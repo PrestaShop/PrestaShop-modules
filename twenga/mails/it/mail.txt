@@ -1,0 +1,6 @@
+Il sito seguente {shop_url} ha disattivato/cancellato il modulo Twenga.
+Nazione Prestashop del merchant: {shop_country}
+
+Il merchant è {trader_email}.
+
+L’équipe Prestashop

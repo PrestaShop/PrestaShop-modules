@@ -1,0 +1,111 @@
+<?php
+/*
+ * 2007-2012 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2012 PrestaShop SA
+ *  @version  Release: $Revision: 13573 $
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * @since 1.5.0
+ */
+
+class PayPalSubmitModuleFrontController extends ModuleFrontController
+{
+	public $display_column_left = false;
+
+	public function initContent()
+	{
+		parent::initContent();
+
+		$this->paypal = new PayPal();
+		$this->context = Context::getContext();
+
+		$this->id_module = (int)Tools::getValue('id_module');
+		$this->id_order = (int)Tools::getValue('id_order');
+		$order = PayPalOrder::getOrderById($this->id_order);
+
+		$this->context->smarty->assign(array(
+		'is_guest' => $this->context->customer->is_guest,
+		'order' => $order,
+		'price' => Tools::displayPrice($order['total_paid'], $this->context->currency),
+		'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
+		'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()));
+
+		if ($this->context->customer->is_guest)
+		{
+			$this->context->smarty->assign(array(
+			'id_order' => (int)$this->order->id_order,
+			'id_order_formatted' => sprintf('#%06d', (int)$this->order->id_order)));
+
+			/* If guest we clear the cookie for security reason */
+			$this->context->customer->mylogout();
+		}
+
+		$this->setTemplate('order-confirmation.tpl');
+	}
+
+	private function displayHook()
+	{
+		if (Validate::isUnsignedId($this->id_order) && Validate::isUnsignedId($this->id_module))
+		{
+			$order = new Order((int)$this->id_order);
+			$currency = new Currency((int)$order->id_currency);
+
+			if (Validate::isLoadedObject($order))
+			{
+				$params['objOrder'] = $order;
+				$params['currencyObj'] = $currency;
+				$params['currency'] = $currency->sign;
+				$params['total_to_pay'] = $order->getOrdersTotalPaid();
+
+				return $params;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Execute the hook displayPaymentReturn
+	 */
+	public function displayPaymentReturn()
+	{
+		$params = $this->displayHook();
+
+		if ($params && is_array($params))
+			return Hook::exec('displayPaymentReturn', $params, (int)$this->id_module);
+		return false;
+	}
+
+	/**
+	 * Execute the hook displayOrderConfirmation
+	 */
+	public function displayOrderConfirmation()
+	{
+		$params = $this->displayHook();
+
+		if ($params && is_array($params))
+			return Hook::exec('displayOrderConfirmation', $params);
+		return false;
+	}
+}

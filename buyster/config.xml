@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>buyster</name>
+	<displayName><![CDATA[Buyster]]></displayName>
+	<version><![CDATA[1.4]]></version>
+	<description><![CDATA[The new online payment solution approved by the Bank of France, which combines simplicity and security through mobile.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>

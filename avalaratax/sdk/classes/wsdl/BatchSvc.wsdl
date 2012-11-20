@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://avatax.avalara.com/services" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://avatax.avalara.com/services" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://avatax.avalara.com/services">
+      <s:element name="BatchFetch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FetchRequest" type="tns:FetchRequest"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FetchRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Fields" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Filters" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Sort" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MaxCount" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PageIndex" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PageSize" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="BatchFetchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchFetchResult" type="tns:BatchFetchResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchFetchResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Batches" type="tns:ArrayOfBatch"/>
+              <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ResultCode" type="tns:SeverityLevel"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Messages" type="tns:ArrayOfMessage"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SeverityLevel">
+        <s:restriction base="s:string">
+          <s:enumeration value="Success"/>
+          <s:enumeration value="Warning"/>
+          <s:enumeration value="Error"/>
+          <s:enumeration value="Exception"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Message" nillable="true" type="tns:Message"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Message">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Summary" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Details" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="HelpLink" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RefersTo" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Severity" type="tns:SeverityLevel"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string"/>
+        </s:sequence>
+        <s:attribute name="Name" type="s:string"/>
+      </s:complexType>
+      <s:complexType name="ArrayOfBatch">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Batch" nillable="true" type="tns:Batch"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Batch">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AccountId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BatchId" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BatchStatusId" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BatchTypeId" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CompanyId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedDate" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedUserId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CompletedDate" type="s:dateTime"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Files" type="tns:ArrayOfBatchFile"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedDate" type="s:dateTime"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedUserId" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Options" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CurrentRecord" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBatchFile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BatchFile" nillable="true" type="tns:BatchFile"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BatchFile">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="BatchFileId" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BatchId" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Content" type="s:base64Binary"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ContentType" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Ext" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="FilePath" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Size" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCount" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Profile" type="tns:Profile"/>
+      <s:complexType name="Profile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Client" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Adapter" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Machine" type="s:string"/>
+        </s:sequence>
+        <s:anyAttribute/>
+      </s:complexType>
+      <s:element name="BatchSave">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Batch" type="tns:Batch"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BatchSaveResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchSaveResult" type="tns:BatchSaveResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchSaveResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="BatchId" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="EstimatedCompletion" type="s:dateTime"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AuditMessage" type="tns:AuditMessage"/>
+      <s:complexType name="AuditMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string"/>
+        </s:sequence>
+        <s:anyAttribute/>
+      </s:complexType>
+      <s:element name="BatchDelete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteRequest" type="tns:DeleteRequest"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeleteRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:FilterRequest"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="FilterRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Filters" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="MaxCount" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="BatchDeleteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchDeleteResult" type="tns:DeleteResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeleteResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:FilterResult"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="FilterResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BatchProcess">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchProcessRequest" type="tns:BatchProcessRequest"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchProcessRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:FilterRequest"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BatchProcessResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchProcessResult" type="tns:BatchProcessResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchProcessResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:FilterResult"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BatchFileFetch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FetchRequest" type="tns:FetchRequest"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BatchFileFetchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchFileFetchResult" type="tns:BatchFileFetchResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchFileFetchResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BatchFiles" type="tns:ArrayOfBatchFile"/>
+              <s:element minOccurs="1" maxOccurs="1" name="RecordCount" type="s:int"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BatchFileSave">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchFile" type="tns:BatchFile"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BatchFileSaveResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchFileSaveResult" type="tns:BatchFileSaveResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BatchFileSaveResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="BatchFileId" type="s:int"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="BatchFileDelete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteRequest" type="tns:DeleteRequest"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BatchFileDeleteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BatchFileDeleteResult" type="tns:DeleteResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Ping">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PingResult" type="tns:PingResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PingResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="IsAuthorized">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Operations" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsAuthorizedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsAuthorizedResult" type="tns:IsAuthorizedResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IsAuthorizedResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Operations" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Expires" type="s:dateTime"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="BatchFetchSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchFetch"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFetchSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchFetchResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFetchProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchSaveSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchSave"/>
+  </wsdl:message>
+  <wsdl:message name="BatchSaveSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchSaveResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchSaveAuditMessage">
+    <wsdl:part name="AuditMessage" element="tns:AuditMessage"/>
+  </wsdl:message>
+  <wsdl:message name="BatchSaveProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchDeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchDelete"/>
+  </wsdl:message>
+  <wsdl:message name="BatchDeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchDeleteResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchDeleteAuditMessage">
+    <wsdl:part name="AuditMessage" element="tns:AuditMessage"/>
+  </wsdl:message>
+  <wsdl:message name="BatchDeleteProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchProcessSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchProcess"/>
+  </wsdl:message>
+  <wsdl:message name="BatchProcessSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchProcessResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchProcessProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileFetchSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchFileFetch"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileFetchSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchFileFetchResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileFetchProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileSaveSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchFileSave"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileSaveSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchFileSaveResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileSaveProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileDeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:BatchFileDelete"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileDeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:BatchFileDeleteResponse"/>
+  </wsdl:message>
+  <wsdl:message name="BatchFileDeleteProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping"/>
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PingProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedSoapIn">
+    <wsdl:part name="parameters" element="tns:IsAuthorized"/>
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedSoapOut">
+    <wsdl:part name="parameters" element="tns:IsAuthorizedResponse"/>
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedProfile">
+    <wsdl:part name="Profile" element="tns:Profile"/>
+  </wsdl:message>
+  <wsdl:portType name="BatchSvcSoap">
+    <wsdl:operation name="BatchFetch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Fetches one or more Batch</wsdl:documentation>
+      <wsdl:input message="tns:BatchFetchSoapIn"/>
+      <wsdl:output message="tns:BatchFetchSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchSave">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Saves a Batch entry</wsdl:documentation>
+      <wsdl:input message="tns:BatchSaveSoapIn"/>
+      <wsdl:output message="tns:BatchSaveSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchDelete">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Deletes one or more Batches</wsdl:documentation>
+      <wsdl:input message="tns:BatchDeleteSoapIn"/>
+      <wsdl:output message="tns:BatchDeleteSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchProcess">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Processes one or more Batches</wsdl:documentation>
+      <wsdl:input message="tns:BatchProcessSoapIn"/>
+      <wsdl:output message="tns:BatchProcessSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileFetch">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Fetches one or more BatchFiles</wsdl:documentation>
+      <wsdl:input message="tns:BatchFileFetchSoapIn"/>
+      <wsdl:output message="tns:BatchFileFetchSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileSave">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Saves a Batch File</wsdl:documentation>
+      <wsdl:input message="tns:BatchFileSaveSoapIn"/>
+      <wsdl:output message="tns:BatchFileSaveSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileDelete">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Deletes one or more BatchFiles</wsdl:documentation>
+      <wsdl:input message="tns:BatchFileDeleteSoapIn"/>
+      <wsdl:output message="tns:BatchFileDeleteSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Tests connectivity and version of the service</wsdl:documentation>
+      <wsdl:input message="tns:PingSoapIn"/>
+      <wsdl:output message="tns:PingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Checks authentication and authorization to one or more operations on the service.</wsdl:documentation>
+      <wsdl:input message="tns:IsAuthorizedSoapIn"/>
+      <wsdl:output message="tns:IsAuthorizedSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BatchSvcSoap" type="tns:BatchSvcSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="BatchFetch">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchFetch" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchFetchProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchSave">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchSave" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchSaveAuditMessage" part="AuditMessage" use="literal"/>
+        <soap:header message="tns:BatchSaveProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchDelete">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchDelete" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchDeleteAuditMessage" part="AuditMessage" use="literal"/>
+        <soap:header message="tns:BatchDeleteProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchProcess">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchProcess" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchProcessProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileFetch">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchFileFetch" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchFileFetchProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileSave">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchFileSave" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchFileSaveProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileDelete">
+      <soap:operation soapAction="http://avatax.avalara.com/services/BatchFileDelete" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:BatchFileDeleteProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://avatax.avalara.com/services/Ping" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:PingProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <soap:operation soapAction="http://avatax.avalara.com/services/IsAuthorized" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:IsAuthorizedProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BatchSvcSoap12" type="tns:BatchSvcSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="BatchFetch">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchFetch" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchFetchProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchSave">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchSave" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchSaveAuditMessage" part="AuditMessage" use="literal"/>
+        <soap12:header message="tns:BatchSaveProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchDelete">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchDelete" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchDeleteAuditMessage" part="AuditMessage" use="literal"/>
+        <soap12:header message="tns:BatchDeleteProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchProcess">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchProcess" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchProcessProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileFetch">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchFileFetch" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchFileFetchProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileSave">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchFileSave" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchFileSaveProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchFileDelete">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/BatchFileDelete" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:BatchFileDeleteProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/Ping" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:PingProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/IsAuthorized" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:IsAuthorizedProfile" part="Profile" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BatchSvc">
+    <wsdl:port name="BatchSvcSoap" binding="tns:BatchSvcSoap">
+      <soap:address location="http://localhost/avatax.services/Batch/BatchSvc.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="BatchSvcSoap12" binding="tns:BatchSvcSoap12">
+      <soap12:address location="http://localhost/avatax.services/Batch/BatchSvc.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
