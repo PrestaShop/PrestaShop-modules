@@ -1,0 +1,7 @@
+Socolissimo
+
+2.3 :
+
+- Add Backward compatibility to use the module on 1.4 / 1.5 PrestaShop version.
+	(OPC and 5 steps process works)
+	

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>jirafe</name>
+	<displayName><![CDATA[Analytics for ecommerce]]></displayName>
+	<version><![CDATA[1.2]]></version>
+	<description><![CDATA[The best analytics for ecommerce merchants.  Deeply integrated into the Prestashop platform.]]></description>
+	<author><![CDATA[Jirafe Inc.]]></author>
+	<tab><![CDATA[analytics_stats]]></tab>
+	<confirmUninstall>Are you sure you want to remove Jirafe analytics integration for your site?</confirmUninstall>
+	<is_configurable>0</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

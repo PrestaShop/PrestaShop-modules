@@ -1,0 +1,81 @@
+/*
+* OpenSi Connect for Prestashop
+*
+* NOTICE OF LICENSE
+*
+* This program is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation; either version 2 of the License, or (at your
+* option) any later version.
+* This program is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+* or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+* for more details.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author Speedinfo SARL
+* @copyright 2003-2012 Speedinfo SARL
+* @contact contact@speedinfo.fr
+* @url http://www.speedinfo.fr
+*
+*/
+
+/* General */
+* { outline:none; }
+h2 { margin-bottom:5px; }
+.clear { clear:both; }
+.version { margin:0 0 10px; color:#7F7F7F; font-size:11px; }
+.mini { font-size:11px; }
+.grey { color:#7F7F7F; }
+.black { margin:0; padding:0 0 20px; }
+.black a { color:#996633; text-decoration:none; }
+.black a:hover { color:#000; text-decoration:none; }
+.brown { color:#996633; }
+.red { color:red; }
+a.grey { color:#7F7F7F; text-decoration:underline; }
+a.grey:hover { color:#7F7F7F; text-decoration:none; }
+
+/* Tabs */
+#menuTab { float:left; padding:0; margin:0; text-align:left; }
+#menuTab li { float:left; display:inline; font-weight:bold; cursor:pointer; font-size:12px; padding:0 0 0 15px; background:url(../img/ltab.jpg) 0 -110px no-repeat; margin:0 1px -1px 0; border-bottom:1px solid #CCC; font-family: Arial,Verdana,Helvetica,sans-serif; }
+#menuTab li span { display:block; padding:7px 15px 7px 0; background:url(../img/rtab.jpg) 100% -110px no-repeat; color:#889097; font-family: Arial,Verdana,Helvetica,sans-serif; }
+#menuTab li.menuTabButton.selected { background-position:0 0; border-bottom:1px solid #FFFFF0; }
+#menuTab li.menuTabButton.selected span { background-position:100% 0; color:#000; }
+#tabList { clear:left; }
+.tabItem { display:none; }
+.tabItem.selected { display:block; background:#FFFFF0; border:1px solid #CCC; border-bottom:0; padding:15px 10px; }
+
+/* Fieldset */
+fieldset { font-size:12px; font-family: Arial,Verdana,Helvetica,sans-serif; }
+fieldset a { color:#996633; text-decoration:underline; }
+fieldset a:hover { color:#996633; text-decoration:none; }
+.button_save { clear:both; border:1px solid #ccc; border-top:none; background:#FFFFF0; text-align:center; padding:5px 0 20px; }
+.button, .button:hover { text-decoration:none; color:#268CCD; }
+sup { color:#CC6633; }
+
+/* Forms */
+.error_box { border:1px dashed #996633; padding:10px; margin:0 0 15px; color:#996633; }
+.info_box { border:1px dashed #999; padding:10px; margin:10px 0 5px; color:#7F7F7F; }
+label { font-size:12px; width:310px; padding-right:10px; text-align:left; font-weight:normal; }
+label.strong { font-weight:bold; }
+#osi_configuration_mode { width:360px; }
+.biginp { width:500px; }
+.tinysel { width:100px; }
+.ws-freq { width:350px; }
+#content .conf, #content .error, #content .warn { -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; }
+.divradio { font-size:12px; color:#000; }
+.cron-details { margin:6px 0 15px 14px; }
+.courier { font-family:Courier; font-size:12px; }
+.pres_ico td { padding:10px; vertical-align:top; }
+.wso td.sync-o { background:url(../img/sync_o.png) 0 50% no-repeat; padding-left:15px; }
+.wso td.sync-p { background:url(../img/sync_p.png) 0 50% no-repeat; padding-left:15px; }
+
+/* Tables */
+.table tr td { border-bottom:0; }
+.wso td { padding:3px; }
+.nowrap { white-space:nowrap; }

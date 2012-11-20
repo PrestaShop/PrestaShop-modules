@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://avatax.avalara.com/services" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://avatax.avalara.com/services" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://avatax.avalara.com/services">
+      <s:element name="AddCustomer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddCustomerRequest" type="tns:AddCustomerRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddCustomerRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Customer" type="tns:Customer" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Customer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NewCustomerCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Attn" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PostalCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParentCustomerCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExemptionCertificate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AvaCertId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Jurisdictions" type="tns:ArrayOfJurisdiction" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerCodes" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CertificateStatus" type="tns:CertificateStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReviewStatus" type="tns:ReviewStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreatedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ModifiedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReceivedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PostalCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SignedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="SignerName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SignerTitle" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BusinessDescription" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SellerPropertyDescription" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CertificateUsage" type="tns:CertificateUsage" />
+          <s:element minOccurs="0" maxOccurs="1" name="IsPartialExemption" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExemptReasonCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExemptFormName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Custom1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Custom2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Custom3" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CertificateStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="ACTIVE" />
+          <s:enumeration value="VOID" />
+          <s:enumeration value="INCOMPLETE" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ReviewStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="PENDING" />
+          <s:enumeration value="ACCEPTED" />
+          <s:enumeration value="REJECTED" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="CertificateUsage">
+        <s:restriction base="s:string">
+          <s:enumeration value="BLANKET" />
+          <s:enumeration value="SINGLE" />
+          <s:enumeration value="NULL" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Jurisdiction">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="JurisdictionCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExpiryDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="DoesNotExpire" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="PermitNumbers" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfJurisdiction">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Jurisdiction" nillable="true" type="tns:Jurisdiction" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfExemptionCertificate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ExemptionCertificate" nillable="true" type="tns:ExemptionCertificate" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddCustomerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddCustomerResult" type="tns:AddCustomerResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddCustomerResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ResultCode" type="tns:SeverityLevel" />
+          <s:element minOccurs="0" maxOccurs="1" name="Messages" type="tns:ArrayOfMessage" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SeverityLevel">
+        <s:restriction base="s:string">
+          <s:enumeration value="Success" />
+          <s:enumeration value="Warning" />
+          <s:enumeration value="Error" />
+          <s:enumeration value="Exception" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Message" nillable="true" type="tns:Message" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Message">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Summary" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Details" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HelpLink" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RefersTo" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Severity" type="tns:SeverityLevel" />
+          <s:element minOccurs="0" maxOccurs="1" name="Source" type="s:string" />
+        </s:sequence>
+        <s:attribute name="Name" type="s:string" />
+      </s:complexType>
+      <s:element name="Profile" type="tns:Profile" />
+      <s:complexType name="Profile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Client" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Adapter" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Machine" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="InitiateExemptCert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InitiateExemptCertRequest" type="tns:InitiateExemptCertRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetExemptionCertificates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetExemptionCertificatesRequest" type="tns:GetExemptionCertificatesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="InitiateExemptCertRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Customer" type="tns:Customer" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomMessage" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CommunicationMode" type="tns:CommunicationMode" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:RequestType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GetExemptionCertificatesRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FromDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ToDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CommunicationMode">
+        <s:restriction base="s:string">
+          <s:enumeration value="Email" />
+          <s:enumeration value="Mail" />
+          <s:enumeration value="Fax" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetExemptionCertificatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetExemptionCertificatesResult" type="tns:GetExemptionCertificatesResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetExemptionCertificatesResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ExemptionCertificates" type="tns:ArrayOfExemptionCertificate" />
+              <s:element minOccurs="0" maxOccurs="1" name="RecordCount" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="InitiateExemptCertResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InitiateExemptCertResult" type="tns:InitiateExemptCertResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="InitiateExemptCertResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="TrackingCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="WizardLaunchUrl" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetAvaCertServiceConfig">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAvaCertServiceConfigRequest" type="tns:GetAvaCertServiceConfigRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetAvaCertServiceConfigRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CompanyCode" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseRequest" />
+      <s:element name="GetAvaCertServiceConfigResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAvaCertServiceConfigResult" type="tns:GetAvaCertServiceConfigResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetAvaCertServiceConfigResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AvaCertServiceConfigs" type="tns:ArrayOfAvaCertServiceConfig" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfAvaCertServiceConfig">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AvaCertServiceConfig" nillable="true" type="tns:AvaCertServiceConfig" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AvaCertServiceConfig">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AvaCertServiceConfigId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CompanyCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsUpdateEnabled" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrgCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AllowPending" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="LastUpdate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedUserId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedUserId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="AvaCertServiceStatus" type="tns:AvaCertServiceStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="AvaCertServiceStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Disabled" />
+          <s:enumeration value="Onboarding" />
+          <s:enumeration value="Enabled" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="RequestType">
+        <s:restriction base="s:string">
+          <s:enumeration value="STANDARD" />
+          <s:enumeration value="DIRECT" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SetAvaCertServiceConfig">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetAvaCertServiceConfigRequest" type="tns:SetAvaCertServiceConfigRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SetAvaCertServiceConfigRequest">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseRequest">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AvaCertServiceConfig" type="tns:AvaCertServiceConfig" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="SetAvaCertServiceConfigResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetAvaCertServiceConfigResult" type="tns:SetAvaCertServiceConfigResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SetAvaCertServiceConfigResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AuditMessage" type="tns:AuditMessage" />
+      <s:complexType name="AuditMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="InitiateUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InitiateUpdateRequest" type="tns:InitiateUpdateRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="InitiateUpdateRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="InitiateUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InitiateUpdateResult" type="tns:InitiateUpdateResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="InitiateUpdateResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="Ping">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PingResult" type="tns:PingResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PingResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="IsAuthorized">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Operations" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsAuthorizedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IsAuthorizedResult" type="tns:IsAuthorizedResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IsAuthorizedResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Operations" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Expires" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AddCustomerSoapIn">
+    <wsdl:part name="parameters" element="tns:AddCustomer" />
+  </wsdl:message>
+  <wsdl:message name="AddCustomerSoapOut">
+    <wsdl:part name="parameters" element="tns:AddCustomerResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddCustomerProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptionCertificatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetExemptionCertificates" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptionCertificatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetExemptionCertificatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptionCertificatesProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="InitiateExemptCertSoapIn">
+    <wsdl:part name="parameters" element="tns:InitiateExemptCert" />
+  </wsdl:message>
+  <wsdl:message name="InitiateExemptCertSoapOut">
+    <wsdl:part name="parameters" element="tns:InitiateExemptCertResponse" />
+  </wsdl:message>
+  <wsdl:message name="InitiateExemptCertProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="GetAvaCertServiceConfigSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAvaCertServiceConfig" />
+  </wsdl:message>
+  <wsdl:message name="GetAvaCertServiceConfigSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAvaCertServiceConfigResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAvaCertServiceConfigProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="SetAvaCertServiceConfigSoapIn">
+    <wsdl:part name="parameters" element="tns:SetAvaCertServiceConfig" />
+  </wsdl:message>
+  <wsdl:message name="SetAvaCertServiceConfigSoapOut">
+    <wsdl:part name="parameters" element="tns:SetAvaCertServiceConfigResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetAvaCertServiceConfigAuditMessage">
+    <wsdl:part name="AuditMessage" element="tns:AuditMessage" />
+  </wsdl:message>
+  <wsdl:message name="SetAvaCertServiceConfigProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="InitiateUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:InitiateUpdate" />
+  </wsdl:message>
+  <wsdl:message name="InitiateUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:InitiateUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="InitiateUpdateAuditMessage">
+    <wsdl:part name="AuditMessage" element="tns:AuditMessage" />
+  </wsdl:message>
+  <wsdl:message name="InitiateUpdateProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="PingProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedSoapIn">
+    <wsdl:part name="parameters" element="tns:IsAuthorized" />
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedSoapOut">
+    <wsdl:part name="parameters" element="tns:IsAuthorizedResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsAuthorizedProfile">
+    <wsdl:part name="Profile" element="tns:Profile" />
+  </wsdl:message>
+  <wsdl:portType name="AvaCertSvcSoap">
+    <wsdl:operation name="AddCustomer">
+      <wsdl:input message="tns:AddCustomerSoapIn" />
+      <wsdl:output message="tns:AddCustomerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InitiateExemptCert">
+      <wsdl:input message="tns:InitiateExemptCertSoapIn" />
+      <wsdl:output message="tns:InitiateExemptCertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptionCertificates">
+      <wsdl:input message="tns:GetExemptionCertificatesSoapIn" />
+      <wsdl:output message="tns:GetExemptionCertificatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAvaCertServiceConfig">
+      <wsdl:input message="tns:GetAvaCertServiceConfigSoapIn" />
+      <wsdl:output message="tns:GetAvaCertServiceConfigSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAvaCertServiceConfig">
+      <wsdl:input message="tns:SetAvaCertServiceConfigSoapIn" />
+      <wsdl:output message="tns:SetAvaCertServiceConfigSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InitiateUpdate">
+      <wsdl:input message="tns:InitiateUpdateSoapIn" />
+      <wsdl:output message="tns:InitiateUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <wsdl:input message="tns:IsAuthorizedSoapIn" />
+      <wsdl:output message="tns:IsAuthorizedSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AvaCertSvcSoap" type="tns:AvaCertSvcSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddCustomer">
+      <soap:operation soapAction="http://avatax.avalara.com/services/AddCustomer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:AddCustomerProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptionCertificates">
+      <soap:operation soapAction="http://avatax.avalara.com/services/GetExemptionCertificates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetExemptionCertificatesProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitiateExemptCert">
+      <soap:operation soapAction="http://avatax.avalara.com/services/InitiateExemptCert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:InitiateExemptCertProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAvaCertServiceConfig">
+      <soap:operation soapAction="http://avatax.avalara.com/services/GetAvaCertServiceConfig" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetAvaCertServiceConfigProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAvaCertServiceConfig">
+      <soap:operation soapAction="http://avatax.avalara.com/services/SetAvaCertServiceConfig" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SetAvaCertServiceConfigAuditMessage" part="AuditMessage" use="literal" />
+        <soap:header message="tns:SetAvaCertServiceConfigProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitiateUpdate">
+      <soap:operation soapAction="http://avatax.avalara.com/services/InitiateUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:InitiateUpdateAuditMessage" part="AuditMessage" use="literal" />
+        <soap:header message="tns:InitiateUpdateProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://avatax.avalara.com/services/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PingProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <soap:operation soapAction="http://avatax.avalara.com/services/IsAuthorized" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:IsAuthorizedProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AvaCertSvcSoap12" type="tns:AvaCertSvcSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddCustomer">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/AddCustomer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:AddCustomerProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptionCertificates">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/GetExemptionCertificates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetExemptionCertificatesProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitiateExemptCert">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/InitiateExemptCert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:InitiateExemptCertProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAvaCertServiceConfig">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/GetAvaCertServiceConfig" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetAvaCertServiceConfigProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAvaCertServiceConfig">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/SetAvaCertServiceConfig" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SetAvaCertServiceConfigAuditMessage" part="AuditMessage" use="literal" />
+        <soap12:header message="tns:SetAvaCertServiceConfigProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitiateUpdate">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/InitiateUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:InitiateUpdateAuditMessage" part="AuditMessage" use="literal" />
+        <soap12:header message="tns:InitiateUpdateProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:PingProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsAuthorized">
+      <soap12:operation soapAction="http://avatax.avalara.com/services/IsAuthorized" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:IsAuthorizedProfile" part="Profile" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AvaCertSvc">
+    <wsdl:port name="AvaCertSvcSoap" binding="tns:AvaCertSvcSoap">
+      <soap:address location="http://localhost/avatax.branches.5.9.0/AvaCert/AvaCertSvc.wsdl" />
+    </wsdl:port>
+    <wsdl:port name="AvaCertSvcSoap12" binding="tns:AvaCertSvcSoap12">
+      <soap12:address location="http://localhost/avatax.branches.5.9.0/AvaCert/AvaCertSvc.wsdl" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

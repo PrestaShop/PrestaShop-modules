@@ -1,0 +1,51 @@
+#paypal-column-block p{text-align:center}
+.bold{font-weight:700}
+.clear{clear:both}
+.half{width:44%}
+#paypal-wrapper{font-size:1.1em;position:relative}
+#paypal-wrapper ul li{text-align:left}
+#paypal-wrapper hr{border-top:1px solid #ccc!important;margin-bottom:0;margin-top:20px}
+.toolbox{background:#fff2cf;border:1px solid #aaa;color:#000;display:none;font-size:10px;font-weight:400;left:730px;line-height:12px;padding:6px!important;position:absolute;text-transform:none;top:-10px!important;width:180px;z-index:100}
+.disabled,.disabled *,.disabled * *,.disabled * * *{color:#888!important}
+.disabled .paypal-button,.disabled input[type=submit]{background:#DDD!important;border:1px solid #999!important}
+.inline{display:inline;margin-right:5px}
+.box{margin:6px 1%;padding:12px;text-align:left}
+.box ul{list-style:none;margin:0;padding:0}
+.box ul.tick li{background:url(../img/blue_tick.png) no-repeat left 3px;padding:4px 26px}
+span.paypal-section{background:url(../img/sprites.png) no-repeat 0 0;color:#FFF!important;float:left;height:24px;line-height:24px;margin-right:8px;text-align:center;width:24px}
+.disabled span.paypal-section{background:url(../img/sprites.png) 0 24px}
+#paypal-slogan{font-size:1.8em;margin:0 0 5px;text-transform:uppercase}
+#paypal-slogan .light{color:#369}
+#paypal-slogan .dark{color:#036}
+#paypal-call-button{margin:-6px 0 0;padding:0}
+#paypal-call,#paypal-call-foonote{background:#e1e1e1 url(../img/bg-call-button.png) repeat-x;border:1px solid #d2d2d2;border-left-color:#ddd;border-radius:5px;border-right-color:#ddd;border-top-color:#e9e9e9;color:#369;display:block;margin:0;padding:10px 20px;width:auto}
+#paypal-call-foonote{background:none;border:none;font-size:.8em;max-width:320px;padding:2px 10px;text-align:justify}
+#paypal-get-identification{display:block;min-width:378px;text-align:center}
+#paypal-wrapper a,#fancybox-wrap a{color:#036;text-decoration:underline}
+#paypal-wrapper h1,#paypal-wrapper h2,#paypal-wrapper h3,#paypal-wrapper h4,#paypal-wrapper h5,#paypal-wrapper h6,#fancybox-wrap h1,#fancybox-wrap h2,#fancybox-wrap h3,#fancybox-wrap h4,#fancybox-wrap h5,#fancybox-wrap h6{color:#036;font-family:Arial, Verdana, Helvetica, sans-serif;font-weight:400;text-transform:uppercase}
+#fancybox-wrap h3,#paypal-wrapper h3{font-size:1.4em;line-height:24px}
+#fancybox-wrap h4,#paypal-wrapper h4{font-size:1.2em;margin-bottom:5px;text-transform:none}
+#paypal-wrapper h1.inline + img,#paypal-wrapper h2.inline + img,#paypal-wrapper h3.inline + img,#paypal-wrapper h4.inline + img,#paypal-wrapper h5.inline + img,#paypal-wrapper h6.inline + img{vertical-align:-6px}
+#paypal-wrapper p{margin-top:10px;padding-bottom:0}
+#paypal-wrapper .form-block{margin-top:5px}
+#paypal-wrapper .form-block input{vertical-align:top}
+#paypal-wrapper dl dt{clear:both;line-height:20px;margin-bottom:2px;text-align:right;width:220px}
+#paypal-wrapper dl dd{margin:0 0 16px 10px}
+#paypal-wrapper label{display:inline-block;float:none;font-size:.9em;font-weight:400;margin-bottom:5px;padding-left:6px;padding-top:0;position:relative;text-align:left;width:auto}
+#paypal-wrapper dl dt label{margin:0;padding:0}
+#paypal-wrapper .description,#paypal-wrapper .paypal-signup-content{color:#666;font-size:.9em;font-weight:400;margin:2px 0}
+label span.description{display:block;padding-left:16px}
+#paypal-wrapper input[type=submit],#fancybox-wrap button,#paypal-wrapper .paypal-button{background:url(../img/bg-button.png) repeat-x;border:1px solid #f29116;border-radius:4px;color:#292929;cursor:pointer;display:inline-block;font-weight:700;height:25px;line-height:26px;padding:0 10px;text-decoration:none;text-shadow:0 1px 1px #DDD;text-transform:uppercase}
+#fancybox-wrap ul{font-size:1.1em;padding-left:10px}
+#fancybox-wrap button{line-height:20px}
+#paypal-test-mode-confirmation{margin:30px;text-align:left;width:500px}
+#fancybox-wrap #buttons{margin-top:20px;text-align:right}
+#paypal-test-mode-confirmation button + button{margin-left:20px;margin-right:20px}
+#paypal-save-success,#paypal-save-failure{width:450px}
+#container_express_checkout{margin:auto;text-align:left}
+#payment_paypal_express_checkout{cursor:pointer}
+.paypal_error span{color:red;font-weight:bolder}
+.paypal_payment_acccepted span{color:green;font-weight:bolder}
+#paypal_configuration > .box{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
+.left,#paypal-wrapper dl > *{float:left}
+.right,.box ul.tick{float:right}

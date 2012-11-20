@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>backwardcompatibility</name>
+	<displayName><![CDATA[Backward compatibility]]></displayName>
+	<version><![CDATA[0.3]]></version>
+	<description><![CDATA[Improve modules compatibility.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[compatibility_tools]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
