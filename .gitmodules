@@ -1,84 +1,84 @@
 [submodule "alliedwallet/backward_compatibility"]
 	path = alliedwallet/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "authorizeaim/backward_compatibility"]
 	path = authorizeaim/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "avalaratax/backward_compatibility"]
 	path = avalaratax/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "backwardcompatibility/backward_compatibility"]
 	path = backwardcompatibility/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "buyster/backward_compatibility"]
 	path = buyster/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "canadapost/backward_compatibility"]
 	path = canadapost/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "cloudcache/backward_compatibility"]
 	path = cloudcache/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "dibs/backward_compatibility"]
 	path = dibs/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "fedexcarrier/backward_compatibility"]
 	path = fedexcarrier/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "gadsense/backward_compatibility"]
 	path = gadsense/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "ganalytics/backward_compatibility"]
 	path = ganalytics/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "gcheckout/backward_compatibility"]
 	path = gcheckout/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "hipay/backward_compatibility"]
 	path = hipay/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "jirafe/backward_compatibility"]
 	path = jirafe/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "mailjet/backward_compatibility"]
 	path = mailjet/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "merchantware/backward_compatibility"]
 	path = merchantware/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "mondialrelay/backward_compatibility"]
 	path = mondialrelay/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "ogone/backward_compatibility"]
 	path = ogone/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paypal/backward_compatibility"]
 	path = paypal/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paysafecard/backward_compatibility"]
 	path = paysafecard/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "shipwire/backward_compatibility"]
 	path = shipwire/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "socolissimo/backward_compatibility"]
 	path = socolissimo/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "trustly/backward_compatibility"]
 	path = trustly/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "upscarrier/backward_compatibility"]
 	path = upscarrier/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "uspscarrier/backward_compatibility"]
 	path = uspscarrier/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "wexpay/backward_compatibility"]
 	path = wexpay/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "themeinstallator/backward_compatibility"]
 	path = themeinstallator/backward_compatibility
-	url = https://gaillafr@github.com/PrestaShop/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
