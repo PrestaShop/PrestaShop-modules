@@ -8,7 +8,6 @@
 * needs please refer to http://www.wexpay.com for more information.
 *
 *  @author Profileo <contact@profileo.com>
-*  @version  Release: $Revision: 2.0 $
 */
 
 if (!defined('_CAN_LOAD_FILES_'))

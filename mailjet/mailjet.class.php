@@ -22,7 +22,6 @@
 *
 *  @author Mailjet SAS
 *  @copyright  2011 Mailjet SAS
-*  @version  Release: $Revision: 1.4 $
 *  @license    hhttp://opensource.org/licenses/mit-license  MIT License
 *  International Registred Trademark & Property of Mailjet SAS
 */
