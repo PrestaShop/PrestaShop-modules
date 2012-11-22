@@ -111,9 +111,10 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
 			VALUES ('.(int)($idCart).','.(int)($idCustomer).',';
 		if ($so_object->delivery_mode == SCFields::RELAY_POINT)
 			$sql .= '\''.pSQL($soParams['DELIVERYMODE']).'\''.',
-					'.(isset($soParams['PRID']) ? '\''.pSQL($soParams['PRID']).'\'' : '').',
+					'.(isset($soParams['PRID']) ? '\''.pSQL($soParams['PRID']).'\'' : '\'\'').',
 					'.(isset($soParams['PRNAME']) ? '\''.pSQL($soParams['PRNAME']).'\'' : '\'\'').',
-					"", "",
+					\''.(isset($deliveryMode[$soParams['DELIVERYMODE']]) ? $deliveryMode[$soParams['DELIVERYMODE']] : 'So Colissimo').'\',
+					'.(isset($soParams['PRCOMPLADRESS']) ? pSQL($soParams['PRCOMPLADRESS']) : '\'\'').',			
 					'.(isset($soParams['PRADRESS1']) ? '\''.pSQL($soParams['PRADRESS1']).'\'' : '\'\'').',
 					'.(isset($soParams['PRADRESS2']) ? '\''.pSQL($soParams['PRADRESS2']).'\'' : '\'\'').',
 					'.(isset($soParams['PRADRESS3']) ? '\''.pSQL($soParams['PRADRESS3']).'\'' : '\'\'').',
@@ -128,8 +129,8 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
 					'.(isset($soParams['CEDOORCODE2']) ? '\''.pSQL($soParams['CEDOORCODE2']).'\'' : '\'\'').')';
 		else
 			$sql .= '\''.pSQL($soParams['DELIVERYMODE']).'\',\'\',
-					'.(isset($soParams['CENAME']) ? '\''.ucfirst(pSQL($soParams['CENAME'])).'\'' : '').',
-					'.(isset($soParams['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($soParams['CEFIRSTNAME'])).'\'' : '').',
+					'.(isset($soParams['CENAME']) ? '\''.ucfirst(pSQL($soParams['CENAME'])).'\'' : '\'\'').',
+					'.(isset($soParams['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($soParams['CEFIRSTNAME'])).'\'' : '\'\'').',
 					'.(isset($soParams['CECOMPLADRESS']) ? '\''.pSQL($soParams['CECOMPLADRESS']).'\'' : '\'\'').',
 					'.(isset($soParams['CEADRESS1']) ? '\''.pSQL($soParams['CEADRESS1']).'\'' : '\'\'').',
 					'.(isset($soParams['CEADRESS2']) ? '\''.pSQL($soParams['CEADRESS2']).'\'' : '\'\'').',
@@ -175,7 +176,7 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
 		else
 		{
 			(isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : $values['prid'] = '');
-			(isset($soParams['CENAME']) ? $values['prname'] = ucfirst(pSQL($soParams['PRNAME'])) : '');
+			(isset($soParams['CENAME']) ? $values['prname'] = ucfirst(pSQL($soParams['CENAME'])) : '');
 			(isset($soParams['CEFIRSTNAME']) ? $values['prfirstname'] = ucfirst(pSQL($soParams['CEFIRSTNAME'])) : '');
 			(isset($soParams['CECOMPLADRESS']) ? $values['prcompladress'] = pSQL($soParams['CECOMPLADRESS']) : '');
 			(isset($soParams['CEADRESS1']) ? $values['pradress1'] = pSQL($soParams['CEADRESS1']) : '');
