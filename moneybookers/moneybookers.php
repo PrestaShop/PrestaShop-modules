@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 9702 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +37,7 @@ class MoneyBookers extends PaymentModule
 	{
 		$this->name = 'moneybookers';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.3';
+		$this->version = '1.6.4';
 		$this->module_key = '1d4c89650f76d274a85e5407cffe8403';
 
 		parent::__construct();
@@ -636,6 +635,8 @@ class MoneyBookers extends PaymentModule
 			$lang = new Language((int)($cookie->id_lang));
 
 			$mbParams = array();
+			
+			$mbParams['base_url'] = __PS_BASE_URI__;
 
 			/* About the merchant */
 			$mbParams['pay_to_email'] = Configuration::get('MB_PAY_TO_EMAIL');
