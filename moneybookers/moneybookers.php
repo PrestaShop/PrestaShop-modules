@@ -635,6 +635,8 @@ class MoneyBookers extends PaymentModule
 			$lang = new Language((int)($cookie->id_lang));
 
 			$mbParams = array();
+			
+			$mbParams['base_url'] = __PS_BASE_URI__;
 
 			/* About the merchant */
 			$mbParams['pay_to_email'] = Configuration::get('MB_PAY_TO_EMAIL');
