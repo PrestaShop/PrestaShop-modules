@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -58,9 +58,9 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.3.5';
+		$this->version = '1.3.6';
 		$this->author = 'PrestaShop';
-		parent::__construct ();
+		parent::__construct();
 		$this->displayName = $this->l('eBay');
 		$this->description = $this->l('Open your shop on the eBay market place !');
 		$this->id_lang = Language::getIdByIso('fr');
@@ -127,43 +127,43 @@ class Ebay extends Module
 
 	public function loadShippingMethod()
 	{
-			// Shipping methods
-			$this->_shippingMethod = array(
-					7104 => array('description' => 'Colissimo', 'shippingService' => 'FR_ColiposteColissimo', 'shippingServiceID' => '7104'),
-					7112 => array('description' => 'Ecopli', 'shippingService' => 'FR_Ecopli', 'shippingServiceID' => '7112'),
-					57104 => array('description' => 'La Poste - Courrier International Prioritaire', 'shippingService' => 'FR_LaPosteInternationalPriorityCourier', 'shippingServiceID' => '57104'),
-					7101 => array('description' => 'Lettre', 'shippingService' => 'FR_PostOfficeLetter', 'shippingServiceID' => '7101'),
-					57105 => array('description' => 'La Poste - Courrier International Economique', 'shippingService' => 'FR_LaPosteInternationalEconomyCourier', 'shippingServiceID' => '57105'),
-					57106 => array('description' => 'La Poste - Colissimo International', 'shippingService' => 'FR_LaPosteColissimoInternational', 'shippingServiceID' => '57106'),
-					7102 => array('description' => 'Lettre avec suivi', 'shippingService' => 'FR_PostOfficeLetterFollowed', 'shippingServiceID' => '7102'),
-					57107 => array('description' => 'La Poste - Colis Economique International', 'shippingService' => 'FR_LaPosteColisEconomiqueInternational', 'shippingServiceID' => '57107'),
-					7103 => array('description' => 'Lettre recommand&eacute;e', 'shippingService' => 'FR_PostOfficeLetterRecommended', 'shippingServiceID' => '7103'),
-					7121 => array('description' => 'Lettre Max', 'shippingService' => 'FR_LaPosteLetterMax', 'shippingServiceID' => '7121'),
-					7113 => array('description' => 'Coli&eacute;co', 'shippingService' => 'FR_Colieco', 'shippingServiceID' => '7113'),
-					57108 => array('description' => 'La Poste - Colissimo Emballage International', 'shippingService' => 'FR_LaPosteColissimoEmballageInternational', 'shippingServiceID' => '57108'),
-					57114 => array('description' => 'Chronopost Express International', 'shippingService' => 'FR_ChronopostExpressInternational', 'shippingServiceID' => '57114'),
-					7106 => array('description' => 'Colissimo Recommand&eacute;', 'shippingService' => 'FR_ColiposteColissimoRecommended', 'shippingServiceID' => '7106'),
-					57109 => array('description' => 'Chronopost Classic International', 'shippingService' => 'FR_ChronopostClassicInternational', 'shippingServiceID' => '57109'),
-					57110 => array('description' => 'Chronopost Premium International', 'shippingService' => 'FR_ChronopostPremiumInternational', 'shippingServiceID' => '57110'),
-					7117 => array('description' => 'Chronopost - Chrono Relais', 'shippingService' => 'FR_ChronopostChronoRelais', 'shippingServiceID' => '7117'),
-					57111 => array('description' => 'UPS Standard', 'shippingService' => 'FR_UPSStandardInternational', 'shippingServiceID' => '57111'),
-					7111 => array('description' => 'Autre mode d\'envoi de courrier', 'shippingService' => 'FR_Autre', 'shippingServiceID' => '7111'),
-					57112 => array('description' => 'UPS Express', 'shippingService' => 'FR_UPSExpressInternational', 'shippingServiceID' => '57112'),
-					7114 => array('description' => 'Autre mode d\'envoi de colis', 'shippingService' => 'FR_AuteModeDenvoiDeColis', 'shippingServiceID' => '7114'),
-					57113 => array('description' => 'DHL', 'shippingService' => 'FR_DHLInternational', 'shippingServiceID' => '57113'),
-					57101 => array('description' => 'Frais de livraison internationale fixes', 'shippingService' => 'FR_StandardInternational', 'shippingServiceID' => '57101'),
-					7116 => array('description' => 'Chronopost', 'shippingService' => 'FR_Chronopost', 'shippingServiceID' => '7116'),
-					57102 => array('description' => 'Frais fixes pour livraison internationale express', 'shippingService' => 'FR_ExpeditedInternational', 'shippingServiceID' => '57102'),
-					57103 => array('description' => 'Autres livraisons internationales (voir description)', 'shippingService' => 'FR_OtherInternational', 'shippingServiceID' => '57103'),
-					7118 => array('description' => 'Chrono 10', 'shippingService' => 'FR_Chrono10', 'shippingServiceID' => '7118'),
-					7119 => array('description' => 'Chrono 13', 'shippingService' => 'FR_Chrono13', 'shippingServiceID' => '7119'),
-					7120 => array('description' => 'Chrono 18', 'shippingService' => 'FR_Chrono18', 'shippingServiceID' => '7120'),
-					7105 => array('description' => 'Coliposte - Colissimo Direct', 'shippingService' => 'FR_ColiposteColissimoDirect', 'shippingServiceID' => '7105'),
-					7107 => array('description' => 'Chronoposte - Chrono Classic International', 'shippingService' => 'FR_ChronoposteInternationalClassic', 'shippingServiceID' => '7107'),
-					7108 => array('description' => 'DHL - Express Europack', 'shippingService' => 'FR_DHLExpressEuropack', 'shippingServiceID' => '7108'),
-					7109 => array('description' => 'UPS - Standard', 'shippingService' => 'FR_UPSStandard', 'shippingServiceID' => '7109'),
-			);
-		}
+		// Shipping methods
+		$this->_shippingMethod = array(
+				7104 => array('description' => 'Colissimo', 'shippingService' => 'FR_ColiposteColissimo', 'shippingServiceID' => '7104'),
+				7112 => array('description' => 'Ecopli', 'shippingService' => 'FR_Ecopli', 'shippingServiceID' => '7112'),
+				57104 => array('description' => 'La Poste - Courrier International Prioritaire', 'shippingService' => 'FR_LaPosteInternationalPriorityCourier', 'shippingServiceID' => '57104'),
+				7101 => array('description' => 'Lettre', 'shippingService' => 'FR_PostOfficeLetter', 'shippingServiceID' => '7101'),
+				57105 => array('description' => 'La Poste - Courrier International Economique', 'shippingService' => 'FR_LaPosteInternationalEconomyCourier', 'shippingServiceID' => '57105'),
+				57106 => array('description' => 'La Poste - Colissimo International', 'shippingService' => 'FR_LaPosteColissimoInternational', 'shippingServiceID' => '57106'),
+				7102 => array('description' => 'Lettre avec suivi', 'shippingService' => 'FR_PostOfficeLetterFollowed', 'shippingServiceID' => '7102'),
+				57107 => array('description' => 'La Poste - Colis Economique International', 'shippingService' => 'FR_LaPosteColisEconomiqueInternational', 'shippingServiceID' => '57107'),
+				7103 => array('description' => 'Lettre recommand&eacute;e', 'shippingService' => 'FR_PostOfficeLetterRecommended', 'shippingServiceID' => '7103'),
+				7121 => array('description' => 'Lettre Max', 'shippingService' => 'FR_LaPosteLetterMax', 'shippingServiceID' => '7121'),
+				7113 => array('description' => 'Coli&eacute;co', 'shippingService' => 'FR_Colieco', 'shippingServiceID' => '7113'),
+				57108 => array('description' => 'La Poste - Colissimo Emballage International', 'shippingService' => 'FR_LaPosteColissimoEmballageInternational', 'shippingServiceID' => '57108'),
+				57114 => array('description' => 'Chronopost Express International', 'shippingService' => 'FR_ChronopostExpressInternational', 'shippingServiceID' => '57114'),
+				7106 => array('description' => 'Colissimo Recommand&eacute;', 'shippingService' => 'FR_ColiposteColissimoRecommended', 'shippingServiceID' => '7106'),
+				57109 => array('description' => 'Chronopost Classic International', 'shippingService' => 'FR_ChronopostClassicInternational', 'shippingServiceID' => '57109'),
+				57110 => array('description' => 'Chronopost Premium International', 'shippingService' => 'FR_ChronopostPremiumInternational', 'shippingServiceID' => '57110'),
+				7117 => array('description' => 'Chronopost - Chrono Relais', 'shippingService' => 'FR_ChronopostChronoRelais', 'shippingServiceID' => '7117'),
+				57111 => array('description' => 'UPS Standard', 'shippingService' => 'FR_UPSStandardInternational', 'shippingServiceID' => '57111'),
+				7111 => array('description' => 'Autre mode d\'envoi de courrier', 'shippingService' => 'FR_Autre', 'shippingServiceID' => '7111'),
+				57112 => array('description' => 'UPS Express', 'shippingService' => 'FR_UPSExpressInternational', 'shippingServiceID' => '57112'),
+				7114 => array('description' => 'Autre mode d\'envoi de colis', 'shippingService' => 'FR_AuteModeDenvoiDeColis', 'shippingServiceID' => '7114'),
+				57113 => array('description' => 'DHL', 'shippingService' => 'FR_DHLInternational', 'shippingServiceID' => '57113'),
+				57101 => array('description' => 'Frais de livraison internationale fixes', 'shippingService' => 'FR_StandardInternational', 'shippingServiceID' => '57101'),
+				7116 => array('description' => 'Chronopost', 'shippingService' => 'FR_Chronopost', 'shippingServiceID' => '7116'),
+				57102 => array('description' => 'Frais fixes pour livraison internationale express', 'shippingService' => 'FR_ExpeditedInternational', 'shippingServiceID' => '57102'),
+				57103 => array('description' => 'Autres livraisons internationales (voir description)', 'shippingService' => 'FR_OtherInternational', 'shippingServiceID' => '57103'),
+				7118 => array('description' => 'Chrono 10', 'shippingService' => 'FR_Chrono10', 'shippingServiceID' => '7118'),
+				7119 => array('description' => 'Chrono 13', 'shippingService' => 'FR_Chrono13', 'shippingServiceID' => '7119'),
+				7120 => array('description' => 'Chrono 18', 'shippingService' => 'FR_Chrono18', 'shippingServiceID' => '7120'),
+				7105 => array('description' => 'Coliposte - Colissimo Direct', 'shippingService' => 'FR_ColiposteColissimoDirect', 'shippingServiceID' => '7105'),
+				7107 => array('description' => 'Chronoposte - Chrono Classic International', 'shippingService' => 'FR_ChronoposteInternationalClassic', 'shippingServiceID' => '7107'),
+				7108 => array('description' => 'DHL - Express Europack', 'shippingService' => 'FR_DHLExpressEuropack', 'shippingServiceID' => '7108'),
+				7109 => array('description' => 'UPS - Standard', 'shippingService' => 'FR_UPSStandard', 'shippingServiceID' => '7109'),
+		);
+	}
 
 
 	/******************************************************************/
@@ -268,7 +268,7 @@ class Ebay extends Module
 			Configuration::updateValue('EBAY_VERSION', $this->version);
 		}
 	}
-
+	
 
 	/******************************************************************/
 	/** Hook Methods **************************************************/
@@ -384,23 +384,23 @@ class Ebay extends Module
 								// Getting the customer
 								$id_customer = (int)Db::getInstance()->getValue('SELECT `id_customer` FROM `'._DB_PREFIX_.'customer` WHERE `active` = 1 AND `email` = \''.pSQL($order['email']).'\' AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
 
-						// Add customer if he doesn't exist
-						if ($id_customer < 1)
-						{
-							$customer = new Customer();
-							$customer->id_gender = 0;
-							$customer->id_default_group = 1;
-							$customer->secure_key = md5(uniqid(rand(), true));
-							$customer->email = $order['email'];
-							$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
-							$customer->last_passwd_gen = pSQL(date('Y-m-d H:i:s'));
-							$customer->newsletter = 0;
-							$customer->lastname = pSQL($order['familyname']);
-							$customer->firstname = pSQL($order['firstname']);
-							$customer->active = 1;
-							$customer->add();
-							$id_customer = $customer->id;
-						}
+								// Add customer if he doesn't exist
+								if ($id_customer < 1)
+								{
+									$customer = new Customer();
+									$customer->id_gender = 0;
+									$customer->id_default_group = 1;
+									$customer->secure_key = md5(uniqid(rand(), true));
+									$customer->email = $order['email'];
+									$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
+									$customer->last_passwd_gen = pSQL(date('Y-m-d H:i:s'));
+									$customer->newsletter = 0;
+									$customer->lastname = pSQL($order['familyname']);
+									$customer->firstname = pSQL($order['firstname']);
+									$customer->active = 1;
+									$customer->add();
+									$id_customer = $customer->id;
+								}
 
 								// Search if address exists
 								$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \'eBay\'');
@@ -408,110 +408,110 @@ class Ebay extends Module
 									$address = new Address((int)$id_address);
 								else
 								{
-						$address = new Address();
-						$address->id_customer = (int)$id_customer;
+									$address = new Address();
+									$address->id_customer = (int)$id_customer;
 								}
-						$address->id_country = (int)Country::getByIso($order['country_iso_code']);
+								$address->id_country = (int)Country::getByIso($order['country_iso_code']);
 								$address->alias = 'eBay';
-						$address->lastname = pSQL($order['familyname']);
-						$address->firstname = pSQL($order['firstname']);
-						$address->address1 = pSQL($order['address1']);
-						$address->address2 = pSQL($order['address2']);
-						$address->postcode = pSQL($order['postalcode']);
-						$address->city = pSQL($order['city']);
-						$address->phone = pSQL($order['phone']);
-						$address->active = 1;
+								$address->lastname = pSQL($order['familyname']);
+								$address->firstname = pSQL($order['firstname']);
+								$address->address1 = pSQL($order['address1']);
+								$address->address2 = pSQL($order['address2']);
+								$address->postcode = pSQL($order['postalcode']);
+								$address->city = pSQL($order['city']);
+								$address->phone = pSQL($order['phone']);
+								$address->active = 1;
 								if ($id_address > 0 && Validate::isLoadedObject($address))
 									$address->update();
 								else
-						$address->add();
-						$id_address = $address->id;
+									$address->add();
+								$id_address = $address->id;
 
-						$flag = 1;
-						foreach ($order['product_list'] as $product)
-						{
-							if ((int)$product['id_product'] < 1 || !Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$product['id_product']))
-								$flag = 0;
+								$flag = 1;
+								foreach ($order['product_list'] as $product)
+								{
+									if ((int)$product['id_product'] < 1 || !Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$product['id_product']))
+										$flag = 0;
 									if (isset($product['id_product_attribute']) && $product['id_product_attribute'] > 0 && !Db::getInstance()->getValue('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$product['id_product'].' AND `id_product_attribute` = '.(int)$product['id_product_attribute']))
-								$flag = 0;
-						}
-
-						if ($flag == 1)
-						{
+										$flag = 0;
+								}
+						
+								if ($flag == 1)
+								{
 									$cartNbProducts = 0;
-	 						$cartAdd = new Cart();
-							$cartAdd->id_customer = $id_customer;
-							$cartAdd->id_address_invoice = $id_address;
-							$cartAdd->id_address_delivery = $id_address;
+			 						$cartAdd = new Cart();
+									$cartAdd->id_customer = $id_customer;
+									$cartAdd->id_address_invoice = $id_address;
+									$cartAdd->id_address_delivery = $id_address;
 									$cartAdd->id_carrier = 0;
-							$cartAdd->id_lang = $this->id_lang;
-							$cartAdd->id_currency = Currency::getIdByIsoCode('EUR');
+									$cartAdd->id_lang = $this->id_lang;
+									$cartAdd->id_currency = Currency::getIdByIsoCode('EUR');
 									$cartAdd->recyclable = 0;
 									$cartAdd->gift = 0;
-		 					$cartAdd->add();
-							foreach ($order['product_list'] as $product)
+				 					$cartAdd->add();
+									foreach ($order['product_list'] as $product)
 										if ($cartAdd->updateQty((int)($product['quantity']), (int)($product['id_product']), ((isset($product['id_product_attribute']) && $product['id_product_attribute'] > 0) ? $product['id_product_attribute'] : NULL)))
 											$cartNbProducts++;
-							$cartAdd->update();
-
+									$cartAdd->update();
+	
 									// Check number of products in the cart
 									if ($cartNbProducts > 0 && !Db::getInstance()->getValue('SELECT `id_ebay_order` FROM `'._DB_PREFIX_.'ebay_order` WHERE `id_order_ref` = \''.pSQL($order['id_order_ref']).'\''))
 									{
-							// Fix on sending e-mail
-							Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-							$customerClear = new Customer();
-							if (method_exists($customerClear, 'clearCache'))
-								$customerClear->clearCache(true);
-
-							// Validate order
-							$paiement = new eBayPayment();
+										// Fix on sending e-mail
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+										$customerClear = new Customer();
+										if (method_exists($customerClear, 'clearCache'))
+											$customerClear->clearCache(true);
+	
+										// Validate order
+										$paiement = new eBayPayment();
 										$paiement->validateOrder(intval($cartAdd->id), Configuration::get('PS_OS_PAYMENT'), floatval($cartAdd->getOrderTotal(true, 3)), 'eBay '.$order['payment_method'].' '.$order['id_order_seller'], NULL, array(), intval($cartAdd->id_currency));
-							$id_order = $paiement->currentOrder;
-
+										$id_order = $paiement->currentOrder;
+	
 										// Fix on date
 										Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', array('date_add' => pSQL($order['date_add'])), 'UPDATE', '`id_order` = '.(int)$id_order);
 
-							// Fix on sending e-mail
-							Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order['email'])), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+										// Fix on sending e-mail
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order['email'])), 'UPDATE', '`id_customer` = '.(int)$id_customer);
 
-							// Update price (because of possibility of price impact)
+										// Update price (because of possibility of price impact)
 										foreach ($order['product_list'] as $product)
 										{
 											$tax_rate = Db::getInstance()->getValue('SELECT `tax_rate` FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
 											Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', array('product_price' => floatval($product['price'] / (1 + ($tax_rate / 100))), 'reduction_percent' => 0), 'UPDATE', '`id_order` = '.(int)$id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
 										}
-							$updateOrder = array(
-								'total_paid' => floatval($order['amount']),
-								'total_paid_real' => floatval($order['amount']),
+										$updateOrder = array(
+											'total_paid' => floatval($order['amount']),
+											'total_paid_real' => floatval($order['amount']),
 											'total_products' => floatval(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 											'total_products_wt' => floatval($order['amount'] - $order['shippingServiceCost']),
-								'total_shipping' => floatval($order['shippingServiceCost']),
-							);
-							Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $updateOrder, 'UPDATE', '`id_order` = '.(int)$id_order);
+											'total_shipping' => floatval($order['shippingServiceCost']),
+										);
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $updateOrder, 'UPDATE', '`id_order` = '.(int)$id_order);
 
-									// Register the ebay order ref
-									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order', array('id_order_ref' => pSQL($order['id_order_ref']), 'id_order' => (int)$id_order), 'INSERT');
-						}
+										// Register the ebay order ref
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order', array('id_order_ref' => pSQL($order['id_order_ref']), 'id_order' => (int)$id_order), 'INSERT');
+									}
 									else
 									{
 										$cartAdd->delete();
 										$orderList[$korder]['errors'][] = $this->l('Could not add product to cart (maybe your stock quantity is 0)');
-					}
+									}
 								}
 								else
 									$orderList[$korder]['errors'][] = $this->l('Could not found products in database');
-						}
+							}
 							else
 								$orderList[$korder]['errors'][] = $this->l('Invalid e-mail');
-					}
+						}
 						else
 							$orderList[$korder]['errors'][] = $this->l('Order already imported');
 					}
 					else
 						$orderList[$korder]['errors'][] = $this->l('Status not complete or amount less than 0.1 or no product matching');
-		}
+				}
 				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '."'".date('d/m/Y H:i:s')."';\n\n".'$orderList = '.var_export($orderList, true).";\n\n");
-	}
+			}
 		}
 	}
 
@@ -532,10 +532,10 @@ class Ebay extends Module
 			$params['id_product_attribute'] = (int)$_POST['id_product_attribute'];
 			if ($params['id_product_attribute'] > 0)
 			{
-		$id_product = Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` = '.(int)$params['id_product_attribute']);
-		$params['product'] = new Product($id_product);
-		$this->hookaddproduct($params);
-	}
+				$id_product = Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product_attribute` = '.(int)$params['id_product_attribute']);
+				$params['product'] = new Product($id_product);
+				$this->hookaddproduct($params);
+			}
 		}
 	}
 	public function hookdeleteproduct($params) { $this->hookaddproduct($params); }
@@ -654,7 +654,12 @@ class Ebay extends Module
 			$this->_postProcessEbaySync();
 	}
 
-
+	private function _getFormUri()
+	{
+		$url = preg_replace('#(?:&id_tab=(?:1|2|3|4))|(?:&section=(?:parameters|category|template|sync))|(?:&action=(?:logged|suggestCategories))#','',$_SERVER['REQUEST_URI']);
+		return htmlentities($url);
+	}
+	
 	/******************************************************************/
 	/** Register Form Config Methods **********************************/
 	/******************************************************************/
@@ -719,7 +724,7 @@ class Ebay extends Module
 					});
 				});
 			</script>
-			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged" method="post">
+			<form action="'.self::_getFormUri().'&action=logged" method="post">
 				<fieldset>
 					<legend><img src="'.$this->_path.'logo.gif" alt="" title="" />'.$this->l('Register the module on eBay').'</legend>
 					<label>'.$this->l('Click on the button below').'</label>
@@ -806,7 +811,7 @@ class Ebay extends Module
 
 
 		// Display Form
-		$html = '<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
+		$html = '<form action="'.self::_getFormUri().'&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.').'</h4>
 					<label>'.$this->l('eBay Identifier').' : </label>
@@ -829,7 +834,7 @@ class Ebay extends Module
 						<select name="ebay_shipping_carrier_id">';
 					foreach ($this->_shippingMethod as $id => $val)
 						$html .= '<option value="'.$id.'" '.(Tools::getValue('ebay_shipping_carrier_id', Configuration::get('EBAY_SHIPPING_CARRIER_ID')) == $id ? 'selected="selected"' : '').'>'.$val['description'].'</option>';
-		$html .= '			</select>
+		$html .= '			</select>				
 						<p>'.$this->l('Shipping cost configuration for your products on eBay').'</p>
 					</div>
 					<label>'.$this->l('Shipping cost').' : </label>
@@ -905,7 +910,7 @@ class Ebay extends Module
 	/******************************************************************/
 	/** Category Form Config Methods **********************************/
 	/******************************************************************/
-
+	
 	private function _getChildCategories($categories, $id, $path = array(), $pathAdd = '')
 	{
 		$categoryTmp = array();
@@ -936,7 +941,7 @@ class Ebay extends Module
 		// Load categories only if necessary
 		if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `'._DB_PREFIX_.'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category')
 			return '<p align="center"><b>'.$this->l('Your categories have already been configured.').'</b></p>
-			<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form">
+			<form action="'.self::_getFormUri().'&id_tab=2&section=category" method="post" class="form">
 			<p align="center"><input class="button" name="submitSave" type="submit" value="'.$this->l('See Categories').'" /></p></form>';
 
 		// Display eBay Categories
@@ -961,13 +966,13 @@ class Ebay extends Module
 		// Display header
 		$html = '<p><b>'.$this->l('To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.').'</b></p><br />
 
-		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
+		<form action="'.self::_getFormUri().'&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
 			<p><b>'.$this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.').'</b>
 			<input class="button" name="submitSave" type="submit" value="'.$this->l('Suggest Categories').'" />
 			</p><br />
 		</form>
 
-		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=2&section=category" method="post" class="form" id="configForm2">
+		<form action="'.self::_getFormUri().'&id_tab=2&section=category" method="post" class="form" id="configForm2">
 		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
 			<thead>
 				<tr class="nodrag nodrop">
@@ -1014,9 +1019,9 @@ class Ebay extends Module
 		<p><b>'.$this->l('Beware : Only product default categories are used for this configuration.').'</b></p><br />
 
 		<p align="left">
-			* Certaines catÃ©gories bÃ©nÃ©ficient du nouveau format dâ€™annonces multi-versions qui permet de publier 1 seule annonce pour plusieurs versions du mÃªme produit.<br />
-			Pour les catÃ©gories ne bÃ©nÃ©ficiant pas de ce format multi-versions, une annonce sera crÃ©Ã©e pour chaque version du produit.<br />
-			<a href="http://sellerupdate.ebay.fr/may2011/multi-variation-listings.html" target="_blank">Cliquez ici pour plus dâ€™informations sur les catÃ©gories multi-versions</a>
+			* Certaines catégories bénéficient du nouveau format d’annonces multi-versions qui permet de publier 1 seule annonce pour plusieurs versions du même produit.<br />
+			Pour les catégories ne bénéficiant pas de ce format multi-versions, une annonce sera créée pour chaque version du produit.<br />
+			<a href="http://sellerupdate.ebay.fr/may2011/multi-variation-listings.html" target="_blank">Cliquez ici pour plus d’informations sur les catégories multi-versions</a>
 		</p><br /><br />
 
 		<script>
@@ -1065,7 +1070,7 @@ class Ebay extends Module
 			$categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'ebay_category_configuration`');
 			foreach ($categoryConfigListTmp as $c)
 				$categoryConfigList[$c['id_category']] = $c;
-			$categoryList = Db::getInstance()->executeS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` WHERE `id_lang` = '.(int)$this->id_lang.$this->context->shop->addSqlRestrictionOnLang('cl'));
+			$categoryList = Db::getInstance()->executeS('SELECT `id_category`, `name` FROM `'._DB_PREFIX_.'category_lang` cl WHERE `id_lang` = '.(int)$this->id_lang.$this->context->shop->addSqlRestrictionOnLang('cl'));
 
 			foreach ($categoryList as $k => $c)
 				if (!isset($categoryConfigList[$c['id_category']]))
@@ -1132,13 +1137,13 @@ class Ebay extends Module
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
 
-		$iso = $context->language->iso_code;
+		$iso = $this->context->language->iso_code;
 		$isoTinyMCE = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso.'.js') ? $iso : 'en');
 		$ad = dirname($_SERVER["PHP_SELF"]);
 
 		// Display Form
 		$forbiddenJs = array('textarea', 'script', 'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter', 'onmouseleave', 'onerror');
-		$html = '<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=3&section=template" method="post" class="form" id="configForm3">
+		$html = '<form action="'.self::_getFormUri().'&id_tab=3&section=template" method="post" class="form" id="configForm3">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You can customise the template for your products page on eBay').' :</h4>
 					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">'.str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))).'</textarea><br />
@@ -1175,7 +1180,7 @@ class Ebay extends Module
 					});
 					</script>
 					' : '
-					<script type="text/javascript">
+					<script type="text/javascript">	
 					var iso = \''.$isoTinyMCE.'\';
 					var pathCSS = \''._THEME_CSS_DIR_.'\';
 					var ad = \''.$ad.'\';
@@ -1318,10 +1323,10 @@ class Ebay extends Module
 				});
 			}
 		</script>
-
+		
 		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 
-		<form action="index.php?tab='.Tools::safeOutput($_GET['tab']).'&configure='.Tools::safeOutput($_GET['configure']).'&token='.Tools::safeOutput($_GET['token']).'&tab_module='.Tools::safeOutput($_GET['tab_module']).'&module_name='.Tools::safeOutput($_GET['module_name']).'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
+		<form action="'.self::_getFormUri().'&id_tab=4&section=sync" method="post" class="form" id="configForm4">
 				<fieldset style="border: 0">
 					<h4>'.$this->l('You will now push your products on eBay.').' <b>'.$this->l('Reminder,').'</b> '.$this->l('you will not have to pay any fees if you have a shop on eBay.').'</h4>
 					<label style="width: 250px;">'.$this->l('Sync Mode').' : </label><br clear="left" /><br /><br />
@@ -1450,7 +1455,7 @@ class Ebay extends Module
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
 
-			// Retrieve products list for eBay (which have matched categories)
+			// Retrieve products list for eBay (which have matched categories)				
 			$productsList = Db::getInstance()->executeS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1460,7 +1465,7 @@ class Ebay extends Module
 			ORDER BY `id_product`
 			LIMIT 1');
 
-			// How Many Product Less ?
+			// How Many Product Less ?			
 			$nbProductsLess = Db::getInstance()->getValue('
 			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1477,7 +1482,7 @@ class Ebay extends Module
 			WHERE `quantity` > 0 AND `active` = 1
 			AND `id_category_default` IN (SELECT `id_category` FROM `'._DB_PREFIX_.'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
 
-			// Retrieve products list for eBay (which have matched categories)
+			// Retrieve products list for eBay (which have matched categories)				
 			$productsList = Db::getInstance()->executeS('
 			SELECT `id_product` FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1487,7 +1492,7 @@ class Ebay extends Module
 			ORDER BY `id_product`
 			LIMIT 1');
 
-			// How Many Product Less ?
+			// How Many Product Less ?			
 			$nbProductsLess = Db::getInstance()->getValue('
 			SELECT COUNT(`id_product`) FROM `'._DB_PREFIX_.'product`
 			WHERE `quantity` > 0 AND `active` = 1
@@ -1496,7 +1501,7 @@ class Ebay extends Module
 			AND `id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT'));
 		}
 
-			// Send each product on eBay
+		// Send each product on eBay
 		if (count($productsList) >= 1)
 		{
 			// Save the last product
@@ -1520,7 +1525,7 @@ class Ebay extends Module
 					foreach ($error['products'] as $product)
 						$productsDetails .= '<br />- '.$product;
 					echo $this->displayError($error['msg'].'<br />'.$productsDetails);
-	}
+				}
 				echo '<style>#content .alert { text-align: left; width: 875px; }</style>';
 				@unlink(dirname(__FILE__).'/log/syncError.php');
 			}
@@ -1600,7 +1605,7 @@ class Ebay extends Module
 						$price_original = $price;
 						if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
 							$price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-						else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+						elseif ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
 							$price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
 
 						$variations[$c['id_product'].'-'.$c['id_product_attribute']]['price'] = round($price, 2);
@@ -1624,7 +1629,7 @@ class Ebay extends Module
 				$price_original = $price;
 				if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
 					$price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-				else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+				elseif ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
 					$price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
 				$price = round($price, 2);
 
@@ -1812,20 +1817,20 @@ class Ebay extends Module
 								}
 								else
 								{
-								// Update
-								if ($ebay->reviseFixedPriceItem($datasTmp))
-									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
+									// Update
+									if ($ebay->reviseFixedPriceItem($datasTmp))
+										Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
 
-								// if product not on eBay we add it
-								if ($ebay->errorCode == 291)
-								{
-									// We delete from DB and Add it on eBay
+									// if product not on eBay we add it
+									if ($ebay->errorCode == 291)
+									{
+										// We delete from DB and Add it on eBay
 									Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datasTmp['itemID']).'\'');
-									$ebay->addFixedPriceItem($datasTmp);
-									if ($ebay->itemID > 0)
-										Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => (int)$datasTmp['id_attribute'], 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
+										$ebay->addFixedPriceItem($datasTmp);
+										if ($ebay->itemID > 0)
+											Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => (int)$datasTmp['id_attribute'], 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
+									}
 								}
-							}
 							}
 							else
 							{
@@ -1836,7 +1841,7 @@ class Ebay extends Module
 							}
 						}
 					}
-				}
+				}				
 				else
 				{
 					// No variations case
@@ -1872,20 +1877,20 @@ class Ebay extends Module
 						}
 						else
 						{
-						// Update
-						if ($ebay->reviseFixedPriceItem($datas))
-							Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
+							// Update
+							if ($ebay->reviseFixedPriceItem($datas))
+								Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('date_upd' => pSQL($date)), 'UPDATE', '`id_product_ref` = '.(int)$itemID);
 
-						// if product not on eBay we add it
-						if ($ebay->errorCode == 291)
-						{
-							// We delete from DB and Add it on eBay
+							// if product not on eBay we add it
+							if ($ebay->errorCode == 291)
+							{
+								// We delete from DB and Add it on eBay
 							Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product` WHERE `id_product_ref` = \''.pSQL($datas['itemID']).'\'');
-							$ebay->addFixedPriceItem($datas);
-							if ($ebay->itemID > 0)
-								Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => 0, 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
+								$ebay->addFixedPriceItem($datas);
+								if ($ebay->itemID > 0)
+									Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_country' => 8, 'id_product' => (int)$product->id, 'id_attribute' => 0, 'id_product_ref' => pSQL($ebay->itemID), 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
+							}
 						}
-					}
 					}
 					else
 					{
@@ -1918,7 +1923,7 @@ class Ebay extends Module
 
 		if ($count_error > 0)
 			file_put_contents(dirname(__FILE__).'/log/syncError.php', '<?php $tab_error = '.var_export($tab_error, true).'; ?>');
-			}
+	}
 
 
 
@@ -1933,7 +1938,7 @@ class Ebay extends Module
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
 			return '<p><b>'.$this->l('You have to configure "General Settings" tab before using this tab.').'</b></p><br />';
 
-
+	
 		$dateLastImport = '-';
 		if (file_exists(dirname(__FILE__).'/log/orders.php'))
 			include(dirname(__FILE__).'/log/orders.php');
@@ -1998,22 +2003,22 @@ class Ebay extends Module
 		<h2>Sommaire</h2>
 		<h4><u><a href="#EbayHelpPart1">Comment lancer lancer sur eBay ?</a></u></h4>
 		<ol>
-		  <li><a href="#EbayHelpPart1-1">Sâ€™inscrire en tant que vendeur professionnel</a></li>
-		  <li><a href="#EbayHelpPart1-2">VÃ©rification du statut de professionnel</a></li>
-		  <li><a href="#EbayHelpPart1-3">Lier son compte PayPal Ã  son compte eBay</a></li>
+		  <li><a href="#EbayHelpPart1-1">S’inscrire en tant que vendeur professionnel</a></li>
+		  <li><a href="#EbayHelpPart1-2">Vérification du statut de professionnel</a></li>
+		  <li><a href="#EbayHelpPart1-3">Lier son compte PayPal à son compte eBay</a></li>
 		  <li><a href="#EbayHelpPart1-4">Configurer son compte vendeur et sa boutique eBay</a></li>
 		</ol>
-		<h4><u><a href="#EbayHelpPart2">Le Module Prestashop, comment Ã§a marcheÂ ?</a></u></h4>
+		<h4><u><a href="#EbayHelpPart2">Le Module Prestashop, comment ça marche ?</a></u></h4>
 		<ul>
-		  <li><a href="#EbayHelpPart2-1">Onglet ParamÃ¨tres</li>
-		  <li><a href="#EbayHelpPart2-2">Onglet Configuration des catÃ©gories</a></li>
+		  <li><a href="#EbayHelpPart2-1">Onglet Paramètres</li>
+		  <li><a href="#EbayHelpPart2-2">Onglet Configuration des catégories</a></li>
 		  <li><a href="#EbayHelpPart2-3">Onglet Template de la fiche produit</a></li>
 		  <li><a href="#EbayHelpPart2-4">Onglet Mise en ligne des produits</a></li>
 		</ul>
 		<h4><u><a href="#EbayHelpPart3">Conseils & Astuces pour bien vendre sur eBay</a></u></h4>
 		<ul>
-		  <li><a href="#EbayHelpPart3-1">Conseil NÂ°1Â : Avoir une bonne fiche produit</a></li>
-		  <li><a href="#EbayHelpPart3-2">Conseil NÂ°2Â : Avoir un bon Profil Vendeur</a></li>
+		  <li><a href="#EbayHelpPart3-1">Conseil N°1 : Avoir une bonne fiche produit</a></li>
+		  <li><a href="#EbayHelpPart3-2">Conseil N°2 : Avoir un bon Profil Vendeur</a></li>
 		</ul>
 
 
@@ -2022,36 +2027,36 @@ class Ebay extends Module
 		<br />
 
 
-		<h2 id="EbayHelpPart1">Comment se lancer sur eBayÂ ?</h2>
-		<p>Plus dâ€™infos et tous les liens sur <a href="http://www.inscriptionpro.com" target="_blank"><u>www.inscriptionpro.com</u></a></p><br />
+		<h2 id="EbayHelpPart1">Comment se lancer sur eBay ?</h2>
+		<p>Plus d’infos et tous les liens sur <a href="http://www.inscriptionpro.com" target="_blank"><u>www.inscriptionpro.com</u></a></p><br />
 
-		<h3><u>4 Etapes pour sâ€™inscrire sur eBay</u></h3>
-		<p>A noter : dÃ¨s votre inscription en tant que professionnel sur eBay.fr, vous recevrez automatiquement un email (dans les 48h) de notre service dÃ©diÃ© Ã  lâ€™intÃ©gration afin de vous aider dans cette dÃ©marche.<br />
-		Vous pouvez contacter directement notre service â€œInscription Proâ€� par email : <a href="mailto:inscriptionpro@ebay.com">inscriptionpro@ebay.com</a></p>
+		<h3><u>4 Etapes pour s’inscrire sur eBay</u></h3>
+		<p>A noter : dès votre inscription en tant que professionnel sur eBay.fr, vous recevrez automatiquement un email (dans les 48h) de notre service dédié à l’intégration afin de vous aider dans cette démarche.<br />
+		Vous pouvez contacter directement notre service “Inscription Pro” par email : <a href="mailto:inscriptionpro@ebay.com">inscriptionpro@ebay.com</a></p>
 		<br />
 
 		<h3 id="EbayHelpPart1-1"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>1) Inscription en tant que vendeur professionnel</u></a></h3>
-		<p>Lâ€™inscription se fait directement sur eBay.fr via un <a href="https://scgi.ebay.fr/ws/eBayISAPI.dll?RegisterEnterInfo&siteid=71&bizflow=2" target="_blank"><u>formulaire</u></a>. Choisissez un pseudo, un mot de passe, saisissez vos informations personnelles (adresse, tÃ©lÃ©phoneâ€¦) et le tour est jouÃ©.</p>
+		<p>L’inscription se fait directement sur eBay.fr via un <a href="https://scgi.ebay.fr/ws/eBayISAPI.dll?RegisterEnterInfo&siteid=71&bizflow=2" target="_blank"><u>formulaire</u></a>. Choisissez un pseudo, un mot de passe, saisissez vos informations personnelles (adresse, téléphone…) et le tour est joué.</p>
 		<br />
 
-		<h3 id="EbayHelpPart1-2"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>2) VÃ©rification de votre statut professionnel</u></a></h3>
-		<p>Envoyez Ã  notre service clients les documents justifiant <a href="http://pages.ebay.fr/help/sell/business/existingbusinessvetting.html" target="_blank"><u>votre statut professionnel</u></a>.</p>
+		<h3 id="EbayHelpPart1-2"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>2) Vérification de votre statut professionnel</u></a></h3>
+		<p>Envoyez à notre service clients les documents justifiant <a href="http://pages.ebay.fr/help/sell/business/existingbusinessvetting.html" target="_blank"><u>votre statut professionnel</u></a>.</p>
 		<br />
 
-		<h3 id="EbayHelpPart1-3"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>3) Liez votre compte PayPal Ã  votre compte eBay</u></a></h3>
-		<p>Si vous nâ€™avez pas de compte PayPal Business, il faut dâ€™abord vous en crÃ©er un directement sur le site de PayPalÂ : <a href="http://altfarm.mediaplex.com/ad/ck/3484-80712-8030-7" target="_blank"><u>crÃ©ez votre compte PayPal business</u></a><br />
-		Si vous avez dÃ©jÃ  un compte PayPal, liez-le Ã  votre compte eBay pour <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=http%3A%2F%2Fmy.ebay.fr%2Fws%2FeBayISAPI.dll%3FMyeBay%26%26guest%3D1%26CurrentPage%3DMyeBayPayPalAccounts%26guest%3D1&pageType=1883" target="_blank"><u>recevoir les paiements</u></a> des acheteurs et <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=https%3A%2F%2Farbd.ebay.fr%2Fws%2FeBayISAPI.dll%3FPaymentSelectionShowV4%26%26guest%3D1%26guest%3D1&pp=pass&pageType=4098&i1=0" target="_blank"><u>payer automatiquement les frais eBay</u></a>.</p>
+		<h3 id="EbayHelpPart1-3"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>3) Liez votre compte PayPal à votre compte eBay</u></a></h3>
+		<p>Si vous n’avez pas de compte PayPal Business, il faut d’abord vous en créer un directement sur le site de PayPal : <a href="http://altfarm.mediaplex.com/ad/ck/3484-80712-8030-7" target="_blank"><u>créez votre compte PayPal business</u></a><br />
+		Si vous avez déjà un compte PayPal, liez-le à votre compte eBay pour <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=http%3A%2F%2Fmy.ebay.fr%2Fws%2FeBayISAPI.dll%3FMyeBay%26%26guest%3D1%26CurrentPage%3DMyeBayPayPalAccounts%26guest%3D1&pageType=1883" target="_blank"><u>recevoir les paiements</u></a> des acheteurs et <a href="https://signin.ebay.fr/ws/eBayISAPI.dll?SignIn&UsingSSL=1&pUserId=&co_partnerId=2&siteid=71&ru=https%3A%2F%2Farbd.ebay.fr%2Fws%2FeBayISAPI.dll%3FPaymentSelectionShowV4%26%26guest%3D1%26guest%3D1&pp=pass&pageType=4098&i1=0" target="_blank"><u>payer automatiquement les frais eBay</u></a>.</p>
 		<br />
 
 		<h3 id="EbayHelpPart1-4"><a href="https://ebayfr.backpackit.com/pub/2214807-guide-pour-les-vendeurs-professionnels-comment-vendre-sur-la-place-de-march-ebay-france-marketplace-ouverture-du-compte-ebay-et-paramtrage-initial-page-2-5"><u>4) Configurez votre compte vendeur et votre Boutique eBay</u></a></h3>
 		<ul>
-			<li><a href="http://cgi4.ebay.fr/ws/eBayISAPI.dll?RegisterBizSellerInfo&amp;guest=1" target="_blank"><u>Configurez votre compte</u></a> vendeur pro (coordonnÃ©es, CGV,â€¦).</li>
-			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=3" target="_blank"><u>Ouvrez votre Boutique eBay</u></a> et <a href="http://cgi6.ebay.fr/ws/eBayISAPI.dll?StoreCategoryMgmt" target="_blank"><u>paramÃ©trez-la</u></a> pour mettre en avant vos produits dans un espace dÃ©diÃ©.</li>
-			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=7" target="_blank"><u>Inscrivez-vous au Gestionnaire de Ventes Pro</u></a>, tableau de bord indispensable au pilotage de votre activitÃ©.</li>
+			<li><a href="http://cgi4.ebay.fr/ws/eBayISAPI.dll?RegisterBizSellerInfo&amp;guest=1" target="_blank"><u>Configurez votre compte</u></a> vendeur pro (coordonnées, CGV,…).</li>
+			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=3" target="_blank"><u>Ouvrez votre Boutique eBay</u></a> et <a href="http://cgi6.ebay.fr/ws/eBayISAPI.dll?StoreCategoryMgmt" target="_blank"><u>paramétrez-la</u></a> pour mettre en avant vos produits dans un espace dédié.</li>
+			<li><a href="http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&amp;productId=7" target="_blank"><u>Inscrivez-vous au Gestionnaire de Ventes Pro</u></a>, tableau de bord indispensable au pilotage de votre activité.</li>
 		</ul>
 		<br />
 
-		<h3 align="center">Vous nâ€™avez plus quâ€™Ã  mettre en ligne vos produits avec le module eBay de PrestashopÂ !</h3>
+		<h3 align="center">Vous n’avez plus qu’à mettre en ligne vos produits avec le module eBay de Prestashop !</h3>
 
 
 		<br />
@@ -2059,24 +2064,24 @@ class Ebay extends Module
 		<br />
 
 
-		<h2 id="EbayHelpPart2">Le module eBay de Prestashop : comment Ã§a marche ?</h2>
+		<h2 id="EbayHelpPart2">Le module eBay de Prestashop : comment ça marche ?</h2>
 
-		<h3 id="EbayHelpPart2-1">1) Onglet Â« ParamÃ¨tres Â»</h3>
-		<p>Cette section est Ã  configurer lors de la premiÃ¨re utilisation du module. <br />Vous devez dÃ©finir votre <strong>compte PayPal</strong> comme <strong>moyen de paiement de produits sur eBay</strong> en renseignant lâ€™email que vous utilisez pour votre compte PayPal. <br />Si vous nâ€™en avez pas, vous devez <a href="https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&amp;SESSION=85gB6zaK7zA5l_Y0UnNe_eJTaw1Al_e4hmrEfOLhrEiojJMJZGG-Cw9amIq&amp;dispatch=5885d80a13c0db1f8e263663d3faee8d5863a909c4bb5aeebb52c6e1151bdaa9" target="_blank"><u>souscrire Ã  un compte PayPal Business</u></a>.<br />Vous devez dÃ©finir le <strong>moyen et les frais de livraison</strong> qui seront appliquÃ©s Ã  vos produits sur eBay.</p>
+		<h3 id="EbayHelpPart2-1">1) Onglet « Paramètres »</h3>
+		<p>Cette section est à configurer lors de la première utilisation du module. <br />Vous devez définir votre <strong>compte PayPal</strong> comme <strong>moyen de paiement de produits sur eBay</strong> en renseignant l’email que vous utilisez pour votre compte PayPal. <br />Si vous n’en avez pas, vous devez <a href="https://www.paypal.com/fr/cgi-bin/webscr?cmd=_flow&amp;SESSION=85gB6zaK7zA5l_Y0UnNe_eJTaw1Al_e4hmrEfOLhrEiojJMJZGG-Cw9amIq&amp;dispatch=5885d80a13c0db1f8e263663d3faee8d5863a909c4bb5aeebb52c6e1151bdaa9" target="_blank"><u>souscrire à un compte PayPal Business</u></a>.<br />Vous devez définir le <strong>moyen et les frais de livraison</strong> qui seront appliqués à vos produits sur eBay.</p>
 
-
-		<h3 id="EbayHelpPart2-2">2) Onglet Â« Configuration des catÃ©gories Â»</h3>
-		<p>Avant de publier vos produits sur eBay, vous devez associer les catÃ©gories de produits de votre boutique Prestashop avec celles dâ€™eBay. Vous pouvez Ã©galement choisir de vendre les produits de votre boutique Prestashop Ã  un prix diffÃ©rent sur eBay. Cet impact sur le prix est dÃ©fini en %.</p>
-		<p><u>NBÂ :</u> Certaines catÃ©gories bÃ©nÃ©ficient du nouveau format dâ€™annonce multi-versions.</p>
+		
+		<h3 id="EbayHelpPart2-2">2) Onglet « Configuration des catégories »</h3>
+		<p>Avant de publier vos produits sur eBay, vous devez associer les catégories de produits de votre boutique Prestashop avec celles d’eBay. Vous pouvez également choisir de vendre les produits de votre boutique Prestashop à un prix différent sur eBay. Cet impact sur le prix est défini en %.</p>
+		<p><u>NB :</u> Certaines catégories bénéficient du nouveau format d’annonce multi-versions.</p>
 		<br />
 
-		<h3 id="EbayHelpPart2-3">3) Onglet Â« Template de la fiche produit Â»</h3>
-		<p>Afin dâ€™optimiser le <strong>design de vos fiches produits</strong> sur eBay, vous pouvez <strong>personnaliser</strong> le header et le footer de vos annonces en crÃ©ant un template qui sâ€™appliquera Ã  lâ€™ensemble de vos produits sur eBay. En designant vos annonces selon votre charte graphique (logo, couleursâ€¦), vous dÃ©veloppez votre <strong>notoriÃ©tÃ©</strong> et votre <strong>visibilitÃ©</strong> sur eBay. De plus, un template dâ€™annonce bien travaillÃ© et prÃ©sentÃ© de maniÃ¨re agrÃ©able et professionnelle fait souvent la diffÃ©rence auprÃ¨s des acheteurs.</p>
+		<h3 id="EbayHelpPart2-3">3) Onglet « Template de la fiche produit »</h3>
+		<p>Afin d’optimiser le <strong>design de vos fiches produits</strong> sur eBay, vous pouvez <strong>personnaliser</strong> le header et le footer de vos annonces en créant un template qui s’appliquera à l’ensemble de vos produits sur eBay. En designant vos annonces selon votre charte graphique (logo, couleurs…), vous développez votre <strong>notoriété</strong> et votre <strong>visibilité</strong> sur eBay. De plus, un template d’annonce bien travaillé et présenté de manière agréable et professionnelle fait souvent la différence auprès des acheteurs.</p>
 		<br />
 
-		<h3 id="EbayHelpPart2-4">4) Onglet Â« Mise en ligne des produits Â»</h3>
-		<p>Cette section vous permet de mettre effectivement en ligne vos produits sur eBay. Vous avez le choix de placer la totalitÃ© des produits de votre boutique Prestashop sur eBay (option recommandÃ©e) ou seulement certaines catÃ©gories.</p>
-		<p><u>Rappel :</u> Si vous avez une Boutique eBay, vous ne paierez aucun frais dâ€™insertion pour mettre vos produits en ligne sur eBay.</p>
+		<h3 id="EbayHelpPart2-4">4) Onglet « Mise en ligne des produits »</h3>
+		<p>Cette section vous permet de mettre effectivement en ligne vos produits sur eBay. Vous avez le choix de placer la totalité des produits de votre boutique Prestashop sur eBay (option recommandée) ou seulement certaines catégories.</p>
+		<p><u>Rappel :</u> Si vous avez une Boutique eBay, vous ne paierez aucun frais d’insertion pour mettre vos produits en ligne sur eBay.</p>
 		<br />
 
 
@@ -2087,28 +2092,28 @@ class Ebay extends Module
 
 		<h2 id="EbayHelpPart3">Conseils &amp; astuces pour bien vendre sur eBay.fr </h2>
 
-		<h3 id="EbayHelpPart3-1">Conseil NÂ°1 : Avoir une bonne fiche produit</h3>
-		<p>Sur eBay, comme ailleurs, il faut soigner la prÃ©sentation de ses produits sous peine de ne pas atteindre le niveau de ventes attendu. Un produit mal photographiÃ© et mal dÃ©crit ne se vendra pas. Il y a donc certaines normes Ã  respecter avant de mettre en ligne ses produits sur eBay.fr. Cela vous permettra de bÃ©nÃ©ficier dâ€™un bon rÃ©fÃ©rencement de vos produits sur eBay, dâ€™optimiser vos ventes et ainsi de dÃ©velopper dâ€™une visibilitÃ© optimale.</p>
+		<h3 id="EbayHelpPart3-1">Conseil N°1 : Avoir une bonne fiche produit</h3>
+		<p>Sur eBay, comme ailleurs, il faut soigner la présentation de ses produits sous peine de ne pas atteindre le niveau de ventes attendu. Un produit mal photographié et mal décrit ne se vendra pas. Il y a donc certaines normes à respecter avant de mettre en ligne ses produits sur eBay.fr. Cela vous permettra de bénéficier d’un bon référencement de vos produits sur eBay, d’optimiser vos ventes et ainsi de développer d’une visibilité optimale.</p>
 		<ul>
-			<li><strong>Titre</strong> (champ limitÃ© Ã  55 caractÃ¨res)<br />Un bon titre doit obligatoirement comporter ces informations : Type de produit &gt; ModÃ¨le &gt; CaractÃ©ristiques importantes &gt; Marque<br />Il doit Ã©galement utiliser des mots clÃ©s pertinents : dÃ©terminer prÃ©alablement les mots clÃ©s les plus recherchÃ©s par les utilisateurs<br />A EVITER : abrÃ©viations, titre coupÃ© car dÃ©passant 55 caractÃ¨res, rÃ©fÃ©rences techniques trop poussÃ©es, ponctuationâ€¦</li>
-			<li><strong>Attributs spÃ©cifiques</strong><br />Renseigner la totalitÃ© des attributs produits car ils sont pris en compte par les filtres de recherche et peuvent, par leur absence, exclure vos produits des rÃ©sultats de recherche.</li>
-			<li><strong>Prix &amp; frais de port</strong><br />Le prix de vos objets, ainsi que vos frais de port, doivent Ãªtre adaptÃ©s Ã  lâ€™offre gÃ©nÃ©rale prÃ©sente sur eBay sous peine de vous voir pÃ©naliser dans lâ€™algorithme de recherche.<br />La gratuitÃ© des frais de port (frais de port inclus) permet de bÃ©nÃ©ficier dâ€™une visibilitÃ© privilÃ©giÃ©e dans les pages de rÃ©sultats.</li>
-			<li><strong>Description / dÃ©tails du produit</strong><br />La description de vos produits doit Ãªtre claire et prÃ©cise, elle doit mentionner les caractÃ©ristiques clÃ©s de vos produits, les garanties, indiquer clairement les conditions et modalitÃ©s de livraison et de retour. Enfin une annonce doit Ãªtre mise en forme de maniÃ¨re attractive (images, logosâ€¦) et adaptÃ©e Ã  votre communication en tant que vendeur.</li>
-			<li><strong>QualitÃ© des photos</strong><br />3 photos minimum (1 principale + 2 dans la description), elles doivent Ãªtre de bonne qualitÃ© et sur fond blanc. Photos des dÃ©tails si nÃ©cessaire. Les photos en disent autant quâ€™une belle description et constituent un Ã©lÃ©ment important dans la dÃ©cision de lâ€™acheteur.</li>
+			<li><strong>Titre</strong> (champ limité à 55 caractères)<br />Un bon titre doit obligatoirement comporter ces informations : Type de produit &gt; Modèle &gt; Caractéristiques importantes &gt; Marque<br />Il doit également utiliser des mots clés pertinents : déterminer préalablement les mots clés les plus recherchés par les utilisateurs<br />A EVITER : abréviations, titre coupé car dépassant 55 caractères, références techniques trop poussées, ponctuation…</li>
+			<li><strong>Attributs spécifiques</strong><br />Renseigner la totalité des attributs produits car ils sont pris en compte par les filtres de recherche et peuvent, par leur absence, exclure vos produits des résultats de recherche.</li>
+			<li><strong>Prix &amp; frais de port</strong><br />Le prix de vos objets, ainsi que vos frais de port, doivent être adaptés à l’offre générale présente sur eBay sous peine de vous voir pénaliser dans l’algorithme de recherche.<br />La gratuité des frais de port (frais de port inclus) permet de bénéficier d’une visibilité privilégiée dans les pages de résultats.</li>
+			<li><strong>Description / détails du produit</strong><br />La description de vos produits doit être claire et précise, elle doit mentionner les caractéristiques clés de vos produits, les garanties, indiquer clairement les conditions et modalités de livraison et de retour. Enfin une annonce doit être mise en forme de manière attractive (images, logos…) et adaptée à votre communication en tant que vendeur.</li>
+			<li><strong>Qualité des photos</strong><br />3 photos minimum (1 principale + 2 dans la description), elles doivent être de bonne qualité et sur fond blanc. Photos des détails si nécessaire. Les photos en disent autant qu’une belle description et constituent un élément important dans la décision de l’acheteur.</li>
 		</ul>
 		<br />
 
-		<h3 id="EbayHelpPart3-2">Conseil NÂ°2 : Avoir un bon profil vendeur</h3>
-		<p>eBay est la seule place de marchÃ© en France Ã  vous donner la propriÃ©tÃ© du client. Vous Ãªtes donc responsable de la relation client avec vos acheteurs qui vous Ã©valuent en tant que vendeur. Pour avoir donc un bon profil vendeur, de bonnes Ã©valuations et ainsi augmentez la confiance de vos acheteurs, il vous faut Ã©videmment remplir vos obligations de vendeur mais aussi soigner votre relation client.</p>
-		<p>Vous devez avoir un <strong>objectif</strong> en taux <strong>de satisfaction</strong> (Ã©valuations) de votre profil vendeur de minimum <strong>4.8/5</strong>.<br /><strong>Cette notation influence beaucoup le rÃ©fÃ©rencement de vos annonces dans eBay.</strong><br />Voici comment les <strong>4 critÃ¨res</strong> sur lesquels vous devez soigner votre niveau de service client pour atteindre cet objectif de 4.8 de taux de satisfaction sur votre profil vendeur :</p>
+		<h3 id="EbayHelpPart3-2">Conseil N°2 : Avoir un bon profil vendeur</h3>
+		<p>eBay est la seule place de marché en France à vous donner la propriété du client. Vous êtes donc responsable de la relation client avec vos acheteurs qui vous évaluent en tant que vendeur. Pour avoir donc un bon profil vendeur, de bonnes évaluations et ainsi augmentez la confiance de vos acheteurs, il vous faut évidemment remplir vos obligations de vendeur mais aussi soigner votre relation client.</p>
+		<p>Vous devez avoir un <strong>objectif</strong> en taux <strong>de satisfaction</strong> (évaluations) de votre profil vendeur de minimum <strong>4.8/5</strong>.<br /><strong>Cette notation influence beaucoup le référencement de vos annonces dans eBay.</strong><br />Voici comment les <strong>4 critères</strong> sur lesquels vous devez soigner votre niveau de service client pour atteindre cet objectif de 4.8 de taux de satisfaction sur votre profil vendeur :</p>
 		<ul>
-			<li><u>Objet conforme Ã  la description de lâ€™annonce :</u> cf. Conseil NÂ°1 Description produit</li>
-			<li><u>Communication :</u> rÃ©ponse rapide aux questions prÃ© ET post-ventes (Messages dans Â« Mon eBay Â»)</li>
-			<li><u>DÃ©lai de livraison :</u> assurer un service de livraison entre 48 et 72h maximum. Attention Ã  la gestion des stocks (dÃ©lai Ã  rallonge avec un produit indisponible)</li>
-			<li><u>Frais de port :</u> la gratuitÃ© des frais de port permet dâ€™obtenir 5/5 Ã  ce critÃ¨re</li>
+			<li><u>Objet conforme à la description de l’annonce :</u> cf. Conseil N°1 Description produit</li>
+			<li><u>Communication :</u> réponse rapide aux questions pré ET post-ventes (Messages dans « Mon eBay »)</li>
+			<li><u>Délai de livraison :</u> assurer un service de livraison entre 48 et 72h maximum. Attention à la gestion des stocks (délai à rallonge avec un produit indisponible)</li>
+			<li><u>Frais de port :</u> la gratuité des frais de port permet d’obtenir 5/5 à ce critère</li>
 		</ul>
 
-		<p><u>NB :</u> Lâ€™outil Â« Gestionnaire de Ventes Pro Â» vous permet dâ€™automatiser un certain nombre de ses tÃ¢ches de relation client et ainsi de vous faire gagner du temps.<br /><a href="http://pages.ebay.fr/outils-vendeurs/gestionnaire-de-ventes/pro.html" target="_blank"><u>Souscrire au Gestionnaire de ventes Pro</u></a></p>';
+		<p><u>NB :</u> L’outil « Gestionnaire de Ventes Pro » vous permet d’automatiser un certain nombre de ses tâches de relation client et ainsi de vous faire gagner du temps.<br /><a href="http://pages.ebay.fr/outils-vendeurs/gestionnaire-de-ventes/pro.html" target="_blank"><u>Souscrire au Gestionnaire de ventes Pro</u></a></p>';
 	}
 
 	public function displayInfoByCart()
@@ -2119,5 +2124,3 @@ class Ebay extends Module
 	private function _displayFormAssociation() { }
 
 }
-
-
