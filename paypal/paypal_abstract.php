@@ -35,6 +35,8 @@ abstract class PayPalAbstract extends PaymentModule
 	public $iso_code;
 	public $context;
 	public $paypal_logos;
+	
+	public $module_key = '646dcec2b7ca20c4e9a5aebbbad98d7e';
 
 	const BACKWARD_REQUIREMENT = '0.2';
 	const DEFAULT_COUNTRY_ISO = 'GB';
@@ -408,7 +410,9 @@ abstract class PayPalAbstract extends PaymentModule
 
 	public function hookProductFooter()
 	{
-		return $this->renderExpressCheckoutButton('product').$this->renderExpressCheckoutForm('product');
+		if (method_exists($this->context, 'getMobileDevice'))
+			return $this->renderExpressCheckoutButton('product').$this->renderExpressCheckoutForm('product');
+		return '';
 	}
 
 	public function renderExpressCheckoutButton($type)
