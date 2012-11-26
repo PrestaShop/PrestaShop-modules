@@ -481,7 +481,8 @@ class PaypalExpressCheckout extends Paypal
 
 		if ($redirect)
 		{
-			Tools::redirectLink($this->context->link->getPageLink('order.php?step=3'));
+			$link = $this->context->link->getPageLink('order.php', false, null, array('step' => '3'));
+			Tools::redirectLink($link);
 			exit(0);
 		}
 	}
