@@ -379,8 +379,15 @@ abstract class PayPalAbstract extends PaymentModule
 	*/
 	public function hookHeader()
 	{
-		$this->context->smarty->assign(array('base_uri' => __PS_BASE_URI__, 'id_cart'  => (int)$this->context->cart->id));
-		$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		$this->context->smarty->assign('base_uri', __PS_BASE_URI__);
+
+		if (isset($this->context->cart) && $this->context->cart->id)
+			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
+
+		if (method_exists($this->context->controller, 'addCSS'))
+			$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		else
+			Tools::addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
 		return '<script type="text/javascript">'.$this->fetchTemplate('/js/', 'front_office', 'js').'</script>';
 	}
 
