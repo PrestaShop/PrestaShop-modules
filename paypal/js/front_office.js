@@ -37,12 +37,12 @@ $(document).ready( function() {
 	});
 	
 	{/literal}
-	{if isset($paypal_one_page_checkout)}
+	{if isset($paypal_authorization)}
 	{literal}
-	$('div#container_express_checkout').hide();
+	$('#container_express_checkout').hide();
 	
-	$('input[type=checkbox]#cgv').click(function() {
-		$(location).attr('href', '{/literal}{$paypal_one_page_checkout}{literal}');
+	$('#cgv').click(function() {
+		$(location).attr('href', '{/literal}{$paypal_authorization}{literal}');
 	});
 	{/literal}
 	{/if}

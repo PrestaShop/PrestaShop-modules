@@ -74,7 +74,7 @@ abstract class PayPalAbstract extends PaymentModule
 		else
 			$mobile_enabled = (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
 
-		if ($this->active)
+		if (self::isInstalled($this->name))
 			$this->loadDefaults();
 
 		if ($mobile_enabled && $this->active && self::isInstalled($this->name))
@@ -102,18 +102,18 @@ abstract class PayPalAbstract extends PaymentModule
 			$this->compatibilityCheck();
 			$this->warningsCheck();
 		}
-		elseif (((int)Configuration::get('PS_ORDER_PROCESS_TYPE') == 1) && ((bool)Tools::getValue('isPaymentStep') == true))
+		elseif ((((int)Configuration::get('PS_ORDER_PROCESS_TYPE') == 1) && ((bool)Tools::getValue('isPaymentStep') == true)) || (isset($this->context->cookie->express_checkout)))
 		{
 			$shop_url = PayPal::getShopDomainSsl(true, true);
 			if (_PS_VERSION_ < '1.5')
 			{
 				$link = $shop_url._MODULE_DIR_.$this->name.'/express_checkout/submit.php';
-				$this->context->smarty->assign('paypal_one_page_checkout', $link.'?'.http_build_query(array('get_confirmation' => true), '', '&'));
+				$this->context->smarty->assign('paypal_authorization', $link.'?'.http_build_query(array('get_confirmation' => true), '', '&'));
 			}
 			else
 			{
 				$values = array('fc' => 'module', 'module' => 'paypal', 'controller' => 'confirm', 'get_confirmation' => true);
-				$this->context->smarty->assign('paypal_one_page_checkout', $shop_url.__PS_BASE_URI__.'?'.http_build_query($values));
+				$this->context->smarty->assign('paypal_authorization', $shop_url.__PS_BASE_URI__.'?'.http_build_query($values));
 			}
 		}
 	}
@@ -376,20 +376,21 @@ abstract class PayPalAbstract extends PaymentModule
 		return $this->fetchTemplate('/views/templates/back/', 'back_office');
 	}
 
-	/*
-	** Added to be used properly with OPC
-	*/
 	public function hookHeader()
 	{
-		$this->context->smarty->assign('base_uri', __PS_BASE_URI__);
-
-		if (isset($this->context->cart) && $this->context->cart->id)
-			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
-
-		if (method_exists($this->context->controller, 'addCSS'))
-			$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
-		else
-			Tools::addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		if (method_exists($this->context, 'getMobileDevice') && $this->context->getMobileDevice())
+		{
+			$id_hook = (int)Configuration::get('PS_MOBILE_HOOK_HEADER_ID');
+			
+			if ($id_hook > 0)
+			{
+				$module = Hook::getModuleFromHook($id_hook, $this->id);
+				if (!$module)
+					$this->registerHook('displayMobileHeader');
+			}
+		}
+		$this->context->smarty->assign(array('base_uri' => __PS_BASE_URI__, 'id_cart'  => (int)$this->context->cart->id));
+		$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
 		return '<script type="text/javascript">'.$this->fetchTemplate('/js/', 'front_office', 'js').'</script>';
 	}
 
@@ -410,9 +411,7 @@ abstract class PayPalAbstract extends PaymentModule
 
 	public function hookProductFooter()
 	{
-		if (method_exists($this->context, 'getMobileDevice'))
-			return $this->renderExpressCheckoutButton('product').$this->renderExpressCheckoutForm('product');
-		return '';
+		return $this->renderExpressCheckoutButton('product').$this->renderExpressCheckoutForm('product');
 	}
 
 	public function renderExpressCheckoutButton($type)
