@@ -1,4 +1,4 @@
-.ProductPrestashop {background-image:url('images/header.png');background-repeat: no-repeat;width:1150px}
+.ProductPrestashop {background-image:url('images/header.png');background-repeat: no-repeat}
 .headerProductPrestashop {width:1150px;height:130px}
 .headerLeftProductPrestashop {text-align:left;padding-left:10px}
 .headerLeftProductPrestashop img {border:1px solid grey}
@@ -11,4 +11,5 @@
 .bodyMediumImageProductPrestashop {border:1px solid grey;margin-left:10px;margin-top:10px}
 .bodyNameProductPrestashop {font-weight:bold}
 .bodyDescriptionProductPrestashop { }
-.footerProductPrestashop {background-image:url('images/footer.png');width:1150px;height:53px}
+.footerProductPrestashop {background-image:url('images/footer.png');height:53px;background-size:100%;background-repeat:no-repeat;}
+.leftProductPrestashop{vertical-align:top;}
