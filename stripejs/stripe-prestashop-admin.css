@@ -1,0 +1,48 @@
+.stripe-module-wrapper { clear: both; margin: 0px auto; min-width: 930px; max-width: 1024px; overflow: hidden; }
+.stripe-module-header { clear: both; margin-bottom: 40px; padding-top: 15px; overflow: hidden; }
+.stripe-module-header img.stripe-logo { float: left; margin: 0px 70px 0px 0px; }
+.stripe-module-header span.stripe-module-intro { border-left: #C3D9EF solid 1px; color: #008CDD; display: block; float: left; font-size: 18px; height: 61px; line-height: 24px; margin: 0px 35px 0px 0px; padding: 11px 0px 0px 20px; width: 310px; }
+.stripe-module-header a.stripe-module-create-btn { background: url(img/bg_btn-blue.png) left top no-repeat; color: #FFF; display: inline-block; font-size: 16px; font-weight: bold; height: 35px; line-height: 33px; margin: 16px 0px 0px 0px; padding: 0px 0px 0px 20px; text-shadow: 0px -1px 0px #03609E; }
+.stripe-module-header a.stripe-module-create-btn span { background: url(img/bg_btn-blue.png) right bottom no-repeat; display: block; height: 35px; margin: 0px -20px 0px 0px; padding: 0px 20px 0px 0px; }
+
+.stripe-module-wrap { background-color: #F7FBFF; border: #C3D9EF solid 1px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; clear: both; margin: 0px 0px 15px 0px; overflow: hidden; padding: 15px; }
+.stripe-module-col1 { float: right; margin: 0px; overflow: hidden; width: 320px; }
+.stripe-module-col2 { margin: 0px 335px 0px 0px; overflow: hidden; min-width: 563px; }
+.stripe-module-col1inner { float: left; margin: 0px; overflow: hidden; width: 48%; }
+.stripe-module-col2inner { clear: both; margin: 0px; padding-top: 20px; }
+.stripe-module-wrap .stripe-module-col2inner h3 { border-top: #C3D9EF solid 1px; padding-top: 20px; }
+.stripe-module-wrap h3 { color: #008CDD; font-size: 18px; font-weight: normal; line-height: 22px; margin: 0px 0px 15px 0px; padding: 0px; text-shadow: 0px -1px 0px #DAF2FF; }
+.stripe-module-wrap p, .stripe-module-wrap ul li { color: #535353; font-size: 14px; line-height: 22px; margin: 0px; padding: 0px; text-shadow: 0px 1px 0px #FFFFFF; }
+.stripe-module-wrap a.stripe-module-btn { background: url(img/stripe-btn-arrow.png) left center no-repeat; color: #008CDD; display: inline-block; margin: 7px 0px; padding-left: 8px; text-decoration: none; text-shadow: 0px 1px 0px #FFFFFF; }
+.stripe-module-wrap a.stripe-module-btn:hover { text-decoration: underline; }
+.stripe-module-wrap ul { list-style: none; margin: 0px; padding: 0px; }
+.stripe-module-wrap ul li { background: url(img/checkmark-blue.png) left 5px no-repeat; margin: 0px; padding: 0px 0px 0px 15px; }
+img.stripe-cc { margin: 0px 40px 0px 0px; vertical-align: middle; }
+
+.floatRight { float: right; }
+.stripe-module-wrap-video { background-color: #FFFFFF; border: #C3D9EF solid 1px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; padding: 6px; overflow: hidden; }
+img.stripe-dashboard { margin: 0px; }
+a.stripe-module-video-btn { display: inline-block; margin: 15px 0px 0px 0px; position: relative; }
+img.stripe-video-btn { position: absolute; left: 119px; top: 80px; }
+
+table.stripe-technical td { padding: 4px 0px; }
+
+fieldset.stripe-settings { width: 670px; float: left; margin-right: 20px; }
+table.stripe-settings label { float: none; padding-right: 0px; text-align: right; width: auto; }
+table.stripe-settings { margin: 0px; }
+table.stripe-settings td { border-bottom: #CCCED7 solid 1px; padding: 8px; }
+table.stripe-settings td.td-right { color: #7F7F7F; font-size: 0.9em; }
+table.stripe-settings td.td-noborder { border-bottom: none; }
+table.stripe-settings td.save { text-align: center; padding-top: 15px; }
+table.stripe-settings table.innerTable td { border: none; padding: 6px; }
+table.stripe-settings table.innerTable td.vertBorder { border-left: #CCCED7 solid 1px; }
+input.button:hover { cursor: pointer; }
+
+fieldset.stripe-cc-numbers { width: 277px; float: left; }
+table.stripe-cc-numbers { border: #CCCED7 solid 1px; background-color: #FFFFFF; }
+table.stripe-cc-numbers th { background-color: #F7FBFF; border-bottom: #CCCED7 solid 1px; padding: 5px 25px 5px 8px; text-align: left; }
+table.stripe-cc-numbers td { border-bottom: #CCCED7 solid 1px; padding: 5px 25px 5px 8px; }
+table.stripe-cc-numbers td.last { border-bottom: none; }
+table.stripe-cc-numbers td.number code { font-family: Courier; }
+
+.stripe-module-wrapper table { color: #585A69; font-size: 12px; text-shadow: 0 1px 0 #FFFFFF;}
