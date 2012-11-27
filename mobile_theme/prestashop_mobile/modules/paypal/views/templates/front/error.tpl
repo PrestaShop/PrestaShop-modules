@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -22,18 +21,30 @@
 *  @copyright  2007-2012 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
+*}
 
-require_once(dirname(__FILE__).'/../../config/config.inc.php');
-require_once(dirname(__FILE__).'/../../init.php');
+{include file="$tpl_dir./header-page.tpl"}
 
-include_once(dirname(__FILE__).'/paypal.php');
-include_once(dirname(__FILE__).'/backward_compatibility/Display.php');
+{assign var='current_step' value='payment'}
+{include file="$tpl_dir./order-steps.tpl"}
 
-new PayPal();
-Context::getContext()->smarty->assign('iso_code',
-	Tools::strtolower(Language::getIsoById((int)($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT')))));
+{include file="$tpl_dir./errors.tpl"}
 
-$display = new BWDisplay();
-$display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/about.tpl');
-$display->run();
+{capture name=path}{l s='Error' mod='paypal'}{/capture}
+{include file="$tpl_dir./breadcrumb.tpl"}
+
+<h2>{$message}</h2>
+	{if isset($logs) && $logs}
+		<div class="error" style="padding: 10px; margin: 15px">
+			<p><b>{l s='Please refer to logs:' mod='paypal'}</b></p>
+			<ol>
+			{foreach from=$logs key=key item=log}
+				<li>{$log}</li>
+			{/foreach}
+			</ol>
+			<p><a href="{$base_dir}" class="button_small" title="{l s='Back' mod='paypal'}">&laquo; {l s='Back' mod='paypal'}</a></p>
+		</div>
+	{/if}
+<br />
+
+{include file="$tpl_dir./footer-page.tpl"}
