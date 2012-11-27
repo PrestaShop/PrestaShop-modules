@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2011 PrestaShop
  *
@@ -25,13 +24,26 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-	// Init
-	$sql = array();
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category`;';	
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_configuration`;';
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_product`;';	
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_order`;';
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_sync_history`;';
-	$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_sync_history_product`;';
 
+$configPath = '../../../config/config.inc.php';
+if (file_exists($configPath))
+{
+	include('../../../config/config.inc.php');
+	include('../../../init.php');
+	include('../../../modules/ebay/ebay.php');
+	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+		die('ERROR : Invalid Token');
+
+	global $cookie;
+	$cookie = new Cookie('psEbay', '', 3600);
+	$cookie2 = new Cookie('psEbaySynch', '1', 3600);
+
+	$ebay = new eBay();
+	$ebay->ajaxProductSync();
+
+	unset($cookie);
+	unset($cookie2);
+}
+else
+	echo 'ERROR';
 

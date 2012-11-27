@@ -17,7 +17,10 @@ if (file_exists($configPath))
 		$ebay->fetchToken();
 		if (!empty($ebay->token))
 		{
-			Configuration::updateValue('EBAY_API_TOKEN', $ebay->token);
+			if(version_compare(_PS_VERSION_,'1.5','>'))
+				Configuration::updateValue('EBAY_API_TOKEN', $ebay->token, false, 0, 0);
+			else
+				Configuration::updateValue('EBAY_API_TOKEN', $ebay->token);
 			echo 'OK';
 		}
 		else
