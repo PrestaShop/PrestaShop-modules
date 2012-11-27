@@ -693,7 +693,8 @@ abstract class PayPalAbstract extends PaymentModule
 		$products = $order->getProducts();
 		$cancel_quantity = Tools::getValue('cancelQuantity');
 		$message = $this->l('Cancel products result:').'<br>';
-
+		
+		include_once(_PS_MODULE_DIR_.$this->name.'/paypal_tools.php');
 		PayPalTools::formatMessage($this->_makeRefund($paypal_order->id_transaction, (int)$order->id,
 		(float)($products[(int)$order_detail->id]['product_price_wt'] * (int)$cancel_quantity[(int)$order_detail->id])), $message);
 		$this->_addNewPrivateMessage((int)$order->id, $message);
@@ -1147,6 +1148,7 @@ abstract class PayPalAbstract extends PaymentModule
 			}
 
 			$message = $this->l('Verification status :').'<br>';
+			include_once(_PS_MODULE_DIR_.$this->name.'/paypal_tools.php');
 			PayPalTools::formatMessage($response, $message);
 			$this->_addNewPrivateMessage((int)$id_order, $message);
 
