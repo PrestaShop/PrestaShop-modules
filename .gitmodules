@@ -82,3 +82,6 @@
 [submodule "themeinstallator/backward_compatibility"]
 	path = themeinstallator/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "ebay/backward_compatibility"]
+	path = ebay/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
