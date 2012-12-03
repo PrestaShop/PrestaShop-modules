@@ -38,7 +38,7 @@ abstract class PayPalAbstract extends PaymentModule
 	
 	public $module_key = '646dcec2b7ca20c4e9a5aebbbad98d7e';
 
-	const BACKWARD_REQUIREMENT = '0.2';
+	const BACKWARD_REQUIREMENT = '0.4';
 	const DEFAULT_COUNTRY_ISO = 'GB';
 
 	const ONLY_PRODUCTS	= 1;
@@ -53,7 +53,7 @@ abstract class PayPalAbstract extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.3';
+		$this->version = '3.4';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -389,8 +389,17 @@ abstract class PayPalAbstract extends PaymentModule
 					$this->registerHook('displayMobileHeader');
 			}
 		}
-		$this->context->smarty->assign(array('base_uri' => __PS_BASE_URI__, 'id_cart'  => (int)$this->context->cart->id));
-		$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		
+		if (isset($this->context->cart) && $this->context->cart->id)
+			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
+		$this->context->smarty->assign('base_uri', __PS_BASE_URI__);
+
+		/* Added for PrestaBox */
+		if (method_exists($this->context->controller, 'addCSS'))
+			$this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		else
+			Tools::addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
+		
 		return '<script type="text/javascript">'.$this->fetchTemplate('/js/', 'front_office', 'js').'</script>';
 	}
 
@@ -411,7 +420,11 @@ abstract class PayPalAbstract extends PaymentModule
 
 	public function hookProductFooter()
 	{
-		return $this->renderExpressCheckoutButton('product').$this->renderExpressCheckoutForm('product');
+		if (!method_exists($this->context, 'getMobileDevice') || !$this->context->getMobileDevice())
+			$content = $this->renderExpressCheckoutButton('product');
+		else
+			$content = '';
+		return $content.$this->renderExpressCheckoutForm('product');
 	}
 
 	public function renderExpressCheckoutButton($type)
@@ -575,7 +588,8 @@ abstract class PayPalAbstract extends PaymentModule
 		// No active or ajax request, drop it
 		if (!$this->active || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']) ||
 			(((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
-			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()))
+			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) ||
+			(isset($this->context->cookie->express_checkout) && $this->context->getMobileDevice()))
 			return;
 
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
