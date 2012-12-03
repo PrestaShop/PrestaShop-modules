@@ -38,7 +38,6 @@ function upgrade_module_3_0($object, $install = false)
 		$object->registerHook('paymentReturn');
 		$object->registerHook('shoppingCartExtra');
 		$object->registerHook('backBeforePayment');
-		$object->registerHook('rightColumn');
 		$object->registerHook('cancelProduct');
 		$object->registerHook('productFooter');
 		$object->registerHook('header');

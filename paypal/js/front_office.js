@@ -41,9 +41,16 @@ $(document).ready( function() {
 	{literal}
 	$('#container_express_checkout').hide();
 	
-	$('#cgv').click(function() {
-		$(location).attr('href', '{/literal}{$paypal_authorization}{literal}');
+	$('#cgv').live('click', function() {
+		if ($('#cgv:checked').length != 0)
+			$(location).attr('href', '{/literal}{$paypal_authorization}{literal}');
 	});
+	
+	$('#cgv').click(function() {
+		if ($('#cgv:checked').length != 0)
+			$(location).attr('href', '{/literal}{$paypal_authorization}{literal}');
+	});
+
 	{/literal}
 	{/if}
 	{literal}
@@ -61,6 +68,7 @@ $(document).ready( function() {
 		var confirmTimer = setInterval(getOrdersCount, 1000);
 	}
 
+	{/literal}{if isset($id_cart)}{literal}
 	function getOrdersCount() {
 		$.get(
 			fullPath + '/confirm.php',
@@ -74,6 +82,7 @@ $(document).ready( function() {
 			}
 		);
 	}
+	{/literal}{/if}{literal}
 });
 
 {/literal}
