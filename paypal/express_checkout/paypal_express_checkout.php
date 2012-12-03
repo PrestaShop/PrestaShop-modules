@@ -112,44 +112,12 @@ class PaypalExpressCheckout extends Paypal
 	}
 
 	// Will build the product_list depending of the type
-	private function initParameters($need_init = false)
+	private function initParameters()
 	{
-		switch($this->type)
-		{
-			case 'product':
-				if ($need_init)
-				{
-					$this->id_product = (int)Tools::getValue('id_product');
-					$this->quantity = (int)Tools::getValue('quantity');
-					$this->id_p_attr = (int)(Tools::getValue('id_p_attr') ? Tools::getValue('id_p_attr') : $this->id_p_attr);
-				}
-
-				$product = new Product((int)$this->id_product);
-				if (!$product || !$this->quantity)
-					return false;
-
-				// Build a product array with needed values
-				$this->product_list[] = array(
-				'id_product' => $product->id,
-				'id_product_attribute' => $this->id_p_attr,
-				'quantity' => $this->quantity,
-				'name' => $product->name[$this->context->language->id],
-				'description_short' => $product->description[$this->context->language->id],
-				'price' => $product->getPrice(false, $this->id_p_attr, 2),
-				'price_wt' => $product->getPrice(true, $this->id_p_attr, 2));
-
-				$this->product_list[0]['total'] = Tools::ps_round($this->product_list[0]['price'] * (int)$this->quantity, 2);
-				$this->product_list[0]['total_wt'] = $this->product_list[0]['price_wt'] * (int)$this->quantity;
-
-				break;
-
-			case ('cart' || 'payment_cart') :
-				if (!$this->context->cart || !$this->context->cart->id)
-					return false;
-				$this->product_list = $this->context->cart->getProducts();
-				break;
-		}
-
+		if (!$this->context->cart || !$this->context->cart->id)
+			return false;
+			
+		$this->product_list = $this->context->cart->getProducts();
 		return (bool)count($this->product_list);
 	}
 

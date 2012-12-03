@@ -109,7 +109,7 @@ else
 					$display = new BWDisplay();
 				else
 					$display = new FrontController();
-				$ppec->getContext()->smarty->assign(array('message' => $ppec->l('Error occurred:'), 'logs' => $ppec->logs, 'use_mobile' => $ppec->getContext()->getMobileDevice()));
+				$ppec->context->smarty->assign(array('message' => $ppec->l('Error occurred:'), 'logs' => $ppec->logs, 'use_mobile' => $ppec->getContext()->getMobileDevice()));
 				$display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/error.tpl');
 			}
 			else
