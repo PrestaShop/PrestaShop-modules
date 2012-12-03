@@ -275,17 +275,11 @@ else
 				(int)$cart->id_currency, false, $customer->secure_key);
 
 			if (!$ppec->currentOrder)
-				$ppec->logs[] = $this->l('Cannot create order');
+				$ppec->logs[] = $ppec->l('Cannot create order');
 			else
 			{
 				$id_order = (int)$ppec->currentOrder;
 				$order = new Order($id_order);
-				
-				$history = new OrderHistory();
-				$history->id_order = (int)$id_order;
-				$history->changeIdOrderState((int)$payment_type, $id_order);
-				$history->addWithemail();
-				$history->add();
 			}
 
 			unset(Context::getContext()->cookie->{PaypalExpressCheckout::$COOKIE_NAME});
