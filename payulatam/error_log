@@ -1,0 +1,11 @@
+[08-Oct-2012 13:57:44 UTC] PHP Fatal error:  Cannot access empty property in /home/bruphu/public_html/payu15/modules/payulatam/payulatam.php on line 303
+[09-Oct-2012 20:17:36 UTC] PHP Fatal error:  Uncaught exception 'PrestaShopException' with message 'Property OrderPayment->id_currency is empty' in /home/bruphu/public_html/payu15/classes/ObjectModel.php:790
+Stack trace:
+#0 /home/bruphu/public_html/payu15/classes/ObjectModel.php(265): ObjectModelCore->validateFields()
+#1 /home/bruphu/public_html/payu15/classes/ObjectModel.php(465): ObjectModelCore->getFields()
+#2 /home/bruphu/public_html/payu15/classes/order/OrderPayment.php(65): ObjectModelCore->add(true, false)
+#3 /home/bruphu/public_html/payu15/classes/ObjectModel.php(427): OrderPaymentCore->add(true, false)
+#4 /home/bruphu/public_html/payu15/modules/payulatam/payulatam.php(304): ObjectModelCore->save()
+#5 /home/bruphu/public_html/payu15/modules/payulatam/validation.php(32): PayULatam->validation()
+#6 {main}
+  thrown in /home/bruphu/public_html/payu15/classes/ObjectModel.php on line 790

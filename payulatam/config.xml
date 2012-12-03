@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>payulatam</name>
+	<displayName><![CDATA[PayU Latam]]></displayName>
+	<version><![CDATA[1.0]]></version>
+	<description><![CDATA[Module for accepting payments in Latin American countries from local credit cards, local bank transfers and cash deposits.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall>Are you sure you want to delete your details?</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
