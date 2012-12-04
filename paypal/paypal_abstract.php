@@ -75,11 +75,14 @@ abstract class PayPalAbstract extends PaymentModule
 			$mobile_enabled = (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
 
 		if (self::isInstalled($this->name))
+		{
 			$this->loadDefaults();
-
-		if ($mobile_enabled && $this->active && self::isInstalled($this->name))
-			$this->checkMobileCredentials();
-		elseif ($mobile_enabled && !$this->active || !self::isInstalled($this->name))
+			if ($mobile_enabled && $this->active)
+				$this->checkMobileCredentials();
+			elseif ($mobile_enabled && !$this->active)
+				$this->checkMobileNeeds();
+		}
+		else
 			$this->checkMobileNeeds();
 	}
 
