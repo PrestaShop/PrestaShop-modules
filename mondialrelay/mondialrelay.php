@@ -68,9 +68,9 @@ class MondialRelay extends Module
 
 	public function __construct()
 	{
-		$this->name		= 'mondialrelay';
-		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.8.7';
+		$this->name = 'mondialrelay';
+		$this->tab = 'shipping_logistics';
+		$this->version = '1.8.8';
 		$this->installed_version = '';
 		$this->module_key = '366584e511d311cfaa899fc2d9ec1bd0';
 		$this->author = 'PrestaShop';

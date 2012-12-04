@@ -12,7 +12,7 @@ nusoap-general@lists.sourceforge.net
 * 
 * @author   Scott Nichol <snichol@users.sourceforge.net>
 * @author	Ingo Fischer <ingo@apollon.de>
-* @version  $Id: class.wsdlcache.php 6626 2011-05-24 09:44:48Z aFolletete $
+* @version  $Id$
 * @access public 
 */
 class nusoap_wsdlcache {
