@@ -9,7 +9,7 @@
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
 * @author   Scott Nichol <snichol@users.sourceforge.net>
-* @version  $Id: class.xmlschema.php 12890 2012-02-01 11:19:57Z vSchoener $
+* @version  $Id$
 * @access   public
 */
 class nusoap_xmlschema extends nusoap_base  {

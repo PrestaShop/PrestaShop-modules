@@ -178,6 +178,7 @@ $_MODULE['<{mondialrelay}prestashop>history_3eb2bc1ee46258d2a166e89398756b3e'] =
 $_MODULE['<{mondialrelay}prestashop>history_9e50665937cbb2f3c833d3626a9f9abb'] = 'Aucun historique disponible';
 $_MODULE['<{mondialrelay}prestashop>history_fa98e6528c9df7f26978c2beb7de3d99'] = 'Supprimer les historiques sélectionnés';
 $_MODULE['<{mondialrelay}prestashop>settings_0a4ee7474864081af12dba847fafdaa6'] = 'Configuration du panneau d\'administration';
+$_MODULE['<{mondialrelay}prestashop>settings_d02bbc3cb147c272b0445ac5ca7d1a36'] = 'État de la commande';
 $_MODULE['<{mondialrelay}prestashop>settings_ca57625685f058f54d82c6e05876a131'] = 'Choississez le statut pour la génération d\'étiquette.';
 $_MODULE['<{mondialrelay}prestashop>settings_c9cc8cce247e49bae79f15173ce97354'] = 'Sauvegarder';
 $_MODULE['<{mondialrelay}prestashop>settings_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
