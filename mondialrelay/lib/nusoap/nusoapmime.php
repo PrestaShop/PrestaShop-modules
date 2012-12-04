@@ -1,6 +1,6 @@
 <?php
 /*
-$Id: nusoapmime.php 6626 2011-05-24 09:44:48Z aFolletete $
+$Id$
 
 NuSOAP - Web Services Toolkit for PHP
 
@@ -48,7 +48,7 @@ require_once('Mail/mimePart.php');
 *
 * @author   Scott Nichol <snichol@users.sourceforge.net>
 * @author	Thanks to Guillaume and Henning Reich for posting great attachment code to the mail list
-* @version  $Id: nusoapmime.php 6626 2011-05-24 09:44:48Z aFolletete $
+* @version  $Id$
 * @access   public
 */
 class nusoap_client_mime extends nusoap_client {
@@ -278,7 +278,7 @@ if (!extension_loaded('soap')) {
 *
 * @author   Scott Nichol <snichol@users.sourceforge.net>
 * @author	Thanks to Guillaume and Henning Reich for posting great attachment code to the mail list
-* @version  $Id: nusoapmime.php 6626 2011-05-24 09:44:48Z aFolletete $
+* @version  $Id$
 * @access   public
 */
 class nusoap_server_mime extends nusoap_server {

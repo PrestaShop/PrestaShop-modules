@@ -1110,7 +1110,7 @@ var PS_MRObject = (function($, undifened) {
 			});
 		})
 		
-		$('input[name="processCarrier"]').on('click', function() {
+		$('input[name="processCarrier"]').click(function() {
 			if (PS_MRData != 'undefined' && PS_MRData.carrier != null) {
 				var result = false;
 				$.each(PS_MRData.carrier_list, function(key, value) {
