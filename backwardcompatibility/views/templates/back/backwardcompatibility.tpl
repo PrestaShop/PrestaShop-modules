@@ -24,16 +24,16 @@
 					<td>{if $module.version}{$module.version}{/if}</td>
 					<td>
 						{if $module.writable == true}
-						<img src="{$image_dir}/accept.png" /> <span style="color: #0A0;">{l s='Writable' mod='backwardcompatibility'}</span>
+							<img src="{$image_dir}/accept.png" /> <span style="color: #0A0;">{l s='Writable' mod='backwardcompatibility'}</span>
 						{else}
-						<img src="{$image_dir}/exclamation.png" /> <span style="color: #A00;">{l s='Not writable' mod='backwardcompatibility'}</span>
+							<img src="{$image_dir}/exclamation.png" /> <span style="color: #A00;">{l s='Not writable' mod='backwardcompatibility'}</span>
 						{/if}
 					</td>
 					<td>
 						{if isset($update_results) && isset($update_results.$module_name)}
 							{if $update_results.$module_name == true}
 								<img src="{$image_dir}/accept.png" /> <span style="color: #0A0;">{l s='Update succeed' mod='backwardcompatibility'}</span>
-								{else}
+							{else}
 								<img src="{$image_dir}/exclamation.png" /> <span style="color: #A00;">{l s='Update failed' mod='backwardcompatibility'}</span>
 							{/if}
 						{/if}
