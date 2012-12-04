@@ -95,7 +95,7 @@ class BackwardCompatibility extends Module
 	{
 		$iterator = new DirectoryIterator($from);
 		foreach ($iterator as $file)
-			if (!$file->isDot() && ($file->getFilename() != '.svn'))
+			if (!$file->isDot() && ($file->getFilename() != '.svn') && ($file->getFilename() != '.git'))
 				$files[] = array('filename' => $file->getFilename(), 'pathname' => $file->getPathname());
 		return $files;
 	}
