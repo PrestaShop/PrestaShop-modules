@@ -38,7 +38,7 @@ class StripeJs extends PaymentModule
 	{
 		$this->name = 'stripejs';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.9.1';
+		$this->version = '0.9.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -563,7 +563,7 @@ class StripeJs extends PaymentModule
 		{
 			$tests['backward'] = array('name' => $this->l('You are using the backward compatibility module'), 'result' => $this->backward, 'resolution' => $this->backward_error);
 			$tmp = Module::getInstanceByName('mobile_theme');
-			if (!version_compare($tmp->version, '0.3.8', '>='))
+			if ($tmp && isset($tmp->version) && !version_compare($tmp->version, '0.3.8', '>='))
 				$tests['mobile_version'] = array('name' => $this->l('You are currently using the default mobile template, the minimum version required is v0.3.8').' (v'.$tmp->version.' '.$this->l('detected').' - <a target="_blank" href="http://addons.prestashop.com/en/mobile-iphone/6165-prestashop-mobile-template.html">'.$this->l('Please Upgrade').'</a>)', 'result' => version_compare($tmp->version, '0.3.8', '>='));
 		}
 
