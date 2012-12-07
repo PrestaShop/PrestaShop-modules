@@ -73,11 +73,11 @@ class PayUController extends FrontController
 
 		$ref = 'payU_'.Configuration::get('PS_SHOP_NAME').'_'.(int)self::$cart->id;
 
-		$token = md5(Tools::safeOutput(Configuration::get('PAYU_API_KEY')).'~'.(int)Configuration::get('PAYU_MERCHANT_ID').'~'.$ref.'~'.(float)self::$cart->getOrderTotal().'~'.Tools::safeOutput($currency->iso_code));
+		$token = md5(Tools::safeOutput(Configuration::get('PAYU_API_KEY')).'~'.Tools::safeOutput(Configuration::get('PAYU_MERCHANT_ID')).'~'.$ref.'~'.(float)self::$cart->getOrderTotal().'~'.Tools::safeOutput($currency->iso_code));
 
 		$params = array(
 			array('value' => (Configuration::get('PAYU_DEMO') == 'yes' ? 1 : 0), 'name' => 'test'),
-			array('value' => (int)Configuration::get('PAYU_MERCHANT_ID'), 'name' => 'merchantId'),
+			array('value' => Tools::safeOutput(Configuration::get('PAYU_MERCHANT_ID')), 'name' => 'merchantId'),
 			array('value' => $ref, 'name' => 'referenceCode'),
 			array('value' => substr(Configuration::get('PS_SHOP_NAME').' Order', 0, 255), 'name' => 'description'),
 			array('value' => (float)self::$cart->getOrderTotal(), 'name' => 'amount'),
