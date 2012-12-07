@@ -39,7 +39,7 @@ class PayULatam extends PaymentModule
 	{
 		$this->name = 'payulatam';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -192,7 +192,7 @@ class PayULatam extends PaymentModule
 					'merchantId' => array(
 						'name' => 'merchantId',
 						'required' => true,
-						'value' => (Tools::getValue('merchantId') ? (int)Tools::getValue('merchantId') : (int)Configuration::get('PAYU_MERCHANT_ID')),
+						'value' => (Tools::getValue('merchantId') ? Tools::safeOutput(Tools::getValue('merchantId')) : Tools::safeOutput(Configuration::get('PAYU_MERCHANT_ID'))),
 						'type' => 'text',
 						'label' => $this->l('Merchant ID:'),
 						'desc' => $this->l('The Merchant ID given to you by PayU Latam at the creation of your account.'),
@@ -254,7 +254,7 @@ class PayULatam extends PaymentModule
 
 	private function _postProcessCredentials()
 	{
-		Configuration::updateValue('PAYU_MERCHANT_ID', (int)Tools::getValue('merchantId'));
+		Configuration::updateValue('PAYU_MERCHANT_ID', Tools::safeOutput(Tools::getValue('merchantId')));
 		Configuration::updateValue('PAYU_API_KEY', pSQL(Tools::getValue('apiKey')));
 		Configuration::updateValue('PAYU_ACCOUNT_ID', (int)Tools::getValue('accountId'));
 		Configuration::updateValue('PAYU_DEMO', pSQL(Tools::getValue('demo')));
@@ -341,7 +341,7 @@ class PayULatam extends PaymentModule
 				else
 				{
 					$currency = new Currency((int)$this->context->cart->id_currency);
-					if ($token == md5(Configuration::get('PAYU_API_KEY').'~'.(int)Configuration::get('PAYU_MERCHANT_ID').'~payU_'.Configuration::get('PS_SHOP_NAME').'_'.(int)$this->context->cart->id.'~'.(float)$this->context->cart->getOrderTotal().'~'.$currency->iso_code.'~'.$statePol))
+					if ($token == md5(Configuration::get('PAYU_API_KEY').'~'.Tools::safeOutput(Configuration::get('PAYU_MERCHANT_ID')).'~payU_'.Configuration::get('PS_SHOP_NAME').'_'.(int)$this->context->cart->id.'~'.(float)$this->context->cart->getOrderTotal().'~'.$currency->iso_code.'~'.$statePol))
 					{
 						if ($statePol == 7)
 							$order->setCurrentState((int)Configuration::get('PAYU_WAITING_PAYMENT'));
