@@ -39,7 +39,7 @@ class PayULatam extends PaymentModule
 	{
 		$this->name = 'payulatam';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
