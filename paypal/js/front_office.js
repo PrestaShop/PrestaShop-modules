@@ -37,9 +37,9 @@ $(document).ready( function() {
 	});
 	
 	{/literal}
-	{if isset($paypal_one_page_checkout)}
+	{if isset($paypal_authorization)}
 	{literal}
-	$('div#container_express_checkout').hide();
+	$('#container_express_checkout').hide();
 	
 	$('#cgv').live('click', function() {
 		if ($('#cgv:checked').length != 0)
