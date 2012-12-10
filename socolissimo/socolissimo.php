@@ -60,7 +60,7 @@ class Socolissimo extends CarrierModule
 	{
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
-		$this->version = '2.7.2';
+		$this->version = '2.7.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -107,9 +107,9 @@ class Socolissimo extends CarrierModule
 	public function install()
 	{
 		if (!parent::install() OR !Configuration::updateValue('SOCOLISSIMO_ID', NULL) OR !Configuration::updateValue('SOCOLISSIMO_KEY', NULL) ||
-				!Configuration::updateValue('SOCOLISSIMO_URL', 'https://ws.colissimo.fr/pudo-fo-frame/storeCall.do') OR !Configuration::updateValue('SOCOLISSIMO_PREPARATION_TIME', 1) ||
+				!Configuration::updateValue('SOCOLISSIMO_URL', 'http://ws.colissimo.fr/pudo-fo-frame/storeCall.do') OR !Configuration::updateValue('SOCOLISSIMO_PREPARATION_TIME', 1) ||
 				!Configuration::updateValue('SOCOLISSIMO_OVERCOST', 3.6) OR !$this->registerHook('extraCarrier') OR !$this->registerHook('AdminOrder') OR !$this->registerHook('updateCarrier') ||
-				!$this->registerHook('newOrder') OR !$this->registerHook('paymentTop') OR !$this->registerHook('backOfficeHeader') OR !Configuration::updateValue('SOCOLISSIMO_SUP_URL', 'https://ws.colissimo.fr/supervision-pudo-frame/supervision.jsp') ||
+				!$this->registerHook('newOrder') OR !$this->registerHook('paymentTop') OR !$this->registerHook('backOfficeHeader') OR !Configuration::updateValue('SOCOLISSIMO_SUP_URL', 'http://ws.colissimo.fr/supervision-pudo-frame/supervision.jsp') ||
 				!Configuration::updateValue('SOCOLISSIMO_SUP', true) OR !Configuration::updateValue('SOCOLISSIMO_USE_FANCYBOX', true))
 			return false;
 
