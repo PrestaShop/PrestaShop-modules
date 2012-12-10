@@ -45,7 +45,7 @@ class iAdvize extends Module
 	
 	function install()
 	{
-		if (!parent::install() OR !$this->registerHook('footer') OR !$this->registerHook('leftColumn') OR !$this->registerHook('rightColumn'))
+		if (!parent::install() OR !$this->registerHook('footer') OR !$this->registerHook('leftColumn') OR !$this->registerHook('rightColumn') OR !$this->registerHook('orderConfirmation'))
 			return false;
 		return true;
 	}
@@ -157,4 +157,15 @@ class iAdvize extends Module
 		</script>
 		<!-- /End - iAdvize - Live chat -->'."\n";
 	}
+
+	public function hookOrderConfirmation($params) {
+		
+		return '<!-- START IADVIZE CONVERSION TRACKING CODE -->
+		<script type="text/javascript">
+		var idzTrans = {"cartAmount":{'.$params['total_to_pay'].'},"tID":"{'.$params['objOrder']->id.'}"};
+		</script>
+		<!-- END IADVIZE CONVERSION TRACKING CODE -->';
+
+	}
+	
 }
