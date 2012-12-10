@@ -135,11 +135,14 @@ class PayPalLogos
 					$picture = @curl_exec($ch);
 					@curl_close($ch);
 				}
-				$size = fwrite($handle, $picture);
-				if ($size > 0 || (file_exists(_MODULE_DIR_.$destination) && (@filesize(_MODULE_DIR_.$destination) > 0)))
-					return _MODULE_DIR_.$destination;
-				elseif (strstr($source, 'https'))
-					return $this->updatePictures(str_replace('https', 'http', $source), $destination);
+				if(isset($picture))
+				{
+					$size = fwrite($handle, $picture);
+					if ($size > 0 || (file_exists(_MODULE_DIR_.$destination) && (@filesize(_MODULE_DIR_.$destination) > 0)))
+						return _MODULE_DIR_.$destination;
+					elseif (strstr($source, 'https'))
+						return $this->updatePictures(str_replace('https', 'http', $source), $destination);
+				}
 				else
 					return false;
 			}
