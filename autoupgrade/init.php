@@ -29,13 +29,13 @@
 ob_start();
 $timerStart = microtime(true);
 
-require_once(AUTOUPGRADE_MODULE_DIR.'Tools14.php');
+require_once(AUTOUPGRADE_MODULE_DIR.'classes/Tools14.php');
 require_once(AUTOUPGRADE_MODULE_DIR.'AdminSelfUpgrade.php');
 
 if (!class_exists('Tools',false))
 	eval('class Tools extends Tools14{}');
 
-require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/Upgrader.php');
+require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/Upgrader.php');
 
 if (!class_exists('Upgrader',false))
 {

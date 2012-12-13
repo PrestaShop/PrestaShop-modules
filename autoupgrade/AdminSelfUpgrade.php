@@ -33,7 +33,7 @@ if (!defined('_PS_ADMIN_DIR_') && defined('PS_ADMIN_DIR'))
 // we don't know the current PrestaShop version number
 require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/AdminSelfTab.php');
 
-require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/Upgrader.php');
+require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/Upgrader.php');
 
 if (!class_exists('Upgrader', false))
 {
@@ -43,7 +43,7 @@ if (!class_exists('Upgrader', false))
 		eval('class Upgrader extends UpgraderCore{}');
 }
 
-require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/Tools14.php');
+require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/Tools14.php');
 if (!class_exists('Tools', false))
 	eval('class Tools extends Tools14{}');
 
@@ -636,7 +636,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		// test writable recursively
 		if(version_compare(_PS_VERSION_,'1.4.6.0','<') || !class_exists('ConfigurationTest', false))
 		{
-			require_once('ConfigurationTest.php');
+			require_once('classes/ConfigurationTest.php');
 			if(!class_exists('ConfigurationTest', false) AND class_exists('ConfigurationTestCore'))
 				eval('class ConfigurationTest extends ConfigurationTestCore{}');
 		}
@@ -2273,7 +2273,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		$oldLevel = error_reporting(E_ALL);
 		//refresh conf file
-		require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/AddConfToFile.php');
+		require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/AddConfToFile.php');
 		$confFile = new AddConfToFile(SETTINGS_FILE, 'w');
 		if ($confFile->error)
 		{
@@ -3320,7 +3320,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$zip_archive = false;
 				// pclzip can be already loaded (server configuration)
 				if (!class_exists('PclZip',false))
-					require_once(dirname(__FILE__).'/pclzip.lib.php');
+					require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
 				$zip = new PclZip($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
 			}
 			if ($zip)
@@ -3820,8 +3820,8 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		if (isset($upgrade_info['branch']))
 		{
 			$content .= '<div style="clear:both">
-				<label>'.$this->l('branch:').'</label>
-				<div class="margin-form" style="padding-top:5px">
+				<label class="label-small">'.$this->l('branch:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px">
 					<span class="available">
 						<img src="../img/admin/'.(!empty($upgrade_info['available'])?'enabled':'disabled').'.gif" />'
 				.' '.(!empty($upgrade_info['available'])?$this->l('available'):$this->l('unavailable')).'
@@ -3830,31 +3830,36 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		}
 		$content .= '<div class="all-infos">';
 		if (isset($upgrade_info['version_name']))
-			$content .= '<div style="clear:both;"><label>'.$this->l('name:').'</label>
-				<div class="margin-form" style="padding-top:5px" >
+			$content .= '<div style="clear:both;">
+			<label class="label-small">'.$this->l('name:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px" >
 				<span class="name">'.$upgrade_info['version_name'].'&nbsp;</span></div>
 				</div>';
 		if (isset($upgrade_info['version_number']))
-			$content .= '<div style="clear:both;"><label>'.$this->l('version number:').'</label>
-				<div class="margin-form" style="padding-top:5px" >
+			$content .= '<div style="clear:both;">
+			<label class="label-small">'.$this->l('version number:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px" >
 				<span class="version">'.$upgrade_info['version_num'].'&nbsp;</span></div>
 				</div>';
 		if (!empty($upgrade_info['link']))
 		{
-			$content .= '<div style="clear:both;"><label>'.$this->l('url:').'</label>
-				<div class="margin-form" style="padding-top:5px" style="">
+			$content .= '<div style="clear:both;">
+			<label class="label-small">'.$this->l('url:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px" style="">
 					<a class="url" href="'.$upgrade_info['link'].'">'.$upgrade_info['link'].'</a>
 				</div>
 				</div>';
 		}
 		if (!empty($upgrade_info['md5']))
-			$content .= '<div style="clear:both;"><label>'.$this->l('md5:').'</label>
-				<div class="margin-form" style="padding-top:5px" style="">
+			$content .= '<div style="clear:both;">
+			<label class="label-small">'.$this->l('md5:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px" style="">
 				<span class="md5">'.$upgrade_info['md5'].'&nbsp;</span></div></div>';
 
 		if (!empty($upgrade_info['changelog']))
-			$content .= '<div style="clear:both;"><label>'.$this->l('changelog:').'</label>
-				<div class="margin-form" style="padding-top:5px" style="">
+			$content .= '<div style="clear:both;">
+			<label class="label-small">'.$this->l('changelog:').'</label>
+				<div class="margin-form margin-form-small" style="padding-top:5px" style="">
 				<a class="changelog" href="'.$upgrade_info['changelog'].'">'.$this->l('see changelog').'</a>
 				</div></div>';
 
@@ -3885,21 +3890,21 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$opt_channels[] = '<option id="useDirectory" value="directory" '.($channel == 'directory'?'class="current" selected="selected">* ':'>')
 			.$this->l('Local directory').'</option>';
 
-		$content .= '<label>'.$this->l('Channel:').'</label><select name="channel" >';
+		$content .= '<label class="label-small">'.$this->l('Channel:').'</label><select name="channel" >';
 		$content .= implode('', $opt_channels);
 		$content .= '</select>';
 		$upgrade_info = $this->getInfoForChannel($channel);
 		$content .= $this->divChannelInfos($upgrade_info);
 
-		$content .= '<div id="for-useMinor" ><div class="margin-form">'.$this->l('This option regroup all stable versions.').'</div></div>';
+		$content .= '<div id="for-useMinor" ><div class="margin-form margin-form-small">'.$this->l('This option regroup all stable versions.').'</div></div>';
 		$content .= '<div id="for-usePrivate">
-			<p><label>'.$this->l('Link:').'</label>
+			<p><label class="label-small">'.$this->l('Link:').'</label>
 			<input size="50" type="text" name="private_release_link" value="'.$this->getConfig('private_release_link').'"/> *
 			</p>
-			<p><label>'.$this->l('Hash key:').'</label>
+			<p><label class="label-small">'.$this->l('Hash key:').'</label>
 			<input size="32" type="text" name="private_release_md5" value="'.$this->getConfig('private_release_md5').'"/> *
 			</p>
-			<p><label>'.$this->l('Allow major upgrade:').'</label>
+			<p><label class="label-small">'.$this->l('Allow major upgrade:').'</label>
 			<input type="checkbox" name="private_allow_major" value="1" '.($this->getConfig('private_allow_major')?'checked="checked"':'').'"/>
 			</p>
 
@@ -3911,7 +3916,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		if (count($dir) > 0)
 		{
 			$archive_filename = $this->getConfig('archive.filename');
-			$content .= '<label>'.$this->l('Archive to use:').'</label><div><select name="archive_prestashop" >
+			$content .= '<label class="label-small">'.$this->l('Archive to use:').'</label><div><select name="archive_prestashop" >
 				<option value="">'.$this->l('choose an archive').'</option>';
 			foreach($dir as $file)
 				$content .= '<option '.($archive_filename?'selected="selected"':'').' value="'.str_replace($download, '', $file).'">'.str_replace($download, '', $file).'</option>';
@@ -3954,9 +3959,8 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			</div>
 			<div style="float:left;position:absolute;display:none;" id="configResult">&nbsp;</div>
 			<div class="clear" id="advanced">
-			<fieldset>
-				<legend>'.$this->l('Expert mode').'</legend>
-				<h3 style="margin-top: 0px;">'.$this->l('Please select your channel:').'</h3>
+				<h3>'.$this->l('Expert mode').'</3>
+				<h4 style="margin-top: 0px;">'.$this->l('Please select your channel:').'</h4>
 				<p>'.$this->l('Channels are offering you different ways to perform an upgrade. You can either upload the new version manually or let the 1-click upgrade module download it for you.').'<br />'.
 				$this->l('Alpha, Beta and Private channels, give you the ability to upgrade to a non-official or unstable release (for testing purposes only).').'<br />'.
 				$this->l('By default, you should use the "Minor release" channel which is offering the latest stable version available.').'</p><br />';
@@ -3967,7 +3971,6 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			$channel = Upgrader::DEFAULT_CHANNEL;
 
 		$content .= $this->getBlockSelectChannel($channel).'
-			</fieldset>
 		</form>
 		</div>';
 
@@ -4013,23 +4016,25 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	private function _displayBlockActivityLog()
 	{
-		$this->_html .= '<fieldset id="activityLogBlock" style="display:none">
-			<legend><img src="../img/admin/slip.gif" /> '.$this->l('Activity Log').'</legend>';
-		$this->_html .= '<div id="currentlyProcessing" style="display:none;float:left">
-			<h4>'.$this->l('Currently processing').' <img id="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
+		$this->_html .= '
+			<fieldset id="activityLogBlock" style="display:none">
+			<legend><img src="../img/admin/slip.gif" /> '.$this->l('Activity Log').'</legend>
+			<p id="upgradeResultCheck"></p>
+			<div id="upgradeResultToDoList"></div>
+			<div id="currentlyProcessing" style="display:none;float:left">
+			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img id="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 			<div id="infoStep" class="processing" >'.$this->l('Analyzing the situation ...').'</div>
 			</div>';
 		// this block will show errors and important warnings that happens during upgrade
-		$this->_html .= '<div id="errorDuringUpgrade" style="display:none;float:right">
+		$this->_html .= '
+			<div id="errorDuringUpgrade" style="display:none;float:right">
 			<h4>'.$this->l('Errors').'</h4>
 			<div id="infoError" class="processing" ></div>';
-		$this->_html .= '</div>';
-
-		$this->_html .= '<div class="clear">&nbsp;</div>';
-		$this->_html .= '<div id="quickInfo" class="processing">&nbsp;</div></fieldset>';
-		// for upgradeDb
-		$this->_html .= '<p id="upgradeResultCheck"></p>';
-		$this->_html .= '</fieldset>';
+		$this->_html .= '
+			</div>
+			<div class="clear">&nbsp;</div>
+			<div id="quickInfo" class="processing">&nbsp;</div></fieldset>
+			</fieldset>';
 	}
 	/**
 	 * _displayBlockUpgradeButton
@@ -4176,7 +4181,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		if (jQuery == "undefined")
 			jq13 = jQuery.noConflict(true);
 			</script>
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/jquery-1.6.2.min.js"></script>';
+		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery-1.6.2.min.js"></script>';
 		/* PrestaShop demo mode */
 		if (defined('_PS_MODE_DEMO_') && _PS_MODE_DEMO_)
 		{
@@ -4232,30 +4237,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 		$this->upgrader = $upgrader;
 
-		$this->_html .= '<style type="text/css">
-fieldset{margin-top:10px}
-.autoupgradeSteps div {  line-height: 30px; }
-.upgradestep { margin-right: 5px;padding-left: 10px; padding-right: 5px;}
-#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
-#upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
-.button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;display:inline-block;font-size: medium;margin:10px 0;padding: 5px;}
-.processing {border:2px outset grey;margin-top:1px;overflow: auto;}
-#infoStep {height:100px;width:300px}
-#infoError {height:100px;width:550px}
-#quickInfo {height:200px}
-#upgradeResultCheck{ padding-left:20px;}
-#checkPrestaShopFilesVersion, #checkPrestaShopModifiedFiles{margin-bottom:20px;}
-#changedList ul{list-style-type:circle}
-.changedFileList {margin-left:20px; padding-left:5px;}
-.changedNotice li{color:grey;}
-.changedImportant li{color:red;font-weight:bold}
-.upgradeDbError{background-color:#FEEFB3}
-.upgradeDbOk{background-color:#DFF2BF}
-.small_label{font-weight:normal;width:300px;float:none;text-align:left;padding:0}
-.blocOneClickUpgrade{width:530px;float:left}
-.ocu-feature-list{margin:0;padding:0;list-style:none}
-.ocu-feature-list li{background:url(../img/admin/enabled.gif) no-repeat; padding-left:20px;margin:0;}
-</style>';
+		$this->_html .= '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'modules/autoupgrade/css/styles.css" />';
 
 		$this->_html .= '
 		<h1>'.$this->l('1-click Upgrade').'</h1>
@@ -4292,7 +4274,7 @@ fieldset{margin-top:10px}
 		$this->_displayForm('upgradeOptions',$this->_fieldsUpgradeOptions,'<a href="#" name="upgrade-options" id="upgrade-options">'.$this->l('Upgrade Options').'</a>', '','prefs');
 		$this->_html .= '</form>';
 
-		$this->_html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/jquery.xml2json.js"></script>';
+		$this->_html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery.xml2json.js"></script>';
 		$this->_html .= '<script type="text/javascript">'.$this->_getJsInit().'</script>';
 		echo $this->_html;
 	}
@@ -4583,17 +4565,15 @@ function afterUpgradeNow(res)
 
 function afterUpgradeComplete(res)
 {
-	console.log(res);
 	params = res.nextParams
 	$("#pleaseWait").hide();
 	if (params.warning_exists == "false")
 	{
 		$("#upgradeResultCheck")
-			.addClass("ok")
+			.addClass("conf")
 			.removeClass("fail")
-			.html("<p>'.$this->l('upgrade complete. Please check your front-office theme is functionnal (try to make an order, check theme)').'</p>")
-			.show("slow")
-			.append("'.$this->l('Don\'t forget to reactivate your shop !', 'AdminSelfUpgrade', true).'</a>");
+			.html("<p>'.$this->l('Upgrade complete').'</p>")
+			.show();
 		$("#infoStep").html("<h3>'.$this->l('Upgrade Complete !', 'AdminSelfUpgrade', true).'</h3>");
 	}
 	else
@@ -4607,6 +4587,21 @@ function afterUpgradeComplete(res)
 			.show("slow");
 		$("#infoStep").html("<h3>'.$this->l('Upgrade Complete, but warnings has been found.', 'AdminSelfUpgrade', true).'</h3>");
 	}
+	
+	todo_list = ["'.$this->l('Don\'t forget to reactivate your shop !', 'AdminSelfUpgrade', true).'", "'.$this->l('Please check your front-office theme is functionnal (try to make an order, check theme)').'"];
+		
+	todo_ul = "<ul>";
+	$("#upgradeResultToDoList")
+		.addClass("hint clear")
+		.html("<h3>'.$this->l('ToDo list:').'</h3>")
+	for(var i in todo_list)
+	{
+		todo_ul += "<li>"+todo_list[i]+"</li>";
+	}
+	todo_ul += "</ul>";
+	$("#upgradeResultToDoList").append(todo_ul)
+	$("#upgradeResultToDoList").show();
+	
 	$(window).unbind("beforeunload");
 }
 
@@ -5166,7 +5161,7 @@ $(document).ready(function()
 		else
 		{
 			if (!class_exists('PclZip', false))
-				require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/pclzip.lib.php');
+				require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/pclzip.lib.php');
 
 			$this->nextQuickInfo[] = $this->l('using class pclZip.lib.php');
 
@@ -5244,7 +5239,7 @@ $(document).ready(function()
 			}
 			else
 			{
-				require_once(dirname(__FILE__).'/pclzip.lib.php');
+				require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
 				if ($zip = new PclZip($zipfile));
 				return $zip->listContent();
 			}
