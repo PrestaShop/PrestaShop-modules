@@ -30,7 +30,7 @@
     <ul>
       {foreach from=$products item=product name=homeFeaturedProducts}
       <li {if !$smarty.foreach.homeFeaturedProducts.first}style="display: none;"{/if}>
-	<a href="{$product.link}" title="{$product.name|escape:html:'UTF-8'}" style="text-decoration: none;">
+	<a href="{$product.link}" title="{$product.name|escape:html:'UTF-8'}" style="text-decoration: none;" data-ajax="false">
 	  <img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'large')}" alt="{$product.name|escape:html:'UTF-8'}" style="border-radius: 15px; width: 100%" />
 	</a>
 	<p style="position: relative; bottom: 25px; background: black; opacity: 0.80; height: 25px; line-height: 25px; color: white; border-radius: 15px; width: 99%;">

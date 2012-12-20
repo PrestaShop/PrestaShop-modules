@@ -126,7 +126,7 @@
 	<div style="display: none;" id="extra_carrier"></div>
 
 		{if $giftAllowed}
-		<div data-role="collapsible" data-theme="c" data-content-theme="c" style="margin-bottom: 20px;">
+		<div data-role="collapsible" data-theme="c" data-content-theme="c" style="margin-bottom: 20px;" id="gift_mobile_div">
 			<h3 style="margin: 0;">{l s='Add a Gift-wrapping'}</h3>
 			<p class="checkbox">
 				<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} onclick="$('#gift_div').toggle('slow');" />
