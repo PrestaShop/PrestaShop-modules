@@ -26,7 +26,7 @@
 {if $smarty.const._PS_VERSION_ < 1.5 && isset($use_mobile) && $use_mobile}
 	{include file="$tpl_dir./modules/paypal/views/templates/front/order-summary.tpl"}
 {else}
-	{capture name=path}<a href="order.php">{l s='Your shopping cart' mod='paypal'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='PayPal' mod='paypal'}{/capture}
+	{capture name=path}<a href="order.php">{l s='Your shopping cart' mod='paypal'}</a><span class="navigation-pipe"> {$navigationPipe} </span> {l s='PayPal' mod='paypal'}{/capture}
 	{include file="$tpl_dir./breadcrumb.tpl"}
 
 	<h1>{l s='Order summary' mod='paypal'}</h1>

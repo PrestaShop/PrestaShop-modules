@@ -25,22 +25,16 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-include_once(dirname(__FILE__) . '/../../config/config.inc.php');
-include_once(dirname(__FILE__) . '/../../init.php');
+if (!defined('_PS_VERSION_'))
+	exit;
 
 class PayPalTools
 {
-	public $name = null;
+	protected $name = null;
 
 	public function __construct($module_name)
 	{
 		$this->name = $module_name;
-	}
-
-	public static function formatMessage($response, &$message)
-	{
-		foreach ($response as $key => $value)
-			$message .= $key.': '.$value.'<br>';
 	}
 
 	public function moveTopPayments($position)

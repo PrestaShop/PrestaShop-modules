@@ -62,7 +62,7 @@
 					<input type="hidden" id="cart_product_attribute_id_{$product.id_product|intval}" value="{$product.id_product_attribute|intval}"/>
 					{if isset($product.id_address_delivery)}<input type="hidden" id="cart_product_address_delivery_id_{$product.id_product|intval}" value="{$product.id_address_delivery}"/>{/if}
 
-					<img src="{$img_prod_dir}{$product.id_image}-medium.jpg" alt="" />
+					<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium')}" alt="" />
 					<h2 style="margin-top: 0px;">{$product.name|escape:'htmlall':'UTF-8'}</h2>
 					<input type="number" style="width: 50px; float: left;" data-inline="true" class="qty-field cart_quantity_input" name="product_cart_quantity_{$product.id_product|intval}" rel="{$product.cart_quantity}" value="{$product.cart_quantity}" min="0" data-mini="true" data-initial-quantity="{$product.cart_quantity}" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" onchange="if (this.value > 0) {literal}{{/literal} location.replace('{$link->getPageLink('cart.php', true, NULL)}?add&update&amp;token={$token_cart}&amp;op='+($(this).val() > $(this).attr('rel') ? 'up' : 'down')+'&amp;id_product={$product.id_product}{if $product.id_product_attribute}&amp;id_product_attribute={$product.id_product_attribute}{/if}&amp;qty='+Math.abs($(this).attr('rel') - $(this).val())); {literal}}{/literal}" /><span style="float: left; display: block; line-height: 35px; margin-left: 7px;"> x&nbsp; {displayPrice price=$product.price_wt}</span>
 					<br class="clear" />

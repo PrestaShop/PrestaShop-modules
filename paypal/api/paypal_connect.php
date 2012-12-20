@@ -24,13 +24,20 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PayPalConnect extends Paypal
+class PayPalConnect
 {
 	private	$_logs = array();
+	
+	private $paypal = null;
+	
+	public function __construct()
+	{
+		$this->paypal = new PayPal();
+	}
 
 	public function makeConnection($host, $script, $body, $simple_mode = false)
 	{
-		$this->_logs[] = $this->l('Making new connection to').' \''.$host.$script.'\'';
+		$this->_logs[] = $this->paypal->l('Making new connection to').' \''.$host.$script.'\'';
 
 		if (function_exists('curl_exec'))
 			$return = $this->_connectByCURL($host.$script, $body);
@@ -59,11 +66,11 @@ class PayPalConnect extends Paypal
 		$ch = @curl_init();
 
 		if (!$ch)
-			$this->_logs[] = $this->l('Connect failed with CURL method');
+			$this->_logs[] = $this->paypal->l('Connect failed with CURL method');
 		else
 		{
-			$this->_logs[] = $this->l('Connect with CURL method successful');
-			$this->_logs[] = '<b>'.$this->l('Sending this params:').'</b>';
+			$this->_logs[] = $this->paypal->l('Connect with CURL method successful');
+			$this->_logs[] = '<b>'.$this->paypal->l('Sending this params:').'</b>';
 			$this->_logs[] = $body;
 
 			@curl_setopt($ch, CURLOPT_URL, 'https://'.$url);
@@ -80,9 +87,9 @@ class PayPalConnect extends Paypal
 			$result = @curl_exec($ch);
 
 			if (!$result)
-				$this->_logs[] = $this->l('Send with CURL method failed ! Error:').' '.curl_error($ch);
+				$this->_logs[] = $this->paypal->l('Send with CURL method failed ! Error:').' '.curl_error($ch);
 			else
-				$this->_logs[] = $this->l('Send with CURL method successful');
+				$this->_logs[] = $this->paypal->l('Send with CURL method successful');
 
 			@curl_close($ch);
 		}
@@ -94,12 +101,12 @@ class PayPalConnect extends Paypal
 		$fp = @fsockopen('sslv3://'.$host, 443, $errno, $errstr, 4);
 
 		if (!$fp)
-			$this->_logs[] = $this->l('Connect failed with fsockopen method');
+			$this->_logs[] = $this->paypal->l('Connect failed with fsockopen method');
 		else
 		{
 			$header = $this->_makeHeader($host, $script, strlen($body));
-			$this->_logs[] = $this->l('Connect with fsockopen method successful');
-			$this->_logs[] = $this->l('Sending this params:').' '.$header.$body;
+			$this->_logs[] = $this->paypal->l('Connect with fsockopen method successful');
+			$this->_logs[] = $this->paypal->l('Sending this params:').' '.$header.$body;
 
 			@fputs($fp, $header.$body);
 
@@ -110,9 +117,9 @@ class PayPalConnect extends Paypal
 			fclose($fp);
 
 			if (!$result)
-				$this->_logs[] = $this->l('Send with fsockopen method failed !');
+				$this->_logs[] = $this->paypal->l('Send with fsockopen method failed !');
 			else
-				$this->_logs[] = $this->l('Send with fsockopen method successful');
+				$this->_logs[] = $this->paypal->l('Send with fsockopen method successful');
 		}
 		return $tmp ? $tmp : false;
 	}
@@ -120,9 +127,9 @@ class PayPalConnect extends Paypal
 	private function _makeHeader($host, $script, $lenght)
 	{
 		return 'POST '.(string)$script.' HTTP/1.0'."\r\n".
-		'Host: '.(string)$host."\r\n".
-		'Content-Type: application/x-www-form-urlencoded'."\r\n".
-		'Content-Length: '.(int)$lenght."\r\n".
-		'Connection: close'."\r\n\r\n";
+			'Host: '.(string)$host."\r\n".
+			'Content-Type: application/x-www-form-urlencoded'."\r\n".
+			'Content-Length: '.(int)$lenght."\r\n".
+			'Connection: close'."\r\n\r\n";
 	}
 }

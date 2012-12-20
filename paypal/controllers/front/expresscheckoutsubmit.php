@@ -29,5 +29,5 @@
 	 * @since 1.5.0
 	 */
 
-include_once(dirname(__FILE__).'/submit.php');
-include_once(dirname(__FILE__).'/../../express_checkout/submit.php');
+include_once(dirname(__FILE__).'/payment.php');
+include_once(dirname(__FILE__).'/../../express_checkout/payment.php');

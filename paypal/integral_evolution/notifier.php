@@ -34,19 +34,6 @@ define('TIMEOUT', 15);
 define('INVALID', 'INVALID');
 define('VERIFIED', 'VERIFIED');
 
-/*
- * PayPal notification fields
- */
-define('ID_INVOICE', 'invoice');
-define('ID_PAYER', 'payer_id');
-define('ID_TRANSACTION', 'txn_id');
-define('CURRENCY', 'mc_currency');
-define('PAYER_EMAIL', 'payer_email');
-define('PAYMENT_DATE', 'payment_date');
-define('TOTAL_PAID', 'mc_gross');
-define('SHIPPING', 'shipping');
-define('VERIFY_SIGN', 'verify_sign');
-
 define('DEBUG_FILE', 'debug.log');
 
 /*
@@ -55,6 +42,10 @@ define('DEBUG_FILE', 'debug.log');
  */
 class PayPalNotifier extends PayPal
 {
+	/**
+	 * Debugging
+	 */
+	protected $logger = false;
 
 	public function __construct()
 	{
@@ -78,6 +69,7 @@ class PayPalNotifier extends PayPal
 		if (isset($cart->id_shop))
 			$this->context->shop = new Shop($cart->id_shop);
 
+		// Debug only
 		$this->createLog($cart->getProducts(true));
 
 		$mc_gross = Tools::getValue('mc_gross');
@@ -100,28 +92,23 @@ class PayPalNotifier extends PayPal
 			}
 			else
 			{
-				$payment = (int)Configuration::get('PS_OS_WS_PAYMENT');
+				$payment = (int)Configuration::get('PS_OS_PAYMENT');
 				$message = $this->l('Payment accepted.').'<br />';
 			}
 
 			$customer = new Customer((int)$cart->id_customer);
 			$id_order = (int)Order::getOrderByCartId((int)$cart->id);
-			$transaction = array(
-				'currency' => pSQL(Tools::getValue(CURRENCY)),
-				'id_invoice' => pSQL(Tools::getValue(ID_INVOICE)),
-				'id_transaction' => pSQL(Tools::getValue(ID_TRANSACTION)),
-				'payment_date' => pSQL(Tools::getValue(PAYMENT_DATE)),
-				'shipping' => (float)Tools::getValue(SHIPPING),
-				'total_paid' => (float)Tools::getValue(TOTAL_PAID),
-			);
-
-			$this->validateOrder($cart->id, $payment, $total_price, $this->displayName, $message, $transaction, $cart->id_currency, false, $customer->secure_key);
-
-			$history = new OrderHistory();
-			$history->id_order = (int)$id_order;
-			$history->changeIdOrderState((int)$payment, (int)$id_order);
-			$history->addWithemail();
-			$history->add();
+			$transaction = PayPalOrder::getTransactionDetails(false);
+			
+			if (_PS_VERSION_ < '1.5')
+				$shop = false;
+			else
+			{
+				$shop_id = $this->context->shop->id;
+				$shop = new Shop($shop_id);
+			}
+			
+			$this->validateOrder($cart->id, $payment, $total_price, $this->displayName, $message, $transaction, $cart->id_currency, false, $customer->secure_key, $shop);
 		}
 	}
 
@@ -153,9 +140,14 @@ class PayPalNotifier extends PayPal
 		return $result;
 	}
 
+	/**
+	 * Integral Evolution log file generation
+	 */
 	public function createLog($data, $file = false)
 	{
-		// Integral Evolution log file generation
+		if ($this->logger == false)
+			return;
+	
 		ob_start();
 		var_dump($data);
 		$buff = ob_get_contents();
