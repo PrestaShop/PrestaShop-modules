@@ -196,13 +196,15 @@ $(document).ready( function() {
 			return true;
 		});
 
-		$('button.fancy_confirm').live('click', function() {
-			jQuery.fancybox.close();
-			if ($(this).val() == '1') {
-				$('input[name="sandbox_mode"]').filter('[value="1"]').attr('checked', true);
-			} else {
-				$('input[name="sandbox_mode"]').filter('[value="0"]').attr('checked', true);
+		$('input[name="express_checkout_shortcut"]').live('change', function() {
+			if ($('#paypal-express-checkout-confirmation').length > 0) {
+				if ($('input[name="express_checkout_shortcut"]:checked').val() == '1') {
+					var div = $('<div id="paypal-express-checkout-confirmation">');
+					var inner = $('#paypal-express-checkout-confirmation').clone().html();
+					$.fancybox({'hideOnOverlayClick' : true, 'content' : div.append(inner)});
+				}
 			}
+			return true;
 		});
 
 		if ($('#paypal-save-success').length > 0)

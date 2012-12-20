@@ -86,14 +86,14 @@ class PaypalExpressCheckout extends Paypal
 		// If type is sent, the cookie has to be delete
 		if ($type)
 		{
-			unset($this->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME});
+			unset($this->context->cookie->{self::$COOKIE_NAME});
 			$this->setExpressCheckoutType($type);
 		}
 
 		// Store back the PayPal data if present under the cookie
-		if (isset($this->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME}))
+		if (isset($this->context->cookie->{self::$COOKIE_NAME}))
 		{
-			$paypal = unserialize($this->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME});
+			$paypal = unserialize($this->context->cookie->{self::$COOKIE_NAME});
 
 			foreach ($this->cookie_key as $key)
 				$this->{$key} = $paypal[$key];
@@ -124,7 +124,7 @@ class PaypalExpressCheckout extends Paypal
 	public function setExpressCheckout()
 	{
 		$this->method = 'SetExpressCheckout';
-		$fields['CANCELURL'] = Tools::getValue('current_shop_url');
+		$this->setCancelUrl($fields);
 
 		// Only this call need to get the value from the $_GET / $_POST array
 		if (!$this->initParameters(true) || !$fields['CANCELURL'])
@@ -142,6 +142,17 @@ class PaypalExpressCheckout extends Paypal
 
 		$this->callAPI($fields);
 		$this->_storeToken();
+	}
+	
+	public function setCancelUrl(&$fields)
+	{
+		$parsed_data = parse_url(Tools::getValue('current_shop_url'));
+		
+		$parsed_data['scheme'] .= '://';
+		$parsed_data['path'] .= '?';
+		$parsed_data['query'] .= '&paypal_ec_canceled=1';
+
+		$fields['CANCELURL'] = implode($parsed_data);
 	}
 
 	public function getExpressCheckout()
@@ -187,22 +198,19 @@ class PaypalExpressCheckout extends Paypal
 	private function _setPaymentDetails(&$fields)
 	{
 		// Required field
-		$fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/submit.php';
+		$fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
 		$fields['REQCONFIRMSHIPPING'] = '0';
 		$fields['NOSHIPPING'] = '1';
 		$fields['BUTTONSOURCE'] = $this->getTrackingCode();
 
 		// Products
-		$taxes = 0;
-		$total = 0;
+		$taxes = $total = 0;
 		$index = -1;
 
 		$id_address = (int)$this->context->cart->id_address_delivery;
 
 		if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart())
-		{
 			$this->setShippingAddress($fields, $id_address);
-		}
 		else
 			$fields['NOSHIPPING'] = '0';
 
@@ -333,11 +341,20 @@ class PaypalExpressCheckout extends Paypal
 			$quantity = Tools::ps_round($product['quantity'], $this->decimals);
 			$total = Tools::ps_round($total + ($price * $quantity), $this->decimals);
 		}
+
+		if ($this->context->cart->gift == 1)
+			$total += Configuration::get('PS_GIFT_WRAPPING_PRICE');
 		
 		if (_PS_VERSION_ < '1.5')
+		{
 			$discounts = $this->context->cart->getDiscounts();
+			$shipping_cost = $this->context->cart->getOrderShippingCost();
+		}
 		else
+		{
 			$discounts = $this->context->cart->getCartRules();
+			$shipping_cost = $this->context->cart->getTotalShippingCost();
+		}
 		
 		if (count($discounts) > 0)
 			foreach ($discounts as $product)
@@ -345,14 +362,8 @@ class PaypalExpressCheckout extends Paypal
 				$price = -1 * Tools::ps_round($product['value_real'], $this->decimals);
 				$total = Tools::ps_round($total + $price, $this->decimals);
 			}
-
-		if ($this->context->cart->gift == 1)
-			$total += Configuration::get('PS_GIFT_WRAPPING_PRICE');
-
-		if (_PS_VERSION_ < '1.5')
-			return Tools::ps_round($this->context->cart->getOrderShippingCost(), $this->decimals) + $total;
-		else
-			return Tools::ps_round($this->context->cart->getTotalShippingCost(), $this->decimals) + $total;
+		
+		return Tools::ps_round($shipping_cost, $this->decimals) + $total;
 	}
 
 	private function _storeToken()
@@ -369,7 +380,7 @@ class PaypalExpressCheckout extends Paypal
 		foreach ($this->cookie_key as $key)
 			$tab[$key] = $this->{$key};
 
-		$this->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME} = serialize($tab);
+		$this->context->cookie->{self::$COOKIE_NAME} = serialize($tab);
 	}
 
 	public function hasSucceedRequest()
@@ -421,11 +432,12 @@ class PaypalExpressCheckout extends Paypal
 		$this->secure_key = $this->getSecureKey();
 		$this->_storeCookieInfo();
 
-		if (method_exists($this->context, 'getMobileDevice') && $this->context->getMobileDevice())
-			header('Location: https://'.$this->getPayPalURL().'/cgi-bin/webscr?cmd=_express-checkout-mobile&token='.urldecode($this->token));
+		if ($this->useMobile())
+			$url = '/cgi-bin/webscr?cmd=_express-checkout-mobile';
 		else
-			header('Location: https://'.$this->getPayPalURL().'/websc&cmd=_express-checkout&token='.urldecode($this->token));
-
+			$url = '/websc&cmd=_express-checkout';
+			
+		header('Location: https://'.$this->getPayPalURL().$url.'&token='.urldecode($this->token));
 		exit(0);
 	}
 

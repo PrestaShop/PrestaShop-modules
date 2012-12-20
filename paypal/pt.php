@@ -2,13 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{paypal}prestashop>ipn_436284843fd9c59fcb17836d8b78bf52'] = 'Não há id da transação';
-$_MODULE['<{paypal}prestashop>ipn_e4c7591894a427342bce31080cd8719d'] = 'Não há pedido';
-$_MODULE['<{paypal}prestashop>ipn_996a45aa702d041706f6388d54c53b12'] = 'Pedido inválido';
-$_MODULE['<{paypal}prestashop>ipn_e1a47cb47ee37c007af42c9a6f34066b'] = 'Valor incorreto';
-$_MODULE['<{paypal}prestashop>ipn_c958cfbd70b13925943fb63666637838'] = 'Status do pedido incorreto';
-$_MODULE['<{paypal}prestashop>ipn_3769f91ca2a263145fbb53feae8464b9'] = 'Não é possível verificar pedido do Paypal';
-$_MODULE['<{paypal}prestashop>ipn_be2aa70b11a61e4a280dcdf97786efb5'] = 'Mesmo status';
 $_MODULE['<{paypal}prestashop>paypal_abstract_ad69e733ebae8d264bccaa38d68830e8'] = 'Paypal';
 $_MODULE['<{paypal}prestashop>paypal_abstract_6e7012516038a096b9f6bb71ba2cc5a3'] = 'Aceita pagamentos por cartão de crédito (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) com Paypal.';
 $_MODULE['<{paypal}prestashop>paypal_abstract_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = 'Você tem certeza que você quer deletar seus dados?';

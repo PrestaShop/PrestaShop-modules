@@ -28,9 +28,16 @@ include_once(_PS_MODULE_DIR_.'paypal/api/paypal_connect.php');
 
 define('PAYPAL_API_VERSION', '94.0');
 
-class PaypalLib extends PayPal
+class PaypalLib
 {
 	private $_logs = array();
+
+	protected $paypal = null;
+
+	public function __construct()
+	{
+		$this->paypal = new PayPal();
+	}
 
 	public function getLogs()
 	{
@@ -67,7 +74,7 @@ class PaypalLib extends PayPal
 			$this->_logs = array();
 
 		$toExclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
-		$this->_logs[] = '<b>'.$this->l('PayPal response:').'</b>';
+		$this->_logs[] = '<b>'.$this->paypal->l('PayPal response:').'</b>';
 
 		foreach ($return as $key => $value)
 		{
