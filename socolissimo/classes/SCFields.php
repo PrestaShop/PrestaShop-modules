@@ -65,7 +65,7 @@ class SCFields extends SCError
 			'CEDOORCODE2' => SCFields::UNKNOWN,
 			'CEENTRYPHONE' => SCFields::UNKNOWN,
 			'TRPARAMPLUS' => SCFields::UNKNOWN,
-			'TRADERCOMPANYNAME' => SCFields::REQUIRED,
+			'TRADERCOMPANYNAME' => SCFields::IGNORED,
 			'ERRORCODE' => SCFields::UNKNOWN,
 
 			// Error required if specific error exist (handle it has not required for now)
@@ -118,7 +118,7 @@ class SCFields extends SCError
 			'CEEMAIL' => SCFields::REQUIRED,
 			'CEPHONENUMBER' => SCFields::REQUIRED,
 			'TRPARAMPLUS' => SCFields::UNKNOWN,
-			'TRADERCOMPANYNAME' => SCFields::REQUIRED,
+			'TRADERCOMPANYNAME' => SCFields::IGNORED,
 			'ERRORCODE' => SCFields::UNKNOWN,
 
 			// Error required if specific error exist (handle it has not required for now)
