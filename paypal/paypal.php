@@ -207,7 +207,7 @@ class PayPal extends PaymentModule
 		$payment_method = Configuration::get('PAYPAL_PAYMENT_METHOD');
 		$order_process_type = (int)Configuration::get('PS_ORDER_PROCESS_TYPE');
 		
-		if (Tools::getValue('paypal_ec_canceled') || !$this->context->cart || !$this->context->cart->id)
+		if (Tools::getValue('paypal_ec_canceled') || $this->context->cart === false)
 			unset($this->context->cookie->express_checkout);
 		
 		if (defined('_PS_ADMIN_DIR_'))
