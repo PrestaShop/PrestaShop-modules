@@ -42,20 +42,44 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 
 		$this->id_module = (int)Tools::getValue('id_module');
 		$this->id_order = (int)Tools::getValue('id_order');
-		$order = PayPalOrder::getOrderById($this->id_order);
-
-		$this->context->smarty->assign(array(
-		'is_guest' => $this->context->customer->is_guest,
-		'order' => $order,
-		'price' => Tools::displayPrice($order['total_paid'], $this->context->currency),
-		'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
-		'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()));
+		$order = new Order($this->id_order);
+		$order_state = new OrderState($order->current_state);
+		$paypal_order = PayPalOrder::getOrderById($this->id_order);
+		
+		if ($order_state->template[$this->context->language->id] == 'payment_error')
+		{
+			$this->context->smarty->assign(
+				array(
+					'message' => $order_state->name[$this->context->language->id],
+					'logs' => array(
+						$this->paypal->l('An error occured while processing payment.')
+					),
+					'order' => $paypal_order,
+					'price' => Tools::displayPrice($paypal_order['total_paid'], $this->context->currency),
+				)
+			);
+			
+			return $this->setTemplate('error.tpl');
+		}
+			
+		$this->context->smarty->assign(
+			array(
+				'is_guest' => $this->context->customer->is_guest,
+				'order' => $paypal_order,
+				'price' => Tools::displayPrice($paypal_order['total_paid'], $this->context->currency),
+				'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
+				'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
+			)
+		);
 
 		if ($this->context->customer->is_guest)
 		{
-			$this->context->smarty->assign(array(
-			'id_order' => (int)$this->order->id_order,
-			'id_order_formatted' => sprintf('#%06d', (int)$this->order->id_order)));
+			$this->context->smarty->assign(
+				array(
+					'id_order' => (int)$this->id_order,
+					'id_order_formatted' => sprintf('#%06d', (int)$this->id_order)
+				)
+			);
 
 			/* If guest we clear the cookie for security reason */
 			$this->context->customer->mylogout();

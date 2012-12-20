@@ -30,9 +30,12 @@ require_once(dirname(__FILE__).'/../../init.php');
 include_once(dirname(__FILE__).'/paypal.php');
 include_once(dirname(__FILE__).'/backward_compatibility/Display.php');
 
-new PayPal();
-Context::getContext()->smarty->assign('iso_code',
-	Tools::strtolower(Language::getIsoById((int)($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT')))));
+$paypal = new PayPal();
+
+$id_lang = (int)($cookie->id_lang ? $cookie->id_lang : Configuration::get('PS_LANG_DEFAULT'));
+$iso_lang = Tools::strtolower(Language::getIsoById($id_lang));
+
+$paypal->context->smarty->assign('iso_code', $iso_lang);
 
 $display = new BWDisplay();
 $display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/about.tpl');
