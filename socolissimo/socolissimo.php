@@ -600,6 +600,7 @@ class Socolissimo extends CarrierModule
 			'trReturnUrlKo' => htmlentities($this->url, ENT_NOQUOTES, 'UTF-8'),
 			'trReturnUrlOk' => htmlentities($this->url ,ENT_NOQUOTES, 'UTF-8')
 		);
+		$inputs['signature'] = $this->generateKey($inputs);
 
 		$this->context->smarty->assign(array(
 			'select_label' => $this->l('Select delivery mode'),
@@ -990,7 +991,7 @@ class Socolissimo extends CarrierModule
 		}
 		else
 		{
-			$gender = new Gender($customer->id_gender);
+			$gender = new Gender($customer->id_gender, $this->context->language->id);
 			return $gender->name;
 		}
 		return $title;
