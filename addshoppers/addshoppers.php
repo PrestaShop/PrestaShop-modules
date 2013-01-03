@@ -38,7 +38,7 @@ class Addshoppers extends Module
   {
     $this->name = 'addshoppers';
     $this->tab = 'advertising_marketing';
-    $this->version = '1.1.1';
+    $this->version = '1.1.2';
     $this->author = 'PrestaShop';
     $this->need_instance = 1;
 
@@ -114,8 +114,15 @@ class Addshoppers extends Module
 					$this->context->smarty->assign('instock', (int)$quantity);
 
 				$images = Image::getImages((int)$id_lang, (int)$product->id);
-				if (is_array($images) && isset($images[0]))
-					$this->context->smarty->assign('id_image', (int)$images[0]['id_image']);
+				$id_image = Product::getCover($product->id);
+				// get Image by id
+				if (sizeof($id_image) > 0)
+				{
+					$image = new Image($id_image['id_image']);
+					// get image full URL
+					$image_url = _PS_BASE_URL_._THEME_PROD_DIR_.$image->getExistingImgPath().".jpg";
+					$this->context->smarty->assign('image_url', $image_url);
+				}
 			}
 			else
 				$this->context->smarty->assign('is_product_page', false);
