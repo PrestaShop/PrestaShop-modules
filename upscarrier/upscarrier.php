@@ -1786,7 +1786,7 @@ class UpsCarrier extends CarrierModule
 		{
 			if ($p['weight'] < 0.5) $p['weight'] = 0.5;
 			$search = array('[[PackagingTypeCode]]', '[[PackageWeight]]', '[[WeightUnit]]', '[[Width]]', '[[Height]]', '[[Length]]', '[[DimensionUnit]]');
-			$replace = array($p['packaging_type'], $p['weight'], $this->_weightUnit, $p['width'], $p['height'], $p['depth'], $this->_dimensionUnit);
+			$replace = array($p['packaging_type'], $p['weight'], $this->_weightUnit, Tools::ps_round($p['width'],2), Tools::ps_round($p['height'],2), Tools::ps_round($p['depth'],2), $this->_dimensionUnit);
 			$xmlPackageList .= str_replace($search, $replace, $xmlPackageTemplate);
 		}
 
