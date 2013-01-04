@@ -27,8 +27,8 @@
 <meta property="og:title" content="{$meta_title|escape:'htmlall':'UTF-8'}" />
 {if $is_product_page}
 <meta property="og:type" content="addshoppers:product" />
-{if isset($id_image)}
-<meta property="og:image" content="{$absolute_base_url}img/p/{$id_product}-{$id_image}-large.jpg" />
+{if isset($image_url)}
+<meta property="og:image" content="{$image_url}" />
 {/if}
 {else}
 <meta property="og:type" content="addshoppers:website" />
@@ -46,7 +46,7 @@
 {/literal}{if $is_product_page}{literal}
       name: "{/literal}{$product_name|escape:'htmlall':'UTF-8'}{literal}",
       description: "{/literal}{$product_description|escape:html:'UTF-8'|replace:"\r\n":''|replace:"\n":''}{literal}",
-      image: "{/literal}{if isset($id_image)}{$absolute_base_url}img/p/{$id_product}-{$id_image}-large.jpg{/if}{literal}",
+      image: "{/literal}{if isset($image_url)}{$image_url}{/if}{literal}",
       price: "{/literal}{$price}{literal}",
       stock: "{/literal}{$stock}{literal}"
       {/literal}{if isset($instock)},instock: {$instock}{/if}{literal}
