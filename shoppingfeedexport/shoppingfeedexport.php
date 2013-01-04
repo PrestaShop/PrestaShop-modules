@@ -34,7 +34,7 @@ class ShoppingFeedExport extends Module
 	{
 	 	$this->name = 'shoppingfeedexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '2.0.3';
+	 	$this->version = '2.0.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -621,7 +621,7 @@ class ShoppingFeedExport extends Module
 
 	public function hookbackOfficeTop()
 	{
-		if (Tools::getValue('controller') == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
+		if (strtolower(Tools::getValue('controller')) == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
 		{
 		
 			$ordersXML = $this->_callWebService('GetOrders');
