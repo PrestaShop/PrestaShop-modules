@@ -19,7 +19,8 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,7 +34,7 @@ class ShoppingFeedExport extends Module
 	{
 	 	$this->name = 'shoppingfeedexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '2.0.2';
+	 	$this->version = '2.0.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 
@@ -452,7 +453,7 @@ class ShoppingFeedExport extends Module
 			foreach ($images as $image)
 			{
 				$ids = $product->id.'-'.$image['id_image'];
-				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, 'large').']]></image>';
+				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, 'large_default').']]></image>';
 				$ret = str_replace('http://http://', 'http://', $ret);
 			}
 		}
@@ -537,7 +538,7 @@ class ShoppingFeedExport extends Module
 					$image_child = false;
 					break;
 				}
-				$ret .= '<image><![CDATA['.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, 'large').']]></image>';
+				$ret .= '<image><![CDATA['.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, 'large_default').']]></image>';
 			}
 
 			if (!$image_child)
@@ -545,7 +546,7 @@ class ShoppingFeedExport extends Module
 				foreach ($product->getImages($configuration['PS_LANG_DEFAULT']) as $images)
 				{
 					$ids = $product->id.'-'.$images['id_image'];
-					$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, 'large').']]></image>';
+					$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, 'large_default').']]></image>';
 					$ret = str_replace('http://http://', 'http://', $ret);
 				}
 			}
@@ -620,7 +621,7 @@ class ShoppingFeedExport extends Module
 
 	public function hookbackOfficeTop()
 	{
-		if (Tools::getValue('controller') == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
+		if (strtolower(Tools::getValue('controller')) == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
 		{
 		
 			$ordersXML = $this->_callWebService('GetOrders');
