@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 	<ul id="product_list" class="clear" data-role="listview">
 	{foreach from=$products item=product name=products}
 		<li style="height: 81px;">
-			<a href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}">
+			<a href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}" data-ajax="false">
 				<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium')}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} style="border-right: 1px solid #CCC;" />
 				<h2 style="margin-top: 4px;">{if isset($product.new) && $product.new == 1}<span style="font-size: 9px; display: inline-block; border: 1px solid #CCC; background: #EEE; padding: 1px 4px; margin-right: 5px;">{l s='NEW'}</span>{/if}{$product.name|escape:'htmlall':'UTF-8'}</h2>
 				<p>{$product.description_short|strip_tags:'UTF-8'}</p>

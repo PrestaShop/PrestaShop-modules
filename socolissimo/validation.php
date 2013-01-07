@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,6 +74,10 @@ if (empty($errors_list))
 			$so->context->cart->id_carrier = (int)$TRPARAMPLUS[0];
 			$so->context->cart->gift = (int)$TRPARAMPLUS[1];
 		}
+                elseif (count($TRPARAMPLUS) == 1)
+                {
+                    $so->context->cart->id_carrier = (int) $TRPARAMPLUS[0];
+                }
 
 		if ((int)$so->context->cart->gift && Validate::isMessage($TRPARAMPLUS[2]))
 			$so->context->cart->gift_message = strip_tags($TRPARAMPLUS[2]);
@@ -81,7 +85,7 @@ if (empty($errors_list))
 		if (!$so->context->cart->update())
 			$errors_list[] = $so->l('Cart can\'t be updated. Please try again your selection');
 		else
-			Tools::redirect($redirect.'step=3&cgv=1');
+			Tools::redirect($redirect.'step=3&cgv=1&id_carrier=' . $so->context->cart->id_carrier);
 	}
 	else
 		$errors_list[] = $so->getError('999');
