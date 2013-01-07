@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -126,7 +126,7 @@
 	<div style="display: none;" id="extra_carrier"></div>
 
 		{if $giftAllowed}
-		<div data-role="collapsible" data-theme="c" data-content-theme="c" style="margin-bottom: 20px;">
+		<div data-role="collapsible" data-theme="c" data-content-theme="c" style="margin-bottom: 20px;" id="gift_mobile_div">
 			<h3 style="margin: 0;">{l s='Add a Gift-wrapping'}</h3>
 			<p class="checkbox">
 				<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} onclick="$('#gift_div').toggle('slow');" />

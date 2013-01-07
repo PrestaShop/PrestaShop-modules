@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -66,8 +66,8 @@
 				</div>
 
 				<label>{$PayPal_content.paypal_account} ?</label>
-				<input type="radio" name="business" id="paypal_business_account_no" value="0" {if $PayPal_business == 0}checked{/if} /> <label for="paypal_business_account_no">{$PayPal_content.no}</label>
-				<input type="radio" name="business" id="paypal_business_account_yes" value="1" style="margin-left: 14px" {if $PayPal_business == 1}checked{/if} /> <label for="paypal_business_account_yes">{$PayPal_content.yes}</label>
+				<input type="radio" name="business" id="paypal_business_account_no" value="0" {if $PayPal_business == 0}checked="checked"{/if} /> <label for="paypal_business_account_no">{$PayPal_content.no}</label>
+				<input type="radio" name="business" id="paypal_business_account_yes" value="1" style="margin-left: 14px" {if $PayPal_business == 1}checked="checked"{/if} /> <label for="paypal_business_account_yes">{$PayPal_content.yes}</label>
 			</div>
 		</div>
 
@@ -92,7 +92,7 @@
                     {if (in_array($PayPal_WPS, $PayPal_allowed_methods))}
                         {* WEBSITE PAYMENT STANDARD *}
                         <label for="paypal_payment_wps">
-                            <input type="radio" name="paypal_payment_method" id="paypal_payment_wps" value='{$PayPal_WPS}' {if $PayPal_payment_method == $PayPal_WPS}checked{/if} />
+                            <input type="radio" name="paypal_payment_method" id="paypal_payment_wps" value='{$PayPal_WPS}' {if $PayPal_payment_method == $PayPal_WPS}checked="checked"{/if} />
                             {$PayPal_content.choose} {$PayPal_content.website_payment_standard}
                             <br />
                             <span class="description">{$PayPal_content.website_payment_standard_tagline}</span>
@@ -103,7 +103,7 @@
                         {* WEBSITE PAYMENT PRO *}
                         <br />
                         <label for="paypal_payment_wpp">
-                            <input type="radio" name="paypal_payment_method" id="paypal_payment_wpp" value='{$PayPal_HSS}' {if $PayPal_payment_method == $PayPal_HSS}checked{/if} />
+                            <input type="radio" name="paypal_payment_method" id="paypal_payment_wpp" value='{$PayPal_HSS}' {if $PayPal_payment_method == $PayPal_HSS}checked="checked"{/if} />
                             {$PayPal_content.choose} {$PayPal_content.website_payment_pro}<br />
                             <span class="description">{$PayPal_content.website_payment_pro_tagline}</span>
                             <p class="toolbox">{$PayPal_content.website_payment_pro_disclaimer}</p>
@@ -117,7 +117,7 @@
             <div class="form-block">
                 {* EXPRESS CHECKOUT SOLUTION *}
                 <label for="paypal_payment_ecs">
-                    <input type="radio" name="paypal_payment_method" id="paypal_payment_ecs" value='{$PayPal_ECS}' {if $PayPal_payment_method == $PayPal_ECS}checked{/if} />
+                    <input type="radio" name="paypal_payment_method" id="paypal_payment_ecs" value='{$PayPal_ECS}' {if $PayPal_payment_method == $PayPal_ECS}checked="checked"{/if} />
                     {$PayPal_content.choose} {$PayPal_content.express_checkout}<br />
                     <span class="description">{$PayPal_content.express_checkout_tagline}</span>
                 </label>
@@ -219,27 +219,28 @@
 				<div id="express_checkout_shortcut" class="hide">
 					<p>{$PayPal_content.express_checkout_shortcut_title}</p>
 					<p class="description">{$PayPal_content.express_checkout_shortcut_tagline}</p>
-					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_no_shortcut" value="1" {if $PayPal_express_checkout_shortcut == 1}checked{/if} /> <label for="paypal_payment_ecs_no_shortcut">{$PayPal_content.yes} {$PayPal_content.sandbox_recommended}</label><br />
-					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_shortcut" value="0" {if $PayPal_express_checkout_shortcut == 0}checked{/if} /> <label for="paypal_payment_ecs_shortcut">{$PayPal_content.no}</label>
+					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_no_shortcut" value="1" {if $PayPal_express_checkout_shortcut == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_shortcut">{$PayPal_content.yes} {$PayPal_content.sandbox_recommended}</label><br />
+					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_shortcut" value="0" {if $PayPal_express_checkout_shortcut == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_shortcut">{$PayPal_content.no}</label>
 				</div>
 
 				<p>{$PayPal_content.sandbox_title}</p>
 				<p class="description">{$PayPal_content.sandbox_tagline} <a href="{$PayPal_content.sandbox_learn_more_link}" target="_blank">{$PayPal_content.sandbox_learn_more}</a></p>
-				<input type="radio" name="sandbox_mode" id="paypal_payment_live_mode" value="0" {if $PayPal_sandbox_mode == 0}checked{/if} /> <label for="paypal_payment_live_mode">{$PayPal_content.sandbox_live_mode}</label><br />
-				<input type="radio" name="sandbox_mode" id="paypal_payment_test_mode" value="1" {if $PayPal_sandbox_mode == 1}checked{/if} /> <label for="paypal_payment_test_mode">{$PayPal_content.sandbox_test_mode}</label>
+				<input type="radio" name="sandbox_mode" id="paypal_payment_live_mode" value="0" {if $PayPal_sandbox_mode == 0}checked="checked"{/if} /> <label for="paypal_payment_live_mode">{$PayPal_content.sandbox_live_mode}</label><br />
+				<input type="radio" name="sandbox_mode" id="paypal_payment_test_mode" value="1" {if $PayPal_sandbox_mode == 1}checked="checked"{/if} /> <label for="paypal_payment_test_mode">{$PayPal_content.sandbox_test_mode}</label>
 
 				<br />
 
 				<p>{$PayPal_content.payment_type_title}</p>
 				<p class="description">{$PayPal_content.payment_type_tagline}</p>
-				<input type="radio" name="payment_capture" id="paypal_direct_sale" value="0" {if $PayPal_payment_capture == 0}checked{/if} /> <label for="paypal_direct_sale">{$PayPal_content.payment_type_direct}</label><br />
-				<input type="radio" name="payment_capture" id="paypal_manual_capture" value="1" {if $PayPal_payment_capture == 1}checked{/if} /> <label for="paypal_manual_capture">{$PayPal_content.payment_type_manual}</label>
+				<input type="radio" name="payment_capture" id="paypal_direct_sale" value="0" {if $PayPal_payment_capture == 0}checked="checked"{/if} /> <label for="paypal_direct_sale">{$PayPal_content.payment_type_direct}</label><br />
+				<input type="radio" name="payment_capture" id="paypal_manual_capture" value="1" {if $PayPal_payment_capture == 1}checked="checked"{/if} /> <label for="paypal_manual_capture">{$PayPal_content.payment_type_manual}</label>
 
 				<br /><br />
 			</div>
 
 			<input type="hidden" name="submitPaypal" value="paypal_configuration" />
 			<input type="submit" name="submitButton" value="{$PayPal_content.save_button}" id="paypal_submit" />
+			
 			<div class="box hide" id="paypal-test-mode-confirmation">
 				<h3>{$PayPal_content.sandbox_confirmation_title} :</h3>
 				<ul>
@@ -252,7 +253,6 @@
 					<button class="fancy_confirm" name="fancy_confirm" value="0">{$PayPal_content.no}</button>
 					<button class="fancy_confirm" name="fancy_confirm" value="1">{$PayPal_content.yes}</button>
 				</div>
-
 			</div>
 
 			{if isset($PayPal_save_success)}

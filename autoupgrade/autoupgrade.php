@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,7 +70,7 @@ class Autoupgrade extends Module
 			if (!$tab->save())
 				return $this->_abortInstall($this->l('Unable to create the "AdminSelfUpgrade" tab'));
 			if (!@copy(dirname(__FILE__).DIRECTORY_SEPARATOR.'logo.gif', _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'t'.DIRECTORY_SEPARATOR.'AdminSelfUpgrade.gif'))
-				return $this->_abortInstall(sprintf($this->l('Unable to copy logo.gif in %s'), $autoupgrade_dir));
+				return $this->_abortInstall(sprintf($this->l('Unable to copy logo.gif in %s'), _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'t'.DIRECTORY_SEPARATOR));
 		}
 		else
 			$tab = new Tab((int)$id_tab);

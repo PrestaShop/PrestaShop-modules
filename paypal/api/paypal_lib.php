@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,9 +28,16 @@ include_once(_PS_MODULE_DIR_.'paypal/api/paypal_connect.php');
 
 define('PAYPAL_API_VERSION', '94.0');
 
-class PaypalLib extends PayPal
+class PaypalLib
 {
 	private $_logs = array();
+
+	protected $paypal = null;
+
+	public function __construct()
+	{
+		$this->paypal = new PayPal();
+	}
 
 	public function getLogs()
 	{
@@ -67,7 +74,7 @@ class PaypalLib extends PayPal
 			$this->_logs = array();
 
 		$toExclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
-		$this->_logs[] = '<b>'.$this->l('PayPal response:').'</b>';
+		$this->_logs[] = '<b>'.$this->paypal->l('PayPal response:').'</b>';
 
 		foreach ($return as $key => $value)
 		{

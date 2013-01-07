@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2012 PrestaShop SA
+*	@copyright	2007-2013 PrestaShop SA
 *	@version	Release: $Revision: 11834 $
 *	@license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
@@ -4583,12 +4583,18 @@ function afterUpgradeComplete(res)
 		$("#upgradeResultCheck")
 			.addClass("fail")
 			.removeClass("ok")
-			.html("<p>'.$this->l('Upgrade complete, but warnings has been found. Please restore your shop.').'</p>")
+			.html("<p>'.$this->l('Upgrade complete, but warnings has been found. Please restore your shop.', 'AdminSelfUpgrade', true).'</p>")
 			.show("slow");
 		$("#infoStep").html("<h3>'.$this->l('Upgrade Complete, but warnings has been found.', 'AdminSelfUpgrade', true).'</h3>");
 	}
 	
-	todo_list = ["'.$this->l('Don\'t forget to reactivate your shop !', 'AdminSelfUpgrade', true).'", "'.$this->l('Please check your front-office theme is functionnal (try to make an order, check theme)').'"];
+	todo_list = [
+		"'.$this->l('Cookies have changed, you will need to log in again once you refreshed the page', 'AdminSelfUpgrade', true).'",
+		"'.$this->l('Javascript and CSS files have changed, please clear your browser cache with CTRL-F5', 'AdminSelfUpgrade', true).'",
+		"'.$this->l('Please check that your front office theme is functionnal (try to create an account, place an order...)', 'AdminSelfUpgrade', true).'",
+		"'.$this->l('Product images does not appear in the front office? Try regenerating the thumbnails in Preferences > Images', 'AdminSelfUpgrade', true).'",
+		"'.$this->l('Do not forget to reactivate your shop once you have checked everything!', 'AdminSelfUpgrade', true).'",
+	];
 		
 	todo_ul = "<ul>";
 	$("#upgradeResultToDoList")

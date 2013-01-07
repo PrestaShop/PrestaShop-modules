@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -600,6 +600,7 @@ class Socolissimo extends CarrierModule
 			'trReturnUrlKo' => htmlentities($this->url, ENT_NOQUOTES, 'UTF-8'),
 			'trReturnUrlOk' => htmlentities($this->url ,ENT_NOQUOTES, 'UTF-8')
 		);
+		$inputs['signature'] = $this->generateKey($inputs);
 
 		$this->context->smarty->assign(array(
 			'select_label' => $this->l('Select delivery mode'),
@@ -990,7 +991,7 @@ class Socolissimo extends CarrierModule
 		}
 		else
 		{
-			$gender = new Gender($customer->id_gender);
+			$gender = new Gender($customer->id_gender, $this->context->language->id);
 			return $gender->name;
 		}
 		return $title;
