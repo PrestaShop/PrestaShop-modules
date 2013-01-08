@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.2';
+		$this->version = '3.4.3';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -93,8 +93,6 @@ class PayPal extends PaymentModule
 		}
 		else
 			$mobile_enabled = (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE');
-
-/* 		d($this->context->cart); */
 		
 		if (self::isInstalled($this->name))
 		{
@@ -227,9 +225,7 @@ class PayPal extends PaymentModule
 				$this->context->smarty->assign('paypal_authorization', true);
 			
 			if (($order_process_type == 1) && ((int)$payment_method == HSS) && !$this->useMobile())
-			{
 				$this->context->smarty->assign('paypal_order_opc', true);
-			}
 			elseif (($order_process_type == 1) && (((bool)Tools::getValue('isPaymentStep') == true) || isset($this->context->cookie->express_checkout)))
 			{
 				$shop_url = PayPal::getShopDomainSsl(true, true);
@@ -322,7 +318,7 @@ class PayPal extends PaymentModule
 
 		$this->getTranslations();
 
-		return $this->fetchTemplate('/views/templates/back/', 'back_office');
+		return $this->fetchTemplate('/views/templates/back/back_office.tpl');
 	}
 
 	/**
@@ -333,7 +329,6 @@ class PayPal extends PaymentModule
 		if ($this->useMobile())
 		{
 			$id_hook = (int)Configuration::get('PS_MOBILE_HOOK_HEADER_ID');
-			
 			if ($id_hook > 0)
 			{
 				$module = Hook::getModuleFromHook($id_hook, $this->id);
@@ -352,7 +347,7 @@ class PayPal extends PaymentModule
 		else
 			Tools::addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
 		
-		return '<script type="text/javascript">'.$this->fetchTemplate('/js/', 'front_office', 'js').'</script>';
+		return '<script type="text/javascript">'.$this->fetchTemplate('paypal.js').'</script>';
 	}
 
 	public function hookDisplayMobileHeader()
@@ -457,7 +452,7 @@ class PayPal extends PaymentModule
 				'tracking_code' => $this->getTrackingCode()
 			));
 
-			return $this->fetchTemplate('/views/templates/front/integral_evolution/', 'iframe');
+			return $this->fetchTemplate('integral_evolution_payment.tpl');
 		}
 		elseif ($method == WPS || $method == ECS)
 		{
@@ -470,7 +465,7 @@ class PayPal extends PaymentModule
 				'PayPal_current_shop_url' => $shop_url.$_SERVER['REQUEST_URI'],
 				'PayPal_tracking_code' => $this->getTrackingCode()));
 
-			return $this->fetchTemplate('/views/templates/front/express_checkout/', 'paypal');
+			return $this->fetchTemplate('express_checkout_payment.tpl');
 		}
 		
 		return null;
@@ -492,9 +487,9 @@ class PayPal extends PaymentModule
 			'PayPal_current_shop_url' => PayPal::getShopDomainSsl(true, true).$_SERVER['REQUEST_URI'],
 			'PayPal_tracking_code' => $this->getTrackingCode(),
 			'include_form' => true,
-			'template_dir' => dirname(__FILE__).'/views/templates/front/express_checkout/'));
+			'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
 
-		return $this->fetchTemplate('/views/templates/front/express_checkout/', 'express_checkout');
+		return $this->fetchTemplate('express_checkout_shortcut_button.tpl');
 	}
 
 	public function hookPaymentReturn()
@@ -502,13 +497,13 @@ class PayPal extends PaymentModule
 		if (!$this->active)
 			return null;
 
-		return $this->fetchTemplate('/views/templates/front/', 'confirmation');
+		return $this->fetchTemplate('confirmation.tpl');
 	}
 
 	public function hookRightColumn()
 	{
 		$this->context->smarty->assign('logo', $this->paypal_logos->getCardsLogo(true));
-		return $this->fetchTemplate('/views/templates/hook/', 'column');
+		return $this->fetchTemplate('column.tpl');
 	}
 
 	public function hookLeftColumn()
@@ -570,7 +565,7 @@ class PayPal extends PaymentModule
 
 			foreach ($adminTemplates as $adminTemplate)
 			{
-				$this->_html .= $this->fetchTemplate('/views/templates/back/admin_order/', $adminTemplate);
+				$this->_html .= $this->fetchTemplate('/views/templates/back/admin_order/'.$adminTemplate.'.tpl');
 				$this->_postProcess();
 				$this->_html .= '</fieldset>';
 			}
@@ -631,7 +626,7 @@ class PayPal extends PaymentModule
 				'PayPal_ECS' => (int)ECS
 			));
 			
-			return (isset($output) ? $output : null).$this->fetchTemplate('/views/templates/back/', 'header');
+			return (isset($output) ? $output : null).$this->fetchTemplate('/views/templates/back/header.tpl');
 		}
 		return null;
 	}
@@ -640,7 +635,7 @@ class PayPal extends PaymentModule
 	{
 		if ((!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') && !$this->useMobile()) || isset($this->context->cookie->express_checkout))
 			return null;
-
+				
 		if (!in_array(ECS, $this->getPaymentMethods()) || (((int)Configuration::get('PAYPAL_BUSINESS') == 1) &&
 		(int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->useMobile())
 			return null;
@@ -658,7 +653,7 @@ class PayPal extends PaymentModule
 			'PayPal_tracking_code' => $this->getTrackingCode())
 		);
 		
-		return $this->fetchTemplate('/views/templates/front/express_checkout/', 'express_checkout');
+		return $this->fetchTemplate('express_checkout_shortcut_button.tpl');
 	}
 
 	public function renderExpressCheckoutForm($type)
@@ -673,15 +668,14 @@ class PayPal extends PaymentModule
 			'PayPal_tracking_code' => $this->getTrackingCode())
 		);
 
-		return $this->fetchTemplate('/views/templates/front/express_checkout/', 'express_checkout_form');
+		return $this->fetchTemplate('express_checkout_shortcut_form.tpl');
 	}
 
 	public function useMobile()
 	{
 		if ((method_exists($this->context, 'getMobileDevice') && $this->context->getMobileDevice()) || Tools::getValue('ps_mobile_site'))
 			return true;
-		else
-			return false;
+		return false;
 	}
 
 	public function getTrackingCode()
@@ -707,31 +701,29 @@ class PayPal extends PaymentModule
 	{
 		$file = dirname(__FILE__).'/'._PAYPAL_TRANSLATIONS_XML_;
 		if (file_exists($file))
-			$xml = simplexml_load_file($file);
-		else
-			return false;
-
-		if (isset($xml) && $xml)
 		{
-			$index = -1;
-			$content = array();
-			$default = array();
-
-			while (isset($xml->country[++$index]))
+			$xml = simplexml_load_file($file);
+			if (isset($xml) && $xml)
 			{
-				$country = $xml->country[$index];
-				$country_iso = $country->attributes()->iso_code;
-
-				if (($this->iso_code != 'default') && ($country_iso == $this->iso_code))
-					$content = (array)$country;
-				elseif ($country_iso == 'default')
-					$default = (array)$country;
+				$index = -1;
+				$content = $default = array();
+	
+				while (isset($xml->country[++$index]))
+				{
+					$country = $xml->country[$index];
+					$country_iso = $country->attributes()->iso_code;
+	
+					if (($this->iso_code != 'default') && ($country_iso == $this->iso_code))
+						$content = (array)$country;
+					elseif ($country_iso == 'default')
+						$default = (array)$country;
+				}
+	
+				$content += $default;
+				$this->context->smarty->assign('PayPal_content', $content);
+	
+				return true;
 			}
-
-			$content += $default;
-			$this->context->smarty->assign('PayPal_content', $content);
-
-			return true;
 		}
 		return false;
 	}
@@ -745,7 +737,6 @@ class PayPal extends PaymentModule
 	{
 		if (Configuration::get('PAYPAL_SANDBOX'))
 			return 'https://'.$this->getPayPalURL().'/cgi-bin/acquiringweb';
-
 		return 'https://securepayments.paypal.com/acquiringweb?cmd=_hosted-payment';
 	}
 
@@ -793,7 +784,7 @@ class PayPal extends PaymentModule
 	public function getPaymentMethods()
 	{
 		// WPS -> Web Payment Standard
-		// HSS -> Web Payment Pro || Integral Evolution
+		// HSS -> Web Payment Pro / Integral Evolution
 		// ECS -> Express Checkout Solution
 
 		$paymentMethod = array('AU' => array(WPS, HSS, ECS), 'BE' => array(WPS, ECS), 'CN' => array(WPS, ECS), 'CZ' => array(), 'DE' => array(WPS),
@@ -845,18 +836,18 @@ class PayPal extends PaymentModule
 			(int)$this->context->cookie->id_lang), array('{logs}' => implode('<br />', $log)), Configuration::get('PS_SHOP_EMAIL'),
 			null, null, null, null, null, _PS_MODULE_DIR_.$this->name.'/mails/');
 
-		return $this->fetchTemplate('/views/templates/front/', 'error');
+		return $this->fetchTemplate('error.tpl');
 	}
 
 	private function _canRefund($id_order)
 	{
-		if (!(int)$id_order)
+		if (!(bool)$id_order)
 			return false;
 
 		$paypal_order = Db::getInstance()->getRow('
-		SELECT `payment_status`, `capture`
-		FROM `'._DB_PREFIX_.'paypal_order`
-		WHERE `id_order` = '.(int)$id_order);
+			SELECT `payment_status`, `capture`
+			FROM `'._DB_PREFIX_.'paypal_order`
+			WHERE `id_order` = '.(int)$id_order);
 
 		return $paypal_order && $paypal_order['payment_status'] == 'Completed' && $paypal_order['capture'] == 0;
 	}
@@ -867,9 +858,9 @@ class PayPal extends PaymentModule
 			return false;
 
 		$order = Db::getInstance()->getRow('
-		SELECT `payment_method`, `payment_status`
-		FROM `'._DB_PREFIX_.'paypal_order`
-		WHERE `id_order` = '.(int)$id_order);
+			SELECT `payment_method`, `payment_status`
+			FROM `'._DB_PREFIX_.'paypal_order`
+			WHERE `id_order` = '.(int)$id_order);
 
 		return $order && $order['payment_method'] != HSS && $order['payment_status'] == 'Pending_validation';
 	}
@@ -880,9 +871,9 @@ class PayPal extends PaymentModule
 			return false;
 
 		$result = Db::getInstance()->getRow('
-		SELECT `payment_method`, `payment_status`
-		FROM `'._DB_PREFIX_.'paypal_order`
-		WHERE `id_order` = '.(int)$id_order.' AND `capture` = 1');
+			SELECT `payment_method`, `payment_status`
+			FROM `'._DB_PREFIX_.'paypal_order`
+			WHERE `id_order` = '.(int)$id_order.' AND `capture` = 1');
 
 		return $result && $result['payment_method'] != HSS && $result['payment_status'] == 'Pending_capture';
 	}
@@ -896,11 +887,9 @@ class PayPal extends PaymentModule
 			$payment_capture = Tools::getValue('payment_capture') !== false ? (int)Tools::getValue('payment_capture') : false;
 			$sandbox_mode = Tools::getValue('sandbox_mode') !== false ? (int)Tools::getValue('sandbox_mode') : false;
 
-			if ($this->default_country === false || $sandbox_mode === false || $payment_capture === false ||
-			$business === false || $payment_method === false)
+			if ($this->default_country === false || $sandbox_mode === false || $payment_capture === false || $business === false || $payment_method === false)
 				$this->_errors[] = $this->l('Some fields are empty.');
-			elseif (($business == 0 || ($business == 1 && $payment_method != HSS)) && (!Tools::getValue('api_username') ||
-			!Tools::getValue('api_password') || !Tools::getValue('api_signature')))
+			elseif (($business == 0 || ($business == 1 && $payment_method != HSS)) && (!Tools::getValue('api_username') || !Tools::getValue('api_password') || !Tools::getValue('api_signature')))
 				$this->_errors[] = $this->l('Credentials fields cannot be empty');
 			elseif ($business == 1 && $payment_method == HSS && !Tools::getValue('api_business_account'))
 				$this->_errors[] = $this->l('Business e-mail field cannot be empty');
@@ -936,9 +925,7 @@ class PayPal extends PaymentModule
 			}
 		}
 
-		$this->loadLangDefault();
-
-		return;
+		return $this->loadLangDefault();
 	}
 
 	private function _makeRefund($id_transaction, $id_order, $amt = false)
@@ -953,10 +940,10 @@ class PayPal extends PaymentModule
 		else
 		{
 			$isoCurrency = Db::getInstance()->getValue('
-			SELECT `iso_code`
-			FROM `'._DB_PREFIX_.'orders` o
-			LEFT JOIN `'._DB_PREFIX_.'currency` c ON (o.`id_currency` = c.`id_currency`)
-			WHERE o.`id_order` = '.(int)$id_order);
+				SELECT `iso_code`
+				FROM `'._DB_PREFIX_.'orders` o
+				LEFT JOIN `'._DB_PREFIX_.'currency` c ON (o.`id_currency` = c.`id_currency`)
+				WHERE o.`id_order` = '.(int)$id_order);
 
 			$params = array('TRANSACTIONID'	=> $id_transaction,	'REFUNDTYPE' => 'Partial', 'AMT' => (float)$amt, 'CURRENCYCODE' => Tools::strtoupper($isoCurrency));
 		}
@@ -968,7 +955,7 @@ class PayPal extends PaymentModule
 
 	public function _addNewPrivateMessage($id_order, $message)
 	{
-		if (!$id_order)
+		if (!(bool)$id_order)
 			return false;
 
 		$new_message = new Message();
@@ -1087,7 +1074,7 @@ class PayPal extends PaymentModule
 
 	private function _updatePaymentStatusOfOrder($id_order)
 	{
-		if (!$id_order || !$this->isPayPalAPIAvailable())
+		if (!(bool)$id_order || !$this->isPayPalAPIAvailable())
 			return false;
 
 		$paypal_order = PayPalOrder::getOrderById((int)$id_order);
@@ -1130,12 +1117,24 @@ class PayPal extends PaymentModule
 		return false;
 	}
 
-	public function fetchTemplate($path, $name, $extension = false)
+	public function fetchTemplate($name)
 	{
 		if (_PS_VERSION_ < '1.4')
 			$this->context->smarty->currentTemplate = $name;
-
-		return $this->context->smarty->fetch(_PS_MODULE_DIR_.'/'.$this->name.'/'.$path.$name.'.'.($extension ? $extension : 'tpl'));
+		elseif (_PS_VERSION_ < '1.5')
+		{
+			$views = 'views/templates/';
+			if (@filemtime(dirname(__FILE__).'/'.$name))
+				return $this->display(__FILE__, $name);
+			elseif (@filemtime(dirname(__FILE__).'/'.$views.'hook/'.$name))
+				return $this->display(__FILE__, $views.'hook/'.$name);
+			elseif (@filemtime(dirname(__FILE__).'/'.$views.'front/'.$name))
+				return $this->display(__FILE__, $views.'front/'.$name);
+			elseif (@filemtime(dirname(__FILE__).'/'.$views.'back/'.$name))
+				return $this->display(__FILE__, $views.'back/'.$name);
+		}
+		
+		return $this->display(__FILE__, $name);
 	}
 
 	public static function getPayPalCustomerIdByEmail($email)

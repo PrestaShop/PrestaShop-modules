@@ -84,7 +84,6 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 			/* If guest we clear the cookie for security reason */
 			$this->context->customer->mylogout();
 		}
-
 		$this->setTemplate('order-confirmation.tpl');
 	}
 
