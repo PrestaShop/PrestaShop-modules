@@ -2,9 +2,9 @@
 <module>
 	<name>paypal</name>
 	<displayName><![CDATA[PayPal]]></displayName>
-	<version><![CDATA[3.4.2]]></version>
+	<version><![CDATA[3.4.3]]></version>
 	<description><![CDATA[Accepts payments by credit cards (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) with PayPal.]]></description>
-	<author><![CDATA[PrestaShop]]></author>
+	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall>Are you sure you want to delete your details?</confirmUninstall>
 	<is_configurable>1</is_configurable>
