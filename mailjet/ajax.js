@@ -23,6 +23,7 @@ $(document).ready(function() {
 			{
 				$("#button_test_mailjet").show();
 				$("#image_ajax_mailjet").hide();
+
 				var retour = html.split("|");
 			
 				if (retour[0] == "true")

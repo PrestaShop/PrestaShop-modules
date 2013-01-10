@@ -45,7 +45,7 @@ class Mailjet extends Module
 	{
 		// Default module variable
 		$this->name = 'mailjet';
-		$this->version = '1.2.3';
+		$this->version = '1.3';
 		$this->displayName = 'Mailjet';
 		$this->module_key = '59cce32ad9a4b86c46e41ac95f298076';
 
@@ -66,7 +66,7 @@ class Mailjet extends Module
 			$this->warning = $this->l('The module is activated but api key or secret key are not correctly set.');
 
 		// Backward compatibility
-		require(dirname(__FILE__).'/backward_compatibility/backward.php');
+		//require(dirname(__FILE__).'/backward_compatibility/backward.php');
 
 		// Defines ajax lang variables in way to translate them
 		$this->l('Mailjet Test E-mail');
@@ -87,20 +87,17 @@ class Mailjet extends Module
 		if (_PS_VERSION_ < '1.5')
 		{
 			if (md5_file(dirname(__FILE__).'/mailjet_override/Message_14.php') != md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
-			if (!@copy(dirname(__FILE__).'/mailjet_override/Message-mailjet_14.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
+			{
+				@copy(dirname(__FILE__).'/mailjet_override/Message-mailjet_14.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php');
+			}
 		}
 		else
 		{
 			if (md5_file(dirname(__FILE__).'/mailjet_override/Message_15.php') != md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
-			if (!@copy(dirname(__FILE__).'/mailjet_override/Message-mailjet_15.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
+			{
+				@copy(dirname(__FILE__).'/mailjet_override/Message-mailjet_15.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php');
+			}
 		}
-
-		// Create Token
-		Configuration::updateValue('MAILJET_AJAX_TOKEN', md5(rand()));
 
 		// Install module
 		if (!parent::install())
@@ -117,17 +114,17 @@ class Mailjet extends Module
 		// Can't do anything else for retrocompatibility
 		if (_PS_VERSION_ < '1.5')
 		{
-			if (md5_file(dirname(__FILE__).'/mailjet_override/Message-mailjet_14.php') != md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
-			if (!@copy(dirname(__FILE__).'/mailjet_override/Message_14.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
+			if (md5_file(dirname(__FILE__).'/mailjet_override/Message-mailjet_14.php') == md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
+			{
+				@copy(dirname(__FILE__).'/mailjet_override/Message_14.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php');
+			}
 		}
 		else
 		{
-			if (md5_file(dirname(__FILE__).'/mailjet_override/Message-mailjet_15.php') != md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
-			if (!@copy(dirname(__FILE__).'/mailjet_override/Message_15.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
-				return false;
+			if (md5_file(dirname(__FILE__).'/mailjet_override/Message-mailjet_15.php') == md5_file(dirname(__FILE__).'/../../tools/swift/Swift/Message.php'))
+			{
+				@copy(dirname(__FILE__).'/mailjet_override/Message_15.php', dirname(__FILE__).'/../../tools/swift/Swift/Message.php');
+			}
 		}
 
 		// Disable tab
@@ -139,11 +136,13 @@ class Mailjet extends Module
 		$this->unregisterHook('displayEmailConfiguration');
 
 		// Uninstall module
+		Configuration::deleteByName('PS_MAIL_METHOD');
+		Configuration::deleteByName('PS_MAIL_SERVER');
+		Configuration::deleteByName('PS_MAIL_USER');
+		Configuration::deleteByName('PS_MAIL_PASSWD');
+		Configuration::deleteByName('PS_MAIL_SMTP_ENCRYPTION');
+		Configuration::deleteByName('PS_MAIL_SMTP_PORT');
 		Configuration::updateValue('PS_MAIL_METHOD', 1);
-		Configuration::updateValue('PS_MAIL_SERVER', "");
-		Configuration::updateValue('PS_MAIL_USER', "");
-		Configuration::updateValue('PS_MAIL_PASSWD', "");
-		Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', "");
 		Configuration::updateValue('PS_MAIL_SMTP_PORT', 25);
 		if (!Configuration::deleteByName('MAILJET_AJAX_TOKEN') OR !Configuration::deleteByName('MAILJET_ACTIVATE') OR
 		    !Configuration::deleteByName('MAILJET_API_KEY') OR !Configuration::deleteByName('MAILJET_SECRET_KEY') OR
@@ -205,7 +204,9 @@ class Mailjet extends Module
 
 	private function _postProcessConfiguration()
 	{
-		$employee = new Employee((int)(Context::getContext()->cookie->id_employee));
+		global $cookie;
+		
+		$employee = new Employee((int)($cookie->id_employee));
 
 		Configuration::updateValue('MAILJET_API_KEY', pSQL(Tools::getValue('mailjet_api_key')));
 		Configuration::updateValue('MAILJET_SECRET_KEY', pSQL(Tools::getValue('mailjet_secret_key')));
@@ -342,7 +343,7 @@ class Mailjet extends Module
 			// Test credentials
 			$mailjet = new MailjetAPI();
 			$mailjet->apiKey = pSQL(Configuration::get('MAILJET_API_KEY'));
-			$mailjet->secretKey = pSQL(Configuration::updateValue('MAILJET_SECRET_KEY'));
+			$mailjet->secretKey = pSQL(Configuration::get('MAILJET_SECRET_KEY'));
 			$params = array(
 				'src' => (version_compare(_PS_VERSION_, '1.5', '>') ? 'prestashop-1.5' : 'prestashop-1.4'),
 				'apikey' => $mailjet->apiKey,
@@ -368,15 +369,15 @@ class Mailjet extends Module
 
 	private function _displayForm()
 	{
-		if (Configuration::get('MAILJET_API_KEY'))
+		//if (Configuration::get('MAILJET_API_KEY'))
 			$this->_displayConfigurationForm();
-		else
+		/*else
 		{
 			if (Tools::isSubmit('submitMailjetAuthenticationForm') || Tools::isSubmit('submitMailjetAuthenticationLogin') || Tools::isSubmit('submitMailjetAuthenticationSubscribe'))
 				$this->_displayAuthenticationForm();
 			else
 				$this->_displayActivationForm();
-		}
+		}*/
 	}
 
 	private function _displayActivationForm()
@@ -421,7 +422,9 @@ class Mailjet extends Module
 
 	private function _displayAuthenticationForm()
 	{
-		$employee = new Employee((int)(Context::getContext()->cookie->id_employee));
+		global $cookie;
+		
+		$employee = new Employee((int)($cookie->id_employee));
 		$this->_html .= '
 		<div>
 			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">
@@ -451,6 +454,10 @@ class Mailjet extends Module
 
 	private function _displayConfigurationForm()
 	{
+		// Set Token
+		// On défini le token a cet endroit pour qu'il soit lié au context shop actuel
+		Configuration::updateValue('MAILJET_AJAX_TOKEN', md5(rand()), false);
+		
 		$mailjet_activate = false;
 		if ((int)(Tools::getValue('mailjet_activation', Configuration::get('MAILJET_ACTIVATE'))) == 1)
 			$mailjet_activate = true;
@@ -459,17 +466,7 @@ class Mailjet extends Module
 		$this->_html .= '<div>
 		<p style="margin-bottom:10px;">
 			<b>'.$this->l('This module sends through Mailjet all email coming from your Prestashop installation (and most third party modules)').'.</b>
-		</p>
-
-		<ul style="list-style:none;">
-			<li style="float:left"><h3><a href="'.$index.'">'.$this->l('Configuration').'</a></h3></li>
-			<li style="float:left;padding-left:35px"><h3><a href="'.$index.'&see=campaigns">'.$this->l('Campaigns').'</a></h3></li>
-			<li style="float:left;padding-left:35px""><h3><a href="'.$index.'&see=contacts">'.$this->l('Contacts').'</a></h3></li>
-			<li style="float:left;padding-left:35px""><h3><a href="'.$index.'&see=stats">'.$this->l('Stats').'</a></h3></li>
-			<li style="float:left;padding-left:35px""><h3><a href="'.$index.'&see=preferences">'.$this->l('Preferences').'</a></h3></li>
-		</ul><br clear="left" /><br />';
-
-
+		</p>';
 
 		if (in_array(Tools::getValue('see'), array('campaigns', 'contacts', 'stats', 'preferences')))
 			$this->_html .= '<fieldset><legend><img src="../img/admin/cog.gif" alt="" class="middle" />'.ucfirst(Tools::getValue('see')).'</legend><iframe border="0" style="border:0px" width="100%" height="800px" src="https://www.mailjet.com/'.Tools::getValue('see').'?t='.Configuration::get('MAILJET_TOKEN').'"></iframe></fieldset>';
@@ -495,11 +492,9 @@ class Mailjet extends Module
 						</div>
 						<hr size="1" style="margin-bottom: 20px;" noshade />
 						<div class="conf confirm" id="mailjet_test_ok" style="display:none">
-							<img src="../img/admin/ok.gif" alt="" title="" />
 							'.$this->l('Authentication successful ! Your configuration is correct.').'
 						</div>
 						<div class="conf error" id="mailjet_test_ko" style="display:none">
-							<img src="../img/admin/forbbiden.gif" alt="" title="" />
 							'.$this->l('An Error has occured : ').'<span id="mailjet_error_message"></span>
 							<p>'.$this->l('If you don\'t understand this error please contact').' <a href="http://fr.mailjet.com/support" target="_blank">Mailjet Support</a></p>
 						</div>
