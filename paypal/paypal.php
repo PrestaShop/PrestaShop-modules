@@ -473,9 +473,8 @@ class PayPal extends PaymentModule
 
 	public function hookShoppingCartExtra()
 	{
-		// No active or ajax request, drop it
-		if (!$this->active || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']) ||
-			(((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
+		// No active
+		if (!$this->active || (((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
 			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) ||
 			isset($this->context->cookie->express_checkout))
 			return null;
