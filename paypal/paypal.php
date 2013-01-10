@@ -318,7 +318,12 @@ class PayPal extends PaymentModule
 
 		$this->getTranslations();
 
-		return $this->fetchTemplate('/views/templates/back/back_office.tpl');
+		$output = $this->fetchTemplate('/views/templates/back/back_office.tpl');
+		
+		if (self::isEnabled($this->name) == false)
+			return $output.$this->hookBackOfficeHeader();
+		
+		return $output;
 	}
 
 	/**
