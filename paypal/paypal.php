@@ -378,7 +378,7 @@ class PayPal extends PaymentModule
 
 	public function hookPayment($params)
 	{
-		if (!$this->active || !$this->checkCurrency($params['cart']))
+		if (!$this->active)
 			return;
 
 		$use_mobile = $this->useMobile();
@@ -389,7 +389,6 @@ class PayPal extends PaymentModule
 			$method = (int)Configuration::get('PAYPAL_PAYMENT_METHOD');
 			
 		$shop_url = PayPal::getShopDomainSsl(true, true);
-
 		if (isset($this->context->cookie->express_checkout))
 		{
 			// Check if user went through the payment preparation detail and completed it

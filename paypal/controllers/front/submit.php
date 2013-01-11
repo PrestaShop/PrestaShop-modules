@@ -61,12 +61,17 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 			
 			return $this->setTemplate('error.tpl');
 		}
-			
+		
+		$order_currency = new Currency((int)$order->id_currency);
+		$display_currency = new Currency((int)$this->context->currency->id);
+
+		$price = Tools::convertPriceFull($paypal_order['total_paid'], $order_currency, $display_currency);
+		
 		$this->context->smarty->assign(
 			array(
 				'is_guest' => $this->context->customer->is_guest,
 				'order' => $paypal_order,
-				'price' => Tools::displayPrice($paypal_order['total_paid'], $this->context->currency),
+				'price' => Tools::displayPrice($price, $this->context->currency->id),
 				'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation(),
 				'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn()
 			)
