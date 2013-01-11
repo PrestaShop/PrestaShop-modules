@@ -116,7 +116,18 @@ class PaypalExpressCheckout extends Paypal
 	{
 		if (!$this->context->cart || !$this->context->cart->id)
 			return false;
-			
+
+		$cart_currency = new Currency((int)$this->context->cart->id_currency);
+		$currency_module = $this->getCurrency((int)$this->context->cart->id_currency);
+
+
+		if ($cart_currency != $currency_module)
+		{
+			$this->context->cart->id_currency = $currency_module->id;
+			$this->context->cart->update();
+		}
+
+		$this->context->currency = $currency_module;
 		$this->product_list = $this->context->cart->getProducts();
 		return (bool)count($this->product_list);
 	}
@@ -310,7 +321,8 @@ class PaypalExpressCheckout extends Paypal
 		else
 			$fields['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Sale';
 		
-		$fields['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->currency->iso_code;
+		$currency = new Currency((int)$this->context->cart->id_currency);
+		$fields['PAYMENTREQUEST_0_CURRENCYCODE'] = $currency->iso_code;
 
 		$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
 		$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);
