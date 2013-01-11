@@ -7,7 +7,7 @@ $(document).ready( function() {
 		return false;
 	});
 
-	$('#paypal_payment_form').on('submit', function() {
+	$('#paypal_payment_form').live('submit', function() {
 		var nb = $('#quantity_wanted').val();
 		var id = $('#idCombination').val();
 
