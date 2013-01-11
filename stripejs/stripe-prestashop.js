@@ -71,18 +71,28 @@ $(document).ready(function() {
 			$('#stripe-ajax-loader').show();
 			$('.stripe-submit-button').attr('disabled', 'disabled'); /* Disable the submit button to prevent repeated clicks */
 
-			Stripe.createToken({
+			stripe_token_params = { 
 				number: $('.stripe-card-number').val(),
 				cvc: $('.stripe-card-cvc').val(),
 				exp_month: $('.stripe-card-expiry-month').val(),
 				exp_year: $('.stripe-card-expiry-year').val(),
-				name: stripe_billing_address.firstname + ' ' + stripe_billing_address.lastname,
-				address_line1: stripe_billing_address.address1,
-				address_line2: stripe_billing_address.address2,
-				address_zip: stripe_billing_address.postcode,
-				address_state: stripe_billing_address.state,
-				address_country: stripe_billing_address.country
-			}, stripeResponseHandler);
+			};
+			
+			/* Check if the billing address element are set and add them to the Token */
+			if (typeof stripe_billing_address != 'undefined')
+			{
+				stripe_token_params.name = stripe_billing_address.firstname + ' ' + stripe_billing_address.lastname;
+				stripe_token_params.address_line1 = stripe_billing_address.address1;
+				stripe_token_params.address_zip = stripe_billing_address.postcode;
+				stripe_token_params.address_country = stripe_billing_address.country;
+			}
+			
+			if (typeof stripe_billing_address.address2 != 'undefined')
+				stripe_token_params.address_line2 = stripe_billing_address.address2;
+			if (typeof stripe_billing_address.state != 'undefined')
+				stripe_token_params.address_state = stripe_billing_address.state;
+			
+			Stripe.createToken(stripe_token_params, stripeResponseHandler);
 
 			return false; /* Prevent the form from submitting with the default action */
 		}
@@ -117,7 +127,6 @@ $(document).ready(function() {
 	/* Catch callback errors */
 	if ($('.stripe-payment-errors').text())
 		$('.stripe-payment-errors').fadeIn(1000);
-	
 });
 
 function stripeResponseHandler(status, response)
