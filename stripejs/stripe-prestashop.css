@@ -70,3 +70,6 @@ div.stripe-card-deleted {
 
 #stripe-translations, #stripe-ajax-loader { display: none; }
 #stripe_save_token { vertical-align: top; }
+a#stripe_error { display: none; }
+#stripe-payment-form input, #stripe-payment-form select { margin-left: 0; }
+#stripe-replace-card, #stripe-delete-card { border: none; padding: 0; cursor: pointer; }

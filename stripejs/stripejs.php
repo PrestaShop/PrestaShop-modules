@@ -38,7 +38,7 @@ class StripeJs extends PaymentModule
 	{
 		$this->name = 'stripejs';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.9.2';
+		$this->version = '0.9.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -102,7 +102,7 @@ class StripeJs extends PaymentModule
 					Configuration::updateValue($u, $v);
 			}
 
-		$ret = parent::install() && $this->registerHook('payment') && $this->registerHook('header') && $this->registerHook('backOfficeHeader') &&
+		$ret = parent::install() && $this->registerHook('payment') && $this->registerHook('header') && $this->registerHook('backOfficeHeader') && $this->registerHook('orderConfirmation') &&
 		Configuration::updateValue('STRIPE_MODE', 0) && Configuration::updateValue('STRIPE_SAVE_TOKENS', 1) &&
 		Configuration::updateValue('STRIPE_SAVE_TOKENS_ASK', 1) && Configuration::updateValue('STRIPE_PENDING_ORDER_STATUS', (int)Configuration::get('PS_OS_PAYMENT')) &&
 		Configuration::updateValue('STRIPE_PAYMENT_ORDER_STATUS', (int)Configuration::get('PS_OS_PAYMENT')) &&
@@ -168,34 +168,19 @@ class StripeJs extends PaymentModule
 			return;
 
 		if (!in_array($this->context->currency->iso_code, $this->limited_currencies))
-			return ;
+			return;
 
 		/* Continue only if we are in the checkout process */
-		if (Tools::getValue('controller') != 'order-opc' && (!($_SERVER['PHP_SELF'] == 'order.php' || Tools::getValue('controller') == 'order' || Tools::getValue('controller') == 'orderopc' || Tools::getValue('step') == 3)))
+		if (Tools::getValue('controller') != 'order-opc' && (!($_SERVER['PHP_SELF'] == __PS_BASE_URI__.'order.php' || $_SERVER['PHP_SELF'] == __PS_BASE_URI__.'order-opc.php' || Tools::getValue('controller') == 'order' || Tools::getValue('controller') == 'orderopc' || Tools::getValue('step') == 3)))
 			return;
 
 		/* Load JS and CSS files through CCC */
-		$this->context->controller->addJS($this->_path.'stripe-prestashop.js');
 		$this->context->controller->addCSS($this->_path.'stripe-prestashop.css');
-
-		/* If the address check has been enabled by the merchant, we will transmitt the billing address to Stripe */
-		if (isset($this->context->cart->id_address_invoice))
-		{
-			$billing_address = new Address((int)$this->context->cart->id_address_invoice);
-			if ($billing_address->id_state)
-			{
-				$state = new State((int)$billing_address->id_state);
-				if (Validate::isLoadedObject($state))
-					$billing_address->state = $state->iso_code;
-			}
-		}
 
 		return '
 		<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
 		<script type="text/javascript">
 			var stripe_public_key = \''.addslashes(Configuration::get('STRIPE_MODE') ? Configuration::get('STRIPE_PUBLIC_KEY_LIVE') : Configuration::get('STRIPE_PUBLIC_KEY_TEST')).'\';
-			'.((isset($billing_address) && Validate::isLoadedObject($billing_address)) ? 'var stripe_billing_address = '.json_encode($billing_address).';' : '').'
-			var stripe_secure_key = \''.addslashes($this->context->customer->secure_key).'\';
 		</script>';
 	}
 
@@ -225,8 +210,26 @@ class StripeJs extends PaymentModule
 			if ($customer_credit_card)
 				$this->smarty->assign('stripe_credit_card', (int)$customer_credit_card);
 		}
+		
+		/* If the address check has been enabled by the merchant, we will transmitt the billing address to Stripe */
+		if (isset($this->context->cart->id_address_invoice))
+		{
+			$billing_address = new Address((int)$this->context->cart->id_address_invoice);
+			if ($billing_address->id_state)
+			{
+				$state = new State((int)$billing_address->id_state);
+				if (Validate::isLoadedObject($state))
+					$billing_address->state = $state->iso_code;
+			}
+		}
+		
+		$this->smarty->assign('stripe_ps_version', _PS_VERSION_);
 
-		return $this->display(__FILE__, 'payment.tpl');
+		return '
+		<script type="text/javascript">'.
+			((isset($billing_address) && Validate::isLoadedObject($billing_address)) ? 'var stripe_billing_address = '.json_encode($billing_address).';' : '').'
+			var stripe_secure_key = \''.addslashes($this->context->customer->secure_key).'\';
+		</script>'.$this->display(__FILE__, 'payment.tpl');
 	}
 
 	/**
@@ -350,6 +353,21 @@ class StripeJs extends PaymentModule
 		\''.(float)$amount.'\', \''.(!isset($this->_errors['stripe_refund_error']) ? 'paid' : 'unpaid').'\', \''.pSQL($result_json->currency).'\',
 		\'\', \'\', 0, 0, \''.(Configuration::get('STRIPE_MODE') ? 'live' : 'test').'\', NOW())');
 	}
+	
+	/**
+	 * Display a confirmation message after an order has been placed
+	 *
+	 * @param array Hook parameters
+	 */
+	public function hookOrderConfirmation($params)
+	{
+		if ($params['objOrder'] && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid))
+
+			$this->smarty->assign('stripe_order', array('reference' => isset($params['objOrder']->reference) ? $params['objOrder']->reference : '#'.sprintf('%06d', $params['objOrder']->id), 'valid' => $params['objOrder']->valid));
+
+		return $this->display(__FILE__, 'order-confirmation.tpl');
+
+	}
 
 	/**
 	 * Process a payment
@@ -435,7 +453,7 @@ class StripeJs extends PaymentModule
 			if (isset($stripe_customer_exists) && !$stripe_customer_exists)
 				Db::getInstance()->Execute('
 				INSERT INTO '._DB_PREFIX_.'stripe_customer (id_stripe_customer, stripe_customer_id, token, id_customer, cc_last_digits, date_add)
-				VALUES (NULL, \''.pSQL($stripe_customer['stripe_customer_id']).'\', \''.pSQL($token).'\', '.(int)$this->context->cookie->id_customer.', '.(int)substr(Tools::getValue('StripLastDigits'), 0, 4).', \'NOW()\')');
+				VALUES (NULL, \''.pSQL($stripe_customer['stripe_customer_id']).'\', \''.pSQL($token).'\', '.(int)$this->context->cookie->id_customer.', '.(int)substr(Tools::getValue('StripLastDigits'), 0, 4).', NOW())');
 		}
 		catch (Exception $e)
 		{
@@ -483,7 +501,7 @@ class StripeJs extends PaymentModule
 			$order_status = (int)Configuration::get('PS_OS_ERROR');
 
 		/* Create the PrestaShop order in database */
-		$this->validateOrder((int)$this->context->cart->id, (int)$order_status, ($result_json->amount * 0.01), $this->l('Stripe (Credit Card)'), $message, array(), null, false, $this->context->customer->secure_key);
+		$this->validateOrder((int)$this->context->cart->id, (int)$order_status, ($result_json->amount * 0.01), $this->displayName, $message, array(), null, false, $this->context->customer->secure_key);
 
 		/** @since 1.5.0 Attach the Stripe Transaction ID to this Order */
 		if (version_compare(_PS_VERSION_, '1.5', '>='))
@@ -511,10 +529,12 @@ class StripeJs extends PaymentModule
 			'.($result_json->card->cvc_check == 'pass' ? 1 : 0).', \''.($result_json->fee * 0.01).'\', \''.($result_json->livemode == 'true' ? 'live' : 'test').'\', NOW())');
 
 		/* Redirect the user to the order confirmation page / history */
-		if (_PS_VERSION_ < 1.4)
-			Tools::redirect('order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&id_order='.(int)$this->currentOrder.'&key='.$this->context->customer->secure_key);
+		if (_PS_VERSION_ < 1.5)
+			$redirect = __PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&id_order='.(int)$this->currentOrder.'&key='.$this->context->customer->secure_key;
 		else
-			Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&id_order='.(int)$this->currentOrder.'&key='.$this->context->customer->secure_key);
+			$redirect = __PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&id_order='.(int)$this->currentOrder.'&key='.$this->context->customer->secure_key;
+
+		header('Location: '.$redirect);
 		exit;
 	}
 
