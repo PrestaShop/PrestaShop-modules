@@ -73,7 +73,7 @@ class ThemeInstallator extends Module
 		@ini_set('memory_limit', '2G');
 
 		$this->name = 'themeinstallator';
-		$this->version = '2.1';
+		$this->version = '2.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, 1.4) >= 0)
@@ -403,18 +403,11 @@ class ThemeInstallator extends Module
 		if (Tools::isSubmit('submitExport') && $this->error === false && $this->checkPostedDatas() == true)
 		{
 			self::getThemeVariations();
-
-			// Check variations exists
-			if (empty($this->variations))
-				$this->_html .= parent::displayError($this->l('You must select at least one theme'));
-			else
-			{
-				self::getDocumentation();
-				self::getHookState();
-				self::getImageState();
-				self::generateXML();
-				self::generateArchive();
-			}
+			self::getDocumentation();
+			self::getHookState();
+			self::getImageState();
+			self::generateXML();
+			self::generateArchive();
 		}
 		self::authorInformationForm();
 		self::modulesInformationForm();
@@ -1204,7 +1197,8 @@ class ThemeInstallator extends Module
 			$zip->close();
 			if ($this->error === false)
 			{
-				ob_end_clean();
+				if (ob_get_length() > 0)
+					ob_end_clean();
 				header('Content-Type: multipart/x-zip');
 				header('Content-Disposition:attachment;filename="'.$zip_file_name.'"');
 				readfile(_EXPORT_FOLDER_.$zip_file_name);
@@ -1239,6 +1233,7 @@ class ThemeInstallator extends Module
 		}
 
 		$variations = $theme->addChild('variations');
+		if (count($this->variations))
 		foreach ($this->variations as $row)
 		{
 			$array = explode('¤', $row);
