@@ -23,7 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="payment_module">
+
+<script type="text/javascript" src="{$module_dir}stripe-prestashop.js"></script>
+<div class="payment_module"{if $stripe_ps_version < '1.5'}style="border: 1px solid #595A5E; padding: 0.6em; margin-left: 0.7em;"{/if}>
 	<h3 class="stripe_title"><img alt="" src="{$module_dir}img/secure-icon.png" />{l s='Pay by credit card with our secured payment server' mod='stripejs'}</h3>
 	{* This form will be displayed only if a previous credit card was saved *}
 	{if isset($stripe_save_tokens_ask) && $stripe_save_tokens_ask && isset($stripe_credit_card)}
@@ -66,29 +68,28 @@
 		<label>{l s='Expiration (MM/YYYY)' mod='stripejs'}</label><br />
 		<select id="month" name="month" class="stripe-card-expiry-month">
 			<option value="01">{l s='January' mod='stripejs'}</option>
-            <option value="02">{l s='February' mod='stripejs'}</option>
-            <option value="03">{l s='March' mod='stripejs'}</option>
-            <option value="04">{l s='April' mod='stripejs'}</option>
-            <option value="05">{l s='May' mod='stripejs'}</option>
-            <option value="06">{l s='June' mod='stripejs'}</option>
-            <option value="07">{l s='July' mod='stripejs'}</option>
-            <option value="08">{l s='August' mod='stripejs'}</option>
-            <option value="09">{l s='September' mod='stripejs'}</option>
-            <option value="10">{l s='October' mod='stripejs'}</option>
-            <option value="11">{l s='November' mod='stripejs'}</option>
-            <option value="12">{l s='December' mod='stripejs'}</option>
-        </select>
+			<option value="02">{l s='February' mod='stripejs'}</option>
+			<option value="03">{l s='March' mod='stripejs'}</option>
+			<option value="04">{l s='April' mod='stripejs'}</option>
+			<option value="05">{l s='May' mod='stripejs'}</option>
+			<option value="06">{l s='June' mod='stripejs'}</option>
+			<option value="07">{l s='July' mod='stripejs'}</option>
+			<option value="08">{l s='August' mod='stripejs'}</option>
+			<option value="09">{l s='September' mod='stripejs'}</option>
+			<option value="10">{l s='October' mod='stripejs'}</option>
+			<option value="11">{l s='November' mod='stripejs'}</option>
+			<option value="12">{l s='December' mod='stripejs'}</option>
+		</select>
 		<span> / </span>
 		<select id="year" name="year" class="stripe-card-expiry-year">
-			<option value="2012">2012</option>
-            <option value="2013">2013</option>
-            <option value="2014">2014</option>
-            <option value="2015">2015</option>
-            <option value="2016">2016</option>
-            <option value="2017">2017</option>
-            <option value="2018">2018</option>
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
+			<option value="2013">2013</option>
+			<option value="2014">2014</option>
+			<option value="2015">2015</option>
+			<option value="2016">2016</option>
+			<option value="2017">2017</option>
+			<option value="2018">2018</option>
+			<option value="2019">2019</option>
+			<option value="2020">2020</option>
         </select>
 		<br />
 		{if isset($stripe_save_tokens_ask)}
