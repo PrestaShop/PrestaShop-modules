@@ -320,7 +320,7 @@ class PayPal extends PaymentModule
 
 		$output = $this->fetchTemplate('/views/templates/back/back_office.tpl');
 		
-		if (self::isEnabled($this->name) == false)
+		if ($this->active == false)
 			return $output.$this->hookBackOfficeHeader();
 		
 		return $output;
