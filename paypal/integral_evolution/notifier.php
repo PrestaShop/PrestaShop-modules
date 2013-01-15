@@ -29,23 +29,12 @@ include_once(dirname(__FILE__).'/../../../init.php');
 
 include_once(_PS_MODULE_DIR_.'paypal/paypal.php');
 
-define('TIMEOUT', 15);
-
-define('INVALID', 'INVALID');
-define('VERIFIED', 'VERIFIED');
-
-define('DEBUG_FILE', 'debug.log');
-
 /*
  * Instant payment notification class.
  * (wait for PayPal payment confirmation, then validate order)
  */
 class PayPalNotifier extends PayPal
 {
-	/**
-	 * Debugging
-	 */
-	protected $logger = false;
 
 	public function __construct()
 	{
@@ -59,7 +48,6 @@ class PayPalNotifier extends PayPal
 		$cart_hash = sha1(serialize($cart->nbProducts()));
 		
 		$this->context->cart = $cart;
-		
 		$address = new Address((int)$cart->id_address_invoice);
 		$this->context->country = new Country((int)$address->id_country);
 		$this->context->customer = new Customer((int)$cart->id_customer);
@@ -68,18 +56,15 @@ class PayPalNotifier extends PayPal
 		
 		if (isset($cart->id_shop))
 			$this->context->shop = new Shop($cart->id_shop);
+		
+		$res = $this->getResult();
 
-		// Debug only
-		$this->createLog($cart->getProducts(true));
-
-		$mc_gross = Tools::getValue('mc_gross');
-		$total_price = Tools::ps_round($cart_details['total_price'], 2);
-
-		$message = null;
-		$result = $this->verify();
-
-		if (strcmp($result, VERIFIED) == 0)
+		if (strcmp($res, "VERIFIED") == 0)
 		{
+			$message = null;
+			$mc_gross = Tools::getValue('mc_gross');
+			$total_price = Tools::ps_round($cart_details['total_price'], 2);
+		
 			if ($mc_gross != $total_price)
 			{
 				$payment = (int)Configuration::get('PS_OS_ERROR');
@@ -101,7 +86,7 @@ class PayPalNotifier extends PayPal
 			$transaction = PayPalOrder::getTransactionDetails(false);
 			
 			if (_PS_VERSION_ < '1.5')
-				$shop = false;
+				$shop = null;
 			else
 			{
 				$shop_id = $this->context->shop->id;
@@ -111,56 +96,64 @@ class PayPalNotifier extends PayPal
 			$this->validateOrder($cart->id, $payment, $total_price, $this->displayName, $message, $transaction, $cart->id_currency, false, $customer->secure_key, $shop);
 		}
 	}
+	
+	public function getRequest()
+	{
+		$raw_post_data = file_get_contents('php://input');
+		$raw_post_array = explode('&', $raw_post_data);
+		$myPost = array();
+		
+		foreach ($raw_post_array as $keyval)
+		{
+			$keyval = explode ('=', $keyval);
+			if (count($keyval) == 2)
+				$myPost[$keyval[0]] = urldecode($keyval[1]);
+		}
+		
+		$req = 'cmd=_notify-validate';
+		
+		if(function_exists('get_magic_quotes_gpc'))
+			$get_magic_quotes_exists = true;
 
-	public function verify()
+		foreach ($myPost as $key => $value)
+		{
+			if($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1)
+				$value = urlencode(stripslashes($value));
+			else
+				$value = urlencode($value);
+			$req .= "&$key=$value";
+		}
+		
+		return $req;
+	}
+
+	public function getResult()
 	{
 		$url = $this->getPaypalStandardUrl();
-		$array = array_merge(array('cmd' => '_notify-validate'), $_POST);
-		$data = http_build_query($array, '', '&');
-
-		/* Get confirmation from PayPal */
-		return $this->fetchResponse($url, $data);
-	}
-
-	public function fetchResponse($url, $data)
-	{
-		$ch = curl_init();
-
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, TIMEOUT);
-
-		$result = curl_exec($ch);
-
+		$request = $this->getRequest();
+		
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+		
+		if( !($res = curl_exec($ch)))
+		{
+			curl_close($ch);
+			exit;
+		}
 		curl_close($ch);
-
-		return $result;
-	}
-
-	/**
-	 * Integral Evolution log file generation
-	 */
-	public function createLog($data, $file = false)
-	{
-		if ($this->logger == false)
-			return;
-	
-		ob_start();
-		var_dump($data);
-		$buff = ob_get_contents();
-		ob_end_clean();
-
-		$file = $file ? $file : 'log.txt';
-		$handle = @fopen($file, 'w+');
-		fwrite($handle, $buff);
-		fclose($handle);
+		
+		return $res;
 	}
 
 }
-
+		
 if ($custom = Tools::getValue('custom'))
 {
 	$notifier = new PayPalNotifier();
