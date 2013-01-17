@@ -161,7 +161,7 @@ class PaypalExpressCheckout extends Paypal
 		
 		$parsed_data['scheme'] .= '://';
 		$parsed_data['path'] .= '?';
-		$parsed_data['query'] .= '&paypal_ec_canceled=1';
+		$parsed_data['query'] = '&paypal_ec_canceled=1';
 
 		$fields['CANCELURL'] = implode($parsed_data);
 	}
