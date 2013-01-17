@@ -91,7 +91,8 @@ function setCustomerAddress($ppec, $customer)
 	$address->lastname = $customer->lastname;
 	$address->firstname = $customer->firstname;
 	$address->address1 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET'];
-	$address->address1 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
+	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
+		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
 	$address->postcode = $ppec->result['SHIPTOZIP'];
 	$address->id_customer = $customer->id;
