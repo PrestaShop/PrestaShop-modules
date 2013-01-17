@@ -144,7 +144,7 @@ var fieldRequired = '{l s='Please fill in all required fields, then save your cu
 					{foreach from=$images item=image name=thumbnails}
 					{assign var=imageIds value="`$product->id`-`$image.id_image`"}
 					<li id="thumbnail_{$image.id_image}"{if !$smarty.foreach.thumbnails.first} style="display: none;"{/if}>
-						<img {if $smarty.foreach.thumbnails.index == 0}id="bigpic"{else}id="thumb_{$image.id_image}"{/if} src="{$link->getImageLink($product->link_rewrite, $imageIds, 'large')}" alt="{$image.legend|htmlspecialchars}" />
+						<img{if $smarty.foreach.thumbnails.index == 0} id="bigpic"{else} id="thumb_{$image.id_image}"{/if} src="{$link->getImageLink($product->link_rewrite, $imageIds, 'large')}" alt="{$image.legend|htmlspecialchars}" class="thumbs" />
 					</li>
 					{/foreach}
 				{/if}
@@ -274,77 +274,76 @@ var fieldRequired = '{l s='Please fill in all required fields, then save your cu
 {/if}
 
 <p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties OR $product->quantity <= 0) OR $allow_oosp OR !$product->available_for_order OR $PS_CATALOG_MODE} style="display: none;"{/if} >{l s='Warning: Last items in stock!'}</p>
-
 	<div class="ui-body ui-body-b">
-			
-	<ul data-role="listview" data-inset="true" data-theme="c">
-		{if $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
-			<li><span>{l s='Previous Price'}</span><span id="old_price" class="ui-li-aside" style="text-decoration: line-through;">
-			{if $priceDisplay >= 0 && $priceDisplay <= 2}
-				{if $productPriceWithoutRedution > $productPrice}
-					<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
-				{/if}
-			{/if}
-			</span></li>
-		{/if}
-		<li style="height: 25px; line-height: 25px;">
-		<span style="font-size: 13px;">
+		<ul data-role="listview" data-inset="true" data-theme="c">
 			{if $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
-				{l s='New Price'}
-				{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}
-				<span id="reduction_percent"> (-<span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span>%)</span>
+				<li><span>{l s='Previous Price'}</span><span id="old_price" class="ui-li-aside" style="text-decoration: line-through;">
+				{if $priceDisplay >= 0 && $priceDisplay <= 2}
+					{if $productPriceWithoutRedution > $productPrice}
+						<span id="old_price_display">{convertPrice price=$productPriceWithoutRedution}</span>
+					{/if}
 				{/if}
-				{else}
-				{l s='Price'}
-				{/if}
-		</span><span class="ui-li-aside" style="font-size: 20px; margin-top: -4px;">
-		<span class="our_price_display">
-			{if $priceDisplay >= 0 && $priceDisplay <= 2}
-				<span id="our_price_display" style="font-size: 15px; margin-top: 4px; display: block;">{convertPrice price=$productPrice}</span>
+				</span></li>
 			{/if}
-			</span>
-			{if $priceDisplay == 2}
-				<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL, 2)}</span>&nbsp;{l s='tax excl.'}</span>
-			{/if}</span></li>
+			<li style="height: 25px; line-height: 25px;">
+			<span style="font-size: 13px;">
+				{if $product->specificPrice AND $product->specificPrice.reduction AND $productPriceWithoutRedution > $productPrice}
+					{l s='New Price'}
+					{if $product->specificPrice AND $product->specificPrice.reduction_type == 'percentage'}
+					<span id="reduction_percent"> (-<span id="reduction_percent_display">{$product->specificPrice.reduction*100}</span>%)</span>
+					{/if}
+					{else}
+					{l s='Price'}
+					{/if}
+			</span><span class="ui-li-aside" style="font-size: 20px; margin-top: -4px;">
+			<span class="our_price_display">
+				{if $priceDisplay >= 0 && $priceDisplay <= 2}
+					<span id="our_price_display" style="font-size: 15px; margin-top: 4px; display: block;">{convertPrice price=$productPrice}</span>
+				{/if}
+				</span>
+				{if $priceDisplay == 2}
+					<span id="pretaxe_price"><span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL, 2)}</span>&nbsp;{l s='tax excl.'}</span>
+				{/if}</span></li>
+				
+			{if $product->ecotax != 0}
+				<li><span>{l s='Ecotax'}</span><span class="ui-li-aside price-ecotax"><span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span></span></li>
+			{/if}
 			
-		{if $product->ecotax != 0}
-			<li><span>{l s='Ecotax'}</span><span class="ui-li-aside price-ecotax"><span id="ecotax_price_display">{if $priceDisplay == 2}{$ecotax_tax_exc|convertAndFormatPrice}{else}{$ecotax_tax_inc|convertAndFormatPrice}{/if}</span></span></li>
-		{/if}
-		
-		{if $quantity_discounts}
-		<li style="font-size: 13px;">{l s='Sliding scale reductions'}</li>
-		<li id="quantityDiscount" style="padding-top: 0; border-top: none;">
-			<table class="std" cellpadding="0" cellspacing="0">
-				<tr>
-					{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-						<th>{$quantity_discount.quantity|intval}
-						{if $quantity_discount.quantity|intval > 1}
-							{l s='qties'}
-						{else}
-							{l s='qty'}
-						{/if}
-						</th>
-					{/foreach}
-				</tr>
-				<tr>
-					{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
-						<td>
-						{if $quantity_discount.price != 0 OR $quantity_discount.reduction_type == 'amount'}
-							-{convertPrice price=$quantity_discount.real_value|floatval}
-						{else}
-							-{$quantity_discount.real_value|floatval}%
-						{/if}
-						</td>
-					{/foreach}
-				</tr>
-			</table>
-		</li>
-		{/if}
-		
-		{if $tax_enabled && $display_tax_label == 1}
-			{if $priceDisplay == 1}<span style="display: block; padding: 5px 0 5px 7px;">{l s='Prices are displayed excluding taxes.'}{else}{l s='Prices include taxes.'}</span>{/if}
-		{/if}
-	</ul>
+			{if $quantity_discounts}
+			<li style="font-size: 13px;">{l s='Sliding scale reductions'}</li>
+			<li id="quantityDiscount" style="padding-top: 0; border-top: none;">
+				<table class="std" cellpadding="0" cellspacing="0">
+					<tr>
+						{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+							<th>{$quantity_discount.quantity|intval}
+							{if $quantity_discount.quantity|intval > 1}
+								{l s='qties'}
+							{else}
+								{l s='qty'}
+							{/if}
+							</th>
+						{/foreach}
+					</tr>
+					<tr>
+						{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
+							<td>
+							{if $quantity_discount.price != 0 OR $quantity_discount.reduction_type == 'amount'}
+								-{convertPrice price=$quantity_discount.real_value|floatval}
+							{else}
+								-{$quantity_discount.real_value|floatval}%
+							{/if}
+							</td>
+						{/foreach}
+					</tr>
+				</table>
+			</li>
+			{/if}
+		</ul>
+		<p style="display: block; padding: 5px 0 5px 7px;">
+			{if $tax_enabled && $display_tax_label == 1}
+				{if $priceDisplay == 1}<span>{l s='Prices are displayed excluding taxes.'}{else}{l s='Prices include taxes.'}</span>{/if}
+			{/if}
+		</p>	
 		<fieldset class="ui-grid-a" data-type="horizontal">
 			<div class="ui-block-a" style="width: 15%; margin-top: 1px;"><span id="quantity_wanted_p" data-inline="true"><input type="number" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" size="2" {if $product->minimal_quantity > 1}onkeyup="checkMinimalQuantity({$product->minimal_quantity});"{/if} /></span></div>
 			<div class="ui-block-b ui-pos-right" style="width: 85%;"><input type="submit" name="Submit" value="{l s='Add to cart'}" data-theme="{$ps_mobile_styles.PS_MOBILE_THEME_BUTTONS}" data-icon="check" data-iconpos="right" /></div>
