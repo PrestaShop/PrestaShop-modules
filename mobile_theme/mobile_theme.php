@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +33,7 @@ class Mobile_Theme extends Module
 	{
 		$this->name = 'mobile_theme';
 		$this->tab = (version_compare(_PS_VERSION_, 1.4) >= 0 ? 'administration' : 'Theme');
-		$this->version = '0.4.1';
+		$this->version = '0.5.0';
 
 		parent::__construct();
 
@@ -123,7 +122,7 @@ class Mobile_Theme extends Module
 					$new_content .= '/* PrestaShop Mobile */ ';
 					if (version_compare(_PS_VERSION_, '1.4', '<'))
 						$new_content .= 'if (strpos($_SERVER[\'REQUEST_URI\'], \'ps_mobile_site=1\') !== false) $_GET[\'ps_mobile_site\'] = 1; if (strpos($_SERVER[\'REQUEST_URI\'], \'ps_full_site=1\') !== false) $_GET[\'ps_full_site\'] = 1; if (strpos($_SERVER[\'REQUEST_URI\'], \'mobile_iframe=1\') !== false) $_GET[\'mobile_iframe\'] = 1; ';
-					$new_content .= 'if ((isset($_GET[\'ps_mobile_site\']) && $_GET[\'ps_mobile_site\'] == 1) || !isset($_GET[\'ps_full_site\'])'.(isset($params['redirect_domain']) && $params['redirect_domain'] ? ' || (!isset($_GET[\'ps_full_site\']) && $_SERVER[\'HTTP_HOST\'] == '.(isset($params['mobile_domain']) ? '\''.$params['mobile_domain'].'\'' : '\''.$default_mobile_domain.'\'').')' : '').') { include(dirname(__FILE__).\'/../modules/mobile_theme/Mobile_Detect.php\'); $mobile_detect = new Mobile_Detect(); define(\'_PS_MOBILE_TABLET_\', '.(isset($params['device']) && $params['device'] == 0 ? '0' : '(int)$mobile_detect->isTablet()').'); define(\'_PS_MOBILE_PHONE_\', '.(isset($params['device']) && $params['device'] == 0 ? 'isset($_GET[\'ps_mobile_site\']) ? 1 : (int)($mobile_detect->isMobile() && !$mobile_detect->isTablet())' : (isset($params['device']) && $params['device'] == 2 ? 'isset($_GET[\'ps_mobile_site\']) ? 1 : (int)$mobile_detect->isMobile()' : '0')).'); } else { define(\'_PS_MOBILE_TABLET_\', 0); define(\'_PS_MOBILE_PHONE_\', 0); } define(\'_PS_MOBILE_\', _PS_MOBILE_PHONE_ || _PS_MOBILE_TABLET_); if (_PS_MOBILE_) define(\'_THEME_NAME_\', \'prestashop_mobile\'); else'."\n";
+					$new_content .= 'if ((isset($_GET[\'ps_mobile_site\']) && $_GET[\'ps_mobile_site\'] == 1) || !isset($_GET[\'ps_full_site\']) || (!isset($_GET[\'ps_full_site\']) && $_SERVER[\'HTTP_HOST\'] == '.(isset($params['mobile_domain']) ? '\''.$params['mobile_domain'].'\'' : '\''.$default_mobile_domain.'\'').')) { include(dirname(__FILE__).\'/../modules/mobile_theme/Mobile_Detect.php\'); $mobile_detect = new Mobile_Detect(); define(\'_PS_MOBILE_TABLET_\', '.(isset($params['device']) && $params['device'] == 0 ? '0' : '(int)$mobile_detect->isTablet()').'); define(\'_PS_MOBILE_PHONE_\', '.(isset($params['device']) && $params['device'] == 1 ? '0' : 'isset($_GET[\'ps_mobile_site\']) ? 1 : (int)$mobile_detect->isMobile()').'); } else { define(\'_PS_MOBILE_TABLET_\', 0); define(\'_PS_MOBILE_PHONE_\', 0); } define(\'_PS_MOBILE_\', _PS_MOBILE_PHONE_ || _PS_MOBILE_TABLET_); if (_PS_MOBILE_) define(\'_THEME_NAME_\', \'prestashop_mobile\'); else'."\n";
 				}
 				$new_content .= $line;
 			}
@@ -411,7 +410,7 @@ class Mobile_Theme extends Module
 		if (!Configuration::get('PS_MOBILE_MODULE_ENABLED'))
 		{
 			$this->editSettings(false);
-			$this->editSettings(true, array('mobile_domain' => Configuration::get('PS_MOBILE_DOMAIN'), 'redirect_domain' => (int)Configuration::get('PS_REDIRECT_MOBILE_DOMAIN'), 'device' => (int)Configuration::get('PS_MOBILE_DEVICE')));
+			$this->editSettings(true, array('mobile_domain' => Configuration::get('PS_MOBILE_DOMAIN'), 'device' => (int)Configuration::get('PS_MOBILE_DEVICE')));
 		}
 
 		if (!defined('_PS_MOBILE_'))
@@ -610,11 +609,21 @@ class Mobile_Theme extends Module
 
 		global $smarty, $link;
 
-		$result = Db::getInstance()->ExecuteS('
-		SELECT c.`id_category`, cl.`description` `desc`, cl.`name`, cl.`link_rewrite`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`)
-		WHERE c.`id_parent` = 1 AND c.`active` = 1 AND cl.`id_lang` = '.(int)$params['cookie']->id_lang);
+		$id_customer = (int)($params['cookie']->id_customer);
+		$id_lang = (int)$params['cookie']->id_lang;
+		$groups = $id_customer ? implode(', ', Customer::getGroupsStatic($id_customer)) : (int)_PS_DEFAULT_CUSTOMER_GROUP_;
+
+		$maxdepth = Configuration::get('BLOCK_CATEG_MAX_DEPTH');
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+			SELECT c.`id_parent`, c.`id_category`, cl.`name`, cl.`description` as `desc`, cl.`link_rewrite`
+			FROM `'._DB_PREFIX_.'category` c
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = c.`id_category`)
+			WHERE (c.`active` = 1 AND c.`id_parent` = 1)
+			'.((int)($maxdepth) != 0 ? ' AND `level_depth` <= '.(int)($maxdepth) : '').'
+			AND cg.`id_group` IN ('.pSQL($groups).')
+			GROUP BY id_category
+			ORDER BY `level_depth` ASC, '.(Configuration::get('BLOCK_CATEG_SORT') ? 'cl.`name`' : 'c.`position`').' '.(Configuration::get('BLOCK_CATEG_SORT_WAY') ? 'DESC' : 'ASC'));
 
 		if ($result)
 		{
@@ -641,7 +650,7 @@ class Mobile_Theme extends Module
 		if (!Configuration::get('PS_MOBILE_MODULE_ENABLED') || isset($_GET['ps_reenable_mobile']))
 		{
 			$this->editSettings(false);
-			$this->editSettings(true, array('mobile_domain' => Configuration::get('PS_MOBILE_DOMAIN'), 'redirect_domain' => (int)Configuration::get('PS_REENABLE_MOBILE'), 'device' => (int)Configuration::get('PS_MOBILE_DEVICE')));
+			$this->editSettings(true, array('mobile_domain' => Configuration::get('PS_MOBILE_DOMAIN'), 'device' => (int)Configuration::get('PS_MOBILE_DEVICE')));
 		}
 
 		if (Tools::isSubmit('SubmitMobile'))
@@ -660,11 +669,11 @@ class Mobile_Theme extends Module
 		elseif (Tools::isSubmit('SubmitMobileSettings'))
 		{
 			Configuration::updateValue('PS_MOBILE_DOMAIN', $_POST['mobile_domain']);
-			Configuration::updateValue('PS_MOBILE_DEVICE', (int)$_POST['mobile_device']);
-			Configuration::updateValue('PS_REDIRECT_MOBILE_DOMAIN', (int)$_POST['redirect_domain']);
 
 			$this->editSettings(false);
-			$this->editSettings(true, array('mobile_domain' => Tools::safeOutput($_POST['mobile_domain']), 'redirect_domain' => (int)Configuration::get('PS_REDIRECT_MOBILE_DOMAIN'), 'device' => (int)$_POST['mobile_device']));
+			$this->editSettings(true, array('mobile_domain' => Tools::safeOutput($_POST['mobile_domain']), 'device' => (int)$_POST['mobile_device']));
+			Configuration::updateValue('PS_MOBILE_DEVICE', (int)$_POST['mobile_device']);
+			Configuration::updateValue('PS_REDIRECT_MOBILE_DOMAIN', (int)$_POST['redirect_domain']);
 			$this->displayConf();
 		}
 

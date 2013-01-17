@@ -40,10 +40,10 @@
 
 {if !isset($email_create)}
 	<div data-role="navbar">
-	<ul>
-	  <li><a data-theme="{$ps_mobile_styles.PS_MOBILE_THEME_HEADINGS}" href="#jqm_page_authentication_login" class="link_page_authenticate_login">{l s='Login'}</a></li>
-	  <li><a data-theme="{$ps_mobile_styles.PS_MOBILE_THEME_HEADINGS}" href="#jqm_page_authentication_register" class="link_page_authenticate_register">{l s='Register'}</a></li>
-	</ul>
+		<ul>
+		  <li><a data-theme="{$ps_mobile_styles.PS_MOBILE_THEME_HEADINGS}" href="#jqm_page_authentication_login" class="link_page_authenticate_login">{l s='Login'}</a></li>
+		  <li><a data-theme="{$ps_mobile_styles.PS_MOBILE_THEME_HEADINGS}" href="#jqm_page_authentication_register" class="link_page_authenticate_register">{l s='Register'}</a></li>
+		</ul>
+		<br class="clear" />	
 	</div>
-	<br class="clear" />
 {/if}
