@@ -218,13 +218,6 @@ class PaypalExpressCheckout extends Paypal
 		$taxes = $total = 0;
 		$index = -1;
 
-		$id_address = (int)$this->context->cart->id_address_delivery;
-
-		if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart())
-			$this->setShippingAddress($fields, $id_address);
-		else
-			$fields['NOSHIPPING'] = '0';
-
 		// Set cart products list
 		$this->setProductsList($fields, $index, $total, $taxes);
 		$this->setDiscountsList($fields, $index, $total, $taxes);
@@ -232,6 +225,15 @@ class PaypalExpressCheckout extends Paypal
 
 		// Payment values
 		$this->setPaymentValues($fields, $total, $taxes);
+
+		$id_address = (int)$this->context->cart->id_address_delivery;
+		if (($id_address == 0) && ($this->context->customer))
+			$id_address = Address::getFirstCustomerAddressId($this->context->customer->id);
+
+		if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart())
+			$this->setShippingAddress($fields, $id_address);
+		else
+			$fields['NOSHIPPING'] = '0';
 
 		foreach ($fields as &$field)
 			if (is_numeric($field))
