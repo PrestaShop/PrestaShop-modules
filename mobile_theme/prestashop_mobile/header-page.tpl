@@ -40,3 +40,6 @@
 		{include file="$tpl_dir./modules/blocksearch/blocksearch-top.tpl"}
   {/if}
 {/if}
+{if isset($smarty.get.id_product) && $page_name == 'cart' && isset($errors) && $errors}
+	{include file="$tpl_dir./errors.tpl"}
+{/if}

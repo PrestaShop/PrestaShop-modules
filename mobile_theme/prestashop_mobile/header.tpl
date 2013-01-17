@@ -64,4 +64,4 @@
 {/if}
 	</head>
 
-	<body {if $page_name}id="{if $page_name == '404'}p{/if}{$page_name|escape:'htmlall':'UTF-8'}{if isset($smarty.get.id_product)}_{$smarty.get.id_product|intval}{/if}"{/if}>
+	<body {if $page_name}id="{if $page_name == '404'}p{/if}{$page_name|escape:'htmlall':'UTF-8'}{if isset($smarty.get.id_product) && $page_name != 'cart'}_{$smarty.get.id_product|intval}{/if}"{/if}>

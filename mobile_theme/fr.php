@@ -5,6 +5,7 @@ $_MODULE = array();
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_a10d5204af6fb9c02499381176ce3fd4'] = 'Thème mobile';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_04fdc8a662f53173f4c2aed47a3d16fa'] = 'Offre un thème mobile compatible avec iPhone, Android...etc.';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_df353db31f655278ffa608d683cd5639'] = 'Désinstaller ce module supprimera votre thème mobile et toutes les modifications que vous y avez apporté, êtes vous sûr ?';
+$_MODULE['<{mobile_theme}prestashop>mobile_theme_abf9715a7f4574dbf67c9445043ec8e9'] = 'Ce module ne peut être installé sur cette version de PrestaShop';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_b4afeadf98f78ac964555580a4a27d69'] = 'En-tete des pages mobiles';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_ffb0d60076012028fb2d6190caf810d3'] = 'Une accroche qui vous permet d\'effectuer des action dans les en-tetes de chaque page mobile';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_e4c490ea8e13111084a160c5f28c21ad'] = 'Erreur : Votre fichier settings.inc.php n\'a pas les permissions d\'écriture, merci de corriger cela.';
@@ -13,7 +14,6 @@ $_MODULE['<{mobile_theme}prestashop>mobile_theme_2d2aed6e9c79f14336c18cadd90adeb
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_9721bfd06fd60adecd44714e711b3442'] = 'Erreur : Votre dossier \"themes\" n\'a pas les permissions d\'écriture ou le thème \"prestashop_mobile\" existe déjà, merci de corriger cela.';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_b9a03bbbf4ed477939257253a517b340'] = 'Le thème mobile a été désactivé';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_cb10b66801d070d1b762fea264cc1fca'] = 'cliquez ici pour le réactiver';
-$_MODULE['<{mobile_theme}prestashop>mobile_theme_bcfaccebf745acfd5e75351095a5394a'] = 'Désactiver';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_c1d9bcbac57ba5a47225787553b4b83b'] = 'Désolé, aucun module de paiement n\'est disponible pour votre pays.';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_68bb80d458d78d8fcda19e26d171e6a1'] = 'Voir le site mobile';
 $_MODULE['<{mobile_theme}prestashop>mobile_theme_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';

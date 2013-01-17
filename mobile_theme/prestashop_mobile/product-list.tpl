@@ -27,7 +27,7 @@
 	<ul id="product_list" class="clear" data-role="listview">
 	{foreach from=$products item=product name=products}
 		<li style="height: 81px;">
-			<a href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}" data-ajax="false">
+			<a href="{$product.link|escape:'htmlall':'UTF-8'}" title="{$product.name|escape:'htmlall':'UTF-8'}">
 				<img src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'medium')}" alt="{$product.legend|escape:'htmlall':'UTF-8'}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} style="border-right: 1px solid #CCC;" />
 				<h2 style="margin-top: 4px;">{if isset($product.new) && $product.new == 1}<span style="font-size: 9px; display: inline-block; border: 1px solid #CCC; background: #EEE; padding: 1px 4px; margin-right: 5px;">{l s='NEW'}</span>{/if}{$product.name|escape:'htmlall':'UTF-8'}</h2>
 				<p>{$product.description_short|strip_tags:'UTF-8'}</p>

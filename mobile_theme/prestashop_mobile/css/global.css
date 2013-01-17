@@ -113,3 +113,14 @@ css: * { font-size: 0.959em !important; padding: 0; margin: 0; }
 #container_express_checkout { float: none!important; margin-right: 0px!important; }
 #container_express_checkout div { margin-left: 0px!important; text-align: center; }
 #container_express_checkout img { cursor: pointer; }
+#authentication .ui-navbar ul {
+	height: 100%;
+	overflow: hidden!important;
+}
+.thumbs {
+	display: block;
+	margin: 0px auto;
+}
+#order #HOOK_PAYMENT li a.ui-link-inherit {
+	padding-left: 215px!important;
+}
