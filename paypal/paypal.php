@@ -835,9 +835,17 @@ class PayPal extends PaymentModule
 		$this->context->smarty->assign(array('message' => $message, 'logs' => $log));
 
 		if ($send)
-			Mail::Send((int)$this->context->cookie->id_lang, 'error_reporting', Mail::l('Error reporting from your PayPal module',
+		{
+			$id_lang = (int)$this->context->cookie->id_lang;
+			$iso_lang = Language::getIsoById($id_lang);
+
+			if (!is_dir(dirname(__FILE__).'/mails/'.strtolower($iso_lang)))
+				$id_lang = Language::getIdByIso('en');
+
+			Mail::Send($id_lang, 'error_reporting', Mail::l('Error reporting from your PayPal module',
 			(int)$this->context->cookie->id_lang), array('{logs}' => implode('<br />', $log)), Configuration::get('PS_SHOP_EMAIL'),
 			null, null, null, null, null, _PS_MODULE_DIR_.$this->name.'/mails/');
+		}
 
 		return $this->fetchTemplate('error.tpl');
 	}
