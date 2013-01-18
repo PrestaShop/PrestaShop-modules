@@ -1027,7 +1027,7 @@ class PayPal extends PaymentModule
 
 			$history = new OrderHistory();
 			$history->id_order = (int)$id_order;
-			$history->changeIdOrderState((int)Configuration::get('PS_OS_REFUND'), (int)$id_order);
+			$history->changeIdOrderState((int)Configuration::get('PS_OS_REFUND'), $history->id_order);
 			$history->addWithemail();
 			$history->save();
 		}
