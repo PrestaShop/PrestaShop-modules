@@ -60,10 +60,12 @@ class PayPalOrder
 	{
 		if ($ppec && $payment_status)
 		{
+			$transaction_id = pSQL($ppec->result['PAYMENTINFO_0_TRANSACTIONID']);
 			return array(
 				'currency' => pSQL($ppec->result['PAYMENTINFO_0_CURRENCYCODE']),
 				'id_invoice' => null,
-				'id_transaction' => pSQL($ppec->result['PAYMENTINFO_0_TRANSACTIONID']),
+				'id_transaction' => $transaction_id,
+				'transaction_id' => $transaction_id,
 				'total_paid' => (float)$ppec->result['PAYMENTINFO_0_AMT'],
 				'shipping' => (float)$ppec->result['PAYMENTREQUEST_0_SHIPPINGAMT'],
 				'payment_date' => pSQL($ppec->result['PAYMENTINFO_0_ORDERTIME']),
@@ -72,10 +74,12 @@ class PayPalOrder
 		}
 		else
 		{
+			$transaction_id = pSQL(Tools::getValue(ID_TRANSACTION));
 			return array(
 				'currency' => pSQL(Tools::getValue(CURRENCY)),
 				'id_invoice' => pSQL(Tools::getValue(ID_INVOICE)),
-				'id_transaction' => pSQL(Tools::getValue(ID_TRANSACTION)),
+				'id_transaction' => $transaction_id,
+				'transaction_id' => $transaction_id,
 				'total_paid' => (float)Tools::getValue(TOTAL_PAID),
 				'shipping' => (float)Tools::getValue(SHIPPING),
 				'payment_date' => pSQL(Tools::getValue(PAYMENT_DATE)),

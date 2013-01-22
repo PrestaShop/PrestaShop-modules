@@ -72,7 +72,7 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 			if (isset($order_state_message) && $order_state_message)
 				$this->context->smarty->assign('message', $order_state_message);
 			
-			$template = 'error';
+			$template = 'error.tpl';
 		}
 		else
 		{
@@ -82,11 +82,11 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 					'price' => $price,
 				)
 			);
-	
-			$template = 'order-confirmation';
+
+			$template = 'order-confirmation.tpl';
 		}
 		
 		$this->context->smarty->assign('use_mobile', (bool) $this->paypal->useMobile());
-		echo $this->paypal->fetchTemplate('/views/templates/front/', $template);
+		echo $this->paypal->fetchTemplate($template);
 	}
 }

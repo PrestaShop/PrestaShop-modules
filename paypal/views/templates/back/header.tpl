@@ -4,4 +4,4 @@
     var PayPal_ECS = '{$PayPal_ECS}';
 </script>
 
-<script type="text/javascript" src="{$PayPal_module_dir}/js/back_office.js"></script>
+<script type="text/javascript" src="{$PayPal_module_dir}/views/templates/back/back_office.js"></script>
