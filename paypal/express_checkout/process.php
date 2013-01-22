@@ -116,7 +116,18 @@ class PaypalExpressCheckout extends Paypal
 	{
 		if (!$this->context->cart || !$this->context->cart->id)
 			return false;
-			
+
+		$cart_currency = new Currency((int)$this->context->cart->id_currency);
+		$currency_module = $this->getCurrency((int)$this->context->cart->id_currency);
+
+
+		if ($cart_currency != $currency_module)
+		{
+			$this->context->cart->id_currency = $currency_module->id;
+			$this->context->cart->update();
+		}
+
+		$this->context->currency = $currency_module;
 		$this->product_list = $this->context->cart->getProducts();
 		return (bool)count($this->product_list);
 	}
@@ -150,7 +161,7 @@ class PaypalExpressCheckout extends Paypal
 		
 		$parsed_data['scheme'] .= '://';
 		$parsed_data['path'] .= '?';
-		$parsed_data['query'] .= '&paypal_ec_canceled=1';
+		$parsed_data['query'] = '&paypal_ec_canceled=1';
 
 		$fields['CANCELURL'] = implode($parsed_data);
 	}
@@ -207,13 +218,6 @@ class PaypalExpressCheckout extends Paypal
 		$taxes = $total = 0;
 		$index = -1;
 
-		$id_address = (int)$this->context->cart->id_address_delivery;
-
-		if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart())
-			$this->setShippingAddress($fields, $id_address);
-		else
-			$fields['NOSHIPPING'] = '0';
-
 		// Set cart products list
 		$this->setProductsList($fields, $index, $total, $taxes);
 		$this->setDiscountsList($fields, $index, $total, $taxes);
@@ -221,6 +225,15 @@ class PaypalExpressCheckout extends Paypal
 
 		// Payment values
 		$this->setPaymentValues($fields, $total, $taxes);
+
+		$id_address = (int)$this->context->cart->id_address_delivery;
+		if (($id_address == 0) && ($this->context->customer))
+			$id_address = Address::getFirstCustomerAddressId($this->context->customer->id);
+
+		if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart())
+			$this->setShippingAddress($fields, $id_address);
+		else
+			$fields['NOSHIPPING'] = '0';
 
 		foreach ($fields as &$field)
 			if (is_numeric($field))
@@ -310,7 +323,8 @@ class PaypalExpressCheckout extends Paypal
 		else
 			$fields['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Sale';
 		
-		$fields['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->currency->iso_code;
+		$currency = new Currency((int)$this->context->cart->id_currency);
+		$fields['PAYMENTREQUEST_0_CURRENCYCODE'] = $currency->iso_code;
 
 		$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
 		$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);

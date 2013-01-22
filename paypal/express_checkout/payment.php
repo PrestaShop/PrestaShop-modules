@@ -40,7 +40,6 @@ if ($id_cart && $id_order && $id_module && $paypal_key)
 {
 	if (_PS_VERSION_ < '1.5')
 		new PayPalExpressCheckoutSubmit();
-		
 	return;
 }
 
@@ -92,6 +91,8 @@ function setCustomerAddress($ppec, $customer)
 	$address->lastname = $customer->lastname;
 	$address->firstname = $customer->firstname;
 	$address->address1 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET'];
+	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
+		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
 	$address->postcode = $ppec->result['SHIPTOZIP'];
 	$address->id_customer = $customer->id;
@@ -265,7 +266,6 @@ if (($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') ||
 		// When all information are checked before, we can validate the payment to paypal
 		// and create the prestashop order
 		$ppec->doExpressCheckout();
-/* 		d($ppec->logs); */
 
 		validateOrder($customer, $cart, $ppec);
 
@@ -357,7 +357,7 @@ else
  * Detect if we are using mobile or not
  * Check the 'ps_mobile_site' parameter.
  */
-$smarty->assign('use_mobile', (bool) $ppec->useMobile());
+$ppec->context->smarty->assign('use_mobile', (bool) $ppec->useMobile());
 
 $display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/'.$template);
 $display->run();

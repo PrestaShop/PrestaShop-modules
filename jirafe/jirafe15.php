@@ -58,6 +58,19 @@ class Jirafe extends Module
         // Confirmation of uninstall
         $this->confirmUninstall = $this->l('Are you sure you want to remove Jirafe analytics integration for your site?');
     }
+    
+    public function checkConfig()
+    {
+		// Check configurations
+        $warnings = array();
+		if (!in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
+			$warnings[] = $this->l('allow_url_fopen be enabled on your server to use this module.');
+		if (!is_callable('curl_exec'))
+			$warnings[] = $this->l('cURL extension must be enabled on your server to use this module.');
+		if (!empty($warnings))
+        	$this->warning = implode(',<br />', $warnings);
+         return (bool)count($warnings);
+    }    
 
     public function getPrestashopClient()
     {
@@ -92,12 +105,18 @@ class Jirafe extends Module
 
     public function install()
     {
-		// Check configurations
-		if (!in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return false;
-		if (!extension_loaded('curl'))
-			return false;
+        if ($this->checkConfig() === true)
+		{
+			echo '<div class="warning">'.Tools::safeOutput($this->warning).'</div>';
+            return false;
+		}
 
+		if (!empty($this->warnings))
+        {
+			$this->warning = implode(',<br />', $this->warnings).'.';
+            return false;
+        }
+            
         $ps = $this->getPrestashopClient();
         $jf = $this->getjirafeClient();
 
@@ -133,8 +152,11 @@ class Jirafe extends Module
         }
 
         // Save information back in Prestashop
-        $ps->setUsers($results['users']);
-        $ps->setSites($results['sites']);
+        if(isset($results['users']))
+            $ps->setUsers($results['users']);
+        if(isset($results['sites']))
+            $ps->setSites($results['sites']);
+
 
         // Add hooks for stats and tags
         return (
