@@ -22,7 +22,8 @@ $(document).ready( function() {
 		$.ajax({
 			type: "GET",
 			url: baseDir+'/modules/paypal/express_checkout/ajax.php',
-			data: { get_qty: "1", id_product: id_product, id_product_attribute: id_product_attribute}
+			data: { get_qty: "1", id_product: id_product, id_product_attribute: id_product_attribute },
+			cache: false
 		}).success(function(result) {
 			if (result >= '1')
 				$('#container_express_checkout').slideDown();
@@ -97,10 +98,9 @@ $(document).ready( function() {
 	{/if}
 	{literal}
 
-	var hostname = 'http://' + window.location.hostname + '{/literal}{$base_uri}{literal}';
 	var modulePath = 'modules/paypal';
 	var subFolder = '/integral_evolution';
-	var fullPath = hostname + modulePath + subFolder;
+	var fullPath = baseDir + modulePath + subFolder;
 	var confirmTimer = false;
 		
 	if ($('form[target="hss_iframe"]').length == 0) {
