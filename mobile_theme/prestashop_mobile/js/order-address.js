@@ -98,7 +98,8 @@ function updateAddresses()
    
    $.ajax({
            type: 'POST',
-           url: baseDir + 'order.php',
+		   headers: { "cache-control": "no-cache" },           
+           url: baseDir + 'order.php' + '?rand=' + new Date().getTime(),
            async: true,
            cache: false,
            dataType : "json",

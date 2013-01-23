@@ -28,7 +28,8 @@ function jqm_change_currency(id_currency, url)
 {
 	$.ajax({
 		type: 'POST',
-		url: baseDir + 'changecurrency.php',
+		headers: { "cache-control": "no-cache" },		
+		url: baseDir + 'changecurrency.php' + '?rand=' + new Date().getTime(),
 		data: 'id_currency=' + parseInt(id_currency),
 		success: function(msg)
 		{
