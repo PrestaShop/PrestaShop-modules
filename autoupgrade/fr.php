@@ -246,7 +246,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_db992f14c2e79f2e8650cdb5d918
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0bce225c5aed0aaee0d357a11a079962'] = 'pour mettre à jour vers la version';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5be0150b075f706fc27b09753ce6646d'] = 'Aucune archive trouvée dans votre dossier admin/autoupgrade/download';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1056e5077997edfad22aa72e719e0126'] = 'Cette option sautera l\'étape de téléchargement';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_82f7803ab394e974c397c0e7ed8486f4'] = 'Le répertoire %1$s sera utilsié pour la mise à jour vers la version';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_82f7803ab394e974c397c0e7ed8486f4'] = 'Le répertoire %1$s sera utilisé pour la mise à jour vers la version';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_13ec745eca168a159d2d69e9f2d5747e'] = 'Cette option sautera les étapes de téléchargement et de décompression et utilisera à la place le dossier admin/autoupgrade/latest/prestashop.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_c9cc8cce247e49bae79f15173ce97354'] = 'Sauver';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9e68a57463e52beb2b2d4d116085044e'] = 'Plus d\'options (mode expert)';
