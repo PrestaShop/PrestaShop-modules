@@ -2209,6 +2209,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		# At this point, database upgrade is over.
 			# Now we need to add all previous missing settings items, and reset cache and compile directories
 			$this->writeNewSettings();
+			
+		if (version_compare(_PS_VERSION_, '1.4.0.0', '>') && version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(INSTALL_VERSION, '1.5.0.0', '>='))
+			$this->rewriteDefaultCustomerGroup();			
 
 		// Settings updated, compile and cache directories must be emptied
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty/cache/';
@@ -2335,6 +2338,36 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->nextQuickInfo[] = $this->l('settings file updated');
 		error_reporting($oldLevel);
 	}
+	
+	/**
+	  * Modify defines.inc.php because _PS_DEFAULT_CUSTOMER_GROUP_ has changed 
+	  *
+	  */
+	public function rewriteDefaultCustomerGroup()
+	{
+		$definition_file = _PS_ROOT_DIR_.'/config/defines.inc.php';	
+		$filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
+		$filename_old = str_replace('.inc.', '.old.', $filename);
+		copy($filename, $filename_old);
+		@chmod($filename_old, 0664);	
+		$content = file_get_contents($filename);
+		$pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
+		preg_match($pattern, $content, $matches);
+		if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_'))
+				define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) AND is_numeric($matches[1]))? (int)$matches[1] : 3));
+		$ps_customer_group = $this->db->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name LIKE "PS_CUSTOMER_GROUP"', false);			
+		$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
+		$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';				
+		$content = str_replace($str_old, $str_new, $content);
+		$result = file_put_contents($filename, $content);
+		if($result === true && file_exists($filename) && file_exists($filename_old))
+		{
+			@unlink($filename_old);
+			@chmod($filename, 0664);
+			return true;
+		}
+		return false;
+		
 
 	/**
 	 * getTranslationFileType
