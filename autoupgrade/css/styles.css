@@ -1,10 +1,10 @@
 fieldset{margin-top:10px}
 .autoupgradeSteps div {  line-height: 30px; }
 .upgradestep { margin-right: 5px;padding-left: 10px; padding-right: 5px;}
-#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
+#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../../../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
 #upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;display:inline-block;font-size: medium;margin:10px 0;padding: 5px;}
-.processing {border:2px outset grey;margin-top:1px;overflow: auto;}
+.processing {border:2px outset gray;margin-top:1px;overflow: auto;}
 #infoStep {height:100px;width:300px}
 #infoError {height:100px;width:550px}
 #quickInfo {height:200px}
@@ -12,7 +12,7 @@ fieldset{margin-top:10px}
 #checkPrestaShopFilesVersion, #checkPrestaShopModifiedFiles{margin-bottom:20px;}
 #changedList ul{list-style-type:circle}
 .changedFileList {margin-left:20px; padding-left:5px;}
-.changedNotice li{color:grey;}
+.changedNotice li{color:gray;}
 .changedImportant li{color:red;font-weight:bold}
 .upgradeDbError{background-color:#FEEFB3}
 .upgradeDbOk{background-color:#DFF2BF}
