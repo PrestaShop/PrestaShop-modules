@@ -2367,7 +2367,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			return true;
 		}
 		return false;
-		
+	}	
 
 	/**
 	 * getTranslationFileType
