@@ -2211,7 +2211,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->writeNewSettings();
 			
 		if (version_compare(_PS_VERSION_, '1.4.0.0', '>') && version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(INSTALL_VERSION, '1.5.0.0', '>='))
-			$this->rewriteDefaultCustomerGroup();			
+			$this->rewriteDefaultCustomerGroup();
+		if (version_compare(_PS_VERSION_, '1.4.0.0', '>') && version_compare(_PS_VERSION_, '1.4.10', '<') && version_compare(INSTALL_VERSION, '1.4.10', '<='))
+			$this->update_htaccess();							
 
 		// Settings updated, compile and cache directories must be emptied
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty/cache/';
@@ -2345,7 +2347,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 	  */
 	public function rewriteDefaultCustomerGroup()
 	{
-		$definition_file = _PS_ROOT_DIR_.'/config/defines.inc.php';	
 		$filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
 		$filename_old = str_replace('.inc.', '.old.', $filename);
 		copy($filename, $filename_old);
@@ -2359,7 +2360,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
 		$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';				
 		$content = str_replace($str_old, $str_new, $content);
-		$result = file_put_contents($filename, $content);
+		$result = (bool)file_put_contents($filename, $content);
 		if($result === true && file_exists($filename) && file_exists($filename_old))
 		{
 			@unlink($filename_old);
@@ -2367,7 +2368,34 @@ class AdminSelfUpgrade extends AdminSelfTab
 			return true;
 		}
 		return false;
-	}	
+	}
+	
+	/**
+	  * Modify .htaccss because Category canonical url is not respected
+	  *
+	  */	
+	public function update_htaccess()
+	{
+		$filename = _PS_ROOT_DIR_.'/.htaccess';
+		if(file_exists($filename))
+		{
+			$filename_old = str_replace('.htaccess', '.htaccess-old', $filename);
+			copy($filename, $filename_old);
+			@chmod($filename_old, 0664);	
+			$content = file_get_contents($filename);						
+			$content = str_replace('&noredirect=1', '', $content);
+			$result = (bool)file_put_contents($filename, $content);
+			if($result === true && file_exists($filename) && file_exists($filename_old))
+			{
+				@unlink($filename_old);
+				@chmod($filename, 0664);
+				return true;
+			}
+		}
+		else
+			return true;
+		return false;
+	}		
 
 	/**
 	 * getTranslationFileType
