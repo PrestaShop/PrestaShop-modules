@@ -6,7 +6,7 @@ class Control extends XMLElement {
      */
 
     public function __construct() {
-        parent::__construct("<control fianetmodule='api_prestashop_certissim' version='2.2'></control>");
+        parent::__construct("<control fianetmodule='api_prestashop_certissim' version='2.2.3'></control>");
     }
 
     /**
