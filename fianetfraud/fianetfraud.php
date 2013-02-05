@@ -26,8 +26,7 @@
  *  International Registred Trademark & Property of PrestaShop SA
  */
 
-if ((basename(__FILE__) == 'fianetfraud.php'))
-	require_once dirname(__FILE__) . '/fianet/lib/includes/includes.inc.php';
+require_once _PS_ROOT_DIR_ . '/modules/fianetfraud/fianet/lib/includes/includes.inc.php';
 
 class Fianetfraud extends Module
 {
@@ -82,12 +81,11 @@ class Fianetfraud extends Module
 	{
 		$this->name = 'fianetfraud';
 		$this->tab = 'payment_security';
-		$this->version = '2.2';
+		$this->version = '2.2.3';
 		$this->limited_countries = array('fr');
 
 		parent::__construct();
 
-		$this->author = 'PrestaShop';
 		$this->displayName = 'FIA-NET - Certissim';
 		$this->description = "Protégez vous contre la fraude à la carte bancaire sans perturber l'acte d'achat";
 		self::$token = sha1('fianetfraud' . _COOKIE_KEY_ . 'token');
@@ -129,7 +127,7 @@ class Fianetfraud extends Module
 		//test de connexion à la BDD
 		$bddwritable = Db::getInstance()->Execute("
 			INSERT INTO `" . _DB_PREFIX_ . self::CERTISSIM_TABLE_NAME . "` (`id_order`, `ip_address`, `date`)
-			VALUES ('0', '" . pSQL($_SERVER['REMOTE_ADDR']) . "','" . pSQL(date('Y-m-d H:i:s')) . "')");
+			VALUES ('0', '" . pSQL(self::getRemoteAddr()) . "','" . pSQL(date('Y-m-d H:i:s')) . "')");
 
 		//log
 		insertLog(__METHOD__ . " : " . __LINE__, (bool) $bddwritable ? "Database is writable" : "Database is not writable");
@@ -388,7 +386,7 @@ class Fianetfraud extends Module
 	{
 		// use in_array is better here.
 		//si mauvaise adresse serveur ou si module de paiement désactivé pour le SAC, fin de process
-		if ($_SERVER['REMOTE_ADDR'] == '0.0.0.0' or $_SERVER['REMOTE_ADDR'] == '' or $_SERVER['REMOTE_ADDR'] === false or !$this->needCheck($params['order']->module))
+		if (self::getRemoteAddr() == '0.0.0.0' or self::getRemoteAddr() == '' or self::getRemoteAddr() === false or !$this->needCheck($params['order']->module))
 			return true;
 
 		//recherche de la commande dans la base Fianet
@@ -403,7 +401,7 @@ class Fianetfraud extends Module
 			//mise à jour de l'entrée
 			$update = Db::getInstance()->Execute("
 				UPDATE `" . _DB_PREFIX_ . self::CERTISSIM_TABLE_NAME . "`
-				SET `ip_address` = '" . pSQL($_SERVER['REMOTE_ADDR']) . "', `date` = '" . pSQL(date('Y-m-d H:i:s')) . "'
+				SET `ip_address` = '" . pSQL(self::getRemoteAddr()) . "', `date` = '" . pSQL(date('Y-m-d H:i:s')) . "'
 				WHERE `id_order` = " . (int) $params['order']->id . " LIMIT 1");
 
 			//log en cas d'erreur
@@ -414,7 +412,7 @@ class Fianetfraud extends Module
 			//ajout de la commande dans la table
 			$insert = Db::getInstance()->Execute("
 				INSERT INTO `" . _DB_PREFIX_ . self::CERTISSIM_TABLE_NAME . "` (`id_order`, `ip_address`, `date`)
-				VALUES (" . (int) $params['order']->id . ", '" . pSQL($_SERVER['REMOTE_ADDR']) . "','" . pSQL(date('Y-m-d H:i:s')) . "')");
+				VALUES (" . (int) $params['order']->id . ", '" . pSQL(self::getRemoteAddr()) . "','" . pSQL(date('Y-m-d H:i:s')) . "')");
 
 			//log en cas d'erreur
 			if (!(bool) $insert)
@@ -434,10 +432,10 @@ class Fianetfraud extends Module
 	{
 		if ($id_order == false)
 			return false;
-		return long2ip(Db::getInstance()->getValue('
+		return Db::getInstance()->getValue('
 			SELECT `ip_address`
 			FROM ' . _DB_PREFIX_ . self::CERTISSIM_TABLE_NAME . '
-			WHERE id_order = ' . (int) $id_order));
+			WHERE id_order = ' . (int) $id_order);
 	}
 
 	/**
@@ -618,7 +616,7 @@ class Fianetfraud extends Module
 			//instanciation de l'élément <utilisateur type="livraison" ...>
 			$utilisateur_livraison = new Utilisateur(
 				'livraison',
-				(($customer->id_gender == 1) ? $this->l('Monsieur') : (($customer->id_gender == 2 ) ? $this->l('Madame') : $this->l('Unknown'))),
+				(($customer->id_gender == 1) ? $this->l('Monsieur') : (($customer->id_gender == 2 ) ? $this->l('Madame') : $this->l(''))),
 				($address_delivery->lastname),
 				($address_delivery->firstname),
 				($address_delivery->company),
@@ -743,6 +741,7 @@ class Fianetfraud extends Module
 			return;
 		}
 
+    insertLog(__METHOD__ . ' : ' . __LINE__, "Retour de Fia-Net pour la commande " . (int)$order->id . " : $res");
 
 		foreach ($res->getChildrenByName('result') as $result)
 		{
@@ -839,7 +838,7 @@ class Fianetfraud extends Module
 			$this->_postProcess();
 
 		$html = '<br /><fieldset style="width:400px;"><legend>' . $this->l('Fianet Validation') . '</legend>';
-		$html .= '<a href="https://secure.fia-net.com/' . ($conf ? 'fscreener' : 'pprod') . '/BO/visucheck_detail.php?sid=' . Configuration::get('SAC_SITEID') . '&log=' . Configuration::get('SAC_LOGIN') . '&pwd=' . urlencode(Configuration::get('SAC_PASSWORD')) . '&rid=' . (int) $params['id_order'] . '">' . $this->l('See Detail') . '</a><br />';
+		$html .= '<a href="https://secure.fia-net.com/' . ($conf ? 'fscreener' : 'pprod') . '/BO/visucheck_detail.php?sid=' . Configuration::get('SAC_SITEID') . '&log=' . urlencode(Configuration::get('SAC_LOGIN')) . '&pwd=' . urlencode(Configuration::get('SAC_PASSWORD')) . '&rid=' . (int) $params['id_order'] . '" target="_blank">' . $this->l('See Detail') . '</a><br />';
 		$html .= $this->l('Eval') . ' : ' . Tools::htmlentitiesUTF8($score['eval']);
 		$html .= ( isset($score['detail']) ? '<br />' . $this->l('Détail') . ' : ' . Tools::htmlentitiesUTF8($score['detail']) : '');
 		$html .= '</fieldset>';
@@ -969,6 +968,25 @@ class Fianetfraud extends Module
 			foreach ($categories as $category)
 				$sac_cat[$category['id_category']] = $category['id_sac'];
 			return $sac_cat;
+	}
+  	/**
+	* Get the server variable REMOTE_ADDR
+	*
+	* @param string $remote_addr ip of client
+	*/
+	static function getRemoteAddr()
+	{
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND $_SERVER['HTTP_X_FORWARDED_FOR'])
+		{
+			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ','))
+			{
+				$ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+				return $ips[0];
+			}
+			else
+				return $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+		return $_SERVER['REMOTE_ADDR'];
 	}
 
 }
