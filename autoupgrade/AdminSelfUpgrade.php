@@ -1307,11 +1307,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			}
 			else
 			{
-				$this->nextParams['msg'] = ($testOrigCore
-																	 ?$this->l('Core files are ok')
-																	 :sprintf($this->l('%1$s files modifications has been detected, including %2$s from core and native module:'),
-																		 count(array_merge($changedFileList['core'], $changedFileList['mail'], $changedFileList['translation'])),
-																		 count($changedFileList['core'])
+				$this->nextParams['msg'] = ($testOrigCore ? $this->l('Core files are ok') : sprintf($this->l('%1$s files modifications has been detected, including %2$s from core and native module:'), count(array_merge($changedFileList['core'], $changedFileList['mail'], $changedFileList['translation'])), count($changedFileList['core'])
 																	 ));
 			}
 			$this->nextParams['result'] = $changedFileList;
@@ -2208,12 +2204,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		# At this point, database upgrade is over.
 			# Now we need to add all previous missing settings items, and reset cache and compile directories
-			$this->writeNewSettings();
-			
-		if (version_compare(_PS_VERSION_, '1.4.0.0', '>') && version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(INSTALL_VERSION, '1.5.0.0', '>='))
-			$this->rewriteDefaultCustomerGroup();
-		if (version_compare(_PS_VERSION_, '1.4.0.0', '>') && version_compare(_PS_VERSION_, '1.4.10', '<') && version_compare(INSTALL_VERSION, '1.4.10', '<='))
-			$this->update_htaccess();							
+			$this->writeNewSettings();							
 
 		// Settings updated, compile and cache directories must be emptied
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty/cache/';
@@ -2339,63 +2330,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		else
 			$this->nextQuickInfo[] = $this->l('settings file updated');
 		error_reporting($oldLevel);
-	}
-	
-	/**
-	  * Modify defines.inc.php because _PS_DEFAULT_CUSTOMER_GROUP_ has changed 
-	  *
-	  */
-	public function rewriteDefaultCustomerGroup()
-	{
-		$filename = _PS_ROOT_DIR_.'/config/defines.inc.php';
-		$filename_old = str_replace('.inc.', '.old.', $filename);
-		copy($filename, $filename_old);
-		@chmod($filename_old, 0664);	
-		$content = file_get_contents($filename);
-		$pattern = "/define\('_PS_DEFAULT_CUSTOMER_GROUP_', (\d)\);/";
-		preg_match($pattern, $content, $matches);
-		if (!defined('_PS_DEFAULT_CUSTOMER_GROUP_'))
-				define('_PS_DEFAULT_CUSTOMER_GROUP_', ((isset($matches[1]) AND is_numeric($matches[1]))? (int)$matches[1] : 3));
-		$ps_customer_group = $this->db->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name LIKE "PS_CUSTOMER_GROUP"', false);			
-		$str_old = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)_PS_DEFAULT_CUSTOMER_GROUP_.');';
-		$str_new = 'define(\'_PS_DEFAULT_CUSTOMER_GROUP_\', '.(int)$ps_customer_group.');';				
-		$content = str_replace($str_old, $str_new, $content);
-		$result = (bool)file_put_contents($filename, $content);
-		if($result === true && file_exists($filename) && file_exists($filename_old))
-		{
-			@unlink($filename_old);
-			@chmod($filename, 0664);
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	  * Modify .htaccss because Category canonical url is not respected
-	  *
-	  */	
-	public function update_htaccess()
-	{
-		$filename = _PS_ROOT_DIR_.'/.htaccess';
-		if(file_exists($filename))
-		{
-			$filename_old = str_replace('.htaccess', '.htaccess-old', $filename);
-			copy($filename, $filename_old);
-			@chmod($filename_old, 0664);	
-			$content = file_get_contents($filename);						
-			$content = str_replace('&noredirect=1', '', $content);
-			$result = (bool)file_put_contents($filename, $content);
-			if($result === true && file_exists($filename) && file_exists($filename_old))
-			{
-				@unlink($filename_old);
-				@chmod($filename, 0664);
-				return true;
-			}
-		}
-		else
-			return true;
-		return false;
-	}		
+	}	
 
 	/**
 	 * getTranslationFileType
