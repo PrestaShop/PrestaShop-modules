@@ -246,7 +246,7 @@ class XMLElement extends Mother {
      */
     public function toSimpleXMLElement($recursive = false) {
         //on créé simplement l'objet SimpleXMLElement
-        $simplexlmelementobject = new SimpleXMLElement('<XMLElement>' . $this->getValue() . '</XMLElement>');
+    $simplexlmelementobject = new SimpleXMLElement('<' . $this->getName() . '>' . $this->getValue() . '</' . $this->getName() . '>');
 
         //on ajoute les attributs
         foreach ($this->getAttributes() as $name => $value) {
@@ -291,7 +291,7 @@ class XMLElement extends Mother {
         //sécurité encodage
         $ret = html_entity_decode($ret, ENT_NOQUOTES, $this->getEncoding());
         //drop des retours de chariot
-        $ret = preg_replace('#[\r\n'.chr(10).chr(13).']#', '', $ret);
+    $ret = preg_replace('#[\r\n' . chr(10) . chr(13) . ']#', '', $ret);
         //suppression des espaces entre les balises
         $ret = preg_replace('#>( )+<#', '><', $ret);
 
@@ -394,11 +394,9 @@ class XMLElement extends Mother {
 
 }
 
+if (!function_exists('mb_convert_encoding')) {
 
-if (!function_exists('mb_convert_encoding'))
-{
-	function mb_convert_encoding($string, $to, $from = '')
-	{
+  function mb_convert_encoding($string, $to, $from = '') {
         // Convert string to ISO_8859-1
         if ($from == "UTF-8")
                 $iso_string = utf8_decode($string);
@@ -417,4 +415,5 @@ if (!function_exists('mb_convert_encoding'))
                 else
                         return($iso_string); 
 	}
+
 }
