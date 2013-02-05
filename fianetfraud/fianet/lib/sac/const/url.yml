@@ -1,0 +1,36 @@
+redirect:
+  prod: https://secure.FIA-NET.com/fscreener/engine/redirect.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/redirect.cgi
+singet:
+  prod: https://secure.FIA-NET.com/fscreener/engine/singet.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/singet.cgi
+stacking:
+  prod: https://secure.FIA-NET.com/fscreener/engine/stacking.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/stacking.cgi
+stackfast: 
+  prod: https://secure.FIA-NET.com/fscreener/engine/stackfast.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/stackfast.cgi
+backoffice: 
+  prod: https://secure.FIA-NET.com/fscreener
+  test: https://secure.FIA-NET.com/pprod
+visucheck: 
+  prod: https://secure.FIA-NET.com/fscreener/BO/visucheck_detail.php
+  test: https://secure.FIA-NET.com/pprod/BO/visucheck_detail.php
+getvalidation: 
+  prod: https://secure.FIA-NET.com/fscreener/engine/get_validation.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/get_validation.cgi
+redirectvalidation: 
+  prod: https://secure.FIA-NET.com/fscreener/engine/redirect_validation.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/redirect_validation.cgi
+defaultredirectvaildationurlback:
+  prod: http://localhost/API_PHP/urlbackprod.php
+  test: http://localhost/API_PHP/urlbacktest.php
+getvalidstack: 
+  prod: https://secure.FIA-NET.com/fscreener/engine/get_validstack.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/get_validstack.cgi
+getalert: 
+  prod: https://secure.FIA-NET.com/fscreener/engine/get_alert.cgi
+  test: https://secure.FIA-NET.com/pprod/engine/get_alert.cgi
+visucheckdetail:
+  prod: https://secure.FIA-NET.com/fscreener/BO/visucheck_detail.php
+  test: https://secure.FIA-NET.com/pprod/BO/visucheck_detail.php
