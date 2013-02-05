@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.0.5';
+		$this->version = '3.0.6';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us', 'ca');
 		parent::__construct();
@@ -226,7 +226,7 @@ class AvalaraTax extends Module
 					{
 						if (unlink(_PS_ROOT_DIR_.'/'.$params['dest']))
 							$removed = true;
-						break ;
+						break;
 					}
 				if (!$removed)
 					$this->_errors[] = $this->l('Error while removing override: ').$key;
@@ -493,7 +493,14 @@ class AvalaraTax extends Module
 	/******************************************************************/
 	public function getContent()
 	{
+		$html = '';
 		$buffer = '';
+		
+		if (version_compare(_PS_VERSION_,'1.5','>'))
+			$this->context->controller->addJQueryPlugin('fancybox');
+		else
+			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
+		  	<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
 		if (Tools::isSubmit('SubmitAvalaraTaxSettings'))
 		{
 			Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
@@ -584,197 +591,249 @@ class AvalaraTax extends Module
 		foreach (Country::getCountries((int)$this->context->cookie->id_lang, false, null, false) as $country)
 			$countryList[] = array('id' => $country['id_country'], 'name' => $country['name'], 'iso_code' => $country['iso_code']);
 
-		$buffer .= '<style type="text/css">
-			fieldset.avalaratax_fieldset td.avalaratax_column { padding: 0 18px; text-align: right; vertical-align: top;}
-			fieldset.avalaratax_fieldset input[type=text] { width: 250px; }
-			fieldset.avalaratax_fieldset input.avalaratax_button { margin-top: 10px; }
-			fieldset.avalaratax_fieldset div#test_connection { margin-left: 18px; border: 1px solid #DFD5C3; padding: 5px; font-size: 11px; margin-bottom: 10px; width: 90%; }
-			fieldset.avalaratax_fieldset a { color: #0000CC; font-weight: bold; text-decoration: underline; }
-			.avalara-pagination {display: inline-block; float: right; }
-			.avalara-pagination ul {list-style: none; display: inline-block; margin: 0; padding: 0;}
-			.avalara-pagination ul li {margin-left: 10px; display: inline-block;}
-			.clear {clear: both; margin: 0 auto;}
-			.current-page {border: 1px solid #000; padding: 3px;}
-			.orders-table {border-collapse:collapse;}
-			.orders-table tr { vertical-align: top;}
-			.orders-table tr td { border-top: 1px solid #000;}
-		</style>
+		$buffer .= '<link href="'.$this->_path.'css/avalara.css" rel="stylesheet" type="text/css">
+
 		<script type="text/javascript">
-			$(function() {
-				/* Add video */
-				$(\'<div style="left: 567px; top: 11px; position: relative; width: 361px; height: 0px"><iframe width="360" height="215" src="http://www.youtube.com/embed/tm1tENVdcQ8" frameborder="0" allowfullscreen></iframe></div>\').prependTo(\'#content form:eq(0)\');
+			/* Fancybox */
+			$(\'a.avalara-video-btn\').live(\'click\', function(){
+			    $.fancybox({
+			        \'type\' : \'iframe\',
+			        \'href\' : this.href.replace(new RegExp("watch\\?v=", "i"), \'embed\') + \'?rel=0&autoplay=1\',
+			        \'swf\': {\'allowfullscreen\':\'true\', \'wmode\':\'transparent\'},
+			        \'overlayShow\' : true,
+			        \'centerOnScroll\' : true,
+			        \'speedIn\' : 100,
+			        \'speedOut\' : 50,
+			        \'width\' : 853,
+			        \'height\' : 480
+			    });
+			    return false;
 			});
 		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+			    var height1 = 0;
+			    var height = 0;
+			     $(\'.field-height1\').each(function(){
+				if (height1 < $(this).height())
+				    height1 = $(this).height();
+			    });
+			    
+			    $(\'.field-height\').each(function(){
+				if (height < $(this).height())
+				    height = $(this).height();
+			    });
+			
+				$(\'.field-height1\').css({\'height\' : $(\'.field-height1\').css(\'height\', height1+\'px\')});
+			    $(\'.field-height\').css({\'height\' : $(\'.field-height\').css(\'height\', height+\'px\')});
 
-		<h2>'.Tools::safeOutput($this->displayName).'</h2>
-		<div class="hint clear" style="display:block;">
-				<a style="float: right;" target="_blank" href="http://www.prestashop.com/en/industry-partners/management/avalara"><img alt="" src="../modules/avalaratax/avalaratax_logo.png"></a>
-				<div style="width: 700px; margin: 0 auto; text-align: center"><h3 style="color: red">'.$this->l('This module is intended to work ONLY in United States of America and Canada').'</h3></div>
-				<h3>'.$this->l('How to configure Avalara Tax Module:').'</h3>
-				- '.$this->l('Fill the Account Number, License Key, and Company Code fields with those provided by Avalara.').' <br />
-				- '.$this->l('Specify your origin address. This is FROM where you are shipping the products (It has to be a ').'<b>'.$this->l('VALID UNITED STATES ADDRESS').'</b>)<br /><br />
-				<h3>'.$this->l('Module goal:').'</h3>
-				'.$this->l('This cloud-based service is the fastest, easiest, most accurate and affordable way to calculate sales and use tax; manage exemption certificates; file returns; and remit payments across North America and beyond.').'<br /><br />
-				<h3>'.$this->l('What modifications does the module do on my store?').'</h3>
-				- '.$this->l('Tax.php, AddressController.php, and AuthController.php will be overriden.').'<br />
-				- '.$this->l('[Payment Tab -> Taxes] and [Payment Tab -> Tax Rules] configurations will be overriden for the US.').'<br />
-				- '.$this->l('On product details (product in edit mode) an optional "Tax Code" field will be added allowing you to specify a valid tax code for each of your products.').'<br />
-		</div>
-		<br />
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2 avalaratax_fieldset">
-				<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Configuration').'</legend>
-				<h3>'.$this->l('AvaTax Credentials').'</h3>';
+updateAvalaraTaxState($(\'#avalaratax_country\').val());
 
-		if (isset($connectionTestResult))
-			$buffer .= '<div id="test_connection" style="background: '.Tools::safeOutput($connectionTestResult[1]).';">'.$connectionTestResult[0].'</div>';
+    $(\'#avalaratax_country\').change(function(){
+updateAvalaraTaxState($(this).val());
+    });
 
-		$buffer .= '<table border="0" cellspacing="5">
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Account Number').'</td>
-						<td><input type="text" name="avalaratax_account_number" value="'.(isset($confValues['AVALARATAX_ACCOUNT_NUMBER']) ? Tools::safeOutput($confValues['AVALARATAX_ACCOUNT_NUMBER']) : '').'" /></td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('License Key').'</td>
-						<td><input type="text" name="avalaratax_license_key" value="'.(isset($confValues['AVALARATAX_LICENSE_KEY']) ? Tools::safeOutput($confValues['AVALARATAX_LICENSE_KEY']) : '').'" /></td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('URL').'</td>
-						<td><input type="text" name="avalaratax_url" value="'.(isset($confValues['AVALARATAX_URL']) ? Tools::safeOutput($confValues['AVALARATAX_URL']) : '').'" /></td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column" style="vertical-align: top; padding-top: 3px;">'.$this->l('Company Code').'</td>
-						<td><input type="text" name="avalaratax_company_code" value="'.(isset($confValues['AVALARATAX_COMPANY_CODE']) ? Tools::safeOutput($confValues['AVALARATAX_COMPANY_CODE']) : '').'" /><br />
-						<span style="color: #7F7F7F; font-size: 10px;">'.$this->l('Located in the top-right corner of your AvaTax Admin Console').'</span></td>
-					</tr>
-				</table>
-				<center><input type="submit" class="button avalaratax_button" name="SubmitAvalaraTaxSettings" value="'.$this->l('Save Settings').'" /></center>
-				<hr size="1" style="margin: 14px auto;" noshade />
-				<center><img src="../img/admin/exchangesrate.gif" alt="" /> <input type="submit" id="avalaratax_test_connection" class="button avalaratax_button" name="SubmitAvalaraTestConnection" value="'.$this->l('Click here to Test Connection').'" style="margin-top: 0;" /></center>
+
+			});
+function updateAvalaraTaxState(iso_code)
+{
+
+var default_state = "'.$confValues['AVALARATAX_STATE'].'";
+
+$(\'#avalaratax_state\').html(\'\');
+	$.ajax({
+	    type : \'GET\',
+	    url : \'../modules/avalaratax/states.php?country_iso_code=\'+iso_code,
+	    dataType: \'JSON\',
+	    success: function(data)
+	    {
+		if (data != 0)
+		{
+		    $.each(data[iso_code], function(i, item){
+if (default_state == item.iso_code)
+			$(\'#avalaratax_state\').append(\'<option  selected="selected" value="\'+item.iso_code+\'">\'+item.name+\'</option>\');
+else
+			$(\'#avalaratax_state\').append(\'<option  value="\'+item.iso_code+\'">\'+item.name+\'</option>\');
+			$(\'#avalaratax_state\').show();
+			$(\'#avalaratax_label_state\').show();
+		    });
+		}
+		else
+		{
+		    $(\'#avalaratax_state\').hide();
+		    $(\'#avalaratax_label_state\').hide();
+		}
+	    }
+	});
+
+}
+
+		</script>
+		<div class="avalara-wrap">
+			<p class="avalara-intro"><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-logo" target="_blank"><img src="'.$this->_path.'img/avalara_logo.png" alt="Avalara" border="0" /></a><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-link" target="_blank">'.$this->l('Create an account').'</a>'.$this->l('Avalara and PrestaShop have partnered to provide the easiest way for you to accurately calculate and file sales tax.').'</p>
+			<div class="clear"></div>
+			<div class="avalara-content">
+				<div class="avalara-video">
+					<h3>'.$this->l('No one likes dealing with sales tax.').'</h3>
+					<p>'.$this->l('Sales tax isn\'t core to your business and should be automated. You may be doing it wrong, exposing your business to unnecessary audit risks, and don\'t even know it.').'</p>
+					<a href="http://www.youtube.com/embed/tm1tENVdcQ8" class="avalara-video-btn"><img src="'.$this->_path.'img/avalara-video-screen.jpg" alt="Avalara Video" /><img src="'.$this->_path.'img/btn-video.png" alt="" class="video-icon" /></a>
+				</div>
+				<h3>'.$this->l('Doing sales tax right is simple with Avalara.').'</h3>
+				<p>'.$this->l('We do all of the research and automate the process for you, ensuring that the system is up-to-date with the most recent sales tax and VAT rates and rules in every state and country, so you don’t have to.  As a cloud-based service, AvaTax eliminates ongoing maintenance and support.  It provides you with a complete solution to manage your sales tax needs.').'</p>
+				<img src="'.$this->_path.'img/avatax_badge.png" alt="AvaTax Certified" class="avatax-badge" />
+				<ul>
+					<li>'.$this->l('Address Validation included').'</li>
+					<li>'.$this->l('Rooftop Accurate Calculations').'</li>
+					<li>'.$this->l('Product and Service Taxability Rules').'</li>
+					<li>'.$this->l('Exemption Certificate Management').'</li>
+					<li>'.$this->l('Out-of-the-Box Sales Tax Reporting').'</li>
+				</ul>
+				<a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-link" target="_blank">'.$this->l('Create an account').'</a>
+			</div>
+			<fieldset class="field-height1 right-fieldset">
+			<legend><img src="'.$this->_path.'img/icon-console.gif" alt="" />'.$this->l('AvaTax Admin Console').'</legend>
+				<p><a href="https://admin-avatax.avalara.net/" target="_blank">'.$this->l('Log-in to AvaTax Admin Console').'</a></p>
+				<a href="https://admin-avatax.avalara.net/" target="_blank"><img src="'.$this->_path.'img/avatax-logo.png" alt="AvaTax" class="avatax-logo" /></a>
 			</fieldset>
-		</form>
-		<br />
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2 avalaratax_fieldset">
-				<legend><img src="../img/admin/cog.gif" alt="" />'.$this->l('Options').'</legend>
-				<table border="0">
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Enable address validation').'</td>
-						<td><input type="checkbox" name="avalaratax_address_validation" value="1"'.(isset($confValues['AVALARATAX_ADDRESS_VALIDATION']) && $confValues['AVALARATAX_ADDRESS_VALIDATION'] ? ' checked="checked"' : '').' /></td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Enable tax calculation').'</td>
-						<td><input type="checkbox" name="avalaratax_tax_calculation" value="1" '.(isset($confValues['AVALARATAX_TAX_CALCULATION']) && $confValues['AVALARATAX_TAX_CALCULATION'] ? ' checked="checked"' : '').' /></td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Enable address normalization in uppercase').'</td>
-						<td><input type="checkbox" name="avalaratax_address_normalization" value="1" '.(isset($confValues['AVALARATAX_ADDRESS_NORMALIZATION']) && $confValues['AVALARATAX_ADDRESS_NORMALIZATION'] ? ' checked="checked"' : '').' /></td>
-					</tr>
-<tr>
-						<td class="avalaratax_column">'.$this->l('Enable tax calculation outside of your state').'</td>
-						<td><input type="checkbox" name="avalaratax_tax_outside" value="1" '.(isset($confValues['AVALARATAX_TAX_OUTSIDE']) && $confValues['AVALARATAX_TAX_OUTSIDE'] ? ' checked="checked"' : '').' /></td>
-</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Request timeout').'</td>
-						<td><input type="text" name="avalaratax_timeout" value="'.(isset($confValues['AVALARATAX_TIMEOUT']) ? Tools::safeOutput($confValues['AVALARATAX_TIMEOUT']) : '').'" style="width: 50px;" /> <span style="font-size: 11px;">'.$this->l('seconds').'</span></td>
-					</tr>
-					<tr style="display: none;">
-
-						<td class="avalaratax_column">'.$this->l('Refresh tax rate cache every: ').'</td>
-						<td><input type="text" name="avalara_cache_max_limit" value="'.(isset($confValues['AVALARA_CACHE_MAX_LIMIT']) ? Tools::safeOutput($confValues['AVALARA_CACHE_MAX_LIMIT']) : '').'" style="width: 50px;" /> <span style="font-size: 11px;">'.$this->l('minutes').'</span></td>
-					</tr>
-
-				</table>
-				<center><input type="submit" class="button avalaratax_button" name="SubmitAvalaraTaxOptions" value="'.$this->l('Save Settings').'" />
-				<input type="submit" class="button avalaratax_button" name="SubmitAvalaraTaxClearCache" value="'.$this->l('Clear Cache').'" style="display: none"/>
-				</center>
-				<h3 style="margin: 10px 0px 0px; padding-top: 3px;border-top: 1px solid #000;">'.$this->l('Default Post/Commit/Cancel/Refund Options').'</h3>
-				<span style="font-style: italic; font-size: 11px; color: #888;">'.$this->l('When an order\'s status is updated, the following options will be used to update Avalara\'s records.').'</span><br /><br />';
-
-		// Check if the order status exist
-		$orderStatusList = array();
-		foreach (Db::getInstance()->ExecuteS('SELECT `id_order_state`, `name` FROM `'._DB_PREFIX_.'order_state_lang` WHERE `id_lang` = '.(int)$this->context->cookie->id_lang) as $v)
-			$orderStatusList[$v['id_order_state']] = Tools::safeOutput($v['name']);
-		$buffer .= '<table>
-					<th style="text-align: right; padding-right: 65px; border: 1px solid #000;">'.$this->l('Action').'</th>
-					<th style="text-align: left; border: 1px solid #000; padding: 0px 15px;">'.$this->l('Order status in your store').'</th>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Post order to Avalara').':</td>
-						<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_POST_ID')]) ? Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_POST_ID')]) :
-							'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
-						</td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Commit order to Avalara').':</td>
-						<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_COMMIT_ID')]) ? Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_COMMIT_ID')]) :
-							'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
-						</td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Delete order from Avalara').':</td>
-						<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_CANCEL_ID')]) ? Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_CANCEL_ID')]) :
-							'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
-						</td>
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Void order in Avalara').':</td>
-						<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_REFUND_ID')]) ? Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_REFUND_ID')]) :
-							'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
-						</td>
-					</tr>
-				</table>
-				<div class="clear"></div>
-			</fieldset>
-		</form>
-		<br />
-		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2 avalaratax_fieldset">
-				<legend><img src="../img/admin/delivery.gif" alt="" />'.$this->l('Default Origin Address').'</legend>
-				<table border="0">
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Address Line 1').'</td>
-						<td><input type="text" name="avalaratax_address_line1" value="'.(isset($confValues['AVALARATAX_ADDRESS_LINE1']) ? Tools::safeOutput($confValues['AVALARATAX_ADDRESS_LINE1']) : '').'" /><br />
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Address Line 2').'</td>
-						<td><input type="text" name="avalaratax_address_line2" value="'.(isset($confValues['AVALARATAX_ADDRESS_LINE2']) ? Tools::safeOutput($confValues['AVALARATAX_ADDRESS_LINE2']) : '').'" /><br />
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('City').'</td>
-						<td><input type="text" name="avalaratax_city" value="'.(isset($confValues['AVALARATAX_CITY']) ? Tools::safeOutput($confValues['AVALARATAX_CITY']) : '').'" /><br />
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('State').'</td>
-						<td>
-							<select name="avalaratax_state" id="avalaratax_state">';
-		foreach ($stateList as $state)
-			$buffer .= '<option value="'.substr(strtoupper($state['iso_code']), 0, 2).'" '.($state['iso_code'] == $confValues['AVALARATAX_STATE'] ? ' selected="selected"' : '').'>'.Tools::safeOutput($state['name']).'</option>';
-		$buffer .= '</select>
-						</td>
-						<br />
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Zip Code').'</td>
-						<td><input type="text" name="avalaratax_zip_code" value="'.(isset($confValues['AVALARATAX_ZIP_CODE']) ? Tools::safeOutput($confValues['AVALARATAX_ZIP_CODE']) : '').'" /><br />
-					</tr>
-					<tr>
-						<td class="avalaratax_column">'.$this->l('Country').'</td>
-						<td>
-							<select name="avalaratax_country" id="avalaratax_country">';
-		foreach ($countryList as $country)
-			$buffer .= '<option value="'.substr(strtoupper($country['iso_code']), 0, 2).'" '.($country['iso_code'] == $confValues['AVALARATAX_COUNTRY'] ? ' selected="selected"' : '').'>'.Tools::safeOutput($country['name']).'</option>';
-		return $buffer.'</select>
-						</td>
-					</tr>
-				</table>
-				<center><input type="submit" class="button avalaratax_button" name="SubmitAvalaraAddressOptions" value="'.$this->l('Save Settings').'" /></center>
-			</fieldset>
-		</form>
-		<br />
-		<fieldset class="width2 avalaratax_fieldset">
-		<legend><img src="../img/admin/statsettings.gif" alt="" />'.$this->l('AvaTax Admin Console').'</legend>
-			<p><a href="https://admin-avatax.avalara.net/" target="_blank">'.$this->l('Log-in to AvaTax Admin Console').'</a></p>
-		</fieldset><br />';
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="left-form">
+				<fieldset class="field-height1">
+					<legend><img src="'.$this->_path.'img/icon-config.gif" alt="" />'.$this->l('Configuration').'</legend>
+					<h4>'.$this->l('AvaTax Credentials').'</h4>';	
+					if (isset($connectionTestResult))
+						$buffer .= '<div id="test_connection" style="background: '.Tools::safeOutput($connectionTestResult[1]).';">'.$connectionTestResult[0].'</div>';
+			
+					$buffer .= '<label>'.$this->l('Account Number').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_account_number" value="'.(isset($confValues['AVALARATAX_ACCOUNT_NUMBER']) ? Tools::safeOutput($confValues['AVALARATAX_ACCOUNT_NUMBER']) : '').'" />
+					</div>
+					<label>'.$this->l('License Key').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_license_key" value="'.(isset($confValues['AVALARATAX_LICENSE_KEY']) ? Tools::safeOutput($confValues['AVALARATAX_LICENSE_KEY']) : '').'" />
+					</div>
+					<label>'.$this->l('URL').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_url" value="'.(isset($confValues['AVALARATAX_URL']) ? Tools::safeOutput($confValues['AVALARATAX_URL']) : '').'" />
+					</div>
+					<label>'.$this->l('Company Code').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_company_code" value="'.(isset($confValues['AVALARATAX_COMPANY_CODE']) ? Tools::safeOutput($confValues['AVALARATAX_COMPANY_CODE']) : '').'" /> '.$this->l('Located in the top-right corner of your AvaTax Admin Console').'
+					</div>
+					<div class="margin-form">
+						<input type="submit" class="button" name="SubmitAvalaraTaxSettings" value="'.$this->l('Save Settings').'" /><img src="'.$this->_path.'img/icon-connection.gif" alt="" class="icon-connection" /><input type="submit" id="avalaratax_test_connection" class="button" name="SubmitAvalaraTestConnection" value="'.$this->l('Click here to Test Connection').'" />
+					</div>
+				</fieldset>
+			</form>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-half reset-label">
+				<fieldset class="field-height MR7">
+					<legend><img src="'.$this->_path.'img/icon-options.gif" alt="" />'.$this->l('Options').'</legend>
+					<label>'.$this->l('Enable address validation').'</label>
+					<div class="margin-form">
+						<input type="checkbox" name="avalaratax_address_validation" value="1"'.(isset($confValues['AVALARATAX_ADDRESS_VALIDATION']) && $confValues['AVALARATAX_ADDRESS_VALIDATION'] ? ' checked="checked"' : '').' />
+					</div>
+					<label>'.$this->l('Enable tax calculation').'</label>
+					<div class="margin-form">
+						<input type="checkbox" name="avalaratax_tax_calculation" value="1" '.(isset($confValues['AVALARATAX_TAX_CALCULATION']) && $confValues['AVALARATAX_TAX_CALCULATION'] ? ' checked="checked"' : '').' />
+					</div>
+					<label>'.$this->l('Enable address normalization in uppercase').'</label>
+					<div class="margin-form">
+						<input type="checkbox" name="avalaratax_address_normalization" value="1" '.(isset($confValues['AVALARATAX_ADDRESS_NORMALIZATION']) && $confValues['AVALARATAX_ADDRESS_NORMALIZATION'] ? ' checked="checked"' : '').' />
+					</div>
+					<label>'.$this->l('Enable tax calculation outside of your state').'</label>
+					<div class="margin-form">
+						<input type="checkbox" name="avalaratax_tax_outside" value="1" '.(isset($confValues['AVALARATAX_TAX_OUTSIDE']) && $confValues['AVALARATAX_TAX_OUTSIDE'] ? ' checked="checked"' : '').' />
+					</div>
+					<label>'.$this->l('Request timeout').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_timeout" value="'.(isset($confValues['AVALARATAX_TIMEOUT']) ? Tools::safeOutput($confValues['AVALARATAX_TIMEOUT']) : '').'" style="width: 40px;" /> '.$this->l('seconds').'
+					</div>
+					<div style="display: none;"
+						<label>'.$this->l('Refresh tax rate cache every: ').'</label>
+						<div class="margin-form">
+							<input type="text" name="avalara_cache_max_limit" value="'.(isset($confValues['AVALARA_CACHE_MAX_LIMIT']) ? Tools::safeOutput($confValues['AVALARA_CACHE_MAX_LIMIT']) : '').'" style="width: 40px;" /> '.$this->l('minutes').'
+						</div>
+					</div>
+					<div class="margin-form">
+						<input type="submit" class="button avalaratax_button" name="SubmitAvalaraTaxOptions" value="'.$this->l('Save Settings').'" />
+						<input type="submit" class="button avalaratax_button" name="SubmitAvalaraTaxClearCache" value="'.$this->l('Clear Cache').'" style="display: none;"/>
+					</div>
+					<div class="sep"></div>
+					<h4>'.$this->l('Default Post/Commit/Cancel/Refund Options').'</h4>
+					<span class="avalara-info">'.$this->l('When an order\'s status is updated, the following options will be used to update Avalara\'s records.').'</span>';
+	
+			// Check if the order status exist
+			$orderStatusList = array();
+			foreach (Db::getInstance()->ExecuteS('SELECT `id_order_state`, `name` FROM `'._DB_PREFIX_.'order_state_lang` WHERE `id_lang` = '.(int)$this->context->cookie->id_lang) as $v)
+				$orderStatusList[$v['id_order_state']] = Tools::safeOutput($v['name']);
+			$buffer .= '<table class="avalara-table" cellspacing="0" cellpadding="0" width="100%">
+						<th>'.$this->l('Action').'</th>
+						<th>'.$this->l('Order status in your store').'</th>
+						<tr>
+							<td class="avalaratax_column">'.$this->l('Post order to Avalara').':</td>
+							<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_POST_ID')]) ? html_entity_decode(Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_POST_ID')])) :
+								'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
+							</td>
+						</tr>
+						<tr>
+							<td class="avalaratax_column">'.$this->l('Commit order to Avalara').':</td>
+							<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_COMMIT_ID')]) ? html_entity_decode(Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_COMMIT_ID')])) :
+								'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
+							</td>
+						</tr>
+						<tr>
+							<td class="avalaratax_column">'.$this->l('Delete order from Avalara').':</td>
+							<td>'.(isset($orderStatusList[Configuration::get('AVALARATAX_CANCEL_ID')]) ? html_entity_decode(Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_CANCEL_ID')])) :
+								'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
+							</td>
+						</tr>
+						<tr>
+							<td class="avalaratax_column last">'.$this->l('Void order in Avalara').':</td>
+							<td class="last">'.(isset($orderStatusList[Configuration::get('AVALARATAX_REFUND_ID')]) ? html_entity_decode(Tools::safeOutput($orderStatusList[Configuration::get('AVALARATAX_REFUND_ID')])) :
+								'<div style="color: red">'.$this->l('[ERROR] A default value was not found. Please, restore PrestaShop\'s default statuses.').'</div>').'
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</form>
+			<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post" class="form-half">
+				<fieldset class="field-height ML7">
+					<legend><img src="'.$this->_path.'img/icon-address.gif" alt="" />'.$this->l('Default Origin Address').'</legend>
+					<label>'.$this->l('Address Line 1').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_address_line1" value="'.(isset($confValues['AVALARATAX_ADDRESS_LINE1']) ? Tools::safeOutput($confValues['AVALARATAX_ADDRESS_LINE1']) : '').'" />
+					</div>
+					<label>'.$this->l('Address Line 2').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_address_line2" value="'.(isset($confValues['AVALARATAX_ADDRESS_LINE2']) ? Tools::safeOutput($confValues['AVALARATAX_ADDRESS_LINE2']) : '').'" />
+					</div>
+					<label>'.$this->l('City').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_city" value="'.(isset($confValues['AVALARATAX_CITY']) ? Tools::safeOutput($confValues['AVALARATAX_CITY']) : '').'" />
+					</div>
+					<label>'.$this->l('Zip Code').'</label>
+					<div class="margin-form">
+						<input type="text" name="avalaratax_zip_code" value="'.(isset($confValues['AVALARATAX_ZIP_CODE']) ? Tools::safeOutput($confValues['AVALARATAX_ZIP_CODE']) : '').'" />
+					</div>
+					<label>'.$this->l('Country').'</label>
+					<div class="margin-form">
+						<select name="avalaratax_country" id="avalaratax_country">';
+			foreach ($countryList as $country)
+				$buffer .= '<option value="'.substr(strtoupper($country['iso_code']), 0, 2).'" '.($country['iso_code'] == $confValues['AVALARATAX_COUNTRY'] ? ' selected="selected"' : '').'>'.Tools::safeOutput($country['name']).'</option>';
+			$buffer .= '</select>
+					</div>
+					<label id="avalaratax_label_state" >'.$this->l('State').'</label>
+					<div class="margin-form">
+						<select name="avalaratax_state" id="avalaratax_state">';
+			foreach ($stateList as $state)
+				$buffer .= '<option value="'.substr(strtoupper($state['iso_code']), 0, 2).'" '.($state['iso_code'] == $confValues['AVALARATAX_STATE'] ? ' selected="selected"' : '').'>'.Tools::safeOutput($state['name']).'</option>';
+			return $buffer .'</select>
+					</div>
+					<div class="margin-form">
+						<input type="submit" class="button" name="SubmitAvalaraAddressOptions" value="'.$this->l('Save Settings').'" />
+					</div>
+				</fieldset>
+			</form>
+			<div class="clear"></div>
+		</div>';
 	}
 
 	/*
@@ -796,8 +855,7 @@ class AvalaraTax extends Module
 		return '<div class="conf '.Tools::safeOutput($type).'">
 			<img src="../img/admin/'.$img.'" alt="" title="" />
 			'.(empty($text) ? $this->l('Settings updated') : $text).
-			'<img src="http://www.prestashop.com/modules/avalaratax.png?sid='.
-			urlencode(Configuration::get('AVALARATAX_ACCOUNT_NUMBER')).'" style="float: right;" />
+			'<img src="http://www.prestashop.com/modules/avalaratax.png?sid='.urlencode(Configuration::get('AVALARATAX_ACCOUNT_NUMBER')).'" style="float: right;" />
 		</div>';
 	}
 
