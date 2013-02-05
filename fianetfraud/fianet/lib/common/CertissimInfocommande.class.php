@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Infocommande extends XMLElement {
+class CertissimInfocommande extends CertissimXMLElement {
 
     public function __construct($siteid, $refid, $montant, $ip, $timestamp, $devise="EUR") {
         parent::__construct();

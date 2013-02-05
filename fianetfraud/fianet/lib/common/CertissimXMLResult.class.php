@@ -6,7 +6,7 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class XMLResult extends XMLElement {
+class CertissimXMLResult extends CertissimXMLElement {
 
     public function __call($name, array $params) {
         //fonction returnItem : retourne la valeur de l'attribute Item si existant, null sinon

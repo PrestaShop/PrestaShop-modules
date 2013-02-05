@@ -3,7 +3,7 @@
 /**
  * @author ESPIAU Nicolas
  */
-class Appartement extends XMLElement {
+class CertissimAppartement extends CertissimXMLElement {
     const FORMAT = 1;
 
     public function __construct(array $params=array()) {

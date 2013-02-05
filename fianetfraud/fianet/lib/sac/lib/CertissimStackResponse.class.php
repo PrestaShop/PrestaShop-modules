@@ -6,12 +6,12 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class StackResponse extends XMLResult {
+class StackResponse extends CertissimXMLResult {
     public function getResults() {
         $results = array();
 
         foreach ($this->getChildrenByName('result') as $result) {
-            $results[] = new ResultResponse($result->getXML());
+            $results[] = new CertissimResultResponse($result->getXML());
         }
 
         return $results;

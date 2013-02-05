@@ -5,7 +5,7 @@
  * 
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class FormFieldInputImage extends FormField {
+class CertissimFormFieldInputImage extends CertissimFormField {
 
     protected $src; //chemin de l'image, si type=image
     protected $alt; //texte alternatif, si type=image

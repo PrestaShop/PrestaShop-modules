@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Form extends Mother {
+class CertissimForm extends CertissimMother {
     const SUBMIT_STANDARD = 'standard';
     const SUBMIT_AUTO = 'auto';
     const SUBMIT_IMAGE = 'image';
@@ -49,14 +49,14 @@ class Form extends Mother {
      */
     public function addField($field) {
         //si le param est déjà un FormField on l'ajoute simplement
-        if (isFormField($field)) {
+        if (CertissimTools::isFormField($field)) {
             $this->fields[] = $field;
         }
 
         //si le paramètre entré un est tableau
         if (is_array($field)) {
             //création d'un objet FormField vide
-            $new_field = new FormField();
+            $new_field = new CertissimFormField();
             //si l'une des clés du tableau est "label"
             if (array_key_exists('label', $field)) {
                 //on ajoute le label à l'objet FormField
@@ -86,7 +86,7 @@ class Form extends Mother {
      * @param string $label
      */
     public function addSubmit($name=null, $value=null, $id=null, $class=null, $label=null) {
-        $this->addField(new FormField('submit', $name, $value, $id, $class, $label));
+        $this->addField(new CertissimFormField('submit', $name, $value, $id, $class, $label));
     }
 
     /**
@@ -100,7 +100,7 @@ class Form extends Mother {
      * @param <type> $id
      */
     public function addImageSubmit($src, $name, $label, $alt, $class=null, $id=null) {
-        $this->addField(new FormFieldInputImage($src, $name, $label, $alt, $class, $id));
+        $this->addField(new CertissimFormFieldInputImage($src, $name, $label, $alt, $class, $id));
     }
 
     public function __toString() {

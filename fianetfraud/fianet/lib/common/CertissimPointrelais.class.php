@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Pointrelais extends XMLElement {
+class CertissimPointrelais extends CertissimXMLElement {
     
     public function __construct($identifiant=null, $enseigne=null, $addresse=null){
         parent::__construct();

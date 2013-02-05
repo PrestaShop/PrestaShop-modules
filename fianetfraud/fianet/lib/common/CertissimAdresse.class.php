@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas
  */
-class Adresse extends XMLElement {
+class CertissimAdresse extends CertissimXMLElement {
     const FORMAT = 1;
 
     public function __construct($type=null, $rue1=null, $rue2=null, $cpostal=null, $ville=null, $pays=null, XMLElement $appartement=null) {

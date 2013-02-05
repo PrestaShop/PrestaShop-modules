@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class FianetSocket extends Mother {
+class CertissimFianetSocket extends CertissimMother {
   const TIMEOUT = 20;
 
   protected $host;
@@ -30,8 +30,8 @@ class FianetSocket extends Mother {
     if (strtoupper($method) == 'GET' || strtoupper($method) == 'POST') {
       $this->method = strtoupper($method);
     } else {
-      $msg = "La méthode demandée ($method) n'est pas reconnue.";
-      insertLog(__METHOD__ . " : " . __LINE__, $msg);
+      $msg = "La methode demandee ($method) n'est pas reconnue.";
+      CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, $msg);
       throw new Exception($msg);
     }
 
@@ -92,7 +92,7 @@ class FianetSocket extends Mother {
       $header .= $this->data;
     } elseif ($this->method == 'GET') {
       if (strlen($this->path . $this->data) > 2048) {
-        insertLog(__METHOD__ . " : " . __LINE__, "Maximum length in get method reached(" . strlen($this->path . $this->data) . ")");
+        CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, "Maximum length in get method reached(" . strlen($this->path . $this->data) . ")");
       }
       $header = "GET " . $this->path . '?' . $this->data . " HTTP/1.1\r\n";
       $header .= "Host: " . $this->host . "\r\n";
@@ -129,7 +129,7 @@ class FianetSocket extends Mother {
     //si la connexion est sécurisée
     if ($this->is_ssl) {
       //connexion au serveur en ssl
-      $socket = fsockopen('ssl://' . $this->host, $this->port, $errno, $error, FianetSocket::TIMEOUT);
+      $socket = fsockopen('ssl://' . $this->host, $this->port, $errno, $error, CertissimFianetSocket::TIMEOUT);
 
       //si la connexion n'est pas sécurisée
     } else {
@@ -152,14 +152,14 @@ class FianetSocket extends Mother {
         //si l'envoi des données a échoué
       } else {
         //on log l'erreur
-        insertLog(__METHOD__ . ' - ' . __LINE__, "Envoi des données impossible sur : " . $this->host);
+        CertissimTools::insertLog(__METHOD__ . ' - ' . __LINE__, "Envoi des données impossible sur : " . $this->host);
         $res = false;
       }
       //fermeture de la connexion
       fclose($socket);
     } else {
       $msg = "Connexion socket impossible sur l'hôte " . $this->host . ". Erreur " . $errno . " : " . $error;
-      insertLog(__METHOD__ . ' - ' . __LINE__, $msg);
+      CertissimTools::insertLog(__METHOD__ . ' - ' . __LINE__, $msg);
       $res = false;
     }
     return $res;

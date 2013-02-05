@@ -6,7 +6,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-abstract class SACService extends Mother {
+abstract class CertissimService extends CertissimMother {
 
     protected $siteid;
     protected $login;
@@ -18,10 +18,10 @@ abstract class SACService extends Mother {
 
     public function __construct() {
         //définition du nom du service en fonction de la classe de l'objet
-        $name = strtolower(get_class($this));
+        $name = CertissimSac::PRODUCT_NAME;
 
         //on charge les paramètres du site en mémoire
-        $siteparams = Spyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/site_params.yml');
+        $siteparams = CertissimSpyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/site_params.yml');
         foreach ($siteparams as $key => $value) {
             $funcname = "set$key";
             $this->$funcname($value);
@@ -29,7 +29,7 @@ abstract class SACService extends Mother {
 
         //si le service n'est pas activé, on log une erreur
         if ($this->getStatus() === false) {
-            insertLog(__METHOD__ . ' : ' . __LINE__, 'le service ' . $name . ' n\'est pas activé. Vérifier le paramétrage.');
+            CertissimTools::insertLog(__METHOD__ . ' : ' . __LINE__, 'le service ' . $name . ' n\'est pas activé. Vérifier le paramétrage.');
         }
 
         //on charge les url des scripts en mémoire si le service est actif
@@ -43,10 +43,10 @@ abstract class SACService extends Mother {
      */
     private function loadURLs() {
         //définition du nom du service en fonction de la classe de l'objet
-        $name = strtolower(get_class($this));
+        $name = CertissimSac::PRODUCT_NAME;
         //on charge les url des scripts en mémoire si le service est actif
         if (!($this->getStatus() === false)) {
-            $url = Spyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/url.yml');
+            $url = CertissimSpyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/url.yml');
             foreach ($url as $script => $modes) {
                 $this->url[$script] = $modes[$this->getStatus()];
             }
@@ -62,7 +62,7 @@ abstract class SACService extends Mother {
     public function getUrl($script) {
         if (!array_key_exists($script, $this->url)) {
             $msg = "L'url pour le script $script n'existe pas ou n'est pas chargée. Vérifiez le paramétrage.";
-            insertLog(get_class($this) . '->getUrl()', $msg);
+            CertissimTools::insertLog(get_class($this) . '->getUrl()', $msg);
             //throw new Exception($msg);
         }
 
@@ -80,7 +80,7 @@ abstract class SACService extends Mother {
         //si le mode n'est pas reconnu
         if (!in_array($mode, array('test', 'prod', 'off'))) {
             //l'erreur est loguée
-            insertLog(__FILE__, "Le mode '$mode' n'est pas reconnu.");
+            CertissimTools::insertLog(__FILE__, "Le mode '$mode' n'est pas reconnu.");
             return false;
         }
 
@@ -98,16 +98,16 @@ abstract class SACService extends Mother {
      * @return bool
      */
     public function saveParamInFile() {
-        $name = strtolower(get_class($this));
+        $name = CertissimSac::PRODUCT_NAME;
         //on charge les paramètres du site en mémoire
-        $siteparams = Spyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/site_params.yml');
+        $siteparams = CertissimSpyc::YAMLLoad(SAC_ROOT_DIR . '/lib/' . $name . '/const/site_params.yml');
 
         foreach ($siteparams as $param => $value) {
             $funcname = "get$param";
             $newparams[$param] = $this->$funcname();
         }
 
-        $yaml_string = Spyc::YAMLDump($newparams);
+        $yaml_string = CertissimSpyc::YAMLDump($newparams);
         //définition du nom du service en fonction de la classe de l'objet
         $handle = fopen(SAC_ROOT_DIR . '/lib/' . $name . '/const/site_params.yml', 'w');
         $written = @fwrite($handle, $yaml_string);

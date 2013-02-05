@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class ProductList extends XMLElement {
+class CertissimProductList extends CertissimXMLElement {
 
     public function __construct($produits=array()) {
         parent::__construct("<list nbproduit='0'></list>");

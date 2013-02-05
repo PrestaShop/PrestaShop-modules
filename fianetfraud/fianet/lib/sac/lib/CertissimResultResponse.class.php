@@ -6,7 +6,7 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class ResultResponse extends XMLResult {
+class CertissimResultResponse extends CertissimXMLResult {
     /**
      * retourne vrai si une transaction a pu être trouvée sur le Fscreener, faux sinon
      *
@@ -34,7 +34,7 @@ class ResultResponse extends XMLResult {
         $transactions = array();
 
         foreach ($this->getChildrenByName('transaction') as $transac){
-            $transactions[] = new TransactionResponse($transac->getXML());
+            $transactions[] = new CertissimTransactionResponse($transac->getXML());
         }
 
         return $transactions;

@@ -5,7 +5,8 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Sac extends SACService {
+class CertissimSac extends CertissimService {
+    const PRODUCT_NAME = 'sac';
     const INPUT_TYPE = 'text'; //type par défaut des champs du form. text pour le debug, hidden sinon
     const IDSEPARATOR = '^'; //séparateur des refid pour la méthode getvalidstack
     const CONSULT_MODE_MINI = 'mini';
@@ -16,7 +17,7 @@ class Sac extends SACService {
      *
      * @param bool $autosubmit permet une soumission automatique ou manuelle ou par bouton image
      */
-    public function generateRedirectForm(XMLElement $controlcallback, $urlcallback, $paracallback, $submittype=Form::SUBMIT_STANDARD, $imagepath=null) {
+    public function generateRedirectForm(CertissimXMLElement $controlcallback, $urlcallback, $paracallback, $submittype=Form::SUBMIT_STANDARD, $imagepath=null) {
         //si le paracallback est un objet XMLElement on en déduit la chaine correspondante
         if (isXMLElement($paracallback))
             $paracallback = $paracallback->getXML();
@@ -30,7 +31,7 @@ class Sac extends SACService {
         );
 
         //instanciation du form
-        $form = new Form($this->getUrlredirect(), 'submit_fianet_xml', 'POST', $fields);
+        $form = new CertissimForm($this->getUrlredirect(), 'submit_fianet_xml', 'POST', $fields);
 
         //ajout du submit
         switch ($submittype) {
@@ -48,7 +49,7 @@ class Sac extends SACService {
 
             default:
                 $msg = "Type submit non reconnu.";
-                insertLog(__METHOD__ . " : " . __LINE__, $msg);
+                CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, $msg);
                 break;
         }
 
@@ -61,12 +62,12 @@ class Sac extends SACService {
      * @param XMLElement $xml flux xml de la transaction
      * @param mixed $paracallback paramètres de retours
      */
-    public function sendSinget(XMLElement $xml) {
+    public function sendSinget(CertissimXMLElement $xml) {
         $data = array(
             'siteid' => $this->getSiteId(),
             'controlcallback' => $xml->getXML(),
         );
-        $con = new FianetSocket($this->getUrlsinget(), 'POST', $data);
+        $con = new CertissimFianetSocket($this->getUrlsinget(), 'POST', $data);
         $res = $con->send();
         return $res;
     }
@@ -77,15 +78,15 @@ class Sac extends SACService {
      * @param XMLElement $stack
      * @return string réponse du script
      */
-    public function sendStacking(XMLElement $stack) {
+    public function sendStacking(CertissimXMLElement $stack) {
         $data = array(
             'siteid' => $this->getSiteId(),
             'controlcallback' => $stack->getXML(),
         );
-        $con = new FianetSocket($this->getUrlstacking(), 'POST', $data);
+        $con = new CertissimFianetSocket($this->getUrlstacking(), 'POST', $data);
         $result = $con->send();
         
-        $xmlresult = ($result !== false ? new XMLElement($result) : false);
+        $xmlresult = ($result !== false ? new CertissimXMLElement($result) : false);
 
         return $xmlresult;
     }
@@ -96,13 +97,13 @@ class Sac extends SACService {
      * @param XMLElement $stack
      * @return string réponse du script
      */
-    public function sendStackfast(XMLElement $stack) {
+    public function sendStackfast(CertissimXMLElement $stack) {
         $data = array(
             'siteid' => $this->getSiteId(),
             'controlcallback' => $stack->getXML(),
         );
-        $con = new FianetSocket($this->getUrlstacking(), 'POST', $data);
-        return new XMLElement($con->send());
+        $con = new CertissimFianetSocket($this->getUrlstacking(), 'POST', $data);
+        return new CertissimXMLElement($con->send());
     }
 
     /**
@@ -121,8 +122,8 @@ class Sac extends SACService {
             'Mode' => $mode,
             'RepFT' => $repFT
         );
-        $con = new FianetSocket($this->getUrlgetvalidation(), 'POST', $data);
-        return new XMLElement($con->send());
+        $con = new CertissimFianetSocket($this->getUrlgetvalidation(), 'POST', $data);
+        return new CertissimXMLElement($con->send());
     }
 
     /**
@@ -144,8 +145,8 @@ class Sac extends SACService {
             'RepFT' => $repFT,
             'urlBack' => (!is_null($urlback) ? $urlback : $this->getUrldefaultredirectvaildationurlback()),
         );
-        $con = new FianetSocket($this->getUrlredirectvalidation(), 'POST', $data);
-        return new XMLElement($con->send());
+        $con = new CertissimFianetSocket($this->getUrlredirectvalidation(), 'POST', $data);
+        return new CertissimXMLElement($con->send());
     }
 
     /**
@@ -189,7 +190,7 @@ class Sac extends SACService {
         //vérifie que la date est au bon format
         if (!preg_match('#^[0-9]{2}/[0-1][0-9]/[0-9]{4}$#', $date)) {
             $msg = "La date '$date' n'est pas au bon format. Format attendu : dd/mm/YYYY";
-            insertLog(__METHOD__ . " : " . __LINE__, $msg);
+            CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, $msg);
             throw new Exception($msg);
         }
 
@@ -211,8 +212,8 @@ class Sac extends SACService {
      * @return string réponse du script
      */
     private function getValidstack($param) {
-        $con = new FianetSocket($this->getUrlgetvalidstack(), 'POST', $param);
-        return new XMLElement($con->send());
+        $con = new CertissimFianetSocket($this->getUrlgetvalidstack(), 'POST', $param);
+        return new CertissimXMLElement($con->send());
     }
 
     public function getAlert($mode='all', $output='mini', $repFT='0') {
@@ -223,8 +224,8 @@ class Sac extends SACService {
             'Output' => $output,
             'RepFT' => $repFT,
         );
-        $con = new FianetSocket($this->getUrlgetalert(), 'POST', $data);
-        return new XMLElement($con->send());
+        $con = new CertissimFianetSocket($this->getUrlgetalert(), 'POST', $data);
+        return new CertissimXMLElement($con->send());
     }
 
     /**

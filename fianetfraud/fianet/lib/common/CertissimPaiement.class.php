@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Paiement extends XMLElement {
+class CertissimPaiement extends CertissimXMLElement {
     const TYPE_CARTE = 'carte';
     const TYPE_CHEQUE = 'cheque';
     const TYPE_REMBOURSEMENT = 'contre-remboursement';

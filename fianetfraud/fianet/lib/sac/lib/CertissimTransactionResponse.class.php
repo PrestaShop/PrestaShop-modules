@@ -6,7 +6,7 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class TransactionResponse extends XMLResult {
+class CertissimTransactionResponse extends CertissimXMLResult {
     /**
      * retourne le détail de la validation ou de l'erreur pour la transaction
      *
@@ -27,7 +27,7 @@ class TransactionResponse extends XMLResult {
     private function getEvalItem($name) {
         $eval = array_pop($this->getChildrenByName('eval'));
 
-        $eval = new XMLResult($eval->getXML());
+        $eval = new CertissimXMLResult($eval->getXML());
 
         $funcname = "return$name";
         return $eval->$funcname();

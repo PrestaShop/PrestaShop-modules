@@ -93,7 +93,7 @@ class Fianetfraud extends Module
 
 	public function install()
 	{
-		insertLog(__METHOD__ . " : " . __LINE__, "Installation du module");
+		CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, "Installation du module");
 		if (!parent::install())
 			return false;
 
@@ -108,7 +108,7 @@ class Fianetfraud extends Module
 				return false;
 			$langs = Language::getLanguages();
 
-		$sac = new Sac();
+		$sac = new CertissimSac();
 		$sac->setStatus('test');
 		$sac->saveParamInFile();
 
@@ -130,7 +130,7 @@ class Fianetfraud extends Module
 			VALUES ('0', '" . pSQL(self::getRemoteAddr()) . "','" . pSQL(date('Y-m-d H:i:s')) . "')");
 
 		//log
-		insertLog(__METHOD__ . " : " . __LINE__, (bool) $bddwritable ? "Database is writable" : "Database is not writable");
+		CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, (bool) $bddwritable ? "Database is writable" : "Database is not writable");
 
 		//nettoyage du test si test réussi
 		if ($bddwritable)
@@ -141,10 +141,10 @@ class Fianetfraud extends Module
 		}
 
 		//test de connexion SSL par un envoi stacking vide
-		$emptystack = new XMLElement('<stack></stack>');
+		$emptystack = new CertissimXMLElement('<stack></stack>');
 		$sslres = $sac->sendStacking($emptystack);
 		//log
-		insertLog(__METHOD__ . " : " . __LINE__, (bool) $sslres ? "Connexion au serveur Fia-Net réussie" : "Connexion au serveur Fia-Net impossible");
+		CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, (bool) $sslres ? "Connexion au serveur Fia-Net réussie" : "Connexion au serveur Fia-Net impossible");
 
 
 		if (!$this->registerHook('updateCarrier'))
@@ -175,7 +175,7 @@ class Fianetfraud extends Module
 		$error = false;
 
 		Configuration::updateValue('SAC_PRODUCTION', ((Tools::getValue('fianetfraud_production') == 1 ) ? 1 : 0));
-		$sac = new Sac();
+		$sac = new CertissimSac();
 		$sac->switchMode(((Tools::getValue('fianetfraud_production') == 1 ) ? "prod" : "test"));
 
 		Configuration::updateValue('SAC_LOGIN', Tools::getValue('fianetfraud_login'));
@@ -406,7 +406,7 @@ class Fianetfraud extends Module
 
 			//log en cas d'erreur
 			if (!(bool) $update)
-				insertLog(__METHOD__ . " : " . __LINE__, "Order " . (int) $params['order']->id . " was not updated.");
+				CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, "Order " . (int) $params['order']->id . " was not updated.");
 		}else
 			{ //si non trouvée
 			//ajout de la commande dans la table
@@ -416,7 +416,7 @@ class Fianetfraud extends Module
 
 			//log en cas d'erreur
 			if (!(bool) $insert)
-				insertLog(__METHOD__ . " : " . __LINE__, "Order " . (int) $params['order']->id . " was not inserted.");
+				CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, "Order " . (int) $params['order']->id . " was not inserted.");
 		}
 
 		return true;
@@ -551,10 +551,10 @@ class Fianetfraud extends Module
 	 */
 	private function buildAndSendOrder($id_order)
 	{
-		insertLog(__METHOD__ . ' : ' . __LINE__, 'construction du flux pour order ' . $id_order);
+		CertissimTools::insertLog(__METHOD__ . ' : ' . __LINE__, 'construction du flux pour order ' . $id_order);
 		$order = new Order($id_order);
 		//instanciation du SAC
-		$sac = new Sac();
+		$sac = new CertissimSac();
 		//récupération de l'adresse de livraison
 		$address_delivery = new Address((int) ($order->id_address_delivery));
 		//récupération de l'adresse de facturation
@@ -562,13 +562,13 @@ class Fianetfraud extends Module
 		//récupération de l'utilisateur
 		$customer = new Customer((int) ($order->id_customer));
 		//instanciation du flux <control>
-		$orderFianet = new Control();
+		$orderFianet = new CertissimControl();
 
 		//récupération de la langue
 		$id_lang = Configuration::get('PS_LANG_DEFAULT');
 
 		//instanciation de l'élément <utilisateur type="livraison" ...>
-		$utilisateur_facturation = new Utilisateur(
+		$utilisateur_facturation = new CertissimUtilisateur(
 			'facturation',
 			(($customer->id_gender == 1) ? $this->l('monsieur') : (($customer->id_gender == 2 ) ? $this->l('madame') : $this->l('monsieur'))),
 			($address_invoice->lastname),
@@ -587,7 +587,7 @@ class Fianetfraud extends Module
 		$all_orders = Order::getCustomerOrders((int) ($customer->id));
 
 		//instanciation de l'élément <sinteconso>
-		$siteconso = new Siteconso(
+		$siteconso = new CertissimSiteconso(
 			$customer_stats['total_orders'],
 			$customer_stats['nb_orders'],
 			$all_orders[count($all_orders) - 1]['date_add'],
@@ -598,7 +598,7 @@ class Fianetfraud extends Module
 		$country = new Country((int) ($address_invoice->id_country));
 
 		//instanciation du l'élément <adresse type="facturation" ...>
-		$adresse_facturation = new Adresse(
+		$adresse_facturation = new CertissimAdresse(
 			'facturation',
 			($address_invoice->address1),
 			($address_invoice->address2),
@@ -614,7 +614,7 @@ class Fianetfraud extends Module
 		if (Configuration::get('SAC_CARRIER_TYPE_' . (int) ($carrier->id)) == 4)
 		{
 			//instanciation de l'élément <utilisateur type="livraison" ...>
-			$utilisateur_livraison = new Utilisateur(
+			$utilisateur_livraison = new CertissimUtilisateur(
 				'livraison',
 				(($customer->id_gender == 1) ? $this->l('Monsieur') : (($customer->id_gender == 2 ) ? $this->l('Madame') : $this->l(''))),
 				($address_delivery->lastname),
@@ -629,7 +629,7 @@ class Fianetfraud extends Module
 			$country = new Country((int) ($address_delivery->id_country));
 
 			//instanciation de l'élément <adresse type="livraison" ...>
-			$adresse_livraison = new Adresse(
+			$adresse_livraison = new CertissimAdresse(
 				'livraison',
 				($address_delivery->address1),
 				($address_delivery->address2),
@@ -643,7 +643,7 @@ class Fianetfraud extends Module
 		//récupération de la devise
 		$currency = new Currency((int) ($order->id_currency));
 		//instanciation de l'élément <infocommande>
-		$infocommande = new Infocommande(
+		$infocommande = new CertissimInfocommande(
 			$sac->getSiteId(),
 			$order->id,
 			(string) $order->total_paid,
@@ -656,7 +656,7 @@ class Fianetfraud extends Module
 		$default_product_type = Configuration::get('SAC_DEFAULT_PRODUCT_TYPE');
 
 		//instanciation de l'élément <list ...>
-		$liste_produits = new ProductList();
+		$liste_produits = new CertissimProductList();
 		//pour chaque produit de la commande
 		$alldownloadables = true;
 		foreach ($products as $product)
@@ -665,7 +665,7 @@ class Fianetfraud extends Module
 			//récupération de la catégorie du produit
 			$product_category = Product::getIndexedCategories((int) ($product['product_id']));
 			//instanciation de l'élément <produit ...>
-			$produit = new XMLElement("<produit></produit>");
+			$produit = new CertissimXMLElement("<produit></produit>");
 
 			//si la catégorie est paramétrée
 			if (Configuration::get('SAC_CATEGORY_TYPE_' . $product_category))
@@ -686,7 +686,7 @@ class Fianetfraud extends Module
 
 		$carrier_type = ($alldownloadables ? '5' : Configuration::get('SAC_CARRIER_TYPE_' . (int) ($carrier->id)));
 		//instanciation de l'élément <transport>
-		$transport = new Transport(
+		$transport = new CertissimTransport(
 			$carrier_type,
 			$alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
 			$alldownloadables ? '1' : self::getCarrierFastById((int) ($carrier->id)),
@@ -697,7 +697,7 @@ class Fianetfraud extends Module
 		if ($carrier_type == 2)
 		{
 			//instanciation de l'élément <adresse> pour la balise <transport>
-			$adresse_point_relai = new Adresse(
+			$adresse_point_relai = new CertissimAdresse(
 				null,
 				($address_delivery->address1),
 				($address_delivery->address2),
@@ -705,16 +705,16 @@ class Fianetfraud extends Module
 				($address_delivery->city),
 				($country->name[$id_lang])
 			);
-			$pointrelais = new Pointrelais(null, $address_delivery->company, $adresse_point_relai);
+			$pointrelais = new CertissimPointrelais(null, $address_delivery->company, $adresse_point_relai);
 			$transport->childPointrelais($pointrelais);
 		}
 
 		//instanciation de l'élément <paiement>
-		$paiement = new Paiement(
+		$paiement = new CertissimPaiement(
 			Configuration::get('SAC_PAYMENT_TYPE_' . (substr($order->module, 0, 15)))
 		);
 		//instanciation du stack
-		$stack = new XMLElement("<stack></stack>");
+		$stack = new CertissimXMLElement("<stack></stack>");
 
 		//compilation du flux total
 		$utilisateur_facturation->childSiteconso($siteconso);
@@ -730,18 +730,18 @@ class Fianetfraud extends Module
 		$orderFianet->childPaiement($paiement);
 
 		$stack->childControl($orderFianet);
-		insertLog(__METHOD__ . ' : ' . __LINE__, '<![DATA[' . $orderFianet->getXML() . ']]>');
+		CertissimTools::insertLog(__METHOD__ . ' : ' . __LINE__, '<![DATA[' . $orderFianet->getXML() . ']]>');
 		//envoi de la commande et récupération de la réponse
 		$res = $sac->sendStacking($stack);
 
 		//log si erreur
 		if ($res === false)
 		{
-			insertLog(__METHOD__ . ' : ' . __LINE__, "L'envoi a échoué pour la commande " . (int) $order->id);
+			CertissimTools::insertLog(__METHOD__ . ' : ' . __LINE__, "L'envoi a échoué pour la commande " . (int) $order->id);
 			return;
 		}
 
-    insertLog(__METHOD__ . ' : ' . __LINE__, "Retour de Fia-Net pour la commande " . (int)$order->id . " : $res");
+    CertissimTools::insertLog(__METHOD__ . ' : ' . __LINE__, "Retour de Fia-Net pour la commande " . (int)$order->id . " : $res");
 
 		foreach ($res->getChildrenByName('result') as $result)
 		{
@@ -867,7 +867,7 @@ class Fianetfraud extends Module
 			return $res;
 
 		//instanciation du SAC
-		$sac = new Sac();
+		$sac = new CertissimSac();
 
 		//récupération du flux XML réponse contenant le score
 		$xml_result = $sac->getValidation($id_order);
@@ -923,7 +923,7 @@ class Fianetfraud extends Module
 	public static function reEvaluateOrder()
 	{
 		//instanciation du SAC
-		$sac = new Sac();
+		$sac = new CertissimSac();
 
 		//récupération des réévaluations
 		$result = $sac->getAlert('all');

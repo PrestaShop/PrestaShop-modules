@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Utilisateur extends XMLElement {
+class CertissimUtilisateur extends CertissimXMLElement {
     const TYPE_ENTREPRISE=1;
     const TYPE_PARTICULIER=2;
 

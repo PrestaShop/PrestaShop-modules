@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class XMLElement extends Mother {
+class CertissimXMLElement extends CertissimMother {
 
     protected $encoding = "UTF-8";
     protected $name = "";
@@ -14,11 +14,8 @@ class XMLElement extends Mother {
     protected $children = array();
 
     public function __construct($data=null) {
-        //on définit l'encodage par défaut au niveau de la conf PHP, pour éviter toute erreur d'encodage
-        ini_set('default_charset', $this->getEncoding());
-
         if (is_null($data)) {
-            $name = normalizeName(get_class($this));
+      $name = preg_replace('#^(certissim-)?(.*)$#', '$2', CertissimTools::normalizeName(get_class($this)));
             $this->setName($name);
         }
 
@@ -28,9 +25,9 @@ class XMLElement extends Mother {
             $data = preg_replace('#^[ \r\n]*#', '', $data);
             //$data = preg_replace('#^[ \r\n' . chr(13) . chr(10) . ']*#', '', $data);
             //on vérifie si la chaine est une chaine valide, si non, on jette un erreur
-            if (!isXMLstring($data)) {
+      if (!CertissimTools::isXMLstring($data)) {
                 $msg = "La chaine \"$data\" n'est pas valide";
-                insertLog(get_class($this) . ' - __construct()', $msg);
+        CertissimTools::insertLog(get_class($this) . ' - __construct()', $msg);
                 throw new Exception($msg);
             }
             
@@ -40,9 +37,9 @@ class XMLElement extends Mother {
                 $actualencoding = $out[1];
                 $wantedencoding = $this->getEncoding();
                 //converti la chaine entrée en utf-8, quel que soit son encodage d'origine
-                $data = mb_convert_encoding($data, $wantedencoding, $actualencoding);
+        $data = CertissimTools::convert_encoding($data, $wantedencoding, $actualencoding);
             } else {
-                $data = mb_convert_encoding($data, $this->getEncoding());
+        $data = CertissimTools::convert_encoding($data, $this->getEncoding());
             }
             //on la convertit en SimpleXMLElement
             $data = new SimpleXMLElement($data);
@@ -71,7 +68,7 @@ class XMLElement extends Mother {
             }
             //on rattache les enfants
             foreach ($data->children() as $simplexmlelementchild) {
-                $child = new XMLElement($simplexmlelementchild);
+        $child = new  CertissimXMLElement($simplexmlelementchild);
                 $this->addChild($child);
             }
         }
@@ -191,7 +188,7 @@ class XMLElement extends Mother {
      */
     private function createChild($input, $value=null, $attributes=array()) {
         //si l'entrée est une chaine non xml, on la construit à partir des autres paramètres
-        if (is_string($input) && !isXMLstring($input)) {
+    if (is_string($input) && !CertissimTools::isXMLstring($input)) {
             $str = "<$input";
             foreach ($attributes as $name => $val) {
                 $str .= " $name='$val'";
@@ -206,17 +203,19 @@ class XMLElement extends Mother {
         }
 
         //si l'entrée est une chaine XML ou un objet simpleXMLElement
-        if (is_string($input) || isSimpleXMLElement($input)) {
+    if (is_string($input) || CertissimTools::isSimpleXMLElement($input)) {
             //conversion en XMLElement
-            $input = new XMLElement($input);
+      $input = new  CertissimXMLElement($input);
         }
 
         //si à ce stade $input n'est pas un XMLElement, il n'est pas pris en compte
-        if (!isXMLElement($input)) {
+    if (!CertissimTools::isXMLElement($input)) {
             $msg = "Le paramètre entré n'est pas pris en compte par la classe XMLElement";
-            insertLog(get_class($this) . " - createChild()", $msg);
+      CertissimTools::insertLog(get_class($this) . " - createChild()", $msg);
             throw new Exception($msg);
         }
+
+//    $input->setName(preg_replace('#^(certissim-)?(.*)$#', '$2', $this->getName()));
 
         return $input;
     }
@@ -341,10 +340,11 @@ class XMLElement extends Mother {
             $empty_allowed = (isset($params[2]) ? $params[2] : false);
 
             //si un paramètre est passé et que c'est un XMLElement on l'ajoute directement comme fils si le nom correspond à celui de la fonction
-            if (isset($params[0]) && isXMLElement($params[0])) {
+      if (isset($params[0]) && CertissimTools::isXMLElement($params[0])) {
+        $childname = preg_replace('#^(certissim-)?(.*)$#', '$2', $params[0]->getName());
                 //si le nom ne correspond pas on jette un erreur
-                if ($params[0]->getName() != $elementname)
-                    throw new Exception("Le nom de la balise ne correspond pas : $elementname attendu, " . $params[0]->getName() . " trouvé.");
+        if ($childname != $elementname)
+          throw new Exception("Le nom de la balise ne correspond pas : $elementname attendu, " . $childname . " trouvé.");
 
                 //si l'élément n'est pas vide ou si on autorise les éléments vides
                 if (!$params[0]->isEmpty() || $empty_allowed)
@@ -355,7 +355,7 @@ class XMLElement extends Mother {
             }
 
             //création de l'élément fils
-            $child = new XMLElement("<$elementname></$elementname>");
+      $child = new  CertissimXMLElement("<$elementname></$elementname>");
             //si des attributs sont passés en paramètres on les ajouts
             if (isset($params[1])) {
                 foreach ($params[1] as $att => $value) {
@@ -375,7 +375,7 @@ class XMLElement extends Mother {
             //si le paramètre est une chaine
             if (is_string($params[0]) or is_int($params[0])) {
                 //si c'est une chaine XML on créé un sous-enfant et on l'affecte
-                if (isXMLstring($params[0])) {
+        if (CertissimTools::isXMLstring($params[0])) {
                     $granchild = $this->createChild($params[0]);
                     $child->addChild($granchild);
                 } else {

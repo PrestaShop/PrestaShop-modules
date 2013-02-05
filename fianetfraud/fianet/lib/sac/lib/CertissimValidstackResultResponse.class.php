@@ -5,7 +5,7 @@
  *
  * @author nespiau
  */
-class ValidstackResultResponse extends XMLResult {
+class CertissimValidstackResultResponse extends CertissimXMLResult {
 
     /**
      * retour le détail sur la réception ou sur l'erreur d'envoi

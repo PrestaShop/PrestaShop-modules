@@ -1,6 +1,6 @@
 <?php
 
-class Control extends XMLElement {
+class CertissimControl extends CertissimXMLElement {
     /* !
       __construct : initie un flux XML avec la balise controle sans enfants
      */
@@ -26,7 +26,7 @@ class Control extends XMLElement {
             $cryptelement->setValue($crypt);
         } else { //si non existante
             //création de la balise
-            $cryptelement = new XMLElement('<crypt version="' . $version . '">' . $crypt . '</crypt>');
+            $cryptelement = new CertissimXMLElement('<crypt version="' . $version . '">' . $crypt . '</crypt>');
             //récupération de l'objet Wallet
             $wallet = array_pop($this->getChildrenByName('wallet'));
             //affectationd de la balise crypt à l'objet Wallet
@@ -49,7 +49,7 @@ class Control extends XMLElement {
             $datelivrelement->setValue($date);
         } else { //si non existante
             //création de la balise
-            $datelivrelement = new XMLElement('<datelivr>' . $date . '</datelivr>');
+            $datelivrelement = new CertissimXMLElement('<datelivr>' . $date . '</datelivr>');
             //récupération de l'objet Wallet
             $wallet = array_pop($this->getChildrenByName('wallet'));
             //affectationd de la balise crypt à l'objet Wallet

@@ -6,7 +6,7 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class ValidstackResponse extends XMLResult {
+class CertissimValidstackResponse extends CertissimXMLResult {
     const ROOT_NAME = "validstack";
 
     public function  __construct($data) {
@@ -14,8 +14,8 @@ class ValidstackResponse extends XMLResult {
         parent::__construct($data);
 
         if($this->getName() != self::ROOT_NAME){
-            $msg = "L'élément racine n'est pas valide : " . $this->getName() . " trouvé, " . self::ROOT_NAME . " attendu.";
-            insertLog(__FILE__ . " - __construct()", $msg);
+            $msg = "L'�l�ment racine n'est pas valide : " . $this->getName() . " trouve, " . self::ROOT_NAME . " attendu.";
+            CertissimTools::insertLog(__FILE__ . " - __construct()", $msg);
         }
     }
 
@@ -47,7 +47,7 @@ class ValidstackResponse extends XMLResult {
     public function getResults() {
         $results = array();
         foreach($this->getChildrenByName('result') as $result){
-            $results[] = new ValidstackResultResponse($result->getXML());
+            $results[] = new CertissimValidstackResultResponse($result->getXML());
         }
 
         return $results;

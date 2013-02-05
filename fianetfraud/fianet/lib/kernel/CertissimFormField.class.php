@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class FormField extends Mother {
+class CertissimFormField extends CertissimMother {
 
     protected $label; //label du champ
     protected $type; //type du champ

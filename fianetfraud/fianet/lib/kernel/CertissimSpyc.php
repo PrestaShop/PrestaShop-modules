@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Spyc -- A Simple PHP YAML Class
+ * CertissimSpyc -- A Simple PHP YAML Class
  * @version 0.5
  * @author Vlad Andersen <vlad.andersen@gmail.com>
  * @author Chris Wanstrath <chris@ozmm.org>
  * @link http://code.google.com/p/spyc/
  * @copyright Copyright 2005-2006 Chris Wanstrath, 2006-2011 Vlad Andersen
  * @license http://www.opensource.org/licenses/mit-license.php MIT License
- * @package Spyc
+ * @package CertissimSpyc
  */
 if (!function_exists('spyc_load')) {
 
@@ -18,7 +18,7 @@ if (!function_exists('spyc_load')) {
      * @return array
      */
     function spyc_load($string) {
-        return Spyc::YAMLLoadString($string);
+        return CertissimSpyc::YAMLLoadString($string);
     }
 
 }
@@ -31,7 +31,7 @@ if (!function_exists('spyc_load_file')) {
      * @return array
      */
     function spyc_load_file($file) {
-        return Spyc::YAMLLoad($file);
+        return CertissimSpyc::YAMLLoad($file);
     }
 
 }
@@ -45,20 +45,20 @@ if (!function_exists('spyc_load_file')) {
  *
  * Usage:
  * <code>
- *   $Spyc  = new Spyc;
+ *   $Spyc  = new CertissimSpyc;
  *   $array = $Spyc->load($file);
  * </code>
  * or:
  * <code>
- *   $array = Spyc::YAMLLoad($file);
+ *   $array = CertissimSpyc::YAMLLoad($file);
  * </code>
  * or:
  * <code>
  *   $array = spyc_load_file($file);
  * </code>
- * @package Spyc
+ * @package CertissimSpyc
  */
-class Spyc {
+class CertissimSpyc {
     // SETTINGS
 
     const REMPTY = "\0\0\0\0\0";
@@ -105,7 +105,7 @@ class Spyc {
     public $_nodeId;
 
     /**
-     * Load a valid YAML string to Spyc.
+     * Load a valid YAML string to CertissimSpyc.
      * @param string $input
      * @return array
      */
@@ -114,7 +114,7 @@ class Spyc {
     }
 
     /**
-     * Load a valid YAML file to Spyc.
+     * Load a valid YAML file to CertissimSpyc.
      * @param string $file
      * @return array
      */
@@ -130,7 +130,7 @@ class Spyc {
      * simple.
      *  Usage:
      *  <code>
-     *   $array = Spyc::YAMLLoad('lucky.yaml');
+     *   $array = CertissimSpyc::YAMLLoad('lucky.yaml');
      *   print_r($array);
      *  </code>
      * @access public
@@ -138,7 +138,7 @@ class Spyc {
      * @param string $input Path of YAML file or string containing YAML
      */
     public static function YAMLLoad($input) {
-        $Spyc = new Spyc;
+        $Spyc = new CertissimSpyc;
         return $Spyc->__load($input);
     }
 
@@ -154,7 +154,7 @@ class Spyc {
      *
      *  Usage:
      *  <code>
-     *   $array = Spyc::YAMLLoadString("---\n0: hello world\n");
+     *   $array = CertissimSpyc::YAMLLoadString("---\n0: hello world\n");
      *   print_r($array);
      *  </code>
      * @access public
@@ -162,7 +162,7 @@ class Spyc {
      * @param string $input String containing YAML
      */
     public static function YAMLLoadString($input) {
-        $Spyc = new Spyc;
+        $Spyc = new CertissimSpyc;
         return $Spyc->__loadString($input);
     }
 
@@ -187,7 +187,7 @@ class Spyc {
      * @param int $wordwrap Pass in 0 for no wordwrap, false for default (40)
      */
     public static function YAMLDump($array, $indent = false, $wordwrap = false) {
-        $spyc = new Spyc;
+        $spyc = new CertissimSpyc;
         return $spyc->dump($array, $indent, $wordwrap);
     }
 
@@ -1100,7 +1100,7 @@ class Spyc {
 
 }
 
-// Enable use of Spyc from command line
+// Enable use of CertissimSpyc from command line
 // The syntax is the following: php spyc.php spyc.yaml
 
 define('SPYC_FROM_COMMAND_LINE', false);

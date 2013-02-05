@@ -6,7 +6,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-abstract class Mother {
+abstract class CertissimMother {
 
     /**
      * retourne la valeur de l'attribut $name

@@ -5,7 +5,7 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class Transport extends XMLElement {
+class CertissimTransport extends CertissimXMLElement {
     const RAPIDITE_STANDARD=2;
     const RAPIDITE_EXPRESS=1;
     const TYPE_RETRAIT_MARCHAND=1;
