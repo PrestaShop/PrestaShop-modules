@@ -121,47 +121,37 @@ function normalizeName($name) {
  */
 function insertLog($func, $msg) {
   //si le fichier log existe mais a dépassé 1Mo on le renomme pour en créer un vierge
-  if(file_exists(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml') && filesize(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml') > 1000000){
+  if (file_exists(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt') && filesize(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt') > 1000000) {
       $prefix = SAC_ROOT_DIR . '/logs/fianetlog-';
       $base = date('YmdHis');
-      $sufix = '.xml';
+    $sufix = '.txt';
       $filename = $prefix . $base . $sufix;
 
       for ($i = 0; file_exists($filename); $i++)
         $filename = $prefix . $base . "-$i" . $sufix;
 
-      rename(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml', $filename);
+    rename(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt', $filename);
   }
     //si le fichier log n'existe pas on le créé vide
-    if (!file_exists(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml')) {
+  if (!file_exists(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt')) {
         //création du fichier en écriture
-        $handle = fopen(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml', 'w');
+    $handle = fopen(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt', 'w');
+
+    $entry = date('d-m-Y h:i:s') . " | " . __METHOD__ . " : " . __LINE__ . " | Création du fichier de log\r";
+
+    fwrite($handle, $entry);
+
         //fermeture immédiate du fichier
         fclose($handle);
-
-        //création d'un XMLElement qui contiendra toutes les erreurs
-        $log = new XMLElement('<fianetlog></fianetlog>');
-        //création d'un XMLElement qui représente la première entrée
-        $error = new XMLElement("<item></item>");
-        $error->childTime(date('d-m-Y h:i:s'));
-        $error->childFunc(__METHOD__ . " : " . __LINE__);
-        $error->childMessage('Création du fichier de log');
-        //ajout de l'entrée dans le log principal
-        $log->addChild($error);
-        //sauvegarde du log
-        $log->saveInFile(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml');
     }
 
     //création d'une nouvelle entrée
-    $error = new XMLElement("<item></item>");
-    $error->childTime(date('d-m-Y h:i:s'));
-    $error->childFunc($func);
-    $error->childMessage($msg);
+  $entry = date('d-m-Y h:i:s') . " | $func | $msg\r";
 
     //ouverture du log principal
-    $log = simplexml_load_file(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml');
-    $xmllog = new XMLElement($log);
-    //ajout de la nouvelle entrée en haut du fichier
-    $xmllog->stackChild($error);
-    $xmllog->saveInFile(SAC_ROOT_DIR . '/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.xml');
+  $handle = fopen(SAC_ROOT_DIR . '/logs/' . sha1(_COOKIE_KEY_ . 'fianet_log') . '.txt', 'a+');
+  fwrite($handle, $entry);
+
+  //fermeture immédiate du fichier
+  fclose($handle);
 }
