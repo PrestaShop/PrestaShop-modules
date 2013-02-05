@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>fianetfraud</name>
+	<displayName><![CDATA[FIA-NET - Certissim]]></displayName>
+	<version><![CDATA[2.2]]></version>
+	<description><![CDATA[Prot&eacute;gez vous contre la fraude &agrave; la carte bancaire sans perturber l&#039;acte d&#039;achat]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[payment_security]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries>fr</limited_countries>
+</module>
