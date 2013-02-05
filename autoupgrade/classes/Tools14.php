@@ -1755,7 +1755,7 @@ class Tools14
 		{
 			$tab['RewriteRule']['content']['^([a-z]{2})/[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$2&isolang=$1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$2&isolang=$1 [QSA,L]';
-			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$2&isolang=$1&noredirect=1 [QSA,L]';
+			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$2&isolang=$1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/([0-9]+)\-[a-zA-Z0-9-]*'] = 'category.php?id_category=$2&isolang=$1 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/content/([0-9]+)\-[a-zA-Z0-9-]*'] = 'cms.php?isolang=$1&id_cms=$2 [QSA,L]';
 			$tab['RewriteRule']['content']['^([a-z]{2})/content/category/([0-9]+)\-[a-zA-Z0-9-]*'] = 'cms.php?isolang=$1&id_cms_category=$2 [QSA,L]';
@@ -1770,7 +1770,7 @@ class Tools14
 		$tab['RewriteRule']['content']['^[a-zA-Z0-9-]*/([0-9]+)\-[a-zA-Z0-9-]*\.html'] = 'product.php?id_product=$1 [QSA,L]';
 		// Notice : the id_category rule has to be after product rules.
 		// If not, category with number in their name will result a bug
-		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$1&noredirect=1 [QSA,L]';
+		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*(/[a-zA-Z0-9-]*)+'] = 'category.php?id_category=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)\-[a-zA-Z0-9-]*'] = 'category.php?id_category=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)__([a-zA-Z0-9-]*)'] = 'supplier.php?id_supplier=$1 [QSA,L]';
 		$tab['RewriteRule']['content']['^([0-9]+)_([a-zA-Z0-9-]*)'] = 'manufacturer.php?id_manufacturer=$1 [QSA,L]';
