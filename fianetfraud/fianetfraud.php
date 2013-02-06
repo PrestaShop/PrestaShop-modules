@@ -112,7 +112,7 @@ class Fianetfraud extends Module
     $sac->setStatus('test');
     $sac->saveParamInFile();
 
-    //nettoyage des orderState de l'ancien module
+    //cleans old order states
     $orderStateFraud = new OrderState((int) Configuration::get('SAC_ID_FRAUD'), (int) Configuration::get('PS_LANG_DEFAULT'));
     $orderStateValid = new OrderState((int) Configuration::get('SAC_ID_VALID'), (int) Configuration::get('PS_LANG_DEFAULT'));
     $orderStateWaiting = new OrderState((int) Configuration::get('SAC_ID_WAITING'), (int) Configuration::get('PS_LANG_DEFAULT'));
@@ -124,7 +124,7 @@ class Fianetfraud extends Module
     $orderStateTest->delete();
 
 
-    //test de connexion à la BDD
+    //database connection test
     $bddwritable = Db::getInstance()->Execute("
 			INSERT INTO `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."` (`id_order`, `ip_address`, `date`)
 			VALUES ('0', '".pSQL(self::getRemoteAddr())."','".pSQL(date('Y-m-d H:i:s'))."')");
@@ -132,7 +132,7 @@ class Fianetfraud extends Module
     //log
     CertissimTools::insertLog(__METHOD__." : ".__LINE__, (bool) $bddwritable ? "Database is writable" : "Database is not writable");
 
-    //nettoyage du test si test réussi
+    //cleans the database test entry if success
     if ($bddwritable)
     {
       Db::getInstance()->Execute("
@@ -140,7 +140,7 @@ class Fianetfraud extends Module
 			WHERE  `id_order`='0'");
     }
 
-    //test de connexion SSL par un envoi stacking vide
+    //tests the connection to the Fia-Net's server
     $emptystack = new CertissimXMLElement('<stack></stack>');
     $sslres = $sac->sendStacking($emptystack);
     //log
@@ -374,10 +374,10 @@ class Fianetfraud extends Module
   }
 
   /**
-   * retourne l'adresse IP de l'internaute acheteur pour une commande donnée
+   * returns the IP address of the customer who paid the order $id_order
    *
-   * @param int $id_order id de la commande
-   * @return string adresse IP acheteur
+   * @param int $id_order id of the order
+   * @return string customer's IP address
    */
   static private function getIpByOrder($id_order = false)
   {
@@ -390,7 +390,7 @@ class Fianetfraud extends Module
   }
 
   /**
-   * action effectuée lors de la mise à jour du statut de la commande
+   * action done when updating the order status
    *
    * @param array $params
    * @return bool
@@ -415,10 +415,9 @@ class Fianetfraud extends Module
   }
 
   /**
-   * retourne vrai si le module de paiement est paramétré pour Certissim et si la commande n'a pas déjà été envoyée, faux sinon
+   * returns true if the payment module $module is set to use Certissim AND if the order has never been sent to Certissim, false otherwise
    *
-   * @param int $id_module id du module de paiement
-   * @param float $total_paid montant de la commande
+   * @param int $id_module payment module id
    * @return bool
    */
   public function needCheck($module)
@@ -426,14 +425,14 @@ class Fianetfraud extends Module
     //récupération des id des modules activés pour l'envoi des transactions
     $modules = explode(',', Configuration::get('SAC_PAYMENT_MODULE'));
 
-    //si le module courant est dans la liste ou si le montant minimum est atteint
+    //set $inarray var to true only if $module is found in the array containing payment modules activated for Certissim
     $inarray = in_array($module, $modules);
 
     return $inarray;
   }
 
   /**
-   * retourne vrai si la transaction est en cours d'évaluation, faux sinon
+   * returns true if the order is under screening, false otherwise
    *
    * @param int $id_order
    * @return bool
@@ -451,7 +450,7 @@ class Fianetfraud extends Module
   }
 
   /**
-   * retourne vrai si la transaction est prête à être envoyée à Certissim : si elle ne l'a jamais été et si elle est déjà pré-enregistrée
+   * returns true if the order is ready to be sent to Certissim, false otherwise
    *
    * @param int $id_order
    * @param bool
@@ -471,9 +470,9 @@ class Fianetfraud extends Module
   }
 
   /**
-   * retourne vrai si la transaction a déjà été envoyée au service Certissim, faux sinon
+   * returns true if the order has already been sent to Certissim, false otherwise
    *
-   * @param int $order_id id de la commande
+   * @param int $order_id
    * @return bool
    */
   public function hasBeenSentToCertissim($order_id)
@@ -495,7 +494,7 @@ class Fianetfraud extends Module
   }
 
   /**
-   * construit le flux XML et l'envoi à Fianet
+   * build and send the XML stream to Certissim
    *
    * @param array $params
    */
@@ -503,18 +502,18 @@ class Fianetfraud extends Module
   {
     CertissimTools::insertLog(__METHOD__.' : '.__LINE__, 'construction du flux pour order '.$id_order);
     $order = new Order($id_order);
-    //instanciation du SAC
+    //service instanciation
     $sac = new CertissimSac();
-    //récupération de l'adresse de livraison
+    //gets the delivery address
     $address_delivery = new Address((int) ($order->id_address_delivery));
-    //récupération de l'adresse de facturation
+    //gets the billing address
     $address_invoice = new Address((int) ($order->id_address_invoice));
-    //récupération de l'utilisateur
+    //gets the customer
     $customer = new Customer((int) ($order->id_customer));
-    //instanciation du flux <control>
+    //XML stream initialization
     $orderFianet = new CertissimControl();
 
-    //récupération de la langue
+    //gets the default language
     $id_lang = Configuration::get('PS_LANG_DEFAULT');
 
     //instanciation de l'élément <utilisateur type="livraison" ...>
@@ -530,13 +529,13 @@ class Fianetfraud extends Module
         $customer->email
     );
 
-    //récupération des stats de l'utilisateur
+    //gets the stats of the customer
     $customer_stats = $customer->getStats();
 
-    //récupération des anciennes commandes de l'utilisateur
+    //gets the orders list of the customer
     $all_orders = Order::getCustomerOrders((int) ($customer->id));
 
-    //instanciation de l'élément <sinteconso>
+    //initialization of the tag <siteconso>
     $siteconso = new CertissimSiteconso(
         $customer_stats['total_orders'],
         $customer_stats['nb_orders'],
@@ -544,10 +543,10 @@ class Fianetfraud extends Module
         (count($all_orders) > 1 ? $all_orders[1]['date_add'] : null)
     );
 
-    //récupération du pays utilisé pour la facturation
+    //gets the billing country
     $country = new Country((int) ($address_invoice->id_country));
 
-    //instanciation du l'élément <adresse type="facturation" ...>
+    //initialization of the tag <adresse type='facturation'>
     $adresse_facturation = new CertissimAdresse(
         'facturation',
         ($address_invoice->address1),
@@ -557,13 +556,13 @@ class Fianetfraud extends Module
         ($country->name[$id_lang])
     );
 
-    //récupération du transporteur
+    //gets the carrier
     $carrier = new Carrier((int) ($order->id_carrier));
 
-    //si il s'agit d'un transporteur à domicile
+    //if it's a home delivery carrier
     if (Configuration::get('SAC_CARRIER_TYPE_'.(int) ($carrier->id)) == 4)
     {
-      //instanciation de l'élément <utilisateur type="livraison" ...>
+      //initialization of the tag <utilisateur type='livraison'>
       $utilisateur_livraison = new CertissimUtilisateur(
           'livraison',
           (($customer->id_gender == 1) ? $this->l('Monsieur') : (($customer->id_gender == 2 ) ? $this->l('Madame') : $this->l(''))),
@@ -575,10 +574,10 @@ class Fianetfraud extends Module
           null,
           $customer->email);
 
-      //récupération du pays utilisé pour la livraison
+      //gets the delivery country
       $country = new Country((int) ($address_delivery->id_country));
 
-      //instanciation de l'élément <adresse type="livraison" ...>
+      //initialization of the tag <adresse type='livraison'>
       $adresse_livraison = new CertissimAdresse(
           'livraison',
           ($address_delivery->address1),
@@ -590,9 +589,9 @@ class Fianetfraud extends Module
       );
     }
 
-    //récupération de la devise
+    //gets the currency
     $currency = new Currency((int) ($order->id_currency));
-    //instanciation de l'élément <infocommande>
+    //initialization of the tag <infocommande>
     $infocommande = new CertissimInfocommande(
         $sac->getSiteId(),
         $order->id,
@@ -600,41 +599,43 @@ class Fianetfraud extends Module
         self::getIpByOrder((int) ($order->id)),
         date('Y-m-d H:i:s')
     );
-    //récupération des produits de la commande
+    //gets information about the order products
     $products = $order->getProducts();
-    //spécification du type par défaut
+    //gets the default product type
     $default_product_type = Configuration::get('SAC_DEFAULT_PRODUCT_TYPE');
 
-    //instanciation de l'élément <list ...>
+    //initialization of the tag <list>
     $liste_produits = new CertissimProductList();
-    //pour chaque produit de la commande
+    //initialization of the var that says if all the products of the order are downloadables
     $alldownloadables = true;
+    //foreach product
     foreach ($products as $product) {
       $alldownloadables = $alldownloadables && strlen($product['download_hash']) > 0;
-      //récupération de la catégorie du produit
+      //gets the product type
       $product_category = Product::getIndexedCategories((int) ($product['product_id']));
-      //instanciation de l'élément <produit ...>
+      //initialization of the tag <produit>
       $produit = new CertissimXMLElement("<produit></produit>");
 
-      //si la catégorie est paramétrée
+      //if this product belongs to a specified category
       if (Configuration::get('SAC_CATEGORY_TYPE_'.$product_category))
-      //ajout de l'attribut type avec la catégorie du produit
+      //sets the specified category as the type attribute
         $produit->addAttribute('type', Configuration::get('SAC_CATEGORY_TYPE_'.$product_category));
-      else //si la catégorie n'est pas paramétrée
-      //ajout de l'attribut type avec la catégorie par défaut
+      else //if this product doesn't belong to a specified category
+      //the type attribute takes the default value
         $produit->addAttribute('type', $default_product_type);
-      //ajout de la ref, du nb, du prixunit et du label
+      //adds the attributes ref, nb and prixunit
       $produit->addAttribute('ref', ((((isset($product['product_reference']) and !empty($product['product_reference'])) ? $product['product_reference'] : ((isset($product['product_ean13']) and !empty($product['product_ean13'])) ? $product['product_ean13'] : strtoupper($product['product_name']))))));
       $produit->addAttribute('nb', $product['product_quantity']);
       $produit->addAttribute('prixunit', $product['total_price']);
       $produit->setValue(($product['product_name']));
 
-      //ajout du produit dans la liste
+      //adds the product into the list
       $liste_produits->addProduit($produit);
     }
 
+    //gets the carrier type
     $carrier_type = ($alldownloadables ? '5' : Configuration::get('SAC_CARRIER_TYPE_'.(int) ($carrier->id)));
-    //instanciation de l'élément <transport>
+    //initialization of the tag <transport>
     $transport = new CertissimTransport(
         $carrier_type,
         $alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
@@ -642,10 +643,10 @@ class Fianetfraud extends Module
         null
     );
 
-    //s'il s'agit d'un transporteur en point relai
+    //if it's a drop off point delivery
     if ($carrier_type == 2)
     {
-      //instanciation de l'élément <adresse> pour la balise <transport>
+      //initialization of the tag <adresse>
       $adresse_point_relai = new CertissimAdresse(
           null,
           ($address_delivery->address1),
@@ -654,18 +655,20 @@ class Fianetfraud extends Module
           ($address_delivery->city),
           ($country->name[$id_lang])
       );
+      //initialization of the tag <pointrelais>
       $pointrelais = new CertissimPointrelais(null, $address_delivery->company, $adresse_point_relai);
+      //adds the tag <pointrelais> as a child of the tag <transport>
       $transport->childPointrelais($pointrelais);
     }
 
-    //instanciation de l'élément <paiement>
+    //initialization of the tag <paiement>
     $paiement = new CertissimPaiement(
         Configuration::get('SAC_PAYMENT_TYPE_'.(substr($order->module, 0, 15)))
     );
-    //instanciation du stack
+    //stack initialization
     $stack = new CertissimXMLElement("<stack></stack>");
 
-    //compilation du flux total
+    //builds the stream by merging all tags together
     $utilisateur_facturation->childSiteconso($siteconso);
     $orderFianet->childUtilisateur($utilisateur_facturation);
     $orderFianet->childAdresse($adresse_facturation);
@@ -680,10 +683,10 @@ class Fianetfraud extends Module
 
     $stack->childControl($orderFianet);
     CertissimTools::insertLog(__METHOD__.' : '.__LINE__, '<![DATA['.$orderFianet->getXML().']]>');
-    //envoi de la commande et récupération de la réponse
+    //sends the stack to Certissim et gets the response
     $res = $sac->sendStacking($stack);
 
-    //log si erreur
+    //logs an error message and returns if an error occured
     if ($res === false)
     {
       CertissimTools::insertLog(__METHOD__.' : '.__LINE__, "L'envoi a échoué pour la commande ".(int) $order->id);
@@ -695,7 +698,7 @@ class Fianetfraud extends Module
     foreach ($res->getChildrenByName('result') as $result) {
       $avancement = $result->getAttribute('avancement');
 
-      //mise à jour de l'entrée
+      //update in database
       Db::getInstance()->Execute("
 			UPDATE `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."`
 			SET `avancement`= '".pSQL($avancement)."'
@@ -704,7 +707,7 @@ class Fianetfraud extends Module
   }
 
   /**
-   * action lors de la confirmation d'un paiement : si le module de paiement est activé alors envoi à fianet, sinon rien
+   * action executed when the payment is confirmed : if the order is ready to be sent, then it's sent to Certissim, otherwise nothing happen
    *
    * @param array $params
    * @return bool
@@ -720,7 +723,7 @@ class Fianetfraud extends Module
   }
 
   /**
-   * affiche un encart avec présentant l'analyse fianet si analyse
+   * display the Certissim analysis on the admin order page if the order has been sent to Certissim, nothing otherwise
    *
    * @param array $params
    * @return string
@@ -747,44 +750,44 @@ class Fianetfraud extends Module
   }
 
   /**
-   * au passage d'une commande, on ajoute son id, l'ip de l'internaute et l'id du module si le module de paiement utilisé est activé pour le SAC
+   * when a new order is created: adds its id, the IP of the customer, and the id of the payment module in the module table in the databse
    *
    * @param array $params
    * @return bool
    */
   public function hookNewOrder($params)
   {
-    // use in_array is better here.
-    //si mauvaise adresse serveur ou si module de paiement désactivé pour le SAC, fin de process
-    if (self::getRemoteAddr() == '0.0.0.0' or self::getRemoteAddr() == '' or self::getRemoteAddr() === false or !$this->needCheck($params['order']->module))
+    //if the IP address is not valid, or if the payment module is not configured to use Certissim then end of process
+    if (in_array(self::getRemoteAddr(), array('0.0.0.0', '', false)) || !$this->needCheck($params['order']->module))
       return true;
 
-    //recherche de la commande dans la base Fianet
+    //looks for the order in the Certissim table
     $res = Db::getInstance()->Execute('
 			SELECT `id_order`
 			FROM '._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'
 			WHERE id_order='.(int) ($params['order']->id));
 
-    //si commande trouvée,
+    //if order found
     if (Db::getInstance()->NumRows() > 0)
     {
-      //mise à jour de l'entrée
+      //updates the entry
       $update = Db::getInstance()->Execute("
 				UPDATE `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."`
 				SET `ip_address` = '".pSQL(self::getRemoteAddr())."', `date` = '".pSQL(date('Y-m-d H:i:s'))."'
 				WHERE `id_order` = ".(int) $params['order']->id." LIMIT 1");
 
-      //log en cas d'erreur
+      //logs error if sql failed
       if (!(bool) $update)
         CertissimTools::insertLog(__METHOD__." : ".__LINE__, "Order ".(int) $params['order']->id." was not updated.");
-    }else
-    { //si non trouvée
-      //ajout de la commande dans la table
+    }
+    else //if order has not been found
+    {
+      //adds the order in the Certissim table
       $insert = Db::getInstance()->Execute("
 				INSERT INTO `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."` (`id_order`, `ip_address`, `date`)
 				VALUES (".(int) $params['order']->id.", '".pSQL(self::getRemoteAddr())."','".pSQL(date('Y-m-d H:i:s'))."')");
 
-      //log en cas d'erreur
+      //logs error if sql failed
       if (!(bool) $insert)
         CertissimTools::insertLog(__METHOD__." : ".__LINE__, "Order ".(int) $params['order']->id." was not inserted.");
     }
@@ -793,20 +796,20 @@ class Fianetfraud extends Module
   }
 
   /**
-   * �crase l'adresse ip dans la table fianet pour pr�venir l'erreur d'ip lorsque la cr�ation de commande est g�n�r�e par un serveur bancaire
+   * Replaces the IP address in the Certissim table in case the previous one has been inserted by the return from a bank server
    *
    * @param array $params
    * @return bool
    */
   public function hookPaymentReturn($params)
   {
-    //v�rification de l'existence de la commande dans la table fia-net
+    //checks if the order already exists in the Certissim table
     $res = Db::getInstance()->ExecuteS('
 			SELECT *
 			FROM `'._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'`
 			WHERE `id_order` = '.(int) $params['id_order']);
 
-    //si commande existante on �crase l'ip
+    //if order exists, then replaces the IP address
     if (Db::getInstance()->NumRows() > 0)
     {
       $update = Db::getInstance()->Execute("
@@ -814,50 +817,51 @@ class Fianetfraud extends Module
 				SET `ip_address` = '".pSQL(self::getRemoteAddr())."'
 				WHERE `id_order` = ".(int) $params['order']->id." LIMIT 1");
 
-      //log en cas d'erreur
+      //logs error if sql failed
       if (!(bool) $update)
         CertissimTools::insertLog(__METHOD__." : ".__LINE__, "Commande ".(int) $params['order']->id." non mise � jour : '".Db::getMsgError()."'");
 
       return (bool) $update;
-    }else
+    }
+    else
     {
       return false;
     }
   }
 
   /**
-   * vérifie les commandes en attente de score et met à jour si besoin     *
+   * checks orders that are waiting their score, and request the score
    */
   static public function checkWaitingOrders()
   {
-    //récupère toutes les commandes sans évaluation
+    //gets all the orders without score
     $orders = Db::getInstance()->ExecuteS('SELECT `id_order`, `avancement` FROM '._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.' WHERE `avancement` = \'encours\'');
-    //pour chaque commande sans évaluation
+    //foreach unscored order
     foreach ($orders as $order) {
-      //interrogation du serveur et récupération de l'évaluation
+      //call Certissim to get the score
       $eval = self::getScore($order['id_order']);
 
       switch ($eval['eval']) {
-        //si évaluation donnée
+        //is score available
         case -1:
         case 0:
         case 100:
           break;
 
-        //si erreur de traitement chez fianet
+        //if error on Certissim side
         case 'error':
-          //on enregistre l'erreur
+          //inserts the error in the Certissim table
           Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'`
 			SET `eval` = "'.pSQL($eval).'", `avancement` = "'.pSQL($eval['eval']).'", `detail` = "'.pSQL($eval['detail']).'"
 			WHERE `id_order` = '.(int) ($order['id_order']).' LIMIT 1');
           break;
 
-        //si transaction absente chez Fianet
+        //if order not found on Certissim server
         case 'absente':
-          //on soumet la transaction une nouvelle fois
+          //sends the order again
           $this->buildAndSendOrder((int) ($order['id_order']));
-          //on enregistre l'erreur
+          //inserts the error in the Certissim table
           Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'`
 			SET `eval` = "'.pSQL($eval).'", `avancement` = "'.pSQL($eval['eval']).'"
@@ -865,20 +869,20 @@ class Fianetfraud extends Module
           break;
 
         default :
-          //si pas d'éval, on attend
           break;
       }
     }
   }
 
   /**
-   * retourne un tableau avec évaluation / détail si éval, notification d'erreur ou d'absence sinon.
+   * returns an array containing evaluation with detail if order is scored, error notification otherwise
    *
-   * @param int $id_order référence de la commande
-   * @return array score de la transaction
+   * @param int $id_order
+   * @return array
    */
   private static function getScore($id_order)
   {
+    //gets the eval and detail fields in the Certissim table
     $res = Db::getInstance()->Execute('
 		SELECT `id_order`,`eval`,`detail`
 		FROM '._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'
@@ -886,49 +890,53 @@ class Fianetfraud extends Module
 
     $count = Db::getInstance()->NumRows();
 
-    //s'il y a déjà une évaluation
+    //f the evaluation is set
     if ($count > 0 && $res['eval'] != '' && $res['eval'] != 'NULL' && !is_null($res['eval']))
-    //retour de l'évaluation
+    //returns the evaluation and detail
       return $res;
 
-    //instanciation du SAC
+    //inistialization of Certisism
     $sac = new CertissimSac();
 
-    //récupération du flux XML réponse contenant le score
+    //gets the validation result
     $xml_result = $sac->getValidation($id_order);
 
-    //récupération du retour
+    //gets the 'retour' attribute value
     $retour = $xml_result->getAttribute('retour');
 
-    //si transac trouvée
+    //if order has been found
     if ($retour == "trouvee")
     {
-      //récupération de l'élément transaction
+      //gets the transaction element
       $transaction = array_pop($xml_result->getChildrenByName('transaction'));
-      //récupération de l'avancement
+      //gets the attribute 'avancement' to know the state of the analysis
       $avancement = $transaction->getAttribute('avancement');
-      //si la transaction a été traitée
+      //if order has been scored
       if ($avancement == "traitee")
       {
-        //récupération de l'évaluation
+        //gets the score
         $xml_eval = array_pop($transaction->getChildrenByName('eval'));
-        //construction du tableau de retour
+        //builds the array to return
         $return = array('eval' => $xml_eval->getValue(), 'detail' => (string) $xml_eval->getAttribute('info'));
 
-        //si commande trouvée en base
+        //if order already exists in Certissim table
         if ($count > 0)
         {
-          //mise à jour de l'entrée
+          //updates the entry
           Db::getInstance()->Execute("
 			UPDATE `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."`
 			SET `eval` = '".pSQL($return['eval'])."', `detail` = '".pSQL($return['detail'])."', `avancement` = '".pSQL($avancement)."'
 			WHERE `id_order` = '".(int) $id_order."' LIMIT 1");
-        } else //si non trouvée {
-        //ajout de la commande dans la table
+        }
+        else //if order not found
+        {
+          //inserts the order into the Certissim table
           Db::getInstance()->Execute("
 			INSERT INTO `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."` (`id_order`, `eval`, `detail`, `avancement`)
 			VALUES (".(int) $id_order.", '".pSQL($return['eval'])."', '".pSQL($return['detail'])."', '".pSQL($avancement)."')");
-      }else
+        }
+      }
+      else
       {
         $return = array('eval' => $avancement);
       }
@@ -941,21 +949,21 @@ class Fianetfraud extends Module
   }
 
   /**
-   * met à jour les évaluations des commandes qui ont été réévaluées
+   * update orders that have been reevaluated
    *
-   * @return <type>
+   * @return bool
    */
   public static function reEvaluateOrder()
   {
-    //instanciation du SAC
+    //Certissim initialization
     $sac = new CertissimSac();
 
-    //récupération des réévaluations
+    //gets all reevaluations
     $result = $sac->getAlert('all');
 
-    //pour chaque transaction réévaluée
+    //foreach reevaluated order
     foreach ($result->getChildrenByName('transaction') as $transaction) {
-      //on vérifie si la commande est bien en base
+      //checks that the order already exists in Certissim table
       $res = Db::getInstance()->ExecuteS('
 		SELECT `id_order`
 		FROM `'._DB_PREFIX_.self::CERTISSIM_TABLE_NAME.'`
@@ -963,13 +971,14 @@ class Fianetfraud extends Module
 
       $found = Db::getInstance()->NumRows() > 0;
 
-      //si la transaction n'est pas trouvée, sortie du script
+      //if order has not been found, end of process
       if (!$found)
         return false;
 
-      //récupération de l'évaluation
+      //gets the score
       $eval = array_pop($transaction->getChildrenByName('eval'));
 
+      //update the entry in Certissim table
       Db::getInstance()->Execute("
 			UPDATE `"._DB_PREFIX_.self::CERTISSIM_TABLE_NAME."`
 			SET `eval` = '".pSQL($eval->getValue())."', `detail` = '".pSQL($eval->getAttribute('info'))."'
@@ -979,11 +988,22 @@ class Fianetfraud extends Module
     return true;
   }
 
-  private static function getCarrierFastById($id_carrier)
+  /**
+   * returns the delivery type : 2 for standard delivery, 1 for express delivery
+   * Notice : there is no way to know what type of delivery it is wile we're developping the module, it returns '2' for each case
+   * 
+   * @return int
+   */
+  private static function getCarrierFastById()
   {
     return 2;
   }
 
+  /**
+   * returns the list of all Certissim product categories
+   * 
+   * @return array
+   */
   public function getSACCategories()
   {
     $categories = Db::getInstance()->ExecuteS('SELECT id_category, id_sac FROM '._DB_PREFIX_.'sac_categories');
