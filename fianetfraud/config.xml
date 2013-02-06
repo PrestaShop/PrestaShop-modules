@@ -2,7 +2,7 @@
 <module>
 	<name>fianetfraud</name>
 	<displayName><![CDATA[FIA-NET - Certissim]]></displayName>
-	<version><![CDATA[2.2]]></version>
+	<version><![CDATA[2.2.4]]></version>
 	<description><![CDATA[Prot&eacute;gez vous contre la fraude &agrave; la carte bancaire sans perturber l&#039;acte d&#039;achat]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payment_security]]></tab>
