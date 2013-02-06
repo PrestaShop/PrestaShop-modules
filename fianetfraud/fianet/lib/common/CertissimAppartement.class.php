@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Class for the tag <appartement>
+ * 
  * @author ESPIAU Nicolas
  */
 class CertissimAppartement extends CertissimXMLElement

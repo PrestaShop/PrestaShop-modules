@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Paiement
+ * Class for the tag <paiement>
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */

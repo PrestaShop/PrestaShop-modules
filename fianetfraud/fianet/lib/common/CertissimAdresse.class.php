@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Global class for the addresses
+ * Class for the tag <adresse>
  *
  * @author ESPIAU Nicolas
  */

@@ -1,7 +1,10 @@
 <?php
 
 /**
- * Classe abstraite pour les retours de script avec fonction magique retournant la valeur des attributs
+ * Class for the Certissim services responses, including a magic method allowing developper to access the attributes directly
+ * Ex. :
+ * $result = new CertissimXMLResult($xml_string);
+ * $date_attribute_value = $result->returnDate();
  *
  * @version 3.1
  * @author ESPIAU Nicolas

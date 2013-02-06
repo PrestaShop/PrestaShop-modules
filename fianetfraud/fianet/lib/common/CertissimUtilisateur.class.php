@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Utilisateur
+ * Class for <utilisateur> tag
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */

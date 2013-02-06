@@ -1,7 +1,7 @@
 <?php
 
 /**
- * objet pour la balise <list>
+ * Class for tag <list>
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
@@ -18,11 +18,11 @@ class CertissimProductList extends CertissimXMLElement
   }
 
   /**
-   * ajoute le produit dans la liste, et incrémente l'attribut nbproduits du nombre de produit ajoutés
+   * adds the product in the list and increments the value of the attribute 'nbproduits' with the number of products added
    * 
-   * @param mixed $produit un tableau ou un objet XMLElement
-   * @param array $attrs tableau regroupant les attributs, renseigné si $produit est sous forme de tableau
-   * @return XMLElement le produit ajouté
+   * @param mixed $produit array or CertissimXMLElement
+   * @param array $attrs array containing product attributes
+   * @return CertissimXMLElement product added
    */
   public function addProduit($produit, $attrs = array())
   {

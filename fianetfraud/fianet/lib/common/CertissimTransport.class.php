@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Transport
+ * Class for <transport> tag
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */

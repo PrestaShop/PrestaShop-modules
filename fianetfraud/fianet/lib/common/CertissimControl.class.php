@@ -1,68 +1,72 @@
 <?php
 
+/**
+ * class for the tag <control>
+ * 
+ */
 class CertissimControl extends CertissimXMLElement
 {
-  /* !
-    __construct : initie un flux XML avec la balise controle sans enfants
+  /**
+   * initializes a stream with the root <control> without child
+   * 
    */
-
   public function __construct()
   {
     parent::__construct("<control fianetmodule='api_prestashop_certissim' version='2.2.5'></control>");
   }
 
   /**
-   * ajoute l'enfant <crypt> à <wallet>
+   * adds the child <crypt> to the tag <wallet>
    *
-   * @param string $crypt valeur du crypt
-   * @param string $version version du crypt
+   * @param string $crypt crypt value
+   * @param string $version crypt version
    */
   public function addCrypt($crypt, $version)
   {
-    //on recherche la présence de la balise crypt
+    //find an existing tag <crypt>
     $elements = $this->getChildrenByName('crypt');
-    //si déjà présente
+    //if <crypt> already exists
     if (count($elements) > 0)
     {
-      //on ajoute la valeur et la version
+      //adds value and version
       $cryptelement = array_pop($elements);
       $cryptelement->setAttribute('version', $version);
       $cryptelement->setValue($crypt);
     }
-    else
-    { //si non existante
-      //création de la balise
+    else //<crypt> does not exist yet
+    {
+      //initializa <crypt> tag
       $cryptelement = new CertissimXMLElement('<crypt version="'.$version.'">'.$crypt.'</crypt>');
-      //récupération de l'objet Wallet
+      //gets the tag <wallet>
       $wallet = array_pop($this->getChildrenByName('wallet'));
-      //affectationd de la balise crypt à l'objet Wallet
+      //add the tag <crypt> into the tag <wallet>
       $wallet->childCrypt($cryptelement);
     }
   }
 
   /**
-   * ajoute l'enfant <datelivr> à <wallet>
+   * adds the child <datelivr> into <wallet>
    *
    * @param date $date
    */
   public function addDatelivr($date)
   {
-    //on recherche la présence de la balise datelivr
+    //finds the tag <datelivr>
     $elements = $this->getChildrenByName('datelivr');
-    //si déjà présente
+    //if tags already exists
     if (count($elements) > 0)
     {
-      //on ajoute la valeur et la version
+      //adds value
       $datelivrelement = array_pop($elements);
       $datelivrelement->setValue($date);
     }
-    else
-    { //si non existante
-      //création de la balise
+    else //if tag does not exist yet
+    {
+      //initialize the tag <datelivr>
       $datelivrelement = new CertissimXMLElement('<datelivr>'.$date.'</datelivr>');
-      //récupération de l'objet Wallet
+      //gets the tag <wallet>
       $wallet = array_pop($this->getChildrenByName('wallet'));
-      //affectationd de la balise crypt à l'objet Wallet
+      //adds the <datelivr> into the tag <wallet>
       $wallet->childDatelivr($datelivrelement);
     }
   }

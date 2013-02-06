@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of InfoCommande
+ * Class for the tag <infocommande>
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */

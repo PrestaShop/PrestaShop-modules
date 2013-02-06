@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of PointRelai
+ * Class for the tag <pointrelais>
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */

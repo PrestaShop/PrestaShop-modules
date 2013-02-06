@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of SiteConso
+ * class for tag <siteconso>
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
