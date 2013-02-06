@@ -79,6 +79,7 @@ class Fianetfraud extends Module
   public function __construct()
   {
     $this->name = 'fianetfraud';
+    $this->author = 'ESPIAU Nicolas @ Fia-Net';
     $this->tab = 'payment_security';
     $this->version = '2.2.5';
     $this->limited_countries = array('fr');
