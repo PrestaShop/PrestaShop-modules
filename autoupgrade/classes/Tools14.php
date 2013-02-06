@@ -548,6 +548,7 @@ class Tools14
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true)
 	{
+		return $string;
 		global $_ERRORS, $cookie;
 
 		$iso = strtolower(Language::getIsoById((is_object($cookie) AND $cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT')));
