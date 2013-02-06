@@ -80,7 +80,7 @@ class Fianetfraud extends Module
   {
     $this->name = 'fianetfraud';
     $this->tab = 'payment_security';
-    $this->version = '2.2.4';
+    $this->version = '2.2.5';
     $this->limited_countries = array('fr');
 
     parent::__construct();
