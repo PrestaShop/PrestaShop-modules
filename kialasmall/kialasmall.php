@@ -403,11 +403,6 @@ class Kialasmall extends Module
 		global $smarty;
 		$cart = $params['cart'];
 
-		// Cart::carrierIsSelected() added in version 1.5
-		if (method_exists($cart, 'carrierIsSelected'))
-			if (!$cart->carrierIsSelected(Configuration::get('KIALASMALL_CARRIER_ID'), $params['address']->id))
-				return;
-
 		if ($this->compatibility_mode)
 			$page_name = basename($_SERVER['PHP_SELF']);
 		else
