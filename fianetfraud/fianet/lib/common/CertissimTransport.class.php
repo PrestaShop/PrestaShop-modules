@@ -5,23 +5,26 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class CertissimTransport extends CertissimXMLElement {
-    const RAPIDITE_STANDARD=2;
-    const RAPIDITE_EXPRESS=1;
-    const TYPE_RETRAIT_MARCHAND=1;
-    const TYPE_POINT_RELAIS=2;
-    const TYPE_RETRAIT_AGENCE=3;
-    const TYPE_TRANSPORTEUR=4;
-    const TYPE_TELECHARGEMENT=5;
+class CertissimTransport extends CertissimXMLElement
+{
 
-    public function __construct($type="", $nom="", $rapidite="", $pointrelais=array()) {
-        parent::__construct();
+  const RAPIDITE_STANDARD = 2;
+  const RAPIDITE_EXPRESS = 1;
+  const TYPE_RETRAIT_MARCHAND = 1;
+  const TYPE_POINT_RELAIS = 2;
+  const TYPE_RETRAIT_AGENCE = 3;
+  const TYPE_TRANSPORTEUR = 4;
+  const TYPE_TELECHARGEMENT = 5;
 
-        $this->childType($type);
-        $this->childNom($nom);
-        $this->childRapidite($rapidite);
+  public function __construct($type = "", $nom = "", $rapidite = "", $pointrelais = array())
+  {
+    parent::__construct();
 
-        $this->childPointrelais($pointrelais);
-    }
+    $this->childType($type);
+    $this->childNom($nom);
+    $this->childRapidite($rapidite);
+
+    $this->childPointrelais($pointrelais);
+  }
 
 }

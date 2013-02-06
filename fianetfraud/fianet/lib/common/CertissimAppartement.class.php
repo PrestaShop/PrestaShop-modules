@@ -3,16 +3,19 @@
 /**
  * @author ESPIAU Nicolas
  */
-class CertissimAppartement extends CertissimXMLElement {
-    const FORMAT = 1;
+class CertissimAppartement extends CertissimXMLElement
+{
 
-    public function __construct(array $params=array()) {
-        parent::__construct();
+  const FORMAT = 1;
 
-        foreach ($params as $key => $value) {
-            $funcname = "child$key";
-            $this->$funcname($value);
-        }
+  public function __construct(array $params = array())
+  {
+    parent::__construct();
+
+    foreach ($params as $key => $value) {
+      $funcname = "child$key";
+      $this->$funcname($value);
     }
+  }
 
 }

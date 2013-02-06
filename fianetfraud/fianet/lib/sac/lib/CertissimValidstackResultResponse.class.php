@@ -5,27 +5,30 @@
  *
  * @author nespiau
  */
-class CertissimValidstackResultResponse extends CertissimXMLResult {
+class CertissimValidstackResultResponse extends CertissimXMLResult
+{
 
-    /**
-     * retour le détail sur la réception ou sur l'erreur d'envoi
-     *
-     * @return string libellé du détail
-     */
-    public function getDetail() {
-        //récupération du libellé de l'erreur ou du détail sur l'avancement
-        $detail = array_pop($this->getChildrenByName('detail'));
+  /**
+   * retour le détail sur la réception ou sur l'erreur d'envoi
+   *
+   * @return string libellé du détail
+   */
+  public function getDetail()
+  {
+    //récupération du libellé de l'erreur ou du détail sur l'avancement
+    $detail = array_pop($this->getChildrenByName('detail'));
 
-        return $detail->getValue();
-    }
+    return $detail->getValue();
+  }
 
-    /**
-     * retourne vrai si une erreur empêche l'analyse, faux sinon
-     *
-     * @return bool présence d'erreur
-     */
-    public function hasError() {
-        return !is_null($this->returnErrorid());
-    }
+  /**
+   * retourne vrai si une erreur empêche l'analyse, faux sinon
+   *
+   * @return bool présence d'erreur
+   */
+  public function hasError()
+  {
+    return !is_null($this->returnErrorid());
+  }
 
 }

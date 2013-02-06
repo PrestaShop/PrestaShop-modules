@@ -5,23 +5,26 @@
  *
  * @author ESPIAU Nicolas
  */
-class CertissimAdresse extends CertissimXMLElement {
-    const FORMAT = 1;
+class CertissimAdresse extends CertissimXMLElement
+{
 
-    public function __construct($type=null, $rue1=null, $rue2=null, $cpostal=null, $ville=null, $pays=null, XMLElement $appartement=null) {
-        parent::__construct();
+  const FORMAT = 1;
 
-        if (!is_null($type))
-            $this->addAttribute('type', $type);
-        $this->addAttribute('format', self::FORMAT);
+  public function __construct($type = null, $rue1 = null, $rue2 = null, $cpostal = null, $ville = null, $pays = null, XMLElement $appartement = null)
+  {
+    parent::__construct();
 
-        $this->childRue1($rue1);
-        $this->childRue2($rue2);
-        $this->childCpostal($cpostal);
-        $this->childVille($ville);
-        $this->childPays($pays);
-        if (!is_null($appartement))
-            $this->childAppartement($appartement);
-    }
+    if (!is_null($type))
+      $this->addAttribute('type', $type);
+    $this->addAttribute('format', self::FORMAT);
+
+    $this->childRue1($rue1);
+    $this->childRue2($rue2);
+    $this->childCpostal($cpostal);
+    $this->childVille($ville);
+    $this->childPays($pays);
+    if (!is_null($appartement))
+      $this->childAppartement($appartement);
+  }
 
 }

@@ -5,8 +5,10 @@
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
-class CertissimFianetSocket extends CertissimMother {
-  const TIMEOUT = 20;
+class CertissimFianetSocket extends CertissimMother
+{
+
+  const TIMEOUT = 4;
 
   protected $host;
   protected $port;
@@ -25,18 +27,23 @@ class CertissimFianetSocket extends CertissimMother {
    * @param string $method méthode d'envoi de la requête
    * @param array $data variables envoyées (si méthode GET)
    */
-  public function __construct($url, $method = 'GET', array $data = null) {
+  public function __construct($url, $method = 'GET', array $data = null)
+  {
     //enregistrement en local de ma méthode de connexion
-    if (strtoupper($method) == 'GET' || strtoupper($method) == 'POST') {
+    if (strtoupper($method) == 'GET' || strtoupper($method) == 'POST')
+    {
       $this->method = strtoupper($method);
-    } else {
+    }
+    else
+    {
       $msg = "La methode demandee ($method) n'est pas reconnue.";
-      CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, $msg);
+      CertissimTools::insertLog(__METHOD__." : ".__LINE__, $msg);
       throw new Exception($msg);
     }
 
     //si les données entrées en paramètre sont sous forme de tableau on construit la chaine qui en découle
-    if (!is_null($data)) {
+    if (!is_null($data))
+    {
       $this->data = http_build_query($data);
     }
 
@@ -50,20 +57,23 @@ class CertissimFianetSocket extends CertissimMother {
    *
    * @param string $url url du script appelé
    */
-  public function parseUrl($url) {
+  public function parseUrl($url)
+  {
     //split
     preg_match('`^([a-z0-9]+://)?([^/:]+)(/.*$)?`i', $url, $out);
 
     $components = parse_url($url);
     extract($components);
     //si on trouve une adresse non sécurisée
-    if ($scheme == 'http') {
+    if ($scheme == 'http')
+    {
       //le mode ssl est spécifié à faux
       $this->is_ssl = false;
       //on spécifie un port 80
       $this->port = 80;
     }
-    if ($scheme == 'https') {
+    if ($scheme == 'https')
+    {
       //le mode ssl est spécifié à vrai
       $this->is_ssl = true;
       //on spécifie un port 443
@@ -83,19 +93,24 @@ class CertissimFianetSocket extends CertissimMother {
    *
    * @return type
    */
-  function build_header() {
-    if ($this->method == 'POST') {
-      $header = "POST " . $this->path . " HTTP/1.0\r\n";
-      $header .= "Host: " . $this->host . "\r\n";
+  function build_header()
+  {
+    if ($this->method == 'POST')
+    {
+      $header = "POST ".$this->path." HTTP/1.0\r\n";
+      $header .= "Host: ".$this->host."\r\n";
       $header .= "Content-type: application/x-www-form-urlencoded\r\n";
-      $header .= "Content-length: " . strlen($this->data) . "\r\n\r\n";
+      $header .= "Content-length: ".strlen($this->data)."\r\n\r\n";
       $header .= $this->data;
-    } elseif ($this->method == 'GET') {
-      if (strlen($this->path . $this->data) > 2048) {
-        CertissimTools::insertLog(__METHOD__ . " : " . __LINE__, "Maximum length in get method reached(" . strlen($this->path . $this->data) . ")");
+    }
+    elseif ($this->method == 'GET')
+    {
+      if (strlen($this->path.$this->data) > 2048)
+      {
+        CertissimTools::insertLog(__METHOD__." : ".__LINE__, "Maximum length in get method reached(".strlen($this->path.$this->data).")");
       }
-      $header = "GET " . $this->path . '?' . $this->data . " HTTP/1.1\r\n";
-      $header .= "Host: " . $this->host . "\r\n";
+      $header = "GET ".$this->path.'?'.$this->data." HTTP/1.1\r\n";
+      $header .= "Host: ".$this->host."\r\n";
       $header .= "Connection: close\r\n\r\n";
     }
 
@@ -107,7 +122,8 @@ class CertissimFianetSocket extends CertissimMother {
    * 
    * @return resource 
    */
-  function send() {
+  function send()
+  {
     //construction du header à envoyer
     $header = $this->build_header();
 
@@ -123,26 +139,32 @@ class CertissimFianetSocket extends CertissimMother {
    * @param string $header header à envoyer au serveur pour atteindre le script voulu et passer les paramètres requis
    * @return type
    */
-  function connect($header) {
+  function connect($header)
+  {
     $error = '';
     $errno = '';
     //si la connexion est sécurisée
-    if ($this->is_ssl) {
+    if ($this->is_ssl)
+    {
       //connexion au serveur en ssl
-      $socket = fsockopen('ssl://' . $this->host, $this->port, $errno, $error, CertissimFianetSocket::TIMEOUT);
+      $socket = fsockopen('ssl://'.$this->host, $this->port, $errno, $error, CertissimFianetSocket::TIMEOUT);
 
       //si la connexion n'est pas sécurisée
-    } else {
+    }
+    else
+    {
       //connexion au serveur sans ssl
       $socket = fsockopen($this->host, $this->port);
     }
 
     //si la connexion a été établie
-    if ($socket !== false) {
+    if ($socket !== false)
+    {
       $res = '';
 
       //envoi des données au serveur : script à appeler et paramètres
-      if (@fputs($socket, $header)) {
+      if (@fputs($socket, $header))
+      {
 
         //lecture de la réponse
         while (!feof($socket)) {
@@ -150,16 +172,20 @@ class CertissimFianetSocket extends CertissimMother {
         }
 
         //si l'envoi des données a échoué
-      } else {
+      }
+      else
+      {
         //on log l'erreur
-        CertissimTools::insertLog(__METHOD__ . ' - ' . __LINE__, "Envoi des données impossible sur : " . $this->host);
+        CertissimTools::insertLog(__METHOD__.' - '.__LINE__, "Envoi des données impossible sur : ".$this->host);
         $res = false;
       }
       //fermeture de la connexion
       fclose($socket);
-    } else {
-      $msg = "Connexion socket impossible sur l'hôte " . $this->host . ". Erreur " . $errno . " : " . $error;
-      CertissimTools::insertLog(__METHOD__ . ' - ' . __LINE__, $msg);
+    }
+    else
+    {
+      $msg = "Connexion socket impossible sur l'hôte ".$this->host.". Erreur ".$errno." : ".$error;
+      CertissimTools::insertLog(__METHOD__.' - '.__LINE__, $msg);
       $res = false;
     }
     return $res;
@@ -170,7 +196,8 @@ class CertissimFianetSocket extends CertissimMother {
    *
    * @return string
    */
-  public function getContent() {
+  public function getContent()
+  {
     $return = $this->response !== false ? preg_replace('#.+(\r\n){2}(.+)$#s', '$2', $this->response) : false;
     return $return;
   }

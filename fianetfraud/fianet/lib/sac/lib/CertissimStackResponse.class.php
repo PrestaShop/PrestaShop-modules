@@ -6,14 +6,18 @@
  * @version 3.1
  * @author ESPIAU Nicolas
  */
-class StackResponse extends CertissimXMLResult {
-    public function getResults() {
-        $results = array();
+class StackResponse extends CertissimXMLResult
+{
 
-        foreach ($this->getChildrenByName('result') as $result) {
-            $results[] = new CertissimResultResponse($result->getXML());
-        }
+  public function getResults()
+  {
+    $results = array();
 
-        return $results;
+    foreach ($this->getChildrenByName('result') as $result) {
+      $results[] = new CertissimResultResponse($result->getXML());
     }
+
+    return $results;
+  }
+
 }
