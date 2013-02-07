@@ -119,15 +119,18 @@ class CacheTools
 			{
 				// Calculate the carrier taxes
 				$getTaxResult = $avalaraModule->getTax($avalaraProducts, array('cart' => $cart), (int)$id_address);
-				$amount = isset($getTaxResult['TaxLines']['Shipping']['GetTax']) ? (float)$getTaxResult['TaxLines']['Shipping']['GetTax'] : 0;
+				$amount = (float)(isset($getTaxResult['TaxLines']['Shipping']['GetTax']) ? (float)$getTaxResult['TaxLines']['Shipping']['GetTax'] : 0);
+				$total_tax = (float)(isset($getTaxResult['TotalTax']) ? $getTaxResult['TotalTax'] : 0);
+				$total_amount = (float)(isset($getTaxResult['TotalAmount']) ? $getTaxResult['TotalAmount'] : 0);
+				$tax_rate = (float)(($total_amount != 0) ? ($total_tax * 100 / $total_amount) : 0);
 
 				$tmp = array('id_carrier' => (int)$cart->id_carrier, 'id_address' => (int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 				foreach ($cart->getProducts() as $product)
 					$tmp[] = array('id_product' => (int)$product['id_product'], 'id_product_attribute' => (int)$product['id_product_attribute'], 'quantity' => (int)$product['quantity']);
-
+				
 				Db::getInstance()->Execute('REPLACE INTO `'._DB_PREFIX_.'avalara_carrier_cache` (`id_carrier`, `tax_rate`, `amount`, `update_date`, `id_cart`, `cart_hash`)
 									VALUES ('.(int)$cart->id_carrier.',
-									'.(float)($getTaxResult['TotalTax'] * 100 / $getTaxResult['TotalAmount']).',
+									'.(float)$tax_rate.',
 									'.(float)$amount.',
 									\''.date('Y-m-d H:i:s').'\',
 								  '.(int)$cart->id.',
