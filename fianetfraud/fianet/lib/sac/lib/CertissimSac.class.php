@@ -1,7 +1,7 @@
 <?php
 
 /**
- * classe SAC avec toutes les méthodes d'accès aux services et scripts du SAC
+ * Certissim class, allow to access the scripts and webservices of the SAC
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
@@ -9,23 +9,28 @@ class CertissimSac extends CertissimService
 {
 
   const PRODUCT_NAME = 'sac';
-  const INPUT_TYPE = 'text'; //type par défaut des champs du form. text pour le debug, hidden sinon
-  const IDSEPARATOR = '^'; //séparateur des refid pour la méthode getvalidstack
+  const INPUT_TYPE = 'text';
+  const IDSEPARATOR = '^'; //refid separator for the service getvalidstack
   const CONSULT_MODE_MINI = 'mini';
   const CONSULT_MODE_FULL = 'full';
 
   /**
-   * génère le formulaire de soumission du flux par redirection (script redirect.cgi) en soumission automatique si $autosubmit=true, en soumission manuelle (par l'internaute) si $autosubmit=false
-   *
-   * @param bool $autosubmit permet une soumission automatique ou manuelle ou par bouton image
+   * generates the submission form to the service redirect.cgi
+   * 
+   * @param CertissimXMLElement $controlcallback Order stream
+   * @param type $urlcallback URL whereto redirect the customer
+   * @param type $paracallback additionnal params
+   * @param type $submittype submission type (auto, input submit, image)
+   * @param type $imagepath path to the img for submission by click on image
+   * @return CertissimForm
    */
   public function generateRedirectForm(CertissimXMLElement $controlcallback, $urlcallback, $paracallback, $submittype = Form::SUBMIT_STANDARD, $imagepath = null)
   {
-    //si le paracallback est un objet XMLElement on en déduit la chaine correspondante
+    //if additionnal params given as a CertissimXMLElement object, gets the XML string
     if (isXMLElement($paracallback))
       $paracallback = $paracallback->getXML();
 
-    //définition des différents champs du form
+    //sets the form fields
     $fields = array(
       'siteid' => array('type' => Sac::INPUT_TYPE, 'name' => 'siteid', 'value' => $this->getSiteId()),
       'controlcallback' => array('type' => Sac::INPUT_TYPE, 'name' => 'controlcallback', 'value' => preg_replace('#"#', "'", $controlcallback->getXML())),
@@ -33,11 +38,12 @@ class CertissimSac extends CertissimService
       'paracallback' => array('type' => Sac::INPUT_TYPE, 'name' => 'paracallback', 'value' => $paracallback),
     );
 
-    //instanciation du form
+    //form initialization
     $form = new CertissimForm($this->getUrlredirect(), 'submit_fianet_xml', 'POST', $fields);
 
-    //ajout du submit
-    switch ($submittype) {
+    //adding the submit
+    switch ($submittype)
+    {
       case Form::SUBMIT_IMAGE:
         $form->addImageSubmit($imagepath, 'payer', 'Payer', 'Payer', 'image_sumbit');
         break;
@@ -60,10 +66,11 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * envoi une transaction au sac en post, via le script singet.cgi
+   * sends a transaction to Certissim using POST method and webservice singet.cgi
    *
-   * @param XMLElement $xml flux xml de la transaction
-   * @param mixed $paracallback paramètres de retours
+   * @param XMLElement $xml order stream
+   * @param mixed $paracallback additional params
+   * @return string response from the webservice
    */
   public function sendSinget(CertissimXMLElement $xml)
   {
@@ -77,10 +84,10 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * envoi un stack de transactions via le script stacking.cgi
+   * send a transactions stack using stacking.cgi
    *
-   * @param XMLElement $stack
-   * @return string réponse du script
+   * @param XMLElement $stack transactions stack
+   * @return string response of the webservice
    */
   public function sendStacking(CertissimXMLElement $stack)
   {
@@ -97,10 +104,10 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * envoi un stack de transactions via le script stackfast.cgi
+   * send a transactions stack using stackfast.cgi
    *
-   * @param XMLElement $stack
-   * @return string réponse du script
+   * @param XMLElement $stack transactions stack
+   * @return string response of the webservice
    */
   public function sendStackfast(CertissimXMLElement $stack)
   {
@@ -113,12 +120,13 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * récupère l'évaluation de la transaction de référence $refid en mode $mode, avec ou sans réponse FT ($repFT à 1 ou 0)
+   * calls the service getvalidation to get the score of an order
    *
-   * @param string $refid référence transaction marchand
-   * @param string $mode mode de réponse (mini, full, ...)
-   * @param bool $repFT affichage ou non de la réponse FT
-   * @return string réponse du script
+   * @param string $refid order ref
+   * @param string $mode answer type
+   * @param bool $repFT displya or not the FT answer
+   * 
+   * @return string reponse of the webservice
    */
   public function getValidation($refid, $mode = 'mini', $repFT = '0')
   {
@@ -134,14 +142,13 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * récupère l'évaluation de la transaction de référence $refid en mode $mode, avec ou sans réponse FT ($repFT à 1 ou 0) et envoi le résultat en POST à l'url urlback
-   * si définie, à l'urlback par défaut si null
+   * calls the validation webservice to get the score of an order and send the response to $urlback
    *
-   * @param string $refid référence transaction marchand
-   * @param string $mode mode de réponse (mini, full, ...)
-   * @param bool $repFT affichage ou non de la réponse FT
-   * @param string $urlback url de renvoi de la réponse en post
-   * @return string réponse du script
+   * @param string $refid order ref
+   * @param string $mode answer mode
+   * @param bool $repFT display or not FT answer
+   * @param string $urlback URL whereto send the response of the webservice
+   * @return string response of the webservice
    */
   public function getRedirectValidation($refid, $mode = Sac::CONSULT_MODE_MINI, $urlback = null, $repFT = '0')
   {
@@ -158,22 +165,17 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * retourne la liste des résultats d'évaluation des transactions dont la ref est dans $listId
+   * returns the scores list of the transactions given in param
    *
-   * @param array $listId tableau des références des transac à récupérer
-   * @param string $mode mode de réponse (mini, full, ...)
-   * @param bool $repFT affichage ou non de la réponse FT
-   * @return string réponse du script
+   * @param array $listId orders ref
+   * @param string $mode answer type
+   * @param bool $repFT display or not FT answer
+   * @return string response of the webservice
    */
   public function getValidstackByReflist(array $listId, $mode = Sac::CONSULT_MODE_MINI, $repFT = '0')
   {
-    //construction de la liste des id
-    $list = '';
-    foreach ($listId as $rid) {
-      $list .= $rid.Sac::IDSEPARATOR;
-    }
-
-    $list = preg_replace('#^(.+)'.Sac::IDSEPARATOR.'$#', '$1', $list);
+    //builds the refid list
+    $list = implode(CertissimSac::IDSEPARATOR, $listId);
 
     $data = array(
       'SiteID' => $this->getSiteId(),
@@ -187,17 +189,17 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * retourne la liste des résultats d'évaluation des commandes passées à la date $date
+   * returns the scores list of every order made at the date $date
    *
-   * @param array $date date scannée
-   * @param int $numpage numéro de la page à consulter
-   * @param string $mode mode de réponse (mini, full, ...)
-   * @param bool $repFT affichage ou non de la réponse FT
-   * @return string réponse du script
+   * @param array $date date
+   * @param int $numpage number of the page to read
+   * @param string $mode answer type
+   * @param bool $repFT display or not FT answer
+   * @return string response of the webservice
    */
   public function getValidstackByDate($date, $numpage, $mode = Sac::CONSULT_MODE_MINI, $repFT = '0')
   {
-    //vérifie que la date est au bon format
+    //checks the date format
     if (!preg_match('#^[0-9]{2}/[0-1][0-9]/[0-9]{4}$#', $date))
     {
       $msg = "La date '$date' n'est pas au bon format. Format attendu : dd/mm/YYYY";
@@ -217,10 +219,10 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * fait un appel à getValidstack avec les paramèters dans $param
+   * calls get_validstack.cgi webservice
    *
-   * @param array $param
-   * @return string réponse du script
+   * @param array $param call parameters
+   * @return string response of the webservice
    */
   private function getValidstack($param)
   {
@@ -228,6 +230,14 @@ class CertissimSac extends CertissimService
     return new CertissimXMLElement($con->send());
   }
 
+  /**
+   * gets the list of the reevaluated transactions
+   * 
+   * @param type $mode call mode (all, new, old)
+   * @param type $output answer type
+   * @param type $repFT display or not the FT answer
+   * @return CertissimXMLElement reevaluations list
+   */
   public function getAlert($mode = 'all', $output = 'mini', $repFT = '0')
   {
     $data = array(
@@ -242,12 +252,12 @@ class CertissimSac extends CertissimService
   }
 
   /**
-   * retourne la html du lien vers le détail de l'analyse de la commande de ref $rid
+   * returns the visu check detail URL for the order $rid
    *
-   * @param string $rid référence de la commande
-   * @param string $txt texte à afficher pour le lien. Si null la référence $rid servira de lien
-   * @param string $target target du lien. Ouverture dans un nouvel onglet / fenêtre par défaut.
-   * @return string code html du lien
+   * @param string $rid order ref
+   * @param string $txt text to display as a link
+   * @param string $target target attribute
+   * @return string HTML link
    */
   public function getVisuCheckUrl($rid, $txt = null, $target = '_blank')
   {
