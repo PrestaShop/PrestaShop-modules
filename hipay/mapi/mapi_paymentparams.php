@@ -192,6 +192,13 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @var string
 	 */
 	protected $logo_url;
+	
+	/**
+	 * Customer email address
+	 *
+	 * @var string
+	 */
+	protected $issuerAccountLogin;
 
 
 	/**
@@ -201,7 +208,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $password
 	 * @return boolean
 	 */
-	public function setLogin($login, $password) {
+	public function setLogin($login, $password)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -223,7 +231,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getLogin() {
+	public function getLogin()
+	{
 		return $this->login;
 	}
 
@@ -232,7 +241,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getPassword() {
+	public function getPassword()
+	{
 		return $this->password;
 	}
 
@@ -246,7 +256,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param int $shippingCostAccount
 	 * @return boolean
 	 */
-	public function setAccounts($itemAccount, $taxAccount = 0, $insuranceAccount = 0, $fixedCostAccount =0, $shippingCostAccount = 0) {
+	public function setAccounts($itemAccount, $taxAccount = 0, $insuranceAccount = 0, $fixedCostAccount =0, $shippingCostAccount = 0)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -282,7 +293,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getItemAccount() {
+	public function getItemAccount()
+	{
 		return $this->itemAccount;
 	}
 
@@ -292,7 +304,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getTaxAccount() {
+	public function getTaxAccount()
+	{
 		return $this->taxAccount;
 	}
 
@@ -302,7 +315,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getInsuranceAccount() {
+	public function getInsuranceAccount()
+	{
 		return $this->insuranceAccount;
 	}
 
@@ -312,7 +326,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getFixedCostAccount() {
+	public function getFixedCostAccount()
+	{
 		return $this->fixedCostAccount;
 	}
 
@@ -322,7 +337,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getShippingCostAccount() {
+	public function getShippingCostAccount()
+	{
 		return $this->shippingCostAccount;
 	}
 
@@ -332,7 +348,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $defaultLang
 	 * @return boolean
 	 */
-	public function setDefaultLang($defaultLang) {
+	public function setDefaultLang($defaultLang)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -348,7 +365,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getDefaultLang() {
+	public function getDefaultLang()
+	{
 		return $this->defaultLang;
 	}
 
@@ -358,7 +376,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $locale
 	 * @return boolean
 	 */
-	public function setLocale($locale) {
+	public function setLocale($locale)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -374,7 +393,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getLocale() {
+	public function getLocale()
+	{
 		return $this->locale;
 	}
 
@@ -384,7 +404,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $media
 	 * @return boolean
 	 */
-	public function setMedia($media) {
+	public function setMedia($media)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -400,7 +421,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getMedia() {
+	public function getMedia()
+	{
 		return $this->media;
 	}
 
@@ -410,7 +432,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $rating
 	 * @return boolean
 	 */
-	public function setRating($rating) {
+	public function setRating($rating)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -427,7 +450,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getRating() {
+	public function getRating()
+	{
 		return $this->rating;
 	}
 
@@ -437,11 +461,10 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param int $paymentMethod
 	 * @return boolean
 	 */
-	public function setPaymentMethod($paymentMethod) {
+	public function setPaymentMethod($paymentMethod)
+	{
 		if ($this->_locked)
-        {
 			return false;
-        }
 
 		$paymentMethod = (int)$paymentMethod;
         if ($paymentMethod != HIPAY_MAPI_METHOD_SIMPLE && $paymentMethod != HIPAY_MAPI_METHOD_MULTI)
@@ -456,7 +479,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getPaymentMethod() {
+	public function getPaymentMethod()
+	{
 		return $this->paymentMethod;
 	}
 
@@ -466,7 +490,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param int $captureDay
 	 * @return boolean
 	 */
-	public function setCaptureDay($captureDay) {
+	public function setCaptureDay($captureDay)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -484,7 +509,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getCaptureDay() {
+	public function getCaptureDay()
+	{
 		return $this->captureDay;
 	}
 
@@ -494,7 +520,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $currency
 	 * @return boolean
 	 */
-	public function setCurrency($currency) {
+	public function setCurrency($currency)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -510,7 +537,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getCurrency() {
+	public function getCurrency()
+	{
 		return $this->currency;
 	}
 
@@ -522,7 +550,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param int $statsGroupId
 	 * @return boolean
 	 */
-	public function setStatsGroupId($statsGroupId) {
+	public function setStatsGroupId($statsGroupId)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -540,7 +569,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getStatsGroupId() {
+	public function getStatsGroupId()
+	{
 		return $this->statsGroupId;
 	}
 
@@ -551,7 +581,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $idForMerchant
 	 * @return boolean
 	 */
-	public function setIdForMerchant($idForMerchant) {
+	public function setIdForMerchant($idForMerchant)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -564,7 +595,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getIdForMerchant() {
+	public function getIdForMerchant()
+	{
 	    return $this->idForMerchant;
 	}
 
@@ -574,7 +606,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param int $merchantSiteId
 	 * @return boolean
 	 */
-	public function setMerchantSiteId($merchantSiteId) {
+	public function setMerchantSiteId($merchantSiteId)
+	{
 		if ($this->_locked)
 			return false;
 
@@ -591,7 +624,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return int
 	 */
-	public function getMerchantSiteId() {
+	public function getMerchantSiteId()
+	{
 		return $this->merchantSiteId;
 	}
 
@@ -601,7 +635,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $merchantDatas
 	 * @return boolean
 	 */
-	public function setMerchantDatas($key,$merchantDatas) {
+	public function setMerchantDatas($key,$merchantDatas)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -619,7 +654,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return array
 	 */
-	public function getMerchantDatas() {
+	public function getMerchantDatas()
+	{
 		return $this->merchantDatas;
 
 	}
@@ -630,7 +666,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $url_ok
 	 * @return unknown
 	 */
-	public function setUrlOk($url_ok) {
+	public function setUrlOk($url_ok)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -647,7 +684,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getUrlOk() {
+	public function getUrlOk()
+	{
 		return $this->url_ok;
 
 	}
@@ -658,7 +696,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $url_nok
 	 * @return unknown
 	 */
-	public function setUrlNok($url_nok) {
+	public function setUrlNok($url_nok)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -675,7 +714,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getUrlNok() {
+	public function getUrlNok()
+	{
 		return $this->url_nok;
 
 	}
@@ -686,7 +726,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $url_cancel
 	 * @return boolean
 	 */
-	public function setUrlCancel($url_cancel) {
+	public function setUrlCancel($url_cancel)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -703,7 +744,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getUrlCancel() {
+	public function getUrlCancel()
+	{
 		return $this->url_cancel;
 	}
 
@@ -714,7 +756,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $url_cancel
 	 * @return boolean
 	 */
-	public function setUrlAck($url_ack) {
+	public function setUrlAck($url_ack)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -731,7 +774,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getUrlAck() {
+	public function getUrlAck()
+	{
 		return $this->url_ack;
 	}
 
@@ -741,7 +785,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $ack_wd
 	 * @return boolean
 	 */
-	public function setAckWd($ack_wd) {
+	public function setAckWd($ack_wd)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -758,7 +803,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getAckWd() {
+	public function getAckWd()
+	{
 		return $this->ack_wd;
 	}
 
@@ -768,7 +814,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $email_ack
 	 * @return boolean
 	 */
-	public function setEmailAck($email_ack) {
+	public function setEmailAck($email_ack)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -785,7 +832,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getEmailAck() {
+	public function getEmailAck()
+	{
 		return $this->email_ack;
 	}
 
@@ -795,7 +843,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $bg_color
 	 * @return boolean
 	 */
-	public function setBackgroundColor($bg_color) {
+	public function setBackgroundColor($bg_color)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -812,7 +861,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getBackgroundColor() {
+	public function getBackgroundColor()
+	{
 		return $this->bg_color;
 	}
 
@@ -822,7 +872,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 * @param string $logo_url
 	 * @return boolean
 	 */
-	public function setLogoUrl($logo_url) {
+	public function setLogoUrl($logo_url)
+	{
 		if ($this->_locked)
 			return false;
 			
@@ -839,8 +890,24 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return string
 	 */
-	public function getLogoUrl() {
+	public function getLogoUrl()
+	{
 		return $this->logo_url;
+	}
+	
+	/**
+	 * Assign the customer email address
+	 *
+	 * @param string $login
+	 * @return boolean
+	 */
+	public function setIssuerAccountLogin($login)
+	{
+		if ($this->_locked)
+			return false;
+			
+		$this->issuerAccountLogin = $login;
+		return true;
 	}
 
 	/**
@@ -848,7 +915,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 	 *
 	 * @return boolean
 	 */
-	public function check() {
+	public function check()
+	{
 		if ($this->login == '')
 			throw new Exception('Username is missing');
 		if ($this->itemAccount <= 0 || $this->taxAccount <= 0 || $this->insuranceAccount <= 0 ||
@@ -879,7 +947,8 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 		return true;
 	}
 
-	protected function init() {
+	protected function init()
+	{
 		$this->login = '';
 		$this->password = '';
 		$this->itemAccount = 0;
@@ -904,11 +973,13 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 		$this->url_ack = '';
 		$this->ack_wd = '';
 		$this->email_ack = '';
+		$this->issuerAccountLogin = '';
 		$this->bg_color = '';
 		$this->logo_url = '';
 	}
 
-	function __construct() {
+	function __construct()
+	{
 		$this->init();
 		parent::__construct();
 	}
