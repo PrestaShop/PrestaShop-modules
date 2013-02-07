@@ -34,6 +34,8 @@ class Hipay extends PaymentModule
 {
 	private $arrayCategories;
 	private $env = PROD;
+	
+	protected $ws_client = false;
 
 	const WS_SERVER = 'http://api.prestashop.com/';
 	const WS_URL = 'http://api.prestashop.com/partner/hipay/hipay.php';
@@ -75,6 +77,11 @@ class Hipay extends PaymentModule
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.'hipay/backward_compatibility/backward.php');
+		
+		if (!class_exists('SoapClient'))
+			$this->warning .= $this->l('To work properly the module need the Soap library to be installed.');
+		else
+			$this->ws_client = $this->getWsClient();
 	}
 	
 	public function install()
@@ -793,6 +800,9 @@ class Hipay extends PaymentModule
 		
 		$form .= '
 		</script>';
+		
+		if ($this->ws_client == false)
+			return $this->displayError('To work properly the module need the Soap library to be installed.').$form;
 		return $form;
 	}
 	
@@ -861,16 +871,20 @@ class Hipay extends PaymentModule
 	{
 		try
 		{
-			$business_line = self::getWsClient()->getBusinessLine($this->formatLanguageCode(Context:: getContext()->language->iso_code));
+			$iso_lang = Context::getContext()->language->iso_code;
+			$format_language = $this->formatLanguageCode($iso_lang);
+			
+			if ($this->ws_client !== false)
+				$business_line = $this->ws_client->getBusinessLine($format_language);
 		}
 		catch (Exception $e)
 		{
 			return array();
 		}
 
-		if (!$business_line)
-			return array();
-		return $business_line;
+		if (isset($business_line) && ($business_line !== false))
+			return $business_line;
+		return array();
 	}
 	
 	protected function processAccountCreation(&$form_errors)
@@ -880,7 +894,8 @@ class Hipay extends PaymentModule
 		// STEP 1: Check if the email is available in Hipay
 		try
 		{
-			$is_available = self::getWsClient()->isAvailable($form_values['email']);
+			if ($this->ws_client !== false)
+				$is_available = $this->ws_client->isAvailable($form_values['email']);
 		}
 		catch (Exception $e)
 		{
@@ -896,8 +911,9 @@ class Hipay extends PaymentModule
 
 		// STEP 2: Account creation
 		try
-		{
-			$return = self::getWsClient()->createWithWebsite(
+		{		
+			if ($this->ws_client !== false)
+				$return = $this->ws_client->createWithWebsite(
 					array(
 						'email' => $form_values['email'],
 						'firstname' => $form_values['firstname'],
@@ -965,12 +981,14 @@ class Hipay extends PaymentModule
 	{
 		try
 		{
-			return self::getWsClient()->getCategoryList(array('site_id' => $hipaySiteId, 'account_id' => $hipayAccountId));
+			if ($this->ws_client !== false)
+				return $this->ws_client->getCategoryList(array('site_id' => $hipaySiteId, 'account_id' => $hipayAccountId));
 		}
 		catch (Exception $e)
 		{
 			return array();
 		}
+		return array();
 	}
 	
 	// Retro compatibility with 1.2.5
