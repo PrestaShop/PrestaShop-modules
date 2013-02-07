@@ -1,31 +1,31 @@
 <?php
 
-if (!class_exists('Mother'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/Mother.class.php';
+if (!class_exists('CertissimMother'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimMother.class.php';
 
-if (!class_exists('XMLElement'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/XMLElement.class.php';
+if (!class_exists('CertissimTools'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimTools.class.php';
 
-if (!class_exists('Spyc'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/spyc.php';
+if (!class_exists('CertissimXMLElement'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimXMLElement.class.php';
 
-if (!class_exists('FianetSocket'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/FianetSocket.class.php';
+if (!class_exists('CertissimSpyc'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimSpyc.php';
 
-if (!class_exists('SACService'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/Service.class.php';
+if (!class_exists('CertissimFianetSocket'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimFianetSocket.class.php';
 
-if (!class_exists('HashMD5'))
-  if (PHP_INT_SIZE == 4)
-    require_once SAC_ROOT_DIR . '/lib/kernel/fianet_key_32bits.php';
-  else
-    require_once SAC_ROOT_DIR . '/lib/kernel/fianet_key_64bits.php';
+if (!class_exists('CertissimService'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimService.class.php';
 
-if (!class_exists('Form'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/Form.class.php';
+if (!class_exists('CertissimHashMD5'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimHashMD5.class.php';
 
-if (!class_exists('FormField'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/FormField.class.php';
+if (!class_exists('CertissimForm'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimForm.class.php';
 
-if (!class_exists('FormFieldInputImage'))
-  require_once SAC_ROOT_DIR . '/lib/kernel/FormFieldInputImage.class.php';
+if (!class_exists('CertissimFormField'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimFormField.class.php';
+
+if (!class_exists('CertissimFormFieldInputImage'))
+  require_once SAC_ROOT_DIR.'/lib/kernel/CertissimFormFieldInputImage.class.php';
