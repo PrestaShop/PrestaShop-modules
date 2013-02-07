@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Classe pour les formulaires, représente un champ html
+ * Class form form field
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
 class CertissimFormField extends CertissimMother
 {
 
-  protected $label; //label du champ
-  protected $type; //type du champ
-  protected $name; //nom du champ
-  protected $value; //valeur du champ
-  protected $id; //attribut html id du champ
-  protected $class; //attribut html class du champ
+  protected $label; //field label
+  protected $type; //field type
+  protected $name; //field name
+  protected $value; //field value
+  protected $id; //id attribute of the field
+  protected $class; //class attribute of the field
 
   public function __construct($type = 'text', $name = '', $value = '', $id = null, $class = 'standardfieldclass', $label = null)
   {
@@ -25,7 +25,7 @@ class CertissimFormField extends CertissimMother
   }
 
   /**
-   * retour true si le champ courant est de type hidden, faux sinon
+   * returns true if the field is hidden, false otherwise
    *
    * @return boolean
    */
@@ -35,7 +35,7 @@ class CertissimFormField extends CertissimMother
   }
 
   /**
-   * retourne le champ sous forme de chaine html, avec le label si existant
+   * returns the fiels as an HTML string, prefixed with the label if defined
    *
    * @return string
    */
@@ -67,9 +67,9 @@ class CertissimFormField extends CertissimMother
   }
 
   /**
-   * retourne le champ sous forme d'une ligne de tableau html, avec label si précisé
+   * returns the field as an HTML table row (<tr>), prefixed with the label if defined
    *
-   * @param boolean $withLabel présence de label ou non
+   * @param boolean $withLabel
    * @return string
    */
   public function toArrayRow($withLabel = true)

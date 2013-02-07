@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Classe pour les input de soumission en forme d'image
+ * Class for input type submit with image
  * 
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
 class CertissimFormFieldInputImage extends CertissimFormField
 {
 
-  protected $src; //chemin de l'image, si type=image
-  protected $alt; //texte alternatif, si type=image
+  protected $src; //path of the img
+  protected $alt; //alt text
 
   public function __construct($src, $name = 'submit', $label = null, $alt = null, $class = 'inputimageclass', $id = null)
   {

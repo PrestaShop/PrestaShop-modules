@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe XMLElement complétant la classe native SimpleXMLElement
+ * Class CertissimXMLElement, represent a XML object, uses native PHP class SimpleXMLElement but with more options and methods
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
@@ -16,19 +16,19 @@ class CertissimXMLElement extends CertissimMother
 
   public function __construct($data = null)
   {
+    //if no data given, build a tag using the name of the class (removing the prefix 'certissim-'
     if (is_null($data))
     {
       $name = preg_replace('#^(certissim-)?(.*)$#', '$2', CertissimTools::normalizeName(get_class($this)));
       $this->setName($name);
     }
 
-//si $data est une chaine de caractères valide
+    //f $data is a string
     if (is_string($data))
     {
-//on supprime les espaces en début de chaine
+      //remove spaces at the begining of the string
       $data = preg_replace('#^[ \r\n]*#', '', $data);
-//$data = preg_replace('#^[ \r\n' . chr(13) . chr(10) . ']*#', '', $data);
-//on vérifie si la chaine est une chaine valide, si non, on jette un erreur
+      //checks the XML validity of the string
       if (!CertissimTools::isXMLstring($data))
       {
         $msg = "La chaine \"$data\" n'est pas valide";
@@ -36,50 +36,53 @@ class CertissimXMLElement extends CertissimMother
         throw new Exception($msg);
       }
 
-//on vérifie l'encodage et on le converti en UTF-8
+      //sets the encoding to the wanted encoding according to the local var $this->encoding
       preg_match('#^<\?xml.+encoding= ?[\'|\"]([^\"\']+).+$#s', $data, $out);
       if (isset($out[1]) && $out[1] != "")
       {
         $actualencoding = $out[1];
         $wantedencoding = $this->getEncoding();
-//converti la chaine entrée en utf-8, quel que soit son encodage d'origine
+        //converts the string into the wanted encoding
         $data = CertissimTools::convert_encoding($data, $wantedencoding, $actualencoding);
       }
       else
       {
         $data = CertissimTools::convert_encoding($data, $this->getEncoding());
       }
-//on la convertit en SimpleXMLElement
+      //converts the XML string into a SimpleXMLElement object
       $data = new SimpleXMLElement($data);
     }
 
-//si $data est un SimpleXMLElement object
+    //if $data is a SimpleXMLElement object
     if (is_object($data) && get_class($data) == 'SimpleXMLElement')
     {
+      //gets the data as a string
       $string = (string) $data;
-//on vérifie l'encodage et on le converti en UTF-8
+      //converts the encoding to the wanted one
       preg_match('#^<\?xml.+encoding= ?[\'|\"]([^\"\']+).+$#s', $string, $out);
       if (isset($out[1]) && $out[1] != "")
       {
         $actualencoding = $out[1];
         $wantedencoding = $this->getEncoding();
-//converti la chaine entrée en utf-8, quel que soit son encodage d'origine
-        $string = mb_convert_encoding($string, $wantedencoding, $actualencoding);
+        //converts the string into the wanted encoding
+        $data = CertissimTools::convert_encoding($data, $wantedencoding, $actualencoding);
       }
       else
       {
-        $string = mb_convert_encoding($string, $this->getEncoding());
+        $data = CertissimTools::convert_encoding($data, $this->getEncoding());
       }
-//on récupère le nom
+      //registers the tag name
       $this->name = $data->getName();
-//on récupère la valeur
+      //registers the tag value
       $this->value = $string;
-//on récupère les attributs
-      foreach ($data->attributes() as $attname => $attvalue) {
+      //registers the attributes
+      foreach ($data->attributes() as $attname => $attvalue)
+      {
         $this->attributes[$attname] = $attvalue;
       }
-//on rattache les enfants
-      foreach ($data->children() as $simplexmlelementchild) {
+      //register the children
+      foreach ($data->children() as $simplexmlelementchild)
+      {
         $child = new CertissimXMLElement($simplexmlelementchild);
         $this->addChild($child);
       }
@@ -87,9 +90,10 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * ajoute un attribut à l'objet courant
-   * @param string $name nom de l'attribut
-   * @param string $value valeur de l'attribut
+   * adds an attribute to the current object
+   * 
+   * @param string $name attribute name
+   * @param string $value attribute value
    */
   public function addAttribute($name, $value)
   {
@@ -97,9 +101,9 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * retourne la valeur de l'attribut $name
+   * returns the value of the attribute $name
    *
-   * @param string $name nom de l'attribut
+   * @param string $name attribute name
    * @return string
    */
   public function getAttribute($name)
@@ -108,23 +112,24 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * retourne un tableau contenant tous les enfants et sous enfants dont le nom est $name
+   * returns a table containing all the chidren named $name
    *
    * @param string $name
    * @return array
    */
   public function getChildrenByName($name)
   {
-//ouverture du tableau
+    //initializes an empty array
     $children = array();
 
-//pour tous les enfants
-    foreach ($this->getChildren() as $child) {
-//si le nom correspond on l'ajoute au tableau
+    //checks all the chidren
+    foreach ($this->getChildren() as $child)
+    {
+      //if the name matches, the child is added into the array
       if ($child->getName() == $name)
         array_push($children, $child);
 
-//on cherche dans les sous enfants
+      //finds the matching children inside the current child
       $children = array_merge($children, $child->getChildrenByName($name));
     }
 
@@ -132,7 +137,7 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * retourne un tableau contenant tous les enfants et sous enfants dont le nom est $name, où l'attribut $attrbutename existe et vaut $attributevalue si non null
+   * return an array containing all the children name $name and having an attribute named $attributename that has for value $attributevalue (if not null)
    *
    * @param <type> $name
    * @param <type> $attributename
@@ -141,14 +146,15 @@ class CertissimXMLElement extends CertissimMother
    */
   public function getChildrenByNameAndAttribute($name, $attributename, $attributevalue = null)
   {
-//on commence par filtrer les enfants par nom
+    //gets the list of children that have a matching name
     $children = $this->getChildrenByName($name);
 
-//pour chaque enfant pré-sélectionné
-    foreach ($children as $key => $child) {
-//l'attribut recherché est absent ou si sa valeur ne correspond pas
+    //checks the attributes of each preselected children
+    foreach ($children as $key => $child)
+    {
+      //if the attribute does not exist or its value does not match
       if (is_null($child->getAttribute($attributename)) || (!is_null($attributevalue) && $child->getAttribute($attributename) != $attributevalue))
-//on retire l'enfant du tableau
+      //the child is removed from the array
         unset($children[$key]);
     }
 
@@ -156,61 +162,64 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * ajoute un enfant à la fin de l'objet courant et retourne l'objet XML de l'enfant
-   * @param mixed $input l'enfant (XMLElement, chaine ou SimpleXMLElement
-   * @param string $value value of the child
-   * @param array $attributes attributes of the child
+   * adds a child to the current object after already existings children and returns the added child object
+   * 
+   * @param mixed $input child to add, of type CertissimXMLElement string or SimpleXMLElement
+   * @param string $value child value
+   * @param array $attributes child attributes
    * @return XMLElement 
    */
   public function addChild($input, $value = null, $attributes = array())
   {
-//normalisation de l'enfant, permettra d'ajouter tous les sous-enfants
+    //normalize the child: permit to add sub children
     $input = $this->createChild($input, $value, $attributes);
 
-//ajout de l'enfant au tableau
+    //add the child into the children table
     $this->children[] = $input;
 
     return $input;
   }
 
   /**
-   * ajoute un enfant à la fin de l'objet courant et retourne l'objet XML de l'enfant
-   * @param mixed $input l'enfant (XMLElement, chaine ou SimpleXMLElement
-   * @param string $value value of the child
-   * @param array $attributes attributes of the child
+   * adds a child to the current object, before already existing childrend, and returns the added child object
+   * 
+   * @param mixed $input child to add, of type CertissimXMLElement string or SimpleXMLElement
+   * @param string $value child value
+   * @param array $attributes child attributes
    * @return XMLElement 
    */
   public function stackChild($input, $value = null, $attributes = array())
   {
-//normalisation de l'enfant, permettra d'ajouter tous les sous-enfants
+    //normalize the child: permit to add sub children
     $input = $this->createChild($input, $value, $attributes);
 
-//ajout de l'enfant en haut du tableau
+    //add the child at the top of the children table
     array_unshift($this->children, $input);
 
     return $input;
   }
 
   /**
-   * normalise $input en XMLElement avec sous enfants
-   * cas d'appels :
-   * createChild(XMLElement) --> ne fera rien
+   * normalizes $input into a CertissimXMLElement with children
+   * call cases:
+   * createChild(CertissimXMLElement) --> won't do anything
    * createChild(simpleXMLElement)
    * createChild("<element a='1' b='2'>valeur</element>")
    * createChild("element","valeur", array('a'=>1, 'b'=>2))
    * 
-   * @param mixed $input objet à normaliser
-   * @param string $value valeur de l'objet (si $input est une chaine)
+   * @param mixed $input object to normalize, type string expected as the name of the element, or SimpleXMLElement as an entire object
+   * @param string $value object value (if $input is a string)
    * @param string $attributes
-   * @return XMLElement objet normalisé
+   * @return CertissimXMLElement
    */
   private function createChild($input, $value = null, $attributes = array())
   {
-//si l'entrée est une chaine non xml, on la construit à partir des autres paramètres
+    //if $input is a non XML formated string, builds a XML formated string based on $input as a name et $value as a value and $attributes as attributes
     if (is_string($input) && !CertissimTools::isXMLstring($input))
     {
       $str = "<$input";
-      foreach ($attributes as $name => $val) {
+      foreach ($attributes as $name => $val)
+      {
         $str .= " $name='$val'";
       }
       $str .= '>';
@@ -222,14 +231,14 @@ class CertissimXMLElement extends CertissimMother
       $input = new SimpleXMLElement($str);
     }
 
-//si l'entrée est une chaine XML ou un objet simpleXMLElement
+    //if $input is a XML formated string or a SimpleXMLElement object
     if (is_string($input) || CertissimTools::isSimpleXMLElement($input))
     {
-//conversion en XMLElement
+      //conversion into a CertissimXMLElement
       $input = new CertissimXMLElement($input);
     }
 
-//si à ce stade $input n'est pas un XMLElement, il n'est pas pris en compte
+    //at this step, if $input is not a CertissimXMLElement it's ignored
     if (!CertissimTools::isXMLElement($input))
     {
       $msg = "Le paramètre entré n'est pas pris en compte par la classe XMLElement";
@@ -237,13 +246,11 @@ class CertissimXMLElement extends CertissimMother
       throw new Exception($msg);
     }
 
-//    $input->setName(preg_replace('#^(certissim-)?(.*)$#', '$2', $this->getName()));
-
     return $input;
   }
 
   /**
-   * retourne vrai si la valeur est vide et s'il n'y a aucun enfant, faux sinon
+   * returns true if the value is empty and the current object has no child, false otherwise
    *
    * @return bool 
    */
@@ -253,7 +260,7 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * retourne le nombre d'enfants au premier degré de l'objet courant
+   * returns the number of first level children of the current object
    *
    * @return int
    */
@@ -263,21 +270,23 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * retourne l'objet SimpleXMLElement correspondant à l'objet courant
-   * @param boolean $recursive autorise la descente dans les enfants et sous-enfants
+   * returns the SimpleXMLElement object corresponding to the current object
+   * 
+   * @param boolean $recursive allow to scan and return children and gran children
    * @return SimpleXMLElement 
    */
   public function toSimpleXMLElement($recursive = false)
   {
-//on créé simplement l'objet SimpleXMLElement
+    //SimpleXMLElement object generation
     $simplexlmelementobject = new SimpleXMLElement('<'.$this->getName().'>'.$this->getValue().'</'.$this->getName().'>');
 
-//on ajoute les attributs
-    foreach ($this->getAttributes() as $name => $value) {
+    //addition of the attributes
+    foreach ($this->getAttributes() as $name => $value)
+    {
       $simplexlmelementobject->addAttribute($name, $value);
     }
 
-//si la récurisivité est autorisée on attache les enfants
+    //if recusrivity set to true, scan of children
     if ($recursive)
       $this->attachChildren($simplexlmelementobject);
 
@@ -285,48 +294,52 @@ class CertissimXMLElement extends CertissimMother
   }
 
   /**
-   * rattache toute la descendance à l'objet SimpleXMLElement en paramètre
+   * attach all the descendants to the SimpleXMLElement object given
    * 
-   * @param SimpleXMLElement $simplexmlelement objet auquel rattacher toute la descendance
+   * @param SimpleXMLElement $simplexmlelement
    */
   public function attachChildren($simplexmlelement)
   {
-//pour chaque enfant de l'objet courant
-    foreach ($this->getChildren() as $child) {
-//on créé un objet SimpleXMLElement et on l'ajoute à l'objet en paramètre
+    //foreach child of the current object
+    foreach ($this->getChildren() as $child)
+    {
+      //creating a SimpleXMLElement object and adding it to the object given in parameter
       $simplexmlelement_child = $simplexmlelement->addChild($child->getName(), $child->getValue());
 
-//on ajoute les attributs
-      foreach ($child->getAttributes() as $name => $value) {
+      //adding the attrbutes
+      foreach ($child->getAttributes() as $name => $value)
+      {
         $simplexmlelement_child->addAttribute($name, $value);
       }
 
-//on rattache les enfants de l'enfant lu à l'objet SimpleXMLElement qui lui correspond
+      //adding children of the loop child to the object given in parameter
       $child->attachChildren($simplexmlelement_child);
     }
   }
 
   /**
-   * retourne l'objet sous forme de chaine XML
-   * @return type string la chaine XML
+   * returns the object as an XML string
+   * 
+   * @return string
    */
   public function getXML()
   {
-//ajout de la déclaration d'encodage dans le flux
+    //adding the XML declaration in the string
     $ret = preg_replace('#^.*(<\?xml.+)(\?>)#is', '$1 encoding="'.$this->getEncoding().'"$2', $this->toSimpleXMLElement(true)->asXML());
-//sécurité encodage
+    //encoding security
     $ret = html_entity_decode($ret, ENT_NOQUOTES, $this->getEncoding());
-//drop des retours de chariot
+    //removes carriage returns
     $ret = preg_replace('#[\r\n'.chr(10).chr(13).']#', '', $ret);
-//suppression des espaces entre les balises
+    //removes spaces between tags
     $ret = preg_replace('#>( )+<#', '><', $ret);
 
     return ($ret);
   }
 
   /**
-   * retourne l'objet sous forme de chaine XML
-   * @return string la chaine XML
+   * returns the object as an XML string
+   * 
+   * @return string
    */
   public function __toString()
   {
@@ -344,74 +357,69 @@ class CertissimXMLElement extends CertissimMother
     return $this->toSimpleXMLElement(true)->asXML($filename);
   }
 
-  /**
-   *
-   * @param string $name
-   * @param array $params
-   * @return mixed 
-   */
   public function __call($name, array $params)
   {
-//si le préfixe est "get", c'est une méthode de lecture
+    //if the called method is prefix by the string 'get', it's a getting method
     if (preg_match('#^get(.+)$#', $name, $out))
     {
       return $this->__get(strtolower($out[1]));
     }
-//si le préfixe est "set", c'est une méthode d'écriture
+    //if the called method is prefix by the string 'set', it's a setting method
     if (preg_match('#^set(.+)$#', $name, $out))
     {
       return $this->__set(strtolower($out[1]), $params[0]);
     }
 
-//si le préfixe est "child", c'est un ajout d'enfant dynamique
+    //if the called method is prefix by the string 'child', it's a method that adds a child to the current object
     if (preg_match('#^child(.+)$#', $name, $out))
     {
-//on stocke le nom de l'élément à ajouter
+      //gets the name of the object to add
       $elementname = strtolower($out[1]);
 
-//on stock le booleen indiquant la possibilité d'ajouter une balise vide
+      //sets the boolean that allow to have empty tag
       $empty_allowed = (isset($params[2]) ? $params[2] : false);
 
-//si un paramètre est passé et que c'est un XMLElement on l'ajoute directement comme fils si le nom correspond à celui de la fonction
+      //if a param is given and it's a CertisismXMLElement, it's added directly as the child if its name match with the suffix of the called method
       if (isset($params[0]) && CertissimTools::isXMLElement($params[0]))
       {
         $childname = preg_replace('#^(certissim-)?(.*)$#', '$2', $params[0]->getName());
-//si le nom ne correspond pas on jette un erreur
+        //if the name does not match, throwing an error
         if ($childname != $elementname)
           throw new Exception("Le nom de la balise ne correspond pas : $elementname attendu, ".$childname." trouvé.");
 
-//si l'élément n'est pas vide ou si on autorise les éléments vides
+        //if the element is not empty or if empty tags are allowed, adding the child to the current object
         if (!$params[0]->isEmpty() || $empty_allowed)
           return $this->addChild($params[0]);
 
-//si vide non autorisé, on sort
+        //if emtpy not allowed, end of process
         return false;
       }
 
-//création de l'élément fils
+      //creating the child object
       $child = new CertissimXMLElement("<$elementname></$elementname>");
-//si des attributs sont passés en paramètres on les ajouts
+      //if attributes were given in params, adding them to the new object
       if (isset($params[1]))
       {
-        foreach ($params[1] as $att => $value) {
+        foreach ($params[1] as $att => $value)
+        {
           $child->addAttribute($att, $value);
         }
       }
 
-//si il n'y a aucun paramètre entré et qu'on autorise les balises vides
+      //if no params and empty tag allowed, adding the child obect to the current object
       if ((!isset($params[0]) || is_null($params[0])))
       {
         if ($empty_allowed)
           return $this->addChild($child);
 
-//si vide non autorisé on sort sans rien faire
+        //if emtpy not allowed, end of process
         return false;
       }
 
-//si le paramètre est une chaine
+      //if the param is a string
       if (is_string($params[0]) or is_int($params[0]))
       {
-//si c'est une chaine XML on créé un sous-enfant et on l'affecte
+        //if it's an XML string, creates and adds the child to the current object
         if (CertissimTools::isXMLstring($params[0]))
         {
           $granchild = $this->createChild($params[0]);
@@ -419,43 +427,17 @@ class CertissimXMLElement extends CertissimMother
         }
         else
         {
-//si c'est une chaine normale, on l'affecte comme valeur
+          //if it's not an XML string, it's added as a value
           $child->setValue($params[0]);
         }
       }
 
-//on ajoute l'enfant
+      //adding the child
       if (!$child->isEmpty() || $empty_allowed)
         return $this->addChild($child);
 
       return false;
     }
-  }
-
-}
-
-if (!function_exists('mb_convert_encoding'))
-{
-
-  function mb_convert_encoding($string, $to, $from = '')
-  {
-// Convert string to ISO_8859-1
-    if ($from == "UTF-8")
-      $iso_string = utf8_decode($string);
-    else
-    if ($from == "UTF7-IMAP")
-      $iso_string = imap_utf7_decode($string);
-    else
-      $iso_string = $string;
-
-// Convert ISO_8859-1 string to result coding
-    if ($to == "UTF-8")
-      return(utf8_encode($iso_string));
-    else
-    if ($to == "UTF7-IMAP")
-      return(imap_utf7_encode($iso_string));
-    else
-      return($iso_string);
   }
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * classe de connection en fsockopen
+ * Connection class, uses fsockopen PHP function
  *
  * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
  */
@@ -21,15 +21,15 @@ class CertissimFianetSocket extends CertissimMother
   protected $errstr;
 
   /**
-   * initialise une connexion à un serveur
+   * init a connection to a server
    *
-   * @param string $url adresse à atteindre, sans les paramètres (si méthode GET)
-   * @param string $method méthode d'envoi de la requête
-   * @param array $data variables envoyées (si méthode GET)
+   * @param string $url URL to reach
+   * @param string $method HTTP method to use
+   * @param array $data vars to send
    */
   public function __construct($url, $method = 'GET', array $data = null)
   {
-    //enregistrement en local de ma méthode de connexion
+    //set the HTTP method
     if (strtoupper($method) == 'GET' || strtoupper($method) == 'POST')
     {
       $this->method = strtoupper($method);
@@ -41,21 +41,21 @@ class CertissimFianetSocket extends CertissimMother
       throw new Exception($msg);
     }
 
-    //si les données entrées en paramètre sont sous forme de tableau on construit la chaine qui en découle
+    //if datas are given in parameter, builds the data string
     if (!is_null($data))
     {
       $this->data = http_build_query($data);
     }
 
-    //nettoyage de l'url
-    //Attention !! écrase la valeur actuelle de $this->data si des paramètres url sont compris dans $url
+    //cleans the URL
+    //Carefull: replace the current value of $this->data if datas are included in $url
     $this->parseUrl($url);
   }
 
   /**
-   * nettoie l'url appelée pour séparer hôte et script
+   * split the URL $url into host and path
    *
-   * @param string $url url du script appelé
+   * @param string $url
    */
   public function parseUrl($url)
   {
@@ -64,32 +64,35 @@ class CertissimFianetSocket extends CertissimMother
 
     $components = parse_url($url);
     extract($components);
-    //si on trouve une adresse non sécurisée
+    //if protocol is not secured
     if ($scheme == 'http')
     {
-      //le mode ssl est spécifié à faux
+      //ssl set to false
       $this->is_ssl = false;
-      //on spécifie un port 80
+      //port set to 80
       $this->port = 80;
     }
+    //if protocol is secured
     if ($scheme == 'https')
     {
-      //le mode ssl est spécifié à vrai
+      //ssl set to true
       $this->is_ssl = true;
-      //on spécifie un port 443
+      //port set to 443
       $this->port = 443;
     }
-    //on spécifie l'hôte
+    
+    //registering host
     $this->host = $host;
-    //on spécifie le script
+    //registering path
     $this->path = $path;
 
+    //if a query was contained into the URL, registration of the query
     if (isset($query))
       $this->data = $query;
   }
 
   /**
-   * construit l'entête du fichier envoyé au serveur permettant l'accès au script demandé
+   * builds the header sent to the distant server
    *
    * @return type
    */
@@ -118,72 +121,69 @@ class CertissimFianetSocket extends CertissimMother
   }
 
   /**
-   * envoi la requête à l'hôte et retourne la réponse
+   * build the request sent to the distant host and returns the response
    * 
-   * @return resource 
+   * @return string 
    */
   function send()
   {
-    //construction du header à envoyer
+    //builds the header
     $header = $this->build_header();
 
-    //connexion au serveur avec les données à atteinder et à envoyer
+    //connects to the distant server and send the datas
     $this->response = $this->connect($header);
 
     return $this->getContent();
   }
 
   /**
-   * établit une connexion à un serveur, execute le script et retourne la réponse
+   * makes a connection to a distant server, reach the path, and returns the response
    *
-   * @param string $header header à envoyer au serveur pour atteindre le script voulu et passer les paramètres requis
+   * @param string $header
    * @return type
    */
   function connect($header)
   {
     $error = '';
     $errno = '';
-    //si la connexion est sécurisée
+    //if secured
     if ($this->is_ssl)
     {
-      //connexion au serveur en ssl
+      //connection to the server with ssl
       $socket = fsockopen('ssl://'.$this->host, $this->port, $errno, $error, CertissimFianetSocket::TIMEOUT);
-
-      //si la connexion n'est pas sécurisée
     }
-    else
+    else //if not secured
     {
-      //connexion au serveur sans ssl
+      //http connection
       $socket = fsockopen($this->host, $this->port);
     }
 
-    //si la connexion a été établie
+    //if connection ok
     if ($socket !== false)
     {
       $res = '';
 
-      //envoi des données au serveur : script à appeler et paramètres
+      //sends the header
       if (@fputs($socket, $header))
       {
 
-        //lecture de la réponse
+        //reads the response
         while (!feof($socket)) {
           $res .= fgets($socket, 128);
         }
-
-        //si l'envoi des données a échoué
       }
-      else
+      else //if connection failed
       {
-        //on log l'erreur
+        //logs error
         CertissimTools::insertLog(__METHOD__.' - '.__LINE__, "Envoi des données impossible sur : ".$this->host);
         $res = false;
       }
-      //fermeture de la connexion
+      //close connection
       fclose($socket);
     }
-    else
+    else//if connection not established
     {
+      //logs error
       $msg = "Connexion socket impossible sur l'hôte ".$this->host.". Erreur ".$errno." : ".$error;
       CertissimTools::insertLog(__METHOD__.' - '.__LINE__, $msg);
       $res = false;
@@ -192,7 +192,7 @@ class CertissimFianetSocket extends CertissimMother
   }
 
   /**
-   * sépare l'entête et le corps de la réponse, et retourne le corps
+   * split the header and the body of the response and returns the body
    *
    * @return string
    */

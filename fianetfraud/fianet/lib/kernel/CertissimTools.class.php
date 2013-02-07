@@ -1,12 +1,7 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of FianetTools
+ * Helper functions
  *
  * @author nespiau
  */
@@ -14,31 +9,31 @@ class CertissimTools extends CertissimMother
 {
 
   /**
-   * retourne vrai si $string est uns chaine XML valide, faux sinon
+   * returns true if $string is a valid XML string, false otherwise
    *
-   * @param string $string chaine à tester
+   * @param string $string
    * @return bool
    */
   static function isXMLstring($string)
   {
-    //on vérifie si des balises sont présentes avec ou sans déclaration xml
+    //checks if tags are present with or without XML declaration
     preg_match('#^(<\?xml.+\?>[\r\n ]*)?<([^( |>)]+).*>.*</(.+)>$#s', $string, $output);
     preg_match('#^(<\?xml.+\?>[\r\n ]*)?<([^( |>)]+).*/>$#s', $string, $output2);
 
-    //retourne vrai si des balises sont présentes et si les balises ont le meme nom
+    //return true if tags are present and have the same name
     return (count($output) != 0 && ($output[2] == $output[3])) || count($output2) != 0;
   }
 
   /**
-   * retourne vrai si l'objet $object et de type $type, faux sinon
+   * returns true if $object is of type $type, false otherwise
    *
-   * @param string $type nom de la classe attendue
-   * @param mixed $object objet à tester
+   * @param string $type
+   * @param mixed $object
    * @return bool
    */
   static function isType($type, $object)
   {
-    //retourne faux directement si le paramètre n'est pas un objet
+    //returns false if $object is not an object
     if (!is_object($object))
       return false;
 
@@ -46,7 +41,7 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * retour vrai si l'objet en paramètre est un objet XMLElement, faux sinon
+   * reutrns false if $object is of type CertissimXMLElement, false otherwise
    *
    * @param mixed $input
    * @return bool
@@ -57,7 +52,7 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * retour vrai si l'objet en paramètre est un objet FormField, faux sinon
+   * returns true if $object is of type CertissimFormField, false otherwise
    *
    * @param mixed $input
    * @return boolean
@@ -68,7 +63,7 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * retour vrai si l'objet en paramètre est un objet Form, faux sinon
+   * returns true if $object is of type CertissimForm, false otherwise
    *
    * @param mixed $input
    * @return boolean
@@ -79,7 +74,7 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * retourne vrai si $input est un objet de classe SimpleXMLElement, faux sinon
+   * returns true if $object is of type SimpleXMLElement, false otherwise
    *
    * @param mixed $input objet à tester
    * @return bool
@@ -90,14 +85,16 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * converti une chaine en chaine valide pour une balise XML, exemple : OptionsPaiement devient options-paiment
+   * normalize string $name to be a valid XML tag name
+   * 
    * @param string $name
    */
   static function normalizeName($name)
   {
     $string = strtolower($name[0]);
     $i = 1;
-    for ($i; $i < strlen($name); $i++) {
+    for ($i; $i < strlen($name); $i++)
+    {
       if (ord($name[$i]) >= ord('A') && ord($name[$i]) <= ord('Z'))
       {
         $string .= '-';
@@ -110,48 +107,57 @@ class CertissimTools extends CertissimMother
   }
 
   /**
-   * ins�re une erreur en haut du fichier de log, en le cr�ant s'il n'existe pas d�j�
+   * create a log file if does not exist
+   * rename the log file if too heavy and creates a new one
+   * inserts a log entry
    *
-   * @param string $func nom de la fonction reportant le bug
-   * @param string $msg description de l'erreur
+   * @param string $func funcname calling the log
+   * @param string $msg message to log
    */
   static function insertLog($func, $msg)
   {
-    //si le fichier log existe mais a d�pass� 1Mo on le renomme pour en cr�er un vierge
+    //if log file already exists but is too heavy
     if (file_exists(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt') && filesize(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt') > 500000)
     {
+      //initialize the new log file name
       $prefix = SAC_ROOT_DIR.'/logs/fianetlog-';
       $base = date('YmdHis');
       $sufix = '.txt';
       $filename = $prefix.$base.$sufix;
 
+      //while the file with the given filename exists, increases the number at its end
       for ($i = 0; file_exists($filename); $i++)
         $filename = $prefix.$base."-$i".$sufix;
 
+      //rename the log file
       rename(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt', $filename);
     }
-    //si le fichier log n'existe pas on le cr�� vide
+
+    //if log file does not exist, creates an empty one
     if (!file_exists(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt'))
     {
-      //cr�ation du fichier en �criture
+      //opens the file in write mode
       $handle = fopen(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt', 'w');
 
-      $entry = date('d-m-Y h:i:s')." | ".__METHOD__." : ".__LINE__." | Cr�ation du fichier de log\r";
+      //creates a first entry
+      $entry = date('d-m-Y h:i:s')." | ".__METHOD__." : ".__LINE__." | Création du fichier de log\r";
 
+      //logs the entry
       fwrite($handle, $entry);
 
-      //fermeture imm�diate du fichier
+      //close the file
       fclose($handle);
     }
 
-    //cr�ation d'une nouvelle entr�e
+    //creates a new entry with the func and message given in parameters
     $entry = date('d-m-Y h:i:s')." | $func | $msg\r";
 
-    //ouverture du log principal
+    //open the log file
     $handle = fopen(SAC_ROOT_DIR.'/logs/'.sha1(_COOKIE_KEY_.'fianet_log').'.txt', 'a+');
+    //write the entry inside the log file
     fwrite($handle, $entry);
 
-    //fermeture imm�diate du fichier
+    //close the file
     fclose($handle);
   }
 
