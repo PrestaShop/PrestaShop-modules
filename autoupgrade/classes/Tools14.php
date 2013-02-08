@@ -548,6 +548,7 @@ class Tools14
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true)
 	{
+		return $string;
 		global $_ERRORS, $cookie;
 
 		$iso = strtolower(Language::getIsoById((is_object($cookie) AND $cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT')));
@@ -1942,6 +1943,19 @@ FileETag INode MTime Size
 
 			$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
 			Logger::addLog($message, 3, $callee['class']);
+		}
+	}
+
+	/* Convert \n and \r\n and \r to <br />
+	*
+	* @param string $string String to transform
+	* @return string New string
+	*/
+	if (!function_exists('nl2br'))
+	{
+		public static function nl2br($str)
+		{
+			return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
 		}
 	}
 
