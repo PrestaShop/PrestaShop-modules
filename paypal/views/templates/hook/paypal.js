@@ -121,7 +121,7 @@ $(document).ready( function() {
 			fullPath + '/confirm.php',
 			{ id_cart: '{/literal}{$id_cart}{literal}' },
 			function (data) {
-				if (data && (data > 0)) {
+				if ((typeof(data) != 'undefined') && (data > 0)) {
 					clearInterval(confirmTimer);
 					window.location.replace(fullPath + '/submit.php?id_cart={/literal}{$id_cart}{literal}');
 					$('p.payment_module, p.cart_navigation').hide();
