@@ -52,7 +52,7 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 				array(
 					'message' => $order_state->name[$this->context->language->id],
 					'logs' => array(
-						$this->paypal->l('An error occured while processing payment.')
+						$this->paypal->l('An error occurred while processing payment.')
 					),
 					'order' => $paypal_order,
 					'price' => Tools::displayPrice($paypal_order['total_paid'], $this->context->currency),

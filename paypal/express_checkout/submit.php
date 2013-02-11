@@ -63,7 +63,7 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 		{
 			$this->context->smarty->assign(
 				array(
-					'logs' => array($this->paypal->l('An error occured while processing payment.')),
+					'logs' => array($this->paypal->l('An error occurred while processing payment.')),
 					'order' => $paypal_order,
 					'price' => $price,
 				)
