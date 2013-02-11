@@ -196,7 +196,7 @@ class Socolissimo extends CarrierModule
 	{
 		if (!Configuration::get('SOCOLISSIMO_PERSONAL_DATA'))
 		{
-			if (_PS_VERSION_ < '1.5')
+			if (_PS_VERSION_ < '1.5' || !method_exists ($this->context->controller, 'addJQuery'))
 			{
 				return	'<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-1.4.4.min.js"></script>'
 						.'<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>'
