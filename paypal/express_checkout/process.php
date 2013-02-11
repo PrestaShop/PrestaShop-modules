@@ -121,7 +121,7 @@ class PaypalExpressCheckout extends Paypal
 		$currency_module = $this->getCurrency((int)$this->context->cart->id_currency);
 
 
-		if ($cart_currency != $currency_module)
+		if ($cart_currency !== $currency_module)
 		{
 			$this->context->cart->id_currency = $currency_module->id;
 			$this->context->cart->update();
