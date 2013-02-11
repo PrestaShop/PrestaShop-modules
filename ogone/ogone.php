@@ -82,6 +82,9 @@ class Ogone extends PaymentModule
 
 	public function getContent()
 	{
+		if (!isset($this->_html) || empty($this->_html))
+			$this->_html = '';
+		
 		if (Tools::isSubmit('submitOgone'))
 		{
 			Configuration::updateValue('OGONE_PSPID', Tools::getValue('OGONE_PSPID'));

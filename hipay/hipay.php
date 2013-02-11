@@ -34,6 +34,8 @@ class Hipay extends PaymentModule
 {
 	private $arrayCategories;
 	private $env = PROD;
+	
+	protected $ws_client = false;
 
 	const WS_SERVER = 'http://api.prestashop.com/';
 	const WS_URL = 'http://api.prestashop.com/partner/hipay/hipay.php';
@@ -42,7 +44,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.5.2';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -75,6 +77,11 @@ class Hipay extends PaymentModule
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.'hipay/backward_compatibility/backward.php');
+		
+		if (!class_exists('SoapClient'))
+			$this->warning .= $this->l('To work properly the module need the Soap library to be installed.');
+		else
+			$this->ws_client = $this->getWsClient();
 	}
 	
 	public function install()
@@ -151,7 +158,7 @@ class Hipay extends PaymentModule
 		{
 			$smarty->assign('hipay_prod', $this->env);
 			$smarty->assign('logo_suffix', $logo_suffix);
-			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
+			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => Tools::getShopDomainSsl(true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
 			return $this->display(__FILE__, 'payment.tpl');
 		}
 	}
@@ -215,10 +222,11 @@ class Hipay extends PaymentModule
 		$paymentParams->setCurrency(strtoupper($currency->iso_code));
 		$paymentParams->setIdForMerchant($cart->id);
 		$paymentParams->setMerchantSiteId($hipaySiteId);
-		$paymentParams->setUrlCancel(self::getHttpHost(true, true).__PS_BASE_URI__.'order.php?step=3');
-		$paymentParams->setUrlNok(self::getHttpHost(true, true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlOk(self::getHttpHost(true, true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlAck(self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.Tools::encrypt($cart->id.$cart->secure_key.Configuration::get('HIPAY_SALT')));
+		$paymentParams->setIssuerAccountLogin($this->context->customer->email);
+		$paymentParams->setUrlCancel(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order.php?step=3');
+		$paymentParams->setUrlNok(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlOk(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlAck(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.Tools::encrypt($cart->id.$cart->secure_key.Configuration::get('HIPAY_SALT')));
 		$paymentParams->setBackgroundColor('#FFFFFF');
 
 		if (!$paymentParams->check())
@@ -266,7 +274,7 @@ class Hipay extends PaymentModule
 			include(dirname(__FILE__).'/../../header.php');
 			
 			$smarty->assign('errors', array('[Hipay] '.strval($err_msg).' ('.$output.')'));
-			$_SERVER['HTTP_REFERER'] = self::getHttpHost(true, true).__PS_BASE_URI__.'order.php?step=3';
+			$_SERVER['HTTP_REFERER'] = Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order.php?step=3';
 			$smarty->display(_PS_THEME_DIR_.'errors.tpl');
 			
 			include(dirname(__FILE__).'/../../footer.php');
@@ -792,6 +800,9 @@ class Hipay extends PaymentModule
 		
 		$form .= '
 		</script>';
+		
+		if ($this->ws_client == false)
+			return $this->displayError('To work properly the module need the Soap library to be installed.').$form;
 		return $form;
 	}
 	
@@ -860,16 +871,20 @@ class Hipay extends PaymentModule
 	{
 		try
 		{
-			$business_line = self::getWsClient()->getBusinessLine($this->formatLanguageCode(Context:: getContext()->language->iso_code));
+			$iso_lang = Context::getContext()->language->iso_code;
+			$format_language = $this->formatLanguageCode($iso_lang);
+			
+			if ($this->ws_client !== false)
+				$business_line = $this->ws_client->getBusinessLine($format_language);
 		}
 		catch (Exception $e)
 		{
 			return array();
 		}
 
-		if (!$business_line)
-			return array();
-		return $business_line;
+		if (isset($business_line) && ($business_line !== false))
+			return $business_line;
+		return array();
 	}
 	
 	protected function processAccountCreation(&$form_errors)
@@ -879,7 +894,8 @@ class Hipay extends PaymentModule
 		// STEP 1: Check if the email is available in Hipay
 		try
 		{
-			$is_available = self::getWsClient()->isAvailable($form_values['email']);
+			if ($this->ws_client !== false)
+				$is_available = $this->ws_client->isAvailable($form_values['email']);
 		}
 		catch (Exception $e)
 		{
@@ -895,8 +911,9 @@ class Hipay extends PaymentModule
 
 		// STEP 2: Account creation
 		try
-		{
-			$return = self::getWsClient()->createWithWebsite(
+		{		
+			if ($this->ws_client !== false)
+				$return = $this->ws_client->createWithWebsite(
 					array(
 						'email' => $form_values['email'],
 						'firstname' => $form_values['firstname'],
@@ -964,12 +981,14 @@ class Hipay extends PaymentModule
 	{
 		try
 		{
-			return self::getWsClient()->getCategoryList(array('site_id' => $hipaySiteId, 'account_id' => $hipayAccountId));
+			if ($this->ws_client !== false)
+				return $this->ws_client->getCategoryList(array('site_id' => $hipaySiteId, 'account_id' => $hipayAccountId));
 		}
 		catch (Exception $e)
 		{
 			return array();
 		}
+		return array();
 	}
 	
 	// Retro compatibility with 1.2.5
@@ -977,18 +996,5 @@ class Hipay extends PaymentModule
 	{
 		$row = Db::getInstance()->getRow($query);
 		return array_shift($row);
-	}
-	
-	// Retro compatibility with 1.2.5
-	static private function getHttpHost($http = false, $entities = false)
-	{
-		$host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
-		
-		if ($entities)
-			$host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');		
-		if ($http)
-			$host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$host;
-			
-		return $host;
 	}
 }
