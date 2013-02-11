@@ -137,7 +137,7 @@ if ($request_type && $ppec->type)
 		$ppec->redirectToAPI();
 	// Display Error and die with this method
 	else
-		$ppec->displayPayPalAPIError($ppec->l('Error during the prepration of the express checkout payment'), $ppec->logs);
+		$ppec->displayPayPalAPIError($ppec->l('Error during the preparation of the Express Checkout payment'), $ppec->logs);
 }
 // If a token exist with payer_id, then we are back from the PayPal API
 elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $payer_id))
@@ -244,7 +244,7 @@ function validateOrder($customer, $cart, $ppec)
 		if ($amount_match)
 			$message = implode('<br />', $ppec->logs).'<br />';
 		else
-			$message = $ppec->l('Price payed on paypal is not the same that on PrestaShop.').'<br />';
+			$message = $ppec->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';
 	}
 		
 	$transaction = PayPalOrder::getTransactionDetails($ppec, $payment_status);
