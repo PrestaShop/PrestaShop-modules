@@ -50,6 +50,7 @@ class Ebay extends Module {
      private $id_lang;
      private $country;
      private $createShopUrl;
+     private $eBayCountry;
 
      /**
       * Construct Method
@@ -70,18 +71,16 @@ class Ebay extends Module {
           $this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
           $this->module_key = '7a6b007a219bab59c1611254347f21d5';
 
-          // Check the country and ask the bypass if not 'fr' nor 'it'
-          if (!$this->checkCountry())
+          // Check the country 
+          $this->eBayCountry = new eBayCountrySpec();
+          $this->country = $this->eBayCountry->getCountry();
+          if (!$this->eBayCountry->checkCountry())
           {
                $this->warning = $this->l('eBay module currently works only for eBay.fr and eBay.it');
                return false;
           }
 
-          if (strtolower($this->country->iso_code) == 'it')
-               $this->createShopUrl = 'http://cgi3.ebay.it/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
-          else 
-               $this->createShopUrl = 'http://cgi3.ebay.fr/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
-
+          $this->createShopUrl = 'http://cgi3.ebay.'.$this->country->iso_code.'/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
           $this->id_lang = Language::getIdByIso($this->country->iso_code);
 
           // Checking Extension
@@ -95,6 +94,7 @@ class Ebay extends Module {
                     $this->warning = $this->l('You must enable allow_url_fopen option on your server if you want to use this module.');
                return false;
           }
+
 
           // Checking compatibility with older PrestaShop and fixing it
           if (!Configuration::get('PS_SHOP_DOMAIN'))
@@ -128,72 +128,11 @@ class Ebay extends Module {
                     $this->warning = $this->l('You must register your module on eBay.');
 
                // Loading Shipping Method
-               $this->loadShippingMethod();
+               $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
 
                // Warning uninstall
                $this->confirmUninstall = $this->l('Are you sure you want uninstall this module ? All your configuration will be lost.');
           }
-     }
-
-     public function loadShippingMethod() 
-     {
-          if (strtolower($this->country->iso_code) == 'fr')
-               $this->_shippingMethod = array(
-                   7104 => array('description' => 'Colissimo', 'shippingService' => 'FR_ColiposteColissimo', 'shippingServiceID' => '7104'),
-                   7112 => array('description' => 'Ecopli', 'shippingService' => 'FR_Ecopli', 'shippingServiceID' => '7112'),
-                   57104 => array('description' => 'La Poste - Courrier International Prioritaire', 'shippingService' => 'FR_LaPosteInternationalPriorityCourier', 'shippingServiceID' => '57104'),
-                   7101 => array('description' => 'Lettre', 'shippingService' => 'FR_PostOfficeLetter', 'shippingServiceID' => '7101'),
-                   57105 => array('description' => 'La Poste - Courrier International Economique', 'shippingService' => 'FR_LaPosteInternationalEconomyCourier', 'shippingServiceID' => '57105'),
-                   57106 => array('description' => 'La Poste - Colissimo International', 'shippingService' => 'FR_LaPosteColissimoInternational', 'shippingServiceID' => '57106'),
-                   7102 => array('description' => 'Lettre avec suivi', 'shippingService' => 'FR_PostOfficeLetterFollowed', 'shippingServiceID' => '7102'),
-                   57107 => array('description' => 'La Poste - Colis Economique International', 'shippingService' => 'FR_LaPosteColisEconomiqueInternational', 'shippingServiceID' => '57107'),
-                   7103 => array('description' => 'Lettre recommand&eacute;e', 'shippingService' => 'FR_PostOfficeLetterRecommended', 'shippingServiceID' => '7103'),
-                   7121 => array('description' => 'Lettre Max', 'shippingService' => 'FR_LaPosteLetterMax', 'shippingServiceID' => '7121'),
-                   7113 => array('description' => 'Coli&eacute;co', 'shippingService' => 'FR_Colieco', 'shippingServiceID' => '7113'),
-                   57108 => array('description' => 'La Poste - Colissimo Emballage International', 'shippingService' => 'FR_LaPosteColissimoEmballageInternational', 'shippingServiceID' => '57108'),
-                   57114 => array('description' => 'Chronopost Express International', 'shippingService' => 'FR_ChronopostExpressInternational', 'shippingServiceID' => '57114'),
-                   7106 => array('description' => 'Colissimo Recommand&eacute;', 'shippingService' => 'FR_ColiposteColissimoRecommended', 'shippingServiceID' => '7106'),
-                   57109 => array('description' => 'Chronopost Classic International', 'shippingService' => 'FR_ChronopostClassicInternational', 'shippingServiceID' => '57109'),
-                   57110 => array('description' => 'Chronopost Premium International', 'shippingService' => 'FR_ChronopostPremiumInternational', 'shippingServiceID' => '57110'),
-                   7117 => array('description' => 'Chronopost - Chrono Relais', 'shippingService' => 'FR_ChronopostChronoRelais', 'shippingServiceID' => '7117'),
-                   57111 => array('description' => 'UPS Standard', 'shippingService' => 'FR_UPSStandardInternational', 'shippingServiceID' => '57111'),
-                   7111 => array('description' => 'Autre mode d\'envoi de courrier', 'shippingService' => 'FR_Autre', 'shippingServiceID' => '7111'),
-                   57112 => array('description' => 'UPS Express', 'shippingService' => 'FR_UPSExpressInternational', 'shippingServiceID' => '57112'),
-                   7114 => array('description' => 'Autre mode d\'envoi de colis', 'shippingService' => 'FR_AuteModeDenvoiDeColis', 'shippingServiceID' => '7114'),
-                   57113 => array('description' => 'DHL', 'shippingService' => 'FR_DHLInternational', 'shippingServiceID' => '57113'),
-                   57101 => array('description' => 'Frais de livraison internationale fixes', 'shippingService' => 'FR_StandardInternational', 'shippingServiceID' => '57101'),
-                   7116 => array('description' => 'Chronopost', 'shippingService' => 'FR_Chronopost', 'shippingServiceID' => '7116'),
-                   57102 => array('description' => 'Frais fixes pour livraison internationale express', 'shippingService' => 'FR_ExpeditedInternational', 'shippingServiceID' => '57102'),
-                   57103 => array('description' => 'Autres livraisons internationales (voir description)', 'shippingService' => 'FR_OtherInternational', 'shippingServiceID' => '57103'),
-                   7118 => array('description' => 'Chrono 10', 'shippingService' => 'FR_Chrono10', 'shippingServiceID' => '7118'),
-                   7119 => array('description' => 'Chrono 13', 'shippingService' => 'FR_Chrono13', 'shippingServiceID' => '7119'),
-                   7120 => array('description' => 'Chrono 18', 'shippingService' => 'FR_Chrono18', 'shippingServiceID' => '7120'),
-                   7105 => array('description' => 'Coliposte - Colissimo Direct', 'shippingService' => 'FR_ColiposteColissimoDirect', 'shippingServiceID' => '7105'),
-                   7107 => array('description' => 'Chronoposte - Chrono Classic International', 'shippingService' => 'FR_ChronoposteInternationalClassic', 'shippingServiceID' => '7107'),
-                   7108 => array('description' => 'DHL - Express Europack', 'shippingService' => 'FR_DHLExpressEuropack', 'shippingServiceID' => '7108'),
-                   7109 => array('description' => 'UPS - Standard', 'shippingService' => 'FR_UPSStandard', 'shippingServiceID' => '7109'),
-               );
-          else
-               $this->_shippingMethod = array(
-                   10101 => array('description' => 'Posta ordinaria', 'shippingService' => 'IT_RegularMail', 'shippingServiceID' => '10101'),
-                   60101 => array('description' => 'Spedizione internazionale standard a prezzo fisso', 'shippingService' => 'IT_StandardInternational', 'shippingServiceID' => '60101'),
-                   10102 => array('description' => 'Posta prioritaria', 'shippingService' => 'IT_PriorityMail', 'shippingServiceID' => '10102'),
-                   60102 => array('description' => 'Spedizione internazionale celere a prezzo fisso', 'shippingService' => 'IT_ExpeditedInternational', 'shippingServiceID' => '60102'),
-                   60103 => array('description' => 'Altre spedizioni internazionali (vedi descrizione)', 'shippingService' => 'IT_OtherInternational', 'shippingServiceID' => '60103'),
-                   10103 => array('description' => 'Posta raccomandata', 'shippingService' => 'IT_MailRegisteredLetter', 'shippingServiceID' => '10103'),
-                   10104 => array('description' => 'Posta raccomandata con contrassegno', 'shippingService' => 'IT_MailRegisteredLetterWithMark', 'shippingServiceID' => '10104'),
-                   10105 => array('description' => 'Posta assicurata', 'shippingService' => 'IT_InsuredMail', 'shippingServiceID' => '10105'),
-                   10106 => array('description' => 'Posta celere', 'shippingService' => 'IT_QuickMail', 'shippingServiceID' => '10106'),
-                   10107 => array('description' => 'Pacco ordinario', 'shippingService' => 'IT_RegularPackage', 'shippingServiceID' => '10107'),
-                   10108 => array('description' => 'Pacco celere 1', 'shippingService' => 'IT_QuickPackage1', 'shippingServiceID' => '10108'),
-                   10109 => array('description' => 'Pacco celere 3', 'shippingService' => 'IT_QuickPackage3', 'shippingServiceID' => '10109'),
-                   10111 => array('description' => 'Paccocelere Maxi', 'shippingService' => 'IT_ExpressPackageMaxi', 'shippingServiceID' => '10111'),
-                   10110 => array('description' => 'Corriere espresso', 'shippingService' => 'IT_ExpressCourier', 'shippingServiceID' => '10110'),
-                   10151 => array('description' => 'Ritiro in zona', 'shippingService' => 'IT_Pickup', 'shippingServiceID' => '10151'),
-                   10112 => array('description' => 'Spedizione economica dall’estero', 'shippingService' => 'IT_EconomyDeliveryFromAbroad', 'shippingServiceID' => '10112'),
-                   10113 => array('description' => 'Spedizione standard dall’estero', 'shippingService' => 'IT_StandardDeliveryFromAbroad', 'shippingServiceID' => '10113'),
-                   10114 => array('description' => 'Spedizione espressa dall’estero', 'shippingService' => 'IT_ExpressDeliveryFromAbroad', 'shippingServiceID' => '10114'),
-               );
      }
 
      /**
@@ -695,7 +634,8 @@ class Ebay extends Module {
           if (Tools::getValue('ebay_country_default_fr') == 'ok')
                $this->setConfiguration('EBAY_COUNTRY_DEFAULT', 8);
 
-          if (!$this->checkCountry())
+          // Check the country 
+          if (!$this->eBayCountry->checkCountry())
                return $this->_html . '<center>' . $this->displayError($this->l('eBay module currently works only for eBay.fr and eBay.it') . '.<br /><a href="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '&ebay_country_default_fr=ok">' . $this->l('Continue anyway ?') . '</a>') . '</center>';
 
           // Checking Extension
@@ -736,18 +676,15 @@ class Ebay extends Module {
           if (!Validate::isCleanHtml($prestashopContent))
                $prestashopContent = '';
 
-          if (strtolower($this->country->iso_code) == 'it')
-               $imgStats = 'ebay_stats-it.png';
-          else
-               $imgStats = 'ebay_stats.png';
+          $imgStats = $this->eBayCountry->getImgStats();
 
           $this->_html .= '
-		<fieldset>
-			<center><img src="' . $this->_path . $imgStats . '" alt="eBay stats"/></center>
-			<br />
-			<u><a href="' . $this->l('http://pages.ebay.fr/professionnels/index.html') . '" target="_blank">' . $this->l('Be informed in professional section on eBay.fr') . '</a></u>
-		</fieldset>
-		<br />';
+      		<fieldset>
+      			<center><img src="' . $this->_path . $imgStats . '" alt="eBay stats"/></center>
+      			<br />
+      			<u><a href="' . $this->l('http://pages.ebay.fr/professionnels/index.html') . '" target="_blank">' . $this->l('Be informed in professional section on eBay.fr') . '</a></u>
+      		</fieldset>
+      		<br />';
 
           // Displaying page
           $this->_html .= '<fieldset>
@@ -824,8 +761,22 @@ class Ebay extends Module {
       *
       **/
      private function _displayFormRegister() 
-     {
+     { 
           $ebay = new eBayRequest();
+          $html .= '';
+          if(isset($_GET['relogin'])){
+
+            $ebay->login();
+            $this->context->cookie->eBaySession = $ebay->session;
+            $this->setConfiguration('EBAY_API_SESSION', $ebay->session);
+            $html .= '<script>
+                    $(document).ready(function() {
+                          window.open(\'' . $ebay->getLoginUrl() . '?SignIn&runame=' . $ebay->runame . '&SessID=' . $this->context->cookie->eBaySession . '\');
+                    });
+                  </script>';
+
+          }
+
 
           if (!empty($this->context->cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged') 
           {
@@ -838,7 +789,7 @@ class Ebay extends Module {
                $ebay->session = $this->context->cookie->eBaySession;
                $ebay->username = $this->context->cookie->eBayUsername;
 
-               $html = '
+               $html .= '
             			<script>
             				function checkToken()
             				{
@@ -856,6 +807,7 @@ class Ebay extends Module {
             				checkToken();
             			</script>';
                $html .= '<fieldset><legend><img src="' . $this->_path . 'logo.gif" alt="" title="" />' . $this->l('Register the module on eBay') . '</legend>';
+               $html .= '<p align="center"><a href="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '&action=logged&relogin=1" class="button">'.$this->l('If you have been logged out from eBay, and you are not redirected to the module configuration page, please click here').'</a>';
                $html .= '<p align="center"><img src="' . $this->_path . 'loading.gif" alt="' . $this->l('Loading') . '" title="' . $this->l('Loading') . '" /></p>';
                $html .= '<p align="center">' . $this->l('Once you sign in from the new eBay window, the module will automatically finish the installation a few seconds later') . '</p>';
                $html .= '</fieldset>';
@@ -869,7 +821,7 @@ class Ebay extends Module {
                     $this->setConfiguration('EBAY_API_SESSION', $ebay->session);
                }
 
-               $html = '
+               $html .= '
             			<style>
             				.ebay_dl {margin: 0 0 10px 40px}
             				.ebay_dl > * {float: left; margin: 10px 0 0 10px}
@@ -2049,7 +2001,7 @@ class Ebay extends Module {
 
                     // Loading Shipping Method
                     if (!isset($this->_shippingMethod[Configuration::get('EBAY_SHIPPING_CARRIER_ID')]['shippingService']))
-                         $this->loadShippingMethod();
+                         $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
 
                     // Generate array and try insert in database
                     $datas = array(
@@ -2073,7 +2025,7 @@ class Ebay extends Module {
 
                     // Fix hook update product
                     if (isset($this->context->employee) && $this->context->employee->id > 0 && isset($_POST['submitProductAttribute']) && isset($_POST['id_product_attribute']) && isset($_POST['attribute_mvt_quantity']) && isset($_POST['id_mvt_reason']))
-     {
+                    {
                          if (substr(_PS_VERSION_, 0, 3) == '1.3') 
                          {
                               $id_product_attribute_fix = (int) $_POST['id_product_attribute'];
@@ -2400,28 +2352,6 @@ class Ebay extends Module {
           return file_get_contents($helpFile);
      }
 
-     /**
-	  * Tools Methods
-	  *
-	  * Set country + sends back true or false
-      **/
-     private function checkCountry() 
-     {
-          if (!is_object($this->country))
-               $this->country = new Country((int) Configuration::get('EBAY_COUNTRY_DEFAULT'));
-
-          if (strtolower($this->country->iso_code) == 'fr' || strtolower($this->country->iso_code) == 'it')
-               return true;
-
-          $this->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-          if (strtolower($this->country->iso_code) == 'fr' || strtolower($this->country->iso_code) == 'it') 
-          {
-               $this->setConfiguration('EBAY_COUNTRY_DEFAULT', $this->country->id);
-               return true;
-          }
-
-          return false;
-     }
 
      private function isVersionOneDotFive() 
      {
@@ -2505,7 +2435,7 @@ class Ebay extends Module {
 	}
       
 
-     private function setConfiguration($configName, $configValue, $html = false) 
+     protected function setConfiguration($configName, $configValue, $html = false) 
      {
           if ($this->isVersionOneDotFive())
                return Configuration::updateValue($configName, $configValue, $html, 0, 0);

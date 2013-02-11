@@ -25,7 +25,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
+// Loading eBay Class Country Specification
+if (file_exists(dirname(__FILE__) . '/eBayCountrySpec.php'))
+     require_once(dirname(__FILE__) . '/eBayCountrySpec.php');
 
 class eBayRequest
 {
@@ -58,7 +60,7 @@ class eBayRequest
 	private $compatibilityLevel;
 
 	private $debug = false;
-	private $dev = false;
+	private $dev = true;
 
 	
 	private $country;
@@ -74,21 +76,14 @@ class eBayRequest
 	public function __construct($apiCall = '')
 	{
 		$this->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-	
-		if(strtolower($this->country->iso_code) == 'it')
-			{
-			$this->siteID = 101;
-			$this->language = 'it_IT';
-			$this->siteName = 'Italy';
-			$this->siteExtension = 'it';
-			}
-		else
-			{
-			$this->siteID = 71;
-			$this->language = 'fr_FR';
-			$this->siteName = 'France';
-			$this->siteExtension = 'fr';
-			}
+		
+		$ebayCountry = new eBayCountrySpec($this->country);
+
+		$this->siteID = $ebayCountry->getSiteID();
+		$this->language = $ebayCountry->getLanguage();
+		$this->siteName = $ebayCountry->getSiteName();
+		$this->siteExtension = $ebayCountry->getSiteExtension();
+
 		
 		/*** SAND BOX PARAMS ***/
 		
