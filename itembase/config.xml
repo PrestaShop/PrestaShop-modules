@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <module>
+            <name>itembase</name>
+            <displayName><![CDATA[itembase]]></displayName>
+            <version><![CDATA[2.0]]></version>
+            <description><![CDATA[itembase - Personal Shopping Manager &amp; Inventory (SEO links, Brand Booster, Traffic Source, Affiliate Channel)]]></description>
+            <author><![CDATA[itembase]]></author>
+            <tab><![CDATA[others]]></tab>
+            <is_configurable>1</is_configurable>
+            <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+        </module>
