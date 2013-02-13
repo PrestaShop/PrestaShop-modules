@@ -121,7 +121,7 @@ class PaypalExpressCheckout extends Paypal
 		$currency_module = $this->getCurrency((int)$this->context->cart->id_currency);
 
 
-		if ($cart_currency != $currency_module)
+		if ($cart_currency !== $currency_module)
 		{
 			$this->context->cart->id_currency = $currency_module->id;
 			$this->context->cart->update();
@@ -224,7 +224,7 @@ class PaypalExpressCheckout extends Paypal
 		$this->setGiftWrapping($fields, $index, $total);
 
 		// Payment values
-		$this->setPaymentValues($fields, $total, $taxes);
+		$this->setPaymentValues($fields, $index, $total, $taxes);
 
 		$id_address = (int)$this->context->cart->id_address_delivery;
 		if (($id_address == 0) && ($this->context->customer))
@@ -311,7 +311,7 @@ class PaypalExpressCheckout extends Paypal
 		}
 	}
 
-	private function setPaymentValues(&$fields, &$total, &$taxes)
+	private function setPaymentValues(&$fields, &$index, &$total, &$taxes)
 	{
 		if (_PS_VERSION_ < '1.5')
 			$shipping_cost_wt = $this->context->cart->getOrderShippingCost();
@@ -326,9 +326,27 @@ class PaypalExpressCheckout extends Paypal
 		$currency = new Currency((int)$this->context->cart->id_currency);
 		$fields['PAYMENTREQUEST_0_CURRENCYCODE'] = $currency->iso_code;
 
-		$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
-		$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);
-		$fields['PAYMENTREQUEST_0_AMT'] = $total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT'];
+		/**
+		 * If the total amount is lower than 1 we put the shipping cost as an item
+		 * so the payment could be valid.
+		 */ 
+		if ($total <= 1)
+		{
+			$carrier = new Carrier($this->context->cart->id_carrier);
+			$fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = $carrier->id_reference;
+			$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $carrier->name;
+			$fields['L_PAYMENTREQUEST_0_AMT'.$index] = Tools::ps_round($shipping_cost_wt, $this->decimals);
+			$fields['L_PAYMENTREQUEST_0_QTY'.$index] = 1;
+			
+			$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals) + Tools::ps_round($shipping_cost_wt, $this->decimals);
+			$fields['PAYMENTREQUEST_0_AMT'] = $total + Tools::ps_round($shipping_cost_wt, $this->decimals);
+		}
+		else
+		{
+			$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
+			$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);
+			$fields['PAYMENTREQUEST_0_AMT'] = $total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT'];
+		}
 	}
 
 	public function rightPaymentProcess()
