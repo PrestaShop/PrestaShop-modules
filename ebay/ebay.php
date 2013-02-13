@@ -33,7 +33,6 @@ if (!defined('_PS_VERSION_'))
 if (file_exists(dirname(__FILE__) . '/eBayRequest.php'))
      require_once(dirname(__FILE__) . '/eBayRequest.php');
 
-
 // Checking compatibility with older PrestaShop and fixing it
 if (!defined('_MYSQL_ENGINE_'))
      define('_MYSQL_ENGINE_', 'MyISAM');
