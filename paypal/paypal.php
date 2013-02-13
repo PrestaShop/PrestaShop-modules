@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.4';
+		$this->version = '3.4.5';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -165,7 +165,7 @@ class PayPal extends PaymentModule
 	private function compatibilityCheck()
 	{
 		if (file_exists(_PS_MODULE_DIR_.'/paypalapi/paypalapi.php') && $this->active)
-			$this->warning = $this->l('All features of Paypal API module are include in the new Paypal module. In order to do not have any conflict, please do not use and remove PayPalAPI module.').'<br />';
+			$this->warning = $this->l('All features of Paypal API module are included in the new Paypal module. In order to do not have any conflict, please do not use and remove PayPalAPI module.').'<br />';
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4,
