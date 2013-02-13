@@ -42,7 +42,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.5.1';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -151,7 +151,7 @@ class Hipay extends PaymentModule
 		{
 			$smarty->assign('hipay_prod', $this->env);
 			$smarty->assign('logo_suffix', $logo_suffix);
-			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
+			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => Tools::getShopDomainSsl(true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
 			return $this->display(__FILE__, 'payment.tpl');
 		}
 	}
@@ -215,10 +215,10 @@ class Hipay extends PaymentModule
 		$paymentParams->setCurrency(strtoupper($currency->iso_code));
 		$paymentParams->setIdForMerchant($cart->id);
 		$paymentParams->setMerchantSiteId($hipaySiteId);
-		$paymentParams->setUrlCancel(self::getHttpHost(true, true).__PS_BASE_URI__.'order.php?step=3');
-		$paymentParams->setUrlNok(self::getHttpHost(true, true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlOk(self::getHttpHost(true, true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
-		$paymentParams->setUrlAck(self::getHttpHost(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.Tools::encrypt($cart->id.$cart->secure_key.Configuration::get('HIPAY_SALT')));
+		$paymentParams->setUrlCancel(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order.php?step=3');
+		$paymentParams->setUrlNok(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlOk(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$cart->id.'&amp;id_module='.(int)$this->id.'&amp;secure_key='.$customer->secure_key);
+		$paymentParams->setUrlAck(Tools::getShopDomainSsl(true).__PS_BASE_URI__.'modules/'.$this->name.'/validation.php?token='.Tools::encrypt($cart->id.$cart->secure_key.Configuration::get('HIPAY_SALT')));
 		$paymentParams->setBackgroundColor('#FFFFFF');
 
 		if (!$paymentParams->check())
@@ -266,7 +266,7 @@ class Hipay extends PaymentModule
 			include(dirname(__FILE__).'/../../header.php');
 			
 			$smarty->assign('errors', array('[Hipay] '.strval($err_msg).' ('.$output.')'));
-			$_SERVER['HTTP_REFERER'] = self::getHttpHost(true, true).__PS_BASE_URI__.'order.php?step=3';
+			$_SERVER['HTTP_REFERER'] = Tools::getShopDomainSsl(true).__PS_BASE_URI__.'order.php?step=3';
 			$smarty->display(_PS_THEME_DIR_.'errors.tpl');
 			
 			include(dirname(__FILE__).'/../../footer.php');
@@ -977,18 +977,5 @@ class Hipay extends PaymentModule
 	{
 		$row = Db::getInstance()->getRow($query);
 		return array_shift($row);
-	}
-	
-	// Retro compatibility with 1.2.5
-	static private function getHttpHost($http = false, $entities = false)
-	{
-		$host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
-		
-		if ($entities)
-			$host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');		
-		if ($http)
-			$host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$host;
-			
-		return $host;
 	}
 }
