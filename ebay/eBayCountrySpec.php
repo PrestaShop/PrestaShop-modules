@@ -27,9 +27,9 @@
 */
 
 if (!in_array('Ebay', get_declared_classes()))
-     include_once(dirname(__FILE__) . '/ebay.php');
+     require_once('ebay.php');
 
-class eBayCountrySpec extends Ebay
+class eBayCountrySpec
 {
 	public $country;
 	public $acceptedIso = array('it', 'fr');
@@ -199,8 +199,9 @@ class eBayCountrySpec extends Ebay
         $this->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
         if (in_array(strtolower($this->country->iso_code), $this->acceptedIso))
         {
-             $this->setConfiguration('EBAY_COUNTRY_DEFAULT', $this->country->id);
-             return $this->country;
+        	$eBay = new Ebay();
+            $eBay->setConfiguration('EBAY_COUNTRY_DEFAULT', $this->country->id);
+            return $this->country;
         }
          return $this->country;
    }

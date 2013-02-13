@@ -26,6 +26,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 // Loading eBay Class Country Specification
+
 if (file_exists(dirname(__FILE__) . '/eBayCountrySpec.php'))
      require_once(dirname(__FILE__) . '/eBayCountrySpec.php');
 
