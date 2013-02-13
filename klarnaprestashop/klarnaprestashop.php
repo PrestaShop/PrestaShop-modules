@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.8';
+		$this->version = '1.6.9';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -786,7 +786,7 @@ class KlarnaPrestaShop extends PaymentModule
 
 				if ($result == KlarnaFlags::ACCEPTED)
 				{
-					$history->changeIdOrderState((int)Configuration::get('KLARNA_PAYMENT_ACCEPTED'), (int)$order->id);
+					$history->changeIdOrderState((int)Configuration::get('KLARNA_PAYMENT_ACCEPTED'), $order->id);
 					$message = $this->l('Klarna has changed the status of this order to Klarna: Payment accepted');
 				}
 				elseif ($result == KlarnaFlags::PENDING)
@@ -798,7 +798,7 @@ class KlarnaPrestaShop extends PaymentModule
 				}
 				elseif ($result == KlarnaFlags::DENIED)
 				{
-					$history->changeIdOrderState((int)Configuration::get('PS_OS_CANCELED'), (int)$order->id);
+					$history->changeIdOrderState((int)Configuration::get('PS_OS_CANCELED'), $order->id);
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'klarna_rno', array('state' => self::CANCEL), 'UPDATE', '`id_cart` = '.(int)$order->id_cart);
 					$type = 'denied';
 					$message = $this->l('Klarna has changed the status of this order to Canceled.');

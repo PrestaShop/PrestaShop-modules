@@ -157,7 +157,7 @@
 					<label for="MR_weight_coefficient" class="mrLabel">{l s='Weight Coefficient:' mod='mondialrelay'}</label>
 					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient|escape:'htmlall'}"/>
 					<sup>*</sup>
-					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}</span>
+					<span class="indication" style="display: inline-block; line-height: 18px; vertical-align: top">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}<br />{l s='The default billing method will be set according to the total weight.' mod='mondialrelay'}</span>
 				</li>
 				<li class="PS_MRSubmit">
 					<input type="submit" name="submit_account_detail" value="{l s='Update Settings' mod='mondialrelay'}" class="button" />
