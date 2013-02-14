@@ -220,6 +220,7 @@ class Ebay extends Module {
           Configuration::deleteByName('EBAY_SECURITY_TOKEN');
           Configuration::deleteByName('EBAY_INSTALL_DATE');
           Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
+          Configuration::deleteByName('EBAY_DELIVERY_TIME');
           // Uninstall Module
           if (!parent::uninstall() ||
                   !$this->unregisterHook('addproduct') ||
@@ -2409,6 +2410,7 @@ class Ebay extends Module {
           return version_compare(_PS_VERSION_, '1.5', '>');
      }
 
+
      private function getAlert() 
      {
           // Test alert
@@ -2486,13 +2488,17 @@ class Ebay extends Module {
 	}
       
 
-     protected function setConfiguration($configName, $configValue, $html = false) 
-     {
-          if ($this->isVersionOneDotFive())
-               return Configuration::updateValue($configName, $configValue, $html, 0, 0);
-          else
-               return Configuration::updateValue($configName, $configValue, $html);
-     }
+   protected function setConfiguration($configName, $configValue, $html = false) 
+   {
+       return $this->setConfigurationStatic($configName, $configValue, $html);
+   }
+
+   public static function setConfigurationStatic($configName, $configValue, $html = false){
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+             return Configuration::updateValue($configName, $configValue, $html, 0, 0);
+        else
+             return Configuration::updateValue($configName, $configValue, $html);
+   }
 
      private function getContextShop() 
      {
