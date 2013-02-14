@@ -187,6 +187,8 @@ $_MODULE['<{tntcarrier}prestashop>shippingnumber_d5aad80114d8aa47f31a6f5050ef683
 $_MODULE['<{tntcarrier}prestashop>shippingnumber_0c458988127eb2150776881e2ef3f0c4'] = 'Adresse d\'expédition';
 $_MODULE['<{tntcarrier}prestashop>shippingnumber_e19726b466603bc3e444dd26fbcde074'] = 'Adresse du client';
 $_MODULE['<{tntcarrier}prestashop>shippingnumber_25364beb50b7a39331177a65760e18f7'] = 'Adresse du point relais';
-$_MODULE['<{tntcarrier}prestashop>weightform_c3f15ecc6da0827a8da712cb43a0b596'] = 'TNT Livraison';
-$_MODULE['<{tntcarrier}prestashop>weightform_06752dfc0286b9fa9e541f204f32f201'] = 'Poids (KG)';
+$_MODULE['<{tntcarrier}prestashop>weightform_c3f15ecc6da0827a8da712cb43a0b596'] = 'Informations de livraison';
+$_MODULE['<{tntcarrier}prestashop>weightform_d66bafd92f698ed7fac400597d08db9f'] = 'Votre paquet doit faire plus de 0.1Kg et';
+$_MODULE['<{tntcarrier}prestashop>weightform_56d721ccadb8bbfd8b47390d82a6ea4b'] = 'Kg';
+$_MODULE['<{tntcarrier}prestashop>weightform_06752dfc0286b9fa9e541f204f32f201'] = 'Poids (Kg)';
 $_MODULE['<{tntcarrier}prestashop>weightform_7f090bbab1cc7f9c08bf4e54d932d3c0'] = 'Modifier';

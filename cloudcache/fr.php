@@ -4,6 +4,9 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{cloudcache}prestashop>cloudcache_f86d8910fee395bdb3d9e0165763235d'] = 'CloudCache';
 $_MODULE['<{cloudcache}prestashop>cloudcache_04a5752fc2ed63bac60e8e819fb37a8a'] = 'Accélérez votre boutique avec le Content Delivery Network (CDN) de CloudCache.com';
+$_MODULE['<{cloudcache}prestashop>cloudcache_ea5eb3f904bf42377277255cbd0e2251'] = 'Pour fonctionner correctement le module \"Rétro-compatibilité\" doit être activé.';
+$_MODULE['<{cloudcache}prestashop>cloudcache_48878e69ef59b9e9d2d9a8c18e4de520'] = 'Pour fonctionner correctement the module requiert l\'installation du module \"Rétro-compatibilité\" v';
+$_MODULE['<{cloudcache}prestashop>cloudcache_c9d8a8d3c76c69e9a5ba6387acb8655a'] = 'Afin d\'utiliser le module vous devez installer le module \"Rétro-compatibilité\".';
 $_MODULE['<{cloudcache}prestashop>cloudcache_3d31c37e7b674b0882fd6eb636b9f883'] = 'Le module a été correctement intallé (';
 $_MODULE['<{cloudcache}prestashop>cloudcache_e2d5a00791bce9a01f99bc6fd613a39d'] = 'configurer';
 $_MODULE['<{cloudcache}prestashop>cloudcache_7171d1fc720355ddfb40537f566d8775'] = ') mais le fichier suivant existe. Fusionnez le manuellement.';
@@ -17,7 +20,7 @@ $_MODULE['<{cloudcache}prestashop>cloudcache_f0c746da3e0a8585f9431752a47f4471'] 
 $_MODULE['<{cloudcache}prestashop>cloudcache_108118f45620e45322c3d5862591c418'] = 'Zone ajouté.';
 $_MODULE['<{cloudcache}prestashop>cloudcache_a63636b538337a40fcdd3363c6707f15'] = 'Erreur pendant l\'ajout de la zone:';
 $_MODULE['<{cloudcache}prestashop>cloudcache_58f9c3960361509cf1d68bf643941ca1'] = 'Toutes les zones ont été synchronisé';
-$_MODULE['<{cloudcache}prestashop>cloudcache_c72fd9c59ceba8b6724e2fd47823a371'] = 'Erreur pendant la synchronisation des zones:';
+$_MODULE['<{cloudcache}prestashop>cloudcache_d94adc30711fa8a860d1da817844312a'] = 'Erreur lors de la synchronisation des zones.';
 $_MODULE['<{cloudcache}prestashop>cloudcache_3d015f6519d6a4266d58735cbb0646aa'] = 'Le cache a été purgé pour toutes les zones.';
 $_MODULE['<{cloudcache}prestashop>cloudcache_927a80bfb795058dd0d56b910ce75182'] = 'Erreur pendant la purge du cache pour toutes les zones.';
 $_MODULE['<{cloudcache}prestashop>cloudcache_0784546200bf0e0b692ce92fca030051'] = 'Le cache a été purgé pour la zone:';
@@ -33,7 +36,6 @@ $_MODULE['<{cloudcache}prestashop>cloudcache_43bff7159a5c1a845ce6bd00f90b692f'] 
 $_MODULE['<{cloudcache}prestashop>cloudcache_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
 $_MODULE['<{cloudcache}prestashop>cloudcache_42c4d8746ae597c8db2724998063b0f5'] = 'Aucune données';
 $_MODULE['<{cloudcache}prestashop>cloudcache_fd7695c3fa7df2aeb0957554d5007378'] = 'Type de zone invalide.';
-$_MODULE['<{cloudcache}prestashop>cloudcache_fb27ef14699bf81370e0c7384aa9e118'] = 'Erreur interne.';
 $_MODULE['<{cloudcache}prestashop>cloudcache_382b0f5185773fa0f67a8ed8056c7759'] = 'N/A';
 $_MODULE['<{cloudcache}prestashop>backofficetop_3f3391f413c692b76b90034e19074ea4'] = 'Vous économisez encore plus de performances en';
 $_MODULE['<{cloudcache}prestashop>backofficetop_baccc7910ea31b5cf2fedc346eee0fe6'] = 'utilisant le module CloudCache';
