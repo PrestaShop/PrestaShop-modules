@@ -26,6 +26,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 // Loading eBay Class Country Specification
+
 if (file_exists(dirname(__FILE__) . '/eBayCountrySpec.php'))
      require_once(dirname(__FILE__) . '/eBayCountrySpec.php');
 
@@ -51,7 +52,7 @@ class eBayRequest {
      private $findingUrl;
      private $findingVersion;
      private $compatibilityLevel;
-     private $debug = true;
+     private $debug = false;
      private $dev = true;
      private $country;
      private $language;
@@ -354,34 +355,16 @@ class eBayRequest {
           $requestXml .= '  <ViewAllNodes>true</ViewAllNodes>' . "\n";
           $requestXml .= '</GetCategoryFeatures>' . "\n";
 
-	function GetCategoryFeatures($featureID) {
-        // Set Api Call
-        $this->apiCall = 'GetCategoryFeatures';
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml, true);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
 
-        ///Build the request Xml string
-        $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-        $requestXml .= '<GetCategoryFeatures xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
-        $requestXml .= '  <RequesterCredentials>' . "\n";
-        $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
-        $requestXml .= '  </RequesterCredentials>' . "\n";
-        $requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>' . "\n";
-        $requestXml .= '  <FeatureID>' . $featureID . '</FeatureID>' . "\n";
-        $requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
-        $requestXml .= '  <Version>' . $this->compatibilityLevel . '</Version>' . "\n";
-        $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
-        $requestXml .= '  <ViewAllNodes>true</ViewAllNodes>' . "\n";
-        $requestXml .= '</GetCategoryFeatures>' . "\n";
-
-         // Send the request and get response
-        $responseXml = $this->makeRequest($requestXml, true);
-        if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
-            $this->error = 'Error sending ' . $this->apiCall . ' request';
-            return false;
-        }
-
-        // Load xml in array
-        $categoriesFeatures = array();
-        $response = simplexml_load_string($responseXml);
+          // Load xml in array
+          $categoriesFeatures = array();
+          $response = simplexml_load_string($responseXml);
 
           if ($featureID == 'VariationsEnabled') {
                foreach ($response->Category as $cat)
@@ -390,7 +373,6 @@ class eBayRequest {
           }
           else
                return array();
-
           return $categoriesFeatures;
      }
 
@@ -468,6 +450,82 @@ class eBayRequest {
           return $ReturnsAccepted;
      }
 
+     function getCarrier() {
+          $this->apiCall = 'GeteBayDetails';
+
+          $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+          $requestXml .= ' <DetailName>ShippingServiceDetails</DetailName>';
+          $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+          $requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '  <RequesterCredentials>' . "\n";
+          $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+          $requestXml .= '  </RequesterCredentials>' . "\n";
+          $requestXml .= '</GeteBayDetailsRequest>';
+
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
+
+          // Load xml in array
+          $categoriesFeatures = array();
+          $response = simplexml_load_string($responseXml);
+
+          $responseCarrier = array();
+          foreach ($response->ShippingServiceDetails as $carrier) {
+               $responseCarrier[] = array(
+                   'description' => strip_tags($carrier->Description->asXML()),
+                   'shippingService' => strip_tags($carrier->ShippingService->asXML()),
+                   'shippingServiceID' => strip_tags($carrier->ShippingServiceID->asXML()),
+                   'InternationalService' => (isset($carrier->InternationalService) ? strip_tags($carrier->InternationalService->asXML()) : false),
+                   'ServiceType' => strip_tags($carrier->ServiceType->asXML())
+               );
+          }
+
+          return $responseCarrier;
+     }
+
+     function getDeliveryTimeOptions() {
+          $this->apiCall = 'GeteBayDetails';
+
+          $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+          $requestXml .= ' <DetailName>DispatchTimeMaxDetails</DetailName>';
+          $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+          $requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '  <RequesterCredentials>' . "\n";
+          $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+          $requestXml .= '  </RequesterCredentials>' . "\n";
+          $requestXml .= '</GeteBayDetailsRequest>';
+
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
+
+
+
+          // Load xml in array
+          $categoriesFeatures = array();
+          $response = simplexml_load_string($responseXml);
+
+          $responseDeliveryTimeOptions = array();
+          foreach ($response->DispatchTimeMaxDetails as $DeliveryTimeOption) {
+               $responseDeliveryTimeOptions[] = array(
+                   'DispatchTimeMax' => strip_tags($DeliveryTimeOption->DispatchTimeMax->asXML()),
+                   'description' => strip_tags($DeliveryTimeOption->Description->asXML())
+               );
+          }
+          array_multisort($responseDeliveryTimeOptions);
+
+          return $responseDeliveryTimeOptions;
+     }
+
      /*      * *************************************************************** */
 
      /** Add / Update / End Product Methods *************************** */
@@ -509,7 +567,7 @@ class eBayRequest {
           $requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
           $requestXml .= '    <Currency>EUR</Currency>' . "\n";
-          $requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>' . "\n";
+          $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
@@ -627,6 +685,7 @@ class eBayRequest {
                $requestXml .= '    </PictureDetails>' . "\n";
           }
           $requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
+          $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
           if (!isset($datas['noPriceUpdate']))
                $requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
@@ -794,7 +853,7 @@ class eBayRequest {
           $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
           $requestXml .= '    </Description>' . "\n";
           $requestXml .= '    <ConditionID>1000</ConditionID>' . "\n";
-          $requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>' . "\n";
+          $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
@@ -959,7 +1018,7 @@ class eBayRequest {
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
           $requestXml .= '    <Currency>EUR</Currency>' . "\n";
           $requestXml .= '    <ConditionID>1000</ConditionID>' . "\n";
-          $requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>' . "\n";
+          $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";

@@ -588,7 +588,6 @@ class Ebay extends Module {
                else if (!ini_get('allow_url_fopen'))
                     return $this->_html . $this->displayError($this->l('You must enable allow_url_fopen option on your server if you want to use this module.'));
           }
-
           // If isset Post Var, post process else display form
           if (!empty($_POST) && (Tools::isSubmit('submitSave') || Tools::isSubmit('submitSave1') || Tools::isSubmit('submitSave2'))) {
                $this->_postValidation();
@@ -664,6 +663,8 @@ class Ebay extends Module {
                $this->_postValidationParameters();
           else if (Tools::getValue('section') == 'category')
                $this->_postValidationCategory();
+          else if (Tools::getValue('section') == 'shipping')
+               $this->_postValidationShipping();
           else if (Tools::getValue('section') == 'template')
                $this->_postValidationTemplateManager();
           else if (Tools::getValue('section') == 'sync')
@@ -677,6 +678,8 @@ class Ebay extends Module {
                $this->_postProcessParameters();
           else if (Tools::getValue('section') == 'category')
                $this->_postProcessCategory();
+          else if (Tools::getValue('section') == 'shipping')
+               $this->_postProcessShipping();
           else if (Tools::getValue('section') == 'template')
                $this->_postProcessTemplateManager();
           else if (Tools::getValue('section') == 'sync')
@@ -807,18 +810,20 @@ class Ebay extends Module {
 		<ul id="menuTab">
 				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
 				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
-				<li id="menuTab3" class="menuTabButton">3. ' . $this->l('Template manager') . '</li>
-				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('eBay Sync') . '</li>
-				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('Orders history') . '</li>
-				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Help') . '</li>
+                                <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
+      				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
+      				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
+      				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
+      				<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
 			</ul>
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
 				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>
-				<div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
-				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
-				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
-				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
+                                <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>
+      				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
+      				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
+      				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
+      				<div id="menuTab7Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
 			</div>
 			<br clear="left" />
 			<br />
@@ -1024,7 +1029,7 @@ class Ebay extends Module {
 
           $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
-          $tabHelp = "&id_tab=6";
+          $tabHelp = "&id_tab=7";
           // Display header
           $html = $this->getAlertCategories();
 
@@ -1193,6 +1198,44 @@ class Ebay extends Module {
      }
 
      /**
+      *  Shipping Fee Form Config Methods and delivery time
+      *
+      * */
+     private function _postValidationShipping() {
+          
+     }
+
+     private function _postProcessShipping() {
+          //Update global information about shipping (delivery time, ...)
+          if (Tools::getValue('submitSaveShippingGlobal')) {
+               $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
+          }
+     }
+
+     private function _displayFormShipping() {
+
+          global $smarty;
+
+          $eBay = new eBayRequest();
+          $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
+          $eBayCarrier = $eBay->getCarrier();
+          $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
+          $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
+
+
+          $smarty->assign(array(
+              'eBayCarrier' => $eBayCarrier,
+              'psCarrier' => $psCarrier,
+              'deliveryTime' => $deliveryTime,
+              'deliveryTimeOptions' => $deliveryTimeOptions,
+              'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
+          ));
+
+
+          return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
+     }
+
+     /**
       * Template Manager Form Config Methods
       *
       * */
@@ -1207,7 +1250,7 @@ class Ebay extends Module {
 
           // Display Form
           $forbiddenJs = array('textarea', 'script', 'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter', 'onmouseleave', 'onerror');
-          $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=template" method="post" class="form" id="configForm3">
+          $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=4&section=template" method="post" class="form" id="configForm3">
 				<fieldset style="border: 0">
 					<h4>' . $this->l('You can customise the template for your products page on eBay') . ' :</h4>
 					<p>' . $this->l('On eBay, your products are presented in templates that you have to prepare yourself. A good template will:') . '</p>
@@ -1466,7 +1509,7 @@ class Ebay extends Module {
 
 		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=4&section=sync" method="post" class="form" id="configForm4">
+		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=5&section=sync" method="post" class="form" id="configForm4">
 				<fieldset style="border: 0">
 					<h4>' . $this->l('You will now push your products on eBay.') . ' <b></h4>
 					<label style="width: 250px;">' . $this->l('Sync Mode') . ' : </label><br clear="left" /><br /><br />
@@ -2213,9 +2256,7 @@ class Ebay extends Module {
           return version_compare(_PS_VERSION_, '1.5', '>');
      }
 
-
-     private function getAlert() 
-     {
+     private function getAlert() {
           // Test alert
           $alert = array();
           if (!Configuration::get('EBAY_API_TOKEN'))
@@ -2283,20 +2324,18 @@ class Ebay extends Module {
           return $alert;
      }
 
-   protected function setConfiguration($configName, $configValue, $html = false) 
-   {
-       return $this->setConfigurationStatic($configName, $configValue, $html);
-   }
+     protected function setConfiguration($configName, $configValue, $html = false) {
+          return $this->setConfigurationStatic($configName, $configValue, $html);
+     }
 
-   public static function setConfigurationStatic($configName, $configValue, $html = false){
-        if (version_compare(_PS_VERSION_, '1.5', '>'))
-             return Configuration::updateValue($configName, $configValue, $html, 0, 0);
-        else
-             return Configuration::updateValue($configName, $configValue, $html);
-   }
+     public static function setConfigurationStatic($configName, $configValue, $html = false) {
+          if (version_compare(_PS_VERSION_, '1.5', '>'))
+               return Configuration::updateValue($configName, $configValue, $html, 0, 0);
+          else
+               return Configuration::updateValue($configName, $configValue, $html);
+     }
 
-     private function getContextShop() 
-     {
+     private function getContextShop() {
           $contextShop = NULL;
           if ($this->isVersionOneDotFive()) {
                $contextShop[] = Shop::getContext();
