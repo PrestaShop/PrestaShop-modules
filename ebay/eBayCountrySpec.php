@@ -199,8 +199,8 @@ class eBayCountrySpec
         $this->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
         if (in_array(strtolower($this->country->iso_code), $this->acceptedIso))
         {
-        	$eBay = new Ebay();
-            $eBay->setConfiguration('EBAY_COUNTRY_DEFAULT', $this->country->id);
+        	
+            Ebay::setConfigurationStatic('EBAY_COUNTRY_DEFAULT', $this->country->id);
             return $this->country;
         }
          return $this->country;
