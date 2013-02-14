@@ -313,14 +313,14 @@ class Ebay extends Module {
                $dateToCheckFromArray = explode('T', $dateToCheckFrom);
 
                $dateToCheckFrom = date("Y-m-d", strtotime($dateToCheckFromArray[0] . " -30 day"));
-               $dateToCheckFrom .= 'T' . $dateToCheckFromArray[1];
+               $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           } else {
                //If it is less than 30 days that we installed the module
                $dateToCheckFrom = Configuration::get('EBAY_INSTALL_DATE');
                $dateToCheckFromArray = explode('T', $dateToCheckFrom);
 
                $dateToCheckFrom = date("Y-m-d", strtotime($dateToCheckFromArray[0] . " -1 day"));
-               $dateToCheckFrom .= 'T' . $dateToCheckFromArray[1];
+               $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           }
 
           if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')) . 'T' . date('H:i:s', strtotime('-30 minutes')) . '.000Z') {
@@ -911,6 +911,7 @@ class Ebay extends Module {
           $html .='
                                              </select>
                                         </div>
+                                        <div style="clear:both;"></div>
                                         <label>' . $this->l('Description') . ' : </label>
                                         <div class="margin-form">
                                              <textarea name="ebay_returns_description" cols="120" rows="10">' . Tools::getValue('ebay_returns_description', Configuration::get('EBAY_RETURNS_DESCRIPTION')) . '</textarea>
