@@ -354,18 +354,34 @@ class eBayRequest {
           $requestXml .= '  <ViewAllNodes>true</ViewAllNodes>' . "\n";
           $requestXml .= '</GetCategoryFeatures>' . "\n";
 
+	function GetCategoryFeatures($featureID) {
+        // Set Api Call
+        $this->apiCall = 'GetCategoryFeatures';
 
-          // Send the request and get response
-          $responseXml = $this->makeRequest($requestXml);
-          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
-               $this->error = 'Error sending ' . $this->apiCall . ' request';
-               return false;
-          }
+        ///Build the request Xml string
+        $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+        $requestXml .= '<GetCategoryFeatures xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+        $requestXml .= '  <RequesterCredentials>' . "\n";
+        $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+        $requestXml .= '  </RequesterCredentials>' . "\n";
+        $requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>' . "\n";
+        $requestXml .= '  <FeatureID>' . $featureID . '</FeatureID>' . "\n";
+        $requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+        $requestXml .= '  <Version>' . $this->compatibilityLevel . '</Version>' . "\n";
+        $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+        $requestXml .= '  <ViewAllNodes>true</ViewAllNodes>' . "\n";
+        $requestXml .= '</GetCategoryFeatures>' . "\n";
 
+         // Send the request and get response
+        $responseXml = $this->makeRequest($requestXml, true);
+        if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+            $this->error = 'Error sending ' . $this->apiCall . ' request';
+            return false;
+        }
 
-          // Load xml in array
-          $categoriesFeatures = array();
-          $response = simplexml_load_string($responseXml);
+        // Load xml in array
+        $categoriesFeatures = array();
+        $response = simplexml_load_string($responseXml);
 
           if ($featureID == 'VariationsEnabled') {
                foreach ($response->Category as $cat)
