@@ -45,7 +45,7 @@ class WidgetCache
 
 	public function refresh()
 	{
-		return file_put_contents($this->_fileName, file_get_contents('https://www.trustedshops.com/bewertung/widget/widgets/'.$this->_ts_id.'.gif'));
+		return (bool)file_put_contents($this->_fileName, file_get_contents('https://www.trustedshops.com/bewertung/widget/widgets/'.$this->_ts_id.'.gif'));
 	}
 }
 
