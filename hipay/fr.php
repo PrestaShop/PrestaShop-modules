@@ -4,6 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{hipay}prestashop>hipay_50089d40ef4536271e8b16dbe5763c01'] = 'Hipay';
 $_MODULE['<{hipay}prestashop>hipay_035ab5edb2d8af86d51f6a92e65b4c0f'] = 'Paiement sécurisé Visa Mastercard et solutions européennes.';
+$_MODULE['<{hipay}prestashop>hipay_9d72404f720479faa0684f13d753ee06'] = 'Pour fonctionner correctement la librairie SOAP doit être installée.';
 $_MODULE['<{hipay}prestashop>hipay_5063b1c7402ff93d09defb875fa0085b'] = '[Hipay] Erreur: impossible de créer PaymentParams';
 $_MODULE['<{hipay}prestashop>hipay_a85eba4c6c699122b2bb1387ea4813ad'] = 'Panier';
 $_MODULE['<{hipay}prestashop>hipay_d4126d0b64579211d37151ef9b5af754'] = '[Hipay] Erreur : impossible de créer le produit \"panier\"';

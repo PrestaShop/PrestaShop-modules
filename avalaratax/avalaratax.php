@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.0.8';
+		$this->version = '3.0.7';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us', 'ca');
 		parent::__construct();
@@ -670,7 +670,7 @@ else
 
 		</script>
 		<div class="avalara-wrap">
-			<p class="avalara-intro"><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-logo" target="_blank"><img src="'.$this->_path.'img/avalara_logo.png" alt="Avalara" border="0" /></a><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-link" target="_blank">'.$this->l('Create an account').'</a>'.$this->l('Avalara and PrestaShop have partnered to provide the easiest way for you to accurately calculate and file sales tax.').'</p>
+			<p class="avalara-intro"><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-logo" target="_blank"><img src="'.$this->_path.'img/avalara_logo.png" alt="Avalara" border="0" /></a><a href="http://www.avalara.com/e-commerce/prestashop" class="avalara-link" target="_blank">'.$this->l('Create an account').'</a>'.$this->l('Avalara and PrestaShop have partnered to provide the easiest way for you to accurately calculate and fill sales tax.').'</p>
 			<div class="clear"></div>
 			<div class="avalara-content">
 				<div class="avalara-video">
