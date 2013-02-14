@@ -647,7 +647,6 @@ class Ebay extends Module {
                else if (!ini_get('allow_url_fopen'))
                     return $this->_html . $this->displayError($this->l('You must enable allow_url_fopen option on your server if you want to use this module.'));
           }
-
           // If isset Post Var, post process else display form
           if (!empty($_POST) && (Tools::isSubmit('submitSave') || Tools::isSubmit('submitSave1') || Tools::isSubmit('submitSave2'))) 
           {
@@ -731,6 +730,8 @@ class Ebay extends Module {
                $this->_postValidationParameters();
           else if (Tools::getValue('section') == 'category')
                $this->_postValidationCategory();
+          else if(Tools::getValue('section') == 'shipping')
+                $this->_postValidationShipping();
           else if (Tools::getValue('section') == 'template')
                $this->_postValidationTemplateManager();
           else if (Tools::getValue('section') == 'sync')
@@ -744,6 +745,8 @@ class Ebay extends Module {
                $this->_postProcessParameters();
           else if (Tools::getValue('section') == 'category')
                $this->_postProcessCategory();
+          else if (Tools::getValue('section') == 'shipping')
+                $this->_postProcessShipping();
           else if (Tools::getValue('section') == 'template')
                $this->_postProcessTemplateManager();
           else if (Tools::getValue('section') == 'sync')
@@ -880,41 +883,43 @@ class Ebay extends Module {
      private function _displayFormConfig() 
      {
           $html = '
-		<ul id="menuTab">
-				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
-				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
-				<li id="menuTab3" class="menuTabButton">3. ' . $this->l('Template manager') . '</li>
-				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('eBay Sync') . '</li>
-				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('Orders history') . '</li>
-				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Help') . '</li>
-			</ul>
-			<div id="tabList">
-				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
-				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>
-				<div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
-				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
-				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
-				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
-			</div>
-			<br clear="left" />
-			<br />
-			<style>
-				#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
-				#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
-				#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
-				#tabList { clear: left; }
-				.tabItem { display: none; }
-				.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
-			</style>
-			<script>
-				$(".menuTabButton").click(function () {
-				  $(".menuTabButton.selected").removeClass("selected");
-				  $(this).addClass("selected");
-				  $(".tabItem.selected").removeClass("selected");
-				  $("#" + this.id + "Sheet").addClass("selected");
-				});
-			</script>
-		';
+      		<ul id="menuTab">
+      				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
+      				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
+              <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
+      				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
+      				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
+      				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
+      				<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
+      			</ul>
+      			<div id="tabList">
+      				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
+      				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>
+              <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>
+      				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
+      				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
+      				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
+      				<div id="menuTab7Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
+      			</div>
+      			<br clear="left" />
+      			<br />
+      			<style>
+      				#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
+      				#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
+      				#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
+      				#tabList { clear: left; }
+      				.tabItem { display: none; }
+      				.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+      			</style>
+      			<script>
+      				$(".menuTabButton").click(function () {
+      				  $(".menuTabButton.selected").removeClass("selected");
+      				  $(this).addClass("selected");
+      				  $(".tabItem.selected").removeClass("selected");
+      				  $("#" + this.id + "Sheet").addClass("selected");
+      				});
+      			</script>
+      		';
           if (isset($_GET['id_tab']))
                $html .= '<script>
           				  $(".menuTabButton.selected").removeClass("selected");
@@ -932,45 +937,45 @@ class Ebay extends Module {
 
           // Display Form
           $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
-				<fieldset style="border: 0">
-					<h4>' . $this->l('To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.') . '</h4>
-					<label>' . $this->l('eBay Identifier') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_identifier" value="' . Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : ')') . '/>
-						<p>' . (Configuration::get('EBAY_IDENTIFIER') ? '<a href="http://shop.ebay.fr/' . Configuration::get('EBAY_IDENTIFIER') . '/m.html?_ipg=50&_sop=12&_rdc=1" target="_blank">' . $this->l('Your products on eBay') . '</a>' : $this->l('Your eBay identifier')) . '</p>
-					</div>
-					<label>' . $this->l('eBay shop') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop" value="' . Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP'))) . '" /> <b>' . $this->l('The use of eBay\'s module require to open an eBay store') . '</b>
-						<p>' . (Configuration::get('EBAY_SHOP') ? '<a href="http://stores.ebay.fr/' . Configuration::get('EBAY_SHOP') . '" target="_blank">' . $this->l('Your shop on eBay') . '</a>' : '<a href="' . $this->createShopUrl . '" style="color:#7F7F7F;">' . $this->l('Open your shop')) . '</a></p>
-					</div>
-					<label>' . $this->l('Paypal Identifier (e-mail)') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_paypal_email" value="' . Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))) . '" />
-						<p>' . $this->l('You have to set your PayPal e-mail account, it\'s the only payment available with this module') . '</p>
-					</div>
-					<label>' . $this->l('Shipping method') . ' : </label>
-					<div class="margin-form">
-						<select name="ebay_shipping_carrier_id">';
-          foreach ($this->_shippingMethod as $id => $val)
-               $html .= '<option value="' . $id . '" ' . (Tools::getValue('ebay_shipping_carrier_id', Configuration::get('EBAY_SHIPPING_CARRIER_ID')) == $id ? 'selected="selected"' : '') . '>' . $val['description'] . '</option>';
-          $html .= '</select>
-						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
-					</div>
-					<label>' . $this->l('Shipping cost') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shipping_cost" value="' . Tools::safeOutput(Tools::getValue('ebay_shipping_cost', Configuration::get('EBAY_SHIPPING_COST'))) . '" /> ' . $configCurrency->sign . '
-						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
-					</div>
-					<label>' . $this->l('Shop postal code') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop_postalcode" value="' . Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))) . '" />
-						<p>' . $this->l('Your shop\'s postal code') . '</p>
-					</div>
-				</fieldset>
-				<div class="margin-form" id="buttonEbayParameters"><input class="button" name="submitSave" type="submit" id="save_ebay_parameters" value="' . $this->l('Save') . '" /></div>
-				<div class="margin-form" id="categoriesProgression" style="font-weight: bold;"></div>
-			</form>';
+				  <fieldset style="border: 0">
+  					<h4>' . $this->l('To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.') . '</h4>
+  					<label>' . $this->l('eBay Identifier') . ' : </label>
+  					<div class="margin-form">
+  						<input type="text" size="20" name="ebay_identifier" value="' . Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : ')') . '/>
+  						<p>' . (Configuration::get('EBAY_IDENTIFIER') ? '<a href="http://shop.ebay.fr/' . Configuration::get('EBAY_IDENTIFIER') . '/m.html?_ipg=50&_sop=12&_rdc=1" target="_blank">' . $this->l('Your products on eBay') . '</a>' : $this->l('Your eBay identifier')) . '</p>
+  					</div>
+  					<label>' . $this->l('eBay shop') . ' : </label>
+  					<div class="margin-form">
+  						<input type="text" size="20" name="ebay_shop" value="' . Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP'))) . '" /> <b>' . $this->l('The use of eBay\'s module require to open an eBay store') . '</b>
+  						<p>' . (Configuration::get('EBAY_SHOP') ? '<a href="http://stores.ebay.fr/' . Configuration::get('EBAY_SHOP') . '" target="_blank">' . $this->l('Your shop on eBay') . '</a>' : '<a href="' . $this->createShopUrl . '" style="color:#7F7F7F;">' . $this->l('Open your shop')) . '</a></p>
+  					</div>
+  					<label>' . $this->l('Paypal Identifier (e-mail)') . ' : </label>
+  					<div class="margin-form">
+  						<input type="text" size="20" name="ebay_paypal_email" value="' . Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))) . '" />
+  						<p>' . $this->l('You have to set your PayPal e-mail account, it\'s the only payment available with this module') . '</p>
+  					</div>
+  					<label>' . $this->l('Shipping method') . ' : </label>
+  					<div class="margin-form">
+  						<select name="ebay_shipping_carrier_id">';
+            foreach ($this->_shippingMethod as $id => $val)
+                 $html .= '<option value="' . $id . '" ' . (Tools::getValue('ebay_shipping_carrier_id', Configuration::get('EBAY_SHIPPING_CARRIER_ID')) == $id ? 'selected="selected"' : '') . '>' . $val['description'] . '</option>';
+            $html .= '</select>
+  						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
+  					</div>
+  					<label>' . $this->l('Shipping cost') . ' : </label>
+  					<div class="margin-form">
+  						<input type="text" size="20" name="ebay_shipping_cost" value="' . Tools::safeOutput(Tools::getValue('ebay_shipping_cost', Configuration::get('EBAY_SHIPPING_COST'))) . '" /> ' . $configCurrency->sign . '
+  						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
+  					</div>
+  					<label>' . $this->l('Shop postal code') . ' : </label>
+  					<div class="margin-form">
+  						<input type="text" size="20" name="ebay_shop_postalcode" value="' . Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))) . '" />
+  						<p>' . $this->l('Your shop\'s postal code') . '</p>
+  					</div>
+  				</fieldset>
+  				<div class="margin-form" id="buttonEbayParameters"><input class="button" name="submitSave" type="submit" id="save_ebay_parameters" value="' . $this->l('Save') . '" /></div>
+  				<div class="margin-form" id="categoriesProgression" style="font-weight: bold;"></div>
+    			</form>';
 
           if (!Configuration::get('EBAY_CATEGORY_LOADED')) 
           {
@@ -1064,8 +1069,8 @@ class Ebay extends Module {
           // Load categories only if necessary
           if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category')
                return '<p align="center"><b>' . $this->l('Your categories have already been configured.') . '</b></p>
-			<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form">
-			<p align="center"><input class="button" name="submitSave" type="submit" value="' . $this->l('See Categories') . '" /></p></form>';
+                			<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form">
+                			<p align="center"><input class="button" name="submitSave" type="submit" value="' . $this->l('See Categories') . '" /></p></form>';
 
           // Display eBay Categories
           if (!Configuration::get('EBAY_CATEGORY_LOADED')) 
@@ -1086,28 +1091,28 @@ class Ebay extends Module {
 
           $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
-          $tabHelp = "&id_tab=6";
+          $tabHelp = "&id_tab=7";
           // Display header
           $html = $this->getAlertCategories();
 
           $html .= '<p><b>' . $this->l('To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.') . '</b></p><br />
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
-			<p><b>' . $this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.') . '</b>
-			<input class="button" name="submitSave" type="submit" value="' . $this->l('Suggest Categories') . '" />
-			</p><br />
-		</form>
+      		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
+      			<p><b>' . $this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.') . '</b>
+      			<input class="button" name="submitSave" type="submit" value="' . $this->l('Suggest Categories') . '" />
+      			</p><br />
+      		</form>
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form" id="configForm2">
-		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
-			<thead>
-				<tr class="nodrag nodrop">
-					<th style="width:110px">' . $this->l('Category') . ' <br/>(' . $this->l('Quantity in stock') . ')</th>
-					<th>' . $this->l('eBay Category') . '</th>
-					<th style="width:128px">' . $this->l('Price impact') . '<a title="' . $this->l('Help') . '" href="' . $_SERVER['REQUEST_URI'] . $tabHelp . '" ><img src="' . $this->_path . 'help.png" width="25" alt="help_picture"/></a></th>
-				</tr>
-			</thead>
-			<tbody>';
+      		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form" id="configForm2">
+      		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
+      			<thead>
+      				<tr class="nodrag nodrop">
+      					<th style="width:110px">' . $this->l('Category') . ' <br/>(' . $this->l('Quantity in stock') . ')</th>
+      					<th>' . $this->l('eBay Category') . '</th>
+      					<th style="width:128px">' . $this->l('Price impact') . '<a title="' . $this->l('Help') . '" href="' . $_SERVER['REQUEST_URI'] . $tabHelp . '" ><img src="' . $this->_path . 'help.png" width="25" alt="help_picture"/></a></th>
+      				</tr>
+      			</thead>
+      			<tbody>';
 
 
           // Displaying categories
@@ -1133,59 +1138,59 @@ class Ebay extends Module {
                if ($k % 2 != 0)
                     $alt = ' class="alt_row"';
                $html .= '<tr' . $alt . '>
-				<td>' . $c['name'] . ' (' . $getCatInStock[0]['instockProduct'] . ')</td>
-				<td id="categoryPath' . $c['id_category'] . '">
-					<select name="category' . $c['id_category'] . '" id="categoryLevel1-' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(1, ' . $c['id_category'] . ');">
-						<option value="0">' . $this->l('No category selected') . '</option>';
-               foreach ($eBayCategoryList as $ec)
-                    $html .= '<option value="' . $ec['id_ebay_category'] . '">' . $ec['name'] . ($ec['is_multi_sku'] == 1 ? ' *' : '') . '</option>';
-               $html .= '</select>';
-               if (isset($categoryConfigList[$c['id_category']]))
-                    $html .= '<script>$(document).ready(function() { loadCategoryMatch(' . $c['id_category'] . '); });</script>';
-               $html .= '</td>
-				<td><select name="percent' . $c['id_category'] . '" id="percent' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px;">';
-               for ($i = 5; $i >= -80; $i--)
-                    $html .= '<option value="' . $i . '" ' . ((isset($categoryConfigList[$c['id_category']]) && $categoryConfigList[$c['id_category']]['percent'] == $i) || (!isset($categoryConfigList[$c['id_category']]) && $i == 0) ? 'selected="selected"' : '') . '>' . (($i >= 0) ? $i : '- ' . ($i * -1)) . ' %</option>';
+        				<td>' . $c['name'] . ' (' . $getCatInStock[0]['instockProduct'] . ')</td>
+        				<td id="categoryPath' . $c['id_category'] . '">
+        					<select name="category' . $c['id_category'] . '" id="categoryLevel1-' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(1, ' . $c['id_category'] . ');">
+        						<option value="0">' . $this->l('No category selected') . '</option>';
+                       foreach ($eBayCategoryList as $ec)
+                            $html .= '<option value="' . $ec['id_ebay_category'] . '">' . $ec['name'] . ($ec['is_multi_sku'] == 1 ? ' *' : '') . '</option>';
+                       $html .= '</select>';
+                       if (isset($categoryConfigList[$c['id_category']]))
+                            $html .= '<script>$(document).ready(function() { loadCategoryMatch(' . $c['id_category'] . '); });</script>';
+                       $html .= '</td>
+        				<td><select name="percent' . $c['id_category'] . '" id="percent' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px;">';
+                       for ($i = 5; $i >= -80; $i--)
+                            $html .= '<option value="' . $i . '" ' . ((isset($categoryConfigList[$c['id_category']]) && $categoryConfigList[$c['id_category']]['percent'] == $i) || (!isset($categoryConfigList[$c['id_category']]) && $i == 0) ? 'selected="selected"' : '') . '>' . (($i >= 0) ? $i : '- ' . ($i * -1)) . ' %</option>';
                $html .= '</select></td></tr>';
           }
 
           $html .= '
-			</tbody>
-		</table><br />
-		<div class="margin-form"><input class="button" name="submitSave" type="submit" value="' . $this->l('Save') . '" /></div>
-		</form>
+        			</tbody>
+        		</table><br />
+        		<div class="margin-form"><input class="button" name="submitSave" type="submit" value="' . $this->l('Save') . '" /></div>
+        		</form>
 
-		<p><b>' . $this->l('Warning : Only defaults products categories are used for the configuration.') . '</b></p><br />
+        		<p><b>' . $this->l('Warning : Only defaults products categories are used for the configuration.') . '</b></p><br />
 
-		<p align="left">
-			* ' . $this->l('Some categories benefit from eBay\'s multi-version from which allows to publish one product with multiple versions.') . '<br />
-			' . $this->l('For the categories which do not gain this functionality, one ad will be added for each version of the product.') . '<br />
-			<a href="http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings" target="_blank">' . $this->l('Click here for more informations on multi-variation listings') . '</a>
-		</p><br /><br />
+        		<p align="left">
+        			* ' . $this->l('Some categories benefit from eBay\'s multi-version from which allows to publish one product with multiple versions.') . '<br />
+        			' . $this->l('For the categories which do not gain this functionality, one ad will be added for each version of the product.') . '<br />
+        			<a href="http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings" target="_blank">' . $this->l('Click here for more informations on multi-variation listings') . '</a>
+        		</p><br /><br />
 
-		<script>
-			function loadCategoryMatch(id_category)
-			{
-				$.ajax({
-				  async: false,
-				  url: "' . _MODULE_DIR_ . 'ebay/ajax/loadCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&id_category=" + id_category + "&time=' . pSQL(date('Ymdhis')) . '",
-				  success: function(data) { $("#categoryPath" + id_category).html(data); }
-				});
-			}
-			function changeCategoryMatch(level, id_category)
-			{
-				var levelParams = "&level1=" + $("#categoryLevel1-" + id_category).val();
-				if (level > 1) levelParams += "&level2=" + $("#categoryLevel2-" + id_category).val();
-				if (level > 2) levelParams += "&level3=" + $("#categoryLevel3-" + id_category).val();
-				if (level > 3) levelParams += "&level4=" + $("#categoryLevel4-" + id_category).val();
-				if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
+        		<script>
+        			function loadCategoryMatch(id_category)
+        			{
+        				$.ajax({
+        				  async: false,
+        				  url: "' . _MODULE_DIR_ . 'ebay/ajax/loadCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&id_category=" + id_category + "&time=' . pSQL(date('Ymdhis')) . '",
+        				  success: function(data) { $("#categoryPath" + id_category).html(data); }
+        				});
+        			}
+        			function changeCategoryMatch(level, id_category)
+        			{
+        				var levelParams = "&level1=" + $("#categoryLevel1-" + id_category).val();
+        				if (level > 1) levelParams += "&level2=" + $("#categoryLevel2-" + id_category).val();
+        				if (level > 2) levelParams += "&level3=" + $("#categoryLevel3-" + id_category).val();
+        				if (level > 3) levelParams += "&level4=" + $("#categoryLevel4-" + id_category).val();
+        				if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
 
-				$.ajax({
-				  url: "' . _MODULE_DIR_ . 'ebay/ajax/changeCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '&id_category=" + id_category + "&level=" + level + levelParams,
-				  success: function(data) { $("#categoryPath" + id_category).html(data); }
-				});
-			}
-		</script>';
+        				$.ajax({
+        				  url: "' . _MODULE_DIR_ . 'ebay/ajax/changeCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '&id_category=" + id_category + "&level=" + level + levelParams,
+        				  success: function(data) { $("#categoryPath" + id_category).html(data); }
+        				});
+        			}
+        		</script>';
           return $html;
      }
 
@@ -1263,6 +1268,53 @@ class Ebay extends Module {
           $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
      }
 
+
+     /**
+     *  Shipping Fee Form Config Methods and delivery time
+     *
+     **/
+
+     private function _postValidationShipping()
+     {
+          
+     }
+
+     private function _postProcessShipping()
+     {
+        //Update global information about shipping (delivery time, ...)
+        if(Tools::getValue('submitSaveShippingGlobal')){
+          $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
+        }
+     }
+
+     private function _displayFormShipping()
+     {
+
+        global $smarty;
+
+        $eBay = new eBayRequest();
+        $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
+        $eBayCarrier = $eBay->getCarrier();
+        $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
+        $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
+
+
+        $smarty->assign(array(
+          'eBayCarrier' => $eBayCarrier,
+          'psCarrier' => $psCarrier,
+          'deliveryTime' => $deliveryTime,
+          'deliveryTimeOptions' => $deliveryTimeOptions,
+          'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
+        ));
+
+
+       return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
+
+     }
+
+
+
+
      /**
 	  * Template Manager Form Config Methods
       *
@@ -1279,8 +1331,8 @@ class Ebay extends Module {
 
           // Display Form
           $forbiddenJs = array('textarea', 'script', 'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter', 'onmouseleave', 'onerror');
-          $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=template" method="post" class="form" id="configForm3">
-				<fieldset style="border: 0">
+          $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=4&section=template" method="post" class="form" id="configForm3">
+				  <fieldset style="border: 0">
 					<h4>' . $this->l('You can customise the template for your products page on eBay') . ' :</h4>
 					<p>' . $this->l('On eBay, your products are presented in templates that you have to prepare yourself. A good template will:') . '</p>
 					<ul style="padding-left:15px;">
@@ -1366,8 +1418,8 @@ class Ebay extends Module {
           }
 
           $html .= '</fieldset>
-				<div class="margin-form"><input class="button" name="submitSave" value="' . $this->l('Save') . '" type="submit"></div>
-			</form>';
+    				<div class="margin-form"><input class="button" name="submitSave" value="' . $this->l('Save') . '" type="submit"></div>
+    			</form>';
 
 
           return $html;
@@ -1550,7 +1602,7 @@ class Ebay extends Module {
 
 		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=4&section=sync" method="post" class="form" id="configForm4">
+		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller'])  : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=5&section=sync" method="post" class="form" id="configForm4">
 				<fieldset style="border: 0">
 					<h4>' . $this->l('You will now push your products on eBay.') . ' <b></h4>
 					<label style="width: 250px;">' . $this->l('Sync Mode') . ' : </label><br clear="left" /><br /><br />
