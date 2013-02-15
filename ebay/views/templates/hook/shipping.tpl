@@ -75,7 +75,7 @@
 			return stringShippingFee;
 	}
 
-	function addInternationalShippingFee()
+	function addInternationalShippingFee(){}
 
 
 	jQuery(document).ready(function($) {
