@@ -59,7 +59,7 @@ class Ebay extends Module {
      public function __construct() {
           $this->name = 'ebay';
           $this->tab = 'market_place';
-          $this->version = '1.3.6';
+          $this->version = '1.3.7';
           $this->author = 'PrestaShop';
           parent::__construct();
 
@@ -236,6 +236,11 @@ class Ebay extends Module {
           if ($version == '1.1' || empty($version)) {
                // Upgrade SQL
                include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
+          } else if (version_compare($version, '1.3.7', '<')) { // Waif for 1.4.0
+               include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
+          }
+
+          if (isset($sql) && is_array($sql) && sizeof($sql)) {
                foreach ($sql as $s)
                     if (!Db::getInstance()->execute($s))
                          return false;
@@ -1041,6 +1046,11 @@ class Ebay extends Module {
 			<input class="button" name="submitSave" type="submit" value="' . $this->l('Suggest Categories') . '" />
 			</p><br />
 		</form>
+                <p>
+                    <b>
+                         ' . $this->l("You can impact price either by adding a fixed an amount or by increasing by percentage. If you choose to increase with percentage add '%' at the end of your number") . '
+                    </b>
+                </p>
 
 		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form" id="configForm2">
 		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
@@ -1086,10 +1096,10 @@ class Ebay extends Module {
                if (isset($categoryConfigList[$c['id_category']]))
                     $html .= '<script>$(document).ready(function() { loadCategoryMatch(' . $c['id_category'] . '); });</script>';
                $html .= '</td>
-				<td><select name="percent' . $c['id_category'] . '" id="percent' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px;">';
-               for ($i = 5; $i >= -80; $i--)
-                    $html .= '<option value="' . $i . '" ' . ((isset($categoryConfigList[$c['id_category']]) && $categoryConfigList[$c['id_category']]['percent'] == $i) || (!isset($categoryConfigList[$c['id_category']]) && $i == 0) ? 'selected="selected"' : '') . '>' . (($i >= 0) ? $i : '- ' . ($i * -1)) . ' %</option>';
-               $html .= '</select></td></tr>';
+				<td>
+                                    <input type="text" size="4" maxlength="4" name="percent' . $c['id_category'] . '" id="percent' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px;" value="' . (isset($categoryConfigList[$c['id_category']]['percent']) ? $categoryConfigList[$c['id_category']]['percent'] : '') . '" />
+                                </td>
+                         </tr>';
           }
 
           $html .= '
@@ -1899,10 +1909,14 @@ class Ebay extends Module {
 
                               $price = $variations[$c['id_product'] . '-' . $c['id_product_attribute']]['price_static'];
                               $price_original = $price;
-                              if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
-                                   $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-                              else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
-                                   $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                              if (preg_match("#[-]{0,1}[0-9]{1,2}%$#is", $categoryDefaultCache[$product->id_category_default]['percent'])) {
+                                   if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
+                                        $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
+                                   else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+                                        $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                              } else {
+                                   $price += $categoryDefaultCache[$product->id_category_default]['percent'];
+                              }
 
                               $variations[$c['id_product'] . '-' . $c['id_product_attribute']]['price'] = round($price, 2);
                               if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0) {
@@ -1922,10 +1936,14 @@ class Ebay extends Module {
                     // Load basic price
                     $price = Product::getPriceStatic((int) $product->id, true);
                     $price_original = $price;
-                    if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
-                         $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-                    else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
-                         $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                    if (preg_match("#[-]{0,1}[0-9]{1,2}%$#is", $categoryDefaultCache[$product->id_category_default]['percent'])) {
+                         if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
+                              $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
+                         else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+                              $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                    } else {
+                         $price += $categoryDefaultCache[$product->id_category_default]['percent'];
+                    }
                     $price = round($price, 2);
 
 
@@ -1977,6 +1995,8 @@ class Ebay extends Module {
                     // Price Update
                     if (isset($p['noPriceUpdate']))
                          $datas['noPriceUpdate'] = $p['noPriceUpdate'];
+
+                    $categoryDefaultCache[$product->id_category_default]['percent'] = preg_replace("#%$#is", "", $categoryDefaultCache[$product->id_category_default]['percent']);
 
                     // Save percent and price discount
                     if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0) {
@@ -2069,7 +2089,7 @@ class Ebay extends Module {
                                        (isset($datasTmp['picturesMedium'][2]) ? '<img src="' . $datasTmp['picturesMedium'][2] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                                        (isset($datasTmp['picturesMedium'][3]) ? '<img src="' . $datasTmp['picturesMedium'][3] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                                        Tools::displayPrice($datasTmp['price']),
-                                       (isset($datasTmp['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datasTmp['price_original']) . '</del> (remise de ' . round($datasTmp['price_percent']) . '%)' : ''),
+                                       (isset($datasTmp['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datasTmp['price_original']) . '</del> (remise de ' . round($datasTmp['price_percent']) . ')' : ''),
                                            ), $datas['description']
                                    );
 
@@ -2121,7 +2141,7 @@ class Ebay extends Module {
                              (isset($datas['picturesMedium'][2]) ? '<img src="' . $datas['picturesMedium'][2] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                              (isset($datas['picturesMedium'][3]) ? '<img src="' . $datas['picturesMedium'][3] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                              Tools::displayPrice($datas['price']),
-                             (isset($datas['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datas['price_original']) . '</del> (remise de ' . round($datas['price_percent']) . '%)' : ''),
+                             (isset($datas['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datas['price_original']) . '</del> (remise de ' . round($datas['price_percent']) . ')' : ''),
                                  ), $datas['description']
                          );
                          // Check if product exists on eBay
