@@ -844,10 +844,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 		
 		
-		if (Tools::isSubmit('putUnderMaintenance'))
+		if (Tools14::isSubmit('putUnderMaintenance'))
 			Configuration::updateValue('PS_SHOP_ENABLE', 0);
 		
-		if (Tools::isSubmit('customSubmitAutoUpgrade'))
+		if (Tools14::isSubmit('customSubmitAutoUpgrade'))
 		{
 			$config_keys = array_keys(array_merge($this->_fieldsUpgradeOptions, $this->_fieldsBackupOptions));
 			$config = array();
@@ -856,13 +856,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$config[$key] = $_POST[$key];
 			$res = $this->writeConfig($config);
 			if ($res)
-				Tools::redirectAdmin($currentIndex.'&conf=6&token='.Tools::getValue('token'));
+				Tools14::redirectAdmin($currentIndex.'&conf=6&token='.Tools14::getValue('token'));
 		}
 
-		if (Tools::isSubmit('deletebackup'))
+		if (Tools14::isSubmit('deletebackup'))
 		{
 			$res = true;
-			$name = Tools::getValue('name');
+			$name = Tools14::getValue('name');
 			$filelist = scandir($this->backupPath);
 			foreach($filelist as $filename)
 				// the following will match file or dir related to the selected backup
@@ -875,7 +875,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name);
 				}
 			if ($res)
-				Tools::redirectAdmin($currentIndex.'&conf=1&token='.Tools::getValue('token'));
+				Tools14::redirectAdmin($currentIndex.'&conf=1&token='.Tools14::getValue('token'));
 			else
 				$this->_errors[] = sprintf($this->l('Error when trying to delete backups %s'), $name);
 		}
@@ -3096,7 +3096,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					return false;
 				}
 
-				$written += fwrite($fp, '/* Backup ' . $this->nextParams['dbStep'] . ' for ' . Tools::getHttpHost(false, false) . __PS_BASE_URI__ . "\n *  at " . date('r') . "\n */\n");
+				$written += fwrite($fp, '/* Backup ' . $this->nextParams['dbStep'] . ' for ' . Tools14::getHttpHost(false, false) . __PS_BASE_URI__ . "\n *  at " . date('r') . "\n */\n");
 				$written += fwrite($fp, "\n".'SET NAMES \'utf8\';'."\n\n");
 				// end init file
 			}
@@ -3621,7 +3621,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			}
 		}
 
-		if (!method_exists('Tools', 'apacheModExists') || Tools::apacheModExists('evasive'))
+		if (!method_exists('Tools', 'apacheModExists') || Tools14::apacheModExists('evasive'))
 			sleep(1);
 	}
 
@@ -4091,7 +4091,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 				if (version_compare(_PS_VERSION_, '1.4.0.0', '<='))
 				{
 					if (method_exists('Tools','getAdminTokenLite'))
-						$token_preferences = Tools::getAdminTokenLite('AdminPreferences');
+						$token_preferences = Tools14::getAdminTokenLite('AdminPreferences');
 					else
 						$token_preferences = Tools14::getAdminTokenLite('AdminPreferences');
 					$this->_html .= '<div class="clear">&nbsp;</div><b>'.$this->l('Smarty 3 Usage:').'</b> <img src="'.$srcShopStatus.'" />'.$label;
@@ -4139,7 +4139,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			$this->_html .= 
 				'<div class="clear"></div>
 				<a class="button button-autoupgrade" 
-					href="index.php?tab=AdminSelfUpgrade&token='.Tools::getAdminToken('AdminSelfUpgrade'.(int)Tab::getIdFromClassName('AdminSelfUpgrade').(int)$cookie->id_employee)
+					href="index.php?tab=AdminSelfUpgrade&token='.Tools14::getAdminToken('AdminSelfUpgrade'.(int)Tab::getIdFromClassName('AdminSelfUpgrade').(int)$cookie->id_employee)
 				.'&refreshCurrentVersion=1">'.$this->l('Check if a new version is available').'</a>';
 			
 			$this->_html .= '<div><span style="font-style: italic; font-size: 11px;">'.sprintf($this->l('Last check: %s'), Configuration::get('PS_LAST_VERSION_CHECK') ? date('Y-m-d H:i:s', Configuration::get('PS_LAST_VERSION_CHECK')) : $this->l('never')).'</span></div>';
@@ -4147,7 +4147,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		else
 		{
 			$this->_html .= '<div class="clear"></div><a class="button button-autoupgrade" href="index.php?tab=AdminSelfUpgrade&token='
-				.Tools::getAdminToken('AdminSelfUpgrade'
+				.Tools14::getAdminToken('AdminSelfUpgrade'
 					.(int)Tab::getIdFromClassName('AdminSelfUpgrade')
 					.(int)$cookie->id_employee)
 				.'&refreshCurrentVersion=1">'.$this->l('refresh the page').'</a>';
@@ -4219,7 +4219,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 					else
 						$upgrader->checkPSVersion(true, array('minor'));
 					
-					Tools::redirectAdmin($currentIndex.'&conf=5&token='.Tools::getValue('token'));
+					Tools14::redirectAdmin($currentIndex.'&conf=5&token='.Tools14::getValue('token'));
 				}
 				else
 				{
@@ -4281,7 +4281,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$js = '';
 
 		if (method_exists('Tools','getAdminTokenLite'))
-			$token_preferences = Tools::getAdminTokenLite('AdminPreferences');
+			$token_preferences = Tools14::getAdminTokenLite('AdminPreferences');
 		else
 			$token_preferences = Tools14::getAdminTokenLite('AdminPreferences');
 
@@ -4308,7 +4308,7 @@ function updateInfoStep(msg){
 }
 
 function addError(arrError){
-	if (arrError.length)
+	if (typeof(arrError) != "undefined" && arrError.length)
 	{
 		$("#errorDuringUpgrade").show();
 		for(i=0;i<arrError.length;i++)
@@ -4449,7 +4449,7 @@ $(document).ready(function(){
 		if($(this).val() != 0)
 		{
 			$(this).after("<a class=\"button confirmBeforeDelete\" href=\"index.php?tab=AdminSelfUpgrade&token='
-			.Tools::getAdminToken('AdminSelfUpgrade'.(int)(Tab::getIdFromClassName('AdminSelfUpgrade')).(int)$cookie->id_employee)
+			.Tools14::getAdminToken('AdminSelfUpgrade'.(int)(Tab::getIdFromClassName('AdminSelfUpgrade')).(int)$cookie->id_employee)
 			.'&amp;deletebackup&amp;name="+$(this).val()+"\">'
 			.'<img src=\"../img/admin/disabled.gif\" />'.$this->l('Delete').'</a>");
 			$(this).next().click(function(e){

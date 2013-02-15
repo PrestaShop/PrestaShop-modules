@@ -26,27 +26,27 @@
 
 function fd($var)
 {
-	return (Tools::fd($var));
+	return (Tools14::fd($var));
 }
 
 function p($var)
 {
-	return (Tools::p($var));
+	return (Tools14::p($var));
 }
 
 function d($var)
 {
-	Tools::d($var);
+	Tools14::d($var);
 }
 
 function ppp($var)
 {
-	return (Tools::p($var));
+	return (Tools14::p($var));
 }
 
 function ddd($var)
 {
-	Tools::d($var);
+	Tools14::d($var);
 }
 
 /**
@@ -71,6 +71,5 @@ function bqSQL($string)
  */
 function nl2br2($string)
 {
-	Tools::displayAsDeprecated();
-	return Tools::nl2br($string);
+	return Tools14::nl2br($string);
 }

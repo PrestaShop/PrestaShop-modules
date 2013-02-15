@@ -187,7 +187,7 @@ abstract class AdminSelfTab
 		$className = get_class($this);
 		if ($className == 'AdminCategories' OR $className == 'AdminProducts')
 			$className = 'AdminCatalog';
-		$this->token = Tools::getAdminToken($className.(int)$this->id.(int)$cookie->id_employee);
+		$this->token = Tools14::getAdminToken($className.(int)$this->id.(int)$cookie->id_employee);
 
 	}
 
@@ -467,24 +467,24 @@ abstract class AdminSelfTab
 		if ($this->includeSubTab('display', array('submitAdd2', 'add', 'update', 'view'))){}
 
 		// Include current tab
-		elseif ((Tools::getValue('submitAdd'.$this->table) AND sizeof($this->_errors)) OR isset($_GET['add'.$this->table]))
+		elseif ((Tools14::getValue('submitAdd'.$this->table) AND sizeof($this->_errors)) OR isset($_GET['add'.$this->table]))
 		{
 			if ($this->tabAccess['add'] === '1')
 			{
 				$this->displayForm();
 				if ($this->tabAccess['view'])
-					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+					echo '<br /><br /><a href="'.((Tools14::getValue('back')) ? Tools14::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools14::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
 			else
 				echo $this->l('You do not have permission to add here');
 		}
 		elseif (isset($_GET['update'.$this->table]))
 		{
-			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools::getValue('id_employee')))
+			if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools14::getValue('id_employee')))
 			{
 				$this->displayForm();
 				if ($this->tabAccess['view'])
-					echo '<br /><br /><a href="'.((Tools::getValue('back')) ? Tools::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
+					echo '<br /><br /><a href="'.((Tools14::getValue('back')) ? Tools14::getValue('back') : $currentIndex.'&token='.$this->token).'"><img src="../img/admin/arrow2.gif" /> '.((Tools14::getValue('back')) ? $this->l('Back') : $this->l('Back to list')).'</a><br />';
 			}
 			else
 				echo $this->l('You do not have permission to edit here');
@@ -579,22 +579,22 @@ abstract class AdminSelfTab
 				{
 
 					case 'submitAdd1':
-						if (Tools::getValue('submitAdd'.$adminTab->table))
+						if (Tools14::getValue('submitAdd'.$adminTab->table))
 							$ok_inc = true;
 						break;
 					case 'submitAdd2':
-						if (Tools::getValue('submitAdd'.$adminTab->table) AND sizeof($adminTab->_errors))
+						if (Tools14::getValue('submitAdd'.$adminTab->table) AND sizeof($adminTab->_errors))
 							$ok_inc = true;
 						break;
 					case 'submitDel':
-						if (Tools::getValue('submitDel'.$adminTab->table))
+						if (Tools14::getValue('submitDel'.$adminTab->table))
 							$ok_inc = true;
 						break;
 					case 'submitFilter':
-						if (Tools::isSubmit('submitFilter'.$adminTab->table))
+						if (Tools14::isSubmit('submitFilter'.$adminTab->table))
 							$ok_inc = true;
 					case 'submitReset':
-						if (Tools::isSubmit('submitReset'.$adminTab->table))
+						if (Tools14::isSubmit('submitReset'.$adminTab->table))
 							$ok_inc = true;
 					default:
 						if (isset($_GET[$action.$adminTab->table]))
@@ -606,7 +606,7 @@ abstract class AdminSelfTab
 			{
 				if (!$adminTab->viewAccess())
 				{
-					echo Tools::displayError('Access denied');
+					echo Tools14::displayError('Access denied');
 					return false;
 				}
 				if (!sizeof($actions))
@@ -647,24 +647,24 @@ abstract class AdminSelfTab
 
 		/* Checking for required fields */
 		foreach ($rules['required'] AS $field)
-			if (($value = Tools::getValue($field)) == false AND (string)$value != '0')
-				if (!Tools::getValue($this->identifier) OR ($field != 'passwd' AND $field != 'no-picture'))
+			if (($value = Tools14::getValue($field)) == false AND (string)$value != '0')
+				if (!Tools14::getValue($this->identifier) OR ($field != 'passwd' AND $field != 'no-picture'))
 					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is required');
 
 		/* Checking for multilingual required fields */
 		foreach ($rules['requiredLang'] AS $fieldLang)
-			if (($empty = Tools::getValue($fieldLang.'_'.$defaultLanguage->id)) === false OR $empty !== '0' AND empty($empty))
+			if (($empty = Tools14::getValue($fieldLang.'_'.$defaultLanguage->id)) === false OR $empty !== '0' AND empty($empty))
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).'</b> '.$this->l('is required at least in').' '.$defaultLanguage->name;
 
 		/* Checking for maximum fields sizes */
 		foreach ($rules['size'] AS $field => $maxLength)
-			if (Tools::getValue($field) !== false AND Tools::strlen(Tools::getValue($field)) > $maxLength)
+			if (Tools14::getValue($field) !== false AND Tools14::strlen(Tools14::getValue($field)) > $maxLength)
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max').')';
 
 		/* Checking for maximum multilingual fields size */
 		foreach ($rules['sizeLang'] AS $fieldLang => $maxLength)
 			foreach ($languages AS $language)
-				if (Tools::getValue($fieldLang.'_'.$language['id_lang']) !== false AND Tools::strlen(Tools::getValue($fieldLang.'_'.$language['id_lang'])) > $maxLength)
+				if (Tools14::getValue($fieldLang.'_'.$language['id_lang']) !== false AND Tools14::strlen(Tools14::getValue($fieldLang.'_'.$language['id_lang'])) > $maxLength)
 					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is too long').' ('.$maxLength.' '.$this->l('chars max, html chars including').')';
 
 		/* Overload this method for custom checking */
@@ -672,12 +672,12 @@ abstract class AdminSelfTab
 
 		/* Checking for fields validity */
 		foreach ($rules['validate'] AS $field => $function)
-			if (($value = Tools::getValue($field)) !== false AND ($field != 'passwd'))
+			if (($value = Tools14::getValue($field)) !== false AND ($field != 'passwd'))
 				if (!Validate::$function($value))
 					$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $field, $className).'</b> '.$this->l('is invalid');
 
 		/* Checking for passwd_old validity */
-		if (($value = Tools::getValue('passwd')) != false)
+		if (($value = Tools14::getValue('passwd')) != false)
 		{
 			if ($className == 'Employee' AND !Validate::isPasswdAdmin($value))
 				$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), 'passwd', $className).'</b> '.$this->l('is invalid');
@@ -688,7 +688,7 @@ abstract class AdminSelfTab
 		/* Checking for multilingual fields validity */
 		foreach ($rules['validateLang'] AS $fieldLang => $function)
 			foreach ($languages AS $language)
-				if (($value = Tools::getValue($fieldLang.'_'.$language['id_lang'])) !== false AND !empty($value))
+				if (($value = Tools14::getValue($fieldLang.'_'.$language['id_lang'])) !== false AND !empty($value))
 					if (!Validate::$function($value))
 						$this->_errors[] = $this->l('the field').' <b>'.call_user_func(array($className, 'displayFieldName'), $fieldLang, $className).' ('.$language['name'].')</b> '.$this->l('is invalid');
 	}
@@ -755,7 +755,7 @@ abstract class AdminSelfTab
 			return false;
 
 		// set token
-		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
+		$token = Tools14::getValue('token') ? Tools14::getValue('token') : $this->token;
 
 		// Sub included tab postProcessing
 		$this->includeSubTab('postProcess', array('status', 'submitAdd1', 'submitDel', 'delete', 'submitFilter', 'submitReset'));
@@ -765,8 +765,8 @@ abstract class AdminSelfTab
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))
 				if (($object->deleteImage()))
-					Tools::redirectAdmin($currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
-			$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
+					Tools14::redirectAdmin($currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools14::getValue($this->identifier).'&conf=7&token='.$token);
+			$this->_errors[] = Tools14::displayError('An error occurred during image deletion (cannot load object).');
 		}
 
 		/* Delete object */
@@ -778,7 +778,7 @@ abstract class AdminSelfTab
 				{
 					// check if request at least one object with noZeroObject
 					if (isset($object->noZeroObject) AND sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
-						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+						$this->_errors[] = Tools14::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools14::displayError('You cannot delete all of the items.');
 					else
 					{
 						if ($this->deleted)
@@ -786,53 +786,53 @@ abstract class AdminSelfTab
 							$object->deleteImage();
 							$object->deleted = 1;
 							if ($object->update())
-								Tools::redirectAdmin($currentIndex.'&conf=1&token='.$token);
+								Tools14::redirectAdmin($currentIndex.'&conf=1&token='.$token);
 						}
 						elseif ($object->delete())
-							Tools::redirectAdmin($currentIndex.'&conf=1&token='.$token);
-						$this->_errors[] = Tools::displayError('An error occurred during deletion.');
+							Tools14::redirectAdmin($currentIndex.'&conf=1&token='.$token);
+						$this->_errors[] = Tools14::displayError('An error occurred during deletion.');
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->_errors[] = Tools14::displayError('An error occurred while deleting object.').' <b>'.$this->table.'</b> '.Tools14::displayError('(cannot load object)');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->_errors[] = Tools14::displayError('You do not have permission to delete here.');
 		}
 
 		/* Change object statuts (active, inactive) */
-		elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools::getValue($this->identifier))
+		elseif ((isset($_GET['status'.$this->table]) OR isset($_GET['status'])) AND Tools14::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if ($object->toggleStatus())
-						Tools::redirectAdmin($currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+						Tools14::redirectAdmin($currentIndex.'&conf=5'.((($id_category = (int)(Tools14::getValue('id_category'))) AND Tools14::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 					else
-						$this->_errors[] = Tools::displayError('An error occurred while updating status.');
+						$this->_errors[] = Tools14::displayError('An error occurred while updating status.');
 				}
 				else
-					$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+					$this->_errors[] = Tools14::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools14::displayError('(cannot load object)');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->_errors[] = Tools14::displayError('You do not have permission to edit here.');
 		}
 		/* Move an object */
 		elseif (isset($_GET['position']))
 		{
 			if ($this->tabAccess['edit'] !== '1')
-				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+				$this->_errors[] = Tools14::displayError('You do not have permission to edit here.');
 			elseif (!Validate::isLoadedObject($object = $this->loadObject()))
-				$this->_errors[] = Tools::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
-			elseif (!$object->updatePosition((int)(Tools::getValue('way')), (int)(Tools::getValue('position'))))
-				$this->_errors[] = Tools::displayError('Failed to update the position.');
+				$this->_errors[] = Tools14::displayError('An error occurred while updating status for object.').' <b>'.$this->table.'</b> '.Tools14::displayError('(cannot load object)');
+			elseif (!$object->updatePosition((int)(Tools14::getValue('way')), (int)(Tools14::getValue('position'))))
+				$this->_errors[] = Tools14::displayError('Failed to update the position.');
 			else
-				Tools::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.$token);
-				 Tools::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) AND Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
+				Tools14::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)(Tools14::getValue($this->identifier))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.$token);
+				 Tools14::redirectAdmin($currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.((($id_category = (int)(Tools14::getValue('id_category'))) AND Tools14::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 		}
 		/* Delete multiple objects */
-		elseif (Tools::getValue('submitDel'.$this->table))
+		elseif (Tools14::getValue('submitDel'.$this->table))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
@@ -842,13 +842,13 @@ abstract class AdminSelfTab
 					if (isset($object->noZeroObject) AND
 						// Check if all object will be deleted
 						(sizeof(call_user_func(array($this->className, $object->noZeroObject))) <= 1 OR sizeof($_POST[$this->table.'Box']) == sizeof(call_user_func(array($this->className, $object->noZeroObject)))))
-						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
+						$this->_errors[] = Tools14::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools14::displayError('You cannot delete all of the items.');
 					else
 					{
 						$result = true;
 						if ($this->deleted)
 						{
-							foreach(Tools::getValue($this->table.'Box') as $id)
+							foreach(Tools14::getValue($this->table.'Box') as $id)
 							{
 								$toDelete = new $this->className($id);
 								$toDelete->deleted = 1;
@@ -856,33 +856,33 @@ abstract class AdminSelfTab
 							}
 						}
 						else
-							$result = $object->deleteSelection(Tools::getValue($this->table.'Box'));
+							$result = $object->deleteSelection(Tools14::getValue($this->table.'Box'));
 
 						if ($result)
-							Tools::redirectAdmin($currentIndex.'&conf=2&token='.$token);
-						$this->_errors[] = Tools::displayError('An error occurred while deleting selection.');
+							Tools14::redirectAdmin($currentIndex.'&conf=2&token='.$token);
+						$this->_errors[] = Tools14::displayError('An error occurred while deleting selection.');
 					}
 				}
 				else
-					$this->_errors[] = Tools::displayError('You must select at least one element to delete.');
+					$this->_errors[] = Tools14::displayError('You must select at least one element to delete.');
 			}
 			else
-				$this->_errors[] = Tools::displayError('You do not have permission to delete here.');
+				$this->_errors[] = Tools14::displayError('You do not have permission to delete here.');
 		}
 
 		/* Create or update an object */
-		elseif (Tools::getValue('submitAdd'.$this->table))
+		elseif (Tools14::getValue('submitAdd'.$this->table))
 		{
 			/* Checking fields validity */
 			$this->validateRules();
 			if (!sizeof($this->_errors))
 			{
-				$id = (int)(Tools::getValue($this->identifier));
+				$id = (int)(Tools14::getValue($this->identifier));
 
 				/* Object update */
 				if (isset($id) AND !empty($id))
 				{
-					if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools::getValue('id_employee') AND Tools::isSubmit('updateemployee')))
+					if ($this->tabAccess['edit'] === '1' OR ($this->table == 'employee' AND $cookie->id_employee == Tools14::getValue('id_employee') AND Tools14::isSubmit('updateemployee')))
 					{
 						$object = new $this->className($id);
 						if (Validate::isLoadedObject($object))
@@ -913,31 +913,31 @@ abstract class AdminSelfTab
 								$this->afterUpdate($object);
 							}
 							if (!$result)
-								$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
+								$this->_errors[] = Tools14::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> ('.Db::getInstance()->getMsgError().')';
 							elseif ($this->postImage($object->id) AND !sizeof($this->_errors))
 							{
-								$parent_id = (int)(Tools::getValue('id_parent', 1));
+								$parent_id = (int)(Tools14::getValue('id_parent', 1));
 								// Specific back redirect
-								if ($back = Tools::getValue('back'))
-									Tools::redirectAdmin(urldecode($back).'&conf=4');
+								if ($back = Tools14::getValue('back'))
+									Tools14::redirectAdmin(urldecode($back).'&conf=4');
 								// Specific scene feature
-								if (Tools::getValue('stay_here') == 'on' || Tools::getValue('stay_here') == 'true' || Tools::getValue('stay_here') == '1')
-									Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
+								if (Tools14::getValue('stay_here') == 'on' || Tools14::getValue('stay_here') == 'true' || Tools14::getValue('stay_here') == '1')
+									Tools14::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&updatescene&token='.$token);
 								// Save and stay on same form
-								if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-									Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
+								if (Tools14::isSubmit('submitAdd'.$this->table.'AndStay'))
+									Tools14::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=4&update'.$this->table.'&token='.$token);
 								// Save and back to parent
-								if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-									Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token);
+								if (Tools14::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+									Tools14::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=4&token='.$token);
 								// Default behavior (save and back)
-								Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token);
+								Tools14::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$token);
 							}
 						}
 						else
-							$this->_errors[] = Tools::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+							$this->_errors[] = Tools14::displayError('An error occurred while updating object.').' <b>'.$this->table.'</b> '.Tools14::displayError('(cannot load object)');
 					}
 					else
-						$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+						$this->_errors[] = Tools14::displayError('You do not have permission to edit here.');
 				}
 
 				/* Object creation */
@@ -948,23 +948,23 @@ abstract class AdminSelfTab
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
 						if (!$object->add())
-							$this->_errors[] = Tools::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
+							$this->_errors[] = Tools14::displayError('An error occurred while creating object.').' <b>'.$this->table.' ('.mysql_error().')</b>';
 						elseif (($_POST[$this->identifier] = $object->id /* voluntary */) AND $this->postImage($object->id) AND !sizeof($this->_errors) AND $this->_redirect)
 						{
-							$parent_id = (int)(Tools::getValue('id_parent', 1));
+							$parent_id = (int)(Tools14::getValue('id_parent', 1));
 							$this->afterAdd($object);
 							// Save and stay on same form
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
+							if (Tools14::isSubmit('submitAdd'.$this->table.'AndStay'))
+								Tools14::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$object->id.'&conf=3&update'.$this->table.'&token='.$token);
 							// Save and back to parent
-							if (Tools::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
-								Tools::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token);
+							if (Tools14::isSubmit('submitAdd'.$this->table.'AndBackToParent'))
+								Tools14::redirectAdmin($currentIndex.'&'.$this->identifier.'='.$parent_id.'&conf=3&token='.$token);
 							// Default behavior (save and back)
-							Tools::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
+							Tools14::redirectAdmin($currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=3&token='.$token);
 						}
 					}
 					else
-						$this->_errors[] = Tools::displayError('You do not have permission to add here.');
+						$this->_errors[] = Tools14::displayError('You do not have permission to add here.');
 				}
 			}
 			$this->_errors = array_unique($this->_errors);
@@ -975,9 +975,9 @@ abstract class AdminSelfTab
 		{
 			$filters = $cookie->getFamily($this->table.'Filter_');
 			foreach ($filters AS $cookieKey => $filter)
-				if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
+				if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools14::strlen($this->table)) == 0)
 					{
-						$key = substr($cookieKey, 7 + Tools::strlen($this->table));
+						$key = substr($cookieKey, 7 + Tools14::strlen($this->table));
 						/* Table alias could be specified using a ! eg. alias!field */
 						$tmpTab = explode('!', $key);
 						$key = (count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0]);
@@ -994,21 +994,21 @@ abstract class AdminSelfTab
 		}
 
 		/* Submit options list */
-		elseif (Tools::getValue('submitOptions'.$this->table))
+		elseif (Tools14::getValue('submitOptions'.$this->table))
 		{
 			$this->updateOptions($token);
 		}
 
 		/* Manage list filtering */
-		elseif (Tools::isSubmit('submitFilter'.$this->table) OR $cookie->{'submitFilter'.$this->table} !== false)
+		elseif (Tools14::isSubmit('submitFilter'.$this->table) OR $cookie->{'submitFilter'.$this->table} !== false)
 		{
 			$_POST = array_merge($cookie->getFamily($this->table.'Filter_'), (isset($_POST) ? $_POST : array()));
 			foreach ($_POST AS $key => $value)
 			{
 				/* Extracting filters from $_POST on key filter_ */
-				if ($value != NULL AND !strncmp($key, $this->table.'Filter_', 7 + Tools::strlen($this->table)))
+				if ($value != NULL AND !strncmp($key, $this->table.'Filter_', 7 + Tools14::strlen($this->table)))
 				{
-					$key = Tools::substr($key, 7 + Tools::strlen($this->table));
+					$key = Tools14::substr($key, 7 + Tools14::strlen($this->table));
 					/* Table alias could be specified using a ! eg. alias!field */
 					$tmpTab = explode('!', $key);
 					$filter = count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0];
@@ -1031,17 +1031,17 @@ abstract class AdminSelfTab
 							if (isset($value[0]) AND !empty($value[0]))
 							{
 								if (!Validate::isDate($value[0]))
-									$this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+									$this->_errors[] = Tools14::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+									$sqlFilter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools14::dateFrom($value[0])).'\'';
 							}
 
 							if (isset($value[1]) AND !empty($value[1]))
 							{
 								if (!Validate::isDate($value[1]))
-									$this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+									$this->_errors[] = Tools14::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
 								else
-									$sqlFilter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+									$sqlFilter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools14::dateTo($value[1])).'\'';
 							}
 						}
 						else
@@ -1060,16 +1060,16 @@ abstract class AdminSelfTab
 				}
 			}
 		}
-		elseif (Tools::isSubmit('submitFields') AND $this->requiredDatabase AND $this->tabAccess['add'] === '1' AND $this->tabAccess['delete'] === '1')
+		elseif (Tools14::isSubmit('submitFields') AND $this->requiredDatabase AND $this->tabAccess['add'] === '1' AND $this->tabAccess['delete'] === '1')
 		{
-			if (!is_array($fields = Tools::getValue('fieldsBox')))
+			if (!is_array($fields = Tools14::getValue('fieldsBox')))
 				$fields = array();
 
 			$object = new $this->className();
 			if (!$object->addFieldsRequiredDatabase($fields))
-				$this->_errors[] = Tools::displayError('Error in updating required fields');
+				$this->_errors[] = Tools14::displayError('Error in updating required fields');
 			else
-				Tools::redirectAdmin($currentIndex.'&conf=4&token='.$token);
+				Tools14::redirectAdmin($currentIndex.'&conf=4&token='.$token);
 		}
 	}
 
@@ -1082,43 +1082,43 @@ abstract class AdminSelfTab
 			foreach ($this->_fieldsOptions as $key => $field)
 			{
 
-				if ($this->validateField(Tools::getValue($key), $field))
+				if ($this->validateField(Tools14::getValue($key), $field))
 				{
 					// check if a method updateOptionFieldName is available
-					$method_name = 'updateOption'.Tools::toCamelCase($key, true);
+					$method_name = 'updateOption'.Tools14::toCamelCase($key, true);
 					if (method_exists($this, $method_name))
-						$this->$method_name(Tools::getValue($key));
+						$this->$method_name(Tools14::getValue($key));
 					elseif ($field['type'] == 'textLang' OR $field['type'] == 'textareaLang')
 					{
 						$languages = Language::getLanguages(false);
 						$list = array();
 						foreach ($languages as $language)
 						{
-							$val = (isset($field['cast']) ? $field['cast'](Tools::getValue($key.'_'.$language['id_lang'])) : Tools::getValue($key.'_'.$language['id_lang']));
+							$val = (isset($field['cast']) ? $field['cast'](Tools14::getValue($key.'_'.$language['id_lang'])) : Tools14::getValue($key.'_'.$language['id_lang']));
 							if (Validate::isCleanHtml($val))
 								$list[$language['id_lang']] = $val;
 							else
-								$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+								$this->_errors[] = Tools14::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
 						}
 						Configuration::updateValue($key, $list);
 					}
 					else
 					{
-						$val = (isset($field['cast']) ? $field['cast'](Tools::getValue($key)) : Tools::getValue($key));
+						$val = (isset($field['cast']) ? $field['cast'](Tools14::getValue($key)) : Tools14::getValue($key));
 						if (Validate::isCleanHtml($val))
 							Configuration::updateValue($key, $val);
 						else
-							$this->_errors[] = Tools::displayError('Can not add configuration '.$key);
+							$this->_errors[] = Tools14::displayError('Can not add configuration '.$key);
 
 					}
 				}
 			}
 
 			if (count($this->_errors) <= 0)
-				Tools::redirectAdmin($currentIndex.'&conf=6&token='.$token);
+				Tools14::redirectAdmin($currentIndex.'&conf=6&token='.$token);
 		}
 		else
-			$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
+			$this->_errors[] = Tools14::displayError('You do not have permission to edit here.');
 	}
 
 	protected function validateField($value, $field)
@@ -1130,7 +1130,7 @@ abstract class AdminSelfTab
 			{
 				if (!Validate::$field['validation']($value))
 				{
-					$this->_errors[] = Tools::displayError($field['title'].' : Incorrect value');
+					$this->_errors[] = Tools14::displayError($field['title'].' : Incorrect value');
 					return false;
 				}
 			}
@@ -1159,7 +1159,7 @@ abstract class AdminSelfTab
 				$_FILES[$name]['tmp_name'] = $tmpName;
 				// Copy new image
 				if (!imageResize($tmpName, _PS_IMG_DIR_.$dir.$id.'.'.$this->imageType, NULL, NULL, ($ext ? $ext : $this->imageType)))
-					$this->_errors[] = Tools::displayError('An error occurred while uploading image.');
+					$this->_errors[] = Tools14::displayError('An error occurred while uploading image.');
 				if (sizeof($this->_errors))
 					return false;
 				if ($this->afterImageUpload())
@@ -1186,7 +1186,7 @@ abstract class AdminSelfTab
 
 			/* Copy new ico */
 			elseif (!copy($_FILES[$name]['tmp_name'], $dest))
-				$this->_errors[] = Tools::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
+				$this->_errors[] = Tools14::displayError('an error occurred while uploading favicon: '.$_FILES[$name]['tmp_name'].' to '.$dest);
 		}
 		return !sizeof($this->_errors) ? true : false;
 	}
@@ -1221,11 +1221,11 @@ abstract class AdminSelfTab
 			if (key_exists($key, $object) AND $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
-				if ($key == 'passwd' AND Tools::getValue('id_'.$table) AND empty($value))
+				if ($key == 'passwd' AND Tools14::getValue('id_'.$table) AND empty($value))
 					continue;
 				/* Automatically encrypt password in MD5 */
 				if ($key == 'passwd' AND !empty($value))
-					$value = Tools::encrypt($value);
+					$value = Tools14::encrypt($value);
 				$object->{$key} = $value;
 			}
 
@@ -1336,7 +1336,7 @@ abstract class AdminSelfTab
 	 */
 	public function displayConf()
 	{
-		if ($conf = Tools::getValue('conf'))
+		if ($conf = Tools14::getValue('conf'))
 			echo '
 			<div class="conf">
 				'.$this->_conf[(int)($conf)].'
@@ -1451,7 +1451,7 @@ abstract class AdminSelfTab
 					.$this->optionTitle.'</legend>' : '');
 		foreach ($this->_fieldsOptions AS $key => $field)
 		{
-			$val = Tools::getValue($key, Configuration::get($key));
+			$val = Tools14::getValue($key, Configuration::get($key));
 			if ($field['type'] != 'textLang')
 				if (!Validate::isCleanHtml($val))
 					$val = Configuration::get($key);
@@ -1478,7 +1478,7 @@ abstract class AdminSelfTab
 				case 'textLang':
 					foreach ($this->_languages as $language)
 					{
-						$val = Tools::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
+						$val = Tools14::getValue($key.'_'.$language['id_lang'], Configuration::get($key, $language['id_lang']));
 						if (!Validate::isCleanHtml($val))
 							$val = Configuration::get($key);
 						echo '
@@ -1529,13 +1529,13 @@ abstract class AdminSelfTab
 	 */
 	protected function loadObject($opt = false)
 	{
-		if ($id = (int)(Tools::getValue($this->identifier)) AND Validate::isUnsignedId($id))
+		if ($id = (int)(Tools14::getValue($this->identifier)) AND Validate::isUnsignedId($id))
 		{
 			if (!$this->_object)
 				$this->_object = new $this->className($id);
 			if (Validate::isLoadedObject($this->_object))
 				return $this->_object;
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (not found)');
+			$this->_errors[] = Tools14::displayError('Object cannot be loaded (not found)');
 		}
 		elseif ($opt)
 		{
@@ -1543,7 +1543,7 @@ abstract class AdminSelfTab
 			return $this->_object;
 		}
 		else
-			$this->_errors[] = Tools::displayError('Object cannot be loaded (identifier missing or invalid)');
+			$this->_errors[] = Tools14::displayError('Object cannot be loaded (identifier missing or invalid)');
 
 		$this->displayErrors();
 	}
@@ -1566,7 +1566,7 @@ abstract class AdminSelfTab
 		else
 			$defaultValue = isset($obj->{$key}) ? $obj->{$key} : '';
 
-		return Tools::getValue($key.($id_lang ? '_'.$id_lang : ''), $defaultValue);
+		return Tools14::getValue($key.($id_lang ? '_'.$id_lang : ''), $defaultValue);
 	}
 
 	/**
@@ -1676,7 +1676,7 @@ abstract class AdminSelfTab
 	 */
 	public function checkToken()
 	{
-		$token = Tools::getValue('token');
+		$token = Tools14::getValue('token');
 		return (!empty($token) AND $token === $this->token);
 	}
 
@@ -1735,7 +1735,7 @@ abstract class AdminSelfTab
 
 		$languages = Language::getLanguages(false);
 		if (method_exists('Tools','clearCache'))
-			Tools::clearCache($smarty);
+			Tools14::clearCache($smarty);
 
 		/* Check required fields */
 		foreach ($fields AS $field => $values)
@@ -1743,34 +1743,34 @@ abstract class AdminSelfTab
 				if (isset($values['type']) AND $values['type'] == 'textLang')
 				{
 					foreach ($languages as $language)
-						if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false AND (string)$value != '0')
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+						if (($value = Tools14::getValue($field.'_'.$language['id_lang'])) == false AND (string)$value != '0')
+							$this->_errors[] = Tools14::displayError('field').' <b>'.$values['title'].'</b> '.Tools14::displayError('is required.');
 				}
-				elseif (($value = Tools::getValue($field)) == false AND (string)$value != '0')
-					$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is required.');
+				elseif (($value = Tools14::getValue($field)) == false AND (string)$value != '0')
+					$this->_errors[] = Tools14::displayError('field').' <b>'.$values['title'].'</b> '.Tools14::displayError('is required.');
 
 		/* Check fields validity */
 		foreach ($fields AS $field => $values)
 			if (isset($values['type']) AND $values['type'] == 'textLang')
 			{
 				foreach ($languages as $language)
-					if (Tools::getValue($field.'_'.$language['id_lang']) AND isset($values['validation']))
-						if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
-							$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+					if (Tools14::getValue($field.'_'.$language['id_lang']) AND isset($values['validation']))
+						if (!Validate::$values['validation'](Tools14::getValue($field.'_'.$language['id_lang'])))
+							$this->_errors[] = Tools14::displayError('field').' <b>'.$values['title'].'</b> '.Tools14::displayError('is invalid.');
 			}
-			elseif (Tools::getValue($field) AND isset($values['validation']))
-				if (!Validate::$values['validation'](Tools::getValue($field)))
-					$this->_errors[] = Tools::displayError('field').' <b>'.$values['title'].'</b> '.Tools::displayError('is invalid.');
+			elseif (Tools14::getValue($field) AND isset($values['validation']))
+				if (!Validate::$values['validation'](Tools14::getValue($field)))
+					$this->_errors[] = Tools14::displayError('field').' <b>'.$values['title'].'</b> '.Tools14::displayError('is invalid.');
 
 		/* Default value if null */
 		foreach ($fields AS $field => $values)
-			if (!Tools::getValue($field) AND isset($values['default']))
+			if (!Tools14::getValue($field) AND isset($values['default']))
 				$_POST[$field] = $values['default'];
 
 		/* Save process */
 		if (!sizeof($this->_errors))
 		{
-			if (Tools::isSubmit('submitAppearanceconfiguration'))
+			if (Tools14::isSubmit('submitAppearanceconfiguration'))
 			{
 				if (isset($_FILES['PS_LOGO']['tmp_name']) AND $_FILES['PS_LOGO']['tmp_name'])
 				{
@@ -1823,15 +1823,14 @@ abstract class AdminSelfTab
 					unset($val);
 					if (isset($values['type']) AND $values['type'] == 'textLang')
 						foreach ($languages as $language)
-							$val[$language['id_lang']] = isset($values['cast']) ? $values['cast'](Tools::getValue($field.'_'.$language['id_lang'])) : Tools::getValue($field.'_'.$language['id_lang']);
+							$val[$language['id_lang']] = isset($values['cast']) ? $values['cast'](Tools14::getValue($field.'_'.$language['id_lang'])) : Tools14::getValue($field.'_'.$language['id_lang']);
 					else
-						$val = isset($values['cast']) ? $values['cast'](Tools::getValue($field)) : Tools::getValue($field);
+						$val = isset($values['cast']) ? $values['cast'](Tools14::getValue($field)) : Tools14::getValue($field);
 
 					Configuration::updateValue($field, $val);
 				}
-				Tools::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
+				Tools14::redirectAdmin($currentIndex.'&conf=6'.'&token='.$this->token);
 			}
 		}
 	}
 }
-
