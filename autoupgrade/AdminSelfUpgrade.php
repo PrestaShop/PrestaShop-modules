@@ -4243,7 +4243,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<img src="../img/admin/warning.gif" alt=""/><strong>'.$this->l('This module is still in a "beta" version.').'</strong><br /><br /><span style="color: #CC0000; font-weight: bold;">'.
 			$this->l('Please always perform a full manual backup of your files and database before starting any upgrade.').'</span><br />'.
 			$this->l('Double-check the integrity of your backup and that you can easily manually roll-back if necessary.').'<br />'.
-			$this->l('If you don\'t know how to proceed, ask your hosting provider.').'</p>			
+			$this->l('If you do not know how to proceed, ask your hosting provider.').'</p>			
 		</fieldset>';
 		
 		/* Make sure the user has configured the upgrade options, or set default values */
