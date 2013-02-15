@@ -408,6 +408,22 @@ class MoneyBookers extends PaymentModule
 				</div>
 			</fieldset>
 		</form>
+
+		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-activation"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitValidation'])) ? ' style="display: none;"' : '').'>
+			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
+				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Account validation').'</legend>
+				'.(Configuration::get('MB_PARAMETERS') == 1 ? '<p style="font-weight: bold; color: green;"><img src="../img/admin/ok.gif" alt="" /> '.$this->l('Your account has been activated').'</p>' : '').'
+				<p style="line-height: 20px;">'.$this->l('You need to').' <b>'.$this->l('validate your account').'</b>.<br /><br />
+				<input type="text" name="mb_email_to_validate" value="'.Configuration::get('MB_PAY_TO_EMAIL').'" style="width: 250px;" />
+				<input type="submit" name="SubmitValidation" class="button" value="'.$this->l('Validate my account').'" /></p>
+				<p style="font-size: 14px;"><a href="'.$manual_links[$iso_manual].'" target="_blank"><img src="../img/admin/pdf.gif" alt="" /></a><a href="'.$manual_links[$iso_manual].'" target="_blank"><b>'.$this->l('For help, refer to the activation manual.').'</b></a></p>
+				<p style="font-size: 12px;">
+'.$this->l('You can test Moneybookers payment with the test account testaccount2@moneybookers.com and the secret word mbtest.').'<br />
+'.$this->l('Beware, this is only a test account: you will not receive money if you use this test account on your shop. To receive money, you have to use the login and password of your personal Moneybookers account !').'
+				</p>
+			</fieldset>
+		</form>
+		
 		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-opening">
 			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
 				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Open Account').'</legend>
@@ -447,21 +463,6 @@ class MoneyBookers extends PaymentModule
 *** '.$this->l('Quick Checkout Moneybookers').'
 </p>
 
-			</fieldset>
-		</form>
-
-		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" id="form-activation"'.((!Configuration::get('MB_PARAMETERS') AND !isset($_POST['SubmitValidation'])) ? ' style="display: none;"' : '').'>
-			<fieldset class="width2" style="margin: 20px 0; width: 800px;">
-				<legend><img src="'.__PS_BASE_URI__.'modules/moneybookers/logo.gif" alt="" />'.$this->l('Account validation').'</legend>
-				'.(Configuration::get('MB_PARAMETERS') == 1 ? '<p style="font-weight: bold; color: green;"><img src="../img/admin/ok.gif" alt="" /> '.$this->l('Your account has been activated').'</p>' : '').'
-				<p style="line-height: 20px;">'.$this->l('You need to').' <b>'.$this->l('validate your account').'</b>.<br /><br />
-				<input type="text" name="mb_email_to_validate" value="'.Configuration::get('MB_PAY_TO_EMAIL').'" style="width: 250px;" />
-				<input type="submit" name="SubmitValidation" class="button" value="'.$this->l('Validate my account').'" /></p>
-				<p style="font-size: 14px;"><a href="'.$manual_links[$iso_manual].'" target="_blank"><img src="../img/admin/pdf.gif" alt="" /></a><a href="'.$manual_links[$iso_manual].'" target="_blank"><b>'.$this->l('For help, refer to the activation manual.').'</b></a></p>
-				<p style="font-size: 12px;">
-'.$this->l('You can test Moneybookers payment with the test account testaccount2@moneybookers.com and the secret word mbtest.').'<br />
-'.$this->l('Beware, this is only a test account: you will not receive money if you use this test account on your shop. To receive money, you have to use the login and password of your personal Moneybookers account !').'
-				</p>
 			</fieldset>
 		</form>
 
