@@ -17,6 +17,16 @@ $_MODULE['<{avalaratax}prestashop>avalaratax_5e75f748e7f06f54b073c307c8062c25'] 
 $_MODULE['<{avalaratax}prestashop>avalaratax_ffea2d321be109fc7243cfeb515fe257'] = 'Choississez votre état (si applicable)';
 $_MODULE['<{avalaratax}prestashop>avalaratax_63406c9482c644975f227cc93788e8fb'] = 'Choississez votre pays';
 $_MODULE['<{avalaratax}prestashop>avalaratax_2fdfd506efea08144c0794c32ca8250a'] = 'Créer un compte';
+$_MODULE['<{avalaratax}prestashop>avalaratax_cdd461e8534a30eb08b155fcf2f11da1'] = 'Avalara et PrestaShop sont partenaires afin de vous apporter le moyen le plus simple pour vous de calculer efficacement vos taxes.';
+$_MODULE['<{avalaratax}prestashop>avalaratax_56b8391721f97665ae9fabff869e0674'] = 'Personne n\'aime traiter avec les taxes.';
+$_MODULE['<{avalaratax}prestashop>avalaratax_515b006df15081a22fffbde68f5a0cca'] = 'Les taxes de vente ne sont pas le coeur de votre métier et devraient être automatisées. Vous pourriez le faire de mauvaise manière, et exposer votre affaire à un risque non nécessaire, et cela sans même le savoir.';
+$_MODULE['<{avalaratax}prestashop>avalaratax_e909c29089d3d9eda30a3bee0468b481'] = 'Travailler correctement avec les taxes de vente est simple avec Avalara';
+$_MODULE['<{avalaratax}prestashop>avalaratax_83db45b1df730cae93810ba1bfd501c4'] = 'Nous effectuons toute la recherche et automatisons le procédé à votre place, assurant que le système est à jour avec les dernières taxes, taux de VAT et règles en vigueur dans chaque état et chaque pays. En tant que service basé sur le Cloud, AvalaraTax vous évite support et maintenance. Ce système vous apporte une solution complète pour gérer vos taxes.';
+$_MODULE['<{avalaratax}prestashop>avalaratax_8b88bf316f85852356604a615276ff06'] = 'Validation de l\'adresse incluse';
+$_MODULE['<{avalaratax}prestashop>avalaratax_dee601cfe9c0b511bf2fafb2711d5959'] = 'Calcul précis des seuils';
+$_MODULE['<{avalaratax}prestashop>avalaratax_be8976301d53fe84645630e6a87a206b'] = 'Règles de taxation des produits et services';
+$_MODULE['<{avalaratax}prestashop>avalaratax_ac82a2f3665b1d2a9b8bd9a4187b0e20'] = 'Gestion des certificats d\'exemption';
+$_MODULE['<{avalaratax}prestashop>avalaratax_810175d536622a06a17b294a4a62dfd1'] = 'Rapport sur les taxes de ventes';
 $_MODULE['<{avalaratax}prestashop>avalaratax_9410e0f9048d0fdecef38e745ce2e9ed'] = 'Console d\'administration AvaTax';
 $_MODULE['<{avalaratax}prestashop>avalaratax_f47aa2664e16e45a8b17e2f0a8a05b1c'] = 'Identifiez vous sur la console d\'administration AvaTax';
 $_MODULE['<{avalaratax}prestashop>avalaratax_254f642527b45bc260048e30704edb39'] = 'Configuration';

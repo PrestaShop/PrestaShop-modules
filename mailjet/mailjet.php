@@ -396,8 +396,8 @@ class Mailjet extends Module
 		<div>
 			<form action="'.htmlentities($_SERVER['REQUEST_URI']).'" method="post">
 				<fieldset>
-					<legend><img src="../img/admin/cog.gif" alt="" class="middle" />'.$this->l('Activation du module').'</legend>
-					<p><b>'.$this->l('Cette solution est gratuite mais exige l’activation d’un compte Mailjet.').'</b></p>
+					<legend><img src="../img/admin/cog.gif" alt="" class="middle" />'.$this->l('Enabling module').'</legend>
+					<p><b>'.$this->l('This solution is free but requires a MailJet account.').'</b></p>
 					<p><input type="submit" name="submitMailjetAuthenticationForm" value="'.$this->l('Activer un compte MailJet maintenant').'" class="button" /></p>
 					<br />
 					<p>
