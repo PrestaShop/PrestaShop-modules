@@ -45,7 +45,7 @@ class StripeJs extends PaymentModule
 		parent::__construct();
 
 		$this->displayName = $this->l('Stripe');
-		$this->description = $this->l('Accept payments by Credit Card with Stripe (Visa, Mastercard, Amex, Discover & Diners Club)');
+		$this->description = $this->l('Accept payments by Credit Card with Stripe (Visa, Mastercard, Amex, Discover and Diners Club)');
 		$this->confirmUninstall = $this->l('Warning: all the Stripe customers credit cards and transaction details saved in your database will be deleted. Are you sure you want uninstall this module?');
 
 		/* Backward compatibility */
