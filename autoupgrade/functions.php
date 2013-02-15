@@ -115,9 +115,9 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			$nCategories = (int)sizeof($categories);
 			foreach ($categories AS $category)
 			{
-				$edit = '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&'.($category['id_category'] == 1 ? 'viewcategory' : 'addcategory').'&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.($category['id_category'] == 1 ? 'home' : 'edit').'.gif" alt="" /></a> ';
+				$edit = '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&'.($category['id_category'] == 1 ? 'viewcategory' : 'addcategory').'&token='.Tools14::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.($category['id_category'] == 1 ? 'Home' : 'Modify').'"><img src="../img/admin/'.($category['id_category'] == 1 ? 'home' : 'edit').'.gif" alt="" /></a> ';
 				$fullPath .= $edit.
-				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools14::getAdminToken('AdminCatalog'.(int)(Tab::getIdFromClassName('AdminCatalog')).(int)($cookie->id_employee)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 				(!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
 				($n < $nCategories ? '</a>' : '').
 				(($n++ != $nCategories OR !empty($path)) ? ' > ' : '');
@@ -133,12 +133,12 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			return $path;
 
 		$name = ($highlight != NULL) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
-		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools14::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
 				<img src="../img/admin/edit.gif" alt="Modify" /></a> ';
 		if ($category->id == 1)
-			$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+			$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools14::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
 					<img src="../img/admin/home.gif" alt="Home" /></a> ';
-		$path = $edit.'<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
+		$path = $edit.'<a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools14::getAdminToken('AdminCMSContent'.(int)(Tab::getIdFromClassName('AdminCMSContent')).(int)($cookie->id_employee)).'">
 		'.$name.'</a> > '.$path;
 		if ($category->id == 1)
 			return substr($path, 0, strlen($path) - 3);
@@ -191,8 +191,8 @@ function checkingTab($tab)
 	if (!$row['id_tab'])
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
-			Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-		echo Tools::displayError('Tab cannot be found.');
+			Tools14::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools14::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
+		echo Tools14::displayError('Tab cannot be found.');
 		return false;
 	}
 	if ($row['module'] AND file_exists(_PS_MODULE_DIR_.'/'.$row['module'].'/'.$tab.'.php'))
@@ -202,13 +202,13 @@ function checkingTab($tab)
 
 	if (!class_exists($tab, false) OR !$row['id_tab'])
 	{
-		echo Tools::displayError('Tab file cannot be found.');
+		echo Tools14::displayError('Tab file cannot be found.');
 		return false;
 	}
 	$adminObj = new $tab;
 	if (!$adminObj->viewAccess())
 	{
-		$adminObj->_errors = array(Tools::displayError('Access denied'));
+		$adminObj->_errors = array(Tools14::displayError('Access denied'));
 		echo $adminObj->displayErrors();
 		return false;
 	}

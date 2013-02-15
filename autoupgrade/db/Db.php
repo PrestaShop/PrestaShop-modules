@@ -623,7 +623,7 @@ abstract class DbCore
 		{
 			$string = $this->_escape($string);
 			if (!$html_ok)
-				$string = strip_tags(Tools::nl2br($string));
+				$string = strip_tags(Tools14::nl2br($string));
 		}
 
 		return $string;
@@ -683,7 +683,6 @@ abstract class DbCore
 	 */
 	public static function s($sql, $use_cache = true)
 	{
-		Tools::displayAsDeprecated();
 		return Db::getInstance()->executeS($sql, true, $use_cache);
 	}
 
@@ -692,7 +691,6 @@ abstract class DbCore
 	 */
 	public static function ps($sql, $use_cache = 1)
 	{
-		Tools::displayAsDeprecated();
 		$ret = Db::s($sql, $use_cache);
 		p($ret);
 		return $ret;
@@ -703,7 +701,6 @@ abstract class DbCore
 	 */
 	public static function ds($sql, $use_cache = 1)
 	{
-		Tools::displayAsDeprecated();
 		Db::s($sql, $use_cache);
 		die();
 	}

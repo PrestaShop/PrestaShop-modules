@@ -126,7 +126,7 @@ class Tools14
 	/**
 	 * getHttpHost return the <b>current</b> host used, with the protocol (http or https) if $http is true
 	 * This function should not be used to choose http or https domain name.
-	 * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead
+	 * Use Tools14::getShopDomain() or Tools14::getShopDomainSsl instead
 	 *
 	 * @param boolean $http
 	 * @param boolean $entities
@@ -497,7 +497,7 @@ class Tools14
 	{
 	 	if (!$html)
 			$string = strip_tags($string);
-		return @Tools::htmlentitiesUTF8($string, ENT_QUOTES);;
+		return @Tools14::htmlentitiesUTF8($string, ENT_QUOTES);;
 	}
 
 	public static function htmlentitiesUTF8($string, $type = ENT_QUOTES)
@@ -899,7 +899,6 @@ class Tools14
 	 */
 	public static function getCategoriesTotal()
 	{
-		Tools::displayAsDeprecated();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_category`) AS total FROM `'._DB_PREFIX_.'category`');
 		return (int)($row['total']);
 	}
@@ -909,7 +908,6 @@ class Tools14
 	 */
 	public static function getProductsTotal()
 	{
-		Tools::displayAsDeprecated();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_product`) AS total FROM `'._DB_PREFIX_.'product`');
 		return (int)($row['total']);
 	}
@@ -919,7 +917,6 @@ class Tools14
 	 */
 	public static function getCustomersTotal()
 	{
-		Tools::displayAsDeprecated();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_customer`) AS total FROM `'._DB_PREFIX_.'customer`');
 		return (int)($row['total']);
 	}
@@ -929,7 +926,6 @@ class Tools14
 	 */
 	public static function getOrdersTotal()
 	{
-		Tools::displayAsDeprecated();
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT COUNT(`id_order`) AS total FROM `'._DB_PREFIX_.'orders`');
 		return (int)($row['total']);
 	}
@@ -1091,7 +1087,6 @@ class Tools14
 	 */
 	public static function getExactTime()
 	{
-		Tools::displayAsDeprecated();
 		return time()+microtime();
 	}
 
@@ -1173,8 +1168,6 @@ class Tools14
 	**/
 	public static function getTimezones($select = false)
 	{
-		Tools::displayAsDeprecated();
-
 		static $_cache = 0;
 
 		// One select
@@ -1202,8 +1195,6 @@ class Tools14
 	**/
 	public static function ps_set_magic_quotes_runtime($var)
 	{
-		Tools::displayAsDeprecated();
-
 		if (function_exists('set_magic_quotes_runtime'))
 			set_magic_quotes_runtime($var);
 	}
@@ -1282,7 +1273,7 @@ class Tools14
 	public static function simplexml_load_file($url, $class_name = null)
 	{
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			return simplexml_load_string(Tools::file_get_contents($url), $class_name);
+			return simplexml_load_string(Tools14::file_get_contents($url), $class_name);
 		else
 			return false;
 	}
@@ -1918,16 +1909,7 @@ FileETag INode MTime Size
 	 */
 	public static function displayAsDeprecated()
 	{
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
-			$backtrace = debug_backtrace();
-			$callee = next($backtrace);
-			trigger_error('Function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['line'].'</strong><br />', E_USER_WARNING);
-
-			$message = self::displayError('The function').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
-
-			Logger::addLog($message, 3, $callee['class']);
-		}
+		return;
 	}
 
 	/**
@@ -1935,15 +1917,7 @@ FileETag INode MTime Size
 	 */
 	public static function displayParameterAsDeprecated($parameter)
 	{
-		if (_PS_DISPLAY_COMPATIBILITY_WARNING_)
-		{
-			$backtrace = debug_backtrace();
-			$callee = next($backtrace);
-			trigger_error('Parameter <strong>'.$parameter.'</strong> in function <strong>'.$callee['function'].'()</strong> is deprecated in <strong>'.$callee['file'].'</strong> on line <strong>'.$callee['Line'].'</strong><br />', E_USER_WARNING);
-
-			$message = self::displayError('The parameter').' '.$parameter.' '.self::displayError(' in function ').' '.$callee['function'].' ('.self::displayError('Line').' '.$callee['Line'].') '.self::displayError('is deprecated and will be removed in the next major version.');
-			Logger::addLog($message, 3, $callee['class']);
-		}
+		return;
 	}
 
 	public static function enableCache($level = 1)
@@ -2259,6 +2233,10 @@ FileETag INode MTime Size
 		}
 		return false;
 	}
+	
+	public static function nl2br($str)
+	{
+		return str_replace(array("\r\n", "\r", "\n"), '<br />', $str);
+	}	
 }
 }
-
