@@ -7,6 +7,7 @@ $_MODULE['<{mondialrelay}prestashop>adminmondialrelay_3b2d373418745276ae6e207421
 $_MODULE['<{mondialrelay}prestashop>adminmondialrelay_b4ac3d3f15bc0984d0906aff1202e701'] = 'Impossible de mettre à jour le compte';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_44585fcd617dce6416d8283b026714c1'] = 'Mondial Relay';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_ed4a3b96dc1f38c160775cac1f7bcd6d'] = 'Livrez vos colis en point relais';
+$_MODULE['<{mondialrelay}prestashop>mondialrelay_1889ea20d1343f376f5d52b6b8dc7a3f'] = 'Vous devez sélectionner un point relai avant de continuer.';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_d2286c9c8c8f92cb0e805b17834591b0'] = 'Enseigne invalide';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_709b076565df5fa98cdb2528d897633d'] = 'Code Marque invalide';
 $_MODULE['<{mondialrelay}prestashop>mondialrelay_c86508f5bc6b4456e7003d6a1868689d'] = 'Clé Webservice invalide';
@@ -115,6 +116,7 @@ $_MODULE['<{mondialrelay}prestashop>configuration_08f785193c96b2a78dec8d76a46648
 $_MODULE['<{mondialrelay}prestashop>configuration_0dae2d7c71f2daaedb00191af25dc28d'] = 'Langue des étiquettes';
 $_MODULE['<{mondialrelay}prestashop>configuration_a26329cba9723551cb8654deba32872b'] = 'Coefficient de Poids :';
 $_MODULE['<{mondialrelay}prestashop>configuration_99244b234ec089eca40ff9e8ec343e87'] = 'grammes = 1';
+$_MODULE['<{mondialrelay}prestashop>configuration_80eac24973917207249176589fb068ce'] = 'Par défaut le prix sera définit en fonction du poids total.';
 $_MODULE['<{mondialrelay}prestashop>configuration_61cbc2d26b4157292673c772ddd6c0f7'] = 'Mettre à jour le compte';
 $_MODULE['<{mondialrelay}prestashop>configuration_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
 $_MODULE['<{mondialrelay}prestashop>configuration_9ffc3ccc968a96d902af963c6d7b4e97'] = 'Paramètres avancés';
