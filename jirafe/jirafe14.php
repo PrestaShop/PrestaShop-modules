@@ -45,7 +45,7 @@ class Jirafe extends Module
 
         $this->name = 'jirafe';
         $this->tab = 'analytics_stats';
-        $this->version = '1.2';
+        $this->version = '1.2.1';
 
         //The constructor must be called after the name has been set, but before you try to use any functions like $this->l()
         parent::__construct();
@@ -150,7 +150,7 @@ class Jirafe extends Module
             $this->_errors[] = $this->l('The Jirafe Web Service is unreachable. Please try again when the connection is restored.').' '.$this->l('Sync');
         }
 
-        if ((bool)count($this->_errors) === true)
+        if (is_array($this->_errors) && (count($this->_errors) > 0))
 		{
         	$errors = implode(',<br />', $this->_errors);		  
 			echo '<div class="error">'.Tools::safeOutput($errors).'</div>';
