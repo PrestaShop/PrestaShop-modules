@@ -824,10 +824,10 @@ class Ebay extends Module {
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
 				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
-          /*
+          
             $html .= '
             <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
-           */
+           
           $html .= '
       				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
       				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
@@ -1144,24 +1144,26 @@ class Ebay extends Module {
      }
 
      private function _displayFormShipping() {
-
           global $smarty;
-
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
           $eBayCarrier = $eBay->getCarrier();
           $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
-
+          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping_national");
+          $internationalShippingLocation = $eBay->getInternationalShippingLocation();
+          $excludeShippingLocation   = $eBay->getExcludeShippingLocation();
 
           $smarty->assign(array(
               'eBayCarrier' => $eBayCarrier,
               'psCarrier' => $psCarrier,
+              'existingNationalCarrier' => $existingNationalCarrier,
               'deliveryTime' => $deliveryTime,
+              'excludeShippingLocation' => $excludeShippingLocation,
+              'internationalShippingLocation' => $internationalShippingLocation,  
               'deliveryTimeOptions' => $deliveryTimeOptions,
               'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
           ));
-
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
      }

@@ -14,7 +14,6 @@
 
 		
 </fieldset>
-{debug}
 <script type="text/javascript">
 	function addShippingFee(show, internationalOnly, idEbayCarrier, idPSCarrier, additionalFee){
 		var currentShippingService = -1;
@@ -75,7 +74,44 @@
 			return stringShippingFee;
 	}
 
-	function addInternationalShippingFee(){}
+	function getShippingLocation(){
+		string = '';
+		{foreach from=$internationalShippingLocation item=shippingLocation}
+		string += '<input type="checkbox" name="internationalShippingLocation" value="{$shippingLocation.location}">{$shippingLocation.description}</option>';
+		{/foreach}
+		return string;
+	}
+
+	function getExcludeShippingLocation(){
+		string = "";
+		string += "<select name=''>";
+		{foreach from=$excludeShippingLocation item=shippingRegion key=region}
+		string += "<option value='{$region}''>{$region}</option>";
+			{foreach from=$shippingRegion item=shippingLocation}
+				string += "<option value='{$shippingLocation.location}''>---{$shippingLocation.description}</option>";
+			{/foreach}
+		{/foreach}
+		string += "</select>";
+		return string;
+	}
+
+	function addInternationalShippingFee(idEbayCarrier, idPSCarrier, additionalFee)
+	{
+		string = "<div class='internationalShipping'>";
+		string += "<table class='table'>";
+		string += "<tr>";
+		string += addShippingFee(0, 1);
+		string += "</tr>";
+		string += "</table>"
+		string += "<label>{l s='Add eBay zone for this carrier' mod='ebay'}</label>";
+		string += "<div class='margin-form'>"+getShippingLocation()+"</div>";
+		string += "<label>{l s='Exclude eBay zone for the carrier'}</label>";
+		string += "<span style='font-size:18px;font-weight:bold;padding-right:5px;' class='addExcludedZone' title='{l s='Add a new excluded zone' mod='ebay'}'>+</span>";
+		string += '</div>';
+
+		$('#internationalCarrier div.internationalShipping:last').after(string);
+
+	}
 
 
 	jQuery(document).ready(function($) {
@@ -83,7 +119,7 @@
 		{foreach from=$existingNationalCarrier item=nationalCarrier}
 			addShippingFee(1, 0, {$nationalCarrier.ebay_carrier}, {$nationalCarrier.ps_carrier}, {$nationalCarrier.extra_fee});
 		{/foreach}
-
+		
 
 		/* EVENTS */
 		$('#addNationalCarrier').click(function(){
@@ -92,11 +128,27 @@
 				$(this).parent().parent().remove();
 			});
 		});
+		
+		$('#addInternationalCarrier').click(function(){
+			addInternationalShippingFee(1, 0);
+			$('.deleteNationalCarrier').unbind().click(function(){
+				$(this).parent().parent().remove();
+			});
+		});
+
 		$('.deleteNationalCarrier').click(function(){
 			$(this).parent().parent().remove();
 		});
 	});
 </script>
+
+<style>
+.internationalShipping{
+	background-color: #FFF;
+	border: 1px solid #AAA;
+	margin-bottom: 10px;
+}
+</style>
 
 
 
@@ -111,6 +163,15 @@
 	<div class="margin-form" id="addNationalCarrier" style="cursor:pointer;">
 	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new Carrier option in eBay'}
 	</div>
+</fieldset>
+
+<fieldset style="margin-top:10px">
+	<legend>{l s='Shipping Method for Interational Shipping' mod='ebay'}</legend>	
+	<div id="internationalCarrier">
+		<div class="internationalShipping"></div>
+	</div>
+	<div class="margin-form" id="addInternationalCarrier" style="cursor:pointer;">
+	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new international Carrier option in eBay'}
 </fieldset>
 
 <div class="margin-form" id="buttonEbayShipping" style="margin-top:20px;">
