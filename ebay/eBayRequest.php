@@ -450,6 +450,94 @@ class eBayRequest {
           return $ReturnsAccepted;
      }
 
+     function getInternationalShippingLocation(){
+          $this->apiCall = 'GeteBayDetails';
+
+          $requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+          $requestXml .= ' <DetailName>ShippingLocationDetails</DetailName>';
+          $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+          $requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '  <RequesterCredentials>' . "\n";
+          $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+          $requestXml .= '  </RequesterCredentials>' . "\n";
+          $requestXml .= '</GeteBayDetailsRequest>';
+
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
+
+
+
+          // Load xml in array
+          $categoriesFeatures = array();
+          $response = simplexml_load_string($responseXml);
+          $responseArray = array();
+          foreach ($response->ExcludeShippingLocationDetails as $line) {
+               $responseArray[] = array(
+                   'description' => strip_tags($line->Description->asXML()),
+                   'location' => strip_tags($line->ShippingLocation->asXML())
+               );
+          }
+          return $responseArray;
+     }
+
+     function getExcludeShippingLocation(){
+          $this->apiCall = 'GeteBayDetails';
+
+          $requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+          $requestXml .= ' <DetailName>ExcludeShippingLocationDetails</DetailName>';
+          $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+          $requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '  <RequesterCredentials>' . "\n";
+          $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+          $requestXml .= '  </RequesterCredentials>' . "\n";
+          $requestXml .= '</GeteBayDetailsRequest>';
+
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
+
+          // Load xml in array
+          $categoriesFeatures = array();
+          $response = simplexml_load_string($responseXml);
+          $responseArraytmp = array();
+          foreach ($response->ExcludeShippingLocationDetails as $line) {
+               $responseArraytmp[] = array(
+                    'region' => strip_tags($line->Region->asXML()),
+                    'description' => strip_tags($line->Description->asXML()),
+                    'location' => strip_tags($line->Location->asXML())
+               );
+          }
+          //Sort array by Region
+          array_multisort($responseArraytmp);
+          $responseArray = array();
+          $region = array();
+          foreach ($responseArraytmp as $key => $value) {
+               if(in_array($value['region'], $region)){
+                    array_push($responseArray[$value['region']], array(
+                         'location' => $value['location'],
+                         'description' => $value['description']));
+
+               }
+               else{
+                    $region[] = $value['region'];
+                    $responseArray[$value['region']][] = array(
+                         'location' => $value['location'],
+                         'description' => $value['description']);
+               }
+          }
+
+          return $responseArray;
+     }
+
      function getCarrier() {
           $this->apiCall = 'GeteBayDetails';
 
