@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,7 +33,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.4';
+		$this->version = '1.4.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -144,9 +144,9 @@ class authorizeAIM extends PaymentModule
 			<fieldset class="width2">
 				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Settings').'</legend>
 				<label for="authorizeaim_login_id">'.$this->l('Login ID').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_login_id" value="'.Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_LOGIN_ID')).'" /></div>
+				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_login_id" value="'.Configuration::get('AUTHORIZE_AIM_LOGIN_ID').'" /></div>
 				<label for="authorizeaim_key">'.$this->l('Key').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_key" value="'.Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_KEY')).'" /></div>
+				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_key" value="'.Configuration::get('AUTHORIZE_AIM_KEY').'" /></div>
 				<label for="authorizeaim_demo_mode">'.$this->l('Mode:').'</label>
 				<div class="margin-form" id="authorizeaim_demo">
 					<input type="radio" name="authorizeaim_demo_mode" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />

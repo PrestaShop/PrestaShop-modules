@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.0.7';
+		$this->version = '3.0.8';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us', 'ca');
 		parent::__construct();
@@ -493,14 +493,14 @@ class AvalaraTax extends Module
 	/******************************************************************/
 	public function getContent()
 	{
-		$html = '';
 		$buffer = '';
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
 			$this->context->controller->addJQueryPlugin('fancybox');
 		else
-			$html .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
+			$buffer .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
 		  	<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
+
 		if (Tools::isSubmit('SubmitAvalaraTaxSettings'))
 		{
 			Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
@@ -592,7 +592,6 @@ class AvalaraTax extends Module
 			$countryList[] = array('id' => $country['id_country'], 'name' => $country['name'], 'iso_code' => $country['iso_code']);
 
 		$buffer .= '<link href="'.$this->_path.'css/avalara.css" rel="stylesheet" type="text/css">
-
 		<script type="text/javascript">
 			/* Fancybox */
 			$(\'a.avalara-video-btn\').live(\'click\', function(){
