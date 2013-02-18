@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 2007-2011 PrestaShop
  *
@@ -58,7 +59,7 @@ class Ebay extends Module {
      public function __construct() {
           $this->name = 'ebay';
           $this->tab = 'market_place';
-          $this->version = '1.3.6';
+          $this->version = '1.3.7';
           $this->author = 'PrestaShop';
           parent::__construct();
 
@@ -171,7 +172,6 @@ class Ebay extends Module {
           $this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $content, true);
           $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
           $this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
-          $this->setConfiguration('EBAY_DELIVERY_TIME', 3);
 
 
           // Init
@@ -236,6 +236,11 @@ class Ebay extends Module {
           if ($version == '1.1' || empty($version)) {
                // Upgrade SQL
                include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
+          } else if (version_compare($version, '1.3.7', '<')) { // Waif for 1.4.0
+               include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
+          }
+
+          if (isset($sql) && is_array($sql) && sizeof($sql)) {
                foreach ($sql as $s)
                     if (!Db::getInstance()->execute($s))
                          return false;
@@ -313,14 +318,14 @@ class Ebay extends Module {
                $dateToCheckFromArray = explode('T', $dateToCheckFrom);
 
                $dateToCheckFrom = date("Y-m-d", strtotime($dateToCheckFromArray[0] . " -30 day"));
-               $dateToCheckFrom .= 'T' . $dateToCheckFromArray[1];
+               $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           } else {
                //If it is less than 30 days that we installed the module
                $dateToCheckFrom = Configuration::get('EBAY_INSTALL_DATE');
                $dateToCheckFromArray = explode('T', $dateToCheckFrom);
 
                $dateToCheckFrom = date("Y-m-d", strtotime($dateToCheckFromArray[0] . " -1 day"));
-               $dateToCheckFrom .= 'T' . $dateToCheckFromArray[1];
+               $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           }
 
           if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')) . 'T' . date('H:i:s', strtotime('-30 minutes')) . '.000Z') {
@@ -818,8 +823,12 @@ class Ebay extends Module {
 			</ul>
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
-				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>
-                                <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>
+				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
+          /*
+            $html .= '
+            <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
+           */
+          $html .= '
       				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
       				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
       				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
@@ -911,6 +920,7 @@ class Ebay extends Module {
           $html .='
                                              </select>
                                         </div>
+                                        <div style="clear:both;"></div>
                                         <label>' . $this->l('Description') . ' : </label>
                                         <div class="margin-form">
                                              <textarea name="ebay_returns_description" cols="120" rows="10">' . Tools::getValue('ebay_returns_description', Configuration::get('EBAY_RETURNS_DESCRIPTION')) . '</textarea>
@@ -981,7 +991,7 @@ class Ebay extends Module {
       * Category Form Config Methods
       *
       * */
-     private function _getChildCategories($categories, $id, $path = array(), $pathAdd = '') {
+     protected function _getChildCategories($categories, $id, $path = array(), $pathAdd = '') {
           $categoryTab = array();
           if ($pathAdd != '')
                $path[] = $pathAdd;
@@ -1001,134 +1011,55 @@ class Ebay extends Module {
      }
 
      private function _displayFormCategory() {
+
+          $isOneDotFive = $this->isVersionOneDotFive();
+
+          if ($isOneDotFive) {
+               $smarty = $this->context->smarty;
+               $cookie = $this->context->cookie;
+          } else {
+               global $smarty, $cookie;
+          }
+          // Load prestashop ebay's configuration
+          $configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
+
           // Check if the module is configured
-          if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
-               return '<p><b>' . $this->l('You have to configure "General Settings" tab before using this tab.') . '</b></p><br />';
+          if ($configs['EBAY_PAYPAL_EMAIL'] === false)
+               return $this->display(dirname(__FILE__), '/views/templates/hook/error_paypal_email.tpl');
 
           // Load categories only if necessary
-          if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category')
-               return '<p align="center"><b>' . $this->l('Your categories have already been configured.') . '</b></p>
-			<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form">
-			<p align="center"><input class="button" name="submitSave" type="submit" value="' . $this->l('See Categories') . '" /></p></form>';
+          if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category') {
+               $smarty->assign('isOneDotFive', $isOneDotFive);
+               return $this->display(dirname(__FILE__), '/views/templates/hook/pre_form_categories.tpl');
+          }
 
           // Display eBay Categories
-          if (!Configuration::get('EBAY_CATEGORY_LOADED')) {
+          if (!$configs['EBAY_CATEGORY_LOADED']) {
                $ebay = new eBayRequest();
                $ebay->saveCategories();
                $this->setConfiguration('EBAY_CATEGORY_LOADED', 1);
                $this->setConfiguration('EBAY_CATEGORY_LOADED_DATE', date('Y-m-d H:i:s'));
           }
 
-
-          // Loading categories
-          $categoryConfigList = array();
-          $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
-          foreach ($categoryConfigListTmp as $c)
-               $categoryConfigList[$c['id_category']] = $c;
-          $categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), ($this->isVersionOneDotFive()) ? 1 : 0);
-
-          $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
-
           $tabHelp = "&id_tab=7";
-          // Display header
-          $html = $this->getAlertCategories();
 
-          $html .= '<p><b>' . $this->l('To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.') . '</b></p><br />
+          
+          // Smarty
+          $datasSmarty = array(
+              'alerts' => $this->getAlertCategories(),
+              'tabHelp' => $tabHelp,
+              'id_lang' => $cookie->id_lang,
+              '_path' => $this->_path,
+              'configs' => $configs,
+              '_module_dir_' => _MODULE_DIR_,
+              'isOneDotFive' => $isOneDotFive,
+              'request_uri' => $_SERVER['REQUEST_URI']
+          );
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
-			<p><b>' . $this->l('You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.') . '</b>
-			<input class="button" name="submitSave" type="submit" value="' . $this->l('Suggest Categories') . '" />
-			</p><br />
-		</form>
+          $smarty->assign($datasSmarty);
 
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=2&section=category" method="post" class="form" id="configForm2">
-		<table class="table tableDnD" cellpadding="0" cellspacing="0" width="100%">
-			<thead>
-				<tr class="nodrag nodrop">
-					<th style="width:110px">' . $this->l('Category') . ' <br/>(' . $this->l('Quantity in stock') . ')</th>
-					<th>' . $this->l('eBay Category') . '</th>
-					<th style="width:128px">' . $this->l('Price impact') . '<a title="' . $this->l('Help') . '" href="' . $_SERVER['REQUEST_URI'] . $tabHelp . '" ><img src="' . $this->_path . 'help.png" width="25" alt="help_picture"/></a></th>
-				</tr>
-			</thead>
-			<tbody>';
-
-
-          // Displaying categories
-          if (!$categoryList)
-               $html .= '<tr><td colspan="4">' . $this->l('No category found.') . '</td></tr>';
-          foreach ($categoryList as $k => $c) {
-
-               if ($this->isVersionOneDotFive())
-                    $rq_getCatInStock = '
-					SELECT SUM( s.quantity ) AS instockProduct
-					FROM `' . _DB_PREFIX_ . 'product` AS p
-					INNER JOIN `' . _DB_PREFIX_ . 'stock_available` AS s ON p.id_product = s.id_product
-					WHERE p.id_category_default =' . $c['id_category'] . $this->addSqlRestrictionOnLang('s')
-                    ;
-               else
-                    $rq_getCatInStock = 'SELECT SUM( quantity ) AS instockProduct FROM `' . _DB_PREFIX_ . 'product`	WHERE id_category_default = ' . $c['id_category'];
-
-               $getCatInStock = Db::getInstance()->ExecuteS($rq_getCatInStock);
-
-               // Display line
-               $alt = 0;
-               if ($k % 2 != 0)
-                    $alt = ' class="alt_row"';
-               $html .= '<tr' . $alt . '>
-				<td>' . $c['name'] . ' (' . $getCatInStock[0]['instockProduct'] . ')</td>
-				<td id="categoryPath' . $c['id_category'] . '">
-					<select name="category' . $c['id_category'] . '" id="categoryLevel1-' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(1, ' . $c['id_category'] . ');">
-						<option value="0">' . $this->l('No category selected') . '</option>';
-               foreach ($eBayCategoryList as $ec)
-                    $html .= '<option value="' . $ec['id_ebay_category'] . '">' . $ec['name'] . ($ec['is_multi_sku'] == 1 ? ' *' : '') . '</option>';
-               $html .= '</select>';
-               if (isset($categoryConfigList[$c['id_category']]))
-                    $html .= '<script>$(document).ready(function() { loadCategoryMatch(' . $c['id_category'] . '); });</script>';
-               $html .= '</td>
-				<td><select name="percent' . $c['id_category'] . '" id="percent' . $c['id_category'] . '" rel="' . $c['id_category'] . '" style="font-size: 12px;">';
-               for ($i = 5; $i >= -80; $i--)
-                    $html .= '<option value="' . $i . '" ' . ((isset($categoryConfigList[$c['id_category']]) && $categoryConfigList[$c['id_category']]['percent'] == $i) || (!isset($categoryConfigList[$c['id_category']]) && $i == 0) ? 'selected="selected"' : '') . '>' . (($i >= 0) ? $i : '- ' . ($i * -1)) . ' %</option>';
-               $html .= '</select></td></tr>';
-          }
-
-          $html .= '
-			</tbody>
-		</table><br />
-		<div class="margin-form"><input class="button" name="submitSave" type="submit" value="' . $this->l('Save') . '" /></div>
-		</form>
-
-		<p><b>' . $this->l('Warning : Only defaults products categories are used for the configuration.') . '</b></p><br />
-
-		<p align="left">
-			* ' . $this->l('Some categories benefit from eBay\'s multi-version from which allows to publish one product with multiple versions.') . '<br />
-			' . $this->l('For the categories which do not gain this functionality, one ad will be added for each version of the product.') . '<br />
-			<a href="http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings" target="_blank">' . $this->l('Click here for more informations on multi-variation listings') . '</a>
-		</p><br /><br />
-
-		<script>
-			function loadCategoryMatch(id_category)
-			{
-				$.ajax({
-				  async: false,
-				  url: "' . _MODULE_DIR_ . 'ebay/ajax/loadCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&id_category=" + id_category + "&time=' . pSQL(date('Ymdhis')) . '",
-				  success: function(data) { $("#categoryPath" + id_category).html(data); }
-				});
-			}
-			function changeCategoryMatch(level, id_category)
-			{
-				var levelParams = "&level1=" + $("#categoryLevel1-" + id_category).val();
-				if (level > 1) levelParams += "&level2=" + $("#categoryLevel2-" + id_category).val();
-				if (level > 2) levelParams += "&level3=" + $("#categoryLevel3-" + id_category).val();
-				if (level > 3) levelParams += "&level4=" + $("#categoryLevel4-" + id_category).val();
-				if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
-
-				$.ajax({
-				  url: "' . _MODULE_DIR_ . 'ebay/ajax/changeCategoryMatch.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '&id_category=" + id_category + "&level=" + level + levelParams,
-				  success: function(data) { $("#categoryPath" + id_category).html(data); }
-				});
-			}
-		</script>';
-          return $html;
+          return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
+          
      }
 
      private function _postValidationCategory() {
@@ -1207,20 +1138,9 @@ class Ebay extends Module {
 
      private function _postProcessShipping() {
           //Update global information about shipping (delivery time, ...)
-          $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
-          
-          //Update Shipping Method for National Shipping (Delete And Insert)
-          $rq_del = "DELETE FROM "._DB_PREFIX_."ebay_shipping_national";
-          Db::getInstance()->Execute($rq_del);
-          foreach ($_POST['ebayCarrier'] as $key => $value) {
-            $rq_ins = "INSERT INTO "._DB_PREFIX_."ebay_shipping_national 
-              VALUES('', 
-                '".(int)$_POST['ebayCarrier'][$key]."',
-                '".(int)$_POST['psCarrier'][$key]."', 
-                '".(int)$_POST['extrafee'][$key]."')";
-            DB::getInstance()->Execute($rq_ins);
+          if (Tools::getValue('submitSaveShippingGlobal')) {
+               $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
           }
-
      }
 
      private function _displayFormShipping() {
@@ -1232,12 +1152,11 @@ class Ebay extends Module {
           $eBayCarrier = $eBay->getCarrier();
           $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
-          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping_national");
+
 
           $smarty->assign(array(
               'eBayCarrier' => $eBayCarrier,
               'psCarrier' => $psCarrier,
-              'existingNationalCarrier' => $existingNationalCarrier,
               'deliveryTime' => $deliveryTime,
               'deliveryTimeOptions' => $deliveryTimeOptions,
               'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
@@ -1910,10 +1829,14 @@ class Ebay extends Module {
 
                               $price = $variations[$c['id_product'] . '-' . $c['id_product_attribute']]['price_static'];
                               $price_original = $price;
-                              if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
-                                   $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-                              else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
-                                   $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                              if (preg_match("#[-]{0,1}[0-9]{1,2}%$#is", $categoryDefaultCache[$product->id_category_default]['percent'])) {
+                                   if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
+                                        $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
+                                   else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+                                        $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                              } else {
+                                   $price += $categoryDefaultCache[$product->id_category_default]['percent'];
+                              }
 
                               $variations[$c['id_product'] . '-' . $c['id_product_attribute']]['price'] = round($price, 2);
                               if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0) {
@@ -1933,10 +1856,14 @@ class Ebay extends Module {
                     // Load basic price
                     $price = Product::getPriceStatic((int) $product->id, true);
                     $price_original = $price;
-                    if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
-                         $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
-                    else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
-                         $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                    if (preg_match("#[-]{0,1}[0-9]{1,2}%$#is", $categoryDefaultCache[$product->id_category_default]['percent'])) {
+                         if ($categoryDefaultCache[$product->id_category_default]['percent'] > 0)
+                              $price *= (1 + ($categoryDefaultCache[$product->id_category_default]['percent'] / 100));
+                         else if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0)
+                              $price *= (1 - ($categoryDefaultCache[$product->id_category_default]['percent'] / (-100)));
+                    } else {
+                         $price += $categoryDefaultCache[$product->id_category_default]['percent'];
+                    }
                     $price = round($price, 2);
 
 
@@ -1988,6 +1915,8 @@ class Ebay extends Module {
                     // Price Update
                     if (isset($p['noPriceUpdate']))
                          $datas['noPriceUpdate'] = $p['noPriceUpdate'];
+
+                    $categoryDefaultCache[$product->id_category_default]['percent'] = preg_replace("#%$#is", "", $categoryDefaultCache[$product->id_category_default]['percent']);
 
                     // Save percent and price discount
                     if ($categoryDefaultCache[$product->id_category_default]['percent'] < 0) {
@@ -2080,7 +2009,7 @@ class Ebay extends Module {
                                        (isset($datasTmp['picturesMedium'][2]) ? '<img src="' . $datasTmp['picturesMedium'][2] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                                        (isset($datasTmp['picturesMedium'][3]) ? '<img src="' . $datasTmp['picturesMedium'][3] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                                        Tools::displayPrice($datasTmp['price']),
-                                       (isset($datasTmp['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datasTmp['price_original']) . '</del> (remise de ' . round($datasTmp['price_percent']) . '%)' : ''),
+                                       (isset($datasTmp['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datasTmp['price_original']) . '</del> (remise de ' . round($datasTmp['price_percent']) . ')' : ''),
                                            ), $datas['description']
                                    );
 
@@ -2132,7 +2061,7 @@ class Ebay extends Module {
                              (isset($datas['picturesMedium'][2]) ? '<img src="' . $datas['picturesMedium'][2] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                              (isset($datas['picturesMedium'][3]) ? '<img src="' . $datas['picturesMedium'][3] . '" class="bodyMediumImageProductPrestashop" />' : ''),
                              Tools::displayPrice($datas['price']),
-                             (isset($datas['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datas['price_original']) . '</del> (remise de ' . round($datas['price_percent']) . '%)' : ''),
+                             (isset($datas['price_original']) ? 'au lieu de <del>' . Tools::displayPrice($datas['price_original']) . '</del> (remise de ' . round($datas['price_percent']) . ')' : ''),
                                  ), $datas['description']
                          );
                          // Check if product exists on eBay
@@ -2264,7 +2193,7 @@ class Ebay extends Module {
           return file_get_contents($helpFile);
      }
 
-     private function isVersionOneDotFive() {
+     protected function isVersionOneDotFive() {
           return version_compare(_PS_VERSION_, '1.5', '>');
      }
 
@@ -2307,7 +2236,7 @@ class Ebay extends Module {
                     $catProblem = 0;
                     foreach ($products as $productArray) {
                          $product = new Product($productArray['id']);
-                         $combinations = $product->getAttributeCombinaisons($this->id_lang);
+                         $combinations = $this->isVersionOneDotFive() ? $product->getAttributeCombinations($this->context->cookie->id_lang) : $product->getAttributeCombinaisons($this->context->cookie->id_lang);
                          if (count($combinations) > 0 && $catProblem == 0) {
                               $catWithProblem[] = $cat['name'];
                               $catProblem = 1;
@@ -2376,7 +2305,7 @@ class Ebay extends Module {
           }
      }
 
-     private function addSqlRestrictionOnLang($alias) {
+     protected function addSqlRestrictionOnLang($alias) {
           if ($this->isVersionOneDotFive())
                Shop::addSqlRestrictionOnLang($alias);
      }
