@@ -54,7 +54,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.3';
+		$this->version = '1.2.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'b7e680a4290c977bb35e3b28817b8348';
@@ -342,7 +342,7 @@ class UpsCarrier extends CarrierModule
 	private function _displayForm()
 	{
 		$this->_html .= '<fieldset>
-		<legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('UPS Module Status').'</legend>';
+		<legend><img src="'.$this->_path.'img/delivery.gif" alt="" /> '.$this->l('UPS Module Status').'</legend>';
 
 		$alert = array();
 		if (!Configuration::get('UPS_CARRIER_RATE_SERVICE_GROUP'))
@@ -1541,7 +1541,6 @@ class UpsCarrier extends CarrierModule
 			}
 		}
 
-
 		// If webservice return a cost, we add it, else, we return the original shipping cost
 		$result = $this->getUpsShippingCost($wsParams);
 		if ($result['connect'] && $result['cost'] > 0)
@@ -1612,13 +1611,10 @@ class UpsCarrier extends CarrierModule
 		return $this->getOrderShippingCost($params, 23);
 	}
 
-
-
 	/*
 	** Webservices Methods
 	**
 	*/
-
 	public function parseXML($valTab)
 	{
 		$level = 0;
@@ -1750,7 +1746,6 @@ class UpsCarrier extends CarrierModule
 		$errno = $errstr = $result = '';
 		$xml = $this->getXml($wsParams);
 
-
 		// Make the request
 		$opts = array(
 			'http'=>array(
@@ -1764,7 +1759,6 @@ class UpsCarrier extends CarrierModule
 		$result = @file_get_contents('https://www.ups.com/ups.app/xml/Rate', false, $context);
 		if (!$result)
 			$this->_webserviceError = $this->l('Could not connect to UPS.com');
-
 
 		// Get xml from HTTP Result
 		$data = strstr($result, '<?');
@@ -1852,4 +1846,3 @@ class UpsCarrier extends CarrierModule
 		return $xml;
 	}
 }
-
