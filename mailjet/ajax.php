@@ -21,7 +21,7 @@
 * THE SOFTWARE.
 *
 *  @author Dream me up
-*  @copyright  2011 Mailjet SAS
+*  @copyright  2011 Mailjet SAS
 *  @license    hhttp://opensource.org/licenses/mit-license  MIT License
 *  International Registred Trademark & Property of Mailjet SAS
 */
