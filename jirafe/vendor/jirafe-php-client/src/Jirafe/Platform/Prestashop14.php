@@ -436,7 +436,7 @@ class Jirafe_Platform_Prestashop14 extends Jirafe_Platform_Ecommerce
         }
         $tracker->setIp($_SERVER['REMOTE_ADDR']);
 
-        if(is_array($cart['products']))
+        if(isset($cart['products']) && is_array($cart['products']))
             foreach ($cart['products'] as $product) {
                 // Get the category - we support only 1 for now
                 $category = empty($product['categories'][0]) ? null : $product['categories'][0];
@@ -451,7 +451,8 @@ class Jirafe_Platform_Prestashop14 extends Jirafe_Platform_Ecommerce
         }
 
         try {
-            $response = $tracker->doTrackEcommerceCartUpdate($cart['total']);
+        	if (isset($cart['total']))
+	            $response = $tracker->doTrackEcommerceCartUpdate($cart['total']);
         } catch (Exception $e) {
             // Do nothing for now
         }
