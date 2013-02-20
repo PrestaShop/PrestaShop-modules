@@ -72,7 +72,9 @@ class Jirafe_Platform_Prestashop15 extends Jirafe_Platform_Prestashop14
         $currentShopId = Shop::getContext('shop');
         $jsites = unserialize(base64_decode($this->get('sites')));
 
-        return $jsites[$currentShopId]['site_id'];
+        if (isset($jsites[$currentShopId]['site_id']))
+	        return $jsites[$currentShopId]['site_id'];
+	    return false;
     }
 
     /**
