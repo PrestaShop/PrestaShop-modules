@@ -2,7 +2,7 @@
 <module>
 	<name>mobile_theme</name>
 	<displayName><![CDATA[Mobile Template]]></displayName>
-	<version><![CDATA[0.5.2]]></version>
+	<version><![CDATA[0.5.3]]></version>
 	<description><![CDATA[Provides a mobile template compatible with iPhone, Android, etc.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[administration]]></tab>
