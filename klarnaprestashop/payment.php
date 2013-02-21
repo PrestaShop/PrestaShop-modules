@@ -61,7 +61,7 @@ class KlarnaPrestaShopController extends FrontController
 				$result = $this->klarna->setPayment(Tools::safeOutput(Tools::getValue('type')));
 
 			if (isset($result['error']))
-				self::$smarty->assign('error', htmlentities($result['message'], ENT_QUOTES, 'ISO-8859-1'));
+				self::$smarty->assign('error', $result['message']);
 		}
 		self::$smarty->assign(array(
 				'nbProducts' => self::$cart->nbProducts(),

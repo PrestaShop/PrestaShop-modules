@@ -2,7 +2,7 @@
 <module>
 	<name>jirafe</name>
 	<displayName><![CDATA[Analytics for ecommerce]]></displayName>
-	<version><![CDATA[1.2.1]]></version>
+	<version><![CDATA[1.2.2]]></version>
 	<description><![CDATA[The best analytics for ecommerce merchants.  Deeply integrated into the Prestashop platform.]]></description>
 	<author><![CDATA[Jirafe Inc.]]></author>
 	<tab><![CDATA[analytics_stats]]></tab>

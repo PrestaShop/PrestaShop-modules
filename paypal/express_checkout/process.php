@@ -286,7 +286,8 @@ class PaypalExpressCheckout extends Paypal
 				$fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = $discount['id_discount'];
 
 				$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
-				$fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($discount['description']), 0, 120).'...';
+				if (isset($discount['description']) && !empty($discount['description']))
+					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($discount['description']), 0, 120).'...';
 
 				/* It is a discount so we store a negative value */
 				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = -1 * Tools::ps_round($discount['value_real'], $this->decimals);
