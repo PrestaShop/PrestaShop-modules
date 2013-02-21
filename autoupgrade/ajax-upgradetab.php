@@ -38,15 +38,18 @@ define('AUTOUPGRADE_MODULE_DIR', _PS_MODULE_DIR_.'autoupgrade/');
 require_once(AUTOUPGRADE_MODULE_DIR.'functions.php');
 //
 // the following test confirm the directory exists
+if (!isset($_POST['dir']))
+	die('no directory');
+	
 if (realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir'] !== realpath(realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']))
-	die('wrong directory :'.$_POST['dir']);
+	die('wrong directory :'.(isset($_POST['dir']) ? $_POST['dir'] : ''));
 
 define('_PS_ADMIN_DIR_', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']);
 
 // defines.inc.php can not exists (1.3.0.1 for example)
 // but we need _PS_ROOT_DIR_
 if (!defined('_PS_ROOT_DIR_'))
-	define('_PS_ROOT_DIR_', realpath(_PS_ADMIN_DIR_.'/../'));
+	define('_PS_ROOT_DIR_', realpath(dirname(__FILE__).'/../../'));
 
 // ajax-upgrade-tab is located in admin/autoupgrade directory
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
