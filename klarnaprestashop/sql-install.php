@@ -54,4 +54,4 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'klarna_payment_pclasses` (
                 `country` int(11) NOT NULL,
                 `expire` int(11) NOT NULL,
                KEY `id` (`id`)
-            ) ENGINE='._DB_PREFIX_.' DEFAULT CHARSET=utf8;';
+            ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
