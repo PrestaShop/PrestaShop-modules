@@ -95,8 +95,9 @@ class UpgraderCore
 
 		$destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
 
-		if (@copy($this->link, $destPath))
-			return true;
+		if ($zip = Tools14::file_get_contents($this->link))
+			if((bool)file_put_contents($destPath, $zip) === true)
+				return true;
 		else
 			return false;
 	}
@@ -252,9 +253,10 @@ class UpgraderCore
 				'timeout' => 5,
 			));
 			$context = stream_context_create($opts);
+			$xml = false;
 			foreach ($protocolsList as $protocol => $port)
 			{
-				$xml_string = file_get_contents($protocol.$this->addons_api, false, $context);
+				$xml_string = Tools14::file_get_contents($protocol.$this->addons_api, false, $context);
 				if ($xml_string)
 				{
 					$xml = @simplexml_load_string($xml_string);
@@ -281,8 +283,7 @@ class UpgraderCore
 		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
 			// @ to hide errors if md5 file is not reachable
-			$xml_string = @file_get_contents($xml_remotefile, false,
-				stream_context_create(array('http' => array('timeout' => 3))));
+			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('http' => array('timeout' => 3))));
 			$xml = @simplexml_load_string($xml_string);
 			if ($xml !== false)
 				file_put_contents($xml_localfile, $xml_string);
@@ -506,5 +507,4 @@ class UpgraderCore
 		$this->getChangedFilesList($version, $refresh);
 		return !$this->version_is_modified;
 	}
-
 }

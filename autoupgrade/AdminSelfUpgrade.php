@@ -561,7 +561,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if(empty($allowed_array))
 		{
 			$allowed_array = array();
-			$allowed_array['fopen'] = ConfigurationTest::test_fopen();
+			$allowed_array['fopen'] = ConfigurationTest::test_fopen() || ConfigurationTest::test_curl();
 			$allowed_array['root_writable'] = $this->getRootWritable();
 			$allowed_array['shop_deactivated'] = !Configuration::get('PS_SHOP_ENABLE');
 			$allowed_array['cache_deactivated'] = !(defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_);
@@ -672,8 +672,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$xml_local = $this->prodRootDir.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'modules_native_addons.xml';
 			$xml = $upgrader->getApiAddons($xml_local, $postData, true);
 
-			foreach ($xml as $mod)
-				$this->modules_addons[(string)$mod->id] = (string)$mod->name;
+			if (is_object($xml))
+				foreach ($xml as $mod)
+					$this->modules_addons[(string)$mod->id] = (string)$mod->name;
 
 			// installedLanguagesIso is used to merge translations files
 			$iso_ids = Language::getIsoIds(false);
@@ -1020,7 +1021,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename))
 			{
-				$config_content = file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename);
+				$config_content = Tools14::file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename);
 				$config = unserialize($config_content);
 			}
 			else
@@ -1075,9 +1076,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->next = '';
 		// update channel
 		if (isset($this->currentParams['channel']))
-		{
 			$config['channel'] = $this->currentParams['channel'];
-		}
 		if (isset($this->currentParams['private_release_link']) && isset($this->currentParams['private_release_md5']))
 		{
 			$config['channel'] = 'private';
@@ -1688,8 +1687,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name))
 			{
-				$id_addons = array_search($module_name, $this->modules_addons);
-				if ($id_addons)
+				if(is_array($this->modules_addons))
+					$id_addons = array_search($module_name, $this->modules_addons);
+				if (isset($id_addons) && $id_addons)
 					$list[] = array('id' => $id_addons, 'name' => $module_name);
 			}
 		}
@@ -1897,10 +1897,22 @@ class AdminSelfUpgrade extends AdminSelfTab
 			@ini_set('memory_limit','128M');
 
 		/* Redefine REQUEST_URI if empty (on some webservers...) */
-		if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '')
-			$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
-		if ($tmp = strpos($_SERVER['REQUEST_URI'], '?'))
-			$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
+		if (!isset($_SERVER['REQUEST_URI']) || empty($_SERVER['REQUEST_URI']))
+		{
+			if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME']))
+				$_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
+			if (isset($_SERVER['SCRIPT_NAME']))
+			{
+				if (basename($_SERVER['SCRIPT_NAME']) == 'index.php' && empty($_SERVER['QUERY_STRING']))
+					$_SERVER['REQUEST_URI'] = dirname($_SERVER['SCRIPT_NAME']).'/';
+				else
+				{
+					$_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
+					if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING']))
+						$_SERVER['REQUEST_URI'] .= '?'.$_SERVER['QUERY_STRING'];
+				}
+			}
+		}
 		$_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
 		define('INSTALL_VERSION', $this->install_version);
@@ -3487,7 +3499,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 */
 	public function ajaxProcessDownload()
 	{
-		if (@ini_get('allow_url_fopen'))
+		if (ConfigurationTest::test_fopen() || ConfigurationTest::test_curl())
 		{
 			if (!is_object($this->upgrader))
 				$this->upgrader = new Upgrader();
@@ -3788,6 +3800,9 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$this->_html .= '<th>'.$this->l('The PHP "Safe mode" option is turned off').'</th>
 			<td>'.(!ini_get('safe_mode') ? $pic_ok : $pic_warn).'</td></tr>';
 
+		$this->_html .= '<th>'.$this->l('The PHP "allow_url_fopen" option is turned on or CURL is installed').'</th>
+			<td>'.((ConfigurationTest::test_fopen() || ConfigurationTest::test_curl()) ? $pic_ok : $pic_nok).'</td></tr>';
+
 		// shop enabled
 		$this->_html .= '<th>'.$this->l('You put your store under maintenance').' '.(!$current_ps_config['shop_deactivated'] ? '<br><form method="post" action="'.$currentIndex.'&token='.$this->token.'"><input type="submit" class="button" name="putUnderMaintenance" value="'.$this->l('Click here to put your shop under maintenance').'"></form>' : '').'</th>
 			<td>'.($current_ps_config['shop_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
@@ -3953,7 +3968,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		<div>
 			<input type="button" class="button" style="float:right" name="btn_adv" value="'.$this->l('More options (Expert mode)').'"/>
 			</div>
-			<div style="float:left;position:absolute;display:none;" id="configResult">&nbsp;</div>
+			<div style="float: left; margin-top: 13px; display:none;" id="configResult">&nbsp;</div>
 			<div class="clear" id="advanced">
 				<h3>'.$this->l('Expert mode').'</3>
 				<h4 style="margin-top: 0px;">'.$this->l('Please select your channel:').'</h4>
@@ -4486,9 +4501,13 @@ $(document).ready(function(){
 function showConfigResult(msg, type){
 	if (type == null)
 		type = "conf";
-	$("#configResult").html("<div class=\""+type+"\">"+msg+"</div>").show().delay(5000).fadeOut("slow", function() {
-		location.reload();
-	});
+	$("#configResult").html("<div class=\""+type+"\">"+msg+"</div>").show();
+	if (type == "conf")
+	{
+		$("#configResult").delay(3000).fadeOut("slow", function() {
+			location.reload();
+		});
+	}
 }
 
 // reuse previousParams, and handle xml returns to calculate next step
@@ -4989,14 +5008,12 @@ $(document).ready(function(){
 		});
 
 		function switch_to_advanced(){
-			$("input[name=btn_adv]")
-				.val("'.$this->l('Less options').'");
+			$("input[name=btn_adv]").val("'.$this->l('Less options', 'AdminTab', true, false).'");
 			$("#advanced").show();
 		}
 
 		function switch_to_normal(){
-			$("input[name=btn_adv]")
-				.val("'.$this->l('More options (Expert mode)').'");
+			$("input[name=btn_adv]").val("'.$this->l('More options (Expert mode)', 'AdminTab', true, false).'");
 			$("#advanced").hide();
 		}
 
@@ -5333,5 +5350,4 @@ $(document).ready(function()
 		else
 			ini_set('display_errors', 'off');
 	}
-
 }

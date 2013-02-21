@@ -67,6 +67,11 @@ class	ConfigurationTestCore
 		return ini_get('allow_url_fopen');
 	}
 
+	static function test_curl()
+	{
+		return function_exists('curl_init');
+	}
+
 	static function test_system($funcs)
 	{
 		foreach ($funcs AS $func)
