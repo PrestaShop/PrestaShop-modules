@@ -23,13 +23,14 @@ $(document).ready( function() {
 			type: "GET",
 			url: baseDir+'/modules/paypal/express_checkout/ajax.php',
 			data: { get_qty: "1", id_product: id_product, id_product_attribute: id_product_attribute },
-			cache: false
-		}).success(function(result) {
-			if (result >= '1')
-				$('#container_express_checkout').slideDown();
-			else
-				$('#container_express_checkout').slideUp();
-			return true;
+			cache: false,
+			success: function(result) {
+				if (result >= '1')
+					$('#container_express_checkout').slideDown();
+				else
+					$('#container_express_checkout').slideUp();
+				return true;
+			}
 		});
 	}
 
