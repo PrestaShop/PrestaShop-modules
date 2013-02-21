@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.0';
+		$this->version = '1.7.1';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -912,7 +912,8 @@ class KlarnaPrestaShop extends PaymentModule
 		$country = new Country((int)$address_invoice->id_country);
 		$currency = new Currency((int)$params['cart']->id_currency);
 
-		$this->context->cart->deleteProduct((int)Configuration::get('KLARNA_INV_FEE_ID_'.$this->countries[$country->iso_code]['name']));
+		if (isset($this->countries[$country->iso_code]))
+			$this->context->cart->deleteProduct((int)Configuration::get('KLARNA_INV_FEE_ID_'.$this->countries[$country->iso_code]['name']));
 
 		if (!$this->verifCountryAndCurrency($country, $currency))
 			return false;
@@ -1218,15 +1219,15 @@ class KlarnaPrestaShop extends PaymentModule
 				$gender = null;
 
 			$result = $klarnaInt->reserve(
-        $pno,
+				$pno,
 				$gender,
-        // Amount. -1 specifies that calculation should calculate the amount
-        // using the goods list
-        -1,
-        KlarnaFlags::NO_FLAG,   // Flags to affect behavior.
-        // -1 notes that this is an invoice purchase, for part payment purchase
-        // you will have a pclass object on which you use getId().
-        (int)$pclass//KlarnaPClass::INVOICE
+		        // Amount. -1 specifies that calculation should calculate the amount
+		        // using the goods list
+		        -1,
+		        KlarnaFlags::NO_FLAG, // Flags to affect behavior.
+		        // -1 notes that this is an invoice purchase, for part payment purchase
+		        // you will have a pclass object on which you use getId().
+		        (int)$pclass //KlarnaPClass::INVOICE
 			);
 
 			// Here we get the reservation number or invoice number
@@ -1271,7 +1272,7 @@ class KlarnaPrestaShop extends PaymentModule
 		}
 		catch (Exception $e)
 		{
-			return array('error' => true, 'message' => Tools::safeOutput($e->getMessage()));
+			return array('error' => true, 'message' => Tools::safeOutput(utf8_encode($e->getMessage())));
 		}
 	}
 }
