@@ -236,7 +236,7 @@ class Ebay extends Module {
           if ($version == '1.1' || empty($version)) {
                // Upgrade SQL
                include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
-          } else if (version_compare($version, '1.3.7', '<')) { // Waif for 1.4.0
+          } else if (version_compare($version, '1.4', '<')) { // Waif for 1.4.0
                include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
           }
 
@@ -824,10 +824,10 @@ class Ebay extends Module {
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
 				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
-          
+          /*
             $html .= '
             <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
-           
+           */
           $html .= '
       				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
       				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
@@ -1024,7 +1024,7 @@ class Ebay extends Module {
           $configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
 
           // Check if the module is configured
-          if ($configs['EBAY_PAYPAL_EMAIL'] === false)
+          if (!isset($configs['EBAY_PAYPAL_EMAIL']) || $configs['EBAY_PAYPAL_EMAIL'] === false)
                return $this->display(dirname(__FILE__), '/views/templates/hook/error_paypal_email.tpl');
 
           // Load categories only if necessary
@@ -1034,7 +1034,7 @@ class Ebay extends Module {
           }
 
           // Display eBay Categories
-          if (!$configs['EBAY_CATEGORY_LOADED']) {
+          if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED']) {
                $ebay = new eBayRequest();
                $ebay->saveCategories();
                $this->setConfiguration('EBAY_CATEGORY_LOADED', 1);
@@ -1043,7 +1043,7 @@ class Ebay extends Module {
 
           $tabHelp = "&id_tab=7";
 
-          
+
           // Smarty
           $datasSmarty = array(
               'alerts' => $this->getAlertCategories(),
@@ -1059,7 +1059,6 @@ class Ebay extends Module {
           $smarty->assign($datasSmarty);
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
-          
      }
 
      private function _postValidationCategory() {
@@ -1070,31 +1069,6 @@ class Ebay extends Module {
           // Init Var
           $date = date('Y-m-d H:i:s');
           $services = Tools::getValue('service');
-
-          if (Tools::getValue('action') == 'suggestCategories') {
-               // Loading categories
-               $ebay = new eBayRequest();
-               $categoryConfigList = array();
-               $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
-               foreach ($categoryConfigListTmp as $c)
-                    $categoryConfigList[$c['id_category']] = $c;
-               $categoryList = Db::getInstance()->executeS('SELECT `id_category`, `name` FROM `' . _DB_PREFIX_ . 'category_lang` WHERE `id_lang` = ' . (int) $this->id_lang . ' ' . (_PS_VERSION_ >= '1.5' ? $this->context->shop->addSqlRestrictionOnLang('cl') : ''));
-
-               foreach ($categoryList as $k => $c)
-                    if (!isset($categoryConfigList[$c['id_category']])) {
-                         $productTest = Db::getInstance()->getRow('
-					SELECT pl.`name`, pl.`description`
-					FROM `' . _DB_PREFIX_ . 'product` p LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . (int) $this->id_lang . ' ' . (_PS_VERSION_ >= '1.5' ? $this->context->shop->addSqlRestrictionOnLang('pl') : '') . ')
-					WHERE `id_category_default` = ' . (int) $c['id_category']);
-                         $id_category_ref_suggested = $ebay->getSuggestedCategories($c['name'] . ' ' . $productTest['name']);
-                         $id_ebay_category_suggested = Db::getInstance()->getValue('SELECT `id_ebay_category` FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = ' . (int) $id_category_ref_suggested);
-                         if ((int) $id_ebay_category_suggested > 0)
-                              Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_category_configuration', array('id_country' => 8, 'id_ebay_category' => (int) $id_ebay_category_suggested, 'id_category' => (int) $c['id_category'], 'percent' => 0, 'date_add' => pSQL($date), 'date_upd' => pSQL($date)), 'INSERT');
-                    }
-
-               $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
-               return true;
-          }
 
 
           // Sort post datas
@@ -1144,15 +1118,18 @@ class Ebay extends Module {
      }
 
      private function _displayFormShipping() {
+
           global $smarty;
+
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
           $eBayCarrier = $eBay->getCarrier();
           $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
-          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping_national");
+          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping_national");
           $internationalShippingLocation = $eBay->getInternationalShippingLocation();
-          $excludeShippingLocation   = $eBay->getExcludeShippingLocation();
+          $excludeShippingLocation = $eBay->getExcludeShippingLocation();
+
 
           $smarty->assign(array(
               'eBayCarrier' => $eBayCarrier,
@@ -1160,10 +1137,11 @@ class Ebay extends Module {
               'existingNationalCarrier' => $existingNationalCarrier,
               'deliveryTime' => $deliveryTime,
               'excludeShippingLocation' => $excludeShippingLocation,
-              'internationalShippingLocation' => $internationalShippingLocation,  
+              'internationalShippingLocation' => $internationalShippingLocation,
               'deliveryTimeOptions' => $deliveryTimeOptions,
               'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
           ));
+
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
      }
