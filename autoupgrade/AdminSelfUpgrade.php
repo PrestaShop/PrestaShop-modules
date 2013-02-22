@@ -3924,13 +3924,13 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$download = $this->downloadPath.DIRECTORY_SEPARATOR;
 		$dir = glob($download.'*.zip');
 		$content .= '<div id="for-useArchive">';
-		if (count($dir) > 0)
+		if ($dir !== false && count($dir) > 0)
 		{
 			$archive_filename = $this->getConfig('archive.filename');
 			$content .= '<label class="label-small">'.$this->l('Archive to use:').'</label><div><select name="archive_prestashop" >
 				<option value="">'.$this->l('choose an archive').'</option>';
-			foreach($dir as $file)
-				$content .= '<option '.($archive_filename?'selected="selected"':'').' value="'.str_replace($download, '', $file).'">'.str_replace($download, '', $file).'</option>';
+			foreach ($dir as $file)
+				$content .= '<option '.($archive_filename ? 'selected="selected"' : '').' value="'.str_replace($download, '', $file).'">'.str_replace($download, '', $file).'</option>';
 			$content .= '</select> '
 				.$this->l('to upgrade for version').' <input type="text" size="10" name="archive_num"
 				value="'.($this->getConfig('archive.version_num')?$this->getConfig('archive.version_num'):'').'" /> *
