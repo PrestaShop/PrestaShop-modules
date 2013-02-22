@@ -4186,13 +4186,10 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	{
 		global $currentIndex;
 
-		// We need jquery 1.6 for json
-		// do we ?
-		$this->_html .= '<script type="text/javascript">
-		if (jQuery == "undefined")
-			jq13 = jQuery.noConflict(true);
-			</script>
-		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery-1.6.2.min.js"></script>';
+		$this->_html .= '<script type="text/javascript">var jQueryVersionPS = parseFloat("."+$().jquery.replace(/\./g, ""));</script>
+		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript">if (jQueryVersionPS >= 0.162) jq162 = jQuery.noConflict(true);</script>';
+		
 		/* PrestaShop demo mode */
 		if (defined('_PS_MODE_DEMO_') && _PS_MODE_DEMO_)
 		{
