@@ -16,7 +16,7 @@ if (file_exists($configPath)) {
                } else {
                     global $smarty;
                }
-
+               
                if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN')) {
                     return $this->l('Your are not logged');
                }
@@ -25,12 +25,9 @@ if (file_exists($configPath)) {
 
                $categoryList = $this->_getChildCategories(Category::getCategories(Tools::getValue('id_lang')), ($this->isVersionOneDotFive()) ? 1 : 0);
 
-               $SQL = '
-                    SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` 
-                    WHERE `id_category_ref` = `id_category_ref_parent`';
-               $eBayCategoryList = Db::getInstance()->executeS($SQL);
+               $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
-               if ($this->isVersionOneDotFive()) {
+               if ($this->isVersionOneDotFive())
                     $rq_getCatInStock = '
                     SELECT SUM(s.`quantity`) AS instockProduct, p.`id_category_default`
                     FROM `' . _DB_PREFIX_ . 'product` AS p
@@ -38,12 +35,11 @@ if (file_exists($configPath)) {
                     WHERE 1 ' . $this->addSqlRestrictionOnLang('s') . '
                     GROUP BY p.`id_category_default`'
                     ;
-               } else {
+               else
                     $rq_getCatInStock = '
                     SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
                     FROM `' . _DB_PREFIX_ . 'product`	
                     GROUP BY `id_category_default`';
-               }
 
                $getCatsStock = Db::getInstance()->ExecuteS($rq_getCatInStock);
                $getCatInStock = array();
@@ -52,13 +48,8 @@ if (file_exists($configPath)) {
                }
 
                // Loading categories
-               $categoryConfigList = $ebayCatsRef = array();
-               $rq_config = '
-                    SELECT * 
-                    FROM `' . _DB_PREFIX_ . 'ebay_category` ec
-                         LEFT OUTER JOIN `' . _DB_PREFIX_ . 'ebay_category_configuration` ecc
-                              ON ec.`id_ebay_category` = ecc.`id_ebay_category`';
-               $categoryConfigListTmp = Db::getInstance()->executeS($rq_config);
+               $categoryConfigList = array();
+               $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
                foreach ($categoryConfigListTmp as $c) {
                     $categoryConfigList[$c['id_category']] = $c;
                }
