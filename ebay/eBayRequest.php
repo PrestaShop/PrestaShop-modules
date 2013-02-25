@@ -450,10 +450,10 @@ class eBayRequest {
           return $ReturnsAccepted;
      }
 
-     function getInternationalShippingLocation() {
+     function getInternationalShippingLocation(){
           $this->apiCall = 'GeteBayDetails';
 
-          $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
           $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
           $requestXml .= ' <DetailName>ShippingLocationDetails</DetailName>';
           $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
@@ -476,7 +476,7 @@ class eBayRequest {
           $categoriesFeatures = array();
           $response = simplexml_load_string($responseXml);
           $responseArray = array();
-          foreach ($response->ExcludeShippingLocationDetails as $line) {
+          foreach ($response->ShippingLocationDetails as $line) {
                $responseArray[] = array(
                    'description' => strip_tags($line->Description->asXML()),
                    'location' => strip_tags($line->ShippingLocation->asXML())
@@ -485,10 +485,10 @@ class eBayRequest {
           return $responseArray;
      }
 
-     function getExcludeShippingLocation() {
+     function getExcludeShippingLocation(){
           $this->apiCall = 'GeteBayDetails';
 
-          $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
           $requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
           $requestXml .= ' <DetailName>ExcludeShippingLocationDetails</DetailName>';
           $requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
@@ -511,9 +511,9 @@ class eBayRequest {
           $responseArraytmp = array();
           foreach ($response->ExcludeShippingLocationDetails as $line) {
                $responseArraytmp[] = array(
-                   'region' => strip_tags($line->Region->asXML()),
-                   'description' => strip_tags($line->Description->asXML()),
-                   'location' => strip_tags($line->Location->asXML())
+                    'region' => strip_tags($line->Region->asXML()),
+                    'description' => strip_tags($line->Description->asXML()),
+                    'location' => strip_tags($line->Location->asXML())
                );
           }
           //Sort array by Region
@@ -521,15 +521,17 @@ class eBayRequest {
           $responseArray = array();
           $region = array();
           foreach ($responseArraytmp as $key => $value) {
-               if (in_array($value['region'], $region)) {
+               if(in_array($value['region'], $region)){
                     array_push($responseArray[$value['region']], array(
-                        'location' => $value['location'],
-                        'description' => $value['description']));
-               } else {
+                         'location' => $value['location'],
+                         'description' => $value['description']));
+
+               }
+               else{
                     $region[] = $value['region'];
                     $responseArray[$value['region']][] = array(
-                        'location' => $value['location'],
-                        'description' => $value['description']);
+                         'location' => $value['location'],
+                         'description' => $value['description']);
                }
           }
 
@@ -667,7 +669,7 @@ class eBayRequest {
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
-          $requestXml .= '        <Value>' . $datas['brand'] . '</Value>' . "\n";
+          $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
           $requestXml .= '      </NameValueList>' . "\n";
           if (isset($datas['attributes']))
                foreach ($datas['attributes'] as $name => $value) {
@@ -964,7 +966,7 @@ class eBayRequest {
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
-          $requestXml .= '        <Value>' . $datas['brand'] . '</Value>' . "\n";
+          $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '    </ItemSpecifics>' . "\n";
           $requestXml .= '	<ReturnPolicy>' . "\n";
@@ -1130,7 +1132,7 @@ class eBayRequest {
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
-          $requestXml .= '        <Value>' . $datas['brand'] . '</Value>' . "\n";
+          $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '    </ItemSpecifics>' . "\n";
           $requestXml .= '	<ReturnPolicy>' . "\n";

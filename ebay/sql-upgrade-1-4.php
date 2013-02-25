@@ -26,3 +26,25 @@
 
 // Init
 $sql[] = 'ALTER TABLE `' . _DB_PREFIX_ . 'ebay_category_configuration` CHANGE `percent` `percent` VARCHAR(4) NOT NULL';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping` (
+			  `id_ebay_shipping` int(11) NOT NULL AUTO_INCREMENT,
+			  `ebay_carrier` int(11) NOT NULL,
+			  `ps_carrier` int(11) NOT NULL,
+			  `extra_fee` int(11) NOT NULL,
+			  `international` int(4) NOT NULL, 
+			  PRIMARY KEY (`id_ebay_shipping`)
+		) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_international_zone_excluded` (
+		  `id_ebay_shipping` int(11) NOT NULL,
+		  `id_ebay_zone_excluded` varchar(256) NOT NULL
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_international_zone` (
+		  `id_ebay_shipping` int(11) NOT NULL,
+		  `id_ebay_zone` varchar(256) NOT NULL
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8';
+
+
+

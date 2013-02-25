@@ -236,7 +236,7 @@ class Ebay extends Module {
           if ($version == '1.1' || empty($version)) {
                // Upgrade SQL
                include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
-          } else if (version_compare($version, '1.4', '<')) { // Waif for 1.4.0
+          } else if (version_compare($version, '1.3.7', '<')) { // Waif for 1.4.0
                include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
           }
 
@@ -824,10 +824,10 @@ class Ebay extends Module {
 			<div id="tabList">
 				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
 				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
-          /*
+          
             $html .= '
             <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
-           */
+           
           $html .= '
       				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
       				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
@@ -1024,7 +1024,7 @@ class Ebay extends Module {
           $configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
 
           // Check if the module is configured
-          if (!isset($configs['EBAY_PAYPAL_EMAIL']) || $configs['EBAY_PAYPAL_EMAIL'] === false)
+          if ($configs['EBAY_PAYPAL_EMAIL'] === false)
                return $this->display(dirname(__FILE__), '/views/templates/hook/error_paypal_email.tpl');
 
           // Load categories only if necessary
@@ -1034,7 +1034,7 @@ class Ebay extends Module {
           }
 
           // Display eBay Categories
-          if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED']) {
+          if (!$configs['EBAY_CATEGORY_LOADED']) {
                $ebay = new eBayRequest();
                $ebay->saveCategories();
                $this->setConfiguration('EBAY_CATEGORY_LOADED', 1);
@@ -1043,7 +1043,7 @@ class Ebay extends Module {
 
           $tabHelp = "&id_tab=7";
 
-
+          
           // Smarty
           $datasSmarty = array(
               'alerts' => $this->getAlertCategories(),
@@ -1059,6 +1059,7 @@ class Ebay extends Module {
           $smarty->assign($datasSmarty);
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
+          
      }
 
      private function _postValidationCategory() {
@@ -1110,38 +1111,91 @@ class Ebay extends Module {
           
      }
 
+     private function getExistingInternationalCarrier(){
+      $existingInternationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping WHERE international = 1");
+      foreach ($existingInternationalCarrier as $key => $carrier) {
+        //get All shipping location associated 
+        $existingInternationalCarrier[$key]['shippingLocation'] = DB::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping_international_zone
+                              WHERE id_ebay_shipping = '".(int)$carrier['id_ebay_shipping']."'");
+        //get all shipping excluded zone 
+        $existingInternationalCarrier[$key]['excludedShippingLocation'] = DB::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping_international_zone_excluded
+                              WHERE id_ebay_shipping = '".(int)$carrier['id_ebay_shipping']."'");
+      }
+
+      return $existingInternationalCarrier;
+     }
+
      private function _postProcessShipping() {
-          //Update global information about shipping (delivery time, ...)
-          if (Tools::getValue('submitSaveShippingGlobal')) {
-               $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
+
+        //Update global information about shipping (delivery time, ...)
+        $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
+        //Update Shipping Method for National Shipping (Delete And Insert)
+        $rq_del = "TRUNCATE "._DB_PREFIX_."ebay_shipping";
+        Db::getInstance()->Execute($rq_del);
+        foreach ($_POST['ebayCarrier'] as $key => $value) {
+          $rq_ins = "INSERT INTO "._DB_PREFIX_."ebay_shipping 
+            VALUES('', 
+              '".(int)$_POST['ebayCarrier'][$key]."',
+              '".(int)$_POST['psCarrier'][$key]."', 
+              '".(int)$_POST['extrafee'][$key]."', 
+              '0')";
+          DB::getInstance()->Execute($rq_ins);
+        }
+        //Update shipping method for international carrier(Delete and Insert)
+        $rq_del = "TRUNCATE "._DB_PREFIX_."ebay_shipping_international_zone_excluded";
+        Db::getInstance()->Execute($rq_del);
+        $rq_del = "TRUNCATE "._DB_PREFIX_."ebay_shipping_international_zone";
+        Db::getInstance()->Execute($rq_del);
+        foreach ($_POST['ebayCarrier_international'] as $key => $value) {
+          $rq_ins = "INSERT INTO "._DB_PREFIX_."ebay_shipping 
+            VALUES('', 
+              '".(int)$_POST['ebayCarrier_international'][$key]."',
+              '".(int)$_POST['psCarrier_international'][$key]."', 
+              '".(int)$_POST['extrafee_international'][$key]."', 
+              '1')";
+          DB::getInstance()->Execute($rq_ins);
+          $rq_get_ID = "SELECT id_ebay_shipping FROM "._DB_PREFIX_."ebay_shipping ORDER BY id_ebay_shipping DESC";
+          $lastID = Db::getInstance()->getValue($rq_get_ID);
+          if(isset($_POST['internationalShippingLocation'][$key])){
+            foreach ($_POST['internationalShippingLocation'][$key] as $key2 => $value2) {
+              $rq_ins = "INSERT INTO "._DB_PREFIX_."ebay_shipping_international_zone VALUES('".(int)$lastID."', '".pSQL($key2)."')";
+              DB::getInstance()->Execute($rq_ins);
+            }
           }
+          if(isset($_POST['internationalExcludedShippingLocation'][$key])){
+            foreach ($_POST['internationalExcludedShippingLocation'][$key] as $key2 => $value2) {
+              if($value2 != -1){
+                $rq_ins = "INSERT INTO "._DB_PREFIX_."ebay_shipping_international_zone_excluded VALUES('".(int)$lastID."', '".pSQL($value2)."')";
+                DB::getInstance()->Execute($rq_ins);
+              }
+            }
+          }
+        }
      }
 
      private function _displayFormShipping() {
-
           global $smarty;
-
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
           $eBayCarrier = $eBay->getCarrier();
           $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
-          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping_national");
+          $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_shipping WHERE international = 0");
+          $existingInternationalCarrier = $this->getExistingInternationalCarrier();
           $internationalShippingLocation = $eBay->getInternationalShippingLocation();
-          $excludeShippingLocation = $eBay->getExcludeShippingLocation();
-
+          $excludeShippingLocation   = $eBay->getExcludeShippingLocation();
 
           $smarty->assign(array(
               'eBayCarrier' => $eBayCarrier,
               'psCarrier' => $psCarrier,
               'existingNationalCarrier' => $existingNationalCarrier,
+              'existingInternationalCarrier' => $existingInternationalCarrier,
               'deliveryTime' => $deliveryTime,
               'excludeShippingLocation' => $excludeShippingLocation,
-              'internationalShippingLocation' => $internationalShippingLocation,
+              'internationalShippingLocation' => $internationalShippingLocation,  
               'deliveryTimeOptions' => $deliveryTimeOptions,
               'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
           ));
-
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
      }
