@@ -2,8 +2,8 @@
 
 $configPath = dirname(__FILE__) . '/../../../config/config.inc.php';
 if (file_exists($configPath)) {
-     include ($configPath);
-     include dirname(__FILE__) . '/../ebay.php';
+     include_once $configPath;
+     include_once dirname(__FILE__) . '/../ebay.php';
 
      class ebayLoadCat extends ebay {
 
@@ -16,7 +16,7 @@ if (file_exists($configPath)) {
                } else {
                     global $smarty;
                }
-               
+
                if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN')) {
                     return $this->l('Your are not logged');
                }
@@ -27,7 +27,7 @@ if (file_exists($configPath)) {
 
                $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
-               if ($this->isVersionOneDotFive())
+               if ($this->isVersionOneDotFive()) {
                     $rq_getCatInStock = '
                     SELECT SUM(s.`quantity`) AS instockProduct, p.`id_category_default`
                     FROM `' . _DB_PREFIX_ . 'product` AS p
@@ -35,11 +35,12 @@ if (file_exists($configPath)) {
                     WHERE 1 ' . $this->addSqlRestrictionOnLang('s') . '
                     GROUP BY p.`id_category_default`'
                     ;
-               else
+               } else {
                     $rq_getCatInStock = '
                     SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
                     FROM `' . _DB_PREFIX_ . 'product`	
                     GROUP BY `id_category_default`';
+               }
 
                $getCatsStock = Db::getInstance()->ExecuteS($rq_getCatInStock);
                $getCatInStock = array();
@@ -49,12 +50,41 @@ if (file_exists($configPath)) {
 
                // Loading categories
                $categoryConfigList = array();
-               $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
+               // init refcats
+               $refCats = array();
+               // init levels
+               $levels = array();
+               // init selects
+               $SQL = '
+                    SELECT *, ec.`id_ebay_category` AS id_ebay_category
+                    FROM `' . _DB_PREFIX_ . 'ebay_category` AS ec
+                         LEFT OUTER JOIN `' . _DB_PREFIX_ . 'ebay_category_configuration` AS ecc
+                              ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+                    ORDER BY `id_category`';
+               $categoryConfigListTmp = Db::getInstance()->executeS($SQL);
                foreach ($categoryConfigListTmp as $c) {
-                    $categoryConfigList[$c['id_category']] = $c;
+                    // Add datas
+                    if (isset($c['id_category'])) {
+                         $categoryConfigList[$c['id_category']] = $c;
+                    }
+                    // add refcats
+                    if (!isset($refCats[$c['id_category_ref']])) {
+                         $refCats[$c['id_category_ref']] = $c;
+                         // Create children in refcats
+                         if ($c['id_category_ref'] != $c['id_category_ref_parent']) {
+                              if (!isset($refCats[$c['id_category_ref_parent']]['children']))
+                                   $refCats[$c['id_category_ref_parent']]['children'] = array();
+                              if (!in_array($c['id_category_ref'], $refCats[$c['id_category_ref_parent']]['children']))
+                                   $refCats[$c['id_category_ref_parent']]['children'][] = $c['id_category_ref'];
+                         }
+                    }
                }
 
-               // Smarty
+               foreach ($categoryConfigList as $k => $v) {
+                    $categoryConfigList[$k]['var'] = $this->getSelectors($refCats, $v['id_category_ref'], $v['id_category'], $v['level']) . '<input type="hidden" name="category' . (int) $v['id_category'] . '" value="' . (int) $v['id_ebay_category'] . '" />';
+               }
+
+               // Smarty datas
                $datasSmarty = array(
                    'tabHelp' => $tabHelp, //
                    '_path' => $this->_path, //
@@ -69,6 +99,47 @@ if (file_exists($configPath)) {
 
                $smarty->assign($datasSmarty);
                return $this->display(realpath(dirname(__FILE__) . '/../'), '/views/templates/hook/table_categories.tpl');
+          }
+          
+          /**
+           * Create selectors
+           * @param array $cats
+           * @param int $id
+           * @param int $cat
+           * @param int $niv
+           * @return string
+           */
+          private function getSelectors($cats, $id, $cat, $niv) {
+               $var = null;
+               if ($niv > 1) {
+                    foreach ($cats as $k => $v) {
+                         if ($k == $id) {
+                              if (isset($cats[$v['id_category_ref_parent']]['children'])) {
+                                   if ($v['id_category_ref'] != $v['id_category_ref_parent'])
+                                        $var .= $this->getSelectors($cats, $v['id_category_ref_parent'], $cat, (int) ($niv - 1));
+                                   $var .= '
+                                        <select name="category' . $cat . '" id="categoryLevel' . (int) ($v['level']) . '-' . (int) $cat . '" rel="' . (int) $cat . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(' . (int) ($v['level']) . ', ' . (int) $cat . ');">';
+                                   foreach ($cats[$v['id_category_ref_parent']]['children'] as $child) {
+                                        $var .= '<option value="' . $cats[$child]['id_ebay_category'] . '"' . ($v['id_category_ref'] == $child ? ' selected' : '') . '>' . $cats[$child]['name'] . '</option>';
+                                   }
+                                   $var .= '
+                                   </select>';
+                              }
+                         }
+                    }
+               } else {
+                    $var .= '
+                         <select name="category' . $cat . '" id="categoryLevel' . (int) $niv . '-' . (int) $cat . '" rel="' . (int) $cat . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(' . (int) $niv . ', ' . (int) $cat . ');">
+                              <option value="0">' . $this->l('No category selected') . '</option>';
+                    foreach ($cats as $k => $v) {
+                         if ($v['id_category_ref'] == $v['id_category_ref_parent'] && !empty($v['id_ebay_category'])) {
+                              $var .= '<option value="' . $v['id_ebay_category'] . '"' . ($v['id_category_ref'] == $id ? ' selected' : '') . '>' . $v['name'] . '</option>';
+                         }
+                    }
+                    $var .= '
+                         </select>';
+               }
+               return $var;
           }
 
      }

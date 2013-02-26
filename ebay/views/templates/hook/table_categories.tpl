@@ -8,14 +8,15 @@
                <td>{$c.name} ({if isset($getCatInStock.{$c.id_category})}{$getCatInStock.{$c.id_category}}{/if})
                </td>
                <td id="categoryPath{$c.id_category}">
-                    <select name="category{$c.id_category}" id="categoryLevel1-{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(1, {$c.id_category});">
-                         <option value="0">{$noCatSelected}</option>
-                         {foreach $eBayCategoryList as $ec}
-                              <option value="{$ec.id_ebay_category}">{$ec.name}{if $ec.is_multi_sku == 1} *{/if}</option>
-                         {/foreach}
-                    </select>
-                    {if isset($categoryConfigList.{$c.id_category})}
-                         <script>$(document).ready(function() { loadCategoryMatch({$c.id_category}); });</script>
+                    {if isset($categoryConfigList.{$c.id_category}) && isset($categoryConfigList.{$c.id_category}.var)}
+                         {$categoryConfigList.{$c.id_category}.var}
+                    {else}
+                         <select name="category{$c.id_category}" id="categoryLevel1-{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(1, {$c.id_category});">
+                              <option value="0">{$noCatSelected}</option>
+                              {foreach $eBayCategoryList as $ec}
+                                   <option value="{$ec.id_ebay_category}">{$ec.name}{if $ec.is_multi_sku == 1} *{/if}</option>
+                              {/foreach}
+                         </select>
                     {/if}
                </td>
                <td>

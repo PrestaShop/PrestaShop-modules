@@ -8,11 +8,11 @@ if (file_exists($configPath)) {
      class ebaySuggestCategories extends ebay {
 
           public function getSuggest() {
-               
+
                if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN')) {
                     return $this->l('Your are not logged');
                }
-               
+
                // Loading categories
                $ebay = new eBayRequest();
                $categoryConfigList = array();
@@ -63,8 +63,8 @@ if (file_exists($configPath)) {
                                    }
                               }
                          }
-                    Db::getInstance()->execute($SQL);
-
+                    if ($i > 0)
+                         Db::getInstance()->execute($SQL);
                     return $this->l('Settings updated');
                }
           }
