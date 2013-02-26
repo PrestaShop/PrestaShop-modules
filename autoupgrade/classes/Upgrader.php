@@ -96,8 +96,10 @@ class UpgraderCore
 		$destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
 
 		if ($zip = Tools14::file_get_contents($this->link))
+		{
 			if((bool)file_put_contents($destPath, $zip) === true)
 				return true;
+		}
 		else
 			return false;
 	}
