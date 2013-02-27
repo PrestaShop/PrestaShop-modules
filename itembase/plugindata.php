@@ -1,7 +1,7 @@
 <?php
 
 /*
-* 2007-2011 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @version  Release: $Revision: 9702 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -31,7 +31,7 @@
  * Please do not change any of these values unless you know what you do!
  **/
 
-define('PS_ITEMBASE_PLUGIN_VERSION', '2.0');
+define('PS_ITEMBASE_PLUGIN_VERSION', '2.1');
 define('PS_ITEMBASE_SERVER_OAUTH', 'https://auth-m2.itembase.com/oauth/v2/token');
 define('PS_ITEMBASE_SERVER_EMBED', 'https://deliver-static-d1.itembase.com');
 define('PS_ITEMBASE_SERVER_HOST', 'https://www.itembase.com');
