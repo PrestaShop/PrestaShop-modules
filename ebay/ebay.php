@@ -211,6 +211,8 @@ class Ebay extends Module {
           Configuration::deleteByName('EBAY_INSTALL_DATE');
           Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
           Configuration::deleteByName('EBAY_DELIVERY_TIME');
+          Configuration::deleteByName('EBAY_RETURNS_DESCRIPTION');
+          Configuration::deleteByName('EBAY_RETURNS_ACCEPTED_OPTION');
           // Uninstall Module
           if (!parent::uninstall() ||
                   !$this->unregisterHook('addproduct') ||
@@ -633,7 +635,7 @@ class Ebay extends Module {
 
           // Displaying page
           $this->_html .= '<fieldset>
-		<legend><img src="' . $this->_path . 'logo.gif" alt="" /> ' . $this->l('eBay Module Status') . '</legend>';
+		      <legend><img src="' . $this->_path . 'logo.gif" alt="" /> ' . $this->l('eBay Module Status') . '</legend>';
           $this->_html .= '<div style="float: left; width: 45%">';
           if (!count($alert)) {
                $this->_html .= '<img src="../modules/ebay/valid.png" /><strong>' . $this->l('eBay Module is configured and online!') . '</strong>';
@@ -815,47 +817,47 @@ class Ebay extends Module {
       * */
      private function _displayFormConfig() {
           $html = '
-		<ul id="menuTab">
-				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
-				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
-                                <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
-      				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
-      				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
-      				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
-      				<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
-			</ul>
-			<div id="tabList">
-				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
-				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
+      		<ul id="menuTab">
+      				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
+      				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
+                                      <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
+            				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
+            				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
+            				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
+            				<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
+      			</ul>
+      			<div id="tabList">
+      				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
+      				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
 
-          $html .= '
-            <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
+                $html .= '
+                  <div id="menuTab3Sheet" class="tabItem">' . $this->_displayFormShipping() . '</div>';
 
-          $html .= '
-      				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
-      				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
-      				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
-      				<div id="menuTab7Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
-			</div>
-			<br clear="left" />
-			<br />
-			<style>
-				#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
-				#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
-				#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
-				#tabList { clear: left; }
-				.tabItem { display: none; }
-				.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
-			</style>
-			<script>
-				$(".menuTabButton").click(function () {
-				  $(".menuTabButton.selected").removeClass("selected");
-				  $(this).addClass("selected");
-				  $(".tabItem.selected").removeClass("selected");
-				  $("#" + this.id + "Sheet").addClass("selected");
-				});
-			</script>
-		';
+                $html .= '
+            				<div id="menuTab4Sheet" class="tabItem">' . $this->_displayFormTemplateManager() . '</div>
+            				<div id="menuTab5Sheet" class="tabItem">' . $this->_displayFormEbaySync() . '</div>
+            				<div id="menuTab6Sheet" class="tabItem">' . $this->_displayOrdersHistory() . '</div>
+            				<div id="menuTab7Sheet" class="tabItem">' . $this->_displayHelp() . '</div>
+      			</div>
+      			<br clear="left" />
+      			<br />
+      			<style>
+      				#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
+      				#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
+      				#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
+      				#tabList { clear: left; }
+      				.tabItem { display: none; }
+      				.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+      			</style>
+      			<script>
+      				$(".menuTabButton").click(function () {
+      				  $(".menuTabButton.selected").removeClass("selected");
+      				  $(this).addClass("selected");
+      				  $(".tabItem.selected").removeClass("selected");
+      				  $("#" + this.id + "Sheet").addClass("selected");
+      				});
+      			</script>
+      		';
           if (isset($_GET['id_tab']))
                $html .= '<script>
           				  $(".menuTabButton.selected").removeClass("selected");
@@ -865,99 +867,32 @@ class Ebay extends Module {
           			</script>';
           return $html;
      }
-
      private function _displayFormParameters() {
-          // Loading config currency
-          $configCurrency = new Currency((int) (Configuration::get('PS_CURRENCY_DEFAULT')));
+        global $smarty;
+        // Loading config currency
+        $configCurrency = new Currency((int) (Configuration::get('PS_CURRENCY_DEFAULT')));
 
-          // Display Form
-          $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=1&section=parameters" method="post" class="form" id="configForm1">
-				<fieldset style="border: 0">
-					<h4>' . $this->l('To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.') . '</h4>
-					<label>' . $this->l('eBay Identifier') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_identifier" value="' . Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : ')') . '/>
-						<p>' . (Configuration::get('EBAY_IDENTIFIER') ? '<a href="http://shop.ebay.fr/' . Configuration::get('EBAY_IDENTIFIER') . '/m.html?_ipg=50&_sop=12&_rdc=1" target="_blank">' . $this->l('Your products on eBay') . '</a>' : $this->l('Your eBay identifier')) . '</p>
-					</div>
-					<label>' . $this->l('eBay shop') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop" value="' . Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP'))) . '" /> <b>' . $this->l('The use of eBay\'s module require to open an eBay store') . '</b>
-						<p>' . (Configuration::get('EBAY_SHOP') ? '<a href="http://stores.ebay.fr/' . Configuration::get('EBAY_SHOP') . '" target="_blank">' . $this->l('Your shop on eBay') . '</a>' : '<a href="' . $this->createShopUrl . '" style="color:#7F7F7F;">' . $this->l('Open your shop')) . '</a></p>
-					</div>
-					<label>' . $this->l('Paypal Identifier (e-mail)') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_paypal_email" value="' . Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))) . '" />
-						<p>' . $this->l('You have to set your PayPal e-mail account, it\'s the only payment available with this module') . '</p>
-					</div>
-					<label>' . $this->l('Shipping method') . ' : </label>
-					<div class="margin-form">
-						<select name="ebay_shipping_carrier_id">';
-          foreach ($this->_shippingMethod as $id => $val)
-               $html .= '<option value="' . $id . '" ' . (Tools::getValue('ebay_shipping_carrier_id', Configuration::get('EBAY_SHIPPING_CARRIER_ID')) == $id ? 'selected="selected"' : '') . '>' . $val['description'] . '</option>';
-          $html .= '</select>
-						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
-					</div>
-					<label>' . $this->l('Shipping cost') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shipping_cost" value="' . Tools::safeOutput(Tools::getValue('ebay_shipping_cost', Configuration::get('EBAY_SHIPPING_COST'))) . '" /> ' . $configCurrency->sign . '
-						<p>' . $this->l('Shipping cost configuration for your products on eBay') . '</p>
-					</div>
-					<label>' . $this->l('Shop postal code') . ' : </label>
-					<div class="margin-form">
-						<input type="text" size="20" name="ebay_shop_postalcode" value="' . Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))) . '" />
-						<p>' . $this->l('Your shop\'s postal code') . '</p>
-					</div>
-				</fieldset>
-                                   <fieldset>
-                                        <legend>' . $this->l('Return policy') . '</legend>
-                                        <label>' . $this->l('Please select your Return Policy and add more informations about it') . ' : </label>
-                                        <div class="margin-form">
-                                             <select name="ebay_returns_accepted_option">';
-          $request = new eBayRequest();
-          $policies = $request->getReturnsPolicy();
-
-          foreach ($policies as $policy) {
-               $html .= '<option value="' . $policy['value'] . '"' . (Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')) == $policy['value'] ? 'selected="selected"' : '') . '>' . $policy['description'] . '</option>';
-          }
-
-          $html .='
-                                             </select>
-                                        </div>
-                                        <div style="clear:both;"></div>
-                                        <label>' . $this->l('Description') . ' : </label>
-                                        <div class="margin-form">
-                                             <textarea name="ebay_returns_description" cols="120" rows="10">' . Tools::getValue('ebay_returns_description', Configuration::get('EBAY_RETURNS_DESCRIPTION')) . '</textarea>
-                                        </div>
-                                   </fieldset>
-				<div class="margin-form" id="buttonEbayParameters"><input class="button" name="submitSave" type="submit" id="save_ebay_parameters" value="' . $this->l('Save') . '" /></div>
-				<div class="margin-form" id="categoriesProgression" style="font-weight: bold;"></div>
-			</form>';
-
-          if (!Configuration::get('EBAY_CATEGORY_LOADED')) {
-               $html .= '
-          			<script>
-          				percent = 0;
-          				function checkCategories()
-          				{
-          					percent++;
-          					if (percent > 100)
-          						percent = 100;
-          					$("#categoriesProgression").html("' . $this->l('Categories loading') . ' : " + percent + " %");
-          					if (percent < 100)
-          						setTimeout ("checkCategories()", 1000);
-          					
-          				}
-          				$(document).ready(function() {
-          					
-          					$("#save_ebay_parameters").click(function() {
-          						$("#buttonEbayParameters").hide();
-          						checkCategories();
-          					});
-          				});
-          			</script>';
-          }
-
-          return $html;
+        $url = 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=1&section=parameters';
+        $ebayIdentifier = Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : '');
+        
+        $request = new eBayRequest();
+        $policies = $request->getReturnsPolicy();
+        $catLoaded = !Configuration::get('EBAY_CATEGORY_LOADED');
+        $ebayShopValue = Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP')));
+        $smarty->assign(array(
+            'url' => $url,
+            'ebayIdentifier' => $ebayIdentifier, 
+            'configCurrencysign' => $configCurrency->sign,
+            'policies' => $policies,
+            'catLoaded' => $catLoaded,
+            'createShopUrl' => $this->createShopUrl,
+            'ebayShopValue' => $ebayShopValue, 
+            'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE')))
+          )
+        );
+        // Display Form
+        
+        return $this->display(dirname(__FILE__), '/views/templates/hook/parameters.tpl');
      }
 
      private function _postValidationParameters() {
@@ -968,8 +903,6 @@ class Ebay extends Module {
                $this->_postErrors[] = $this->l('Your ebay shop must be specified');
           if (Tools::getValue('ebay_paypal_email') == NULL OR !Validate::isEmail(Tools::getValue('ebay_paypal_email')))
                $this->_postErrors[] = $this->l('Your Paypal E-mail account is not specified or is invalid');
-          if (Tools::getValue('ebay_shipping_cost') == '' OR !is_numeric(Tools::getValue('ebay_shipping_cost')))
-               $this->_postErrors[] = $this->l('Your shipping cost is not specified or is invalid');
           if (Tools::getValue('ebay_shop_postalcode') == '' OR !Validate::isPostCode(Tools::getValue('ebay_shop_postalcode')))
                $this->_postErrors[] = $this->l('Your shop\'s postal code is not specified or is invalid');
      }
@@ -981,9 +914,6 @@ class Ebay extends Module {
                   $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', pSQL(Tools::getValue('ebay_returns_accepted_option'))) &&
                   $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', pSQL(Tools::getValue('ebay_returns_description'))) &&
                   $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
-                  $this->setConfiguration('EBAY_SHIPPING_COST', (float) (Tools::getValue('ebay_shipping_cost'))) &&
-                  $this->setConfiguration('EBAY_SHIPPING_COST_CURRENCY', (int) (Configuration::get('PS_CURRENCY_DEFAULT'))) &&
-                  $this->setConfiguration('EBAY_SHIPPING_CARRIER_ID', pSQL(Tools::getValue('ebay_shipping_carrier_id'))) &&
                   $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))))
                $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
           else
@@ -1218,89 +1148,89 @@ class Ebay extends Module {
           // Display Form
           $forbiddenJs = array('textarea', 'script', 'onmousedown', 'onmousemove', 'onmmouseup', 'onmouseover', 'onmouseout', 'onload', 'onunload', 'onfocus', 'onblur', 'onchange', 'onsubmit', 'ondblclick', 'onclick', 'onkeydown', 'onkeyup', 'onkeypress', 'onmouseenter', 'onmouseleave', 'onerror');
           $html = '<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=4&section=template" method="post" class="form" id="configForm3">
-				<fieldset style="border: 0">
-					<h4>' . $this->l('You can customise the template for your products page on eBay') . ' :</h4>
-					<p>' . $this->l('On eBay, your products are presented in templates that you have to prepare yourself. A good template will:') . '</p>
-					<ul style="padding-left:15px;">
-						<li>' . $this->l('Bring more professionalism towards your buyers') . '</li>
-						<li>' . $this->l('Give your customers all needed information to continue their purchase.') . '</li>
-					</ul>
-					<br/>
-					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">' . str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))) . '</textarea><br />';
+    				<fieldset style="border: 0">
+    					<h4>' . $this->l('You can customise the template for your products page on eBay') . ' :</h4>
+    					<p>' . $this->l('On eBay, your products are presented in templates that you have to prepare yourself. A good template will:') . '</p>
+    					<ul style="padding-left:15px;">
+    						<li>' . $this->l('Bring more professionalism towards your buyers') . '</li>
+    						<li>' . $this->l('Give your customers all needed information to continue their purchase.') . '</li>
+    					</ul>
+    					<br/>
+    					<textarea class="rte" cols="100" rows="50" name="ebay_product_template">' . str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE'))) . '</textarea><br />';
 
-          if (substr(_PS_VERSION_, 0, 3) == '1.3') {
-               $html .= '<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-					<script type="text/javascript">
-					tinyMCE.init({
-						mode : "textareas",
-						theme : "advanced",
-						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
-						// Theme options
-						theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-						theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
-						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
-						theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
-						theme_advanced_toolbar_location : "top",
-						theme_advanced_toolbar_align : "left",
-						theme_advanced_statusbar_location : "bottom",
-						theme_advanced_resizing : false,
-						content_css : "' . __PS_BASE_URI__ . 'themes/' . _THEME_NAME_ . '/css/global.css",
-						document_base_url : "' . __PS_BASE_URI__ . '",
-						width: "850",
-						height: "800",
-						font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
-						// Drop lists for link/image/media/template dialogs
-						template_external_list_url : "lists/template_list.js",
-						external_link_list_url : "lists/link_list.js",
-						external_image_list_url : "lists/image_list.js",
-						media_external_list_url : "lists/media_list.js",
-						elements : "nourlconvert",
-						convert_urls : false,
-						language : "' . (file_exists(_PS_ROOT_DIR_ . '/js/tinymce/jscripts/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en') . '"
-					});
-					</script>';
-          } else if ($this->isVersionOneDotFive()) {
-               $html .= '<script type="text/javascript">	
-							var iso = \'' . (file_exists(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en') . '\' ;
-							var pathCSS = \'' . _THEME_CSS_DIR_ . '\' ;
-							var ad = \'' . dirname($_SERVER['PHP_SELF']) . '\' ;
-						</script>
-						<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tiny_mce/tiny_mce.js"></script>
-						<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tinymce.inc.js"></script>
+              if (substr(_PS_VERSION_, 0, 3) == '1.3') {
+                   $html .= '<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+    					<script type="text/javascript">
+    					tinyMCE.init({
+    						mode : "textareas",
+    						theme : "advanced",
+    						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
+    						// Theme options
+    						theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+    						theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
+    						theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,media,|,ltr,rtl,|,fullscreen",
+    						theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak",
+    						theme_advanced_toolbar_location : "top",
+    						theme_advanced_toolbar_align : "left",
+    						theme_advanced_statusbar_location : "bottom",
+    						theme_advanced_resizing : false,
+    						content_css : "' . __PS_BASE_URI__ . 'themes/' . _THEME_NAME_ . '/css/global.css",
+    						document_base_url : "' . __PS_BASE_URI__ . '",
+    						width: "850",
+    						height: "800",
+    						font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
+    						// Drop lists for link/image/media/template dialogs
+    						template_external_list_url : "lists/template_list.js",
+    						external_link_list_url : "lists/link_list.js",
+    						external_image_list_url : "lists/image_list.js",
+    						media_external_list_url : "lists/media_list.js",
+    						elements : "nourlconvert",
+    						convert_urls : false,
+    						language : "' . (file_exists(_PS_ROOT_DIR_ . '/js/tinymce/jscripts/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en') . '"
+    					});
+    					</script>';
+              } else if ($this->isVersionOneDotFive()) {
+                   $html .= '<script type="text/javascript">	
+    							var iso = \'' . (file_exists(_PS_ROOT_DIR_ . '/js/tiny_mce/langs/' . $iso . '.js') ? $iso : 'en') . '\' ;
+    							var pathCSS = \'' . _THEME_CSS_DIR_ . '\' ;
+    							var ad = \'' . dirname($_SERVER['PHP_SELF']) . '\' ;
+    						</script>
+    						<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tiny_mce/tiny_mce.js"></script>
+    						<script type="text/javascript" src="' . __PS_BASE_URI__ . 'js/tinymce.inc.js"></script>
 
-						<script type="text/javascript">
-                         $(document).ready(function(){
-   
-                              tinySetup({
-                               editor_selector :"rte",
-                               theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-                               theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-                               theme_advanced_buttons3 : "",
-                               theme_advanced_buttons4 : ""
-                              });
+    						<script type="text/javascript">
+                             $(document).ready(function(){
+       
+                                  tinySetup({
+                                   editor_selector :"rte",
+                                   theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
+                                   theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
+                                   theme_advanced_buttons3 : "",
+                                   theme_advanced_buttons4 : ""
+                                  });
 
-                        });
-                   </script>
-						';
-          } else {
-               $html .= '<script type="text/javascript">
-						var iso = \'' . $isoTinyMCE . '\';
-						var pathCSS = \'' . _THEME_CSS_DIR_ . '\';
-						var ad = \'' . $ad . '\';
-						</script>
-						<script type="text/javascript" src="' . _PS_JS_DIR_ . '/tiny_mce/tiny_mce.js"></script>
-						<script type="text/javascript" src="' . _PS_JS_DIR_ . '/tinymce.inc.js"></script>
-						<script>
-							tinyMCE.settings.width = 850;
-							tinyMCE.settings.height = 800;
-							tinyMCE.settings.extended_valid_elements = "iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
-							tinyMCE.settings.extended_valid_elements = "link[href|type|rel|id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
-						</script>';
-          }
+                            });
+                       </script>
+    						';
+              } else {
+                   $html .= '<script type="text/javascript">
+    						var iso = \'' . $isoTinyMCE . '\';
+    						var pathCSS = \'' . _THEME_CSS_DIR_ . '\';
+    						var ad = \'' . $ad . '\';
+    						</script>
+    						<script type="text/javascript" src="' . _PS_JS_DIR_ . '/tiny_mce/tiny_mce.js"></script>
+    						<script type="text/javascript" src="' . _PS_JS_DIR_ . '/tinymce.inc.js"></script>
+    						<script>
+    							tinyMCE.settings.width = 850;
+    							tinyMCE.settings.height = 800;
+    							tinyMCE.settings.extended_valid_elements = "iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
+    							tinyMCE.settings.extended_valid_elements = "link[href|type|rel|id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
+    						</script>';
+              }
 
-          $html .= '</fieldset>
-				<div class="margin-form"><input class="button" name="submitSave" value="' . $this->l('Save') . '" type="submit"></div>
-			</form>';
+              $html .= '</fieldset>
+    				<div class="margin-form"><input class="button" name="submitSave" value="' . $this->l('Save') . '" type="submit"></div>
+    			</form>';
 
 
           return $html;
