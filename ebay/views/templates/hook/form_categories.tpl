@@ -57,15 +57,8 @@
 </p><br /><br />
 {literal}
      <script type="text/javascript">
-          var $wait_refresh = 3;
                
           var $selects = false;
-          function ebayRefresh(i){
-               if($wait_refresh == i)
-                    window.location.reload(true);
-                         
-               setTimeout('ebayRefresh(' + parseInt(i + 1) + ')', 1000);
-          }
           
           function loadCategoryMatch(id_category) {
                $.ajax({
@@ -97,7 +90,7 @@
                     $(this).fadeOut();
                     $.ajax({
                          url: "{/literal}{$_module_dir_}{literal}ebay/ajax/suggestCategories.php?token={/literal}{$configs['EBAY_SECURITY_TOKEN']}{literal}&id_lang={/literal}{$id_lang}{literal}",
-                         success : function(data) { $("#configForm2SuggestedCategories").html('<div class="module_confirmation conf confirm">' + data + '</div>'); ebayRefresh(0); }
+                         success : function(data) { window.location.href = window.location.href + "&conf=6"; }
                     });
                     return false;
                });
