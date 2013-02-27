@@ -39,9 +39,8 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.0.8';
+		$this->version = '3.1';
 		$this->author = 'PrestaShop';
-		$this->limited_countries = array('us', 'ca');
 		parent::__construct();
 
 		$this->displayName = $this->l('Avalara - AvaTax');
