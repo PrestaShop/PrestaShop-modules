@@ -60,7 +60,7 @@ if (file_exists($configPath)) {
                     FROM `' . _DB_PREFIX_ . 'ebay_category` AS ec
                          LEFT OUTER JOIN `' . _DB_PREFIX_ . 'ebay_category_configuration` AS ecc
                               ON ec.`id_ebay_category` = ecc.`id_ebay_category`
-                    ORDER BY `id_category`';
+                    ORDER BY `level`';
                $categoryConfigListTmp = Db::getInstance()->executeS($SQL);
                foreach ($categoryConfigListTmp as $c) {
                     // Add datas
@@ -132,7 +132,7 @@ if (file_exists($configPath)) {
                          <select name="category' . $cat . '" id="categoryLevel' . (int) $niv . '-' . (int) $cat . '" rel="' . (int) $cat . '" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch(' . (int) $niv . ', ' . (int) $cat . ');">
                               <option value="0">' . $this->l('No category selected') . '</option>';
                     foreach ($cats as $k => $v) {
-                         if ($v['id_category_ref'] == $v['id_category_ref_parent'] && !empty($v['id_ebay_category'])) {
+                         if (isset($v['id_category_ref']) && $v['id_category_ref'] == $v['id_category_ref_parent'] && !empty($v['id_ebay_category'])) {
                               $var .= '<option value="' . $v['id_ebay_category'] . '"' . ($v['id_category_ref'] == $id ? ' selected' : '') . '>' . $v['name'] . '</option>';
                          }
                     }
