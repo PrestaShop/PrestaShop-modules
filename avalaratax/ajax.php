@@ -34,11 +34,27 @@ include(_PS_ROOT_DIR_.'/init.php');
 include(_PS_MODULE_DIR_.'avalaratax/avalaratax.php');
 
 $avalaraModule = new AvalaraTax();
+if (!$avalaraModule->active)
+	die;
 if (!Validate::isLoadedObject($avalaraModule) || !$avalaraModule->active)
 	die('{"hasError" : true, "errors" : ["Error while loading Avalara module"]}');
 
 $timeout = Configuration::get('AVALARATAX_TIMEOUT');
 ini_set('max_execution_time', (int)$timeout > 0 ? (int)$timeout : 120);
+
+if (Tools::getValue('ajax') == 'validateAddress')
+{
+	$result = $avalaraModule->fixPOST();
+	if (isset($result['ResultCode']) && $result['ResultCode'] == 'Error')
+	{
+		if (isset($result['Messages']['Summary']))
+			foreach ($result['Messages']['Summary'] as $error)
+				die(Tools::safeOutput($error));
+		else
+			die(Tools::displayError('This address cannot be submitted'));
+	}
+	die('1');
+}
 
 // Check if the AJAX call is valid
 if (!isset($_POST['id_cart']) || !isset($_POST['id_address']) || !isset($_POST['ajax']) || !isset($_POST['token']) ||
@@ -86,6 +102,9 @@ $cc = CacheTools::checkCarrierCache($cart);
 
 if (!$pc && !$cc)
 	die('{"hasError":false, "cached_tax":true}');
+
+$pc = 1;
+$cc = 1;
 
 if ($pc)
 	CacheTools::updateProductsTax($avalaraModule, $cart, (int)$_POST['id_address'], $region, $taxable);

@@ -91,14 +91,17 @@ class CacheTools
 
 			// Call Avalara
 			$getTaxResult = $avalaraModule->getTax(array($avalaraProducts), array('type' => 'SalesOrder', 'DocCode' => 1, 'cart' => $cart, 'taxable' => $taxable), $id_address);
-
+			
 			// Store the taxrate in cache
-			// If taxrate exists (but it's outdated), then update, else insert (REPLACE INTO)
+			// If taxrate exists (but it's outdated), then update, else insert (REPLACE INTO)			
 			if (isset($getTaxResult['TotalTax']) && (float)$getTaxResult['TotalTax'] >= 0 && isset($getTaxResult['TotalAmount']) && $getTaxResult['TotalAmount'])
+			{
 				Db::getInstance()->Execute('REPLACE INTO `'._DB_PREFIX_.'avalara_product_cache` (`id_product`, `tax_rate`, `region`, `update_date`, `id_address`)
-									VALUES ('.(int)$product['id_product'].', '.(float)($getTaxResult['TotalTax'] * 100 / $getTaxResult['TotalAmount']).',
-												\''.($region ? pSQL($region) : '').'\', \''.date('Y-m-d H:i:s').'\', '.(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}.')');
+				VALUES ('.(int)$product['id_product'].', '.(float)($getTaxResult['TotalTax'] * 100 / $getTaxResult['TotalAmount']).',
+				\''.($region ? pSQL($region) : '').'\', \''.date('Y-m-d H:i:s').'\', '.(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}.')');
+			}
 		}
+
 		return $p;
 	}
 

@@ -4,7 +4,7 @@
  */
 
 /**
- * Contains exemption certificate data. Is part of the GetExemptionCertificatesResult result came from the GetExemptionCertificates.
+ * Contains exemption certificate data. Is part of the GetExemptionCertificatesResult result came from the GetExemptionCertificates.
  * @see GetExemptionCertificatesResult
  *
  * @author    Avalara
