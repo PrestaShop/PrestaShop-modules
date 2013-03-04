@@ -48,7 +48,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			'Ville'					=> array(
 						'required'				=> false,
 						'value'						=> '',
-						'regexValidation' => '#^[A-Z_\-\' ]{2,25}$#'),
+						'regexValidation' => '#^[A-Z_\-\' ]{2,25}\s*#'),
 			'CP'						=> array(
 						'required'				=> false,
 						'value'						=> '',
