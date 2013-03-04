@@ -51,11 +51,11 @@ define('_PS_ADMIN_DIR_', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARAT
 if (!defined('_PS_ROOT_DIR_'))
 	define('_PS_ROOT_DIR_', realpath(dirname(__FILE__).'/../../'));
 	
-if (!defined('_MYSQL_ENGINE_'))
-	define('_MYSQL_ENGINE_', 'MyISAM');	
-
 // ajax-upgrade-tab is located in admin/autoupgrade directory
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+
+if (!defined('_MYSQL_ENGINE_'))
+	define('_MYSQL_ENGINE_', 'MyISAM');
 
 //require(_PS_ADMIN_DIR_.'/functions.php');
 include(AUTOUPGRADE_MODULE_DIR.'init.php');
