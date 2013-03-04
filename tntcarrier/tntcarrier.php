@@ -27,7 +27,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.2';
+		$this->version = '1.8.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -281,7 +281,10 @@ class TntCarrier extends CarrierModule
 
 		$alert = array();
 		if (!Configuration::get('TNT_CARRIER_LOGIN') || !Configuration::get('TNT_CARRIER_PASSWORD') || !Configuration::get('TNT_CARRIER_NUMBER_ACCOUNT'))
+		{
+			$smarty->assign('account_set', false);
 			$alert['account'] = 1;
+		}
 		if (
 			!Configuration::get('TNT_CARRIER_SHIPPING_ADDRESS1') ||
 			!Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE') ||
@@ -915,18 +918,26 @@ class TntCarrier extends CarrierModule
 		}
 		$services = Db::getInstance()->ExecuteS('SELECT `id_carrier`, `option` FROM `'._DB_PREFIX_.'tnt_carrier_option`');
 		$dueDate = serviceCache::getDueDate($id_cart, $services);
-		$smarty->assign('id_cart', $id_cart);
-		$smarty->assign('tnt_token', Configuration::get('TNT_CARRIER_TOKEN'));
-		$smarty->assign('version', _PS_VERSION_);
-		$smarty->assign('services', $services);
-		$smarty->assign('dueDate', $dueDate);
+		
+		$smarty->assign(
+			array(
+				'shop_url' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__,
+				'id_cart' => $id_cart,
+				'tnt_token' => Configuration::get('TNT_CARRIER_TOKEN'),
+				'version' => _PS_VERSION_,
+				'services' => $services,
+				'dueDate' => $dueDate,
+			)
+		);
+		
+		$output = null;
 		if (_PS_VERSION_ >= 1.5)
 		{
 			$this->context->controller->addJS('http://maps.google.com/maps/api/js?sensor=true');
 			$this->context->controller->addJS($this->_path.'js/relais.js');
 			$this->context->controller->addJS($this->_path.'js/jquery-ui-1.8.10.custom.min.js');
 		}
-		return $this->display( __FILE__, 'tpl/relaisColis.tpl' );
+		return $output.$this->display(__FILE__, 'tpl/relaisColis.tpl');
 	}
 
 	public function hookadminOrder($params)
