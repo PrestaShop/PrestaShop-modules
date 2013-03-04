@@ -33,7 +33,7 @@ class Tax extends TaxCore
 	 * @param integer $id_address
 	 * @return Tax Rate
 	 */
-	public static function getProductTaxRate($id_product, $id_address = null, Context $context = null, $getCarrierRate = false)
+	public static function getProductTaxRate($id_product, $id_address = null, $getCarrierRate = false)
 	{
 		include_once(_PS_ROOT_DIR_.'/modules/avalaratax/avalaratax.php');
 
@@ -63,6 +63,6 @@ class Tax extends TaxCore
 
 	public static function getCarrierTaxRate($id_carrier, $id_address = NULL)
 	{
-		return (float)self::getProductTaxRate($id_carrier, $id_address, null, true);
+		return (float)self::getProductTaxRate($id_carrier, $id_address, true);
 	}
 }
