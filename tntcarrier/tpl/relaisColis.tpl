@@ -1,9 +1,9 @@
-<link rel="stylesheet" href="./modules/tntcarrier/css/ui.tabs.css" type="text/css" />
-<link rel="stylesheet" href="./modules/tntcarrier/css/ui.dialog.css" type="text/css" />
+<link rel="stylesheet" href="{$shop_url}/modules/tntcarrier/css/ui.tabs.css" type="text/css" />
+<link rel="stylesheet" href="{$shop_url}/modules/tntcarrier/css/ui.dialog.css" type="text/css" />
 {if $version < '1.5'}
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-    <script type="text/javascript" src="./modules/tntcarrier/js/relais.js"></script>
-    <script type="text/javascript" src="./js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" src="{$shop_url}/modules/tntcarrier/js/relais.js"></script>
+    <script type="text/javascript" src="{$shop_url}/js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
 {/if}
 <script type="text/javascript">
 //date_carrier[$(this).val()]
@@ -50,7 +50,7 @@ $("input[name='id_carrier']").click(function() {
 	idCart = document.getElementById("cartRelaisColis").value;
 	$.ajax({
 	    type: "POST",
-	    url: "./modules/tntcarrier/relaisColis/postRelaisData.php",
+	    url: "{/literal}{$shop_url}{literal}/modules/tntcarrier/relaisColis/postRelaisData.php",
 	    data: "id_cart="+idCart+"&due_date="+date_carrier[idcarrier]
 	});
     }
@@ -82,9 +82,9 @@ function displayNewTable(response, id)
 {else}
 {literal}
 $(document).ready(function()
-	{
-var chosenCarrier = $("input[name*='delivery_option[']:checked").val().split(',');
-getAjaxRelais(chosenCarrier[0]);
+{
+	var chosenCarrier = $("input[name*='delivery_option[']:checked").val().split(',');
+	getAjaxRelais(chosenCarrier[0]);
 		$("[id*='delivery_option_']").each(function(){
 			var id_array = $(this).val().split(',');
 			var indexTab = jQuery.inArray(id_array[0], id_carrier);
@@ -104,14 +104,15 @@ getAjaxRelais(chosenCarrier[0]);
 			}
 		});
 	});
-	$("input[name*='delivery_option[']").click(function() {
-		var id_array = $("input[name*='delivery_option[']:checked").val().split(',');
-		if (document.getElementById("tr_carrier_relais"))
-		{
-			$("#tr_carrier_relais").remove();
-		}
-		getAjaxRelais(id_array[0]);
-	});
+	
+	if ($('.opc-main-block').length == 0) {
+		$("input[name*='delivery_option[']").click(function() {
+			var id_array = $("input[name*='delivery_option[']:checked").val().split(',');
+			if (document.getElementById("tr_carrier_relais"))
+				$("#tr_carrier_relais").remove();
+			getAjaxRelais(id_array[0]);
+		});
+	}
 	function displayNewTable(response, id)
 		{
 			$("[id*='delivery_option_']").each(function(){
@@ -120,6 +121,8 @@ getAjaxRelais(chosenCarrier[0]);
 				{
 					$(this).next("[for*='delivery_option_']").after("<div style='display:none' id='tr_carrier_relais'></div>");
 					$("#tr_carrier_relais").html(response);
+					$("#tr_carrier_relais").css('padding', '4px');
+					$("#tr_carrier_relais h3").css('margin', '0 -5px');
 					$("#tr_carrier_relais").slideDown('slow');
 					tntRCInitMap();
 					tntRCgetCommunes();
@@ -132,7 +135,7 @@ getAjaxRelais(chosenCarrier[0]);
 	function getAjaxRelais(id)
 	{
 		$.get(
-			"./modules/tntcarrier/relaisColis.php?id_carrier="+id+"&idcart="+$("#cartRelaisColis").val(),
+			"{/literal}{$shop_url}{literal}/modules/tntcarrier/relaisColis.php?id_carrier="+id+"&idcart="+$("#cartRelaisColis").val(),
 			function(response, status, xhr) 
 			{
 				/*if (status == "error") 
@@ -172,7 +175,7 @@ getAjaxRelais(chosenCarrier[0]);
 	function selectCities(token)
 	{
 		$.get(
-			"./modules/tntcarrier/changeCity.php?city="+$("#citiesGuide").val()+"&id="+$("#cartRelaisColis").val()+"&token="+token,
+			"{/literal}{$shop_url}{literal}/modules/tntcarrier/changeCity.php?city="+$("#citiesGuide").val()+"&id="+$("#cartRelaisColis").val()+"&token="+token,
 			function(response, status, xhr) 
 			{
 				if (status == 'success' && response != 'none')
@@ -186,7 +189,7 @@ getAjaxRelais(chosenCarrier[0]);
 	}
 {/literal}
 </script>
-<div id="tntHelpCarrier" style="display:none;position:absolute;width:100%;top:0px;left:0px;background:url('./img/macFFBgHack.png');z-index:10000">
+<div id="tntHelpCarrier" style="display:none;position:absolute;width:100%;top:0px;left:0px;background:url('{$shop_url}img/macFFBgHack.png');z-index:10000">
 	<div id="helpCarrierBlock" style="text-align:center;position:relative">
 		<div style="width:720px;margin:auto;background-color:white">
 		<span style="cursor:pointer;color:blue;text-decoration:underline;" onclick="hideHelpCarrier()">{l s='Close' mod='tntcarrier'}</span><br/>

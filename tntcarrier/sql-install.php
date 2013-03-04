@@ -51,4 +51,7 @@
 			  `additionnal_charges` double(6,2) DEFAULT NULL,
 			  PRIMARY KEY  (`id_weight`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+
+	$sql[] = 'TRUNCATE `'._DB_PREFIX_.'tnt_carrier_option`;';
+
 ?>

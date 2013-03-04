@@ -15,7 +15,7 @@ function postMobile(token)
 	var id = $("#id_cart").val();
 	var ph = $("#mobileTnt").val();;
 	
-	$.get("./modules/tntcarrier/relaisColis/postMobileData.php?id_cart="+id+"&phone="+ph+"&token="+token);
+	$.get(baseDir+"/modules/tntcarrier/relaisColis/postMobileData.php?id_cart="+id+"&phone="+ph+"&token="+token);
 }
 	
 function resetMap() {
@@ -104,7 +104,7 @@ function tntRCSetSelectedInfo(selectedIdx, noMarkerInfo)
 	var id_cart = document.getElementById("cartRelaisColis").value;
 	$.ajax({
 	   type: "POST",
-	   url: "./modules/tntcarrier/relaisColis/postRelaisData.php",
+	   url: baseDir+"/modules/tntcarrier/relaisColis/postRelaisData.php",
 	   data: "id_cart="+id_cart+"&tntRCSelectedCode="+oRelais[0]+"&tntRCSelectedNom="+oRelais[1]+"&tntRCSelectedAdresse="+oRelais[4]+"&tntRCSelectedCodePostal="+oRelais[2]+"&tntRCSelectedCommune="+oRelais[3]
 	});
 	
@@ -215,16 +215,16 @@ function listeRelais(tabRelais)
 
 		var messages="";			
 		var logo_point = "";
-		if (messages != "") logo_point = "<img src='./modules/tntcarrier/img/exception.gif' alt='Informations compl&#233;mentaires' width='16px' height='16px'>";
+		if (messages != "") logo_point = "<img src='"+baseDir+"/modules/tntcarrier/img/exception.gif' alt='Informations compl&#233;mentaires' width='16px' height='16px'>";
 		
 		tntRCjTable.append(
 			"<tr>"+
 				"<td class='tntRCblanc' width=''></td>"+
-				"<td class='tntRCblanc' width=''><img src='./modules/tntcarrier/img/logo-tnt-petit.jpg'>&nbsp;" + logo_point + "</td>"+
+				"<td class='tntRCblanc' width=''><img src='"+baseDir+"/modules/tntcarrier/img/logo-tnt-petit.jpg'>&nbsp;" + logo_point + "</td>"+
 				"<td style='font-size:10px; padding:0 0 3px' class='tntRCrelaisColis' width=''>" + nomRelais + " - " + adresse + " - " + codePostal + " - " + commune + "<BR>&nbsp;&nbsp;&nbsp;&nbsp;>> Ouvert jusqu'&agrave; " + heureFermeture + "</td>"+
 				"<td class='tntRCrelaisColis' width=''>&nbsp;</td>"+
 				"<td style='font-size:10px;  padding: 0;' class='tntRCrelaisColis' valign='middle' align='center' width=''>"+
-					"<img onclick='afficheDetail(" + i + ");' style='vertical-align:middle;cursor:pointer' src='./modules/tntcarrier/img/loupe.gif' class='tntRCBoutonLoupe'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+					"<img onclick='afficheDetail(" + i + ");' style='vertical-align:middle;cursor:pointer' src='"+baseDir+"/modules/tntcarrier/img/loupe.gif' class='tntRCBoutonLoupe'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
 					"<input type='radio' style='vertical-align: middle;margin-left:0px' name='tntRCchoixRelais' value='" + codeRelais + "'" + ( i==0 ? "checked" : "") + " onclick='tntRCSetSelectedInfo(" + i + ")'/>"+
 				"</td>"+
 				"<td class='tntRCblanc' width=''></td>"+
@@ -236,18 +236,6 @@ function listeRelais(tabRelais)
 	// Mémorisation des infos du relais sélectionné par défaut (c'est le premier)		
 	tntRCSetSelectedInfo(0, true);
 	// Ajout du lien de retour sur la liste des communes si cette dernière a été mémorisée
-	/*if (tntRCJsonCommunes != null) {
-		tntRCjTable.append(
-			"<tr>"+
-				"<td colspan='5' class='tntRCBack2Communes'>"+
-					"<a href='#' onclick='tntRCafficheCommunes(tntRCJsonCommunes);'>"+
-						"<img src='" + pathToImages + "bt-Retour.gif'>"+
-						tntRCMsgBodyBack2Communes + 
-					"</a>"+
-				"</td>"+
-				"<td />"+
-			"</tr>");
-	}*/
 	
 	jMessage.append(tntRCjTable);
 	if (mapDetected) init_marker(tabRelais);
@@ -277,7 +265,7 @@ function listeCommunes(tabCommunes)
 		tntRCjTable.append(
 			"<tr>"+
 				"<td class='tntRCblanc' width=''></td>"+
-				"<td class='tntRCblanc' width=''><img src='./modules/tntcarrier/img/logo-tnt-petit.jpg'></td>" +
+				"<td class='tntRCblanc' width=''><img src='"+baseDir+"/modules/tntcarrier/img/logo-tnt-petit.jpg'></td>" +
 				"<td class='tntRCrelaisColis' width=''> " + nomVille + " (" + tntRCcodePostal + ") </td>" +
 				"<td class='tntRCrelaisColis' width=''>&nbsp;</td>"+
 				"<td class='tntRCrelaisColis' align='center' width=''>"+
@@ -294,7 +282,7 @@ function listeCommunes(tabCommunes)
 			"<td class='tntRCblanc' colspan='2' width=''></td>"+
 			"<td class='tntRCblanc' width=''></td>"+
 			"<td class='tntRCblanc' align='center' width=''>"+
-				"<a href='javascript:tntRCgetRelaisColis();'><img class='tntRCButton' src='./modules/tntcarrier/img/bt-Continuer-2.jpg' onmouseover='this.src=\"./modules/tntcarrier/img/bt-Continuer-1.jpg\"' onmouseout='this.src=\"./modules/tntcarrier/img/bt-Continuer-2.jpg\"'></a>" +
+				"<a href='javascript:tntRCgetRelaisColis();'><img class='tntRCButton' src='"+baseDir+"/modules/tntcarrier/img/bt-Continuer-2.jpg' onmouseover='this.src=\"/modules/tntcarrier/img/bt-Continuer-1.jpg\"' onmouseout='this.src=\"/modules/tntcarrier/img/bt-Continuer-2.jpg\"'></a>" +
 			"</td>"+
 			"<td class='tntRCblanc' width='></td>"+
 		"</tr>");
@@ -351,7 +339,7 @@ var infowindow;
 
 var relaisMarkers = [];
 var iconRelais = new google.maps.MarkerImage(
-		"./modules/tntcarrier/img/google/relaisColis.png", 
+		baseDir+"/modules/tntcarrier/img/google/relaisColis.png", 
 		new google.maps.Size(40, 30), 
 		new google.maps.Point(0, 0), 
 		new google.maps.Point(20, 30))
@@ -443,7 +431,6 @@ function setInfoMarker(codeRelais, nomRelais, adresse, codePostal, commune, mess
 
 	google.maps.event.addListener(infowindow, "domready", function() {  
 		$("#point_choisi").attr("value", adresse_pointclic);
-		$("#tabs").tabs();
 		$("#tabs").parent().removeAttr("style");
 	});
 

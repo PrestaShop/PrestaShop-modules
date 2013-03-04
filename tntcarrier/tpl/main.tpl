@@ -1,7 +1,9 @@
 <ul id="menuTab">
 	<li id="menuTab1" class="menuTabButton selected">{l s='Account settings' mod='tntcarrier'}</li>
-	<li id="menuTab2" class="menuTabButton">{l s='Shipping Settings' mod='tntcarrier'}</li>
-	<li id="menuTab3" class="menuTabButton">{l s='Service Settings' mod='tntcarrier'}</li>
+	{if !isset($account_set) || $account_set === true}
+		<li id="menuTab2" class="menuTabButton">{l s='Shipping Settings' mod='tntcarrier'}</li>
+		<li id="menuTab3" class="menuTabButton">{l s='Service Settings' mod='tntcarrier'}</li>
+	{/if}
 </ul>
 <div id="tabList">
 	<div id="menuTab1Sheet" class="tabItem selected">{$varMain.account}</div>
