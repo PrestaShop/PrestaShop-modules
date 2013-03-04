@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.1.1';
+		$this->version = '3.2.1';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -174,13 +174,12 @@ class AvalaraTax extends Module
 	{
 		return array(
 			'Tax.php' => array(
-				'source' => 'override-14x/classes/Tax.php',
+				'source' => 'override/classes/tax/Tax.php',
 				'dest' => 'override/classes/Tax.php',
 				'md5' => array(
 					'1.1' => '5d9e318d673bfa723b02f14f952e0a7a',
 					'2.3' => '86c900cd6fff286aa6a52df2ff72228a',
 					'3.0.2' => 'c558c0b15877980134e301af34e42c3e',
-					'3.1.1' => '38acdbc8b4d57d7e5110d589a78796bc',
 				)
 			),
 			'Cart.php' => array(
@@ -197,6 +196,7 @@ class AvalaraTax extends Module
 				'md5' => array(
 					'1.1' => 'ebc4f31298395c4b113c7e2d7cc41b4a',
 					'3.0.2' => 'ff3d9cb2956c35f4229d5277cb2e92e6',
+					'3.2.1' => 'bc34c1150f7170d3ec7912eb383cd04b',
 				)
 			),
 			'AuthController.php' => array(
@@ -231,6 +231,7 @@ class AvalaraTax extends Module
 				if (!$removed)
 					$this->_errors[] = $this->l('Error while removing override: ').$key;
 			}
+
 		return !isset($this->_errors) || !$this->_errors || !count($this->_errors);
 	}
 
@@ -453,30 +454,29 @@ class AvalaraTax extends Module
 
 		if (!(int)$id_address)
 			return ;
-
 		return '<script type="text/javascript">
 				function refresh_taxes(count)
 				{
-								$.ajax({
-												type : \'POST\',
-												url : \''.$this->_path.'\' + \'ajax.php\',
-												data : {
-																\'id_cart\': "'.(int)$this->context->cart->id.'",
-																\'id_lang\': "'.(int)$this->context->cookie->id_lang.'",
-																\'id_address\': "'.(int)$id_address.'",
-																\'ajax\': "getProductTaxRate",
-																\'token\': "'.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'",
-												},
-												dataType: \'json\',
-												success : function(d) {
-																if (d.hasError == false && d.cached_tax == true)
-																				$(\'#total_tax\').html($(\'body\').data(\'total_tax\'));
-																else if (d.hasError == false && d.cached_tax == false)
-																				$(\'#total_tax\').html(d.total_tax);
-																else
-																				$(\'#total_tax\').html(\''.$this->l('Error while calculating taxes').'\');
-												}
-								});
+					$.ajax({
+						type : \'POST\',
+						url : \''.$this->_path.'\' + \'ajax.php\',
+						data : {
+							\'id_cart\': "'.(int)$this->context->cart->id.'",
+							\'id_lang\': "'.(int)$this->context->cookie->id_lang.'",
+							\'id_address\': "'.(int)$id_address.'",
+							\'ajax\': "getProductTaxRate",
+							\'token\': "'.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'",
+						},
+						dataType: \'json\',
+						success : function(d) {
+							if (d.hasError == false && d.cached_tax == true)
+											$(\'#total_tax\').html($(\'body\').data(\'total_tax\'));
+							else if (d.hasError == false && d.cached_tax == false)
+											$(\'#total_tax\').html(d.total_tax);
+							else
+											$(\'#total_tax\').html(\''.$this->l('Error while calculating taxes').'\');
+						}
+					});
 				}
 
 		$(function() {
@@ -728,6 +728,7 @@ else
 					<label>'.$this->l('Enable address validation').'</label>
 					<div class="margin-form">
 						<input type="checkbox" name="avalaratax_address_validation" value="1"'.(isset($confValues['AVALARATAX_ADDRESS_VALIDATION']) && $confValues['AVALARATAX_ADDRESS_VALIDATION'] ? ' checked="checked"' : '').' />
+						('.$this->l('Not compatible with One Page Checkout').')
 					</div>
 					<label>'.$this->l('Enable tax calculation').'</label>
 					<div class="margin-form">
@@ -1371,12 +1372,11 @@ else
 		$address->postcode = isset($_POST['postcode']) ? $_POST['postcode'] : null;
 		$address->id_country = isset($_POST['id_country']) ? $_POST['id_country'] : null;
 
-		// US customer: normalize the address
+		/* Validate address */
 		if ($address->id_country == Country::getByIso('US'))
 		{
 			if ($this->tax('isAuthorized') && Configuration::get('AVALARATAX_ADDRESS_VALIDATION'))
 			{
-				// Validate address
 				$normalizedAddress = $this->validateAddress($address);
 				if (isset($normalizedAddress['ResultCode']) && $normalizedAddress['ResultCode'] == 'Success')
 				{
@@ -1385,13 +1385,7 @@ else
 					$_POST['city'] = Tools::safeOutput($normalizedAddress['Normalized']['City']);
 					$_POST['postcode'] =  Tools::safeOutput(substr($normalizedAddress['Normalized']['PostalCode'], 0, strpos($normalizedAddress['Normalized']['PostalCode'], '-')));
 				}
-			}
-			else
-			{
-				include_once(_PS_TAASC_PATH_.'AddressStandardizationSolution.php');
-				$normalize = new AddressStandardizationSolution();
-				$_POST['address1'] = Tools::safeOutput($normalize->AddressLineStandardization($address->address1));
-				$_POST['address2'] = Tools::safeOutput($normalize->AddressLineStandardization($address->address2));
+				return $normalizedAddress;
 			}
 		}
 	}
