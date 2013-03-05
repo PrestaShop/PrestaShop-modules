@@ -69,7 +69,7 @@
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "trustly/backward_compatibility"]
 	path = trustly/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
 [submodule "upscarrier/backward_compatibility"]
 	path = upscarrier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
