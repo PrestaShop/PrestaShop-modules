@@ -2234,17 +2234,6 @@ FileETag INode MTime Size
 					return true;
 			}
 		}
-		else{
-			// If apache_get_modules does not exists,
-			// one solution should be parsing httpd.conf, 
-			// but we could simple parse phpinfo(INFO_MODULES) return string
-			ob_start();
-			phpinfo(INFO_MODULES);
-			$phpinfo = ob_get_contents();
-			ob_end_clean();
-			if (strpos($phpinfo, $name) !== false)
-				return true;
-		}
 		return false;
 	}
 	
