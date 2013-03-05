@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.1';
+		$this->version = '1.7.2';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -1053,12 +1053,19 @@ class KlarnaPrestaShop extends PaymentModule
 			{
 				$order = new Order((int)$order_id);
 				$shippingPrice = $order->total_shipping_tax_incl;
-				$rate = round((($order->total_shipping_tax_incl / $order->total_shipping_tax_excl) - 1.0) * 100);
+				if (!$order->total_shipping_tax_excl)
+					$rate = 0;
+				else
+					$rate = round((($order->total_shipping_tax_incl / $order->total_shipping_tax_excl) - 1.0) * 100);
 			}
 			else
 			{
 				$shippingPrice = $cart->getTotalShippingCost();
-				$rate = round((($cart->getTotalShippingCost() / $cart->getTotalShippingCost(null, false)) - 1.0) * 100);
+				$shippingPriceTaxExcl = $cart->getTotalShippingCost(null, false);
+				if (!$shippingPriceTaxExcl)
+					$rate = 0;
+				else
+					$rate = round((($cart->getTotalShippingCost() / $cart->getTotalShippingCost(null, false)) - 1.0) * 100);
 			}
 
 			$klarna->addArticle(
