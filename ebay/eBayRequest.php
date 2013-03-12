@@ -52,7 +52,7 @@ class eBayRequest {
      private $findingUrl;
      private $findingVersion;
      private $compatibilityLevel;
-     private $debug = false;
+     private $debug = true;
      private $dev = true;
      private $country;
      private $language;
@@ -138,6 +138,7 @@ class eBayRequest {
           if ($this->debug == true) {
                if (!file_exists(dirname(__FILE__) . '/log/request.php'))
                     file_put_contents(dirname(__FILE__) . '/log/request.php', "<?php\n\n", FILE_APPEND | LOCK_EX);
+               file_put_contents(dirname(__FILE__) . '/log/request.php', date('d/m/Y H:i:s') . "\n\n HEADERS : \n".print_r($this->buildHeaders(), true), FILE_APPEND | LOCK_EX);
                file_put_contents(dirname(__FILE__) . '/log/request.php', date('d/m/Y H:i:s') . "\n\n" . $request . "\n\n" . $response . "\n\n-------------------\n\n", FILE_APPEND | LOCK_EX);
           }
 
@@ -145,39 +146,44 @@ class eBayRequest {
           return $response;
      }
 
-     private function buildHeadersShopping() {
-          $headers = array(
-              'X-EBAY-API-APP-ID:' . $this->appID,
-              'X-EBAY-API-VERSION:' . $this->compatibilityLevel,
-              'X-EBAY-API-SITE-ID:' . $this->siteID,
-              'X-EBAY-API-CALL-NAME:' . $this->apiCall,
-              'X-EBAY-API-REQUEST-ENCODING:XML',
-              //For api call on a different endpoint we need to add the content type 
-              'Content-type:text/xml;charset=utf-8'
+    private function buildHeadersShopping()
+     {
+          $headers = array (
+               'X-EBAY-API-APP-ID:'.$this->appID,
+               'X-EBAY-API-VERSION:'.$this->compatibilityLevel,
+               'X-EBAY-API-SITE-ID:'.$this->siteID,
+               'X-EBAY-API-CALL-NAME:'.$this->apiCall,
+               'X-EBAY-API-REQUEST-ENCODING:XML', 
+
+               //For api call on a different endpoint we need to add the content type 
+               'Content-type:text/xml;charset=utf-8'
           );
 
           return $headers;
      }
 
-     private function buildHeaders() {
-          $headers = array(
-              // Regulates versioning of the XML interface for the API
-              'X-EBAY-API-COMPATIBILITY-LEVEL: ' . $this->compatibilityLevel,
-              // Set the keys
-              'X-EBAY-API-DEV-NAME: ' . $this->devID,
-              'X-EBAY-API-APP-NAME: ' . $this->appID,
-              'X-EBAY-API-CERT-NAME: ' . $this->certID,
-              // The name of the call we are requesting
-              'X-EBAY-API-CALL-NAME: ' . $this->apiCall,
-              //SiteID must also be set in the Request's XML
-              //SiteID = 0  (US) - UK = 3, Canada = 2, Australia = 15, ....
-              //SiteID Indicates the eBay site to associate the call with
-              'X-EBAY-API-SITEID: ' . $this->siteID,
+     private function buildHeaders()
+     {
+          $headers = array (
+               // Regulates versioning of the XML interface for the API
+               'X-EBAY-API-COMPATIBILITY-LEVEL: '.$this->compatibilityLevel,
+               
+               // Set the keys
+               'X-EBAY-API-DEV-NAME: '.$this->devID,
+               'X-EBAY-API-APP-NAME: '.$this->appID,
+               'X-EBAY-API-CERT-NAME: '.$this->certID,
+               
+               // The name of the call we are requesting
+               'X-EBAY-API-CALL-NAME: '.$this->apiCall,
+               
+               //SiteID must also be set in the Request's XML
+               //SiteID = 0  (US) - UK = 3, Canada = 2, Australia = 15, ....
+               //SiteID Indicates the eBay site to associate the call with
+               'X-EBAY-API-SITEID: '.$this->siteID,
           );
 
           return $headers;
      }
-
      /*      * *************************************************************** */
 
      /** Authentication Methods *************************************** */
@@ -289,7 +295,8 @@ class eBayRequest {
      /*      * *************************************************************** */
 
 
-     function saveCategories() {
+     function saveCategories()
+     {
           // Set Api Call
           $this->apiCall = 'GetCategories';
 
@@ -308,7 +315,8 @@ class eBayRequest {
 
           // Send the request and get response
           $responseXml = $this->makeRequest($requestXml);
-          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+          {
                $this->error = 'Error sending ' . $this->apiCall . ' request';
                return false;
           }
@@ -356,7 +364,7 @@ class eBayRequest {
           $requestXml .= '</GetCategoryFeatures>' . "\n";
 
           // Send the request and get response
-          $responseXml = $this->makeRequest($requestXml, true);
+          $responseXml = $this->makeRequest($requestXml);
           if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
                $this->error = 'Error sending ' . $this->apiCall . ' request';
                return false;
@@ -482,6 +490,7 @@ class eBayRequest {
                    'location' => strip_tags($line->ShippingLocation->asXML())
                );
           }
+;
           return $responseArray;
      }
 
@@ -497,6 +506,8 @@ class eBayRequest {
           $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
           $requestXml .= '  </RequesterCredentials>' . "\n";
           $requestXml .= '</GeteBayDetailsRequest>';
+
+
 
           // Send the request and get response
           $responseXml = $this->makeRequest($requestXml);
@@ -517,25 +528,7 @@ class eBayRequest {
                );
           }
           //Sort array by Region
-          array_multisort($responseArraytmp);
-          $responseArray = array();
-          $region = array();
-          foreach ($responseArraytmp as $key => $value) {
-               if(in_array($value['region'], $region)){
-                    array_push($responseArray[$value['region']], array(
-                         'location' => $value['location'],
-                         'description' => $value['description']));
-
-               }
-               else{
-                    $region[] = $value['region'];
-                    $responseArray[$value['region']][] = array(
-                         'location' => $value['location'],
-                         'description' => $value['description']);
-               }
-          }
-
-          return $responseArray;
+          return $responseArraytmp;
      }
 
      function getCarrier() {
@@ -614,6 +607,7 @@ class eBayRequest {
           return $responseDeliveryTimeOptions;
      }
 
+
      /*      * *************************************************************** */
 
      /** Add / Update / End Product Methods *************************** */
@@ -649,24 +643,20 @@ class eBayRequest {
           $requestXml .= '    <PrimaryCategory>' . "\n";
           $requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
           $requestXml .= '    </PrimaryCategory>' . "\n";
-          $requestXml .= '    <ConditionID>1000</ConditionID>' . "\n";
+          $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           if (!isset($datas['noPriceUpdate']))
                $requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
           $requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
           $requestXml .= '    <Currency>EUR</Currency>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
-          $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
+          $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
           $requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
           $requestXml .= '    <PostalCode>' . Configuration::get('EBAY_SHOP_POSTALCODE') . '</PostalCode>' . "\n";
           $requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
           $requestXml .= '    <ItemSpecifics>' . "\n";
-          $requestXml .= '      <NameValueList>' . "\n";
-          $requestXml .= '        <Name>Etat</Name>' . "\n";
-          $requestXml .= '        <Value>Neuf</Value>' . "\n";
-          $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
           $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
@@ -687,12 +677,31 @@ class eBayRequest {
           //$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
           $requestXml .= ' 	</ReturnPolicy>' . "\n";
           $requestXml .= '    <ShippingDetails>' . "\n";
-          $requestXml .= '      <ShippingServiceOptions>' . "\n";
-          $requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>' . "\n";
-          $requestXml .= '        <ShippingService>' . $datas['shippingService'] . '</ShippingService>' . "\n";
-          $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-          $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $datas['shippingCost'] . '</ShippingServiceCost>' . "\n";
-          $requestXml .= '      </ShippingServiceOptions>' . "\n";
+          //Shipping Exclude Location
+          foreach ($datas['shipping']['excludedZone'] as $excluded) {
+               $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+          }
+          //National Shipping Service
+          foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <ShippingServiceOptions>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               $requestXml .= '      </ShippingServiceOptions>' . "\n";
+          }
+          //International Shipping Service
+          foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
+          }
+         
+
           $requestXml .= '    </ShippingDetails>' . "\n";
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
           $requestXml .= '  </Item>' . "\n";
@@ -763,6 +772,7 @@ class eBayRequest {
           $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
+          $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           if (isset($datas['pictures'])) {
                $requestXml .= '    <PictureDetails>' . "\n";
                $requestXml .= '      <GalleryType>Gallery</GalleryType>' . "\n";
@@ -774,19 +784,37 @@ class eBayRequest {
           }
           $requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
+          $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
           if (!isset($datas['noPriceUpdate']))
                $requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
-          if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) {
+          if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) {//We resynchronize everything, not only quantity and price
                $requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
                $requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
                $requestXml .= '    <ShippingDetails>' . "\n";
-               $requestXml .= '      <ShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $datas['shippingService'] . '</ShippingService>' . "\n";
-               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $datas['shippingCost'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '      </ShippingServiceOptions>' . "\n";
+               //Shipping Exclude Location
+               foreach ($datas['shipping']['excludedZone'] as $excluded) {
+                    $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+               }
+               //National Shipping Service
+               foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
+                    $requestXml .= '      <ShippingServiceOptions>' . "\n";
+                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+                    $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+                    $requestXml .= '      </ShippingServiceOptions>' . "\n";
+               }
+               //International Shipping Service
+               foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
+                    $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
+                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+                    $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
+               }
                $requestXml .= '    </ShippingDetails>' . "\n";
           }
           $requestXml .= '	<ReturnPolicy>' . "\n";
@@ -940,9 +968,9 @@ class eBayRequest {
           $requestXml .= '    <Description>' . "\n";
           $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
           $requestXml .= '    </Description>' . "\n";
-          $requestXml .= '    <ConditionID>1000</ConditionID>' . "\n";
+          $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
-          $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
+          $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
           $requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
@@ -960,10 +988,6 @@ class eBayRequest {
                $requestXml .= '    </PictureDetails>' . "\n";
           }
           $requestXml .= '    <ItemSpecifics>' . "\n";
-          $requestXml .= '      <NameValueList>' . "\n";
-          $requestXml .= '        <Name>Etat</Name>' . "\n";
-          $requestXml .= '        <Value>Neuf</Value>' . "\n";
-          $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
           $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
@@ -1027,12 +1051,31 @@ class eBayRequest {
           }
           $requestXml .= '    </Variations>' . "\n";
           $requestXml .= '    <ShippingDetails>' . "\n";
-          $requestXml .= '      <ShippingServiceOptions>' . "\n";
-          $requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>' . "\n";
-          $requestXml .= '        <ShippingService>' . $datas['shippingService'] . '</ShippingService>' . "\n";
-          $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-          $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $datas['shippingCost'] . '</ShippingServiceCost>' . "\n";
-          $requestXml .= '      </ShippingServiceOptions>' . "\n";
+          //Shipping Exclude Location
+          foreach ($datas['shipping']['excludedZone'] as $excluded) {
+               $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+          }
+          //National Shipping Service
+          foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <ShippingServiceOptions>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               $requestXml .= '      </ShippingServiceOptions>' . "\n";
+          }
+          //International Shipping Service
+          foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
+          }
+         
+
           $requestXml .= '    </ShippingDetails>' . "\n";
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
           $requestXml .= '  </Item>' . "\n";
@@ -1088,6 +1131,76 @@ class eBayRequest {
           return true;
      }
 
+     function relistFixedPriceItem($datas = array()){
+           // Check data
+          if (!$datas)
+               return false;
+
+          // Set Api Call
+          $this->apiCall = 'RelistFixedPriceItem';
+
+          // Build the request Xml string
+          $requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+          $requestXml .= '<RelistFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+          $requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+          $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '  <Item>' . "\n";
+          $requestXml .= '    <ItemID>' . $datas['itemID'] .'</ItemID>' . "\n";
+          $requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
+          $requestXml .= '  </Item>' . "\n";
+          $requestXml .= '  <RequesterCredentials>' . "\n";
+          $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+          $requestXml .= '  </RequesterCredentials>' . "\n";
+          $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+          $requestXml .= '</RelistFixedPriceItem>' . "\n";
+
+
+          // Send the request and get response
+          $responseXml = $this->makeRequest($requestXml);
+          if (stristr($responseXml, 'HTTP 404') || $responseXml == '') {
+               $this->error = 'Error sending ' . $this->apiCall . ' request';
+               return false;
+          }
+
+          // Loading XML tree in array
+          $this->response = simplexml_load_string($responseXml);
+
+          // Checking Errors
+          $this->error = '';
+          $this->errorCode = '';
+          if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+               foreach ($this->response->Errors as $e) {
+                    // if product no longer on eBay, we log the error code
+                    if ((int) $e->ErrorCode == 291)
+                         $this->errorCode = (int) $e->ErrorCode;
+
+                    // We log error message
+                    if ($e->SeverityCode == 'Error') {
+                         if ($this->error != '')
+                              $this->error .= '<br />';
+                         $this->error .= (string) $e->LongMessage;
+                         if (isset($e->ErrorParameters->Value))
+                              $this->error .= '<br />' . (string) $e->ErrorParameters->Value;
+                    }
+               }
+
+          // Checking Success
+          $this->itemID = 0;
+          if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) {
+               $this->fees = 0;
+               $this->itemID = (string) $this->response->ItemID;
+               if (isset($this->response->Fees->Fee))
+                    foreach ($this->response->Fees->Fee as $f)
+                         $this->fees += (float) $f->Fee;
+          }
+          else if ($this->error == '')
+               $this->error = 'Sorry, technical problem, try again later.';
+
+          if (!empty($this->error))
+               return false;
+          return $this->itemID;
+     }
+
      function reviseFixedPriceItemMultiSku($datas = array()) {
           // Check data
           if (!$datas)
@@ -1105,9 +1218,9 @@ class eBayRequest {
           $requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
           $requestXml .= '    <Currency>EUR</Currency>' . "\n";
-          $requestXml .= '    <ConditionID>1000</ConditionID>' . "\n";
+          $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
-          $requestXml .= '    <ListingDuration>GTC</ListingDuration>' . "\n";
+          $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
           $requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
           $requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
@@ -1126,10 +1239,6 @@ class eBayRequest {
                $requestXml .= '    </PictureDetails>' . "\n";
           }
           $requestXml .= '    <ItemSpecifics>' . "\n";
-          $requestXml .= '      <NameValueList>' . "\n";
-          $requestXml .= '        <Name>Etat</Name>' . "\n";
-          $requestXml .= '        <Value>Neuf</Value>' . "\n";
-          $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '      <NameValueList>' . "\n";
           $requestXml .= '        <Name>Marque</Name>' . "\n";
           $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
@@ -1201,12 +1310,31 @@ class eBayRequest {
                $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
                $requestXml .= '    </Description>' . "\n";
                $requestXml .= '    <ShippingDetails>' . "\n";
-               $requestXml .= '      <ShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $datas['shippingService'] . '</ShippingService>' . "\n";
-               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $datas['shippingCost'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '      </ShippingServiceOptions>' . "\n";
+               //Shipping Exclude Location
+               foreach ($datas['shipping']['excludedZone'] as $excluded) {
+                    $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+               }
+               //National Shipping Service
+               foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
+                    $requestXml .= '      <ShippingServiceOptions>' . "\n";
+                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+                    $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+                    $requestXml .= '      </ShippingServiceOptions>' . "\n";
+               }
+               //International Shipping Service
+               foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
+                    $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
+                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+                    $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
+               }
+              
+
                $requestXml .= '    </ShippingDetails>' . "\n";
           }
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
