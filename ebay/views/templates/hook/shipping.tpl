@@ -39,15 +39,15 @@
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 		"<select name='ebayCarrier"+internationsuffix+"["+lastId+"]' id='ebayCarrier_"+lastId+"'>";
 		{foreach from=$eBayCarrier item=carrier}
-		currentShippingService = {$carrier.shippingServiceID};
+		currentShippingService = '{$carrier.shippingService}';
 		//check for international
 		if((internationalOnly == 1 && '{$carrier.InternationalService}'=== 'true') || internationalOnly == 0)
 		{
 			if(currentShippingService == idEbayCarrier){
-				stringShippingFee += 		"<option value='{$carrier.shippingServiceID}' selected='selected'>{$carrier.description}</option>";
+				stringShippingFee += 		"<option value='{$carrier.shippingService}' selected='selected'>{$carrier.description}</option>";
 			}
 			else{
-				stringShippingFee += 		"<option value='{$carrier.shippingServiceID}'>{$carrier.description}</option>";
+				stringShippingFee += 		"<option value='{$carrier.shippingService}'>{$carrier.description}</option>";
 			}
 		}
 		{/foreach}
@@ -87,31 +87,6 @@
 	}
 
 	
-
-	function getExcludeShippingLocation(jQueryparent, idExisting, lastId, lastIDExcludedLocation){
-		if(lastId == undefined)
-			var lastId = jQueryparent.attr('data-id');
-		if(lastIDExcludedLocation == undefined)
-			var lastIDExcludedLocation = jQueryparent.find('.internationalExcludedShippingLocation').length;
-		
-
-
-		var string = "";
-		string += "<select name='internationalExcludedShippingLocation["+lastId+"]["+lastIDExcludedLocation+"]' style='margin-right:10px' class='internationalExcludedShippingLocation'>";
-		string += "<option value='-1'>No excluded zone</option>";	
-		{foreach from=$excludeShippingLocation item=shippingRegion key=region}
-		string += "<option value='{$region}''>{$region}</option>";
-			{foreach from=$shippingRegion item=shippingLocation}
-				if(idExisting == '{$shippingLocation.location}')
-					string += "<option value='{$shippingLocation.location}' selected='selected'>---{$shippingLocation.description}</option>";
-				else
-					string += "<option value='{$shippingLocation.location}'>--- {$shippingLocation.description}</option>";
-			{/foreach}
-		{/foreach}
-		string += "</select>";
-		return string;
-	}
-
 	function getShippingLocation(lastId, zone){
 		var string = '';
 		{foreach from=$internationalShippingLocation item=shippingLocation}
@@ -140,21 +115,42 @@
 		string += "<label>{l s='Add eBay zone for this carrier' mod='ebay'}</label>";
 		string += "<div class='margin-form'	>"+getShippingLocation(lastId, zone)+"</div>";
 		string += "<div style='width:100%;clear:both'></div>";
-		string += "<label style='clear:both;'>{l s='Exclude eBay zone for the carrier'}</label>";
-		if(zoneExcluded != undefined)
-			for(i = 0; i < zoneExcluded.length; i++)
-				string += getExcludeShippingLocation(null, zoneExcluded[i], lastId, i);
-		string += "<span style='font-size:18px;font-weight:bold;padding-right:5px;clear:both;cursor:pointer;' class='addExcludedZone' title='{l s='Add a new excluded zone' mod='ebay'}'>+</span>";
 		string += '</div>';
 
 		$('#internationalCarrier div.internationalShipping:last').after(string);
 	}
 
+	function excludeLocation(){
+		string = '<input type="hidden" value="1" name="excludeLocationHidden"/>'
+		string += '<table class="allregion table">';
+		
+		{foreach from=$excludeShippingLocation.all item=region key=regionvalue name=count}
+			{if $smarty.foreach.count.index % 4 == 0}
+				string += "<tr>";
+			{/if}
+			string += "<td>";
+			string += "<div class='excludedLocation'>";
+			string += "<input type='checkbox' name='excludeLocation[{$regionvalue}]' {if in_array($regionvalue, $excludeShippingLocation.excluded)} checked='checked'{/if}/> {$region.description}<br/>";
+			string += "<span class='showCountries' data-region='{$regionvalue}'>({l s='Show all countries'})</span>";
+			string += "<div class='listcountry'></div>"
+			string += "</div>";
+			string += "</td>";
+
+			{if $smarty.foreach.count.index % 4 == 3}
+				string += "</tr>";
+			{/if}
+		{/foreach}
+		string += "</table>";
+
+
+
+		return string;
+	}
 
 	jQuery(document).ready(function($) {
 		/* INIT */
 		{foreach from=$existingNationalCarrier item=nationalCarrier}
-			addShippingFee(1, 0, {$nationalCarrier.ebay_carrier}, {$nationalCarrier.ps_carrier}, {$nationalCarrier.extra_fee});
+			addShippingFee(1, 0, '{$nationalCarrier.ebay_carrier}', {$nationalCarrier.ps_carrier}, {$nationalCarrier.extra_fee});
 		{/foreach}
 		var zone = new Array();
 		var zoneExcluded = new Array();
@@ -168,22 +164,49 @@
 				zoneExcluded.push('{$excludedShippingLocation.id_ebay_zone_excluded}');
 			{/foreach}
 
-			addInternationalShippingFee({$internationalCarrier.ebay_carrier}, {$internationalCarrier.ps_carrier}, {$internationalCarrier.extra_fee}, zone, zoneExcluded);
+			addInternationalShippingFee('{$internationalCarrier.ebay_carrier}', {$internationalCarrier.ps_carrier}, {$internationalCarrier.extra_fee}, zone, zoneExcluded);
 		{/foreach}
 
-		/* EVENTS */
-		$('#addNationalCarrier').click(function(){
-			addShippingFee(1, 0);
-			bindElements();
-		});
-		
-		$('#addInternationalCarrier').click(function(){
-			addInternationalShippingFee();
-			bindElements();
-		});
+		{if count($excludeShippingLocation) > 0}
+		showExcludeLocation();
+		{/if}
 
+
+		/* EVENTS */
 		bindElements();
 	});
+
+
+	function showExcludeLocation(){
+		$('#nolist').fadeOut('normal', function(){
+			$('#list').html(excludeLocation());	
+			
+			{literal}
+		$('.showCountries').each(function(){
+			var showcountries = $(this);
+			$.ajax({
+				url: '{/literal}{$module_dir}{literal}ajax/getCountriesLocation.php',
+				type: 'POST',
+				data: {region: $(this).attr('data-region')},
+				complete: function(xhr, textStatus) {
+
+				},
+				success: function(data, textStatus, xhr) {
+					showcountries.parent().find('.listcountry').html(data);
+				},
+				error: function(xhr, textStatus, errorThrown) {
+				//called when there is an error
+				}
+			});
+		});
+		{/literal}
+
+			bindElements();
+
+		});
+
+
+	}
 
 	function bindElements(){
 		$('#internationalCarrier .deleteCarrier').unbind().click(function(){
@@ -198,44 +221,101 @@
 			$(this).before(excluded);
 		});
 
+		
+		$('#addNationalCarrier').unbind().click(function(){
+			addShippingFee(1, 0);
+			bindElements();
+		});
+		
+		$('#addInternationalCarrier').unbind().click(function(){
+			addInternationalShippingFee();
+			bindElements();
+		});
+
+		$('#createlist').unbind().click(function(){
+			showExcludeLocation();
+		});
+
+		$('.showCountries').unbind().click(function(){
+			$(this).hide().parent().find('.listcountry').show();
+		});
+
+
 	}
 </script>
-
 <style>
-.internationalShipping{
-	background-color: #FFF;
-	border: 1px solid #AAA;
-	margin-bottom: 10px;
-}
+	.internationalShipping{
+		background-color: #FFF;
+		border: 1px solid #AAA;
+		margin-bottom: 10px;
+	}
 
+	.excludedLocation{
+		float:left;
+		min-height:30px;
+		margin-right:10px;
+		min-width:140px;
+	}
+
+	.excludeCountry{
+		height:20px;
+		padding-left:5px;
+	}
+
+	.excludeCountry input{
+		margin-right:5px;
+	}
 	
+	.allregion tr td{
+		vertical-align: top;
+	}
+	
+	.showCountries{
+		color:blue;
+		font-size:9px;
+		padding-left:14px;
+		cursor:pointer;
+	}
 
-.table tr td {
-	border-bottom:none;
-}
 
-.internationalShipping input[type="checkbox"]{
-	margin-right: 2px;
-	margin-left: 10px;
-	margin-top: -3px;
-}
 
-.internationalShipping .shippinglocationOption:first-child  input[type="checkbox"]{
-	margin-left:0px;
-}
+	.listcountry{
+		margin-top:10px;
+		display:none;
+	}
 
-.shippinglocationOption{
-	float: left;
-	padding-top: 2px;
-	margin-top: 3px;
-}
+	.table tr td {
+		border-bottom:none;
+	}
+
+	.internationalShipping input[type="checkbox"]{
+		margin-right: 2px;
+		margin-left: 0px;
+		margin-top: -3px;
+	}
+
+
+
+	.shippinglocationOption{
+		float: left;
+		padding-top: 2px;
+		margin-right:10px;
+		margin-top: 3px;
+		margin-bottom:5px;
+	}
 </style>
 
 
 
 <fieldset style="margin-top:10px;">
 	<legend>{l s='Shipping Method for National Shipping' mod='ebay'}</legend>
-
+	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
+		<select name="nationalZone" id="">
+			{foreach from=$prestashopZone item=zone}
+				<option value="{$zone.id_zone}" {if $zone.id_zone == Configuration::get('EBAY_ZONE_NATIONAL')} selected="selected"{/if}>{$zone.name}</option>
+			{/foreach}
+		</select>
+	</p>
 	<table id="nationalCarrier" class="table">
 		<tr>
 		</tr>
@@ -248,11 +328,31 @@
 
 <fieldset style="margin-top:10px">
 	<legend>{l s='Shipping Method for Interational Shipping' mod='ebay'}</legend>	
+	<p>{l s='Prestashop zone used to calculate shipping fees  :' mod='ebay'}
+		<select name="internationalZone" id="">
+			{foreach from=$prestashopZone item=zone}
+				<option value="{$zone.id_zone}" {if $zone.id_zone == Configuration::get('EBAY_ZONE_INTERNATIONAL')} selected="selected"{/if}>{$zone.name}</option>
+			{/foreach}
+		</select>
+	</p>
 	<div id="internationalCarrier">
 		<div class="internationalShipping"></div>
 	</div>
 	<div class="margin-form" id="addInternationalCarrier" style="cursor:pointer;">
 	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new international Carrier option in eBay'}
+</fieldset>
+
+<fieldset style="margin-top:10px">
+	<legend>{l s='Exclude shipping locations' mod='ebay'}</legend>
+	<div id="nolist">
+		<p>
+			{l s='No locations are excluded'}<br/>
+			<span id="createlist">{l s='Create exclusion list'}</span>
+		</p>
+	</div>
+	<div id="list">
+		
+	</div>
 </fieldset>
 
 <div class="margin-form" id="buttonEbayShipping" style="margin-top:20px;">

@@ -51,6 +51,7 @@ class Ebay extends Module {
      private $country;
      private $createShopUrl;
      private $eBayCountry;
+     private $excludedLocation;
 
      /**
       * Construct Method
@@ -112,6 +113,8 @@ class Ebay extends Module {
                          $this->setConfiguration($u, $v);
                }
 
+
+
           // Check if installed
           if (self::isInstalled($this->name)) {
                // Upgrade eBay module
@@ -124,6 +127,9 @@ class Ebay extends Module {
 
                // Loading Shipping Method
                $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
+
+               if(DB::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'ebay_shipping_zone_excluded') == 0)
+                  $this->_loadEbayExcludedLocation();
 
                // Warning uninstall
                $this->confirmUninstall = $this->l('Are you sure you want uninstall this module ? All your configuration will be lost.');
@@ -172,6 +178,12 @@ class Ebay extends Module {
           $this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $content, true);
           $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
           $this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
+          $this->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
+          $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
+          $this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
+          $this->setConfiguration('EBAY_CONDITION_NEW', 1000);
+          $this->setConfiguration('EBAY_CONDITION_USED', 3000);
+          $this->setConfiguration('EBAY_CONDITION_REFURBISHED', 2500);
 
 
           // Init
@@ -213,6 +225,20 @@ class Ebay extends Module {
           Configuration::deleteByName('EBAY_DELIVERY_TIME');
           Configuration::deleteByName('EBAY_RETURNS_DESCRIPTION');
           Configuration::deleteByName('EBAY_RETURNS_ACCEPTED_OPTION');
+          Configuration::deleteByName('EBAY_LISTING_DURATION');
+          Configuration::deleteByName('EBAY_AUTOMATICALLY_RELIST');
+          Configuration::deleteByName('EBAY_LAST_RELIST');
+          Configuration::deleteByName('EBAY_CONDITION_NEW');
+          Configuration::deleteByName('EBAY_CONDITION_USED');
+          Configuration::deleteByName('EBAY_CONDITION_REFURBISHED');
+          Configuration::deleteByName('EBAY_SYNC_OPTION_RESYNC');
+          Configuration::deleteByName('EBAY_SYNC_LAST_PRODUCT');
+          Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
+          Configuration::deleteByName('EBAY_ZONE_NATIONAL');
+          Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
+          Configuration::deleteByName('EBAY_SECURITY_TOKEN');
+
+
           // Uninstall Module
           if (!parent::uninstall() ||
                   !$this->unregisterHook('addproduct') ||
@@ -267,8 +293,8 @@ class Ebay extends Module {
                $productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE ' . $sql . ' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0)');
                foreach ($productsList as $k => $v)
                     $productList[$k]['noPriceUpdate'] = 1;
-               //if ($productsList)
-               //	$this->_syncProducts($productsList);
+               if ($productsList)
+               	  $this->_syncProducts($productsList);
           } else if (Configuration::get('EBAY_SYNC_MODE') == 'B') {
                // Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories) AND Send each product on eBay
                $productsList = Db::getInstance()->executeS('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE ' . $sql . ' AND `active` = 1 AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_category` > 0 AND `id_ebay_category` > 0 AND `sync` = 1)');
@@ -303,15 +329,16 @@ class Ebay extends Module {
      }
 
      public function hookheader($params) {
-          //Change context Shop to be default
-          if ($this->isVersionOneDotFive() && Shop::isFeatureActive()) {
-               $oldContextShop = $this->getContextShop();
-               $this->setContextShop();
-          }
           //End of change 
           // Check if the module is configured
           if (!Configuration::get('EBAY_PAYPAL_EMAIL'))
                return false;
+
+          //Change context Shop to be default 
+          if ($this->isVersionOneDotFive() && Shop::isFeatureActive()) {
+               $oldContextShop = $this->getContextShop();
+               $this->setContextShop();
+          }
 
           // Fix hook update product attribute
           $this->hookupdateProductAttributeEbay();
@@ -544,6 +571,8 @@ class Ebay extends Module {
           // Set old Context Shop
           if ($this->isVersionOneDotFive() && Shop::isFeatureActive())
                $this->setContextShop($oldContextShop);
+
+          $this->relistItems();
      }
 
      // Alias
@@ -653,7 +682,6 @@ class Ebay extends Module {
                $this->_html .= '<br />' . (isset($alert['allowurlfopen']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 2) ' . $this->l('Allow url fopen');
                $this->_html .= '<br />' . (isset($alert['curl']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 3) ' . $this->l('Enable cURL');
                $this->_html .= '<br />' . (isset($alert['SellerBusinessType']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 4) ' . $this->l('Your account type must be Business type');
-               $this->_html .= '<br />' . (isset($alert['StoreOwner']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 5) ' . $this->l('You must have an eBay Store to use the module');
           }
 
           $this->_html .= '</div><div style="float: right; width: 45%">' . $prestashopContent . '<br>' . $this->l('Connection to eBay.') . strtolower($this->country->iso_code) . '</div>';
@@ -869,12 +897,35 @@ class Ebay extends Module {
      }
      private function _displayFormParameters() {
         global $smarty;
+
         // Loading config currency
         $configCurrency = new Currency((int) (Configuration::get('PS_CURRENCY_DEFAULT')));
 
         $url = 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=1&section=parameters';
         $ebayIdentifier = Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : '');
         
+        $listingDurations = array(
+          'Days_1' => '1 Day',
+          'Days_3' => '3 Days',
+          'Days_5' => '5 Days',
+          'Days_7' => '7 Days',
+          'Days_10' => '10 Days',
+          'Days_30' => '30 Days',
+          'GTC' => 'Good \'Till Canceled');
+
+        $ebayItemConditions = array(
+          '1000' => $this->l('New'),
+          '1500' => $this->l('New other'),
+          '1750' => $this->l('New with defects'), 
+          '2000' => $this->l('Manufacturer refurbished'), 
+          '2500' => $this->l('Seller refurbished'),
+          '3000' => $this->l('Used'),
+          '4000' => $this->l('Very good'),
+          '5000' => $this->l('Good'), 
+          '6000' => $this->l('Acceptable'), 
+          '7000' => $this->l('For parts or not working')
+        );
+
         $request = new eBayRequest();
         $policies = $request->getReturnsPolicy();
         $catLoaded = !Configuration::get('EBAY_CATEGORY_LOADED');
@@ -885,9 +936,11 @@ class Ebay extends Module {
             'configCurrencysign' => $configCurrency->sign,
             'policies' => $policies,
             'catLoaded' => $catLoaded,
+            'ebayItemConditions' => $ebayItemConditions,
             'createShopUrl' => $this->createShopUrl,
             'ebayShopValue' => $ebayShopValue, 
-            'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE')))
+            'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
+            'listingDurations' => $listingDurations
           )
         );
         // Display Form
@@ -899,8 +952,6 @@ class Ebay extends Module {
           // Check configuration values
           if (Tools::getValue('ebay_identifier') == NULL)
                $this->_postErrors[] = $this->l('Your eBay identifier account is not specified or is invalid');
-          if (Tools::getValue('ebay_shop') == NULL)
-               $this->_postErrors[] = $this->l('Your ebay shop must be specified');
           if (Tools::getValue('ebay_paypal_email') == NULL OR !Validate::isEmail(Tools::getValue('ebay_paypal_email')))
                $this->_postErrors[] = $this->l('Your Paypal E-mail account is not specified or is invalid');
           if (Tools::getValue('ebay_shop_postalcode') == '' OR !Validate::isPostCode(Tools::getValue('ebay_shop_postalcode')))
@@ -914,7 +965,14 @@ class Ebay extends Module {
                   $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', pSQL(Tools::getValue('ebay_returns_accepted_option'))) &&
                   $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', pSQL(Tools::getValue('ebay_returns_description'))) &&
                   $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
-                  $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))))
+                  $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))) &&
+                  $this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations')) &&
+                  $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist')) && 
+                  $this->setConfiguration('EBAY_CONDITION_NEW', Tools::getValue('newConditionID')) && 
+                  $this->setConfiguration('EBAY_CONDITION_USED', Tools::getValue('usedConditionID')) && 
+                  $this->setConfiguration('EBAY_CONDITION_REFURBISHED', Tools::getValue('refurbishedConditionID'))
+
+                  )
                $this->_html .= $this->displayConfirmation($this->l('Settings updated'));
           else
                $this->_html .= $this->displayError($this->l('Settings failed'));
@@ -1049,64 +1107,96 @@ class Ebay extends Module {
                //get All shipping location associated 
                $existingInternationalCarrier[$key]['shippingLocation'] = DB::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping_international_zone
                               WHERE id_ebay_shipping = '" . (int) $carrier['id_ebay_shipping'] . "'");
-               //get all shipping excluded zone 
-               $existingInternationalCarrier[$key]['excludedShippingLocation'] = DB::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping_international_zone_excluded
-                              WHERE id_ebay_shipping = '" . (int) $carrier['id_ebay_shipping'] . "'");
           }
 
           return $existingInternationalCarrier;
      }
 
+
+
      private function _postProcessShipping() {
+
+
+          //Update excluded location
+
+
+          if(isset($_POST['excludeLocationHidden'])){
+            $rq_raz = "UPDATE " . _DB_PREFIX_ . "ebay_shipping_zone_excluded SET excluded = 0";
+            Db::getInstance()->Execute($rq_raz);
+            if(isset($_POST['excludeLocation'])){
+              $where = '0 || ';
+              foreach ($_POST['excludeLocation'] as $location => $on) {
+                //build update $where 
+                $where .= 'location = "' . pSQL($location) . '" || ';
+              }
+              $where .= ' 0';
+              if($this->isVersionOneDotFive())
+                DB::getInstance()->update('ebay_shipping_zone_excluded', array('excluded' => 1), $where);
+              else 
+                Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_zone_excluded', array('excluded' => 1), 'UPDATE', $where );
+            }
+          }
+
 
           //Update global information about shipping (delivery time, ...)
           $this->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
+          $this->setConfiguration('EBAY_ZONE_INTERNATIONAL', Tools::getValue('internationalZone'));
+          $this->setConfiguration('EBAY_ZONE_NATIONAL', Tools::getValue('nationalZone'));
           //Update Shipping Method for National Shipping (Delete And Insert)
           $rq_del = "TRUNCATE " . _DB_PREFIX_ . "ebay_shipping";
+
           Db::getInstance()->Execute($rq_del);
-          foreach ($_POST['ebayCarrier'] as $key => $value) {
-               $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
-            VALUES('', 
-              '" . (int) $_POST['ebayCarrier'][$key] . "',
-              '" . (int) $_POST['psCarrier'][$key] . "', 
-              '" . (int) $_POST['extrafee'][$key] . "', 
-              '0')";
-               DB::getInstance()->Execute($rq_ins);
+
+          if(isset($_POST['ebayCarrier'])){
+            foreach ($_POST['ebayCarrier'] as $key => $value) {
+                 $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
+              VALUES('', 
+                '" . pSQL($_POST['ebayCarrier'][$key]) . "',
+                '" . (int) $_POST['psCarrier'][$key] . "', 
+                '" . (int) $_POST['extrafee'][$key] . "', 
+                '0')";
+
+                 DB::getInstance()->Execute($rq_ins);
+            }  
           }
-          //Update shipping method for international carrier(Delete and Insert)
-          $rq_del = "TRUNCATE " . _DB_PREFIX_ . "ebay_shipping_international_zone_excluded";
-          Db::getInstance()->Execute($rq_del);
+
           $rq_del = "TRUNCATE " . _DB_PREFIX_ . "ebay_shipping_international_zone";
           Db::getInstance()->Execute($rq_del);
-          foreach ($_POST['ebayCarrier_international'] as $key => $value) {
-               $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
-            VALUES('', 
-              '" . (int) $_POST['ebayCarrier_international'][$key] . "',
-              '" . (int) $_POST['psCarrier_international'][$key] . "', 
-              '" . (int) $_POST['extrafee_international'][$key] . "', 
-              '1')";
-               DB::getInstance()->Execute($rq_ins);
-               $rq_get_ID = "SELECT id_ebay_shipping FROM " . _DB_PREFIX_ . "ebay_shipping ORDER BY id_ebay_shipping DESC";
-               $lastID = Db::getInstance()->getValue($rq_get_ID);
-               if (isset($_POST['internationalShippingLocation'][$key])) {
-                    foreach ($_POST['internationalShippingLocation'][$key] as $key2 => $value2) {
-                         $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping_international_zone VALUES('" . (int) $lastID . "', '" . pSQL($key2) . "')";
-                         DB::getInstance()->Execute($rq_ins);
-                    }
-               }
-               if (isset($_POST['internationalExcludedShippingLocation'][$key])) {
-                    foreach ($_POST['internationalExcludedShippingLocation'][$key] as $key2 => $value2) {
-                         if ($value2 != -1) {
-                              $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping_international_zone_excluded VALUES('" . (int) $lastID . "', '" . pSQL($value2) . "')";
-                              DB::getInstance()->Execute($rq_ins);
-                         }
-                    }
-               }
+          if(isset($_POST['ebayCarrier_international']))
+          {
+            foreach ($_POST['ebayCarrier_international'] as $key => $value) {
+                 $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
+              VALUES('', 
+                '" . pSQL( $_POST['ebayCarrier_international'][$key]  ) . "',
+                '" . (int) $_POST['psCarrier_international'][$key] . "', 
+                '" . (int) $_POST['extrafee_international'][$key] . "', 
+                '1')";
+                 DB::getInstance()->Execute($rq_ins);
+                 $rq_get_ID = "SELECT id_ebay_shipping FROM " . _DB_PREFIX_ . "ebay_shipping ORDER BY id_ebay_shipping DESC";
+                 $lastID = Db::getInstance()->getValue($rq_get_ID);
+                 if (isset($_POST['internationalShippingLocation'][$key])) {
+                      foreach ($_POST['internationalShippingLocation'][$key] as $key2 => $value2) {
+                           $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping_international_zone VALUES('" . (int) $lastID . "', '" . pSQL($key2) . "')";
+                           DB::getInstance()->Execute($rq_ins);
+                      }
+                 }
+                 if (isset($_POST['internationalExcludedShippingLocation'][$key])) {
+                      foreach ($_POST['internationalExcludedShippingLocation'][$key] as $key2 => $value2) {
+                           if ($value2 != -1) {
+                                $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping_international_zone_excluded VALUES('" . (int) $lastID . "', '" . pSQL($value2) . "')";
+                                DB::getInstance()->Execute($rq_ins);
+                           }
+                      }
+                }
+             }
           }
      }
 
      private function _displayFormShipping() {
           global $smarty;
+
+          //INITIALIZE CACHE
+          $this->excludedLocation = $this->_cacheEbayExcludedLocation();
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
           $eBayCarrier = $eBay->getCarrier();
@@ -1115,7 +1205,7 @@ class Ebay extends Module {
           $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping WHERE international = 0");
           $existingInternationalCarrier = $this->getExistingInternationalCarrier();
           $internationalShippingLocation = $eBay->getInternationalShippingLocation();
-          $excludeShippingLocation = $eBay->getExcludeShippingLocation();
+          $prestashopZone = Zone::getZones(); 
 
           $smarty->assign(array(
               'eBayCarrier' => $eBayCarrier,
@@ -1123,7 +1213,8 @@ class Ebay extends Module {
               'existingNationalCarrier' => $existingNationalCarrier,
               'existingInternationalCarrier' => $existingInternationalCarrier,
               'deliveryTime' => $deliveryTime,
-              'excludeShippingLocation' => $excludeShippingLocation,
+              'prestashopZone' => $prestashopZone, 
+              'excludeShippingLocation' => $this->excludedLocation,
               'internationalShippingLocation' => $internationalShippingLocation,
               'deliveryTimeOptions' => $deliveryTimeOptions,
               'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
@@ -1755,6 +1846,7 @@ class Ebay extends Module {
           foreach ($productsList as $p) {
                // Product instanciation
                $product = new Product((int) $p['id_product'], true, $this->id_lang);
+               
                if (!$this->isVersionOneDotFive()) {
                     $productQuantity = new Product((int) $p['id_product']);
                     $quantityProduct = $productQuantity->quantity;
@@ -1837,6 +1929,8 @@ class Ebay extends Module {
                     if (!isset($this->_shippingMethod[Configuration::get('EBAY_SHIPPING_CARRIER_ID')]['shippingService']))
                          $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
 
+
+
                     // Generate array and try insert in database
                     $datas = array(
                         'id_product' => $product->id,
@@ -1856,6 +1950,26 @@ class Ebay extends Module {
                         'picturesMedium' => $picturesMedium,
                         'picturesLarge' => $picturesLarge,
                     );
+
+                    //Add Item Conditions for eBay
+                    switch($product->condition){
+                      case 'new' :
+                        $datas['condition'] = Configuration::get('EBAY_CONDITION_NEW');
+                        break;
+                      case 'used' : 
+                        $datas['condition'] = Configuration::get('EBAY_CONDITION_USED');
+                        break;
+                      case 'refurbished' : 
+                        $datas['condition'] = Configuration::get('EBAY_CONDITION_REFURBISHED');
+                        break;
+                      default:
+                        $datas['condition'] = Configuration::get('EBAY_CONDITION_NEW');
+                        break;
+                    }
+
+
+                    //Add shipping details 
+                    $datas['shipping'] = $this->getShippingDetailsForProduct($product);
 
                     // Fix hook update product
                     if (isset($this->context->employee) && $this->context->employee->id > 0 && isset($_POST['submitProductAttribute']) && isset($_POST['id_product_attribute']) && isset($_POST['attribute_mvt_quantity']) && isset($_POST['id_mvt_reason'])) {
@@ -1900,8 +2014,10 @@ class Ebay extends Module {
                     $datas['description'] = str_replace(
                             array('{DESCRIPTION_SHORT}', '{DESCRIPTION}', '{FEATURES}', '{EBAY_IDENTIFIER}', '{EBAY_SHOP}', '{SLOGAN}', '{PRODUCT_NAME}'), array($datas['description_short'], $datas['description'], $featuresHtml, Configuration::get('EBAY_IDENTIFIER'), Configuration::get('EBAY_SHOP'), '', $product->name), Configuration::get('EBAY_PRODUCT_TEMPLATE')
                     );
+                    
+                    
 
-
+                   
                     // Export on eBay
                     if (count($datas['variations']) > 0) {
                          // Variations Case
@@ -2089,6 +2205,166 @@ class Ebay extends Module {
                file_put_contents(dirname(__FILE__) . '/log/syncError.php', '<?php $tab_error = ' . var_export($tab_error, true) . '; ?>');
      }
 
+
+     private function getShippingDetailsForProduct($product)
+     {
+        $shipDetails = array(
+          'excludedZone' => array(),
+          'nationalShip' => array(),
+          'internationalShip' => array()
+          );
+
+        //Get Excluded Zone 
+        $shipDetails['excludedZone'] = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_shipping_zone_excluded WHERE excluded = 1');
+
+        //Get National Informations : service, costs, additional costs, priority
+        $nationalCarriers = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_shipping WHERE international = 0');
+        $servicePriority = 1; 
+        foreach ($nationalCarriers as $carrier) {
+          $shipDetails['nationalShip'][$carrier['ebay_carrier']] = array(
+            'servicePriority' => $servicePriority, 
+            'serviceAdditionalCosts' => $carrier['extra_fee'], 
+            'serviceCosts' => $this->getShippingPriceForProduct($product, Configuration::get('EBAY_ZONE_NATIONAL'), $carrier['ps_carrier'])
+          );  
+          $servicePriority++;
+        }
+
+        foreach ($nationalCarriers as $carrier) {
+          $shipDetails['internationalShip'][$carrier['ebay_carrier']] = array(
+            'servicePriority' => $servicePriority, 
+            'serviceAdditionalCosts' => $carrier['extra_fee'], 
+            'serviceCosts' => $this->getShippingPriceForProduct($product, Configuration::get('EBAY_ZONE_INTERNATIONAL'), $carrier['ps_carrier'])
+          );  
+          $servicePriority++;
+        }
+
+        return $shipDetails;
+     }
+
+
+     private function getShippingPriceForProduct($product, $zone, $carrierid){
+      $carrier = new Carrier($carrierid);
+      if(Configuration::get('PS_SHIPPING_METHOD') == 1)
+      {//Shipping by weight
+        $price = $carrier->getDeliveryPriceByWeight($product->weight, $zone);
+      }
+      else
+      {//Shipping by price
+        $price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
+      }
+      return $price;
+     }
+
+     /*
+      * Returns array of form : 
+      * all[ 
+        * Region [
+        *   location,
+        *   description,
+        *   Country[
+        *     location,
+        *     description  
+        *   ]  
+        * ]
+        ]
+      * excluded[
+      *   location
+      * ]
+      *
+     */
+     private function _cacheEbayExcludedLocation(){
+        $ebayexcludedLocation = Db::getInstance()->ExecuteS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_shipping_zone_excluded`
+                                ORDER BY region, description');
+        $responseArray = array('all' => array(), 'excluded' => array());
+        $region = array();
+        foreach ($ebayexcludedLocation as $key => $value) {
+             if(in_array($value['region'], $region)){
+                  array_push($responseArray['all'][$value['region']]['country'], 
+                        array(
+                         'location' => $value['location'],
+                         'description' => $value['description'],
+                         'excluded' => $value['excluded'] ));
+
+             }
+             else{
+                  $region[] = $value['region'];
+                  $responseArray['all'][$value['region']]['country'][] = array(
+                       'location' => $value['location'],
+                       'description' => $value['description'],
+                       'excluded' => $value['excluded']);
+             }
+        }
+        foreach ($ebayexcludedLocation as $key => $value) {
+          if(in_array($value['location'], $region)){
+              $responseArray['all'][$value['location']]['description'] = $value['description'];
+          }
+        }
+
+        unset($responseArray['all']['Worldwide']);
+
+
+
+        foreach ($responseArray['all'] as $key => $value) {
+          if(!isset($value['description']))
+            $responseArray['all'][$key]['description'] = $key;
+        }
+
+
+        //get real excluded location
+        $ebayexcludedLocation = Db::getInstance()->ExecuteS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_shipping_zone_excluded`
+                                WHERE excluded = 1');
+
+        foreach ($ebayexcludedLocation as $location) {
+          array_push($responseArray['excluded'], $location['location']);
+        }
+
+
+        return $responseArray;
+     }
+
+     private function _loadEbayExcludedLocation(){
+      $ebayRequest = new eBayRequest(); 
+      $excludeLocation = $ebayRequest->getExcludeShippingLocation();
+      foreach ($excludeLocation as $key => $value) {
+        $excludeLocation[$key]['excluded'] = 0;
+        $excludeLocation[$key]['location'] = pSQL($value['location']);
+        $excludeLocation[$key]['description'] = pSQL($value['description']);
+        $excludeLocation[$key]['region'] = pSQL($value['region']);
+      }
+
+      if($this->isVersionOneDotFive())
+        Db::getInstance()->insert('ebay_shipping_zone_excluded', $excludeLocation);
+      else 
+        Db::getInstance()->autoExecute('ebay_shipping_zone_excluded', $excludeLocation, 'INSERT');
+      
+     }
+
+      private function relistItems(){
+        if(Configuration::get('EBAY_LISTING_DURATION') != 'GTC' AND Configuration::get('EBAY_AUTOMATICALLY_RELIST') == 'on'){
+          $days = substr(Configuration::get('EBAY_LISTING_DURATION'), 5);
+          //We do relist automatically each day
+          $this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
+          $ebay = new eBayRequest();
+          if($this->isVersionOneDotFive())
+            $items = Db::getInstance()->ExecuteS('
+              SELECT ep.id_product_ref AS itemID, ep.id_product, s.quantity AS quantity 
+                FROM ' . _DB_PREFIX_ . 'ebay_product AS ep
+                INNER JOIN ' . _DB_PREFIX_ . 'stock_available AS s ON s.id_product = ep.id_product AND s.id_product_attribute = ep.id_attribute
+                WHERE NOW()  > DATE_ADD(date_upd, INTERVAL '.$days.' DAY)
+                LIMIT 0,10
+              ');
+          
+          foreach ($items as $item) {
+            $newItemID = $ebay->relistFixedPriceItem($item);
+            $newItemID = ($newItemID != 0 ? $newItemID : $item['itemID']);
+            //Update of the product so that we don't take it in the next 10 products to relist ! 
+
+            Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_product_ref' => pSQL($newItemID), 'date_upd' => date('Y-m-d h:i:s')), 'UPDATE', '`id_product_ref` = ' . $item['itemID']);
+          
+          }
+        }
+      }
+
      /**
       * Orders History Methods
       *
@@ -2180,8 +2456,6 @@ class Ebay extends Module {
 
           if ($userProfile[0]['SellerBusinessType'][0] != 'Commercial')
                $alert['SellerBusinessType'] = 1;
-          if ($userProfile[0]['StoreName'][0] == '' && $userProfile[0]['StoreUrl'][0] == '')
-               $alert['StoreOwner'] = 1;
 
           return $alert;
      }

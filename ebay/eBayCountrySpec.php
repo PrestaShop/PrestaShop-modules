@@ -32,7 +32,7 @@ if (!in_array('Ebay', get_declared_classes()))
 class eBayCountrySpec
 {
 	public $country;
-	public $acceptedIso = array('it', 'fr');
+	public $acceptedIso = array('it', 'fr', 'gb', 'es');
 
 	function __construct($pCountry = null){
 		if($pCountry != null)
@@ -46,6 +46,12 @@ class eBayCountrySpec
 			case 'it':
 				return 101;
 				break;
+			case 'gb':
+				return 3;
+				break;
+			case 'es':
+				return 186;
+				break;
 			case 'fr':
 			default:
 				return 71;
@@ -57,6 +63,12 @@ class eBayCountrySpec
 		switch($this->country->iso_code){
 			case 'it':
 				return 'it_IT';
+				break;
+			case 'gb': 
+				return 'en_GB';
+				break;
+			case 'es': 
+				return 'es_ES';
 				break;
 			case 'fr':
 			default:
@@ -70,6 +82,12 @@ class eBayCountrySpec
 			case 'it':
 				return 'Italy';
 				break;
+			case 'gb':
+				return 'United Kingdom';
+				break;
+			case 'es':
+				return 'Spain';
+				break;
 			case 'fr':
 			default:
 				return 'France';
@@ -82,6 +100,12 @@ class eBayCountrySpec
 			case 'it':
 				return 'it';
 				break;
+			case 'gb':
+				return 'co.uk';
+				break;
+			case 'es':
+				return 'es';
+				break;
 			case 'fr':
 			default:
 				return 'fr';
@@ -93,6 +117,12 @@ class eBayCountrySpec
 		switch($this->country->iso_code){
 			case 'it':
 				return 'ebay_stats-it.png';
+				break;
+			case 'gb':
+
+				break;
+			case 'es':
+
 				break;
 			case 'fr':
 			default:
