@@ -53,7 +53,7 @@ class eBayRequest {
      private $findingVersion;
      private $compatibilityLevel;
      private $debug = true;
-     private $dev = false;
+     private $dev = true;
      private $country;
      private $language;
      private $siteName;
@@ -650,7 +650,7 @@ class eBayRequest {
                $requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
           $requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
+          $requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
@@ -922,7 +922,7 @@ class eBayRequest {
           $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
+          $requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <Description>' . "\n";
           $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
           $requestXml .= '    </Description>' . "\n";
@@ -1151,7 +1151,7 @@ class eBayRequest {
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
+          $requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";

@@ -71,17 +71,9 @@ class Ebay extends Module {
           $this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
           $this->module_key = '7a6b007a219bab59c1611254347f21d5';
 
-          // Check the country 
-          $this->eBayCountry = new eBayCountrySpec();
-          $this->country = $this->eBayCountry->getCountry();
-          if (!$this->eBayCountry->checkCountry()) {
-               $this->warning = $this->l('eBay module currently works only for eBay.fr and eBay.it');
-               return false;
-          }
+          
 
-          $this->createShopUrl = 'http://cgi3.ebay.' . $this->country->iso_code . '/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
-          $this->id_lang = Language::getIdByIso($this->country->iso_code);
-
+         
           // Checking Extension
           if (!extension_loaded('curl') || !ini_get('allow_url_fopen')) {
                if (!extension_loaded('curl') && !ini_get('allow_url_fopen'))
@@ -117,6 +109,17 @@ class Ebay extends Module {
 
           // Check if installed
           if (self::isInstalled($this->name)) {
+                // Check the country 
+                $this->eBayCountry = new eBayCountrySpec();
+                $this->country = $this->eBayCountry->getCountry();
+                if (!$this->eBayCountry->checkCountry()) {
+                     $this->warning = $this->l('eBay module currently works only for eBay.fr and eBay.it');
+                     return false;
+                }
+                $this->createShopUrl = 'http://cgi3.ebay.' . $this->country->iso_code . '/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
+                $this->id_lang = Language::getIdByIso($this->country->iso_code);
+
+
                // Upgrade eBay module
                if (Configuration::get('EBAY_VERSION') != $this->version)
                     $this->upgrade();
