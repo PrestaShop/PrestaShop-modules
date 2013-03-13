@@ -164,14 +164,26 @@ class Trustly extends PaymentModule
 		$html .= '
 		<form action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" method="post">
 			<fieldset style="margin:auto"><legend><img src="../modules/'.Tools::safeOutput($this->name).'/logo.gif" style="vertical-align:middle" /> '.$this->l('Trustly settings').'</legend>
-				<div style="margin:20px">
-					<p>'.$this->l('Step by step').'</p>
-					<ol style="margin:0;padding:10px 18px">
-						<li>'.$this->l('Register for a Trustly account by pressing "Open a new Trustly account" and fill out the Signup form').'</li>
-						<li>'.$this->l('Introduce the Username and Password you have chosen in the Signup form into the corresponding fields below').'</li>
-						<li>'.$this->l('Press "Update settings"').'</li>
+				
+				<div  style="margin:2%;width:46%;float:left">
+					<p style="font-weight:bold;">'.$this->l('Don\'t have a Trustly account?').'<br />'.$this->l('Continue with the following steps:').'</p>
+					<ol style="list-style:decimal;padding-left:0;margin-left:25px">
+						<li style="margin-bottom:8px">'.$this->l('Register for a Trustly account by pressing "Open a new account" and fill out the Signup form').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Introduce the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Press "Update settings"').'</li>
 					</ol>
-					<p>'.$this->l('You can monitor your transactions and get support in the Trustly backoffice. Login with your Username and Password at :').' <a href="http://www.trustly.com/backoffice" target="_blank">'.$this->l('http://www.trustly.com/backoffice').'</a></p>
+				</div>
+				<div  style="margin:2%;width:46%;float:left">
+					<p style="font-weight:bold;">'.$this->l('Already signed up for a Trustly account?').'<br />'.$this->l('Continue with the following steps:').'</p>
+					<ol style="list-style:decimal;padding-left:0;margin-left:25px;">
+						<li style="margin-bottom:8px">'.$this->l('Introduce the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Replace the existing Private key in the field below with the Private key you received from your sign up').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Press "Update settings"').'</li>
+					</ol>
+				</div>
+			
+				<div style="margin:20px">
+					<p>'.$this->l('You can monitor your transactions and get support in the Trustly backoffice.').'<br />'.$this->l('Login with your Username and Password at :').' <strong><a href="http://www.trustly.com/backoffice" target="_blank">'.$this->l('http://www.trustly.com/backoffice').'</a></strong></p>
 				</div>
 				<label for="TRUSTLY_USERNAME">'.$this->l('Username').'</label>
 				<div class="margin-form">
