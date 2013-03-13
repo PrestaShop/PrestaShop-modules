@@ -77,6 +77,24 @@ class eBayCountrySpec
 		}
 	}
 
+	public function getCurrency(){
+		switch($this->country->iso_code){
+			case 'it':
+				return 'EUR';
+				break;
+			case 'gb': 
+				return 'GBP';
+				break;
+			case 'es': 
+				return 'EUR';
+				break;
+			case 'fr':
+			default:
+				return 'EUR';
+				break;
+		}
+	}
+
 	public function getSiteName(){
 		switch($this->country->iso_code){
 			case 'it':

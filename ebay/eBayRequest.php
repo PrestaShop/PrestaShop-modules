@@ -53,11 +53,12 @@ class eBayRequest {
      private $findingVersion;
      private $compatibilityLevel;
      private $debug = true;
-     private $dev = true;
+     private $dev = false;
      private $country;
      private $language;
      private $siteName;
      private $siteExtension;
+     private $currency;
 
      /*      * *************************************************************** */
 
@@ -74,6 +75,7 @@ class eBayRequest {
           $this->language = $ebayCountry->getLanguage();
           $this->siteName = $ebayCountry->getSiteName();
           $this->siteExtension = $ebayCountry->getSiteExtension();
+          $this->currency = $ebayCountry->getCurrency();
 
 
           /*           * * SAND BOX PARAMS ** */
@@ -648,7 +650,7 @@ class eBayRequest {
                $requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
           $requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency>EUR</Currency>' . "\n";
+          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
           $requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
@@ -677,32 +679,9 @@ class eBayRequest {
           //$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
           $requestXml .= ' 	</ReturnPolicy>' . "\n";
           $requestXml .= '    <ShippingDetails>' . "\n";
-          //Shipping Exclude Location
-          foreach ($datas['shipping']['excludedZone'] as $excluded) {
-               $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
-          }
-          //National Shipping Service
-          foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
-               $requestXml .= '      <ShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-               $requestXml .= '      </ShippingServiceOptions>' . "\n";
-          }
-          //International Shipping Service
-          foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
-               $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-               $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
-          }
-         
-
+          $requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
           $requestXml .= '    </ShippingDetails>' . "\n";
+          $requestXml .= $this->_getBuyerRequirementDetails($datas);
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
           $requestXml .= '  </Item>' . "\n";
           $requestXml .= '  <RequesterCredentials>' . "\n";
@@ -792,30 +771,9 @@ class eBayRequest {
                $requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
                $requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
                $requestXml .= '    <ShippingDetails>' . "\n";
-               //Shipping Exclude Location
-               foreach ($datas['shipping']['excludedZone'] as $excluded) {
-                    $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
-               }
-               //National Shipping Service
-               foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
-                    $requestXml .= '      <ShippingServiceOptions>' . "\n";
-                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-                    $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-                    $requestXml .= '      </ShippingServiceOptions>' . "\n";
-               }
-               //International Shipping Service
-               foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
-                    $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
-                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-                    $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
-               }
+               $requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
                $requestXml .= '    </ShippingDetails>' . "\n";
+               $requestXml .= $this->_getBuyerRequirementDetails($datas);  
           }
           $requestXml .= '	<ReturnPolicy>' . "\n";
           $requestXml .= ' 		<ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
@@ -964,7 +922,7 @@ class eBayRequest {
           $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency>EUR</Currency>' . "\n";
+          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <Description>' . "\n";
           $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
           $requestXml .= '    </Description>' . "\n";
@@ -1051,32 +1009,9 @@ class eBayRequest {
           }
           $requestXml .= '    </Variations>' . "\n";
           $requestXml .= '    <ShippingDetails>' . "\n";
-          //Shipping Exclude Location
-          foreach ($datas['shipping']['excludedZone'] as $excluded) {
-               $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
-          }
-          //National Shipping Service
-          foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
-               $requestXml .= '      <ShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-               $requestXml .= '      </ShippingServiceOptions>' . "\n";
-          }
-          //International Shipping Service
-          foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
-               $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
-               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-               $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-               $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
-          }
-         
-
+          $requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
           $requestXml .= '    </ShippingDetails>' . "\n";
+          $requestXml .= $this->_getBuyerRequirementDetails($datas);
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
           $requestXml .= '  </Item>' . "\n";
           $requestXml .= '  <RequesterCredentials>' . "\n";
@@ -1146,7 +1081,6 @@ class eBayRequest {
           $requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <ItemID>' . $datas['itemID'] .'</ItemID>' . "\n";
-          $requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
           $requestXml .= '  </Item>' . "\n";
           $requestXml .= '  <RequesterCredentials>' . "\n";
           $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
@@ -1217,7 +1151,7 @@ class eBayRequest {
           $requestXml .= '  <Item>' . "\n";
           $requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
           $requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
-          $requestXml .= '    <Currency>EUR</Currency>' . "\n";
+          $requestXml .= '    <Currency"' . $this->currency .'</Currency>' . "\n";
           $requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
           $requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
           $requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
@@ -1310,32 +1244,9 @@ class eBayRequest {
                $requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
                $requestXml .= '    </Description>' . "\n";
                $requestXml .= '    <ShippingDetails>' . "\n";
-               //Shipping Exclude Location
-               foreach ($datas['shipping']['excludedZone'] as $excluded) {
-                    $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
-               }
-               //National Shipping Service
-               foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
-                    $requestXml .= '      <ShippingServiceOptions>' . "\n";
-                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-                    $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
-                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-                    $requestXml .= '      </ShippingServiceOptions>' . "\n";
-               }
-               //International Shipping Service
-               foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
-                    $requestXml .= '      <InternationalShippingServiceOptions>' . "\n";
-                    $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
-                    $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
-                    $requestXml .= '        <ShippingServiceCost currencyID="EUR">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
-                    $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
-                    $requestXml .= '      </InternationalShippingServiceOptions>' . "\n";
-               }
-              
-
+               $requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
                $requestXml .= '    </ShippingDetails>' . "\n";
+               $requestXml .= $this->_getBuyerRequirementDetails($datas);
           }
           $requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
           $requestXml .= '  </Item>' . "\n";
@@ -1539,6 +1450,45 @@ class eBayRequest {
                }
 
           return $orderList;
+     }
+
+     public function _getShippingDetails($datas){
+          $request = '';
+          foreach ($datas['shipping']['excludedZone'] as $excluded) {
+               $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+          }
+          //National Shipping Service
+          foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <ShippingServiceOptions>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="' . $this->currency .'">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               $requestXml .= '      </ShippingServiceOptions>' . "\n";
+          }
+          //International Shipping Service
+          foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
+               $requestXml .= '      <InternationalShippingServiceOption>' . "\n";
+               $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+               $requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+               $requestXml .= '        <ShippingServiceCost currencyID="' . $this->currency .'">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+               $requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+               foreach ($serviceShipping['locationToShip'] as $location) {
+                    $requestXml .= '         <ShipToLocation>' . $location['id_ebay_zone'] . '</ShipToLocation>';
+               }
+               $requestXml .= '      </InternationalShippingServiceOption>' . "\n";
+          }
+          return $requestXml;
+     }
+
+     public function _getBuyerRequirementDetails($datas){
+          $requestXml = '<BuyerRequirementDetails>';
+          if(count($datas['shipping']['excludedZone']))
+               $requestXml .= '<ShipToRegistrationCountry>true</ShipToRegistrationCountry>';
+
+          $requestXml .= '</BuyerRequirementDetails>';
+          return $requestXml;
      }
 
 }

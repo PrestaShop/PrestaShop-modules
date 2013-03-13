@@ -461,7 +461,7 @@ class Ebay extends Module {
                                              $cartAdd->id_address_delivery = $id_address;
                                              $cartAdd->id_carrier = 0;
                                              $cartAdd->id_lang = $this->id_lang;
-                                             $cartAdd->id_currency = Currency::getIdByIsoCode('EUR');
+                                             $cartAdd->id_currency = Currency::getIdByIsoCode($this->eBayCountry->getCurrency());
                                              $cartAdd->recyclable = 0;
                                              $cartAdd->gift = 0;
                                              $cartAdd->add();
@@ -730,7 +730,6 @@ class Ebay extends Module {
 
      /**
       * Register Form Config Methods
-      *
       * */
      private function _displayFormRegister() {
           $ebay = new eBayRequest();
@@ -960,10 +959,11 @@ class Ebay extends Module {
 
      private function _postProcessParameters() {
           // Saving new configurations
+
           if ($this->setConfiguration('EBAY_PAYPAL_EMAIL', pSQL(Tools::getValue('ebay_paypal_email'))) &&
                   $this->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier'))) &&
                   $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', pSQL(Tools::getValue('ebay_returns_accepted_option'))) &&
-                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', pSQL(Tools::getValue('ebay_returns_description'))) &&
+                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', pSQL(nl2br2(Tools::getValue('ebay_returns_description'))), true) &&
                   $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
                   $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))) &&
                   $this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations')) &&
@@ -2229,14 +2229,21 @@ class Ebay extends Module {
           $servicePriority++;
         }
 
-        foreach ($nationalCarriers as $carrier) {
+
+        //Get International Informations
+        $internationalCarriers = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_shipping WHERE international = 1');
+        $servicePriority = 1; 
+        foreach ($internationalCarriers as $carrier) {
           $shipDetails['internationalShip'][$carrier['ebay_carrier']] = array(
             'servicePriority' => $servicePriority, 
             'serviceAdditionalCosts' => $carrier['extra_fee'], 
-            'serviceCosts' => $this->getShippingPriceForProduct($product, Configuration::get('EBAY_ZONE_INTERNATIONAL'), $carrier['ps_carrier'])
-          );  
+            'serviceCosts' => $this->getShippingPriceForProduct($product, Configuration::get('EBAY_ZONE_INTERNATIONAL'), $carrier['ps_carrier']),
+            'locationToShip' => Db::getInstance()->ExecuteS('SELECT id_ebay_zone FROM ' . _DB_PREFIX_ . 'ebay_shipping_international_zone WHERE id_ebay_shipping = "'.(int)$carrier['id_ebay_shipping']. '"')
+          ); 
+
           $servicePriority++;
         }
+
 
         return $shipDetails;
      }
@@ -2331,11 +2338,15 @@ class Ebay extends Module {
         $excludeLocation[$key]['description'] = pSQL($value['description']);
         $excludeLocation[$key]['region'] = pSQL($value['region']);
       }
-
       if($this->isVersionOneDotFive())
         Db::getInstance()->insert('ebay_shipping_zone_excluded', $excludeLocation);
       else 
-        Db::getInstance()->autoExecute('ebay_shipping_zone_excluded', $excludeLocation, 'INSERT');
+      {
+        foreach ($excludeLocation as $location) {
+          Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_zone_excluded', $location, 'INSERT');
+        }
+        
+      }
       
      }
 
@@ -2345,20 +2356,18 @@ class Ebay extends Module {
           //We do relist automatically each day
           $this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
           $ebay = new eBayRequest();
-          if($this->isVersionOneDotFive())
-            $items = Db::getInstance()->ExecuteS('
-              SELECT ep.id_product_ref AS itemID, ep.id_product, s.quantity AS quantity 
+          $items = Db::getInstance()->ExecuteS('
+              SELECT ep.id_product_ref AS itemID, ep.id_product
                 FROM ' . _DB_PREFIX_ . 'ebay_product AS ep
-                INNER JOIN ' . _DB_PREFIX_ . 'stock_available AS s ON s.id_product = ep.id_product AND s.id_product_attribute = ep.id_attribute
-                WHERE NOW()  > DATE_ADD(date_upd, INTERVAL '.$days.' DAY)
+                WHERE NOW()  > DATE_ADD(ep.date_upd, INTERVAL '.$days.' DAY)
                 LIMIT 0,10
               ');
+
           
           foreach ($items as $item) {
             $newItemID = $ebay->relistFixedPriceItem($item);
             $newItemID = ($newItemID != 0 ? $newItemID : $item['itemID']);
             //Update of the product so that we don't take it in the next 10 products to relist ! 
-
             Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', array('id_product_ref' => pSQL($newItemID), 'date_upd' => date('Y-m-d h:i:s')), 'UPDATE', '`id_product_ref` = ' . $item['itemID']);
           
           }
