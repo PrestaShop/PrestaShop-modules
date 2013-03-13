@@ -41,6 +41,7 @@ class eBayRequest {
      public $itemID;
      public $fees;
      public $error;
+     public $itemConditionError;
      public $errorCode;
      private $devID;
      private $appID;
@@ -76,7 +77,7 @@ class eBayRequest {
           $this->siteName = $ebayCountry->getSiteName();
           $this->siteExtension = $ebayCountry->getSiteExtension();
           $this->currency = $ebayCountry->getCurrency();
-
+          $this->itemConditionError = false;
 
           /*           * * SAND BOX PARAMS ** */
 
@@ -671,13 +672,7 @@ class eBayRequest {
                     $requestXml .= '      </NameValueList>' . "\n";
                }
           $requestXml .= '    </ItemSpecifics>' . "\n";
-          $requestXml .= '	<ReturnPolicy>' . "\n";
-          $requestXml .= ' 		<ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
-          //$requestXml .= ' 		<RefundOption>MoneyBack</RefundOption>' . "\n";
-          //$requestXml .= '		<ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
-          $requestXml .= ' 		<Description>' . Configuration::get('EBAY_RETURNS_DESCRIPTION') . '</Description>' . "\n";
-          //$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
-          $requestXml .= ' 	</ReturnPolicy>' . "\n";
+          $requestXml .= $this->_getReturnPolicy($datas);
           $requestXml .= '    <ShippingDetails>' . "\n";
           $requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
           $requestXml .= '    </ShippingDetails>' . "\n";
@@ -709,6 +704,9 @@ class eBayRequest {
                     // if product no longer on eBay, we log the error code
                     if ((int) $e->ErrorCode == 291)
                          $this->errorCode = (int) $e->ErrorCode;
+
+                    if((int) $e->ErrorCode == 21916883 || (int) $e->ErrorCode == 21916884)
+                         $this->itemConditionError = true;
 
                     // We log error message
                     if ($e->SeverityCode == 'Error') {
@@ -775,13 +773,7 @@ class eBayRequest {
                $requestXml .= '    </ShippingDetails>' . "\n";
                $requestXml .= $this->_getBuyerRequirementDetails($datas);  
           }
-          $requestXml .= '	<ReturnPolicy>' . "\n";
-          $requestXml .= ' 		<ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
-          //$requestXml .= ' 		<RefundOption>MoneyBack</RefundOption>' . "\n";
-          //$requestXml .= '		<ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
-          $requestXml .= ' 		<Description>' . Configuration::get('EBAY_RETURNS_DESCRIPTION') . '</Description>' . "\n";
-          //$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
-          $requestXml .= ' 	</ReturnPolicy>' . "\n";
+          $requestXml .= $this->_getReturnPolicy($datas);
           $requestXml .= '  </Item>' . "\n";
           $requestXml .= '  <RequesterCredentials>' . "\n";
           $requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
@@ -951,13 +943,7 @@ class eBayRequest {
           $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '    </ItemSpecifics>' . "\n";
-          $requestXml .= '	<ReturnPolicy>' . "\n";
-          $requestXml .= ' 		<ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
-          //$requestXml .= ' 		<RefundOption>MoneyBack</RefundOption>' . "\n";
-          //$requestXml .= '		<ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
-          $requestXml .= ' 		<Description>' . Configuration::get('EBAY_RETURNS_DESCRIPTION') . '</Description>' . "\n";
-          //$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
-          $requestXml .= ' 	</ReturnPolicy>' . "\n";
+          $requestXml .= $this->_getReturnPolicy($datas);
           $requestXml .= '    <Variations>' . "\n";
           if (isset($datas['variations'])) {
                // Generate Variations Set
@@ -1178,13 +1164,7 @@ class eBayRequest {
           $requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
           $requestXml .= '      </NameValueList>' . "\n";
           $requestXml .= '    </ItemSpecifics>' . "\n";
-          $requestXml .= '	<ReturnPolicy>' . "\n";
-          $requestXml .= ' 		<ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
-//               $requestXml .= ' 		<RefundOption>MoneyBack</RefundOption>' . "\n";
-//               $requestXml .= '		<ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
-          $requestXml .= ' 		<Description>' . Configuration::get('EBAY_RETURNS_DESCRIPTION') . '</Description>' . "\n";
-//               $requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
-          $requestXml .= ' 	</ReturnPolicy>' . "\n";
+          $requestXml .= $this->_getReturnPolicy($datas);
           $requestXml .= '    <Variations>' . "\n";
           if (isset($datas['variations'])) {
                // Generate Variations Set
@@ -1490,6 +1470,18 @@ class eBayRequest {
           $requestXml .= '</BuyerRequirementDetails>';
           return $requestXml;
      }
+
+     public function _getReturnPolicy($datas){
+          $requestXml = '    <ReturnPolicy>' . "\n";
+          $requestXml .= '         <ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
+          //$requestXml .= '       <RefundOption>MoneyBack</RefundOption>' . "\n";
+          //$requestXml .= '       <ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
+          $requestXml .= '         <Description>' . preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')) . '</Description>' . "\n";
+          //$requestXml .= '       <ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
+          $requestXml .= '    </ReturnPolicy>' . "\n";
+          return $requestXml;
+     }
+    
 
 }
 
