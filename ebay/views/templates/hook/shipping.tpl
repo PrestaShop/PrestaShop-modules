@@ -34,7 +34,7 @@
 		if(additionalFee == undefined)
 			additionalFee = '';
 
-		var stringShippingFee = "<tr>";
+		var stringShippingFee = "<tr class='onelineebaycarrier'>";
 		stringShippingFee += "<td>{l s='Choose your eBay carrier'}</td>";
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 		"<select name='ebayCarrier"+internationsuffix+"["+lastId+"]' id='ebayCarrier_"+lastId+"'>";
@@ -303,6 +303,12 @@
 		margin-top: 3px;
 		margin-bottom:5px;
 	}
+
+
+	.unquatre .onelineebaycarrier select{
+		width:140px;
+	}
+
 </style>
 
 

@@ -128,11 +128,6 @@ class Ebay extends Module {
                if (!Configuration::get('EBAY_API_TOKEN'))
                     $this->warning = $this->l('You must register your module on eBay.');
 
-               // Loading Shipping Method
-               $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
-
-               if(DB::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'ebay_shipping_zone_excluded') == 0)
-                  $this->_loadEbayExcludedLocation();
 
                // Warning uninstall
                $this->confirmUninstall = $this->l('Are you sure you want uninstall this module ? All your configuration will be lost.');
@@ -657,13 +652,23 @@ class Ebay extends Module {
 
           $imgStats = $this->eBayCountry->getImgStats();
 
-          $this->_html .= '
-      		<fieldset>
-      			<center><img src="' . $this->_path . $imgStats . '" alt="eBay stats"/></center>
-      			<br />
-      			<u><a href="' . $this->l('http://pages.ebay.fr/professionnels/index.html') . '" target="_blank">' . $this->l('Be informed in professional section on eBay.fr') . '</a></u>
-      		</fieldset>
-      		<br />';
+          if($imgStats != null){
+            $this->_html .= '
+            <fieldset>
+              <center><img src="' . $this->_path . $imgStats . '" alt="eBay stats"/></center>
+              <br />
+              <u><a href="' . $this->l('http://pages.ebay.fr/professionnels/index.html') . '" target="_blank">' . $this->l('Be informed in professional section on eBay.fr') . '</a></u>
+            </fieldset>
+            <br />';  
+          }
+          else{
+            $this->_html .= '
+            <fieldset>
+              <u><a href="' . $this->l('http://pages.ebay.fr/professionnels/index.html') . '" target="_blank">' . $this->l('Be informed in professional section on eBay.fr') . '</a></u>
+            </fieldset>
+            <br />';  
+          }
+          
 
           // Displaying page
           $this->_html .= '<fieldset>
@@ -846,17 +851,21 @@ class Ebay extends Module {
       *
       * */
      private function _displayFormConfig() {
+        if($this->isVersionOneDotFive())
+          $classGeneral = 'uncinq';
+        else
+          $classGeneral = 'unquatre';
           $html = '
       		<ul id="menuTab">
-      				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
-      				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
-                                      <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
-            				<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
-            				<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
-            				<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
-            				<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
-      			</ul>
-      			<div id="tabList">
+    				<li id="menuTab1" class="menuTabButton selected">1. ' . $this->l('Parameters') . '</li>
+    				<li id="menuTab2" class="menuTabButton">2. ' . $this->l('Categories settings') . '</li>
+            <li id="menuTab3" class="menuTabButton">3. ' . $this->l('Shipping') . '</li>
+          	<li id="menuTab4" class="menuTabButton">4. ' . $this->l('Template manager') . '</li>
+          	<li id="menuTab5" class="menuTabButton">5. ' . $this->l('eBay Sync') . '</li>
+          	<li id="menuTab6" class="menuTabButton">6. ' . $this->l('Orders history') . '</li>
+          	<li id="menuTab7" class="menuTabButton">7. ' . $this->l('Help') . '</li>
+    			</ul>
+      		<div id="tabList" class="' . $classGeneral . '">
       				<div id="menuTab1Sheet" class="tabItem selected">' . $this->_displayFormParameters() . '</div>
       				<div id="menuTab2Sheet" class="tabItem">' . $this->_displayFormCategory() . '</div>';
 
@@ -928,8 +937,7 @@ class Ebay extends Module {
           '7000' => $this->l('For parts or not working')
         );
 
-        $request = new eBayRequest();
-        $policies = $request->getReturnsPolicy();
+        $policies = $this->getReturnsPolicy();
         $catLoaded = !Configuration::get('EBAY_CATEGORY_LOADED');
         $ebayShopValue = Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP')));
         $smarty->assign(array(
@@ -940,6 +948,7 @@ class Ebay extends Module {
             'catLoaded' => $catLoaded,
             'ebayItemConditions' => $ebayItemConditions,
             'createShopUrl' => $this->createShopUrl,
+            'ebayReturns' => $this->br2nl(Configuration::get('EBAY_RETURNS_DESCRIPTION')),
             'ebayShopValue' => $ebayShopValue, 
             'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
             'listingDurations' => $listingDurations
@@ -963,10 +972,11 @@ class Ebay extends Module {
      private function _postProcessParameters() {
           // Saving new configurations
 
+         
           if ($this->setConfiguration('EBAY_PAYPAL_EMAIL', pSQL(Tools::getValue('ebay_paypal_email'))) &&
                   $this->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier'))) &&
                   $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', pSQL(Tools::getValue('ebay_returns_accepted_option'))) &&
-                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', pSQL(nl2br2(Tools::getValue('ebay_returns_description'))), true) &&
+                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', (nl2br2(Tools::getValue('ebay_returns_description'))), true) &&
                   $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
                   $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))) &&
                   $this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations')) &&
@@ -1018,7 +1028,7 @@ class Ebay extends Module {
           $configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
 
           // Check if the module is configured
-          if ($configs['EBAY_PAYPAL_EMAIL'] === false)
+          if($configs['EBAY_PAYPAL_EMAIL'] === false)
                return $this->display(dirname(__FILE__), '/views/templates/hook/error_paypal_email.tpl');
 
           // Load categories only if necessary
@@ -1198,16 +1208,22 @@ class Ebay extends Module {
      private function _displayFormShipping() {
           global $smarty;
 
+          // Loading Shipping Method
+         $this->_shippingMethod = $this->eBayCountry->loadShippingMethod();
+
+         if(DB::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'ebay_shipping_zone_excluded') == 0)
+            $this->_loadEbayExcludedLocation();
+
           //INITIALIZE CACHE
           $this->excludedLocation = $this->_cacheEbayExcludedLocation();
           $eBay = new eBayRequest();
-          $deliveryTimeOptions = $eBay->getDeliveryTimeOptions();
-          $eBayCarrier = $eBay->getCarrier();
+          $deliveryTimeOptions = $this->getDeliveryTimeOptions();
+          $eBayCarrier = $this->getCarrier();
           $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
           $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping WHERE international = 0");
           $existingInternationalCarrier = $this->getExistingInternationalCarrier();
-          $internationalShippingLocation = $eBay->getInternationalShippingLocation();
+          $internationalShippingLocation = $this->getInternationalShippingLocation();
           $prestashopZone = Zone::getZones(); 
 
           $smarty->assign(array(
@@ -1353,185 +1369,188 @@ class Ebay extends Module {
           if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) as nb FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`') < 1)
                return '<p><b>' . $this->l('You have to configure "Categories Settings" tab before using this tab.') . '</b></p><br />';
 
-          if ($this->isVersionOneDotFive()) {
+          if ($this->isVersionOneDotFive()) 
+          {
                $nbProductsModeA = Db::getInstance()->getValue('
-			SELECT COUNT( * ) FROM (
-				SELECT COUNT( p.id_product ) AS nb
-					FROM  `' . _DB_PREFIX_ . 'product` AS p
-					INNER JOIN  `' . _DB_PREFIX_ . 'stock_available` AS s ON p.id_product = s.id_product
-					WHERE s.`quantity` >0
-					AND  `active` =1
-					AND  `id_category_default`
-					IN (
+          			SELECT COUNT( * ) FROM (
+          				SELECT COUNT( p.id_product ) AS nb
+          					FROM  `' . _DB_PREFIX_ . 'product` AS p
+          					INNER JOIN  `' . _DB_PREFIX_ . 'stock_available` AS s ON p.id_product = s.id_product
+          					WHERE s.`quantity` >0
+          					AND  `active` =1
+          					AND  `id_category_default`
+          					IN (
 
-						SELECT  `id_category` 
-						FROM  `' . _DB_PREFIX_ . 'ebay_category_configuration` 
-						WHERE  `id_ebay_category` >0
-					)
-					' . $this->addSqlRestrictionOnLang('s') . '
-					GROUP BY p.id_product
-			)TableReponse');
+          						SELECT  `id_category` 
+          						FROM  `' . _DB_PREFIX_ . 'ebay_category_configuration` 
+          						WHERE  `id_ebay_category` >0
+          					)
+          					' . $this->addSqlRestrictionOnLang('s') . '
+          					GROUP BY p.id_product
+          			)TableReponse');
                $nbProductsModeB = Db::getInstance()->getValue('
-			SELECT COUNT( * ) FROM (
-				SELECT COUNT( p.id_product ) AS nb
-					FROM  `' . _DB_PREFIX_ . 'product` AS p
-					INNER JOIN  `' . _DB_PREFIX_ . 'stock_available` AS s ON p.id_product = s.id_product
-					WHERE s.`quantity` >0
-					AND  `active` =1
-					AND  `id_category_default`
-					IN (
+          			SELECT COUNT( * ) FROM (
+          				SELECT COUNT( p.id_product ) AS nb
+          					FROM  `' . _DB_PREFIX_ . 'product` AS p
+          					INNER JOIN  `' . _DB_PREFIX_ . 'stock_available` AS s ON p.id_product = s.id_product
+          					WHERE s.`quantity` >0
+          					AND  `active` =1
+          					AND  `id_category_default`
+          					IN (
 
-						SELECT  `id_category` 
-						FROM  `' . _DB_PREFIX_ . 'ebay_category_configuration` 
-						WHERE  `id_ebay_category` >0 AND `sync` = 1
-					)' . $this->addSqlRestrictionOnLang('s') . '
-					GROUP BY p.id_product
-			)TableReponse');
-          } else {
+          						SELECT  `id_category` 
+          						FROM  `' . _DB_PREFIX_ . 'ebay_category_configuration` 
+          						WHERE  `id_ebay_category` >0 AND `sync` = 1
+          					)' . $this->addSqlRestrictionOnLang('s') . '
+          					GROUP BY p.id_product
+          			)TableReponse');
+          } 
+          else 
+          {
                $nbProductsModeA = Db::getInstance()->getValue('
-			SELECT COUNT(`id_product`) as nb
-			FROM `' . _DB_PREFIX_ . 'product`
-			WHERE `quantity` > 0 AND `active` = 1
-			AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_ebay_category` > 0)');
-               $nbProductsModeB = Db::getInstance()->getValue('
-			SELECT COUNT(`id_product`) as nb
-			FROM `' . _DB_PREFIX_ . 'product`
-			WHERE `quantity` > 0 AND `active` = 1
-			AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_ebay_category` > 0 AND `sync` = 1)');
+          			SELECT COUNT(`id_product`) as nb
+          			FROM `' . _DB_PREFIX_ . 'product`
+          			WHERE `quantity` > 0 AND `active` = 1
+          			AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_ebay_category` > 0)');
+                         $nbProductsModeB = Db::getInstance()->getValue('
+          			SELECT COUNT(`id_product`) as nb
+          			FROM `' . _DB_PREFIX_ . 'product`
+          			WHERE `quantity` > 0 AND `active` = 1
+          			AND `id_category_default` IN (SELECT `id_category` FROM `' . _DB_PREFIX_ . 'ebay_category_configuration` WHERE `id_ebay_category` > 0 AND `sync` = 1)');
           }
-          $nbProducts = $nbProductsModeA;
-          if (Configuration::get('EBAY_SYNC_MODE') == 'B')
-               $nbProducts = $nbProductsModeB;
+  $nbProducts = $nbProductsModeA;
+  if (Configuration::get('EBAY_SYNC_MODE') == 'B')
+       $nbProducts = $nbProductsModeB;
 
-          if (($nbProducts == 0) || ($nbProducts == 1))
-               $prod_nb = $this->l('product');
-          else
-               $prod_nb = $this->l('products');
-          // Display Form
-          $html = '<style> 
-			#button_ebay_sync1{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:25px;}
-			#button_ebay_sync2{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:15px;}
-		</style>
-		<script>
-			var nbProducts = ' . $nbProducts . ';
-			var nbProductsModeA = ' . $nbProductsModeA . ';
-			var nbProductsModeB = ' . $nbProductsModeB . ';
-			$(document).ready(function() {
-				$(".categorySync").click(function() {
+  if (($nbProducts == 0) || ($nbProducts == 1))
+       $prod_nb = $this->l('product');
+  else
+       $prod_nb = $this->l('products');
+  // Display Form
+  $html = '<style> 
+		#button_ebay_sync1{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:25px;}
+		#button_ebay_sync2{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:15px;}
+  	</style>
+  	<script>
+  		var nbProducts = ' . $nbProducts . ';
+  		var nbProductsModeA = ' . $nbProductsModeA . ';
+  		var nbProductsModeB = ' . $nbProductsModeB . ';
+  		$(document).ready(function() {
+  			$(".categorySync").click(function() {
 
-					var params = "";
-					if ($(this).attr("value") > 0)
-						params = "&id_category=" + $(this).attr("value");
-					if ($(this).attr("checked"))
-						params = params + "&action=1";
-					else
-						params = params + "&action=0";
+  				var params = "";
+  				if ($(this).attr("value") > 0)
+  					params = "&id_category=" + $(this).attr("value");
+  				if ($(this).attr("checked"))
+  					params = params + "&action=1";
+  				else
+  					params = params + "&action=0";
 
-					$.ajax({
-						url: "' . _MODULE_DIR_ . 'ebay/ajax/getNbProductsSync.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '" + params,
-						success: function(data) {
-					  		nbProducts = data;
-					  		nbProductsModeB = data;
-							$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + data + " ' . $prod_nb . ')");
-							$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + data + " ' . $prod_nb . ')");
-						}
-					});
-				});
-			});
-
-
-			$(document).ready(function() {
-				$("#ebay_sync_mode1").click(function() {
-					nbProducts = nbProductsModeA;
-					$("#catSync").hide("slow");
-					$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + nbProducts + " ' . $this->l('products') . ')");
-					$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + nbProducts + " ' . $prod_nb . ')");
-				});
-				$("#ebay_sync_mode2").click(function() {
-					nbProducts = nbProductsModeB;
-					$("#catSync").show("slow");
-					$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + nbProducts + " ' . $prod_nb . ')");
-					$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + nbProducts + " ' . $prod_nb . ')");
-				});
-			});
-
-			function eBaySync(option)
-			{
-				$(".categorySync").attr("disabled", "true");
-				$("#ebay_sync_mode1").attr("disabled", "true");
-				$("#ebay_sync_mode2").attr("disabled", "true");
-				$("#ebay_sync_option_resync").attr("disabled", "true");
-				$("#button_ebay_sync1").attr("disabled", "true");
-				$("#button_ebay_sync1").css("background-color", "#D5D5D5");
-				$("#button_ebay_sync2").attr("disabled", "true");
-				$("#button_ebay_sync2").css("background-color", "#D5D5D5");
-				$("#resultSync").html("<img src=\"../modules/ebay/loading-small.gif\" border=\"0\" />");
-				eBaySyncProduct(option);
-			}
-
-			function reableSyncProduct(){
-				$(".categorySync").removeAttr("disabled", "disabled");
-				$("#ebay_sync_mode1").removeAttr("disabled", "disabled");
-				$("#ebay_sync_mode2").removeAttr("disabled", "disabled");
-				$("#ebay_sync_option_resync").removeAttr("disabled", "disabled");
-				$("#button_ebay_sync1").removeAttr("disabled", "disabled");
-				$("#button_ebay_sync1").css("background-color", "#FFFAC6");
-				$("#button_ebay_sync2").removeAttr("disabled", "disabled");
-				$("#button_ebay_sync2").css("background-color", "#FFFAC6");
-			}
-			var counter = 0;
-			function eBaySyncProduct(option)
-			{
-				counter++;
-				$.ajax({
-				  url: \'' . _MODULE_DIR_ . 'ebay/ajax/eBaySyncProduct.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&option=\'+option+\'&time=' . pSQL(date('Ymdhis')) . '\'+counter,
-				  success: function(data)
-				  {
-					tab = data.split("|");
-					$("#resultSync").html(tab[1]);
-					if (tab[0] != "OK")
-						eBaySyncProduct(option);
-					else
-						reableSyncProduct();
-				  }
-				});
-			}
-		</script>
-
-		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
-
-		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=5&section=sync" method="post" class="form" id="configForm4">
-				<fieldset style="border: 0">
-					<h4>' . $this->l('You will now push your products on eBay.') . ' <b></h4>
-					<label style="width: 250px;">' . $this->l('Sync Mode') . ' : </label><br clear="left" /><br /><br />
-					<div class="margin-form">
-						<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode1" value="A" checked="checked" /> ' . $this->l('Option A') . ' : ' . $this->l('Sync all your products with eBay') . '
-					</div>
-					<div class="margin-form">
-						<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode2" value="B" /> ' . $this->l('Option B') . ' : ' . $this->l('Sync the products only from selected categories') . '
-					</div>
-					<label style="width: 250px;">' . $this->l('Option') . ' : </label><br clear="left" /><br /><br />
-					<div class="margin-form">
-						<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" ' . (Configuration::get('EBAY_SYNC_OPTION_RESYNC') == 1 ? 'checked="checked"' : '') . ' /> ' . $this->l('When update a product, resync only price and quantity') . '
-					</div>
-					<div style="display: none;" id="catSync">';
+  				$.ajax({
+  					url: "' . _MODULE_DIR_ . 'ebay/ajax/getNbProductsSync.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '" + params,
+  					success: function(data) {
+  				  		nbProducts = data;
+  				  		nbProductsModeB = data;
+  						$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + data + " ' . $prod_nb . ')");
+  						$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + data + " ' . $prod_nb . ')");
+  					}
+  				});
+  			});
+  		});
 
 
-          // Loading categories
-          $categoryConfigList = array();
-          $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
-          foreach ($categoryConfigListTmp as $c)
-               $categoryConfigList[$c['id_category']] = $c;
-          $categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
-          $html .= '<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
-			<thead>
-				<tr class="nodrag nodrop">
-					<th>' . $this->l('Select') . '</th>
-					<th>' . $this->l('Category') . '</th>
-				</tr>
-			</thead>
-			<tbody>';
-          if (!$categoryList)
+  		$(document).ready(function() {
+  			$("#ebay_sync_mode1").click(function() {
+  				nbProducts = nbProductsModeA;
+  				$("#catSync").hide("slow");
+  				$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + nbProducts + " ' . $this->l('products') . ')");
+  				$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + nbProducts + " ' . $prod_nb . ')");
+  			});
+  			$("#ebay_sync_mode2").click(function() {
+  				nbProducts = nbProductsModeB;
+  				$("#catSync").show("slow");
+  				$("#button_ebay_sync1").attr("value", "' . $this->l('Sync with eBay') . '\n(" + nbProducts + " ' . $prod_nb . ')");
+  				$("#button_ebay_sync2").attr("value", "' . $this->l('Sync with eBay') . '\n' . $this->l('and update') . '\n(" + nbProducts + " ' . $prod_nb . ')");
+  			});
+  		});
+
+  			function eBaySync(option)
+  			{
+  				$(".categorySync").attr("disabled", "true");
+  				$("#ebay_sync_mode1").attr("disabled", "true");
+  				$("#ebay_sync_mode2").attr("disabled", "true");
+  				$("#ebay_sync_option_resync").attr("disabled", "true");
+  				$("#button_ebay_sync1").attr("disabled", "true");
+  				$("#button_ebay_sync1").css("background-color", "#D5D5D5");
+  				$("#button_ebay_sync2").attr("disabled", "true");
+  				$("#button_ebay_sync2").css("background-color", "#D5D5D5");
+  				$("#resultSync").html("<img src=\"../modules/ebay/loading-small.gif\" border=\"0\" />");
+  				eBaySyncProduct(option);
+  			}
+
+  			function reableSyncProduct(){
+  				$(".categorySync").removeAttr("disabled", "disabled");
+  				$("#ebay_sync_mode1").removeAttr("disabled", "disabled");
+  				$("#ebay_sync_mode2").removeAttr("disabled", "disabled");
+  				$("#ebay_sync_option_resync").removeAttr("disabled", "disabled");
+  				$("#button_ebay_sync1").removeAttr("disabled", "disabled");
+  				$("#button_ebay_sync1").css("background-color", "#FFFAC6");
+  				$("#button_ebay_sync2").removeAttr("disabled", "disabled");
+  				$("#button_ebay_sync2").css("background-color", "#FFFAC6");
+  			}
+  			var counter = 0;
+  			function eBaySyncProduct(option)
+  			{
+  				counter++;
+  				$.ajax({
+  				  url: \'' . _MODULE_DIR_ . 'ebay/ajax/eBaySyncProduct.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&option=\'+option+\'&time=' . pSQL(date('Ymdhis')) . '\'+counter,
+  				  success: function(data)
+  				  {
+  					tab = data.split("|");
+  					$("#resultSync").html(tab[1]);
+  					if (tab[0] != "OK")
+  						eBaySyncProduct(option);
+  					else
+  						reableSyncProduct();
+  				  }
+  				});
+  			}
+  		</script>
+
+  		<div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
+
+  		<form action="index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=5&section=sync" method="post" class="form" id="configForm4">
+  				<fieldset style="border: 0">
+  					<h4>' . $this->l('You will now push your products on eBay.') . ' <b></h4>
+  					<label style="width: 250px;">' . $this->l('Sync Mode') . ' : </label><br clear="left" /><br /><br />
+  					<div class="margin-form">
+  						<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode1" value="A" checked="checked" /> ' . $this->l('Option A') . ' : ' . $this->l('Sync all your products with eBay') . '
+  					</div>
+  					<div class="margin-form">
+  						<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode2" value="B" /> ' . $this->l('Option B') . ' : ' . $this->l('Sync the products only from selected categories') . '
+  					</div>
+  					<label style="width: 250px;">' . $this->l('Option') . ' : </label><br clear="left" /><br /><br />
+  					<div class="margin-form">
+  						<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" ' . (Configuration::get('EBAY_SYNC_OPTION_RESYNC') == 1 ? 'checked="checked"' : '') . ' /> ' . $this->l('When update a product, resync only price and quantity') . '
+  					</div>
+  					<div style="display: none;" id="catSync">';
+
+
+  // Loading categories
+  $categoryConfigList = array();
+  $categoryConfigListTmp = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`');
+  foreach ($categoryConfigListTmp as $c)
+       $categoryConfigList[$c['id_category']] = $c;
+  $categoryList = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
+  $html .= '<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
+	<thead>
+		<tr class="nodrag nodrop">
+			<th>' . $this->l('Select') . '</th>
+			<th>' . $this->l('Category') . '</th>
+		</tr>
+	</thead>
+	<tbody>';
+  if (!$categoryList)
                $html .= '<tr><td colspan="2">' . $this->l('No category found.') . '</td></tr>';
           $i = 0;
           foreach ($categoryList as $k => $c) {
@@ -1808,9 +1827,17 @@ class Ebay extends Module {
                     include(dirname(__FILE__) . '/log/syncError.php');
                     foreach ($tab_error as $error) {
                          $productsDetails = '<br /><u>' . $this->l('Product(s) concerned') . ' :</u>';
+                         
                          foreach ($error['products'] as $product)
                               $productsDetails .= '<br />- ' . $product;
                          echo $this->displayError($error['msg'] . '<br />' . $productsDetails);
+                    }
+                    if($itemConditionError == true){//Add a specific message for item condition error
+                      $message = $this->l('The settings you have choosen for item\'s condition is not possible with the categories you have choosen on eBay.'). '<br/>';
+                      $message .= $this->l('You can modify you item conditions by applying the conditions for the categories that you will find at this link : ');
+                      $message .= '<a href="' . $this->l('pages.ebay.co.uk/help/sell/item-condition.html') . '"> '. $this->l('pages.ebay.co.uk/help/sell/item-condition.html') . '</a><br/>';
+                      $message .= $this->l('The future version of the module will allow to specify item conditions by categories');
+                      echo $this->displayError($message);
                     }
                     echo '<style>#content .alert { text-align: left; width: 875px; }</style>';
                     @unlink(dirname(__FILE__) . '/log/syncError.php');
@@ -2199,13 +2226,13 @@ class Ebay extends Module {
                          $count_error++;
                     }
                     else
-                         $count_success++;
+                         $count_success++;                    
                     $count++;
                }
           }
 
           if ($count_error > 0)
-               file_put_contents(dirname(__FILE__) . '/log/syncError.php', '<?php $tab_error = ' . var_export($tab_error, true) . '; ?>');
+               file_put_contents(dirname(__FILE__) . '/log/syncError.php', '<?php $tab_error = ' . var_export($tab_error, true) . '; '. ($ebay->itemConditionError ? '$itemConditionError = true; ' : '$itemConditionError = false;'). ' ?>');
      }
 
 
@@ -2250,6 +2277,7 @@ class Ebay extends Module {
 
         return $shipDetails;
      }
+
 
 
      private function getShippingPriceForProduct($product, $zone, $carrierid){
@@ -2347,11 +2375,83 @@ class Ebay extends Module {
       {
         foreach ($excludeLocation as $location) {
           Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_zone_excluded', $location, 'INSERT');
-        }
         
+}        
       }
       
      }
+
+      private function getInternationalShippingLocation(){
+        $exists = Db::getInstance()->getValue('SELECT COUNT(*) AS nb FROM ' . _DB_PREFIX_ . 'ebay_shipping_location');
+        if($exists > 0)
+        {
+          return Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_shipping_location');
+        }
+        else
+        {
+          $eBay = new eBayRequest();
+          $location = $eBay->getInternationalShippingLocation();
+          foreach ($location as $key => $value) {
+            Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_location', $value, 'INSERT');
+          }
+
+           return $location;
+        }
+      }
+
+
+      private function getDeliveryTimeOptions(){
+        $exists = Db::getInstance()->getValue('SELECT COUNT(*) AS nb FROM ' . _DB_PREFIX_ . 'ebay_delivery_time_options');
+        if($exists > 0)
+        {
+          return Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_delivery_time_options');
+        }
+        else
+        {
+          $eBay = new eBayRequest();
+          $location = $eBay->getDeliveryTimeOptions();
+          foreach ($location as $key => $value) {
+            Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_delivery_time_options', $value, 'INSERT');
+          }
+
+           return $location;
+        }
+      }
+
+      private function getCarrier(){
+        $exists = Db::getInstance()->getValue('SELECT COUNT(*) AS nb FROM ' . _DB_PREFIX_ . 'ebay_shipping_service');
+        if($exists > 0)
+        {
+          return Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_shipping_service');
+        }
+        else
+        {
+          $eBay = new eBayRequest();
+          $location = $eBay->getCarrier();
+          foreach ($location as $key => $value) {
+            Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_service', $value, 'INSERT');
+          }
+
+           return $location;
+        }
+      }
+
+      private function getReturnsPolicy(){
+        $exists = Db::getInstance()->getValue('SELECT COUNT(*) AS nb FROM ' . _DB_PREFIX_ . 'ebay_returns_policy');
+        if($exists > 0)
+        {
+          return Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'ebay_returns_policy');
+        }
+        else
+        {
+          $eBay = new eBayRequest();
+          $location = $eBay->getReturnsPolicy();
+          foreach ($location as $key => $value) {
+            Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_returns_policy', $value, 'INSERT');
+          }
+          return $location;
+        }
+      }
 
       private function relistItems(){
         if(Configuration::get('EBAY_LISTING_DURATION') != 'GTC' AND Configuration::get('EBAY_AUTOMATICALLY_RELIST') == 'on'){
@@ -2401,12 +2501,12 @@ class Ebay extends Module {
 						.orderImportTd3 {border-top:1px solid #000}
 					</style>
 					<p>
-					<b>' . $this->l('Order Ref eBay') . ' :</b> ' . $order['id_order_ref'] . '<br />
-					<b>' . $this->l('Id Order Seller') . ' :</b> ' . $order['id_order_seller'] . '<br />
-					<b>' . $this->l('Amount') . ' :</b> ' . $order['amount'] . '<br />
-					<b>' . $this->l('Status') . ' :</b> ' . $order['status'] . '<br />
-					<b>' . $this->l('Date') . ' :</b> ' . $order['date'] . '<br />
-					<b>' . $this->l('E-mail') . ' :</b> ' . $order['email'] . '<br />
+					<b>' . $this->l('Order Ref eBay') . ' :</b> ' . (isset($order['id_order_ref']) ? $order['id_order_ref'] : '') . '<br />
+					<b>' . $this->l('Id Order Seller') . ' :</b> ' . (isset($order['id_order_seller']) ? $order['id_order_seller'] : '') . '<br />
+					<b>' . $this->l('Amount') . ' :</b> ' . (isset($order['amount']) ? $order['amount'] : '') . '<br />
+					<b>' . $this->l('Status') . ' :</b> ' . (isset($order['status']) ? $order['status'] : '') . '<br />
+					<b>' . $this->l('Date') . ' :</b> ' . (isset($order['date']) ? $order['date'] : '') . '<br />
+					<b>' . $this->l('E-mail') . ' :</b> ' . (isset($order['email']) ? $order['email'] : '') . '<br />
 					<b>' . $this->l('Products') . ' :</b><br />';
                     if (isset($order['product_list']) && count($order['product_list']) > 0) {
                          $html .= '<table border="0" cellpadding="4" cellspacing="0"><tr>
@@ -2561,6 +2661,10 @@ class Ebay extends Module {
           if ($this->isVersionOneDotFive())
                Shop::addSqlRestrictionOnLang($alias);
      }
+
+    public function br2nl($string){
+       return preg_replace('#<br\s*?/?>#i', "\n", $string); 
+    }
 
 }
 

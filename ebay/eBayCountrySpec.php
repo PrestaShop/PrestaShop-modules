@@ -42,7 +42,7 @@ class eBayCountrySpec
 	}
 
 	public function getSiteID(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
 				return 101;
 				break;
@@ -60,7 +60,7 @@ class eBayCountrySpec
 	}
 
 	public function getLanguage(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
 				return 'it_IT';
 				break;
@@ -78,7 +78,7 @@ class eBayCountrySpec
 	}
 
 	public function getCurrency(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
 				return 'EUR';
 				break;
@@ -96,12 +96,12 @@ class eBayCountrySpec
 	}
 
 	public function getSiteName(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
 				return 'Italy';
 				break;
 			case 'gb':
-				return 'United Kingdom';
+				return 'UK';
 				break;
 			case 'es':
 				return 'Spain';
@@ -114,7 +114,7 @@ class eBayCountrySpec
 	}
 
 	public function getSiteExtension(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
 				return 'it';
 				break;
@@ -132,15 +132,15 @@ class eBayCountrySpec
 	}
 
 	public function getImgStats(){
-		switch($this->country->iso_code){
+		switch(strtolower($this->country->iso_code)){
 			case 'it':
-				return 'ebay_stats-it.png';
+				return null;
 				break;
 			case 'gb':
-
+				return null;
 				break;
 			case 'es':
-
+				return null;
 				break;
 			case 'fr':
 			default:
