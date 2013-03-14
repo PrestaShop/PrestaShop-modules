@@ -24,7 +24,6 @@ if (file_exists($configPath)) {
                $tabHelp = "&id_tab=7";
 
                $categoryList = $this->_getChildCategories(Category::getCategories(Tools::getValue('id_lang')), ($this->isVersionOneDotFive()) ? 1 : 0);
-
                $eBayCategoryList = Db::getInstance()->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'ebay_category` WHERE `id_category_ref` = `id_category_ref_parent`');
 
                if ($this->isVersionOneDotFive()) {
