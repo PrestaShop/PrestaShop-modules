@@ -60,7 +60,7 @@ class Ebay extends Module {
      public function __construct() {
           $this->name = 'ebay';
           $this->tab = 'market_place';
-          $this->version = '1.3.7';
+          $this->version = '1.4.0';
           $this->author = 'PrestaShop';
           parent::__construct();
 
@@ -272,6 +272,7 @@ class Ebay extends Module {
           { // Waif for 1.4.0
                include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
                $this->installupgradeonefour();
+               $this->setConfiguration('EBAY_VERSION', $this->version);
           }
 
           if (isset($sql) && is_array($sql) && sizeof($sql)) {
