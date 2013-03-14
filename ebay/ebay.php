@@ -134,7 +134,7 @@ class Ebay extends Module {
           }
      }
 
-     /**
+      /**
       * Install / Uninstall Methods
       *
       * */
@@ -176,13 +176,7 @@ class Ebay extends Module {
           $this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $content, true);
           $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
           $this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
-          $this->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
-          $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
-          $this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
-          $this->setConfiguration('EBAY_CONDITION_NEW', 1000);
-          $this->setConfiguration('EBAY_CONDITION_USED', 3000);
-          $this->setConfiguration('EBAY_CONDITION_REFURBISHED', 2500);
-
+          $this->installupgradeonefour();
 
           // Init
           $this->setConfiguration('EBAY_VERSION', $this->version);
@@ -257,13 +251,27 @@ class Ebay extends Module {
           return true;
      }
 
+     public function installupgradeonefour(){
+          $this->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
+          $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
+          $this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
+          $this->setConfiguration('EBAY_CONDITION_NEW', 1000);
+          $this->setConfiguration('EBAY_CONDITION_USED', 3000);
+          $this->setConfiguration('EBAY_CONDITION_REFURBISHED', 2500);
+
+     }
+
      public function upgrade() {
           $version = Configuration::get('EBAY_VERSION');
-          if ($version == '1.1' || empty($version)) {
+          if ($version == '1.1' || empty($version)) 
+          {
                // Upgrade SQL
                include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
-          } else if (version_compare($version, '1.4.0', '<')) { // Waif for 1.4.0
+          } 
+          else if (version_compare($version, '1.4.0', '<'))
+          { // Waif for 1.4.0
                include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
+               $this->installupgradeonefour();
           }
 
           if (isset($sql) && is_array($sql) && sizeof($sql)) {
