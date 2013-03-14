@@ -164,7 +164,7 @@ class Ebay extends Module {
           if ($this->isVersionOneDotFive())
                $content = str_replace('{SHOP_LOGO}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/' . _PS_IMG_ . Configuration::get('PS_LOGO') . '?' . Configuration::get('PS_IMG_UPDATE_TIME'), $content);
           else
-               $content = str_replace('{SHOP_LOGO}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/logo.jpg', $content);
+               $content = str_replace('{SHOP_LOGO}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/img/logo.jpg', $content);
           $content = str_replace('{SHOP_NAME}', Configuration::get('PS_SHOP_NAME'), $content);
           $content = str_replace('{SHOP_URL}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/', $content);
           $content = str_replace('{MODULE_URL}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/modules/ebay/', $content);
@@ -770,6 +770,7 @@ class Ebay extends Module {
             				{
             					$.ajax({
             					  url: \'' . _MODULE_DIR_ . 'ebay/ajax/checkToken.php?token=' . Configuration::get('EBAY_SECURITY_TOKEN') . '&time=' . pSQL(date('Ymdhis')) . '\',
+                        cache: false,
             					  success: function(data)
             					  {
             						if (data == \'OK\')
@@ -1898,9 +1899,9 @@ class Ebay extends Module {
                     $prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' : '');
                     $images = $product->getImages($this->id_lang);
                     foreach ($images as $image) {
-                         $pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
-                         $picturesMedium[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
-                         $picturesLarge[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
+                         $pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
+                         $picturesMedium[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
+                         $picturesLarge[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
                     }
                     // Load Variations
                     $variations = array();
