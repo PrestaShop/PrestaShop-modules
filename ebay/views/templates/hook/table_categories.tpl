@@ -21,7 +21,7 @@
                </td>
                <td>
                     <input type="text" size="4" maxlength="4" name="percent{$c.id_category}" id="percent{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px;" value="{$categoryConfigList.{$c.id_category}.percent}" />
-               </td>{debug}
+               </td>
           </tr>
      {/foreach}
 {/if}
