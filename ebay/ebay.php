@@ -1947,7 +1947,7 @@ class Ebay extends Module {
                     if (isset($combinationsImages) && !empty($combinationsImages) && count($combinationsImages) > 0)
                          foreach ($combinationsImages as $ci)
                               foreach ($ci as $i)
-                                   $variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : ''));
+                                   $variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : ''));
 
 
                     // Load basic price
