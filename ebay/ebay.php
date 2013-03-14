@@ -782,7 +782,7 @@ class Ebay extends Module {
             				checkToken();
             			</script>';
                $html .= '<fieldset><legend><img src="' . $this->_path . 'logo.gif" alt="" title="" />' . $this->l('Register the module on eBay') . '</legend>';
-               $html .= '<p align="center"><a href="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '&action=logged&relogin=1" class="button">' . $this->l('If you have been logged out from eBay, and you are not redirected to the module configuration page, please click here') . '</a>';
+               $html .= '<p align="center" class="warning"><a href="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '&action=logged&relogin=1" class="button">' . $this->l('If you have been logged out from eBay, and you are not redirected to the module configuration page, please click here') . '</a>';
                $html .= '<p align="center"><img src="' . $this->_path . 'loading.gif" alt="' . $this->l('Loading') . '" title="' . $this->l('Loading') . '" /></p>';
                $html .= '<p align="center">' . $this->l('Once you sign in from the new eBay window, the module will automatically finish the installation a few seconds later') . '</p>';
                $html .= '</fieldset>';
@@ -976,7 +976,7 @@ class Ebay extends Module {
           if ($this->setConfiguration('EBAY_PAYPAL_EMAIL', pSQL(Tools::getValue('ebay_paypal_email'))) &&
                   $this->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier'))) &&
                   $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', pSQL(Tools::getValue('ebay_returns_accepted_option'))) &&
-                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', (nl2br2(Tools::getValue('ebay_returns_description'))), true) &&
+                  $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', ($this->isVersionOneDotFive() ? Tools::nl2br(Tools::getValue('ebay_returns_description')) : nl2br2(Tools::getValue('ebay_returns_description'))), true) &&
                   $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
                   $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))) &&
                   $this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations')) &&
@@ -2376,7 +2376,7 @@ class Ebay extends Module {
         foreach ($excludeLocation as $location) {
           Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_zone_excluded', $location, 'INSERT');
         
-}        
+        }        
       }
       
      }
@@ -2392,6 +2392,9 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $location = $eBay->getInternationalShippingLocation();
           foreach ($location as $key => $value) {
+            foreach ($value as $keyfield => $fieldValue){
+              $value[$keyfield] = pSQL($fieldValue);
+            }
             Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_location', $value, 'INSERT');
           }
 
@@ -2411,6 +2414,9 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $location = $eBay->getDeliveryTimeOptions();
           foreach ($location as $key => $value) {
+            foreach ($value as $keyfield => $fieldValue){
+              $value[$keyfield] = pSQL($fieldValue);
+            }
             Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_delivery_time_options', $value, 'INSERT');
           }
 
@@ -2429,6 +2435,9 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $location = $eBay->getCarrier();
           foreach ($location as $key => $value) {
+            foreach ($value as $keyfield => $fieldValue){
+              $value[$keyfield] = pSQL($fieldValue);
+            }
             Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_shipping_service', $value, 'INSERT');
           }
 
@@ -2447,6 +2456,9 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $location = $eBay->getReturnsPolicy();
           foreach ($location as $key => $value) {
+            foreach ($value as $keyfield => $fieldValue){
+              $value[$keyfield] = pSQL($fieldValue);
+            }
             Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_returns_policy', $value, 'INSERT');
           }
           return $location;
