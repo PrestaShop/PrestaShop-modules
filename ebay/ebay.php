@@ -2547,7 +2547,7 @@ class Ebay extends Module {
           return file_get_contents($helpFile);
      }
 
-     protected function isVersionOneDotFive($operator = '1.5', $tocompare = '>') {
+     protected function isVersionOneDotFive($operator = '>', $tocompare = '1.5') {
           return version_compare(_PS_VERSION_, $tocompare, $operator);
      }
 
