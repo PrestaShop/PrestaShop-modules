@@ -1028,7 +1028,7 @@ class Ebay extends Module {
           $configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
 
           // Check if the module is configured
-          if($configs['EBAY_PAYPAL_EMAIL'] === false)
+          if(!isset($configs['EBAY_PAYPAL_EMAIL']) || $configs['EBAY_PAYPAL_EMAIL'] === false)
                return $this->display(dirname(__FILE__), '/views/templates/hook/error_paypal_email.tpl');
 
           // Load categories only if necessary
@@ -1898,9 +1898,9 @@ class Ebay extends Module {
                     $prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' : '');
                     $images = $product->getImages($this->id_lang);
                     foreach ($images as $image) {
-                         $pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive() ? '_default' : '')));
-                         $picturesMedium[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive() ? '_default' : '')));
-                         $picturesLarge[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive() ? '_default' : '')));
+                         $pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
+                         $picturesMedium[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
+                         $picturesLarge[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : '')));
                     }
                     // Load Variations
                     $variations = array();
@@ -1938,7 +1938,7 @@ class Ebay extends Module {
                     if (isset($combinationsImages) && !empty($combinationsImages) && count($combinationsImages) > 0)
                          foreach ($combinationsImages as $ci)
                               foreach ($ci as $i)
-                                   $variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive() ? '_default' : ''));
+                                   $variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.3.1') ? '_default' : ''));
 
 
                     // Load basic price
@@ -2547,8 +2547,8 @@ class Ebay extends Module {
           return file_get_contents($helpFile);
      }
 
-     protected function isVersionOneDotFive() {
-          return version_compare(_PS_VERSION_, '1.5', '>');
+     protected function isVersionOneDotFive($operator = '1.5', $tocompare = '>') {
+          return version_compare(_PS_VERSION_, $tocompare, $operator);
      }
 
      private function getAlert() {
