@@ -160,10 +160,6 @@
 			{foreach from=$internationalCarrier.shippingLocation item=shippingLocation}
 				zone.push('{$shippingLocation.id_ebay_zone}');
 			{/foreach}
-			{foreach from=$internationalCarrier.excludedShippingLocation item=excludedShippingLocation}
-				zoneExcluded.push('{$excludedShippingLocation.id_ebay_zone_excluded}');
-			{/foreach}
-
 			addInternationalShippingFee('{$internationalCarrier.ebay_carrier}', {$internationalCarrier.ps_carrier}, {$internationalCarrier.extra_fee}, zone, zoneExcluded);
 		{/foreach}
 
