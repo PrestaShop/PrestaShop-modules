@@ -27,7 +27,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.3';
+		$this->version = '1.8.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -173,12 +173,12 @@ class TntCarrier extends CarrierModule
 		$languages = Language::getLanguages(true);
 		foreach ($languages as $language)
 		{
-			if ($language['iso_code'] == 'fr')
+			if (($language['iso_code'] == 'fr') || ($language['iso_code'] == 'en'))
 				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
-			if ($language['iso_code'] == 'en')
+			if ($language['iso_code'] == Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')) && isset($config['delay'][$language['iso_code']]))
 				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
-			if ($language['iso_code'] == Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')))
-				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
+			elseif ($language['iso_code'] == Language::getIsoById(Configuration::get('PS_LANG_DEFAULT')) && isset($config['delay']['en']))
+				$carrier->delay[(int)$language['id_lang']] = $config['delay']['en'];
 		}
 
 		if ($carrier->add())

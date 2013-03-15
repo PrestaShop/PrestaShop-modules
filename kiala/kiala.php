@@ -66,7 +66,7 @@ class Kiala extends Module
 		$this->name		= 'kiala';
 		$this->author = 'PrestaShop';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.3.2';
+		$this->version	= '1.3.3';
 		$this->module_key = '9d77262bd27f8a9340855def9c137832';
 		$this->compatibility_mode = version_compare(_PS_VERSION_, '1.5.0.0', '<');
 		$this->limited_countries = array('es', 'fr');
@@ -452,10 +452,12 @@ class Kiala extends Module
 		{
 			if ($language['iso_code'] == 'fr')
 				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
-			if ($language['iso_code'] == 'en')
+			elseif ($language['iso_code'] == 'en')
 				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
-			if ($language['iso_code'] == 'es')
+			elseif ($language['iso_code'] == 'es')
 				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
+			elseif (!isset($config['delay'][$language['iso_code']]))
+				$carrier->delay[(int)$language['id_lang']] = $config['delay']['en'];
 		}
 
 		if($carrier->add())
