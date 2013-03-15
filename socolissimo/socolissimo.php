@@ -60,7 +60,7 @@ class Socolissimo extends CarrierModule
 	{
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
-		$this->version = '2.7.3';
+		$this->version = '2.7.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -767,11 +767,16 @@ class Socolissimo extends CarrierModule
 		$carrier->need_range = $config['need_range'];
 
 		$languages = Language::getLanguages(true);
-		foreach ($languages as $language) {
+		foreach ($languages as $language)
+		{
 			if ($language['iso_code'] == 'fr')
-				$carrier->delay[$language['id_lang']] = $config['delay'][$language['iso_code']];
-			if ($language['iso_code'] == 'en')
-				$carrier->delay[$language['id_lang']] = $config['delay'][$language['iso_code']];
+				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
+			elseif ($language['iso_code'] == 'en')
+				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
+			elseif ($language['iso_code'] == 'es')
+				$carrier->delay[(int)$language['id_lang']] = $config['delay'][$language['iso_code']];
+			elseif (!isset($config['delay'][$language['iso_code']]))
+				$carrier->delay[(int)$language['id_lang']] = $config['delay']['en'];
 		}
 
 		if($carrier->add())
