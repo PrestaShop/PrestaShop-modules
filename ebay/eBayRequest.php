@@ -1433,7 +1433,7 @@ class eBayRequest {
      }
 
      public function _getShippingDetails($datas){
-          $request = '';
+          $requestXml = '';
           foreach ($datas['shipping']['excludedZone'] as $excluded) {
                $requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
           }
@@ -1448,6 +1448,7 @@ class eBayRequest {
                $requestXml .= '      </ShippingServiceOptions>' . "\n";
           }
           //International Shipping Service
+
           foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping){
                $requestXml .= '      <InternationalShippingServiceOption>' . "\n";
                $requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
