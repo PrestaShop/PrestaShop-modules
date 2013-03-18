@@ -34,7 +34,7 @@ define ('JIRAFE_DEBUG', false);
 define ('JIRAFE_MODULE_VERSION', '0.1');
 
 if (version_compare(_PS_VERSION_, '1.5') >= 0) {
-    require_once 'jirafe15.php';
+    require_once(dirname(__FILE__).'/jirafe15.php');
 } elseif (version_compare(_PS_VERSION_, '1.4') >= 0) {
-    require_once 'jirafe14.php';
+    require_once(dirname(__FILE__).'/jirafe14.php');
 }
