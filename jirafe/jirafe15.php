@@ -65,7 +65,7 @@ class Jirafe extends Module
 			$this->warnings[] = $this->l('allow_url_fopen be enabled on your server to use this module.');
 		if (!is_callable('curl_exec'))
 			$this->warnings[] = $this->l('cURL extension must be enabled on your server to use this module.');
-         return (bool) (count($this->warnings) ? false : true);
+         return (bool) (isset($this->warnings) && count($this->warnings)) ? false : true;
     }    
 
     public function getPrestashopClient()
