@@ -265,6 +265,8 @@ class Ebay extends Module {
           $this->setConfiguration('EBAY_CONDITION_USED', 3000);
           $this->setConfiguration('EBAY_CONDITION_REFURBISHED', 2500);
           $this->setConfiguration('EBAY_RETURNS_DESCRIPTION', '');
+          $this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', 'ReturnsAccepted');
+
 
      }
 

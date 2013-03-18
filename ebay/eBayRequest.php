@@ -53,8 +53,8 @@ class eBayRequest {
      private $findingUrl;
      private $findingVersion;
      private $compatibilityLevel;
-     private $debug = true;
-     private $dev = true;
+     private $debug = false;
+     private $dev = false;
      private $country;
      private $language;
      private $siteName;
