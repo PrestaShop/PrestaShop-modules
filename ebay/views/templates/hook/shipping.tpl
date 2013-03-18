@@ -112,7 +112,7 @@
 		string += addShippingFee(0, 1, idEbayCarrier, idPSCarrier, additionalFee);
 		string += "</tr>";
 		string += "</table>";
-		string += "<label>{l s='Add eBay zone for this carrier' mod='ebay'}</label>";
+		string += "<label>{l s='Add country you will ship to' mod='ebay'}</label>";
 		string += "<div class='margin-form'	>"+getShippingLocation(lastId, zone)+"</div>";
 		string += "<div style='width:100%;clear:both'></div>";
 		string += '</div>';
@@ -163,9 +163,8 @@
 			addInternationalShippingFee('{$internationalCarrier.ebay_carrier}', {$internationalCarrier.ps_carrier}, {$internationalCarrier.extra_fee}, zone, zoneExcluded);
 		{/foreach}
 
-		{if count($excludeShippingLocation) > 0}
+		
 		showExcludeLocation();
-		{/if}
 
 
 		/* EVENTS */
@@ -177,7 +176,7 @@
 		$('#nolist').fadeOut('normal', function(){
 			$('#list').html(excludeLocation());	
 			
-			{literal}
+		{literal}
 		$('.showCountries').each(function(){
 			var showcountries = $(this);
 			$.ajax({
@@ -310,7 +309,7 @@
 
 
 <fieldset style="margin-top:10px;">
-	<legend>{l s='Shipping Method for National Shipping' mod='ebay'}</legend>
+	<legend>{l s='Shipping method for domestic shipping' mod='ebay'}</legend>
 	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
 		<select name="nationalZone" id="">
 			{foreach from=$prestashopZone item=zone}
@@ -324,7 +323,7 @@
 	</table>
 	
 	<div class="margin-form" id="addNationalCarrier" style="cursor:pointer;">
-	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new Carrier option in eBay'}
+	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new carrier option' mod='ebay'}
 	</div>
 </fieldset>
 
@@ -341,16 +340,12 @@
 		<div class="internationalShipping"></div>
 	</div>
 	<div class="margin-form" id="addInternationalCarrier" style="cursor:pointer;">
-	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new international Carrier option in eBay'}
+	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new international carrier option' mod='ebay'}
 </fieldset>
 
 <fieldset style="margin-top:10px">
 	<legend>{l s='Exclude shipping locations' mod='ebay'}</legend>
 	<div id="nolist">
-		<p>
-			{l s='No locations are excluded'}<br/>
-			<span id="createlist">{l s='Create exclusion list'}</span>
-		</p>
 	</div>
 	<div id="list">
 		

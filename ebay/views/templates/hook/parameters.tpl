@@ -1,7 +1,7 @@
 <form action="{$url}" method="post" class="form" id="configForm1">
 		<fieldset style="border: 0">
                <legend>{l s='Global Configuration' mod='ebay'}</legend>
-			<h4>{l s='To export your products on eBay, you have to create a pro account on eBay (see Help) and configure your eBay-Prestashop module.' mod='ebay'}</h4>
+			<h4>{l s='To list your products on eBay, you first need to create a business seller account on eBay and configure your eBay-Prestashop module' mod='ebay'}</h4>
 			<label>{l s='eBay Identifier' mod='ebay'} : </label>
 			<div class="margin-form">
 				<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}"/>
@@ -36,8 +36,8 @@
 			<legend>{l s='Item Conditions' mod='ebay'}</legend>
 			<table class="table">
 				<tr>
-					<th>{l s='PrestaShop Item\'s condition' mod='ebay'}</th>
-					<th>{l s='Ebay Item\'s condition' mod='ebay'}</th>
+					<th>{l s='PrestaShop item condition' mod='ebay'}</th>
+					<th>{l s='Ebay item condition' mod='ebay'}</th>
 				</tr>
 				<tr>
 					<td>{l s='New' mod='ebay'}</td>
@@ -71,13 +71,13 @@
 				</tr>
 			</table>
 
-			<p>{l s='To see definitions of eBay item conditions, please go to : http://pages.ebay.com/help/sell/item-condition.html'}</p>
+			<p>{l s='Lear more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html'}</p>
 		</fieldset>
 
 
         <fieldset style="margin-top:10px;">
                <legend>{l s='Return policy' mod='ebay'}</legend>
-               <label>{l s='Please select your Return Policy and add more informations about it' mod='ebay'} : </label>
+               <label>{l s='Please define your returns policy' mod='ebay'} : </label>
                <div class="margin-form">
                     <select name="ebay_returns_accepted_option">';
                     {foreach from=$policies item=policy}

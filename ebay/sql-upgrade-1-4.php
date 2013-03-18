@@ -47,7 +47,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_zone_excl
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_international_zone` (
 			  `id_ebay_shipping` int(11) NOT NULL,
-			  `id_ebay_zone` varchar(256) NOT NULL,
+			  `id_ebay_zone` varchar(256) NOT NULL
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_location` (

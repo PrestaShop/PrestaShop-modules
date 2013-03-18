@@ -3,7 +3,7 @@
 {/if}
 <p>
      <b>
-          {l s='To export your products on eBay, you have to associate each one of your shop categories to an eBay category. You can also define an impact of your price on eBay.' mod='ebay'}
+          {l s='To list your products on eBay, you must associate each shop category to an eBay category. You can also define a price adjustment for your product price when listing on eBay.' mod='ebay'}
      </b>
 </p>
 <p>
@@ -30,7 +30,7 @@
                          {l s='eBay Category' mod='ebay'}
                     </th>
                     <th style="width:128px;">
-                         {l s='Price Impact' mod='ebay'}
+                         {l s='Price adjustment' mod='ebay'}
                          <a title="{l s='Help' mod='ebay'}" href="{$request_uri}{$tabHelp}" >
                               <img src="{$_path}help.png" width="25" alt="help_picture"/>
                          </a>
@@ -48,11 +48,11 @@
      <div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
 </form>
 
-<p><b>{l s='Warning : Only defaults products categories are used for the configuration.' mod='ebay'}</b></p><br />
+<p><b>{l s='Warning: Only default product categories are used for the configuration' mod='ebay'}</b></p><br />
 
 <p align="left">
      * {l s="Some categories benefit from eBay's multi-version from which allows to publish one product with multiple versions." mod='ebay'}<br />
-     {l s='For the categories which do not gain this functionality, one ad will be added for each version of the product.' mod='ebay'}<br />
+     {l s='Warning: For categories that do not have this functionality, one listing will be added for each version of the product' mod='ebay'}<br />
      <a href="http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings" target="_blank">{l s='Click here for more informations on multi-variation listings' mod='ebay'}</a>
 </p><br /><br />
 {literal}

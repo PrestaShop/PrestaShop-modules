@@ -10,7 +10,7 @@ if (file_exists($configPath)) {
           public function getSuggest() {
 
                if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN')) {
-                    return $this->l('Your are not logged');
+                    return $this->l('You are not logged in');
                }
 
                // Loading categories
