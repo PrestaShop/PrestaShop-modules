@@ -71,7 +71,7 @@
 				</tr>
 			</table>
 
-			<p>{l s='Lear more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html'}</p>
+			<p>{l s='Learn more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}</p>
 		</fieldset>
 
 
@@ -97,7 +97,7 @@
                <legend>{l s='Listing Durations' mod='ebay'}</legend>
                
                <label>
-                    {l s='Choose your listing duration'}
+                    {l s='Choose your listing duration' mod='ebay'}
                </label>
                <div class="margin-form">
 
@@ -108,7 +108,7 @@
                     </select>
                </div>
 
-               <label for="">{l s='Do you want to automatically relist'}</label>
+               <label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
                <div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if Configuration::get('EBAY_AUTOMATICALLY_RELIST') == 'on'} checked="checked" {/if} /></div>
           </fieldset>
           

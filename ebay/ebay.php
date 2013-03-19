@@ -28,7 +28,7 @@
 // Security
 if (!defined('_PS_VERSION_'))
      exit;
-
+  
 // Loading eBay Class Request
 if (file_exists(dirname(__FILE__) . '/eBayRequest.php'))
      require_once(dirname(__FILE__) . '/eBayRequest.php');
@@ -146,7 +146,7 @@ class Ebay extends Module {
      public function install() {
           global $cookie;
           // Install SQL
-          include(dirname(__FILE__) . '/sql-install.php');
+          include(dirname(__FILE__) . '/sql/sql-install.php');
           foreach ($sql as $s)
                if (!Db::getInstance()->execute($s))
                     return false;
@@ -167,20 +167,20 @@ class Ebay extends Module {
           // Generate Product Template
           $content = file_get_contents(dirname(__FILE__) . '/template/ebay.tpl');
           if ($this->isVersionOneDotFive())
-               $content = str_replace('{SHOP_LOGO}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/' . _PS_IMG_ . Configuration::get('PS_LOGO') . '?' . Configuration::get('PS_IMG_UPDATE_TIME'), $content);
+               $content = str_replace('{SHOP_LOGO}', Tools::getShopDomain(true).'/' . __PS_BASE_URI__ . '/' . _PS_IMG_ . Configuration::get('PS_LOGO') . '?' . Configuration::get('PS_IMG_UPDATE_TIME'), $content);
           else
-               $content = str_replace('{SHOP_LOGO}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/img/logo.jpg', $content);
+               $content = str_replace('{SHOP_LOGO}', Tools::getShopDomain(true).'/' . __PS_BASE_URI__ . '/img/logo.jpg', $content);
           $content = str_replace('{SHOP_NAME}', Configuration::get('PS_SHOP_NAME'), $content);
-          $content = str_replace('{SHOP_URL}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/', $content);
-          $content = str_replace('{MODULE_URL}', 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' . __PS_BASE_URI__ . '/modules/ebay/', $content);
+          $content = str_replace('{SHOP_URL}', Tools::getShopDomain(true).'/' . __PS_BASE_URI__ . '/', $content);
+          $content = str_replace('{MODULE_URL}', Tools::getShopDomain(true).'/' . __PS_BASE_URI__ . '/modules/ebay/', $content);
           $content = str_replace('See our ratings', $this->l('See our ratings'), $content);
           $content = str_replace('Add this shop to my favorites', $this->l('Add this shop to my favorites'), $content);
           $content = str_replace('Availability', $this->l('Availability'), $content);
           $content = str_replace('in stock', $this->l('in stock'), $content);
           $this->setConfiguration('EBAY_PRODUCT_TEMPLATE', '');
           $this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $content, true);
-          $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
-          $this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d') . 'T' . date('H:i:s') . '.000Z');
+          $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date("Y-m-d\TH:i:s.000\Z"));
+          $this->setConfiguration('EBAY_INSTALL_DATE', date("Y-m-d\TH:i:s.000\Z"));
           $this->installupgradeonefour();
 
           // Init
@@ -196,7 +196,7 @@ class Ebay extends Module {
                     return false;
 
           // Uninstall SQL
-          include(dirname(__FILE__) . '/sql-uninstall.php');
+          include(dirname(__FILE__) . '/sql/sql-uninstall.php');
           foreach ($sql as $s)
                if (!Db::getInstance()->execute($s))
                     return false;
@@ -275,11 +275,11 @@ class Ebay extends Module {
           if ($version == '1.1' || empty($version)) 
           {
                // Upgrade SQL
-               include(dirname(__FILE__) . '/sql-upgrade-1-2.php');
+               include(dirname(__FILE__) . '/sql/sql-upgrade-1-2.php');
           } 
           else if (version_compare($version, '1.4.0', '<'))
           { // Waif for 1.4.0
-               include(dirname(__FILE__) . '/sql-upgrade-1-4.php');
+               include(dirname(__FILE__) . '/sql/sql-upgrade-1-4.php');
                $this->installupgradeonefour();
                $this->setConfiguration('EBAY_VERSION', $this->version);
           }
@@ -376,7 +376,7 @@ class Ebay extends Module {
                $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           }
 
-          if (1 || Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-1 minutes')) . 'T' . date('H:i:s', strtotime('-1 minutes')) . '.000Z') {
+          if (1 || Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')) . 'T' . date('H:i:s', strtotime('-30 minutes')) . '.000Z') {
 
                $dateNew = date('Y-m-d') . 'T' . date('H:i:s') . '.000Z';
                $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', $dateNew);
@@ -602,7 +602,7 @@ class Ebay extends Module {
      }
 
      public function hookupdateProductAttributeEbay() {
-          if (isset($_POST['submitProductAttribute']) && isset($_POST['id_product_attribute'])) {
+          if (Tools::getValue('submitProductAttribute') && Tools::getValue('id_product_attribute')) {
                $params = array();
                $params['id_product_attribute'] = (int) $_POST['id_product_attribute'];
                if ($params['id_product_attribute'] > 0) {
@@ -655,7 +655,7 @@ class Ebay extends Module {
                     $this->_postProcess();
                else
                     foreach ($this->_postErrors AS $err)
-                         $this->_html .= '<div class="alert error"><img src="../modules/ebay/forbbiden.gif" alt="nok" />&nbsp;' . $err . '</div>';
+                         $this->_html .= '<div class="alert error"><img src="../modules/ebay/img/forbbiden.gif" alt="nok" />&nbsp;' . $err . '</div>';
           }
           $this->_displayForm();
           // Set old Context Shop
@@ -698,21 +698,21 @@ class Ebay extends Module {
 		      <legend><img src="' . $this->_path . 'logo.gif" alt="" /> ' . $this->l('eBay Module Status') . '</legend>';
           $this->_html .= '<div style="float: left; width: 45%">';
           if (!count($alert)) {
-               $this->_html .= '<img src="../modules/ebay/valid.png" /><strong>' . $this->l('eBay Module is configured and online!') . '</strong>';
+               $this->_html .= '<img src="../modules/ebay/img/valid.png" /><strong>' . $this->l('eBay Module is configured and online!') . '</strong>';
                if ($this->isVersionOneDotFive()) {
                     if ((version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')) && !Shop::isFeatureActive()) {
-                         $this->_html .= '<br/><img src="../modules/ebay/warn.png" /><strong>' . $this->l('You\'re using version 1.5.1 of PrestaShop. We invite you to upgrade to version 1.5.2  so you can use the eBay module properly.') . '</strong>';
+                         $this->_html .= '<br/><img src="../modules/ebay/img/warn.png" /><strong>' . $this->l('You\'re using version 1.5.1 of PrestaShop. We invite you to upgrade to version 1.5.2  so you can use the eBay module properly.') . '</strong>';
                          $this->_html .= '<br/><strong>' . $this->l('Please synchronize your eBay sales in your Prestashop front office') . '</strong>';
                     } else if (Shop::isFeatureActive())
                          $this->_html .= '<br/><strong>' . $this->l('The eBay module does not support multishop. Stock and categories will be sent from the default Prestashop store') . '</strong>';
                }
           }
           else {
-               $this->_html .= '<img src="../modules/ebay/warn.png" /><strong>' . $this->l('Please complete the following settings to configure the module') . '</strong>';
-               $this->_html .= '<br />' . (isset($alert['registration']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 1) ' . $this->l('Register the module on eBay');
-               $this->_html .= '<br />' . (isset($alert['allowurlfopen']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 2) ' . $this->l('Allow url fopen');
-               $this->_html .= '<br />' . (isset($alert['curl']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 3) ' . $this->l('Enable cURL');
-               $this->_html .= '<br />' . (isset($alert['SellerBusinessType']) ? '<img src="../modules/ebay/warn.png" />' : '<img src="../modules/ebay/valid.png" />') . ' 4) ' . $this->l('Please register an eBay business seller account to configure the application');
+               $this->_html .= '<img src="../modules/ebay/img/warn.png" /><strong>' . $this->l('Please complete the following settings to configure the module') . '</strong>';
+               $this->_html .= '<br />' . (isset($alert['registration']) ? '<img src="../modules/ebay/img/warn.png" />' : '<img src="../modules/ebay/img/valid.png" />') . ' 1) ' . $this->l('Register the module on eBay');
+               $this->_html .= '<br />' . (isset($alert['allowurlfopen']) ? '<img src="../modules/ebay/img/warn.png" />' : '<img src="../modules/ebay/img/valid.png" />') . ' 2) ' . $this->l('Allow url fopen');
+               $this->_html .= '<br />' . (isset($alert['curl']) ? '<img src="../modules/ebay/img/warn.png" />' : '<img src="../modules/ebay/img/valid.png" />') . ' 3) ' . $this->l('Enable cURL');
+               $this->_html .= '<br />' . (isset($alert['SellerBusinessType']) ? '<img src="../modules/ebay/img/warn.png" />' : '<img src="../modules/ebay/img/valid.png" />') . ' 4) ' . $this->l('Please register an eBay business seller account to configure the application');
           }
 
           $this->_html .= '</div><div style="float: right; width: 45%">' . $prestashopContent . '<br>' . $this->l('Connection to eBay.') . strtolower($this->country->iso_code) . '</div>';
@@ -779,7 +779,7 @@ class Ebay extends Module {
 
 
           if (!empty($this->context->cookie->eBaySession) && isset($_GET['action']) && $_GET['action'] == 'logged') {
-               if (isset($_POST['eBayUsername'])) {
+               if (Tools::getValue('eBayUsername')) {
                     $this->context->cookie->eBayUsername = $_POST['eBayUsername'];
                     $this->setConfiguration('EBAY_API_USERNAME', $_POST['eBayUsername']);
                     $this->setConfiguration('EBAY_IDENTIFIER', $_POST['eBayUsername']);
@@ -807,7 +807,7 @@ class Ebay extends Module {
             			</script>';
                $html .= '<fieldset><legend><img src="' . $this->_path . 'logo.gif" alt="" title="" />' . $this->l('Register the module on eBay') . '</legend>';
                $html .= '<p align="center" class="warning"><a href="' . Tools::safeOutput($_SERVER['REQUEST_URI']) . '&action=logged&relogin=1" target="_blank" class="button">' . $this->l('If you\'ve been logged out of eBay and not redirected to the configuration page, please click here') . '</a>';
-               $html .= '<p align="center"><img src="' . $this->_path . 'loading.gif" alt="' . $this->l('Loading') . '" title="' . $this->l('Loading') . '" /></p>';
+               $html .= '<p align="center"><img src="' . $this->_path . 'img/loading.gif" alt="' . $this->l('Loading') . '" title="' . $this->l('Loading') . '" /></p>';
                $html .= '<p align="center">' . $this->l('Once you sign in via the new eBay window, the module will automatically finish the installation') . '</p>';
                $html .= '</fieldset>';
           } else {
@@ -823,7 +823,7 @@ class Ebay extends Module {
             				.ebay_dl > * {float: left; margin: 10px 0 0 10px}
             				.ebay_dl > dt {min-width: 100px; display: block; clear: both; text-align: left}
             				#ebay_label {font-weight: normal; float: none}
-            				#button_ebay{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:385px;height:191px;cursor:pointer;padding-bottom:70px;font-weight:bold;font-size:22px}
+            				#button_ebay{background-image:url(' . $this->_path . 'img/ebay.png);background-repeat:no-repeat;background-position:center 90px;width:385px;height:191px;cursor:pointer;padding-bottom:70px;font-weight:bold;font-size:22px}
             			</style>
             			<script>
             				$(document).ready(function() {
@@ -940,13 +940,13 @@ class Ebay extends Module {
         $ebayIdentifier = Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))) . '" ' . ((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : '');
         
         $listingDurations = array(
-          'Days_1' => '1 Day',
-          'Days_3' => '3 Days',
-          'Days_5' => '5 Days',
-          'Days_7' => '7 Days',
-          'Days_10' => '10 Days',
-          'Days_30' => '30 Days',
-          'GTC' => 'Good \'Till Canceled');
+          'Days_1' => $this->l('1 Day'),
+          'Days_3' => $this->l('3 Days'),
+          'Days_5' => $this->l('5 Days'),
+          'Days_7' => $this->l('7 Days'),
+          'Days_10' => $this->l('10 Days'),
+          'Days_30' => $this->l('30 Days'),
+          'GTC' => $this->l('Good \'Till Canceled'));
 
         $ebayItemConditions = array(
           '1000' => $this->l('New'),
@@ -972,7 +972,7 @@ class Ebay extends Module {
             'catLoaded' => $catLoaded,
             'ebayItemConditions' => $ebayItemConditions,
             'createShopUrl' => $this->createShopUrl,
-            'ebayReturns' => $this->br2nl(Configuration::get('EBAY_RETURNS_DESCRIPTION')),
+            'ebayReturns' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
             'ebayShopValue' => $ebayShopValue, 
             'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
             'listingDurations' => $listingDurations
@@ -1157,10 +1157,10 @@ class Ebay extends Module {
           //Update excluded location
 
 
-          if(isset($_POST['excludeLocationHidden'])){
+          if(Tools::getValue('excludeLocationHidden')){
             $rq_raz = "UPDATE " . _DB_PREFIX_ . "ebay_shipping_zone_excluded SET excluded = 0";
             Db::getInstance()->Execute($rq_raz);
-            if(isset($_POST['excludeLocation'])){
+            if(Tools::getValue('excludeLocation')){
               $where = '0 || ';
               foreach ($_POST['excludeLocation'] as $location => $on) {
                 //build update $where 
@@ -1184,7 +1184,7 @@ class Ebay extends Module {
 
           Db::getInstance()->Execute($rq_del);
 
-          if(isset($_POST['ebayCarrier'])){
+          if(Tools::getValue('ebayCarrier')){
             foreach ($_POST['ebayCarrier'] as $key => $value) {
                  $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
               VALUES('', 
@@ -1199,9 +1199,9 @@ class Ebay extends Module {
 
           $rq_del = "TRUNCATE " . _DB_PREFIX_ . "ebay_shipping_international_zone";
           Db::getInstance()->Execute($rq_del);
-          if(isset($_POST['ebayCarrier_international']))
+          if(Tools::getValue('ebayCarrier_international'))
           {
-            foreach ($_POST['ebayCarrier_international'] as $key => $value) {
+            foreach (Tools::getValue('ebayCarrier_international') as $key => $value) {
                  $rq_ins = "INSERT INTO " . _DB_PREFIX_ . "ebay_shipping 
               VALUES('', 
                 '" . pSQL( $_POST['ebayCarrier_international'][$key]  ) . "',
@@ -1458,8 +1458,8 @@ class Ebay extends Module {
        $prod_nb = $this->l('products');
   // Display Form
   $html = '<style> 
-		#button_ebay_sync1{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:25px;}
-		#button_ebay_sync2{background-image:url(' . $this->_path . 'ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:15px;}
+		#button_ebay_sync1{background-image:url(' . $this->_path . 'img/ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:25px;}
+		#button_ebay_sync2{background-image:url(' . $this->_path . 'img/ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:15px;}
   	</style>
   	<script>
   		var nbProducts = ' . $nbProducts . ';
@@ -1514,7 +1514,7 @@ class Ebay extends Module {
   				$("#button_ebay_sync1").css("background-color", "#D5D5D5");
   				$("#button_ebay_sync2").attr("disabled", "true");
   				$("#button_ebay_sync2").css("background-color", "#D5D5D5");
-  				$("#resultSync").html("<img src=\"../modules/ebay/loading-small.gif\" border=\"0\" />");
+  				$("#resultSync").html("<img src=\"../modules/ebay/img/loading-small.gif\" border=\"0\" />");
   				eBaySyncProduct(option);
   			}
 
@@ -1651,7 +1651,7 @@ class Ebay extends Module {
                $this->setConfiguration('EBAY_SYNC_MODE', 'B');
 
                // Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories)
-               if (isset($_POST['category'])) {
+               if (Tools::getValue('category')) {
                     Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_category_configuration', array('sync' => 0), 'UPDATE', '');
                     foreach ($_POST['category'] as $id_category)
                          Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_category_configuration', array('sync' => 1), 'UPDATE', '`id_category` = ' . (int) $id_category);
@@ -1849,7 +1849,7 @@ class Ebay extends Module {
                // Sync product
                $this->_syncProducts($productsList);
 
-               echo 'KO|<br /><br /> <img src="../modules/ebay/loading-small.gif" border="0" /> ' . $this->l('Products') . ' : ' . ($nbProductsTotal - $nbProductsLess + 1) . ' / ' . $nbProductsTotal . '<br /><br />';
+               echo 'KO|<br /><br /> <img src="../modules/ebay/img/loading-small.gif" border="0" /> ' . $this->l('Products') . ' : ' . ($nbProductsTotal - $nbProductsLess + 1) . ' / ' . $nbProductsTotal . '<br /><br />';
           } else {
                echo 'OK|' . $this->displayConfirmation($this->l('Settings updated') . ' (' . $this->l('Option') . ' ' . Configuration::get('EBAY_SYNC_MODE') . ' : ' . ($nbProductsTotal - $nbProductsLess) . ' / ' . $nbProductsTotal . ' ' . $this->l('product(s) sync with eBay') . ')');
                if (file_exists(dirname(__FILE__) . '/log/syncError.php')) {
@@ -1924,7 +1924,7 @@ class Ebay extends Module {
                     $pictures = array();
                     $picturesMedium = array();
                     $picturesLarge = array();
-                    $prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? 'http://' . Configuration::get('PS_SHOP_DOMAIN') . '/' : '');
+                    $prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? Tools::getShopDomain(true).'/' : '');
                     $images = $product->getImages($this->id_lang);
                     foreach ($images as $image) {
                          $pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
@@ -2029,7 +2029,7 @@ class Ebay extends Module {
                     $datas['shipping'] = $this->getShippingDetailsForProduct($product);
 
                     // Fix hook update product
-                    if (isset($this->context->employee) && $this->context->employee->id > 0 && isset($_POST['submitProductAttribute']) && isset($_POST['id_product_attribute']) && isset($_POST['attribute_mvt_quantity']) && isset($_POST['id_mvt_reason'])) {
+                    if (isset($this->context->employee) && $this->context->employee->id > 0 && Tools::getValue('submitProductAttribute') && Tools::getValue('id_product_attribute') && Tools::getValue('attribute_mvt_quantity') && Tools::getValue('id_mvt_reason')) {
                          if (substr(_PS_VERSION_, 0, 3) == '1.3') {
                               $id_product_attribute_fix = (int) $_POST['id_product_attribute'];
                               $quantity_fix = (int) $_POST['attribute_quantity'];
@@ -2755,10 +2755,6 @@ class Ebay extends Module {
           if ($this->isVersionOneDotFive())
                Shop::addSqlRestrictionOnLang($alias);
      }
-
-    public function br2nl($string){
-       return preg_replace('#<br\s*?/?>#i', "\n", $string); 
-    }
 
 }
 
