@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.5';
+		$this->version = '3.4.6';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -440,7 +440,7 @@ class PayPal extends PaymentModule
 				'customer' => $this->context->customer,
 				'business_account' => Configuration::get('PAYPAL_BUSINESS_ACCOUNT'),
 				'custom' => Tools::jsonEncode(array('id_cart' => $cart->id, 'hash' => sha1(serialize($cart->nbProducts())))),
-				'gift_price' => (float)Configuration::get('PS_GIFT_WRAPPING_PRICE'),
+				'gift_price' => (float)$this->getGiftWrappingPrice(),
 				'billing_address' => $billing_address,
 				'delivery_address' => $delivery_address,
 				'shipping' => $cart_details['total_shipping_tax_exc'],
@@ -1239,5 +1239,19 @@ class PayPal extends PaymentModule
 			if (count($transaction) > 0)
 				PayPalOrder::saveOrder((int)$this->currentOrder, $transaction);
 		}
+	}
+
+	protected function getGiftWrappingPrice()
+	{
+		if (_PS_VERSION_ >= '1.5')
+			$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
+		else
+		{
+			$wrapping_fees = (float)(Configuration::get('PS_GIFT_WRAPPING_PRICE'));
+			$wrapping_fees_tax = new Tax((int)(Configuration::get('PS_GIFT_WRAPPING_TAX')));
+			$wrapping_fees_tax_inc = $wrapping_fees * (1 + (((float)($wrapping_fees_tax->rate) / 100)));
+		}
+
+		return (float)Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency);
 	}
 }
