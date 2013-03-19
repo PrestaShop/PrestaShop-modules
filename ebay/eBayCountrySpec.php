@@ -27,7 +27,7 @@
 */
 
 if (!in_array('Ebay', get_declared_classes()))
-     require_once('ebay.php');
+     require_once(dirname(__FILE__).'/ebay.php');
 
 class eBayCountrySpec
 {
@@ -144,7 +144,7 @@ class eBayCountrySpec
 				break;
 			case 'fr':
 			default:
-				return 'ebay_stats.png';
+				return 'img/ebay_stats.png';
 				break;
 		}
 	}
