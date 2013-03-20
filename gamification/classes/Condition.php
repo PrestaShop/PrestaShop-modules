@@ -29,9 +29,7 @@ class Condition extends ObjectModel
 	public $id;
 	
 	public $id_ps_condition;
-	
-	public $id_shop;
-	
+		
 	public $type;
 	
 	public $request;
@@ -62,7 +60,6 @@ class Condition extends ObjectModel
 		'primary' => 'id_condition',
 		'fields' => array(
 			'id_ps_condition' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'id_shop' =>				array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'type' =>					array('type' => self::TYPE_STRING, 'size' => 32),
 			'request' => 				array('type' => self::TYPE_STRING),
 			'operator' =>				array('type' => self::TYPE_STRING),
