@@ -2,7 +2,7 @@
 <module>
 	<name>twenga</name>
 	<displayName><![CDATA[Twenga API]]></displayName>
-	<version><![CDATA[1.8.5]]></version>
+	<version><![CDATA[1.8.6]]></version>
 	<description><![CDATA[Export your products to Twenga Shopping Search Engine and get new online buyers immediately.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[smart_shopping]]></tab>

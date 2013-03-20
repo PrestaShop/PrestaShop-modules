@@ -1,29 +1,28 @@
 <?php
-/**
- * 2007-2013 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2013 PrestaShop SA : 6 rue lacepede, 75005 PARIS
- *  @version  Release: $Revision: 16958 $
- *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
- **/
+/*
+* 2007-2013 PrestaShop 
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registred Trademark & Property of PrestaShop SA
+*/
 
 /**
  * Twenga module allow to use the Twenga API to :
@@ -122,7 +121,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.8.5';
+	 	$this->version = '1.8.6';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
@@ -168,8 +167,7 @@ class Twenga extends PaymentModule
 	{
 		if (Configuration::updateValue('TWENGA_TOKEN', Tools::passwdGen()))
 			return parent::install();
-		else
-			return false;
+		return false;
 	}
 	
 	/**
@@ -178,8 +176,7 @@ class Twenga extends PaymentModule
 	 */
 	public function uninstall()
 	{
-		if (!parent::uninstall()
-		OR !self::$obj_twenga->deleteMerchantLogin())
+		if (!parent::uninstall() || !self::$obj_twenga->deleteMerchantLogin())
 			return false;
 		return true;
 	}
@@ -304,23 +301,6 @@ class Twenga extends PaymentModule
 		echo '<script type="text/javascript" language="javascript">window.open("'.$link.'");</script>';
 	}
 
-	/* private function submitTwengaSubscription()
-	{
-		 unset($_POST['submitTwengaSubscription']);
-		$params = array_filter($_POST);
-		$return = '';
-		try {
-			$return = self::$obj_twenga->getSubscriptionLink($params);
-			self::$obj_ps_stats->actSubscription();
-			$this->inscription_url = $return['message'];
-			self::redirectTwengaSubscription($this->inscription_url);
-		} catch (TwengaFieldsException $e) {
-			$this->_errors[] = $this->l('Params are not allowed (see details) : ').'<br />'.$e->getMessage();
-		} catch (TwengaException $e) {
-			$this->_errors[] = $this->l('Error occurred with the Twenga API method (see details) : ').'<br /> '.nl2br($e->getMessage());
-		}
-	}*/
-
 	private function submitTwengaLogin()
 	{
 		if (!self::$obj_twenga->setHashkey($_POST['twenga_hashkey']))
@@ -333,15 +313,24 @@ class Twenga extends PaymentModule
 		if (empty($this->_errors))
 		{
 			$bool_save = false; 
-			try{
+			try
+			{
 				$bool_save = self::$obj_twenga->saveMerchantLogin();
 				self::$obj_ps_stats->validateSubscription();
 				if (!$bool_save)
 					$this->_errors[] = $this->l('Authentication failed.')."<br />\n"
 						.$this->l('Please review the e-mail sent by Twenga after subscription. If error still occurred, contact Twenga service.');
 				else
+				{
 					self::$obj_twenga->addFeed(array('feed_url' => $this->feed_url));
-			} catch (Exception $e) {
+					$this->_html .= '
+					<div class="conf" style="font-weight:bolder;">
+						'.$this->l('Saved information.').'
+					</div>';
+				}
+			}
+			catch (Exception $e)
+			{
 				$this->_errors[] = nl2br($e->getMessage());
 			}
 		}
@@ -352,14 +341,23 @@ class Twenga extends PaymentModule
 		$activate = false;
 		
 		// Use TwengaObj::siteActivate() method to activate tracking.
-		try {
+		try
+		{
 		   $activate = self::$obj_twenga->siteActivate();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			$this->_errors[] = $e->getMessage();
 		}
 		if ($activate)
 		{
-			$this->registerHook('payment');
+			if(Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+				$this->registerHook('displayCarrierList');
+			else
+			{
+				$this->registerHook('displayPayment');
+				$this->registerHook('payment');
+			}
 			$this->registerHook('updateOrderStatus');
 			$this->registerHook('cancelProduct');
 		}
@@ -369,29 +367,19 @@ class Twenga extends PaymentModule
 	{
 		$return = Db::getInstance()->ExecuteS('SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = \''.pSQL($this->id).'\'');
 		foreach ($return as $hook)
-		{
 			$this->unregisterHook($hook['id_hook']);
-		}
 	}
 
 	public function preProcess()
 	{
 		if (isset($_POST['submitTwengaSubscription']))
-		{
 		   $this->submitTwengaSubscription();
-		}
 		if (isset($_POST['submitTwengaLogin']))
-		{
 			$this->submitTwengaLogin();
-		}
 		if (isset($_POST['submitTwengaActivateTracking']))
-		{
 			$this->submitTwengaActivateTracking();
-		}
 		if (isset($_POST['submitTwengaDisableTracking']))
-		{
 			$this->submitTwengaDisableTracking();
-		}
 	}
 
 	public function hookCancelProduct($params)
@@ -404,19 +392,11 @@ class Twenga extends PaymentModule
 			$cart = new Cart($params['order']->id_cart);
 			$customer = new Customer($params['order']->id_customer);
 			$params_to_twenga = array();
-			// @todo delete or not ??
-//			$params_to_twenga['order_id'] = (string)$params['order']->id;
-//			$params_to_twenga['user_id'] = (string)$customer->id;
-//			$params_to_twenga['cli_email'] = (string)$customer->email;
 			$params_to_twenga['basket_id'] = (string)$params['order']->id_cart;
-			try {
-				if (self::$obj_twenga->orderExist($params_to_twenga))
-				{
-					$bool = self::$obj_twenga->orderCancel($params_to_twenga);
-					self::$obj_ps_stats->cancelOrder();
-				}
-			} catch (Exception $e) {
-				// die($e->getMessage());
+			if (self::$obj_twenga->orderExist($params_to_twenga))
+			{
+				$bool = self::$obj_twenga->orderCancel($params_to_twenga);
+				self::$obj_ps_stats->cancelOrder();
 			}
 		}
 	}
@@ -433,35 +413,41 @@ class Twenga extends PaymentModule
 			$obj_order = new Order($params['id_order']);
 			$customer = new Customer($obj_order->id_customer);
 			$params_to_twenga = array();
-			// @todo delete or not ??
-//			$params_to_twenga['order_id'] = (int)$params['id_order'];
-//			$params_to_twenga['user_id'] = (int)$customer->id;
-//			$params_to_twenga['cli_email'] = (string)$customer->email;
 			$params_to_twenga['basket_id'] = (int)$obj_order->id_cart;
 			$bool = false;
-			try {
-				if (($params_to_twenga))
-				{
-					$cart = new Cart($params_to_twenga['basket_id']);
-					$bool = self::$obj_twenga->orderValidate($params_to_twenga);
-					self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
-				}
-			} catch (Exception $e) {
-				// die($e->getMessage());
+			if (($params_to_twenga))
+			{
+				$cart = new Cart($params_to_twenga['basket_id']);
+				$bool = self::$obj_twenga->orderValidate($params_to_twenga);
+				self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
 			}
 		}
 	}
-
+	
+	/**
+	 * Function HOOK Payment
+	 */
 	public function hookPayment($params)
 	{
-		if ($this->_allowToWork == false)
+		return $this->doHook($params);
+	}
+	
+	/**
+	 * Function HOOK Carrier List
+	 */
+	public function hookDisplayCarrierList($params)
+	{
+		return $this->doHook($params);
+	}
+	
+	/**
+	 * Function DO HOOK
+	 */
+	public function doHook($params)
+	{
+		if ($this->_allowToWork == false  )
 			return;
-			
-		// One page Checkout cause problem with event and document.write use by twenga script
-		// (page completely deleted
-		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
-			return ;
-			
+				
 		$customer = new Customer($params['cart']->id_customer);
 		$currency = new Currency($params['cart']->id_currency);
 		$address = $customer->getAddresses($params['cart']->id_lang);
@@ -470,23 +456,11 @@ class Twenga extends PaymentModule
 		// for 1.3 compatibility
 		$type_both = 3;
 		$type_only_shipping = 5;
-		
-		/*		const ONLY_PRODUCTS = 1;
-		const ONLY_DISCOUNTS = 2;
-		const BOTH = 3;
-		const BOTH_WITHOUT_SHIPPING = 4;
-		const ONLY_SHIPPING = 5;
-		const ONLY_WRAPPING = 6;
-		const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
-		*/
+
 		$tva = $params['cart']->getOrderTotal(true, $type_both)-$params['cart']->getOrderTotal(false, $type_both);
 		$tax = ($tva * 100) / $params['cart']->getOrderTotal(true, $type_both);
-		
+
 		$params_to_twenga = array();
-		// @todo delete or not ??
-//		$params_to_twenga['user_id'] = $customer->id;
-//		$params_to_twenga['cli_email'] = $customer->email;
-		
 		$params_to_twenga['total_ht'] = $params['cart']->getOrderTotal(false, Twenga::ONLY_PRODUCTS_WITHOUT_SHIPPING);
 		$params_to_twenga['basket_id'] = $params['cart']->id;
 		$params_to_twenga['currency'] = $currency->iso_code;
@@ -503,23 +477,33 @@ class Twenga extends PaymentModule
 		foreach ($params['cart']->getProducts() as $product)
 		{
 			$arr_item = array();
-			if ($product['total']!= '') $arr_item['total_ht'] = (float)$product['total'];
-			if ($product['cart_quantity'] != '') $arr_item['quantity'] = (int)$product['cart_quantity'];
-			if ($product['reference'] != '') $arr_item['sku'] = (string)$product['reference'];
-			if ($product['name'] != '') $arr_item['name'] = (string)$product['name'];
-			if ($product['category']) $arr_item['category_name'] = (string)$product['category'];
+			if ($product['total']!= '')
+				$arr_item['total_ht'] = (float)$product['total'];
+			if ($product['cart_quantity'] != '')
+				$arr_item['quantity'] = (int)$product['cart_quantity'];
+			if ($product['reference'] != '')
+				$arr_item['sku'] = (string)$product['reference'];
+			if ($product['name'] != '')
+				$arr_item['name'] = (string)$product['name'];
+			if ($product['category'])
+				$arr_item['category_name'] = (string)$product['category'];
 			$params_to_twenga['items'][] = $arr_item;
 		}
 		$params_to_twenga = array_filter($params_to_twenga);
 		
-		try {
+		try
+		{
 			// twenga don't saved double orders with the same id, 
 			// so don't need to use TwengaObj::orderExist() method.
 			$tracking_code = self::$obj_twenga->getTrackingScript($params_to_twenga);
 			return $tracking_code;
-		} catch (TwengaFieldsException $e) {
+		}
+		catch (TwengaFieldsException $e)
+		{
 			return $this->l('Error occurred when params passed in Twenga API').' : <br />'.$e->getMessage();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			return $e->getMessage();
 		}
 	}
@@ -563,7 +547,7 @@ class Twenga extends PaymentModule
 				ON c_l.id_country = c.id_country
 				WHERE c_l.id_lang = '.(int)$cookie->id_lang.' 
 				AND c.iso_code IN ('; 
-			foreach($this->limited_countries as $iso)
+			foreach ($this->limited_countries as $iso)
 				$query .= "'".strtoupper($iso)."', ";
 			$query = rtrim($query, ', ').')';
 			$countriesName = Db::getInstance()->ExecuteS($query);
@@ -572,7 +556,7 @@ class Twenga extends PaymentModule
 					<p>'.$this->l('Your default country is').' : '.Twenga::getCurrentCountryName().'</p>
 					<p>'.$this->l('Please select one of these available countries approved by Twenga').' :</p>
 					<ul>';
-			foreach($countriesName as $c)
+			foreach ($countriesName as $c)
 				$htmlError .= '<li>'.$c['name'].'</li>';
 			$url = Tools::getShopDomain(true).$_SERVER['PHP_SELF'].'?tab=AdminCountries&token='.
 				Tools::getAdminTokenLite('AdminCountries').'#Countries';
@@ -587,13 +571,15 @@ class Twenga extends PaymentModule
 
 	public function getContent()
 	{
-		try {
+		try
+		{
 			$this->_checkCurrentCountrie();
-			if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
-				$this->_html .= '
-					<div class="warn" style="font-weight:bolder;">
-						'.$this->l('Twenga cannot work under the one page checkout process').'
-					</div>';
+			if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && $this->isRegisteredInHook('displayPayment')) ||
+				(Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && $this->isRegisteredInHook('Payment')) ||
+				(Configuration::get('PS_ORDER_PROCESS_TYPE') != 1 && $this->isRegisteredInHook('displayCarrierList')))
+			{
+				$this->submitTwengaActivateTracking();
+			}
 		}
 		catch (Exception $e)
 		{
@@ -611,23 +597,14 @@ class Twenga extends PaymentModule
 		$this->_html .= $this->displayTwengaLogin();
 		
 		if ((self::$obj_twenga->getHashKey() === NULL || self::$obj_twenga->getHashKey() === '')
-		|| (self::$obj_twenga->getUserName() === NULL || self::$obj_twenga->getUserName() === '')
-		|| (self::$obj_twenga->getPassword() === NULL || self::$obj_twenga->getPassword() === '')
-		)
-		{
+			|| (self::$obj_twenga->getUserName() === NULL || self::$obj_twenga->getUserName() === '')
+			|| (self::$obj_twenga->getPassword() === NULL || self::$obj_twenga->getPassword() === ''))
 			return $this->displayErrors().$this->_html;
-			// $this->_html .= $this->displaySubscription();
-		}
 		else
-		{
 			$this->_html .= $this->displayActivate();
-		}
 		return $this->displayErrors().$this->_html;
 	}
 	
-	/**
-	 * 
-	 */
 	public function displayTwengaIntro()
 	{
 		global $cookie;
@@ -636,13 +613,18 @@ class Twenga extends PaymentModule
 		$defaultIsoCountry = strtolower($this->_currentIsoCodeCountry);
 		
 		$errors = array();
-		try {
+		try
+		{
 			$return = self::$obj_twenga->getSubscriptionLink(array('site_url' => $this->site_url, 'feed_url' => $this->feed_url, 'country' => $isoUser, 'module_version' => (string)$this->version, 'platform_version' => (string)_PS_VERSION_));
 			$this->inscription_url= $return['message'];
 			
-		} catch (TwengaFieldsException $e) {
+		}
+		catch (TwengaFieldsException $e)
+		{
 			$errors[] = $e->getMessage();
-		} catch (TwengaException $e) {
+		}
+		catch (TwengaException $e)
+		{
 			$errors[] = $e->getMessage();
 		}
 		if (!empty($errors))
@@ -689,17 +671,10 @@ class Twenga extends PaymentModule
 				</div><p><strong>'.$this->l('CASE #1 - You never signed-up to the Twenga Ready to Sell programme before:').'</strong></p>
 				<ol>'.'<li>'.$this->l('Click on this link to register for the  Twenga Ready to Sell programme'); 
 
-				// if ($this->inscription_url !== NULL)
-					// $str_return .= '&nbsp;<a href="'.$this->inscription_url.'" target="_blank" class="link">&raquo;'.$this->l('List my website on Twenga').'&laquo;</a>'.'</li>';
-				// else
-					// $str_return .= '&nbsp;<em style="color:red;">'.$this->l('Error(s) occurred: please contact Twenga').'</em>';
-			
-				$str_return .='				<a href="'.$this->inscription_url.'" target="_blank" class="link">&raquo;'.$this->l('List my website on Twenga').'&laquo;</a>
+				$str_return .='<a href="'.$this->inscription_url.'" target="_blank" class="link">&raquo;'.$this->l('List my website on Twenga').'&laquo;</a>
 					<li>'.$this->l('Fill out the Twenga registration form. Certain fields concerning your site and your catalogue will be automatically filled in for your convenience.').'</li>
 					<li>'.$this->l('When you receive the Twenga hash-key by e-mail, return to this page and paste in the "hashkey" field. Click on Save and Activate.').'</li>
 				</ol>';
-
-				
 
 				$str_return .= '<p><strong>'.$this->l('CASE #2 - You already registered to the Twenga Ready to Sell programme:').'</strong></p>'
 				.'<ol>'
@@ -726,9 +701,9 @@ class Twenga extends PaymentModule
 
 		$isoUser = strtolower(Language::getIsoById(intval($cookie->id_lang)));
 		if ($isoUser == 'en')
-			$lost_link = 'https://rts.twenga.co.uk/lost_password';
+			$lost_link = 'https://rts.twenga.co.uk/lostpassword';
 		else
-			$lost_link = 'https://rts.twenga.'.$isoUser.'/lost_password';
+			$lost_link = 'https://rts.twenga.'.$isoUser.'/lostpassword';
 
 		if ($isoUser == 'en')
 			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
@@ -778,100 +753,6 @@ class Twenga extends PaymentModule
 	}
 	
 	/**
-	 * Subscription form need to be pre-filled.
-	 * @return string the html form for subscription
-	 */
-	/*private function displaySubscription()
-	{
-		$site_name = Configuration::get('PS_SHOP_NAME');
-		$employee = new Employee(1);
-		$email = Configuration::get('PS_SHOP_EMAIL');
-		$phone = (Configuration::get('PS_SHOP_PHONE') !== FALSE) ? Configuration::get('PS_SHOP_PHONE') : '';
-		$legaltype = (Configuration::get('PS_SHOP_DETAILS') !== FALSE) ? Configuration::get('PS_SHOP_DETAILS') : '';
-		$address = ((Configuration::get('PS_SHOP_ADDR1') !== FALSE) ? Configuration::get('PS_SHOP_ADDR1')."\n" : '').((Configuration::get('PS_SHOP_ADDR2') !== FALSE) ? Configuration::get('PS_SHOP_ADDR2') : '');
-		$postal_code = (Configuration::get('PS_SHOP_CODE') !== FALSE) ? Configuration::get('PS_SHOP_CODE') : '';
-		$city = (Configuration::get('PS_SHOP_CITY') !== FALSE) ? Configuration::get('PS_SHOP_CITY') : '';
-	 	return '
-	 	<form name="form_subscription_twenga" id="form_subscription_twenga" method="post" action="">
-		<fieldset>
-			<legend><img src="../modules/'.$this->name.'/logo.gif" class="middle" /> '.$this->l('This information pre-fills the Twenga subscription form.').'</legend>
-			<p>'.$this->l('The following information will pre-fill your "Twenga Ready to Sell" subscription. Please check the validity of the values.').'</p><br />
-			<label>'.$this->l('Site\'s url').' <sup>*</sup> : </label>
-			<div class="margin-form">'
-				.'<div class="simulate-disable-input" >'.$this->site_url.'</div>
-				<input type="hidden" name="site_url" value="'.$this->site_url.'"/>'
-				.'<p>'.$this->l('Site\'s url').'</p>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Feed\'s url').' <sup>*</sup> : </label>
-			<div class="margin-form">
-				<div class="simulate-disable-input" >'.$this->feed_url.'</div>
-				<input type="hidden" name="feed_url" value="'.$this->feed_url.'"/>
-				<p>'
-					.$this->l('Feeds Url, the list of products in xml.').'<br />'
-					.$this->l('Value is automatically filled, please do not change.')
-				.'</p>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Country').' <sup>*</sup> : </label>
-			<div class="margin-form">
-				<div class="simulate-disable-input" >'.(self::$shop_country == 'GB' ? 'UK' : self::$shop_country).'</div>
-				<input type="hidden" name="country" value="'.self::$shop_country.'"/>
-				<p>'
-				.$this->l('E-Merchant’s society country. Use the ISO_3166-1 Alpha-2 country code format.')
-				.'<br />
-				Ex : France => FR, Germany => DE<br />
-				<a href="http://en.wikipedia.org/wiki/ISO_3166-1#Current_codes" target="_blank" >> related link</a><br />
-				</p>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Site\'s name').' : </label>
-			<div class="margin-form">
-				<input type="text" name="site_name" value="'.$site_name.'">
-				<p>'.$this->l('Site\'s name').'</p>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Last Name').' : </label>
-			<div class="margin-form">
-				<input type="text" name="lastname" value="'.$employee->lastname.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('First Name').' : </label>
-			<div class="margin-form">
-				<input type="text" name="firstname" value="'.$employee->firstname.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('E-mail').' : </label>
-			<div class="margin-form">
-				<input type="text" name="email" value="'.$email.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Phone').' : </label>
-			<div class="margin-form">
-				<input type="text" name="phone" value="'.$phone.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Organization name ').' : </label>
-			<div class="margin-form">
-				<input type="text" name="site_name" value="'.$site_name.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Legal type').' : </label>
-			<div class="margin-form">
-				<input type="text" name="legaltype" value="'.$legaltype.'">
-				<p>'.$this->l('society legal type').'</p>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Address').' : </label>
-			<div class="margin-form">
-				<textarea name="address" >'.$address.'</textarea>
-			</div><!-- .margin-form -->
-			<label>'.$this->l('Zip/ Postal Code').' : </label>
-			<div class="margin-form">
-				<input type="text" name="postal_code" value="'.$postal_code.'">
-			</div><!-- .margin-form -->
-			<label>'.$this->l('City').' : </label>
-			<div class="margin-form">
-				<input type="text" name="city" value="'.$city.'">
-			</div><!-- .margin-form -->
-			<div style="text-align:center;margin:20px 0 0 0;" >
-				<input type="submit" name="submitTwengaSubscription" id="submitTwengaSubscription" class="button" value="'.$this->l('Save').'" />
-			</div>
-		</fieldset>
-		</form>';
-	}*/
-	
-	/**
 	 * @return string html form for activate or disable the Twenga tracking
 	 */
 	private function displayActivate()
@@ -887,9 +768,7 @@ class Twenga extends PaymentModule
 			</fieldset>
 		</form>';
 		
-		if ($this->isRegisteredInHook('payment')
-		&& $this->isRegisteredInHook('updateOrderStatus')
-		&& $this->isRegisteredInHook('cancelProduct'))
+		if ( $this->isRegisteredInHook('displayCarrierList') || $this->isRegisteredInHook('displayPayment') || $this->isRegisteredInHook('Payment') )
 			$str = sprintf($str, $this->l('Disable Tracking'), $this->l('To disable tracking, click on the following button :'), 'submitTwengaDisableTracking', $this->l('Disable'));
 		else
 			$str = sprintf($str, $this->l('Activate Tracking'), $this->l('To activate tracking, click on the following button :'), 'submitTwengaActivateTracking', $this->l('Activate'));
@@ -897,18 +776,14 @@ class Twenga extends PaymentModule
 	}
 	
 	/**
-	 * Just set in one method the displaying error message in Prestashop back-office.
+	 * Just set in one method the displaying error message in PrestaShop back-office.
 	 */
 	private function displayErrors()
 	{
 		$string = '';
 		if (!empty($this->_errors))
-		{
 			foreach ($this->_errors as $error)
-			{
 				$string .= $this->displayError($error);
-			}
-		}
 		return $string;
 	}
 	
@@ -928,17 +803,18 @@ class Twenga extends PaymentModule
 		}
 		if ($bool_site_exists)
 		{
-			try {
+			try
+			{
 				$bool_site_exists = self::$obj_twenga->siteExist();
-			} catch (Exception $e) {
+			}
+			catch (Exception $e)
+			{
 				$this->_errors[] = $e->getMessage().$this->l('Some parameters missing, or the site doesn\'t exist');
 				$bool_site_exists = false;
 			}
 		}
 		if (!$bool_site_exists)
-		{
 			return $this->displayErrors();
-		}
 		
 		// Now method build the XML
 		echo '<?xml version="1.0" encoding="utf-8"?><catalog>';
@@ -979,7 +855,7 @@ class Twenga extends PaymentModule
 					echo '<product>';
 					
 					// required Fields
-					echo '<product_url>'.$product_values['product_url'].'</product_url>';
+					echo '<product_url><![CDATA['.$product_values['product_url'].']]></product_url>';
 					echo '<designation><![CDATA['.$product_values['designation'].']]></designation>';
 					echo '<price>'.$product_values['price'].'</price>';
 					echo '<category><![CDATA['.$product_values['category'].']]></category>';
@@ -1024,13 +900,11 @@ class Twenga extends PaymentModule
 		
 		// To build description and model tags.
 		if (isset($combination['attributes']))
-		{
 			foreach ($combination['attributes'] as $attribut)
 			{
 				$str_features[] = $attribut['group_name'].' : '.$attribut['name'];
 				$model[] = $attribut['name'];
 			}
-		}
 		if (isset($combination['weight']) && (int)$combination['weight'] !== 0)
 			$str_features[] = 'weight : '.$combination['weight'];
 		elseif ($product->weight !== 0)
@@ -1076,7 +950,7 @@ class Twenga extends PaymentModule
 			$arr_return['image_url'] = $prefix.$link->getImageLink('', $product->id.'-'.$id_image, 'large');
 		}
 		else
-			$arr_return['image_url'] = $link->getImageLink($product->link_rewrite[$lang], $product->id.'-'.$id_image, 'large');
+			$arr_return['image_url'] = $link->getImageLink($product->link_rewrite[$lang], $product->id.'-'.$id_image, 'large_default');
 
 		
 		// Must description added since Twenga-module v1.1
