@@ -89,7 +89,10 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 			/* If guest we clear the cookie for security reason */
 			$this->context->customer->mylogout();
 		}
-		$this->setTemplate('order-confirmation.tpl');
+		if ($this->context->getMobileDevice() == true)
+			$this->setTemplate('order-confirmation-mobile.tpl');
+		else
+			$this->setTemplate('order-confirmation.tpl');
 	}
 
 	private function displayHook()
