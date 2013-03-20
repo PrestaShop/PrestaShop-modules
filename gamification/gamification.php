@@ -94,7 +94,7 @@ class Gamification extends Module
 		$tab->class_name = "AdminGamification";
 		$tab->name = array();
 		foreach (Language::getLanguages(true) as $lang)
-			$tab->name[$lang['id_lang']] = "Your Merchant Expertise";
+			$tab->name[$lang['id_lang']] = "Merchant Expertise";
 		$tab->id_parent = (int)Tab::getIdFromClassName('AdminAdmin');
 		$tab->module = $this->name;
 		return $tab->add();
