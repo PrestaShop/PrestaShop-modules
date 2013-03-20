@@ -89,7 +89,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.0';
+		$this->version = '3.1';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
