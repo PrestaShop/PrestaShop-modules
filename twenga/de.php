@@ -102,3 +102,4 @@ $_MODULE['<{twenga}prestashop>twengaobj_9fb66ea632c1aff220b180918df3c77c'] = 'In
 $_MODULE['<{twenga}prestashop>twengaobj_6e182f2ba494a6720ce552ed2a255403'] = 'Der Server ist im Moment nicht verfügbar';
 $_MODULE['<{twenga}prestashop>twengaobj_4252fb7eb531ed1ec250e5c16f8ced37'] = 'Diese PrestaShop Webservice Anfrage hat einen Fehlercode auf HTTP-Status zurückgegeben.';
 $_MODULE['<{twenga}prestashop>twengaobj_5619f08f21127bd8f72ec9bbb25031ac'] = 'Fehler';
+$_MODULE['<{twenga}prestashop>twengaobj_1a5f108b2f67129f257007616fa20ba3'] = 'Gespeicherte Informationen.';

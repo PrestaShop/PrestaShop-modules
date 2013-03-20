@@ -102,3 +102,4 @@ $_MODULE['<{twenga}prestashop>twengaobj_9fb66ea632c1aff220b180918df3c77c'] = 'El
 $_MODULE['<{twenga}prestashop>twengaobj_6e182f2ba494a6720ce552ed2a255403'] = 'El servidor no está accesible por el momento';
 $_MODULE['<{twenga}prestashop>twengaobj_4252fb7eb531ed1ec250e5c16f8ced37'] = 'La llamada a los servicios Web Twenga a devuelto un estado HTTP inesperado:';
 $_MODULE['<{twenga}prestashop>twengaobj_5619f08f21127bd8f72ec9bbb25031ac'] = 'Error  n°';
+$_MODULE['<{twenga}prestashop>twengaobj_1a5f108b2f67129f257007616fa20ba3'] = 'Guardado información.';
