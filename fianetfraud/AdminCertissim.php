@@ -107,13 +107,13 @@ class AdminCertissim extends AdminCertissimController
 				'width' => 50,
 				'search' => true,
 				'icon' => array(
-					'0' => array('src' => "../../modules/fianetfraud/img/0.gif", 'alt' => 'Risque détecté'),
-					'-1' => array('src' => "../../modules/fianetfraud/img/-1.gif", 'alt' => 'Pas de risque détecté'),
-					'100' => array('src' => "../../modules/fianetfraud/img/100.gif", 'alt' => 'Certifiée sans risque'),
+					'0' => array('src' => "../../modules/fianetfraud/img/0.gif", 'alt' => 'Risque dï¿½tectï¿½'),
+					'-1' => array('src' => "../../modules/fianetfraud/img/-1.gif", 'alt' => 'Pas de risque dï¿½tectï¿½'),
+					'100' => array('src' => "../../modules/fianetfraud/img/100.gif", 'alt' => 'Certifiï¿½e sans risque'),
 					'error' => array('src' => "../../modules/fianetfraud/img/error.gif", 'alt' => 'Erreur'),
 					'sent' => array('src' => "../../modules/fianetfraud/img/sent.gif", 'alt' => 'Calcul du risque en cours'),
 					'ready to send' => array('src' => "../../modules/fianetfraud/img/ready-to-send.gif", 'alt' => 'En attente du paiement'),
-					'not concerned' => array('src' => "../../modules/fianetfraud/img/not-concerned.gif", 'alt' => 'Non concernée')
+					'not concerned' => array('src' => "../../modules/fianetfraud/img/not-concerned.gif", 'alt' => 'Non concernï¿½e')
 				),
 			);
 			$this->fields_list['score'] = $column_description;
@@ -148,12 +148,12 @@ class AdminCertissim extends AdminCertissimController
 				//if no order specified: end of process
 				if (!Tools::isSubmit('id_order'))
 				{
-					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "pas de commande indiquée. Fin checkout.");
+					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "pas de commande indiquï¿½e. Fin checkout.");
 					break;
 				}
 				if (!is_int((int) Tools::getValue('id_order')))
 				{
-					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Référence incorrecte : ".Tools::getValue('id_order').". Fin checkout.");
+					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Rï¿½fï¿½rence incorrecte : ".Tools::getValue('id_order').". Fin checkout.");
 					break;
 				}
 
@@ -164,8 +164,7 @@ class AdminCertissim extends AdminCertissimController
 				if (_PS_VERSION_ < '1.5')
 				{
 					//redirects the user to the admin order page
-					$admin_dir_tokens = explode('\\', _PS_ADMIN_DIR_);
-					$admin_dir = $admin_dir_tokens[count($admin_dir_tokens) - 1];
+					$admin_dir = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.substr(PS_ADMIN_DIR, strrpos(PS_ADMIN_DIR, '/') + 1);
 					$url = $admin_dir.'/index.php?tab=AdminCertissim&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminTokenLite('AdminCertissim');
 					Tools::redirect($url);
 				}
@@ -176,12 +175,12 @@ class AdminCertissim extends AdminCertissimController
 				//if no order specified: end of process
 				if (!Tools::isSubmit('id_order'))
 				{
-					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "pas de commande indiquée. Fin checkout.");
+					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "pas de commande indiquï¿½e. Fin checkout.");
 					break;
 				}
 				if (!is_int((int) Tools::getValue('id_order')))
 				{
-					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Référence incorrecte : ".Tools::getValue('id_order').". Fin checkout.");
+					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Rï¿½fï¿½rence incorrecte : ".Tools::getValue('id_order').". Fin checkout.");
 					break;
 				}
 
@@ -194,8 +193,7 @@ class AdminCertissim extends AdminCertissimController
 				if (_PS_VERSION_ < '1.5')
 				{
 					//redirects the user to the admin order page
-					$admin_dir_tokens = explode('\\', _PS_ADMIN_DIR_);
-					$admin_dir = $admin_dir_tokens[count($admin_dir_tokens) - 1];
+					$admin_dir = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.substr(PS_ADMIN_DIR, strrpos(PS_ADMIN_DIR, '/') + 1);
 					$url = $admin_dir.'/index.php?tab=AdminCertissim&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminTokenLite('AdminCertissim');
 					CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, "Redirection vers $url");
 					Tools::redirect($url);
@@ -242,7 +240,7 @@ class AdminCertissim extends AdminCertissimController
 				{
 					foreach (Shop::getShops() as $shop)
 					{
-						CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Récupération des évaluations en attente pour shop ".$shop['id_shop']); //finlog
+						CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Rï¿½cupï¿½ration des ï¿½valuations en attente pour shop ".$shop['id_shop']); //finlog
 						$sql_orders = "
 							SELECT o.`id_order` as `id_order`
 							FROM `"._DB_PREFIX_.Fianetfraud::CERTISSIM_ORDER_TABLE_NAME."` o 
@@ -328,7 +326,7 @@ class AdminCertissim extends AdminCertissimController
 		$stack = $sac->getAlert('new');
 		$reevals = new CertissimResultResponse($stack->getXML());
 
-		CertissimLogger::insertLog(__METHOD__." : ".__LINE__, $reevals->returnCount()." réévaluations trouvées."); //log
+		CertissimLogger::insertLog(__METHOD__." : ".__LINE__, $reevals->returnCount()." rï¿½ï¿½valuations trouvï¿½es."); //log
 		//for each reevaluation found
 		foreach ($reevals->getTransactions() as $transaction)
 		{
@@ -340,9 +338,9 @@ class AdminCertissim extends AdminCertissimController
 			fianetfraud::switchOrderToState($transaction->returnRefid(), 'scored');
 			//log insert result
 			if (!$update)
-				CertissimLogger::insertLog(__METHOD__." : ".__LINE__, 'Erreur de mise à  jour de la commande '.$transaction->returnRefid().' : '.Db::getInstance()->getMsgError());
+				CertissimLogger::insertLog(__METHOD__." : ".__LINE__, 'Erreur de mise ï¿½ jour de la commande '.$transaction->returnRefid().' : '.Db::getInstance()->getMsgError());
 			else
-				CertissimLogger::insertLog(__METHOD__." : ".__LINE__, 'Commande '.$transaction->returnRefid().' réévaluée.');
+				CertissimLogger::insertLog(__METHOD__." : ".__LINE__, 'Commande '.$transaction->returnRefid().' rï¿½ï¿½valuï¿½e.');
 		}
 	}
 
@@ -357,7 +355,7 @@ class AdminCertissim extends AdminCertissimController
 		if ($sent)
 			fianetfraud::switchOrderToState($id_order, 'sent');
 		else
-			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, "L'envoi de la commande $id_order vers Certissim a échoué.");
+			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, "L'envoi de la commande $id_order vers Certissim a ï¿½chouï¿½.");
 	}
 
 }
