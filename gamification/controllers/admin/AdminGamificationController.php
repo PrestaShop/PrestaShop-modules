@@ -43,16 +43,16 @@ class AdminGamificationController extends ModuleAdminController
 		$badges_international->where('type', '=', 'international');
 		
 		$badges_type = array(
-			'badges_feature' => array('name' => $this->l('Feature'), 'badges' => $badges_feature),
-			'badges_achievement' => array('name' => $this->l('Achievement'), 'badges' => $badges_achievement),
+			'badges_feature' => array('name' => $this->l('Features'), 'badges' => $badges_feature),
+			'badges_achievement' => array('name' => $this->l('Achievements'), 'badges' => $badges_achievement),
 			'badges_international' => array('name' => $this->l('International'), 'badges' => $badges_international),
-			);
+		);
 		
 		$this->tpl_view_vars = array(
 			'badges_type' => $badges_type,
 			'current_level_percent' => (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
 			'current_level' => (int)Configuration::get('GF_CURRENT_LEVEL')
-			);
+		);
 		return parent::renderView();
 	}
 	
@@ -77,7 +77,7 @@ class AdminGamificationController extends ModuleAdminController
 			'advices_to_display' => $this->processGetAdvicesToDisplay(),
 			'level_badge_validation' => $this->processLevelAndBadgeValidation(),
 			'header_notification' => $this->module->renderHeaderNotification(),
-			)));
+		)));
 	}
 	
 	public function processRefreshData()
