@@ -106,8 +106,8 @@ class CertissimTools extends CertissimMother
 		$string = htmlentities($string, ENT_NOQUOTES, $charset);
 
 		$string = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $string);
-		$string = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $string); // pour les ligatures e.g. '&oelig;'
-		$string = preg_replace('#&[^;]+;#', '', $string); // supprime les autres caract�res
+		$string = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $string); // for ligatures e.g. '&oelig;'
+		$string = preg_replace('#&[^;]+;#', '', $string); // drops other chars
 
 		return $string;
 	}
