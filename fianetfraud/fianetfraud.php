@@ -89,7 +89,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.0';
+		$this->version = '3.1';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -152,11 +152,11 @@ class fianetfraud extends Module
 		$tab_controller_main->move(Tab::getNewLastPosition(0));
 
 		return (parent::install()
-				&& $this->registerHook('newOrder')
-				&& $this->registerHook('paymentConfirm')
-				&& $this->registerHook('adminOrder')
-				&& $this->registerHook('backOfficeHeader')
-				);
+			&& $this->registerHook('newOrder')
+			&& $this->registerHook('paymentConfirm')
+			&& $this->registerHook('adminOrder')
+			&& $this->registerHook('backOfficeHeader')
+			);
 	}
 
 	public function uninstall()
@@ -178,16 +178,14 @@ class fianetfraud extends Module
 	 */
 	private function loadProductCategories()
 	{
-		$categories = Category::getCategories($this->context->language->id);
+		$categories = Category::getSimpleCategories($this->context->language->id);
+
 		$shop_categories = array();
 		foreach ($categories as $category)
 		{
-			if (!isset($category['infos']))
-				$category = array_pop($category);
-
-			$certissim_type = Tools::isSubmit('certissim_'.$category['infos']['id_category'].'_product_type') ? Tools::getValue('certissim_'.$category['infos']['id_category'].'_product_type') : Configuration::get('CERTISSIM_'.$category['infos']['id_category'].'_PRODUCT_TYPE');
-			$shop_categories[$category['infos']['id_category']] = array(
-				'name' => $category['infos']['name'],
+			$certissim_type = Tools::isSubmit('certissim_'.$category['id_category'].'_product_type') ? Tools::getValue('certissim_'.$category['id_category'].'_product_type') : Configuration::get('CERTISSIM_'.$category['id_category'].'_PRODUCT_TYPE');
+			$shop_categories[$category['id_category']] = array(
+				'name' => $category['name'],
 				'certissim_type' => $certissim_type
 			);
 		}
@@ -852,15 +850,15 @@ class fianetfraud extends Module
 
 		//initialization of the element <utilisateur type='facturation'...>
 		$xml_element_invoice_customer = new CertissimUtilisateur(
-						'facturation',
-						$gender,
-						$address_invoice->lastname,
-						$address_invoice->firstname,
-						$address_invoice->company,
-						$address_invoice->phone,
-						$address_invoice->phone_mobile,
-						null,
-						$customer->email
+				'facturation',
+				$gender,
+				$address_invoice->lastname,
+				$address_invoice->firstname,
+				$address_invoice->company,
+				$address_invoice->phone,
+				$address_invoice->phone_mobile,
+				null,
+				$customer->email
 		);
 
 		//gets customer stats
@@ -871,10 +869,10 @@ class fianetfraud extends Module
 
 		//initialization of the element <siteconso>
 		$xml_element_invoice_customer_stats = new CertissimSiteconso(
-						$customer_stats['total_orders'],
-						$customer_stats['nb_orders'],
-						$all_orders[count($all_orders) - 1]['date_add'],
-						(count($all_orders) > 1 ? $all_orders[1]['date_add'] : null)
+				$customer_stats['total_orders'],
+				$customer_stats['nb_orders'],
+				$all_orders[count($all_orders) - 1]['date_add'],
+				(count($all_orders) > 1 ? $all_orders[1]['date_add'] : null)
 		);
 
 		//gets back the invoice country
@@ -882,12 +880,12 @@ class fianetfraud extends Module
 
 		//initialization of the element <adresse type="facturation" ...>
 		$xml_element_invoice_address = new CertissimAdresse(
-						'facturation',
-						$address_invoice->address1,
-						$address_invoice->address2,
-						$address_invoice->postcode,
-						$address_invoice->city,
-						$country->name[$id_lang]
+				'facturation',
+				$address_invoice->address1,
+				$address_invoice->address2,
+				$address_invoice->postcode,
+				$address_invoice->city,
+				$country->name[$id_lang]
 		);
 
 		//gets back the carrier used for this order
@@ -904,28 +902,28 @@ class fianetfraud extends Module
 		{
 			//initialization of the element <utilisateur type="livraison" ...>
 			$xml_element_delivery_customer = new CertissimUtilisateur(
-							'livraison',
-							$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
-							$address_delivery->lastname,
-							$address_delivery->firstname,
-							$address_delivery->company,
-							$address_delivery->phone,
-							$address_delivery->phone_mobile,
-							null,
-							$customer->email);
+					'livraison',
+					$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
+					$address_delivery->lastname,
+					$address_delivery->firstname,
+					$address_delivery->company,
+					$address_delivery->phone,
+					$address_delivery->phone_mobile,
+					null,
+					$customer->email);
 
 			//gets back the delivery country
 			$country = new Country((int) ($address_delivery->id_country));
 
 			//initialization of the element <adresse type="livraison" ...>
 			$xml_element_delivery_address = new CertissimAdresse(
-							'livraison',
-							$address_delivery->address1,
-							$address_delivery->address2,
-							$address_delivery->postcode,
-							$address_delivery->city,
-							$country->name[$id_lang],
-							null
+					'livraison',
+					$address_delivery->address1,
+					$address_delivery->address2,
+					$address_delivery->postcode,
+					$address_delivery->city,
+					$country->name[$id_lang],
+					null
 			);
 		}
 
@@ -939,12 +937,12 @@ class fianetfraud extends Module
 
 		//initialize the element <infocommande>
 		$xml_element_order_details = new CertissimInfocommande(
-						$siteid,
-						$order->id,
-						(string) $order->total_paid,
-						self::getIpByOrder((int) ($order->id)),
-						date('Y-m-d H:i:s'),
-						$currency->iso_code
+				$siteid,
+				$order->id,
+				(string) $order->total_paid,
+				self::getIpByOrder((int) ($order->id)),
+				date('Y-m-d H:i:s'),
+				$currency->iso_code
 		);
 
 		//gets the order products
@@ -1021,10 +1019,10 @@ class fianetfraud extends Module
 
 		//initialization of the element <transport>
 		$xml_element_carrier = new CertissimTransport(
-						$real_carrier_type,
-						$alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
-						$alldownloadables ? '1' : '2',
-						null
+				$real_carrier_type,
+				$alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
+				$alldownloadables ? '1' : '2',
+				null
 		);
 
 		//find the id of the payment module used (depends on the PS version)
