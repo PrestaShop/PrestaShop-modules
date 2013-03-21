@@ -78,9 +78,10 @@
 {foreach from=$badges_type key=key item=type}
 <fieldset>
 	<legend><img src="../modules/gamification/views/img/{$key}.png" alt="{$type.name|escape:html:'UTF-8'}" /> {$type.name|escape:html:'UTF-8'}</legend>
-	<ul class="badge_list" style="">
+	{include file='./filters.tpl' type=$key}
+	<ul class="badge_list" id="list_{$key}" style="">
 		{foreach from=$type.badges item=badge}
-		<li class="badge_square {if $badge->validated}validated {else} not_validated{/if}" id="{$badge->id|intval}">
+		<li class="badge_square badge_all {if $badge->validated}validated {else} not_validated{/if} group_{$badge->id_group} level_{$badge->group_position} " id="{$badge->id|intval}">
 			<div class="gamification_badges_img"><img src="{$badge->getBadgeImgUrl()}"></div>
 			<div class="gamification_badges_name">{$badge->name|escape:html:'UTF-8'}</div>
 			<div class="gamification_badges_description" style="display:none">{$badge->description|escape:html:'UTF-8'}</div>
@@ -89,6 +90,7 @@
 			<div class="gamification_badges_name">{l s="No badge in this section"}</div>
 		{/foreach}
 	</ul>
+	<p id="no_badge_{$key}" class="gamification_badges_name" style="display:none;text-align:center">{l s="No badge in this section"}</p>
 </fieldset>
 <div class="clear"></br></div>
 {/foreach}

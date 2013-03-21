@@ -95,3 +95,28 @@ function initBubbleDescription()
 		}
 	});
 }
+
+
+function filterBadge(type)
+{
+	group = '.'+$('#group_select_'+type+' option:selected').val();
+	status = '.'+$('#status_select_'+type+' option:selected').val();
+	level = '.'+$('#level_select_'+type+' option:selected').val();
+
+	if (group == '.undefined')
+		group = '';
+	if (status == '.undefined')
+		status = '';
+	if (level == '.undefined')
+		level = '';
+	
+	$('#list_'+type).isotope({filter: '.badge_square'+group+status+level, animationEngine : 'css'});
+	
+	if (!$('#list_'+type+' li').not('.isotope-hidden').length)
+		$('#no_badge_'+type).fadeIn();
+	else
+		$('#no_badge_'+type).fadeOut();
+}
+
+
+

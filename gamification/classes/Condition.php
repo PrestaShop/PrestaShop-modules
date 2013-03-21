@@ -91,7 +91,7 @@ class Condition extends ObjectModel
 		$sub_query->select('id_badge');
 		$sub_query->from('badge', 'b');
 		$sub_query->where('b.`validated` = 0');
-		$sub_query->groupBy('b.`group`');
+		$sub_query->groupBy('b.`id_group`');
 		
 		$query = new DbQuery();
 		$query->select('c.`id_condition`');
@@ -116,7 +116,7 @@ class Condition extends ObjectModel
 		$sub_query = new DbQuery();
 		$sub_query->select('id_badge');
 		$sub_query->from('badge', 'b');
-		$sub_query->groupBy('b.`group`');
+		$sub_query->groupBy('b.`id_group`');
 		
 		$query = new DbQuery();
 		$query->select('c.`id_condition`');
@@ -144,7 +144,7 @@ class Condition extends ObjectModel
 		$sub_query->from('badge', 'b');
 		$sub_query->where('b.`group_position` = '.(int)$badge_group_position);
 		$sub_query->where('b.`validated` = 0');
-		$sub_query->groupBy('b.`group`');
+		$sub_query->groupBy('b.`id_group`');
 		
 		$query = new DbQuery();
 		$query->select('c.`id_condition`');

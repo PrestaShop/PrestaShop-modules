@@ -30,25 +30,20 @@ class Badge extends ObjectModel
 	
 	public $id_ps_badge;
 		
-	/** @var string type */
 	public $type;
 	
-	/** @var string group */
-	public $group;
+	public $id_group;
 	
-	/** @var int group position */
 	public $group_position;
+	
+	public $group_name;
 
-	/** @var int scoring */
 	public $scoring;
 	
-	/** @var bool validated */
 	public $validated;
 	
-	/** @var string name */
 	public $name;
 	
-	/** @var string description */
 	public $description;
 	
 	const BAGDE_IMG_URL = 'http://gamification.prestashop.com/api/getBadgeImg';
@@ -63,7 +58,7 @@ class Badge extends ObjectModel
 		'fields' => array(
 			'id_ps_badge' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'type' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
-			'group' =>				array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
+			'id_group' =>			array('type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 32),
 			'group_position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'scoring' =>			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'validated' =>			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -71,6 +66,7 @@ class Badge extends ObjectModel
 			// Lang fields
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
+			'group_name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 255),
 		),
 	);
 	
@@ -114,7 +110,7 @@ class Badge extends ObjectModel
 		$query = new DbQuery();
 		$query->select('b.`id_badge`');
 		$query->from('badge', 'b');
-		$query->where('b.group = \''.pSQL($this->group).'\' AND b.validated = 0');
+		$query->where('b.id_group = \''.pSQL($this->id_group).'\' AND b.validated = 0');
 		$query->orderBy('b.group_position');		
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
