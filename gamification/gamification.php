@@ -51,6 +51,7 @@ class Gamification extends Module
 
 	public function install()
 	{
+		Tools::deleteDirectory($this->cache_data, false);
 		if (!$this->installDb() || !$this->installTab() ||
 			!Configuration::updateGlobalValue('GF_INSTALL_CALC', 0) ||
 			!Configuration::updateGlobalValue('GF_CURRENT_LEVEL', 1) || !Configuration::updateGlobalValue('GF_CURRENT_LEVEL_PERCENT', 0) ||
