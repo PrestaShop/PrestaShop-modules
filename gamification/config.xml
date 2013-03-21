@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>gamification</name>
-            <displayName><![CDATA[Your Merchant Expertise]]></displayName>
-            <version><![CDATA[0.2]]></version>
+            <displayName><![CDATA[Merchant Expertise]]></displayName>
+            <version><![CDATA[0.3]]></version>
             <description><![CDATA[Become an e-commerce expert within the blink of an eye!]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[administration]]></tab>

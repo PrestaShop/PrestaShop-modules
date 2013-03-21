@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '0.2';
+		$this->version = '0.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -185,7 +185,6 @@ class Gamification extends Module
 			$this->refreshDatas($default_iso_lang);
 
 		$cache_file = $this->cache_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json';
-
 		if (!$this->isFresh($cache_file, 604800))
 			if ($this->getData($iso_lang))
 			{
@@ -195,7 +194,7 @@ class Gamification extends Module
 
 				if (function_exists('openssl_verify'))
 				{
-					if (!openssl_verify(Tools::jsonencode($data->conditions), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
+					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
 				if (isset($data->conditions))
@@ -242,7 +241,10 @@ class Gamification extends Module
 	{
 		$formated_badges_lang = array();
 		foreach ($badges_lang as $lang)
-			$formated_badges_lang[$lang->id_ps_badge] = array('name' => array($id_lang => $lang->name), 'description' => array($id_lang => $lang->description));
+			$formated_badges_lang[$lang->id_ps_badge] = array(
+				'name' => array($id_lang => $lang->name),
+				'description' => array($id_lang => $lang->description),
+				'group_name' => array($id_lang => $lang->group_name));
 
 		$cond_ids = $this->getFormatedConditionsIds();
 
@@ -253,6 +255,7 @@ class Gamification extends Module
 				$bdg = new Badge($id_badge);
 				$bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
 				$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
+				$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
 				$bdg->update();
 			}
 			else

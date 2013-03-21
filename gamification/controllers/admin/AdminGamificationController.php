@@ -14,9 +14,8 @@ class AdminGamificationController extends ModuleAdminController
 	public function setMedia()
 	{
 		$this->addJqueryUI('ui.progressbar');
-		$this->addJS('/modules/gamification/views/js/bubble-popup.js');
-		$this->addJS('/modules/gamification/views/js/gamification.js');
-		$this->addCSS('/modules/gamification/views/css/bubble-popup.css');
+		$this->addJS(array('/modules/gamification/views/js/bubble-popup.js', '/modules/gamification/views/js/gamification.js', '/modules/gamification/views/js/jquery.isotope.js'));
+		$this->addCSS(array('/modules/gamification/views/css/bubble-popup.css', '/modules/gamification/views/css/isotope.css'));
 		
 		return parent::setMedia();
 	}
@@ -35,23 +34,52 @@ class AdminGamificationController extends ModuleAdminController
 	{
 		$badges_feature = new Collection('badge', $this->context->language->id);
 		$badges_feature->where('type', '=', 'feature');
+		$badges_feature->orderBy('id_group');
+		$badges_feature->orderBy('group_position');
 		
 		$badges_achievement = new Collection('badge', $this->context->language->id);
 		$badges_achievement->where('type', '=', 'achievement');
+		$badges_achievement->orderBy('id_group');
+		$badges_achievement->orderBy('group_position');
 		
 		$badges_international = new Collection('badge', $this->context->language->id);
 		$badges_international->where('type', '=', 'international');
+		$badges_international->orderBy('id_group');
+		$badges_international->orderBy('group_position');
 		
+		$groups = array();
+		$query = new DbQuery();
+		$query->select('DISTINCT(b.`id_group`), bl.group_name, b.type');
+		$query->from('badge', 'b');
+		$query->join('
+			LEFT JOIN `'._DB_PREFIX_.'badge_lang` bl ON bl.`id_badge` = b.`id_badge`');
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+		foreach ($result as $res)
+			$groups['badges_'.$res['type']][$res['id_group']] = $res['group_name'];
+
 		$badges_type = array(
 			'badges_feature' => array('name' => $this->l('Features'), 'badges' => $badges_feature),
 			'badges_achievement' => array('name' => $this->l('Achievements'), 'badges' => $badges_achievement),
 			'badges_international' => array('name' => $this->l('International'), 'badges' => $badges_international),
 		);
 		
+		$levels = array(
+			1 => $this->l('1. Beginner'),
+			2 => $this->l('2. Pro'),
+			3 => $this->l('3. Expert'),
+			4 => $this->l('4. Wizard'),
+			5 => $this->l('5. Guru'),
+			6 => $this->l('6. Legend'),
+		);
+		
 		$this->tpl_view_vars = array(
 			'badges_type' => $badges_type,
 			'current_level_percent' => (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT'),
-			'current_level' => (int)Configuration::get('GF_CURRENT_LEVEL')
+			'current_level' => (int)Configuration::get('GF_CURRENT_LEVEL'),
+			'groups' => $groups,
+			'levels' => $levels,
 		);
 		return parent::renderView();
 	}
