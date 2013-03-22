@@ -10,8 +10,8 @@
 			<div class="margin-form">
 				<input type="text" size="20" name="ebay_shop" value="{$ebayShopValue}" /> 
 				<p>
-                         {if Configuration::get('EBAY_SHOP')!== false}
-                              <a href="http://stores.ebay.fr/{Configuration::get('EBAY_SHOP')}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>'
+                         {if $ebayShop!== false}
+                              <a href="http://stores.ebay.fr/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>'
                          {else} 
                               <a href="{$createShopUrl}" style="color:#7F7F7F;">
                                    {l s='Open your shop' mod='ebay'}'
@@ -22,7 +22,7 @@
 			<label>{l s='Paypal Identifier (e-mail)' mod='ebay'} : </label>
 			<div class="margin-form">
 
-				<input type="text" size="20" name="ebay_paypal_email" value="{Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL')))}" />
+				<input type="text" size="20" name="ebay_paypal_email" value="{$ebay_paypal_email}" />
 				<p>{l s='You have to set your PayPal e-mail account, it\'s the only payment available with this module' mod='ebay'}</p>
 			</div>
 			<label>{l s='Shop postal code' mod='ebay'} : </label>
@@ -44,7 +44,7 @@
 					<td>
 						<select name="newConditionID" id="">
 						{foreach from=$ebayItemConditions item=itemCondition key=key}
-							<option value="{$key}" {if $key == Configuration::get('EBAY_CONDITION_NEW')} selected="selected"{/if}>{$itemCondition}</option>
+							<option value="{$key}" {if $key == $ebayConditionNew} selected="selected"{/if}>{$itemCondition}</option>
 						{/foreach}
 						</select>
 					</td>					
@@ -54,7 +54,7 @@
 					<td>
 						<select name="usedConditionID" id="">
 						{foreach from=$ebayItemConditions item=itemCondition key=key}
-							<option value="{$key}" {if $key == Configuration::get('EBAY_CONDITION_USED')} selected="selected"{/if}>{$itemCondition}</option>
+							<option value="{$key}" {if $key == $ebayConditionUsed} selected="selected"{/if}>{$itemCondition}</option>
 						{/foreach}
 						</select>
 					</td>					
@@ -64,7 +64,7 @@
 					<td>
 						<select name="refurbishedConditionID" id="">
 						{foreach from=$ebayItemConditions item=itemCondition key=key}
-							<option value="{$key}" {if $key == Configuration::get('EBAY_CONDITION_REFURBISHED')} selected="selected"{/if}>{$itemCondition}</option>
+							<option value="{$key}" {if $key == $ebayConditionRefurbished} selected="selected"{/if}>{$itemCondition}</option>
 						{/foreach}
 						</select>
 					</td>
@@ -81,7 +81,7 @@
                <div class="margin-form">
                     <select name="ebay_returns_accepted_option">';
                     {foreach from=$policies item=policy}
-                         <option value="{$policy.value}" {if Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')) == $policy.value} selected="selected"{/if}>{$policy.description}</option>
+                         <option value="{$policy.value}" {if $returnsConditionAccepted == $policy.value} selected="selected"{/if}>{$policy.description}</option>
                     {/foreach}                                      
                     </select>
                </div>
@@ -103,13 +103,13 @@
 
                     <select name="listingdurations">
                          {foreach from=$listingDurations item=listing key=key}
-                              <option value="{$key}" {if Configuration::get('EBAY_LISTING_DURATION') == $key}selected="selected" {/if}>{$listing}</option>
+                              <option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing}</option>
                          {/foreach}
                     </select>
                </div>
 
                <label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
-               <div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if Configuration::get('EBAY_AUTOMATICALLY_RELIST') == 'on'} checked="checked" {/if} /></div>
+               <div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
           </fieldset>
           
 
