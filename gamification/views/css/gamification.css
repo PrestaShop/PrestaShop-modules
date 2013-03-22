@@ -303,3 +303,11 @@ li.not_validated {
 	/*background: url('../img/not_validated.png') transparent no-repeat 100px 0;*/
 	color: #ccc;
 }
+
+.badges_filters div{
+	float: left;
+	margin-bottom: 30px
+}
+.badges_filters select{
+	margin-right: 30px;
+}
