@@ -12,7 +12,7 @@
      </b>
 </p>
 <br />
-<form action="index.php?{if $isOneDotFive}controller={Tools::getValue('controller')}{else}tab={Tools::getValue('tab')}{/if}&configure={Tools::getValue('configure')}&token={Tools::getValue('token')}&tab_module={Tools::getValue('tab_module')}&module_name={Tools::getValue('module_name')}&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
+<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
      <p>
           <b>
                {l s='You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.' mod='ebay'}
@@ -20,7 +20,7 @@
           <input class="button" name="submitSave" type="submit" value="{l s='Suggest Categories' mod='ebay'}" />
      </p><br />
 </form>
-<form action="index.php?{if isset($isOneDotFive) && $isOneDotFive}controller={Tools::getValue('controller')}{else}tab={Tools::getValue('tab')}{/if}&configure={Tools::getValue('configure')}&token={Tools::getValue('token')}&tab_module={Tools::getValue('tab_module')}&module_name={Tools::getValue('module_name')}&id_tab=2&section=category" method="post" class="form" id="configForm2">     <table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
+<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category" method="post" class="form" id="configForm2">     <table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
           <thead>
                <tr class="nodrag nodrop">
                     <th style="width:110px;">
@@ -63,7 +63,7 @@
           function loadCategoryMatch(id_category) {
                $.ajax({
                     async: false,
-                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadCategoryMatch.php?token={/literal}{$configs['EBAY_SECURITY_TOKEN']}{literal}&id_category=" + id_category + "&time={/literal}{pSQL(date('Ymdhis'))}{literal}",
+                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadCategoryMatch.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_category=" + id_category + "&time={/literal}{$date}{literal}",
                     success: function(data) { $("#categoryPath" + id_category).html(data); }
                });
           }
@@ -75,13 +75,13 @@
                if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
 
                $.ajax({
-                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/changeCategoryMatch.php?token={/literal}{$configs['EBAY_SECURITY_TOKEN']}{literal}&id_category=" + id_category + "&time={/literal}{pSQL(date('Ymdhis'))}{literal}&level=" + level + levelParams,
+                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/changeCategoryMatch.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_category=" + id_category + "&time={/literal}{$date}{literal}&level=" + level + levelParams,
                     success: function(data) { $("#categoryPath" + id_category).html(data); }
                });
           }
           $(document).ready(function(){
                $.ajax({
-                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadTableCategories.php?token={/literal}{$configs['EBAY_SECURITY_TOKEN']}{literal}&id_lang={/literal}{$id_lang}{literal}",
+                    url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadTableCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",
                     success : function(data) { $("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data); }
                });
                
@@ -89,7 +89,7 @@
                     $('<div class="center"><img src="{/literal}{$_path}{literal}img/loading-small.gif" alt="" />{/literal}{l s='Thank you for waiting while creating suggestions' mod='ebay'}{literal}</div>').insertAfter($(this));
                     $(this).fadeOut();
                     $.ajax({
-                         url: "{/literal}{$_module_dir_}{literal}ebay/ajax/suggestCategories.php?token={/literal}{$configs['EBAY_SECURITY_TOKEN']}{literal}&id_lang={/literal}{$id_lang}{literal}",
+                         url: "{/literal}{$_module_dir_}{literal}ebay/ajax/suggestCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",
                          success : function(data) { window.location.href = window.location.href + "&conf=6"; }
                     });
                     return false;

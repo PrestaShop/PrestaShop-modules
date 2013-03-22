@@ -965,17 +965,25 @@ class Ebay extends Module {
         $catLoaded = !Configuration::get('EBAY_CATEGORY_LOADED');
         $ebayShopValue = Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP')));
         $smarty->assign(array(
-            'url' => $url,
-            'ebayIdentifier' => $ebayIdentifier, 
-            'configCurrencysign' => $configCurrency->sign,
-            'policies' => $policies,
-            'catLoaded' => $catLoaded,
-            'ebayItemConditions' => $ebayItemConditions,
-            'createShopUrl' => $this->createShopUrl,
-            'ebayReturns' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
-            'ebayShopValue' => $ebayShopValue, 
-            'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
-            'listingDurations' => $listingDurations
+            'url'                      => $url,
+            'ebayIdentifier'           => $ebayIdentifier, 
+            'configCurrencysign'       => $configCurrency->sign,
+            'policies'                 => $policies,
+            'catLoaded'                => $catLoaded,
+            'ebayItemConditions'       => $ebayItemConditions,
+            'createShopUrl'            => $this->createShopUrl,
+            'ebayReturns'              => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
+            'ebayShopValue'            => $ebayShopValue, 
+            'shopPostalCode'           => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
+            'listingDurations'         => $listingDurations,
+            'ebayShop'                 => Configuration::get('EBAY_SHOP'),
+            'ebay_paypal_email'        => Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))),
+            'ebayConditionNew'         => Configuration::get('EBAY_CONDITION_NEW'),
+            'ebayConditionUsed'        => Configuration::get('EBAY_CONDITION_USED'),
+            'ebayConditionRefurbished' => Configuration::get('EBAY_CONDITION_REFURBISHED'),
+            'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
+            'ebayListingDuration'      => Configuration::get('EBAY_LISTING_DURATION'),
+            'automaticallyRelist'      => Configuration::get('EBAY_AUTOMATICALLY_RELIST')
           )
         );
         // Display Form
@@ -1057,7 +1065,15 @@ class Ebay extends Module {
 
           // Load categories only if necessary
           if (Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`) FROM `' . _DB_PREFIX_ . 'ebay_category_configuration`') >= 1 && Tools::getValue('section') != 'category') {
-               $smarty->assign('isOneDotFive', $isOneDotFive);
+               $smarty->assign(array(
+                'isOneDotFive' => $isOneDotFive,
+                'controller'   => Tools::getValue('controller'),
+                'tab'          => Tools::getValue('tab'), 
+                'configure'    => Tools::getValue('configure'), 
+                'token'        => Tools::getValue('token'),
+                'tab_module'   => Tools::getValue('tab_module'),
+                'module_name'  => Tools::getValue('module_name')
+                ));
                return $this->display(dirname(__FILE__), '/views/templates/hook/pre_form_categories.tpl');
           }
 
@@ -1074,14 +1090,21 @@ class Ebay extends Module {
 
           // Smarty
           $datasSmarty = array(
-              'alerts' => $this->getAlertCategories(),
-              'tabHelp' => $tabHelp,
-              'id_lang' => $cookie->id_lang,
-              '_path' => $this->_path,
-              'configs' => $configs,
+              'alerts'       => $this->getAlertCategories(),
+              'tabHelp'      => $tabHelp,
+              'id_lang'      => $cookie->id_lang,
+              '_path'        => $this->_path,
+              'configs'      => $configs,
               '_module_dir_' => _MODULE_DIR_,
               'isOneDotFive' => $isOneDotFive,
-              'request_uri' => $_SERVER['REQUEST_URI']
+              'request_uri'  => $_SERVER['REQUEST_URI'],
+              'controller'   => Tools::getValue('controller'),
+              'tab'          => Tools::getValue('tab'), 
+              'configure'    => Tools::getValue('configure'), 
+              'token'        => Tools::getValue('token'),
+              'tab_module'   => Tools::getValue('tab_module'),
+              'module_name'  => Tools::getValue('module_name'), 
+              'date'         => pSQL(date('Ymdhis'))
           );
 
           $smarty->assign($datasSmarty);
@@ -1257,16 +1280,19 @@ class Ebay extends Module {
           $prestashopZone = Zone::getZones(); 
 
           $smarty->assign(array(
-              'eBayCarrier' => $eBayCarrier,
-              'psCarrier' => $psCarrier,
-              'existingNationalCarrier' => $existingNationalCarrier,
-              'existingInternationalCarrier' => $existingInternationalCarrier,
-              'deliveryTime' => $deliveryTime,
-              'prestashopZone' => $prestashopZone, 
-              'excludeShippingLocation' => $this->excludedLocation,
+              'eBayCarrier'                   => $eBayCarrier,
+              'psCarrier'                     => $psCarrier,
+              'existingNationalCarrier'       => $existingNationalCarrier,
+              'existingInternationalCarrier'  => $existingInternationalCarrier,
+              'deliveryTime'                  => $deliveryTime,
+              'prestashopZone'                => $prestashopZone, 
+              'excludeShippingLocation'       => $this->excludedLocation,
               'internationalShippingLocation' => $internationalShippingLocation,
-              'deliveryTimeOptions' => $deliveryTimeOptions,
-              'formUrl' => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping'
+              'deliveryTimeOptions'           => $deliveryTimeOptions,
+              'formUrl'                       => 'index.php?' . (($this->isVersionOneDotFive()) ? 'controller=' . Tools::safeOutput($_GET['controller']) : 'tab=' . Tools::safeOutput($_GET['tab'])) . '&configure=' . Tools::safeOutput($_GET['configure']) . '&token=' . Tools::safeOutput($_GET['token']) . '&tab_module=' . Tools::safeOutput($_GET['tab_module']) . '&module_name=' . Tools::safeOutput($_GET['module_name']) . '&id_tab=3&section=shipping',
+              'ebayZoneNational'              => Configuration::get('EBAY_ZONE_NATIONAL'),
+              'ebayZoneInternational'         => Configuration::get('EBAY_ZONE_INTERNATIONAL'),
+
           ));
 
           return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
