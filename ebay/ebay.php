@@ -1272,7 +1272,7 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $this->getDeliveryTimeOptions();
           $eBayCarrier = $this->getCarrier();
-          $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
+          $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, Carrier::ALL_CARRIERS);
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
           $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping WHERE international = 0");
           $existingInternationalCarrier = $this->getExistingInternationalCarrier();
