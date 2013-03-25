@@ -4,6 +4,9 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_fff01a1de50e0559f82501a927654d1b'] = 'Importer / Exporter un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_83ebbd7865677d356ffde5ad7e12784f'] = 'Exporter ou importer un thème et ses modules sur votre boutique';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_ea5eb3f904bf42377277255cbd0e2251'] = 'Pour fonctionner correctement ce module nécessite que le module de rétrocompatibilité soit installé ';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_48878e69ef59b9e9d2d9a8c18e4de520'] = 'Pour fonctionner correctement ce module a besoin du module de rétrocompatibilité avec au minimum la version v';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_c9d8a8d3c76c69e9a5ba6387acb8655a'] = 'Pour utiliser ce module vous devez installer le module de rétrocompatibilité';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_625752b5671445388af8f5e1ea3176c0'] = '%s ne peut être exporter. Celui-ci est invalide.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_25b9e1d82d8200d70be2b22a1a283957'] = 'Une erreur est survenue durant l\'envoi du fichier.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_050991b5b76aad0be75563b7cb93a33e'] = 'Seuls les fichiers zip sont autorisés';
@@ -12,7 +15,6 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_5fd13c2b89a6eaaa4614bfe
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dea6caeb83e5c11d3678284e64ebed8'] = 'Une erreur est survenue durant l\'envoi du fichier';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_c186217583219f4cd040d9ee8d388ffb'] = 'Une erreur est survenue durant l\'extraction du fichier zip';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0210b6456cdccad569cb56026bb0f689'] = 'Mauvais fichier de configuration';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_416fa810b877005364d8dc1f61a2b7f0'] = 'Vous devez sélectionner au moins un thème';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_a7eca295291f53a23ab7ba0a9c7fd9de'] = 'Cette fonctionnalité a été désactivé.';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_5b6cf869265c13af8566f192b4ab3d2a'] = 'Documentation';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_6bdbe5a8a9f446d4d758ee4c22648771'] = 'Vous pouvez consulter la documentation';
