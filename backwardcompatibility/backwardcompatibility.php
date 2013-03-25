@@ -46,13 +46,6 @@ class BackwardCompatibility extends Module
 			$this->addContext();
 	}
 
-	public function install()
-	{
-		if (!parent::install())
-			return false;
-		return true;
-	}
-
 	protected function getVersion($ini_file = false)
 	{
 		if (!$ini_file)
