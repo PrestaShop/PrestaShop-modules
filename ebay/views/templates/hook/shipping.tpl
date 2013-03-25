@@ -41,7 +41,7 @@
 			additionalFee = '';
 
 		var stringShippingFee = "<tr class='onelineebaycarrier'>";
-		stringShippingFee += "<td>{l s='Choose your eBay carrier'}</td>";
+		stringShippingFee += "<td>{l s='Choose your eBay carrier' mod='ebay'}</td>";
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 		"<select name='ebayCarrier"+internationsuffix+"["+lastId+"]' id='ebayCarrier_"+lastId+"'>";
 		{foreach from=$eBayCarrier item=carrier}
@@ -62,7 +62,7 @@
 		stringShippingFee += 		"</select>";
 		stringShippingFee += 	"</td>";
 		stringShippingFee += 	"<td>";
-		stringShippingFee += 		"{l s='Associate it with a PrestaShop carrier'}";
+		stringShippingFee += 		"{l s='Associate it with a PrestaShop carrier' mod='ebay'}";
 		stringShippingFee += 	"</td>";
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 		"<select name='psCarrier"+internationsuffix+"["+lastId+"]' id='psCarrier_"+lastId+"'>";
@@ -80,7 +80,7 @@
 		stringShippingFee += 		"</select>";
 		stringShippingFee += 	"</td>";
 		stringShippingFee += 	"<td>";
-		stringShippingFee += 		"{l s='Add extra fee for this carrier'}";
+		stringShippingFee += 		"{l s='Add extra fee for this carrier' mod='ebay'} ";
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 	"<td>";
 		stringShippingFee += 		"<input type='text' name='extrafee"+internationsuffix+"["+lastId+"]' value='"+additionalFee+"'>";
