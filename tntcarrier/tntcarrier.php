@@ -27,7 +27,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.4';
+		$this->version = '1.8.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -910,7 +910,7 @@ class TntCarrier extends CarrierModule
 				}
 			}
 			$link = new Link();
-			$redirect = $link->getPageLink('order.php?step=2');
+			$redirect = $link->getPageLink('order.php', false, null, 'step=2');
 			$smarty->assign('redirect' , $redirect);
 			if (!sizeof($cities))
 				$smarty->assign('cityError', $this->l('your shipping address zipcode is not correct.'));
@@ -931,12 +931,15 @@ class TntCarrier extends CarrierModule
 		);
 		
 		$output = null;
-		if (_PS_VERSION_ >= 1.5)
+		if (method_exists($this->context->controller, 'addJS'))
 		{
 			$this->context->controller->addJS('http://maps.google.com/maps/api/js?sensor=true');
 			$this->context->controller->addJS($this->_path.'js/relais.js');
 			$this->context->controller->addJS($this->_path.'js/jquery-ui-1.8.10.custom.min.js');
 		}
+		else
+			$smarty->assign('js_include', true);
+		
 		return $output.$this->display(__FILE__, 'tpl/relaisColis.tpl');
 	}
 
