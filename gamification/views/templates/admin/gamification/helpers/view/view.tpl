@@ -62,7 +62,7 @@
 				</li>
 				<li>
 					<img src="../modules/gamification/views/img/mail_icon.png" alt="{l s="Email"}" />
-					<a href="mailto:#">{l s="By e-mail"}</a>
+					<a href="http://www.prestashop.com/en/contact-us">{l s="By e-mail"}</a>
 				</li>
 			</ul>
 		</div>
