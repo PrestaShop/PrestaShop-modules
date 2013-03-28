@@ -108,6 +108,14 @@ class ThemeInstallator extends Module
 			$this->action_form = $this->current_index.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token'));
 		}
 	}
+	
+	public function install()
+	{
+		if ($this->id)
+			return true;
+		else
+			return parent::install();
+	}
 
 	/* Check status of backward compatibility module*/
 	protected function backwardCompatibilityChecks()
