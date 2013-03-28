@@ -901,6 +901,40 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 */
 	public function ajaxProcessUpgradeComplete()
 	{
+		if (version_compare($this->install_version, '1.5.4.0', '>='))
+		{
+			// Upgrade languages
+			if (!defined('_PS_TOOL_DIR_'))
+				define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');
+			if (!defined('_PS_TRANSLATIONS_DIR_'))
+				define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_.'/translations/');
+			if (!defined('_PS_MODULES_DIR_'))
+				define('_PS_MODULES_DIR_', _PS_ROOT_DIR_.'/modules/');
+			if (!defined('_PS_MAILS_DIR_'))
+				define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
+			$langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang WHERE active=1');
+			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
+			foreach ($langs as $lang)
+			{
+				$lang_pack = Tools::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
+				if (!$lang_pack)
+					continue;
+				elseif ($content = Tools::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
+				{
+					$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+					if ((bool)@file_put_contents($file, $content))
+					{
+						$gz = new Archive_Tar($file, true);
+						$files_list = $gz->listContent();
+						if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+							continue;
+					}
+				}
+			}
+			// Remove class_index Autoload cache
+			@unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
+		}
+		
 		if (!$this->warning_exists)
 			$this->next_desc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
 		else
@@ -1690,7 +1724,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if(is_array($this->modules_addons))
 					$id_addons = array_search($module_name, $this->modules_addons);
 				if (isset($id_addons) && $id_addons)
-					$list[] = array('id' => $id_addons, 'name' => $module_name);
+					if ($module_name != 'autoupgrade')
+						$list[] = array('id' => $id_addons, 'name' => $module_name);
 			}
 		}
 		file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList,serialize($list));

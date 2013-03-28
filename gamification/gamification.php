@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '0.4';
+		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -135,16 +135,19 @@ class Gamification extends Module
 	
 	public function hookDisplayBackOfficeHeader()
 	{
-		$this->context->controller->addJquery();
-		$this->context->controller->addJqueryUI('ui.progressbar');
-		$this->context->controller->addCss($this->_path.'views/css/gamification.css');
-		$this->context->controller->addJs($this->_path.'views/js/gamification.js');
-		$this->context->controller->addJqueryPlugin('fancybox');
+		if (method_exists($this->context->controller, 'addJquery'))
+		{
+			$this->context->controller->addJquery();
+			$this->context->controller->addJqueryUI('ui.progressbar');
+			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
+			$this->context->controller->addJs($this->_path.'views/js/gamification.js');
+			$this->context->controller->addJqueryPlugin('fancybox');
 		
-		return '<script>
+			return '<script>
 				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
 				var current_id_tab = '.(int)$this->context->controller->id.';
-				</script>';
+			</script>';
+		}
 	}
 	
 	public function renderHeaderNotification()

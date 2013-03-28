@@ -98,11 +98,15 @@ class PayPalOrder
 
 	public static function getIdOrderByTransactionId($id_transaction)
 	{
-		return Db::getInstance()->getRow('
-			SELECT `id_order`
+		$sql = 'SELECT `id_order`
 			FROM `'._DB_PREFIX_.'paypal_order`
-			WHERE `id_transaction` = \''.pSQL($id_transaction).'\''
-		);
+			WHERE `id_transaction` = \''.pSQL($id_transaction).'\'';
+
+		$result = Db::getInstance()->getRow($sql);
+		
+		if ($result != false)
+			return (int)$result['id_order'];
+		return 0;
 	}
 
 	public static function saveOrder($id_order, $transaction)
@@ -125,5 +129,25 @@ class PayPalOrder
 				\''.(int)Configuration::get('PAYPAL_PAYMENT_METHOD').'\',
 				\''.pSQL($transaction['payment_status']).'\')'
 		);
+	}
+
+	public static function updateOrder($id_order, $transaction)
+	{
+		$order = new Order((int)$id_order);
+		$total_paid = (float)$transaction['total_paid'];
+			
+		if (!isset($transaction['payment_status']) || !$transaction['payment_status'])
+			$transaction['payment_status'] = 'NULL';
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'paypal_order`
+			SET `payment_status` = \''.pSQL($transaction['payment_status']).'\'
+			WHERE `id_order` = \''.(int)$id_order.'\'
+				AND `id_transaction` = \''.pSQL($transaction['id_transaction']).'\'
+				AND `currency` = \''.pSQL($transaction['currency']).'\'';
+		if ((int)Configuration::get('PAYPAL_SANDBOX') != 1)
+			$sql .= 'AND `total_paid` = \''.$transaction['total_paid'].'\'
+				AND `shipping` = \''.(float)$transaction['shipping'].'\';';
+			
+		Db::getInstance()->Execute($sql);
 	}
 }
