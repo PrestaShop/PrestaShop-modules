@@ -51,6 +51,8 @@ class Gamification extends Module
 
 	public function install()
 	{
+		if ($this->id)
+			return true;
 		Tools::deleteDirectory($this->cache_data, false);
 		if (!$this->installDb() || !$this->installTab() ||
 			!Configuration::updateGlobalValue('GF_INSTALL_CALC', 0) ||
