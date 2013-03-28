@@ -220,12 +220,13 @@ function validateOrder($customer, $cart, $ppec)
 {
 	$amount_match = $ppec->rightPaymentProcess();
 	$order_total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-	
+
 	// Payment succeed
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token) && $amount_match)
 	{
 		if ((bool)Configuration::get('PAYPAL_CAPTURE'))
 		{
+			$payment_type = (int)Configuration::get('PS_OS_WS_PAYMENT');
 			$payment_status = 'Pending_capture';
 			$message = $ppec->l('Pending payment capture.').'<br />';
 		}

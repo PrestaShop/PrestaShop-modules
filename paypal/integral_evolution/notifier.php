@@ -63,7 +63,14 @@ class PayPalNotifier extends PayPal
 		{
 			$message = null;
 			$mc_gross = Tools::getValue('mc_gross');
-			$total_price = Tools::ps_round($cart_details['total_price'], 2);
+			
+			$cart_details = $cart->getSummaryDetails(null, true);
+			
+			$shipping = $cart_details['total_shipping_tax_exc'];
+			$subtotal = $cart_details['total_price_without_tax'] - $cart_details['total_shipping_tax_exc'];
+			$tax = $cart_details['total_tax'];
+			
+			$total_price = $shipping + $subtotal + $tax;
 		
 			if ($mc_gross != $total_price)
 			{
@@ -82,7 +89,6 @@ class PayPalNotifier extends PayPal
 			}
 
 			$customer = new Customer((int)$cart->id_customer);
-			$id_order = (int)Order::getOrderByCartId((int)$cart->id);
 			$transaction = PayPalOrder::getTransactionDetails(false);
 			
 			if (_PS_VERSION_ < '1.5')
