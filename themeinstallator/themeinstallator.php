@@ -73,7 +73,7 @@ class ThemeInstallator extends Module
 		@ini_set('memory_limit', '2G');
 
 		$this->name = 'themeinstallator';
-		$this->version = '2.2';
+		$this->version = '2.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, 1.4) >= 0)
