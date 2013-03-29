@@ -44,7 +44,7 @@ class Jirafe extends Module
 
         $this->name = 'jirafe';
         $this->tab = 'analytics_stats';
-        $this->version = '1.2.4';
+        $this->version = '1.2.5';
 
         //The constructor must be called after the name has been set, but before you try to use any functions like $this->l()
         parent::__construct();
@@ -168,7 +168,9 @@ class Jirafe extends Module
     private function installAdminDashboard()
     {
         $tab = new Tab();
-        $tab->name = 'Jirafe Analytics';
+        $tab->name = array();
+        foreach (Language::getLanguages() as $language)
+	        $tab->name[$language['id_lang']] = 'Jirafe Analytics';
         $tab->class_name = 'AdminJirafeDashboard';
         $tab->module = 'jirafe';
         $tab->id_parent = Tab::getIdFromClassName('AdminParentStats');
