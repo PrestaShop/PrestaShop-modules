@@ -328,16 +328,61 @@
 {/literal}
 </style>
 
-
+<div style="display:none; position:absolute; width:500px; padding:20px 70px 20px 20px; left:30%;background-color:#FFF;border:4px solid #555;" id="warningOnCarriersContainer">
+	<div class="close"><img src="" alt=""></div>
+	<p class="error" id="warningOnCarriers" style="width:500px;">
+	{l s='The Prestashop carriers added through a module are not configurable with the eBay integration.' mod='ebay'}<br/><br/>
+	{l s='To overcome this issue, you can add a new carrier in your Prestashop back office and disable it from viewing in the Prestashop front office' mod='ebay'} <br/><br/>
+	{foreach from=$psCarrierModule item=carrier}
+		- <b>{$carrier.name}</b><br/>
+	{/foreach}
+	</p>
+	<div class="fancyboxeBayClose"  style="text-align:center; margin-top:10px;font-weight:bold;cursor:pointer;">{l s='Close' mod='eBay'}</div>
+</div>
+<script type="text/javascript" src="../js/jquery/jquery.fancybox-1.3.4.js"></script>
+<script>
+	{literal}
+	$(document).ready(function() {
+		if(!$.fancybox){
+			$(".fancyboxeBay").fancybox({
+				maxWidth	: '500px',
+				maxHeight	: '300px',
+				fitToView	: false,
+				autoSize	: false,
+				closeClick	: false,
+				openEffect	: 'none',
+				closeEffect	: 'none'
+			});	
+		}
+		else{
+			$(".fancyboxeBay").click(function(){
+				$("#warningOnCarriersContainer").fadeIn();
+			})
+			$(".fancyboxeBayClose").click(function(){
+				$(this).parent().fadeOut();
+			})
+		}
+		
+	});
+	{/literal}
+</script>
 
 <fieldset style="margin-top:10px;">
 	<legend>{l s='Shipping method for domestic shipping' mod='ebay'}</legend>
+	
 	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
+		
 		<select name="nationalZone" id="">
 			{foreach from=$prestashopZone item=zone}
 				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneNational} selected="selected"{/if}>{$zone.name}</option>
 			{/foreach}
 		</select>
+		{if $psCarrierModule|count > 0}
+			<a href="#warningOnCarriers" class="fancyboxeBay">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+			</a>
+			
+		{/if}
 	</p>
 	<table id="nationalCarrier" class="table">
 		<tr>
@@ -357,6 +402,12 @@
 				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneInternational} selected="selected"{/if}>{$zone.name}</option>
 			{/foreach}
 		</select>
+		{if $psCarrierModule|count > 0}
+			<a href="#warningOnCarriers" class="fancyboxeBay">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+			</a>
+			
+		{/if}
 	</p>
 	<div id="internationalCarrier">
 		<div class="internationalShipping"></div>
