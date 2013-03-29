@@ -184,6 +184,6 @@ $_MODULE['<{ebay}prestashop>shipping_e22c0b2d9fed838d208819010bbbc089'] = 'Méth
 $_MODULE['<{ebay}prestashop>shipping_c4fa21d84f1b360db82566a654839f5a'] = 'Zone PrestaShop utilisée pour calculer les frais de livraisons';
 $_MODULE['<{ebay}prestashop>shipping_9a983d430dd96573b02ee03a175c2726'] = 'Ajouter un nouveau service de livraison';
 $_MODULE['<{ebay}prestashop>shipping_324e87e314f7b4d49b1a378de8009fbe'] = 'Méthode de livraison pour les livraisons internationales';
-$_MODULE['<{ebay}prestashop>shipping_b2c0215fa3f2832ed5ff14ebafc0351f'] = 'Zone PrestaShop utilisée pour les livraisons nationales';
+$_MODULE['<{ebay}prestashop>shipping_b2c0215fa3f2832ed5ff14ebafc0351f'] = 'Zone PrestaShop utilisée pour les livraisons internationales';
 $_MODULE['<{ebay}prestashop>shipping_525960858f561032f837572972705ea2'] = 'Ajouter un nouveau transporteur pour les livraisons internationales';
 $_MODULE['<{ebay}prestashop>shipping_b83fba61cfc197683690e44383ecbdf4'] = 'Exclure des régions des zones livrables';
