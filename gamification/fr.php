@@ -14,9 +14,9 @@ $_MODULE['<{gamification}prestashop>admingamificationcontroller_38f7af7416ffcd15
 $_MODULE['<{gamification}prestashop>admingamificationcontroller_e7613fe56cdbeddfc9bb6276fd0f0d12'] = '4. Maître';
 $_MODULE['<{gamification}prestashop>admingamificationcontroller_8d03eaad7ff7babdd33c2c74fe479ed0'] = '5. Gourou';
 $_MODULE['<{gamification}prestashop>admingamificationcontroller_e4be4f3e3ae4ee9dda6b60815bf774c1'] = '6. Légende';
-$_MODULE['<{gamification}prestashop>filters_1aa4c641d6920ddb97a2562f8ec53853'] = 'Groupe :';
+$_MODULE['<{gamification}prestashop>filters_e659b52eba1f0299b2d8ca3483919e72'] = 'Type :';
 $_MODULE['<{gamification}prestashop>filters_b1c94ca2fbc3e78fc30069c8d0f01680'] = 'Tous';
-$_MODULE['<{gamification}prestashop>filters_24a23d787190f2c4812ff9ab11847a72'] = 'Statut :';
+$_MODULE['<{gamification}prestashop>filters_18325105de95083e4a1d10b78f29c2bc'] = 'Etat :';
 $_MODULE['<{gamification}prestashop>filters_5364259abab90e94890f2ed2481b9824'] = 'Validé';
 $_MODULE['<{gamification}prestashop>filters_dc450ba947e6adecbdbe68c25de03a1b'] = 'Non validé';
 $_MODULE['<{gamification}prestashop>filters_07ad815187b53dc2ceaf5ad6e0a12bb1'] = 'Niveau :';
