@@ -1272,7 +1272,8 @@ class Ebay extends Module {
           $eBay = new eBayRequest();
           $deliveryTimeOptions = $this->getDeliveryTimeOptions();
           $eBayCarrier = $this->getCarrier();
-          $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, Carrier::ALL_CARRIERS);
+          $psCarrier = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'));
+          $psCarrierModule = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, Carrier::CARRIERS_MODULE);
           $deliveryTime = Configuration::get('EBAY_DELIVERY_TIME');
           $existingNationalCarrier = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping WHERE international = 0");
           $existingInternationalCarrier = $this->getExistingInternationalCarrier();
@@ -1282,6 +1283,7 @@ class Ebay extends Module {
           $smarty->assign(array(
               'eBayCarrier'                   => $eBayCarrier,
               'psCarrier'                     => $psCarrier,
+              'psCarrierModule'               => $psCarrierModule,
               'existingNationalCarrier'       => $existingNationalCarrier,
               'existingInternationalCarrier'  => $existingInternationalCarrier,
               'deliveryTime'                  => $deliveryTime,
