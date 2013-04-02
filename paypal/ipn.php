@@ -47,7 +47,6 @@ if (Tools::getValue('payment_status') !== false)
 {	
 	$details = getIPNTransactionDetails();
 	$id_order = PayPalOrder::getIdOrderByTransactionId($details['id_transaction']);
-	$order = new Order($id_order);
 	PayPalOrder::updateOrder($id_order, $details);
 
 	$history = new OrderHistory();
