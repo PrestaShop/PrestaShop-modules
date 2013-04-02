@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.2';
+		$this->version = '1.7.3';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -90,7 +90,7 @@ class KlarnaPrestaShop extends PaymentModule
 		  if (!Db::getInstance()->Execute($s))
 		    return false;
 
-		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('adminOrder'))
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('adminOrder') || !$this->registerHook('paymentReturn') || !$this->registerHook('orderConfirmation'))
 			return false;
 
 		$this->registerHook('displayPayment');
@@ -1048,32 +1048,22 @@ class KlarnaPrestaShop extends PaymentModule
 				(int)$carrier->id,
 				(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}
 			);
+
 // Next we might want to add a shipment fee for the product
 			if ($order_id)
 			{
 				$order = new Order((int)$order_id);
 				$shippingPrice = $order->total_shipping_tax_incl;
-				if (!$order->total_shipping_tax_excl)
-					$rate = 0;
-				else
-					$rate = round((($order->total_shipping_tax_incl / $order->total_shipping_tax_excl) - 1.0) * 100);
 			}
 			else
-			{
 				$shippingPrice = $cart->getTotalShippingCost();
-				$shippingPriceTaxExcl = $cart->getTotalShippingCost(null, false);
-				if (!$shippingPriceTaxExcl)
-					$rate = 0;
-				else
-					$rate = round((($cart->getTotalShippingCost() / $cart->getTotalShippingCost(null, false)) - 1.0) * 100);
-			}
 
 			$klarna->addArticle(
 				1,
 				$this->klarnaEncode((int)$cart->id_carrier),
 				$this->klarnaEncode($carrier->name),
 				$shippingPrice,
-				$rate,
+				$taxrate,
 				0,
 				KlarnaFlags::INC_VAT | KlarnaFlags::IS_SHIPMENT
 			);
@@ -1275,11 +1265,44 @@ class KlarnaPrestaShop extends PaymentModule
 					null,
 					false,
 					$this->context->cart->secure_key);
-			Tools::redirectLink(__PS_BASE_URI__.'history.php');
+
+			$redirect = __PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&id_order='.(int)$this->currentOrder.'&key='.$this->context->cart->secure_key;
+			header('Location: '.$redirect);
+			exit;
 		}
 		catch (Exception $e)
 		{
-			return array('error' => true, 'message' => Tools::safeOutput(utf8_encode($e->getMessage())));
+			/*remove invoiceFee if existe*/
+			$this->context->cart->deleteProduct((int)Configuration::get('KLARNA_INV_FEE_ID_'.$this->countries[$country->iso_code]['name']));
+
+ 			return array('error' => true, 'message' => Tools::safeOutput(utf8_encode($e->getMessage())));
 		}
 	}
+
+	public function hookDisplayPaymentReturn($params)
+	{
+		if ($params['objOrder']->module != $this->name)
+			return false;
+		$cart = new Cart((int)$params['objOrder']->id_cart);
+		if (Validate::isLoadedObject($cart))
+		{
+			$address = new Address((int)$cart->id_address_invoice);
+			$country = new Country((int)$address->id_country);
+			$cart->deleteProduct((int)Configuration::get('KLARNA_INV_FEE_ID_'.$this->countries[$country->iso_code]['name']));
+			$cart->save();
+		}
+	}
+
+	public function hookDisplayOrderConfirmation($params)
+	{
+		if ($params['objOrder']->module != $this->name)
+			return false;
+		if ($params['objOrder'] && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid))
+		{
+			if (isset($params['objOrder']->reference))
+				$this->smarty->assign('klarna_order', array('reference' => $params['objOrder']->reference, 'valid' => $params['objOrder']->valid));
+			return $this->display(__FILE__, 'tpl/order-confirmation.tpl');
+		}
+	}
+
 }
