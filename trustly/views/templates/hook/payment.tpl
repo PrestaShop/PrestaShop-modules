@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,8 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7134 $
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +31,7 @@
 		</span>
 		<br />
 		<span style="float:left;text-align:justify">
-			{l s='Realize your payment through direct bank e-payment online without leaving this website. We will connect you with your online bank with maximum security. Trustly is ease to use and you don´t need to sign-up or register.' mod='trustly'}<br />
+			{l s='Achieve your payment through direct bank e-payment online without leaving this website. We will connect you with your online bank with maximum security. Trustly is ease to use and you don\'t need to sign-up or register.' mod='trustly'}<br />
 			<br />
 			{l s='Examples of banks available through Trustly: BBVA, La Caixa, Bankia, Sabadell, Banco Popular, Banco Pastor, Bankinter and ING Direct.' mod='trustly'}
 		</span>
