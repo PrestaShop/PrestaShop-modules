@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.3';
+		$this->version = '1.7.4';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -140,17 +140,23 @@ class KlarnaPrestaShop extends PaymentModule
 				$currency->add();
 			}
 		}
+		
 		Currency::refreshCurrencies();
+		
+		$version = str_replace('.', '', _PS_VERSION_);
+		$version = substr($version, 0, 2);
+		
 		foreach ($languages as $key => $val)
 		{
-			$pack = Tools::file_get_contents('http://www.prestashop.com/download/localization/'.$val['iso_code'].'.xml');
-			if ($pack)
+			$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$val['language_code'].'.xml');
+
+			if ($pack || $pack = @Tools::file_get_contents(dirname(__FILE__).'/../../localization/'.$val['language_code'].'.xml'))
 			{
 					$localizationPack = new LocalizationPack();
-					$localizationPack->loadLocalisationPack($pack, array('taxes'));
+					$localizationPack->loadLocalisationPack($pack, array('taxes', 'languages'));
 			}
 
-			if (!Language::getIdByIso($val['iso_code']))
+			if (!Language::getIdByIso($val['language_code']))
 			{
 				if (_PS_VERSION_ >= 1.5)
 				{
