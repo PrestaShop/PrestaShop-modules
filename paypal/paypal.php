@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.7';
+		$this->version = '3.4.8';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -346,7 +346,7 @@ class PayPal extends PaymentModule
 		
 		if (isset($this->context->cart) && $this->context->cart->id)
 			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
-		$this->context->smarty->assign('base_uri', __PS_BASE_URI__);
+		$this->context->smarty->assign('base_uri', Tools::getShopDomainSsl(true).__PS_BASE_URI__);
 
 		/* Added for PrestaBox */
 		if (method_exists($this->context->controller, 'addCSS'))

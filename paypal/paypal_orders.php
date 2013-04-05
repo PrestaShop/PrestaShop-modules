@@ -133,7 +133,6 @@ class PayPalOrder
 
 	public static function updateOrder($id_order, $transaction)
 	{
-		$order = new Order((int)$id_order);
 		$total_paid = (float)$transaction['total_paid'];
 			
 		if (!isset($transaction['payment_status']) || !$transaction['payment_status'])
