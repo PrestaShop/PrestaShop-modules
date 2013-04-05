@@ -236,6 +236,7 @@ class Gamification extends Module
 			$cond->hydrate((array)$condition, (int)$id_lang);
 			$cond->date_upd = date('Y-m-d H:i:s', time() - 86400);
 			$cond->date_add = date('Y-m-d H:i:s');
+			$condition->calculation_detail = trim($condition->calculation_detail);
 			$cond->add(false);
 			if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
 				$this->registerHook($condition->calculation_detail);
