@@ -302,7 +302,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 * value = the next step you want instead
 	 *	example : public static $skipAction = array();
 	 *	initial order upgrade:
-	 *		download, unzip, removeSamples, backupFiles, backupDb, upgradeFiles, upgradeDb, upgradeModules, upgradeComplete
+	 *		download, unzip, removeSamples, backupFiles, backupDb, upgradeFiles, upgradeDb, upgradeModules, cleanDatabase, upgradeComplete
 	 * initial order rollback: rollback, restoreFiles, restoreDb, rollbackComplete
 	 */
 	public static $skipAction = array();
@@ -4038,6 +4038,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$content .= '<a href="" id="upgradeFiles" class="button upgradestep" >upgradeFiles</a>';
 		$content .= '<a href="" id="upgradeDb" class="button upgradestep" >upgradeDb</a>';
 		$content .= '<a href="" id="upgradeModules" class="button upgradestep" >upgradeModules</a>';
+		$content .= '<a href="" id="cleanDatabase" class="button upgradestep" >cleanDb</a>';		
 		$content .= '<a href="" id="upgradeComplete" class="button upgradestep" >upgradeComplete</a>';
 		$content .= '</div>';
 
