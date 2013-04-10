@@ -26,6 +26,7 @@
 
 include_once(dirname(__FILE__).'/../../../config/config.inc.php');
 include_once(dirname(__FILE__).'/../../../init.php');
+include_once(dirname(__FILE__).'/../paypal.php');
 
 // Ajax query
 $quantity = Tools::getValue('get_qty');
@@ -39,7 +40,7 @@ if ($quantity && $quantity > 0)
 	
 	if ($product_quantity <= 0)
 	{
-		$paypal = new Paypal();
+		$paypal = new PayPal();
 		echo $paypal->l('This product is no longer in stock with those attributes but is available with others');
 	}
 	else

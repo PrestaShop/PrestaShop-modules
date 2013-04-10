@@ -20,7 +20,7 @@
 	
 	<br />
 	
-	{if $opc && $isLogged && !$isGuest}
+	{if !$is_guest}
 		<a href="{$link->getPageLink('index', true)}" data-role="button" data-theme="a" data-icon="back" data-ajax="false">{l s='Continue shopping'}</a>
 	{else}
 		<ul data-role="listview" data-inset="true" id="list_myaccount">
@@ -28,7 +28,7 @@
 				<a href="{$link->getPageLink('index', true)}" data-ajax="false">{l s='Continue shopping'}</a>
 			</li>
 			<li data-theme="b" data-icon="back">
-				<a href="{if $back}{$link->getPageLink('history.php', true, NULL, 'step=1&amp;back={$back}')}{else}{$link->getPageLink('order', true, NULL, 'step=1')}{/if}" data-ajax="false">{l s='Back to orders' mod='paypal'}</a>
+				<a href="{$link->getPageLink('history.php', true, NULL, 'step=1&amp;back={$back}')}" data-ajax="false">{l s='Back to orders' mod='paypal'}</a>
 			</li>
 		</ul>
 	{/if}

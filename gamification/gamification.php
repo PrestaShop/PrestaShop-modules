@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.0';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -51,6 +51,9 @@ class Gamification extends Module
 
 	public function install()
 	{
+		if (Db::getInstance()->getValue('SELECT id_module FROM '._DB_PREFIX_.'module WHERE name =\''.pSQL($this->name).'\''))
+			return true;
+
 		Tools::deleteDirectory($this->cache_data, false);
 		if (!$this->installDb() || !$this->installTab() ||
 			!Configuration::updateGlobalValue('GF_INSTALL_CALC', 0) ||
@@ -233,6 +236,7 @@ class Gamification extends Module
 			$cond->hydrate((array)$condition, (int)$id_lang);
 			$cond->date_upd = date('Y-m-d H:i:s', time() - 86400);
 			$cond->date_add = date('Y-m-d H:i:s');
+			$condition->calculation_detail = trim($condition->calculation_detail);
 			$cond->add(false);
 			if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
 				$this->registerHook($condition->calculation_detail);

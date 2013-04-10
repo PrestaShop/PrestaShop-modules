@@ -220,25 +220,36 @@ function validateOrder($customer, $cart, $ppec)
 {
 	$amount_match = $ppec->rightPaymentProcess();
 	$order_total = (float)$cart->getOrderTotal(true, Cart::BOTH);
-	
+
 	// Payment succeed
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token) && $amount_match)
 	{
 		if ((bool)Configuration::get('PAYPAL_CAPTURE'))
 		{
+			$payment_type = (int)Configuration::get('PS_OS_WS_PAYMENT');
 			$payment_status = 'Pending_capture';
 			$message = $ppec->l('Pending payment capture.').'<br />';
 		}
 		else
 		{
 			$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
-			$message = $ppec->l('Payment accepted.').'<br />';
+			
+			if (strcmp($payment_status, 'Completed') === 0)
+			{
+				$payment_type = (int)Configuration::get('PS_OS_PAYMENT');
+				$message = $ppec->l('Payment accepted.').'<br />';
+			}
+			elseif (strcmp($payment_status, 'Pending') === 0)
+			{
+				$payment_type = (int)Configuration::get('PS_OS_PAYPAL');
+				$message = $ppec->l('Pending payment confirmation.').'<br />';
+			}
 		}
-		$payment_type = (int)Configuration::get('PS_OS_PAYMENT');
 	}
 	// Payment error
 	else
 	{
+		$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
 		$payment_type = (int)Configuration::get('PS_OS_ERROR');
 
 		if ($amount_match)

@@ -73,7 +73,7 @@ class ThemeInstallator extends Module
 		@ini_set('memory_limit', '2G');
 
 		$this->name = 'themeinstallator';
-		$this->version = '2.2';
+		$this->version = '2.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, 1.4) >= 0)
@@ -107,6 +107,14 @@ class ThemeInstallator extends Module
 
 			$this->action_form = $this->current_index.'&configure='.$this->name.'&token='.Tools::htmlentitiesUTF8(Tools::getValue('token'));
 		}
+	}
+	
+	public function install()
+	{
+		if ($this->id)
+			return true;
+		else
+			return parent::install();
 	}
 
 	/* Check status of backward compatibility module*/

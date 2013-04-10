@@ -45,7 +45,7 @@ class Jirafe extends Module
 
         $this->name = 'jirafe';
         $this->tab = 'analytics_stats';
-        $this->version = '1.2.4';
+        $this->version = '1.2.6';
 
         //The constructor must be called after the name has been set, but before you try to use any functions like $this->l()
         parent::__construct();
@@ -67,12 +67,14 @@ class Jirafe extends Module
     
     public function checkConfig()
     {
+		if (!in_array(ini_get('safe_mode'), array('Off', 'off', '0')))
+			$this->_errors[] = $this->l('safe_mode should be turned off to use this module.');
 		if (!in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')))
-			$this->warnings[] = $this->l('allow_url_fopen be enabled on your server to use this module.');
+			$this->_errors[] = $this->l('allow_url_fopen should be enabled on your server to use this module.');
 		if (!is_callable('curl_exec'))
-			$this->warnings[] = $this->l('cURL extension must be enabled on your server to use this module.');
-         return (bool) (isset($this->warnings) && count($this->warnings)) ? false : true;
-    }  
+			$this->_errors[] = $this->l('cURL extension should be enabled on your server to use this module.');
+         return (bool) (isset($this->_errors) && count($this->_errors) > 0) ? false : true;
+    }
 
     public function getPrestashopClient()
     {
@@ -107,9 +109,9 @@ class Jirafe extends Module
 
     public function install()
     {
-        if ($this->checkConfig() === false)
+        if (isset($this->_errors) && (count($this->_errors) > 0))
         {
-			$this->displayError(implode(',<br />', $this->warnings).'.');
+	       	echo $this->displayError(implode('<br />', $this->_errors));
             return false;
         }
                

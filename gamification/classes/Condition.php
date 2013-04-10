@@ -198,7 +198,9 @@ class Condition extends ObjectModel
 	
 	protected function processInstall()
 	{		
-		$this->result = $this->makeCalculation($this->operator, (time() - strtotime(_PS_CREATION_DATE_)), ($this->value * 86400));
+		$install = strtotime(_PS_CREATION_DATE_.' 00:00:00');
+		$value = strtotime('+ '.(int)$this->value.' day', $install);
+		$this->result = $this->makeCalculation($this->operator, (time() - $install), $value - $install);
 		if ($this->result)
 			$this->validated = 1;
 
