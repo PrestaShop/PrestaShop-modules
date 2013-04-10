@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2013 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,8 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 7471 $
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -88,7 +87,7 @@ class Trustly extends PaymentModule
 		{
 			$html .= '
 			<div class="warn">
-				'.($allow_url_fopen ? '' : '<h3>'.$this->l('You are not allowed to open external URLs').'</h3>').'
+				'.($allow_url_fopen ? '' : '<h3>'.$this->l('You are not allowed to open external URLs. \'allow__url_fopen\' should be turned on.').'</h3>').'
 				'.($openssl ? '' : '<h3>'.$this->l('OpenSSL is not enabled').'</h3>').'
 				'.(($allow_url_fopen AND $openssl AND !$ping) ? '<h3>'.$this->l('Cannot access payment gateway:').' '.$this->json_rpc_target_host.':443 ('.$this->l('check your firewall or ask your hosting service to do it for you').')</h3>' : '').'
 				'.($online ? '' : '<h3>'.$this->l('Your shop is not online').'</h3>').'
@@ -169,14 +168,14 @@ class Trustly extends PaymentModule
 					<p style="font-weight:bold;">'.$this->l('Don\'t have a Trustly account?').'<br />'.$this->l('Continue with the following steps:').'</p>
 					<ol style="list-style:decimal;padding-left:0;margin-left:25px">
 						<li style="margin-bottom:8px">'.$this->l('Register for a Trustly account by pressing "Open a new account" and fill out the Signup form').'</li>
-						<li style="margin-bottom:8px">'.$this->l('Introduce the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Enter the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
 						<li style="margin-bottom:8px">'.$this->l('Press "Update settings"').'</li>
 					</ol>
 				</div>
 				<div  style="margin:2%;width:46%;float:left">
 					<p style="font-weight:bold;">'.$this->l('Already signed up for a Trustly account?').'<br />'.$this->l('Continue with the following steps:').'</p>
 					<ol style="list-style:decimal;padding-left:0;margin-left:25px;">
-						<li style="margin-bottom:8px">'.$this->l('Introduce the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
+						<li style="margin-bottom:8px">'.$this->l('Enter the Username and Password you have created in the Signup form into the corresponding fields below').'</li>
 						<li style="margin-bottom:8px">'.$this->l('Replace the existing Private key in the field below with the Private key you received from your sign up').'</li>
 						<li style="margin-bottom:8px">'.$this->l('Press "Update settings"').'</li>
 					</ol>

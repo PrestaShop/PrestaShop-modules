@@ -82,3 +82,6 @@
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "gsitemap/backward_compatibility"]
+	path = gsitemap/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
