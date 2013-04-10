@@ -86,8 +86,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_25f4996684554fd5dd5a487cd7d7
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2a2c187bdb804ba79fd4bf8972ba5073'] = 'Невозможно удалить обновленные файлы.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7575346d53af6b5bb70539f2cf9e87ea'] = 'Файлы из пакета обновлений были удалены.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_bd268461738946d6d9e4ad51508b2816'] = 'файлы из пакета обновлений были удалены.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_34ac411170ca683ead45472d07fa33b8'] = '
-ошибка при удалении %1$s ';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_34ac411170ca683ead45472d07fa33b8'] = 'ошибка при удалении %1$s ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7a7f0b250e761f8e251a0aa9c61c7fc2'] = '%s не удален';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ecb902a8f7110e7f93d750cfa6aa505f'] = 'осталось удалить %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9523b86c2578ee7962644a45b758d36e'] = 'Файлы восстановлены. Приступаем к восстановлению базы данных ...';
@@ -126,8 +125,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_412cb9a2978bf041be4ca6c6ded0
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0c0db54fe8212c1a7215005fef75d7dd'] = 'Ошибка при загрузке';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7775b77bfe927301d302c1c4e8c38d32'] = 'для автоматической загрузки необходимо включить параметр allow_url_fopen.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_93120c07d8c5cee44042627cd493e0e0'] = 'для автоматической загрузки необходимо включить параметр allow_url_fopen .  Также вы можете вручную загрузить файлы в %s';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3bb38e7d0bfd5a02f7c06cae446fee86'] = '
-действие %s пропущено';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3bb38e7d0bfd5a02f7c06cae446fee86'] = 'действие %s пропущено';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b4302e98d94591ee9afa09e769b2ee63'] = 'действие \"%1$s\" не найдено';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_760c4026bc5a0bd5378e6efc3f1370b4'] = 'Слишком долго!';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4f2e28904946a09d8c7f36dd3ee72457'] = 'Указанные значения не совпадают!';
@@ -147,8 +145,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a9d82945b8603f0c8807958d7db9
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b37eef07b764ea58eec9afe624e20a40'] = 'Ошибка при создании файла  /config/settings.inc.php';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3d9f514d46849760ef1b1412e314fd99'] = 'Ошибка';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_504053ab4c6d648edf11624f1bea4bb4'] = 'Эта база данных PrestaShop уже существует. Перепроверьте ваши аутентификационные данные для подключения к этой базе данных.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d7a99f61bb284d096ea4f221784af85a'] = '
-Возникла ошибка при изменении размера изображения.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d7a99f61bb284d096ea4f221784af85a'] = 'Возникла ошибка при изменении размера изображения.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_428c933bafbf262d693fbf1c22c03e5d'] = 'Подключение к базе данных доступно!';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_76bd190129b7aefb90fdf42f09ec3ec7'] = 'Сервер баз данных доступен, но база данных не найдена';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_045f4b5c3f990e5a26e2837495d68259'] = 'Сервер базы данных не найден. Пожалуйста, проверьте указанные логин, пароль и адрес сервера.';
