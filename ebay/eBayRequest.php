@@ -291,7 +291,7 @@ class eBayRequest
 		$requestXml .= '<GetUserProfileRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
 		$requestXml .= '  <UserID>'.$this->username.'</UserID>'."\n";
 		$requestXml .= '  <IncludeSelector>Details</IncludeSelector>'."\n";
-		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>'."\n";
+		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
 		$requestXml .= '  <Version>719</Version>'."\n";
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 
