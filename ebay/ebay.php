@@ -376,7 +376,7 @@ class Ebay extends Module {
                $dateToCheckFrom .= 'T' . (isset($dateToCheckFromArray[1]) ? $dateToCheckFromArray[1] : '');
           }
 
-          if (1 || Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')) . 'T' . date('H:i:s', strtotime('-30 minutes')) . '.000Z') {
+          if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d', strtotime('-30 minutes')) . 'T' . date('H:i:s', strtotime('-30 minutes')) . '.000Z') {
 
                $dateNew = date('Y-m-d') . 'T' . date('H:i:s') . '.000Z';
                $this->setConfiguration('EBAY_ORDER_LAST_UPDATE', $dateNew);
