@@ -36,7 +36,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -98,7 +98,7 @@ class Gsitemap extends Module
 
 		$this->context->smarty->assign(array(
 				'gsitemap_form' => './index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap',
-				'gsitemap_cron' => _PS_BASE_URL_._MODULE_DIR_.'gsitemap/gsitemap-cron.php',
+				'gsitemap_cron' => _PS_BASE_URL_._MODULE_DIR_.'gsitemap/gsitemap-cron.php?token='.substr(Tools::encrypt('gsitemap/cron'),0,10),
 				'gsitemap_feed_exists' => file_exists(dirname(__FILE__).'/../../index_sitemap.xml'),
 				'gsitemap_last_export' => Configuration::get('GSITEMAP_LAST_EXPORT'),
 				'gsitemap_frequency' => Configuration::get('GSITEMAP_FREQUENCY'),
@@ -146,13 +146,13 @@ class Gsitemap extends Module
 			}
 			else if ($index % 20 == 0 && $this->cron)
 			{
-				header('Refresh: 5; url=http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1));
+				header('Refresh: 5; url=http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue&token='.substr(Tools::encrypt('gsitemap/cron'),0,10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1));
 				die();
 			}
 			else
 			{
 				if ($this->cron)
-					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1));
+					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue&token='.substr(Tools::encrypt('gsitemap/cron'),0,10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1));
 				else
 				{
 					$admin_folder = str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
@@ -350,7 +350,7 @@ class Gsitemap extends Module
 		$this->_createIndexSitemap();
 		Configuration::updateValue('GSITEMAP_LAST_EXPORT', date('r'));
 
-		fopen('http://www.google.com/webmasters/sitemaps/ping?sitemap='.urlencode('http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.index_sitemap.xml), 'r');
+		fopen('http://www.google.com/webmasters/sitemaps/ping?sitemap='.urlencode('http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'index_sitemap.xml'), 'r');
 
 		if ($this->cron)
 			return true;
