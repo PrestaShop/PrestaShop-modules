@@ -426,7 +426,7 @@
 </fieldset>
 
 <div class="margin-form" id="buttonEbayShipping" style="margin-top:20px;">
-	<input class="button" name="submitSave" type="submit" id="save_ebay_shipping" value="Sauvegarder"/>
+	<input class="button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save' mod='ebay'}"/>
 </div>
 
 

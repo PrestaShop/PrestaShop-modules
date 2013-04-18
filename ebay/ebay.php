@@ -116,7 +116,7 @@ class Ebay extends Module {
                      $this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
                      return false;
                 }
-                $this->createShopUrl = 'http://cgi3.ebay.' . $this->country->iso_code . '/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
+                $this->createShopUrl = 'http://cgi3.ebay.' . $this->eBayCountry->getSiteExtension() . '/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
                 $this->id_lang = Language::getIdByIso($this->country->iso_code);
 
                 //Fix for UK 
@@ -715,7 +715,7 @@ class Ebay extends Module {
                $this->_html .= '<br />' . (isset($alert['SellerBusinessType']) ? '<img src="../modules/ebay/img/warn.png" />' : '<img src="../modules/ebay/img/valid.png" />') . ' 4) ' . $this->l('Please register an eBay business seller account to configure the application');
           }
 
-          $this->_html .= '</div><div style="float: right; width: 45%">' . $prestashopContent . '<br>' . $this->l('Connection to eBay.') . strtolower($this->country->iso_code) . '</div>';
+          $this->_html .= '</div><div style="float: right; width: 45%">' . $prestashopContent . '<br>' . $this->l('Connection to eBay.') . $this->eBayCountry->getSiteExtension() . '</div>';
 
           $this->_html .= '</fieldset><div class="clear">&nbsp;</div>';
 
@@ -955,9 +955,9 @@ class Ebay extends Module {
           '2000' => $this->l('Manufacturer refurbished'), 
           '2500' => $this->l('Seller refurbished'),
           '3000' => $this->l('Used'),
-          '4000' => $this->l('Very good'),
-          '5000' => $this->l('Good'), 
-          '6000' => $this->l('Acceptable'), 
+          //'4000' => $this->l('Very good'),
+          //'5000' => $this->l('Good'), 
+          //'6000' => $this->l('Acceptable'), 
           '7000' => $this->l('For parts or not working')
         );
 

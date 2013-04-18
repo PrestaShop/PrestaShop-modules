@@ -16,7 +16,7 @@
      <p>
           <b>
                {l s='You can use the button below to associate automatically the categories which have no association for the moment with an eBay suggested category.' mod='ebay'}
-          </b>
+          </b><br/>
           <input class="button" name="submitSave" type="submit" value="{l s='Suggest Categories' mod='ebay'}" />
      </p><br />
 </form>
@@ -51,9 +51,9 @@
 <p><b>{l s='Warning: Only default product categories are used for the configuration' mod='ebay'}</b></p><br />
 
 <p align="left">
-     * {l s="Some categories benefit from eBay's multi-version from which allows to publish one product with multiple versions." mod='ebay'}<br />
+     * {l s='Some categories benefit from eBay\'s multi-variation feature which allows publishing one product with multiple versions.' mod='ebay'}<br />
      {l s='Warning: For categories that do not have this functionality, one listing will be added for each version of the product' mod='ebay'}<br />
-     <a href="http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings" target="_blank">{l s='Click here for more informations on multi-variation listings' mod='ebay'}</a>
+     <a href="{l s='http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings' mod='ebay'}" target="_blank">{l s='Click here for more informations on multi-variation listings' mod='ebay'}</a>
 </p><br /><br />
 {literal}
      <script type="text/javascript">
