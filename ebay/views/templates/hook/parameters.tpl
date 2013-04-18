@@ -11,10 +11,10 @@
 				<input type="text" size="20" name="ebay_shop" value="{$ebayShopValue}" /> 
 				<p>
                          {if $ebayShop!== false}
-                              <a href="http://stores.ebay.fr/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>'
+                              <a href="http://stores.ebay.fr/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>
                          {else} 
                               <a href="{$createShopUrl}" style="color:#7F7F7F;">
-                                   {l s='Open your shop' mod='ebay'}'
+                                   {l s='Open your shop' mod='ebay'}
                               </a>
                          {/if}
                     </p>
@@ -34,6 +34,7 @@
 		
 		<fieldset style="margin-top:10px;">
 			<legend>{l s='Item Conditions' mod='ebay'}</legend>
+			<p>{l s='Please align your item condition settings on PrestaShop and eBay' mod='ebay'}</p>
 			<table class="table">
 				<tr>
 					<th>{l s='PrestaShop item condition' mod='ebay'}</th>
@@ -71,7 +72,7 @@
 				</tr>
 			</table>
 
-			<p>{l s='Learn more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}</p>
+			<p><a href="{l s='http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}">{l s='Learn more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}</a></p>
 		</fieldset>
 
 
