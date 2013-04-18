@@ -3840,26 +3840,26 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 		// root : getRootWritable()
 
-		$this->_html .= '<th>'.$this->l('Your store root directory is writeable (appropriate CHMOD permissions)').'</th>
+		$this->_html .= '<th>'.$this->l('Your store root directory must be writeable (appropriate CHMOD permissions)').'</th>
 			<td>'.($current_ps_config['root_writable'] ? $pic_ok : $pic_nok.' '.$this->root_writable_report).'</td></tr>';
 
 		//check safe_mod
-		$this->_html .= '<th>'.$this->l('The PHP "Safe mode" option is turned off').'</th>
+		$this->_html .= '<th>'.$this->l('The PHP "Safe mode" option must be turned off').'</th>
 			<td>'.(!ini_get('safe_mode') ? $pic_ok : $pic_warn).'</td></tr>';
 
-		$this->_html .= '<th>'.$this->l('The PHP "allow_url_fopen" option is turned on or CURL is installed').'</th>
+		$this->_html .= '<th>'.$this->l('The PHP "allow_url_fopen" option must be turned on or CURL must be installed').'</th>
 			<td>'.((ConfigurationTest::test_fopen() || ConfigurationTest::test_curl()) ? $pic_ok : $pic_nok).'</td></tr>';
 
 		// shop enabled
-		$this->_html .= '<th>'.$this->l('You put your store under maintenance').' '.(!$current_ps_config['shop_deactivated'] ? '<br><form method="post" action="'.$currentIndex.'&token='.$this->token.'"><input type="submit" class="button" name="putUnderMaintenance" value="'.$this->l('Click here to put your shop under maintenance').'"></form>' : '').'</th>
+		$this->_html .= '<th>'.$this->l('You must put your store under maintenance').' '.(!$current_ps_config['shop_deactivated'] ? '<br><form method="post" action="'.$currentIndex.'&token='.$this->token.'"><input type="submit" class="button" name="putUnderMaintenance" value="'.$this->l('Click here to put your shop under maintenance').'"></form>' : '').'</th>
 			<td>'.($current_ps_config['shop_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
 
-		$this->_html .= '<th>'.$this->l('You de-activated or are not using the Caching features of PrestaShop').'</th>
+		$this->_html .= '<th>'.$this->l('You must disable the Caching features of PrestaShop').'</th>
 			<td>'.($current_ps_config['cache_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
 
 		// for informaiton, display time limit
 		$max_exec_time = ini_get('max_execution_time');
-		$this->_html .= '<th>'.sprintf($this->l('The PHP time limit is high or disabled (Current value: %s)'), ($max_exec_time == 0 ? $this->l('unlimited') : $max_exec_time.' '.$this->l('seconds'))).'</th>
+		$this->_html .= '<th>'.sprintf($this->l('The PHP time limit must be either high or disabled (Current value: %s)'), ($max_exec_time == 0 ? $this->l('unlimited') : $max_exec_time.' '.$this->l('seconds'))).'</th>
 			<td>'.($max_exec_time == 0 ? $pic_ok : $pic_warn).'</td></tr>
 				</table>
 				<p>'.$this->l('Please also make sure you proceeded to a full manual backup of your files and database.').'</p>
