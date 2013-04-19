@@ -346,7 +346,8 @@ class PayPal extends PaymentModule
 		
 		if (isset($this->context->cart) && $this->context->cart->id)
 			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
-		$this->context->smarty->assign('base_uri', Tools::getShopDomain(true).__PS_BASE_URI__);
+		if (!isset($this->context->smarty->tpl_vars['base_uri']->value))
+			$this->context->smarty->assign('base_uri', Tools::getShopDomain(true).__PS_BASE_URI__);
 
 		/* Added for PrestaBox */
 		if (method_exists($this->context->controller, 'addCSS'))
