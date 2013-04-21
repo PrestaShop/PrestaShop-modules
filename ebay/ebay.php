@@ -2658,7 +2658,7 @@ class Ebay extends Module {
      private function _displayHelp() {
           $helpFile = dirname(__FILE__) . '/help/help-' . strtolower($this->country->iso_code) . '.html';
           if (!file_exists($helpFile))
-               $helpFile = dirname(__FILE__) . '/help/help-fr.html';
+               $helpFile = dirname(__FILE__) . '/help/help-gb.html';
 
           return file_get_contents($helpFile);
      }
