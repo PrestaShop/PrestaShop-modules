@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.8';
+		$this->version = '3.4.9';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -228,7 +228,7 @@ class PayPal extends PaymentModule
 			
 			if (($order_process_type == 1) && ((int)$payment_method == HSS) && !$this->useMobile())
 				$this->context->smarty->assign('paypal_order_opc', true);
-			elseif (($order_process_type == 1) && (((bool)Tools::getValue('isPaymentStep') == true) || isset($this->context->cookie->express_checkout)))
+			elseif (($order_process_type == 1) && (((bool)Tools::getValue('isPaymentStep') == true)))
 			{
 				$shop_url = PayPal::getShopDomainSsl(true, true);
 				if (_PS_VERSION_ < '1.5')
@@ -346,8 +346,6 @@ class PayPal extends PaymentModule
 		
 		if (isset($this->context->cart) && $this->context->cart->id)
 			$this->context->smarty->assign('id_cart', (int)$this->context->cart->id);
-		if (!isset($this->context->smarty->tpl_vars['base_uri']->value))
-			$this->context->smarty->assign('base_uri', Tools::getShopDomain(true).__PS_BASE_URI__);
 
 		/* Added for PrestaBox */
 		if (method_exists($this->context->controller, 'addCSS'))
@@ -463,7 +461,6 @@ class PayPal extends PaymentModule
 				'PayPal_express_checkout' => ECS,
 				'PayPal_payment_method' => $method,
 				'PayPal_payment_type' => 'payment_cart',
-				'PayPal_current_shop_url' => $shop_url.$_SERVER['REQUEST_URI'],
 				'PayPal_tracking_code' => $this->getTrackingCode()));
 
 			return $this->fetchTemplate('express_checkout_payment.tpl');
@@ -476,15 +473,13 @@ class PayPal extends PaymentModule
 	{
 		// No active
 		if (!$this->active || (((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
-			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) ||
-			isset($this->context->cookie->express_checkout))
+			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()))
 			return null;
 		
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
 		$this->context->smarty->assign(array(
 			'PayPal_payment_type' => 'cart',
 			'PayPal_lang_code' => (isset($values[$this->context->language->iso_code]) ? $values[$this->context->language->iso_code] : 'en_US'),
-			'PayPal_current_shop_url' => PayPal::getShopDomainSsl(true, true).$_SERVER['REQUEST_URI'],
 			'PayPal_tracking_code' => $this->getTrackingCode(),
 			'include_form' => true,
 			'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
@@ -633,7 +628,7 @@ class PayPal extends PaymentModule
 
 	public function renderExpressCheckoutButton($type)
 	{
-		if ((!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') && !$this->useMobile()) || isset($this->context->cookie->express_checkout))
+		if ((!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') && !$this->useMobile()))
 			return null;
 				
 		if (!in_array(ECS, $this->getPaymentMethods()) || (((int)Configuration::get('PAYPAL_BUSINESS') == 1) &&
@@ -649,7 +644,6 @@ class PayPal extends PaymentModule
 			'use_mobile' => (bool) $this->useMobile(),
 			'PayPal_payment_type' => $type,
 			'PayPal_lang_code' => (isset($iso_lang[$this->context->language->iso_code])) ? $iso_lang[$this->context->language->iso_code] : 'en_US',
-			'PayPal_current_shop_url' => PayPal::getShopDomainSsl(true, true).$_SERVER['REQUEST_URI'],
 			'PayPal_tracking_code' => $this->getTrackingCode())
 		);
 		
@@ -664,7 +658,6 @@ class PayPal extends PaymentModule
 
 		$this->context->smarty->assign(array(
 			'PayPal_payment_type' => $type,
-			'PayPal_current_shop_url' => PayPal::getShopDomainSsl(true, true).$_SERVER['REQUEST_URI'],
 			'PayPal_tracking_code' => $this->getTrackingCode())
 		);
 
