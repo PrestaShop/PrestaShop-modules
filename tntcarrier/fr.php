@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_58ec6a48b4720ef0aa2adfded1ccf8a3'] = 'TNT Express';
-$_MODULE['<{tntcarrier}prestashop>tntcarrier_9b7637001f5d2bcb42efb4ab6b3e93da'] = 'Offre aux clients, différentes methodes de livraison';
+$_MODULE['<{tntcarrier}prestashop>tntcarrier_9b7637001f5d2bcb42efb4ab6b3e93da'] = 'La livraison express 24h partout en France avant 13h';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_416900392875e9effb318da8648fbdcb'] = 'doivent etre configurés pour utiliser le module correctement';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_e2236d4f47edb104d62eaa4168b298f0'] = 'doit être configuré pour utiliser le module correctement.';
 $_MODULE['<{tntcarrier}prestashop>tntcarrier_632cae5cf3af08786414932a8e6f96a0'] = 'Identifiant TNT';
