@@ -4,7 +4,7 @@ global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{fianetfraud}prestashop>admincertissim_c70b641f029c8bd0bbe5f124f17b79cf'] = 'Evaluation Certissim';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_ab5027ece6c724ae52cd5d26c860367b'] = 'Fia-Net - Certissim';
-$_MODULE['<{fianetfraud}prestashop>fianetfraud_91100c8826e6f2eb7c1292616f6573f5'] = 'Protégez votre boutique contre la fraude.';
+$_MODULE['<{fianetfraud}prestashop>fianetfraud_91100c8826e6f2eb7c1292616f6573f5'] = 'Sécurisez vos ventes et maîtrisez vos impayés !';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_60215cf79519116365bb100d179aab3f'] = 'Afin de fonctionner correctement sur Prestashop 1.4, le module Certissim de Fia-Net nécessite le module Backward Compatibility dans sa version v0.4 au minimum.';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_e991b71085336e1b95dfbde4f87604b6'] = 'Vous pouvez téléchargher ce module gratuitement à l\'adresse :  http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.htmlhttp://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html';
 $_MODULE['<{fianetfraud}prestashop>fianetfraud_8afe1086333fa5c21a9f3e0aadc3a888'] = 'Vous devez indiquer un identifiant';
