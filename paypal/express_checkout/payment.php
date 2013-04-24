@@ -232,7 +232,10 @@ function validateOrder($customer, $cart, $ppec)
 		}
 		else
 		{
-			$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
+			if (isset($ppec->result['PAYMENTINFO_0_PAYMENTSTATUS']))
+				$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
+			else
+				$payment_status = 'Error';
 			
 			if (strcmp($payment_status, 'Completed') === 0)
 			{
@@ -329,7 +332,7 @@ if (($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') ||
 	}
 }
 
-$display = (_PS_VERSION_ < '1.5') ? new BWDisplay() : $display = new FrontController();
+$display = (_PS_VERSION_ < '1.5') ? new BWDisplay() : new FrontController();
 $payment_confirmation = Tools::getValue('get_confirmation');
 
 // Display payment confirmation

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>yotpo</name>
+	<displayName><![CDATA[Yotpo - Social Reviews and Testimonials]]></displayName>
+	<version><![CDATA[1.2.4]]></version>
+	<description><![CDATA[The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.]]></description>
+	<author><![CDATA[Yotpo]]></author>
+	<tab><![CDATA[advertising_marketing]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
+
