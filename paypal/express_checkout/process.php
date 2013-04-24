@@ -156,11 +156,12 @@ class PaypalExpressCheckout extends Paypal
 	
 	public function setCancelUrl(&$fields)
 	{
-		$parsed_data = parse_url(Tools::getValue('current_shop_url'));
+		$url = urldecode(Tools::getValue('current_shop_url'));
+		$parsed_data = parse_url($url);
 		
 		$parsed_data['scheme'] .= '://';
 		$parsed_data['path'] .= '?';
-		$parsed_data['query'] = '&paypal_ec_canceled=1';
+		$parsed_data['query'] = isset($parsed_data['query']) ? $parsed_data['query'].'&paypal_ec_canceled=1':'&paypal_ec_canceled=1';
 
 		$fields['CANCELURL'] = implode($parsed_data);
 	}
