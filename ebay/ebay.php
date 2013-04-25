@@ -85,7 +85,6 @@ class Ebay extends Module
 				$this->warning = $this->l('You must enable cURL extension on your server if you want to use this module.');
 			else if (!ini_get('allow_url_fopen'))
 				$this->warning = $this->l('You must enable allow_url_fopen option on your server if you want to use this module.');
-			return false;
 		}
 
 
