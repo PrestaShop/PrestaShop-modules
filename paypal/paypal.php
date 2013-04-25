@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.9';
+		$this->version = '3.5.0';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -228,7 +228,7 @@ class PayPal extends PaymentModule
 			
 			if (($order_process_type == 1) && ((int)$payment_method == HSS) && !$this->useMobile())
 				$this->context->smarty->assign('paypal_order_opc', true);
-			elseif (($order_process_type == 1) && (((bool)Tools::getValue('isPaymentStep') == true)))
+			elseif (($order_process_type == 1) && ((bool)Tools::getValue('isPaymentStep') == true))
 			{
 				$shop_url = PayPal::getShopDomainSsl(true, true);
 				if (_PS_VERSION_ < '1.5')
@@ -388,24 +388,9 @@ class PayPal extends PaymentModule
 			$method = ECS;
 		else
 			$method = (int)Configuration::get('PAYPAL_PAYMENT_METHOD');
-			
-		$shop_url = PayPal::getShopDomainSsl(true, true);
+		
 		if (isset($this->context->cookie->express_checkout))
-		{
-			// Check if user went through the payment preparation detail and completed it
-			$detail = unserialize($this->context->cookie->express_checkout);
-
-			if (!empty($detail['payer_id']) && !empty($detail['token']))
-			{
-				$values = array('get_confirmation' => true);
-				$link = $shop_url._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
-
-				if (_PS_VERSION_ < '1.5')
-					Tools::redirectLink($link.'?'.http_build_query($values, '', '&'));
-				else
-					Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'confirm', $values));
-			}
-		}
+			$this->redirectToConfirmation();
 
 		$this->context->smarty->assign(array(
 			'logos' => $this->paypal_logos->getLogos(),
@@ -430,6 +415,8 @@ class PayPal extends PaymentModule
 				$action_url = 'https://securepayments.sandbox.paypal.com/acquiringweb';
 			else
 				$action_url = 'https://securepayments.paypal.com/acquiringweb';
+
+			$shop_url = PayPal::getShopDomainSsl(true, true);
 
 			$this->context->smarty->assign(array(
 				'action_url' => $action_url,
@@ -461,6 +448,7 @@ class PayPal extends PaymentModule
 				'PayPal_express_checkout' => ECS,
 				'PayPal_payment_method' => $method,
 				'PayPal_payment_type' => 'payment_cart',
+				'PayPal_current_page' => $this->getCurrentUrl(),
 				'PayPal_tracking_code' => $this->getTrackingCode()));
 
 			return $this->fetchTemplate('express_checkout_payment.tpl');
@@ -479,6 +467,7 @@ class PayPal extends PaymentModule
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
 		$this->context->smarty->assign(array(
 			'PayPal_payment_type' => 'cart',
+			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($values[$this->context->language->iso_code]) ? $values[$this->context->language->iso_code] : 'en_US'),
 			'PayPal_tracking_code' => $this->getTrackingCode(),
 			'include_form' => true,
@@ -643,6 +632,7 @@ class PayPal extends PaymentModule
 		$this->context->smarty->assign(array(
 			'use_mobile' => (bool) $this->useMobile(),
 			'PayPal_payment_type' => $type,
+			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($iso_lang[$this->context->language->iso_code])) ? $iso_lang[$this->context->language->iso_code] : 'en_US',
 			'PayPal_tracking_code' => $this->getTrackingCode())
 		);
@@ -1247,5 +1237,30 @@ class PayPal extends PaymentModule
 		}
 
 		return (float)Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency);
+	}
+	
+	public function redirectToConfirmation()
+	{
+		$shop_url = PayPal::getShopDomainSsl(true, true);
+		
+		// Check if user went through the payment preparation detail and completed it
+		$detail = unserialize($this->context->cookie->express_checkout);
+
+		if (!empty($detail['payer_id']) && !empty($detail['token']))
+		{
+			$values = array('get_confirmation' => true);
+			$link = $shop_url._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
+
+			if (_PS_VERSION_ < '1.5')
+				Tools::redirectLink($link.'?'.http_build_query($values, '', '&'));
+			else
+				Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'confirm', $values));
+		}
+	}
+	
+	protected function getCurrentUrl()
+	{
+		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
+		return $protocol_link.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'];
 	}
 }
