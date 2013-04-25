@@ -126,30 +126,20 @@ class PayPalLogos
 		// 604800 => One week timestamp
 		if (!file_exists(_PS_MODULE_DIR_.$destination) || ((time() - filemtime(_PS_MODULE_DIR_.$destination)) > 604800) || $force)
 		{
-			if ($handle = @fopen(_PS_MODULE_DIR_.$destination, 'w+'))
+			$picture = Tools::file_get_contents($source);
+			if ((bool)$picture !== false)
 			{
-				$url_fopen = ini_get('allow_url_fopen');
-				if ($https_wrapper && !empty($url_fopen))
-					$picture = @file_get_contents($source);
-				elseif(is_callable('curl_init'))
-				{
-					$ch = @curl_init();
-					@curl_setopt($ch, CURLOPT_URL, $source);
-					@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					$picture = @curl_exec($ch);
-					@curl_close($ch);
-				}
-				if(isset($picture))
+				if ($handle = @fopen(_PS_MODULE_DIR_.$destination, 'w+'))
 				{
 					$size = fwrite($handle, $picture);
 					if ($size > 0 || (file_exists(_MODULE_DIR_.$destination) && (@filesize(_MODULE_DIR_.$destination) > 0)))
 						return _MODULE_DIR_.$destination;
-					elseif (strstr($source, 'https'))
-						return $this->updatePictures(str_replace('https', 'http', $source), $destination);
 				}
-				else
-					return false;
 			}
+			elseif (strstr($source, 'https'))
+				return $this->updatePictures(str_replace('https', 'http', $source), $destination);
+			else
+				return false;
 		}
 
 		return _MODULE_DIR_.$destination;

@@ -40,7 +40,6 @@
 </p>
 
 <form id="paypal_payment_form" action="{$base_dir_ssl}modules/paypal/express_checkout/payment.php" data-ajax="false" title="{l s='Pay with PayPal' mod='paypal'}" method="post">
-	{assign var=paypal_base_uri value=$base_uri|regex_replace:"#(.*)(\/index\.php|\/)$#":"$1"}
 	<input type="hidden" name="express_checkout" value="{$PayPal_payment_type}"/>
-	<input type="hidden" name="current_shop_url" value="{$paypal_base_uri}{$smarty.server.REQUEST_URI|urlencode}" />
+	<input type="hidden" name="current_shop_url" value="{$PayPal_current_page}" />
 </form>

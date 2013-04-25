@@ -206,13 +206,12 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 				$ppec->logs[] = $ppec->l('Cannot update existing cart');
 			else
 			{
-				$payment_cart = (bool) ($ppec->type != 'payment_cart');
+				$payment_cart = (bool)($ppec->type != 'payment_cart');
 				$ppec->redirectToCheckout($customer, $payment_cart);
 			}
 		}
 	}
 }
-
 /**
  * Check payment return
  */
@@ -269,7 +268,7 @@ function validateOrder($customer, $cart, $ppec)
 }
 
 // If Previous steps succeed, ready (means 'ready to pay') will be set to true
-if (($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || $ppec->type == 'payment_cart')))
+if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || $ppec->type == 'payment_cart'))
 {
 	// Check modification on the product cart / quantity
 	if ($ppec->isProductsListStillRight())
