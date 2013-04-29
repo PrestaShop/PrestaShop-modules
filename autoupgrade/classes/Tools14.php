@@ -1264,7 +1264,7 @@ class Tools14
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 			$opts = stream_context_get_options($stream_context);
-			if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
+			if (isset($opts['http']['method']) && self::strtolower($opts['http']['method']) == 'post')
 			{
 				curl_setopt($curl, CURLOPT_POST, true);
 				if (isset($opts['http']['content']))
@@ -1283,7 +1283,7 @@ class Tools14
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
+		return @simplexml_load_string(self::file_get_contents($url), $class_name);
 	}
 
 	public static function minifyHTML($html_content)
