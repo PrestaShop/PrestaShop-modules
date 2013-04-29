@@ -95,6 +95,9 @@ class Shipwire extends Module
 
 		$this->displayName = $this->l('Shipwire');
 		$this->description = $this->l('Enterprise logistics for everyone.');
+		
+		if (!is_callable('curl_exec'))
+			$this->warning = $this->l('cURL extension should be enabled on your server to use this module.');
 
 		if (Configuration::get('PS_CIPHER_ALGORITHM'))
 			$this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
