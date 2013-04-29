@@ -1796,12 +1796,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 				INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
 				WHERE m.`name` LIKE \'backwardcompatibility\'');
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'backwardcompatibility\'');
-				$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
 
 				if (file_exists($this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR.'dibs.php'))
 					$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
 			}
 
+			$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
 			$this->next = 'upgradeModules';
 			$this->next_desc = sprintf($this->l('%s modules left to upgrade'), $modules_left);
 			$this->stepDone = false;
