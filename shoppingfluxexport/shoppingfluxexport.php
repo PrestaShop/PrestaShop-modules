@@ -1029,7 +1029,15 @@ class ShoppingFluxExport extends Module
 			'total_shipping_tax_excl' => floatval((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
 		);
                 
+                
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $updateOrderInvoice, 'UPDATE', '`id_order` = '.(int)$id_order);
+                
+                $updateOrderTracking = array(
+			'shipping_cost_tax_incl' => floatval($order->TotalShipping),
+			'shipping_cost_tax_excl' => floatval((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
+		);
+                
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_carrier', $updateOrderTracking, 'UPDATE', '`id_order` = '.(int)$id_order);
                 
 		$updatePayment = array(
 			'amount' => floatval($order->TotalAmount),
