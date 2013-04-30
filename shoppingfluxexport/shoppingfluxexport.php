@@ -34,7 +34,7 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '2.0.4';
+	 	$this->version = '2.0.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 
@@ -621,10 +621,13 @@ class ShoppingFluxExport extends Module
 
 	public function hookbackOfficeTop()
 	{
-		if (strtolower(Tools::getValue('controller')) == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
+            if (strtolower(Tools::getValue('controller')) == 'adminorders' && Configuration::get('SHOPPING_FLUX_ORDERS') != '' && in_array('curl', get_loaded_extensions()))
 		{
 		
 			$ordersXML = $this->_callWebService('GetOrders');
+                        
+                        if (sizeof($ordersXML->Response->Orders) == 0)
+                            return;
 
 			foreach ($ordersXML->Response->Orders->Order as $order)
 			{
@@ -737,6 +740,7 @@ class ShoppingFluxExport extends Module
 			$this->_getOrderStates(Configuration::get('PS_LANG_DEFAULT')) == $params['newOrderStatus']->name)
 		{
 			$order = new Order((int)$params['id_order']);
+                        $shipping = $order->getShipping();
 
 			if (in_array($order->payment, $this->_getMarketplaces()))
 			{
@@ -749,6 +753,8 @@ class ShoppingFluxExport extends Module
 				$xml .= '<IdOrder>'.$id_order_marketplace[1].'</IdOrder>';
 				$xml .= '<Marketplace>'.$order->payment.'</Marketplace>';
 				$xml .= '<Status>Shipped</Status>';
+                                $xml .= '<TrackingNumber>'.$shipping[0]['tracking_number'].'</TrackingNumber>';
+				$xml .= '<CarrierName>'.$shipping[0]['state_name'].'</CarrierName>';
 				$xml .= '</Order>';
 				$xml .= '</UpdateOrders>';
 
@@ -983,10 +989,10 @@ class ShoppingFluxExport extends Module
 				'product_price' => floatval((float)$product->Price / (1 + ($tax_rate / 100))),
 				'reduction_percent' => 0,
 				'reduction_amount' => 0,
-				'total_price_tax_incl' => floatval($product->Price),
-				'total_price_tax_excl' => floatval((float)$product->Price / (1 + ($tax_rate / 100))),
-				'unit_price_tax_incl' => floatval($product->Price/$product->Quantity),
-				'unit_price_tax_excl' => floatval((float)$product->Price / ((1 + ($tax_rate / 100))* $product->Quantity)),
+				'total_price_tax_incl' => floatval((float)$product->Price*$product->Quantity),
+				'total_price_tax_excl' => floatval(((float)$product->Price / (1 + ($tax_rate / 100)))*$product->Quantity),
+				'unit_price_tax_incl' => floatval($product->Price),
+				'unit_price_tax_excl' => floatval((float)$product->Price / (1 + ($tax_rate / 100))),
 			);
 
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $updateOrderDetail, 'UPDATE', '`id_order` = '.(int)$id_order.' AND `product_id` = '.(int)$skus[0].' AND `product_attribute_id` = '.(int)$skus[1]);
@@ -1041,6 +1047,8 @@ class ShoppingFluxExport extends Module
 
 		//we need to flush the cart because of cache problems
 		$cart->getPackageList(true);
+                $cart->getDeliveryOptionList(null, true);
+		$cart->getDeliveryOption(null, false, false);
                 
 		$payment->validateOrder(intval($cart->id), 2, floatval($cart->getOrderTotal()), $marketplace, NULL, array(), $cart->id_currency, false, $cart->secure_key);
 		return $payment;
