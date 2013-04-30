@@ -2047,7 +2047,7 @@ FileETag INode MTime Size
 		}
 		else
 		{
-			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
+			require_once(dirname(__FILE__).'/pclzip.lib.php');
 			$zip = new PclZip($fromFile);
 			return ($zip->privCheckFormat() === true);
 		}
@@ -2070,7 +2070,7 @@ FileETag INode MTime Size
 		}
 		else
 		{
-			require_once(dirname(__FILE__).'/../tools/pclzip/pclzip.lib.php');
+			require_once(dirname(__FILE__).'/pclzip.lib.php');
 			$zip = new PclZip($fromFile);
 			$list = $zip->extract(PCLZIP_OPT_PATH, $toDir);
 			foreach ($list as $extractedFile)

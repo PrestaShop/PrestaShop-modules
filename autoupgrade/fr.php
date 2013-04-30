@@ -2,7 +2,6 @@
 
 global $_MODULE;
 $_MODULE = array();
-
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_525fb8e111db9b4b3bb676f83d214801'] = 'Sauvegarder ma base de données et mes fichiers';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5089075937b6a81d0f53084bd83ee9d4'] = 'Faire une sauvegarde automatique de la base de données et des fichiers afin de pouvoir restaurer votre magasin si besoin est (expérimental, une sauvegarde manuelle de vos données est toujours nécessaires).';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_eb827c258fdd50abbaf7227155b5ed6e'] = 'Sauvegarder mes images.';
@@ -10,7 +9,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d99a0af55371c1f5cc5d04c653df
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5243e62512552a2cd6369e446bbf10f4'] = 'Puissance du serveur';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a94e6f7e27ad55c963170658ee6a9e28'] = 'A moins que vous n\'utilisiez un serveur dédié, choisissez \"Basse\".';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3a0b384265cba47da7e7e4408913711e'] = 'Une valeur élevée peut faire échouer la mise à jour si votre serveur n\'est pas assez rapide pour traiter les différentes tâches de la mise à jour en un temps suffisamment court.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_73ae0e1bfd470f9e26dac64d270cda9d'] = 'Basse (recommendé)';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_73ae0e1bfd470f9e26dac64d270cda9d'] = 'Basse (recommandé)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_87f8a6ab85c9ced3702b4ea641ad4bb5'] = 'Moyenne';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_655d20c1ca69519ca647684edbb2db35'] = 'Elevée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_26f07ad840fb1c17d29f5be0f428f015'] = 'Désactiver les modules non-natifs';
@@ -25,7 +24,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ff11cad65449ea177b5d80446b9e
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_947a49c0d390e5984c04751dfaeef83e'] = 'Mode pas à pas.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5daa24f177056cf9b1ac69738471bca9'] = 'Toujours réaliser la mise à jour pas à pas (mode debug)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e803dd4410d411c286544d04af33732e'] = 'Afficher les erreurs PHP';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f2ae35ddd7afbed5dd8ecd60a855f500'] = 'Cette option va laisser \"display_errors\" à \"on\" (où forcer cette valeur)';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f2ae35ddd7afbed5dd8ecd60a855f500'] = 'Cette option va laisser \"display_errors\" à \"on\" (où forcer cette valeur) ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f3a7c82d256a54f4e87c5fcfa74547e1'] = 'Ceci n\'est pas recommandé parce que la mise à jour va immédiatement échouer si une erreur PHP survient pendant un appel ajax.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_36be1130454bc8c4e0a41d36fa062a8b'] = 'Impossible de créer le répertoire %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_56195ded2802813800f43e3be1babe1c'] = 'Erreur à la suppression des sauvegardes %s';
@@ -48,10 +47,10 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4ad974c7f06be7aa3ce318299d3b
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_8d8e0207549d32c6f864246403034279'] = 'Les fichiers du coeur sont ok';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_bc20903d1bc370a0efa7c349f404bcc2'] = '%1$s modifications de fichiers ont été détectées, dont %2$s fichiers natifs (coeur et module)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7b2f224649ef2ad10a2d73595d67a876'] = 'Démarrage de la mise à niveau...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7620e3c0440e810c56733e535ba4ccbd'] = 'Boutique désactivée. Suppressions des échantillons ...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e6ed31815e7e749ff5db555e9d8795bd'] = 'Boutique désactivée. Décompression de l\'archive ...';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_57d086df797edfd853469a386178e513'] = 'Saute le téléchargement et le dézippage, procède à la suppression des échantillons';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7620e3c0440e810c56733e535ba4ccbd'] = 'Boutique désactivée. Suppression des échantillons ...';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2adf97e9f33a777c0913efa63302d7ae'] = 'Saute le téléchargement, procède au dézippage';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e6ed31815e7e749ff5db555e9d8795bd'] = 'Boutique désactivée. Décompression de l\'archive ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_13b35313a987313838f0105902bb6742'] = 'Boutique désactivée. Téléchargement en cours... (ce qui peut prendre un certain temps) ...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_aa064774928ad6ebed71b36b9efeee38'] = 'Le répertoire latest a été vidé';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_65b259727ac87919e232bd9b63920f36'] = 'Téléchargement de %s';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2cb90dfd2384d138d744e6c2bc7f5b35'] = 'Signature md5 vérifiée sur %s';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_aa064774928ad6ebed71b36b9efeee38'] = 'Le répertoire latest a été vidé';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4eecd9c195e46c054ef7da6d9d1a738b'] = 'Extraction terminée. Suppression des fichiers exemples...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0929f38eaac3ca38801f08b7269574e0'] = 'Impossible d\'extraire %1$s dans %2$s ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7ede2690fecace2b1aa73b0a3b65f75c'] = 'Impossible d\'ecrire dans le dossier d\'extraction (latest)';
@@ -116,7 +115,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7a7f0b250e761f8e251a0aa9c61c
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ecb902a8f7110e7f93d750cfa6aa505f'] = '%s restant';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9523b86c2578ee7962644a45b758d36e'] = 'Fichiers restaurés. Restauration de la base de données ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_cb7dce5f6a1934d54c0d3335c7ffe841'] = 'Fichiers restaurés.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2ad6405b321e313639d11507e047b066'] = 'La sauvegarde de la base de données est vide';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a4030f24727b9953cfa425aa87672a76'] = 'Impossible d\'extraire';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2ad6405b321e313639d11507e047b066'] = 'La sauvegarde de la base de données est vide';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_daad044945b853a8483df2682d0c00c3'] = 'restoration de la base de données : fichier %1$s terminé. %2$s fichier(s) restant ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_30da45f850d1f1a2b42f215836382f19'] = 'Restauration de la base de donnée terminée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b8496a6ac08d176ab264e1a33533e986'] = 'La base de données à été restaurée.';
@@ -132,22 +131,22 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ca3f0a9c2464acb36a341a9bf8df
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b4c6a83d292337a86b7a701142787309'] = '%1$s tables ont été sauvegardées.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_57589aee8b3e5a98bd9482b12b63847f'] = 'Backup de la base de données : %s table(s) restantes ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_10907e082ba71b1ca94811c639024641'] = 'Aucune table n\'a été trouvée à sauvegarder. Backup annulé.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ce8b36a7ed149d84d731576886c7ca46'] = 'Sauvegarde de la base de donnée terminé dans %s. Mise à jour des fichiers ...';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ce8b36a7ed149d84d731576886c7ca46'] = 'Sauvegarde de la base de donnée terminée dans %s. Mise à jour des fichiers ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_47be00f6998760420c05002e38a90cd5'] = 'Erreur lors de la sauvegarde des fichiers';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_48f95ff09327408a578e91655ed872a1'] = '%s fichiers à sauvegarder.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_70960f2aa87d307170d3a1bc3e06d904'] = 'sauvegarde des fichiers initilialisée dans %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9bebecbf68b6ce5a6d656c5ea793b762'] = 'Sauvegarde des fichiers en cours. Encore %d fichiers.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_15b353ca964fe816547e67e1508ff85d'] = 'Fichiers sauvegardés. Sauvegarde de la base de données ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a25c4f085558c5f6e519e56257af531f'] = 'tous les fichiers ont été ajoutés à l\'archive.';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f79479c0de75d568def0afdc1e5de04e'] = 'Erreur lorsque vous essayez d\'ajouter %1$s à l\'archive %2$s.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_91f805cf850500bda66426aea042602f'] = '%1$s ajouté à l\'archive. Encore %2$s.';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f79479c0de75d568def0afdc1e5de04e'] = 'Erreur lorsque vous essayez d\'ajouter %1$s à l\'archive %2$s.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b9a2db69065827812dd4b7a7f9ffc0b1'] = 'impossible d\'ouvrir l\'archive';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2589a25910cd3d7fab7e45361c4cb39d'] = '%1$s supprimé. reste %2$s';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d82eef1ba081c54686767c555670c0fe'] = 'erreur lors de la suppression de %1$s, reste encore %2$s';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2589a25910cd3d7fab7e45361c4cb39d'] = '%1$s supprimé. reste %2$s ';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d82eef1ba081c54686767c555670c0fe'] = 'erreur lors de la suppression de %1$s, reste encore %2$s ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_344c592d141604c614c219fad3fa0dae'] = '%1$s fichiers exemple à supprimer';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3838c139fdcd91f73c35ea6f3fd3af6d'] = 'Tous les fichiers exemple ont été supprimés. Sauvegarde ignorée. Mise à jour des fichiers ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0baf8c94d1d03d1621c17cd6eabf7b9f'] = 'Tous les exemples de fichiers supprimés. Sauvegarde des fichiers en cours...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b0d51f91a1118b7c39ee1835cc6c926a'] = 'Téléchargement terminé. Extraction ...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4723092f623f18928fb35e90cea5e736'] = 'Téléchargement terminé, mais md5sum ne correspond pas. Opération annulée.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_549e11f82d3c02b92e5db1b38b858eb6'] = 'Sauvegarde du fichier dans %s';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3c2681ea85407c2c0d252e05a8eaf6aa'] = 'Téléchargement terminé.';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b0d51f91a1118b7c39ee1835cc6c926a'] = 'Téléchargement terminé. Extraction ...';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_38f9eb3936b09141e52e2893dced07db'] = 'Téléchargement terminé, mais md5sum ne correspond pas (%s)';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4723092f623f18928fb35e90cea5e736'] = 'Téléchargement terminé, mais md5sum ne correspond pas. Opération annulée.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_412cb9a2978bf041be4ca6c6ded0030c'] = 'Erreur au téléchargement. La \"clef communautaire\" est peut-être erronnée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0c0db54fe8212c1a7215005fef75d7dd'] = 'Erreur pendant le téléchargement';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_333b5cc4630e34043c47023ea89cf77b'] = 'Impossible d\'ecrire dans le dossier download';
@@ -222,13 +221,13 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e48cd737d2cde94a5e9029fa6641
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_8f827bdb774347622c4f16ffdf7e92c0'] = 'La valeur time limit de PHP doit être suffisamment haute ou totalement désactivée (Valeur actuelle : %s)';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_958f470d0b1c8fb2b9e62b48e8903299'] = 'illimité';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_783e8e29e6a8c3e22baa58a19420eb4f'] = 'secondes';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5d01162d83a28884fef87736129af788'] = 'S\'il vous plait, veuillez aussi vérifier que vous avez procédé à une sauvegarde manuelle de vos fichiers et de votre base de données.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_5d01162d83a28884fef87736129af788'] = 'S\'il vous plait, veuillez aussi vérifier que vous avez procédé à une sauvegarde manuelle de vos fichiers et de votre base de données. ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d5d4eff97eccea28fa291fecac84fa14'] = 'Branche :';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e4894ca167b08880bfc35862f18575eb'] = 'disponible';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7060e0481896e00b3f7d20f1e8e2749a'] = 'non disponible';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d942692a8122af8eb3b3adc3cc48a614'] = 'nom :';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_409e4a97709d4eba788f8b55449a2b4c'] = 'numéro de version :';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_df1472f5e5bf668cc96d8393fc75ba97'] = 'url :';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_409e4a97709d4eba788f8b55449a2b4c'] = 'numéro de version : ';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_df1472f5e5bf668cc96d8393fc75ba97'] = 'url : ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ba9feda0e64632f007af2067bad98efb'] = 'md5 :';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9c2d96412a2f8c9a4b264ce7f92afce4'] = 'changelog :';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_39089ec5b14aadac3156e62cde5027b1'] = 'voir le changelog';
@@ -325,7 +324,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e47b67bdaa4f2c695e46ce1e5231
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4e265d12ee7ee679a4f40a4c4fde1208'] = 'La requête a dépassé le temps d\"exécution maximum autorisé. Vous devez changer votre configuration serveur pour augmenter la durée de max_execution_time.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_c050dd9e80b7658fbf59103b2b982c5d'] = 'Cliquez sur le bouton %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_60d6dceb25c5f6871d6341fa7f28c30c'] = 'Opération annulée. Vérification de la restauration ...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0753ed9e8997a201770ca39206056720'] = 'Opération annulée. Une erreur est survenue.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e3d2f07a805f02286c6ad420a70478c4'] = 'Voulez vous restorer';$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0753ed9e8997a201770ca39206056720'] = 'Opération annulée. Une erreur est survenue.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_95e42bb250909b740190f9a46e80070c'] = 'est manquant. Merci de réinstaller le module';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1607e6098b7b62a2791653b059c975d2'] = 'Afficher / masquer la liste';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_25b91596a896c6cf688104169b4b6a71'] = 'Fichier(s) de la solution';
@@ -343,7 +342,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a69c07539d05f495cb104687f8d0
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9311ab161709b4f5efe9c6ff08b33699'] = '%s n\'est pas un fichier';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_616496820033da9e454a870fbb428829'] = 'Utilisation de la classe ZipArchive';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e6f480591342c9f97e8094240a62303f'] = 'sauvegarde extraite';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1df17d9bcf452bebeb4c9c98a754d828'] = 'zip->extractTo() : Impossible d\'utiliser %s comme destination';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_1df17d9bcf452bebeb4c9c98a754d828'] = 'zip->extractTo() : Impossible d\'utiliser %s comme destination ';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0f9f19a4f5e93b3d5a94405e3af32a28'] = 'Impossible d\'ouvrir le fichier zip %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_d5c2da59d52ac435d85b4b47e9ce4ab1'] = 'Utilisation de la classe pclZip.lib.php';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_57acd32f94fad88ba248969926e3d94b'] = '%s conservé';

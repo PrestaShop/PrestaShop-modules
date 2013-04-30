@@ -1184,7 +1184,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 			$upgrade_info = array();
 			$upgrade_info['branch'] = $upgrader->branch;
-			$upgrade_info['available'] =$upgrader->available;
+			$upgrade_info['available'] = $upgrader->available;
 			$upgrade_info['version_num'] = $upgrader->version_num;
 			$upgrade_info['version_name'] = $upgrader->version_name;
 			$upgrade_info['link'] = $upgrader->link;
@@ -1375,12 +1375,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 			case 'directory' :
 				// if channel directory is choosen, we assume it's "ready for use" (samples already removed for example)
 				$this->next = 'removeSamples';
-				$this->nextQuickInfo[] = 'skip download and unzip, will now remove samples';
+				$this->nextQuickInfo[] = $this->l('Skip download and unzip, will now remove samples');
 				$this->next_desc = $this->l('Shop deactivated. removing sample files...');
 				break;
 			case 'archive' :
 				$this->next = 'unzip';
-				$this->nextQuickInfo[] = 'skip download step, go to unzip';
+				$this->nextQuickInfo[] = $this->l('Skip download step, go to unzip');
 				$this->next_desc = $this->l('Shop deactivated. Extracting files ...');
 				break;
 			default :
@@ -1391,8 +1391,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$this->upgrader->link = $this->getConfig('private_release_link');
 					$this->upgrader->md5 = $this->getConfig('private_release_md5');
 				}
-				$this->nextQuickInfo[] = sprintf('downloading from %s', $this->upgrader->link);
-				$this->nextQuickInfo[] = sprintf('md5 will be checked against %s', $this->upgrader->md5);
+				$this->nextQuickInfo[] = sprintf($this->l('downloading from %s'), $this->upgrader->link);
+				$this->nextQuickInfo[] = sprintf($this->l('md5 will be checked against %s'), $this->upgrader->md5);
 		}
 	}
 
@@ -1787,7 +1787,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList, serialize($listModules));
 			unset($listModules);
 			
-			//deactivate backward_compatibility, not used in 1.5.X			
+			//deactivate backward_compatibility, not used in 1.5.X
 			if (version_compare($this->install_version, '1.5.0.0', '>='))
 			{
 				Db::getInstance()->execute('DELETE ms.*, hm.*
@@ -2647,7 +2647,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		// 1st, need to analyse what was wrong.
 		$this->nextParams = $this->currentParams;
-		if (!empty($this->restoreName))
+		$this->restoreFilesFilename = $this->restoreName;
+		if (!empty($this->restoreName) && $this->getConfig('PS_AUTOUP_BACKUP'))
 		{
 			$files = scandir($this->backupPath);
 			// find backup filenames, and be sure they exists
@@ -3053,7 +3054,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next = 'upgradeFiles';
 			return true;
 		}
-		
+
 		$relative_backup_path = str_replace(_PS_ROOT_DIR_, '', $this->backupPath);
 		$report = '';
 		if (!ConfigurationTest::test_dir($relative_backup_path, false, $report))
@@ -3369,6 +3370,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (!self::$force_pclZip && class_exists('ZipArchive', false))
 			{
+				$this->nextQuickInfo[] = $this->l('using class ZipArchive ...');
 				$zip_archive = true;
 				$zip = new ZipArchive();
 				$zip->open($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename, ZIPARCHIVE::CREATE);
@@ -3376,6 +3378,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			else
 			{
 				$zip_archive = false;
+				$this->nextQuickInfo[] = $this->l('using class pclzip ...');
 				// pclzip can be already loaded (server configuration)
 				if (!class_exists('PclZip',false))
 					require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
@@ -3467,7 +3470,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$item = str_replace($this->prodRootDir, '', array_shift($removeList));
 				$this->next = 'removeSamples';
 				$this->nextParams['removeList'] = $removeList;
-				$this->nextQuickInfo[] = sprintf($this->l('%1$s removed. %2$s items left'), $item, count($removeList));
+				if(count($removeList) > 0)
+					$this->nextQuickInfo[] = sprintf($this->l('%1$s removed. %2$s items left'), $item, count($removeList));
 			}
 			else
 			{
@@ -3510,7 +3514,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			// remove all override present in the archive
 			$this->_listSampleFiles($this->latestPath.'/prestashop/override', '.php');
 
-			$this->nextQuickInfo[] = sprintf($this->l('Starting to remove %1$s sample files'), count($this->sampleFileList));
+			if (count($this->sampleFileList) > 0)
+				$this->nextQuickInfo[] = sprintf($this->l('Starting to remove %1$s sample files'), count($this->sampleFileList));
 
 			$this->nextParams['removeList'] = $this->sampleFileList;
 		}
@@ -3567,8 +3572,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$this->upgrader->link = $this->getConfig('private_release_link');
 				$this->upgrader->md5 = $this->getConfig('private_release_md5');
 			}
-			$this->nextQuickInfo[] = sprintf('downloading from %s', $this->upgrader->link);
-			$this->nextQuickInfo[] = sprintf('file will be saved in %s', $this->downloadPath.DIRECTORY_SEPARATOR.$this->destDownloadFilename);
+			$this->nextQuickInfo[] = sprintf($this->l('downloading from %s'), $this->upgrader->link);
+			$this->nextQuickInfo[] = sprintf($this->l('file will be saved in %s'), $this->downloadPath.DIRECTORY_SEPARATOR.$this->destDownloadFilename);
 			
 			$report = '';
 			$relative_download_path = str_replace(_PS_ROOT_DIR_, '', $this->downloadPath);
@@ -3580,14 +3585,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$md5file = md5_file(realpath($this->downloadPath).DIRECTORY_SEPARATOR.$this->destDownloadFilename);
 				 	if ($md5file == $this->upgrader->md5)
 					{
-						$this->nextQuickInfo[] = 'Download complete.';
+						$this->nextQuickInfo[] = $this->l('Download complete.');
 						$this->next = 'unzip';
 						$this->next_desc = $this->l('Download complete. Now extracting');
 					}
 					else
 					{
-						$this->nextQuickInfo[] = sprintf('Download complete but md5sum does not match (%s)', $md5file);
-						$this->nextErrors[] = sprintf('Download complete but md5sum does not match (%s)', $md5file);
+						$this->nextQuickInfo[] = sprintf($this->l('Download complete but md5sum does not match (%s)'), $md5file);
+						$this->nextErrors[] = sprintf($this->l('Download complete but md5sum does not match (%s)'), $md5file);
 						$this->next = 'error';
 						$this->next_desc = $this->l('Download complete but md5sum does not match. Operation aborted.');
 					}
@@ -3597,14 +3602,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 					if ($this->upgrader->channel == 'private')
 					{
 						$this->next_desc = $this->l('Error during download. The private key may be incorrect.');
-						$this->nextQuickInfo[] = 'Error during download. The private key may be incorrect.';
-						$this->nextErrors[] = 'Error during download. The private key may be incorrect.';
+						$this->nextQuickInfo[] = $this->l('Error during download. The private key may be incorrect.');
+						$this->nextErrors[] = $this->l('Error during download. The private key may be incorrect.');
 					}
 					else
 					{
 						$this->next_desc = $this->l('Error during download');
-						$this->nextQuickInfo[] = 'Error during download';
-						$this->nextErrors[] = 'Error during download';
+						$this->nextQuickInfo[] = $this->l('Error during download');
+						$this->nextErrors[] = $this->l('Error during download');
 					}
 					$this->next = 'error';
 				}
@@ -3612,8 +3617,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			else
 			{
 				$this->next_desc = $this->l('Download directory is not writeable ');
-				$this->nextQuickInfo[] = 'Download directory is not writeable ';
-				$this->nextErrors[] = 'Download directory is not writeable "'.$this->downloadPath.'"';
+				$this->nextQuickInfo[] = $this->l('Download directory is not writeable ');
+				$this->nextErrors[] = $this->l('Download directory is not writeable ').$this->downloadPath;
 				$this->next = 'error';
 			}
 		}
@@ -4095,7 +4100,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$this->_html .= '
 			</div>
 			<div class="clear">&nbsp;</div>
-			<div id="quickInfo" class="processing">&nbsp;</div></fieldset>
+			<div id="quickInfo" class="processing"></div></fieldset>
 			</fieldset>';
 	}
 	/**
@@ -4365,8 +4370,8 @@ function cleanInfo(){
 function updateInfoStep(msg){
 	if (msg)
 	{
-		$("#infoStep").html(msg);
-		$("#infoStep").attr({ scrollTop: $("#infoStep").attr("scrollHeight") });
+		$("#infoStep").append(msg+"<div class=\"clear\"></div>");
+		$("#infoStep").prop({ scrollTop: $("#infoStep").prop("scrollHeight")},1);
 	}
 }
 
@@ -4377,7 +4382,7 @@ function addError(arrError){
 		for(i=0;i<arrError.length;i++)
 			$("#infoError").append(arrError[i]+"<div class=\"clear\"></div>");
 		// Note : jquery 1.6 make uses of prop() instead of attr()
-		$("#infoError").prop({ scrollTop: $("#infoError").prop("scrollHeight") },1);
+		$("#infoError").prop({ scrollTop: $("#infoError").prop("scrollHeight")},1);
 	}
 }
 
@@ -4388,20 +4393,23 @@ function addQuickInfo(arrQuickInfo){
 		for(i=0;i<arrQuickInfo.length;i++)
 			$("#quickInfo").append(arrQuickInfo[i]+"<div class=\"clear\"></div>");
 		// Note : jquery 1.6 make uses of prop() instead of attr()
-		$("#quickInfo").prop({ scrollTop: $("#quickInfo").prop("scrollHeight") },1);
+		$("#quickInfo").prop({ scrollTop: $("#quickInfo").prop("scrollHeight")},1);
 	}
 }';
 
 		if ($this->manualMode)
-			$js .= 'var manualMode = true;';
+			$js .= 'var manualMode = true;'."\n";
 		else
-			$js .= 'var manualMode = false;';
+			$js .= 'var manualMode = false;'."\n";
 
 		// relative admin dir
 		$admin_dir = trim(str_replace($this->prodRootDir, '', $this->adminDir), DIRECTORY_SEPARATOR);
 		// _PS_MODE_DEV_ will be available in js
 		if (defined('_PS_MODE_DEV_') AND _PS_MODE_DEV_)
-			$js .= 'var _PS_MODE_DEV_ = true;';
+			$js .= 'var _PS_MODE_DEV_ = true;'."\n";
+
+		if ($this->getConfig('PS_AUTOUP_BACKUP'))
+			$js .= 'var PS_AUTOUP_BACKUP = true;'."\n";
 
 		$js .= $this->_getJsErrorMsgs();
 
@@ -4582,9 +4590,9 @@ function afterUpdateConfig(res)
 }
 function startProcess(type){
 	if (type == "upgrade")
-		msg = "'.$this->l('an upgrade is currently in progress ... Click "OK" to abort.').'";
+		msg = "'.$this->l('an upgrade is currently in progress ... Click "OK" to abort.', 'AdminTab', true, false).'";
 	else
-		msg = "'.$this->l('a restoration is currently in progress ... Click "OK" to abort.').'";
+		msg = "'.$this->l('a restoration is currently in progress ... Click "OK" to abort.', true, false).'";
 
 
 	// hide useless divs, show activity log
@@ -4593,7 +4601,7 @@ function startProcess(type){
 
 	$(window).bind("beforeunload", function(e)
 	{
-		if (confirm("'.$this->l('an update is currently in progress ... Click "OK" to abort.').'"))
+		if (confirm("'.$this->l('an update is currently in progress ... Click "OK" to abort.', 'AdminTab', true, false).'"))
 		{
 			$.xhrPool.abortAll();
 			$(window).unbind("beforeunload");
@@ -4642,7 +4650,7 @@ function afterUpgradeComplete(res)
 	else
 	{
 		params = res.nextParams
-		$("#pleaseWait").hide();
+		//$("#pleaseWait").hide();
 		$("#upgradeResultCheck")
 			.addClass("fail")
 			.removeClass("ok")
@@ -4679,7 +4687,7 @@ function afterError(res)
 	params = res.nextParams;
 	if (params.next == "")
 		$(window).unbind("beforeunload");
-	$("#pleaseWait").hide();
+	//$("#pleaseWait").hide();
 
 	addQuickInfo(["unbind :) "]);
 }
@@ -4692,13 +4700,13 @@ function afterRollback(res)
 function afterRollbackComplete(res)
 {
 	params = res.nextParams
-	$("#pleaseWait").hide();
+	//$("#pleaseWait").hide();
 	$("#upgradeResultCheck")
 		.addClass("ok")
 		.removeClass("fail")
 		.html("<p>'.$this->l('Restoration complete.').'</p>")
-		.show("slow")
-	$("#infoStep").html("<h3>'.$this->l('Restoration complete.').'</h3>");
+		.show("slow");
+	updateInfoStep("<h3>'.$this->l('Restoration complete.').'</h3>");
 	$(window).unbind();
 }
 
@@ -4725,8 +4733,9 @@ function afterBackupFiles(res)
  */
 function afterBackupDb(res)
 {
-	params = res.nextParams
-	if (res.stepDone)
+	params = res.nextParams;
+	var PS_AUTOUP_BACKUP;
+	if (res.stepDone && typeof(PS_AUTOUP_BACKUP) != "undefined" && PS_AUTOUP_BACKUP == "true")
 	{
 		$("#restoreBackupContainer").show();
 		$("select[name=restoreName]").children("options").removeAttr("selected");
@@ -4743,9 +4752,9 @@ function call_function(func){
 
 function doAjaxRequest(action, nextParams){
 	var _PS_MODE_DEV_;
-	if (_PS_MODE_DEV_)
+	if (typeof(_PS_MODE_DEV_) != "undefined" && _PS_MODE_DEV_ == "true")
 		addQuickInfo(["[DEV] ajax request : "+action]);
-	$("#pleaseWait").show();
+	//$("#pleaseWait").show();
 	req = $.ajax({
 		type:"POST",
 		url : "'. __PS_BASE_URI__.$admin_dir.'/autoupgrade/ajax-upgradetab.php'.'",
@@ -4770,8 +4779,7 @@ function doAjaxRequest(action, nextParams){
 		},
 		success : function(res, textStatus, jqXHR)
 		{
-			$("#pleaseWait").hide();
-
+			//$("#pleaseWait").hide();
 			try{
 				res = $.parseJSON(res);
 			}
@@ -4816,7 +4824,7 @@ function doAjaxRequest(action, nextParams){
 		},
 		error: function(jqXHR, textStatus, errorThrown)
 		{
-			$("#pleaseWait").hide();
+			//$("#pleaseWait").hide();
 			if (textStatus == "timeout")
 			{
 				if (action == "download")
@@ -4825,7 +4833,7 @@ function doAjaxRequest(action, nextParams){
 					updateInfoStep("[Server Error] Timeout:'.addslashes($this->l('The request exceeded the max_time_limit. Please change your server configuration.')).'");
 			}
 			else
-				updateInfoStep("[Ajax / Server Error] textStatus: \\"" + textStatus + "\\" errorThrown:\\"" + errorThrown + "\\" jqXHR: \\"" + jqXHR.responseText + "\\"");
+				updateInfoStep("[Ajax / Server Error for action " + action + "] textStatus: \"" + textStatus + " \" errorThrown:\"" + errorThrown + " \" jqXHR: \" " + jqXHR.responseText + "\"");
 		}
 	});
 	return req;
@@ -4897,7 +4905,8 @@ function handleError(res, action)
 	{
 		$(".button-autoupgrade").html("'.$this->l('Operation cancelled. checking for restoration ...').'");
 		res.nextParams.restoreName = res.nextParams.backupName;
-		doAjaxRequest("rollback",res.nextParams);
+		if (confirm("'.$this->l('Do you want to restore').' " + "'.$this->backupName.'" + " ?"))
+			doAjaxRequest("rollback",res.nextParams);
 	}
 	else
 	{
@@ -5089,8 +5098,7 @@ $(document).ready(function()
 
 			if(newChannel == "private")
 			{
-				if (($("input[name=private_release_link]").val() == "")
-					|| ($("input[name=private_release_md5]").val() == ""))
+				if (($("input[name=private_release_link]").val() == "") || ($("input[name=private_release_md5]").val() == ""))
 				{
 					showConfigResult("'.$this->l('Link and MD5 hash cannot be empty').'", "error");
 					return false;
@@ -5230,7 +5238,7 @@ $(document).ready(function()
 			if (!class_exists('PclZip', false))
 				require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/pclzip.lib.php');
 
-			$this->nextQuickInfo[] = $this->l('using class pclZip.lib.php');
+			$this->nextQuickInfo[] = $this->l('using class pclzip ...');
 
 			$zip = new PclZip($from_file);
 
@@ -5258,7 +5266,7 @@ $(document).ready(function()
 				if (($extract_result = $zip->extract(PCLZIP_OPT_BY_INDEX, $index, PCLZIP_OPT_PATH, $to_dir, PCLZIP_OPT_REPLACE_NEWER)) == 0)
 				{
 					$this->next = 'error';
-					$this->nextQuickInfo[] = '[ERROR] error on extract using pclzip : '.$zip->errorInfo(true);
+					$this->nextErrors[] = '[ERROR] error on extract using pclzip : '.$zip->errorInfo(true);
 					return false;
 				}
 				else
@@ -5290,6 +5298,7 @@ $(document).ready(function()
 		{
 			if (!self::$force_pclZip && class_exists('ZipArchive', false))
 			{
+				$this->nextQuickInfo[] = $this->l('using class ZipArchive ...');
 				$files = array();
 				$zip = new ZipArchive();
 				$zip->open($zipfile);
@@ -5306,7 +5315,9 @@ $(document).ready(function()
 			}
 			else
 			{
-				require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
+				$this->nextQuickInfo[] = $this->l('using class pclzip ...');
+				if (!class_exists('PclZip',false))
+					require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
 				if ($zip = new PclZip($zipfile));
 				return $zip->listContent();
 			}
