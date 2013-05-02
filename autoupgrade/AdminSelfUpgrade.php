@@ -928,8 +928,16 @@ class AdminSelfUpgrade extends AdminSelfTab
 					{
 						$gz = new Archive_Tar($file, true);
 						$files_list = $gz->listContent();
-						if (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-							continue;
+						if (!$this->keepMails)
+						{
+							foreach($files_list as $i => $file)
+								if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
+									unset($files_list[$i]);
+							if (!$gz->extractList($files_list, _PS_TRANSLATIONS_DIR_.'../'))
+								continue;							
+						}
+						elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+								continue;
 					}
 				}
 			}
