@@ -735,6 +735,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->excludeAbsoluteFilesFromUpgrade[] = '/config/settings.inc.php';
 		$this->excludeAbsoluteFilesFromUpgrade[] = '/install';
 		$this->excludeAbsoluteFilesFromUpgrade[] = '/install-dev';
+		$this->excludeAbsoluteFilesFromUpgrade[] = '/config/modules_list.xml';
+		$this->excludeAbsoluteFilesFromUpgrade[] = '/config/xml/modules_list.xml';		
 		// this will exclude autoupgrade dir from admin, and autoupgrade from modules
 		$this->excludeFilesFromUpgrade[] = 'autoupgrade';
 
