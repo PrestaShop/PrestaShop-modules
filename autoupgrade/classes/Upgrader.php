@@ -32,6 +32,7 @@ class UpgraderCore
 	public $addons_api = 'api.addons.prestashop.com';
 	public $rss_channel_link = 'https://api.prestashop.com/xml/channel.xml';
 	public $rss_md5file_link_dir = 'https://api.prestashop.com/xml/md5/';
+	
 	/**
 	 * @var boolean contains true if last version is not installed
 	 */
@@ -72,6 +73,11 @@ class UpgraderCore
 			// checkPSVersion to get need_upgrade
 			$this->checkPSVersion();
 		}
+		if (!extension_loaded('openssl'))		
+		{
+			$this->rss_channel_link = str_replace('https', 'http', $this->rss_channel_link);
+			$this->rss_md5file_link_dir = str_replace('https', 'http', $this->rss_md5file_link_dir);			
+		}		
 	}
 	public function __get($var)
 	{
@@ -189,9 +195,14 @@ class UpgraderCore
 							continue;
 						$this->version_name = (string)$branch->name;
 						$this->version_num = (string)$branch->num;
-						$this->link = str_replace('http', 'https', (string)$branch->download->link);
+						$this->link = (string)$branch->download->link;
 						$this->md5 = (string)$branch->download->md5;
-						$this->changelog = str_replace('http', 'https', (string)$branch->download->changelog);
+						$this->changelog = (string)$branch->download->changelog;
+						if (extension_loaded('openssl'))
+						{
+							$this->link = str_replace('http', 'https', $this->link);
+							$this->changelog = str_replace('http', 'https', $this->changelog);
+						}
 						$this->available = $channel_available && (string)$branch['available'];
 					}
 				}
@@ -245,7 +256,8 @@ class UpgraderCore
 		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
 			$protocolsList = array('https://' => 443, 'http://' => 80);
-
+			if (!extension_loaded('openssl'))		
+				unset($protocolsList['https://']);
 			// Make the request
 			$opts = array(
 				'http'=>array(
@@ -285,7 +297,7 @@ class UpgraderCore
 		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
 			// @ to hide errors if md5 file is not reachable
-			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('https' => array('timeout' => 3))));
+			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('http' => array('timeout' => 3))));
 			$xml = @simplexml_load_string($xml_string);
 			if ($xml !== false)
 				file_put_contents($xml_localfile, $xml_string);

@@ -273,7 +273,9 @@ abstract class DbCore
 				return $this->update($table, $data, $where, $limit, $use_null, $use_cache, false);
 
 			default :
-				throw new PrestaShopDatabaseException('Wrong argument (miss type) in Db::autoExecute()');
+				Tools14::displayError('Wrong argument (miss type) in Db::autoExecute()');
+				exit();
+				break;
 		}
 	}
 
@@ -335,7 +337,10 @@ abstract class DbCore
 		else if ($type == Db::REPLACE)
 			$insert_keyword = 'REPLACE';
 		else
-			throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
+		{
+			Tools14::displayError('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
+			exit();
+		}
 
 		// Check if $data is a list of row
 		$current = current($data);
@@ -353,7 +358,10 @@ abstract class DbCore
 				{
 					// Check if row array mapping are the same
 					if (!in_array("`$key`", $keys))
-						throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
+					{
+						Tools14::displayError('Keys form $data subarray don\'t match');
+						exit();
+					}
 				}
 				else
 					$keys[] = "`$key`";
@@ -468,7 +476,10 @@ abstract class DbCore
 		if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql))
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
-				throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
+			{
+				Tools14::displayError('Db->executeS() must be used only with select, show, explain or describe queries');
+				exit();
+			}
 			return $this->execute($sql, $use_cache);
 		}
 
@@ -603,8 +614,9 @@ abstract class DbCore
 		else if (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS'))
 		{
 			if ($sql)
-				throw new PrestaShopDatabaseException($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
-			throw new PrestaShopDatabaseException($this->getMsgError());
+				Tools14::displayError($this->getMsgError().'<br /><br /><pre>'.$sql.'</pre>');
+			Tools14::displayError($this->getMsgError());
+			exit();			
 		}
 	}
 

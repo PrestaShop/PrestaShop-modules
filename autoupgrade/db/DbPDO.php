@@ -54,12 +54,16 @@ class DbPDOCore extends Db
 		try {
 			$this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
 		} catch (PDOException $e) {
-			throw new PrestaShopDatabaseException(sprintf(Tools14::displayError('Link to database cannot be established: %s'), $e->getMessage()));
+			die(sprintf(Tools14::displayError('Link to database cannot be established: %s'), $e->getMessage()));
+			exit();
 		}
 
 		// UTF-8 support
-		if ($this->link->exec('SET NAMES \'utf8\'') === false)
-			throw new PrestaShopDatabaseException(Tools14::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+		if (!is_object($this->link) || $this->link->exec('SET NAMES \'utf8\'') === false)
+		{
+			Tools14::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.');
+			exit();
+		}
 
 		return $this->link;
 	}
