@@ -1844,6 +1844,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		$addons_url = 'api.addons.prestashop.com';
 		$protocolsList = array('https://' => 443, 'http://' => 80);
+		if (!extension_loaded('openssl'))		
+			unset($protocolsList['https://']);		
 		$postData = 'version='.$this->install_version.'&method=module&id_module='.(int)$id_module;
 
 		// Make the request
@@ -4466,12 +4468,13 @@ $(document).ready(function(){
 					res = {nextParams:{status:"error"}};
 
 				answer = res.nextParams.result;
+				if (typeof(answer) != "undefined")
 				$("#channel-infos").replaceWith(answer.div);
-				if (answer.available)
+				if (typeof(answer) != "undefined" && answer.available)
 				{
 					$("#channel-infos .all-infos").show();
 				}
-				else
+				else if (typeof(answer) != "undefined")
 				{
 					$("#channel-infos").html(answer.div);
 					$("#channel-infos .all-infos").hide();
@@ -4945,7 +4948,7 @@ function handleError(res, action)
 			$js .= '
 			function isJsonString(str) {
 				try {
-						JSON.parse(str);
+						typeof(str) != "undefined" && JSON.parse(str);
 				} catch (e) {
 						return false;
 				}
