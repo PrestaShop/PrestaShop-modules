@@ -245,7 +245,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 	public $install_version;
 	public $keepImages = null;
-	public $keepDefaultTheme = null;
+	public $updateDefaultTheme = null;
 	public $keepMails = null;
 	public $manualMode = null;
 	public $deactivateCustomModule = null;
@@ -521,8 +521,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->l('Keeping them enabled might prevent you from loading properly the "Modules" tab after the upgrade'),
 		);
 
-		$this->_fieldsUpgradeOptions['PS_AUTOUP_KEEP_DEFAULT_THEME'] = array(
-			'title' => $this->l('Upgrade the "default" theme'), 'cast' => 'intval', 'validation' => 'isBool', 'defaultValue' => '0',
+		$this->_fieldsUpgradeOptions['PS_AUTOUP_UPDATE_DEFAULT_THEME'] = array(
+			'title' => $this->l('Upgrade the "default" theme'), 'cast' => 'intval', 'validation' => 'isBool', 'defaultValue' => '1',
 			'type' => 'bool', 'desc' => $this->l('This will upgrade the theme named "default" (PrestaShop default theme).').'<br />'.$this->l('If you are using this theme and customized it, you will loose your modifications.'),
 		);
 		
@@ -563,7 +563,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$allowed_array = array();
 			$allowed_array['fopen'] = ConfigurationTest::test_fopen() || ConfigurationTest::test_curl();
 			$allowed_array['root_writable'] = $this->getRootWritable();
-			$allowed_array['shop_deactivated'] = !Configuration::get('PS_SHOP_ENABLE');
+			$allowed_array['shop_deactivated'] = (!Configuration::get('PS_SHOP_ENABLE') || (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], array('127.0.0.1', 'localhost'))));
 			$allowed_array['cache_deactivated'] = !(defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_);
 
 			$allowed_array['module_version_ok'] = $this->checkAutoupgradeLastVersion();
@@ -697,7 +697,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 
 		$this->keepImages = $this->getConfig('PS_AUTOUP_KEEP_IMAGES');
-		$this->keepDefaultTheme = $this->getConfig('PS_AUTOUP_KEEP_DEFAULT_THEME');
+		$this->updateDefaultTheme = $this->getConfig('PS_AUTOUP_UPDATE_DEFAULT_THEME');
 		$this->keepMails = $this->getConfig('PS_AUTOUP_KEEP_MAILS');
 		$this->manualMode = $this->getConfig('PS_AUTOUP_MANUAL_MODE');
 		$this->deactivateCustomModule = $this->getConfig('PS_AUTOUP_CUSTOM_MOD_DESACT');
@@ -751,7 +751,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->restoreIgnoreAbsoluteFiles[] = '/img/tmp';
 		}
 
-		if (!$this->keepDefaultTheme) /* If set to false, we need to preserve the default theme */
+		if (!$this->updateDefaultTheme) /* If set to false, we need to preserve the default themes */
 		{
 			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
 			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default';
@@ -839,14 +839,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->writeConfig(array (
 				'PS_AUTOUP_PERFORMANCE' => '1',
 				'PS_AUTOUP_CUSTOM_MOD_DESACT' => '0', 
-				'PS_AUTOUP_KEEP_DEFAULT_THEME' => '0',
+				'PS_AUTOUP_UPDATE_DEFAULT_THEME' => '1',
 				'PS_AUTOUP_KEEP_MAILS' => '0',
 				'PS_AUTOUP_BACKUP' => '1',
 				'PS_AUTOUP_KEEP_IMAGES' => '1'
 				));
 		}
-		
-		
+
 		if (Tools14::isSubmit('putUnderMaintenance'))
 			Configuration::updateValue('PS_SHOP_ENABLE', 0);
 		
@@ -4327,7 +4326,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		</fieldset>';
 		
 		/* Make sure the user has configured the upgrade options, or set default values */
-		$configuration_keys = array('PS_AUTOUP_KEEP_DEFAULT_THEME' => 0, 'PS_AUTOUP_KEEP_MAILS' => 0, 'PS_AUTOUP_CUSTOM_MOD_DESACT' => 1,
+		$configuration_keys = array('PS_AUTOUP_UPDATE_DEFAULT_THEME' => 1, 'PS_AUTOUP_KEEP_MAILS' => 0, 'PS_AUTOUP_CUSTOM_MOD_DESACT' => 1,
 		'PS_AUTOUP_MANUAL_MODE' => 0, 'PS_AUTOUP_PERFORMANCE' => 1, 'PS_DISPLAY_ERRORS' => 0);
 		foreach ($configuration_keys as $k => $default_value)
 			if (Configuration::get($k) == '')
