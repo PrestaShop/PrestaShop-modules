@@ -703,7 +703,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		if (isset($datas['attributes']))
 			foreach ($datas['attributes'] as $name => $value) 
@@ -1000,7 +1000,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		$requestXml .= '    </ItemSpecifics>' . "\n";
 		$requestXml .= $this->_getReturnPolicy($datas);
@@ -1238,7 +1238,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		$requestXml .= '    </ItemSpecifics>' . "\n";
 		$requestXml .= $this->_getReturnPolicy($datas);
