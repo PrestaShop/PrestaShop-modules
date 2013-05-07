@@ -671,7 +671,7 @@ class eBayRequest
 		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
 		$requestXml .= '  <Item>' . "\n";
 		$requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
-		$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 		if (isset($datas['pictures'])) 
 		{
 			$requestXml .= '    <PictureDetails>' . "\n";
@@ -816,7 +816,7 @@ class eBayRequest
 			$requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
 		{//We resynchronize everything, not only quantity and price
-			$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 			$requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
 			$requestXml .= '    <ShippingDetails>' . "\n";
 			$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
@@ -986,7 +986,7 @@ class eBayRequest
 		$requestXml .= '    <PrimaryCategory>' . "\n";
 		$requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
 		$requestXml .= '    </PrimaryCategory>' . "\n";
-		$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 		if (isset($datas['pictures'])) 
 		{
 			$requestXml .= '    <PictureDetails>' . "\n";
@@ -1302,7 +1302,7 @@ class eBayRequest
 		$requestXml .= '    </Variations>' . "\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
 		{
-			$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 			$requestXml .= '    <Description>' . "\n";
 			$requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
 			$requestXml .= '    </Description>' . "\n";
