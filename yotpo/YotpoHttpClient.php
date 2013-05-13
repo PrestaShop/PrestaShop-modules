@@ -118,7 +118,8 @@ class YotpoHttpClient
 		{
 			$code = isset($result[1]['status']) ? $result[1]['status']['code'] : $result[1]['code'];
 			$message = isset($result[1]['status']) ? $result[1]['status']['message'] : $result[1]['message'];
-			return array('json' => true, 'status_code' => $code, 'status_message' => $message, 'response' => $result[1]['response']);
+			$response = isset($result[1]['response']) ? $result[1]['response'] : '';
+		    return array('json' => true, 'status_code' => $code, 'status_message' => $message, 'response' => $response);
 		}
 		else
 		{
