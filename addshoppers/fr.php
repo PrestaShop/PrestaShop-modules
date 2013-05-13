@@ -74,8 +74,7 @@ $_MODULE['<{addshoppers}prestashop>registrationform_3adbdb3ac060038aa0e6e6c138ef
 $_MODULE['<{addshoppers}prestashop>registrationform_02c9347aaa43aeb4dd97e6ac07b137fa'] = 'Téléphone (optionnel)';
 $_MODULE['<{addshoppers}prestashop>registrationform_f9f2ac6b0c9354e48aa3998b009c3c86'] = 'Créez un compte gratuit';
 $_MODULE['<{addshoppers}prestashop>settingsform_e66d7720d0455efee7e255790e4c177b'] = 'Applications sociales par défaut';
-$_MODULE['<{addshoppers}prestashop>settingsform_23835b7130d35a670bee6c99691e090b'] = 'Utiliser les boutons par défaut';
-$_MODULE['<{addshoppers}prestashop>settingsform_ccfbbe8ed6ae167a0f0d5cdba10aef9a'] = 'Utiliser les boutons Facebook Open Graph';
+$_MODULE['<{addshoppers}prestashop>settingsform_09b5a33e7a071268e199e1381377f8b7'] = 'Utilisez les boutons flottants sociaux';
 $_MODULE['<{addshoppers}prestashop>settingsform_c9cc8cce247e49bae79f15173ce97354'] = 'Sauvegarder';
 $_MODULE['<{addshoppers}prestashop>settingsform_cb04d7265d181041f76ed7bff9ca07a8'] = 'Suivez-nous pour nos dernières actualités et fonctionnalités:';
 $_MODULE['<{addshoppers}prestashop>settingsform_579998eeaa50da556a417e615f3fda69'] = 'Suivez @addshoppers';
