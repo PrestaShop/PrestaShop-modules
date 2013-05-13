@@ -917,23 +917,28 @@ class AdminSelfUpgrade extends AdminSelfTab
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			foreach ($langs as $lang)
 			{
-				$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
+				// ssl needs to be activated on the vhost, currently not the case
+				$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? '' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
+
 				if (!$lang_pack)
 					continue;
-				elseif ($content = Tools14::file_get_contents('http://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
+				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? '' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
 				{
 					$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 					if ((bool)@file_put_contents($file, $content))
 					{
 						$gz = new Archive_Tar($file, true);
-						$files_list = $gz->listContent();
+						$files_list = $gz->listContent();					
 						if (!$this->keepMails)
 						{
 							foreach($files_list as $i => $file)
 								if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
 									unset($files_list[$i]);
-							if (!$gz->extractList($files_list, _PS_TRANSLATIONS_DIR_.'../'))
-								continue;							
+							foreach($files_list as $file)
+							if (isset($file['filename']) && is_string($file['filename']))
+								$files_listing[] = $file['filename'];
+							if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
+								continue;
 						}
 						elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
 								continue;
