@@ -177,11 +177,15 @@ class ShoppingFluxExport extends Module
 			</p>';
 			
 		if ($price!=0)
-			$html .= '<p>'.$this->l('A partir de 69€ H.T/mois. ');
+			$html .= '<p><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois. ').'</b>';
+		else
+			$html .= '<p><b>'.$this->l('A partir de 79€ H.T/mois. ').'</b>';
 			
-		$html .= $this->l('Bénéficiez de 1 mois de test gratuit et sans engagement.').'</p>
+		$html .= $this->l('Bénéficiez de 1 mois de test gratuit et sans engagement. Vous serez facturés automatiquement à la fin de votre période d\'essai.').'</p>';
+			
+		$html .= '<p>'.$this->l('Utilisé par plus de 500 clients, Shopping Flux réussit à doubler votre chiffre d\'affaires après 4 mois d\'utilisation quotidienne.').'</p>
 			<br/>
-			<p>'.$this->l('Le tout, via une interface unique, pratique et agréable d\'utilisation').' :</p>
+			<p>'.$this->l('Voici des copies d\'écrans').' :</p>
 			<p style="text-align:center">';
 
 		//add 6 screens
