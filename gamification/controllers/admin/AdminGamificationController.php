@@ -9,6 +9,8 @@ class AdminGamificationController extends ModuleAdminController
 		$this->display = 'view';
 		$this->meta_title = $this->l('Your Merchant Expertise');
 		parent::__construct();
+		if (!$this->module->active)
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminHome'));
 	}
 	
 	public function setMedia()
