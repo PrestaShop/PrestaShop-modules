@@ -2071,6 +2071,7 @@ class Ebay extends Module
 			else
 				$quantityProduct = $product->quantity;
 
+			//Fix for payment modules validating orders out of context, $link will not  generate fatal error.
 			if(is_object($this->context->link))
 				$link = $this->context->link;
 			else
