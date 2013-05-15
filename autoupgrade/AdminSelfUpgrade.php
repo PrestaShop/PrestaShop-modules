@@ -313,7 +313,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 */
 	public static $force_pclZip = false;
 
-	protected $_includeContainer = false;
+	protected $_includeContainer = true;
 
 	public $_fieldsUpgradeOptions = array();
 	public $_fieldsBackupOptions = array();
