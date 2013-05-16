@@ -180,7 +180,8 @@ class Gsitemap extends Module
 			{
 				if (_PS_VERSION_ >= 1.5)
 				{
-					Dispatcher::getInstance()->addRoute($meta['page'], (isset($meta['url_rewrite']) ? $meta['url_rewrite'] : $meta['page']), $meta['page'], $lang['id_lang']);
+					$url_rewrite = Db::getInstance()->getValue('SELECT url_rewrite FROM `'._DB_PREFIX_.'meta_lang` WHERE `id_meta` = '.(int)$meta['id_meta']);
+					Dispatcher::getInstance()->addRoute($meta['page'], (isset($url_rewrite) ? $url_rewrite : $meta['page']), $meta['page'], $lang['id_lang']);
 					$uri_path = Dispatcher::getInstance()->createUrl($meta['page'], $lang['id_lang'], array(), (bool)Configuration::get('PS_REWRITING_SETTINGS'));
 					$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
 					$url .= __PS_BASE_URI__.(Language::isMultiLanguageActivated() ? $lang['iso_code'].'/' : '').ltrim($uri_path, '/');
