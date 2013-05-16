@@ -13,7 +13,7 @@ $("#form").submit(function()
 function postMobile(token)
 {
 	var id = $("#id_cart").val();
-	var ph = $("#mobileTnt").val();;
+	var ph = $("#mobileTnt").val();
 	
 	$.get(baseDir+"/modules/tntcarrier/relaisColis/postMobileData.php?id_cart="+id+"&phone="+ph+"&token="+token);
 }
@@ -51,7 +51,7 @@ function tntRCgetRelaisColis(commune)
 	var ajaxUrl;
 	var ajaxData;
 
-	ajaxUrl = "http://www.tnt.fr/public/b2c/relaisColis/loadJson.do?cp=" + tntRCcodePostal + "&commune=" + tntRCCommune;
+	ajaxUrl = "https://www.tnt.fr/public/b2c/relaisColis/loadJson.do?cp=" + tntRCcodePostal + "&commune=" + tntRCCommune;
 	ajaxData = "";
 	
 	// Chargement de la liste de relais colis
@@ -78,7 +78,7 @@ function		tntRCgetCommunes()
 	}
 	var ajaxUrl;
 	var ajaxData;
-	ajaxUrl = "http://www.tnt.fr/public/b2c/relaisColis/rechercheJson.do?code=" + tntRCcodePostal;
+	ajaxUrl = "https://www.tnt.fr/public/b2c/relaisColis/rechercheJson.do?code=" + tntRCcodePostal;
 	ajaxData = "";
 	$.ajax({type: "GET", url: ajaxUrl, data: ajaxData, dataType: "script", error:function(msg){$("#relaisColisResponse").html("Error !: " + msg );}});
 }
@@ -174,10 +174,10 @@ function listeRelais(tabRelais)
 {
 	var jData = tabRelais;
 	var jMessage = $('#relaisColisResponse');
-	var tntRCjTable = $("<table style='width:100%;border:1px solid gray;' cellpadding='0' cellspacing='0'></table>");
+	var tntRCjTable = $("<table style='width:100%;border:1px solid gray;' cellpadding='2px' cellspacing='0'></table>");
 	
 	jMessage.html("");
-	tntRCjTable.append("<tr><td class='tntRCblanc' width=''></td><td class='tntRCgris' colspan='2' width=''>&nbsp;Les diff&eacute;rents Relais Colis&#174;</td><td class='tntRCblanc' width=''></td><td class='tntRCgris' width=''>&nbsp;Mon choix</td><td class='tntRCblanc' width=''></td></tr>");
+	tntRCjTable.append("<tr style='background:#999;color:white;height:24px;padding:4px'><th class='tntRCblanc' width=''></th><th class='tntRCgris' colspan='2' width=''>&nbsp;Les diff&eacute;rents Relais Colis&#174;</th><th class='tntRCblanc' width=''></th><th class='tntRCgris' width=''>&nbsp;Mon choix</th><th class='tntRCblanc' width=''></th></tr>");
 	var i = 0;
 	tntRClisteRelais = jData;
 	for(i = 0; i < jData.length; i++) {
@@ -220,12 +220,12 @@ function listeRelais(tabRelais)
 		tntRCjTable.append(
 			"<tr>"+
 				"<td class='tntRCblanc' width=''></td>"+
-				"<td class='tntRCblanc' width=''><img src='"+baseDir+"/modules/tntcarrier/img/logo-tnt-petit.jpg'>&nbsp;" + logo_point + "</td>"+
-				"<td style='font-size:10px; padding:0 0 3px' class='tntRCrelaisColis' width=''>" + nomRelais + " - " + adresse + " - " + codePostal + " - " + commune + "<BR>&nbsp;&nbsp;&nbsp;&nbsp;>> Ouvert jusqu'&agrave; " + heureFermeture + "</td>"+
+				"<td class='tntRCblanc' width='' style='padding-left:5px'><img src='"+baseDir+"/modules/tntcarrier/img/logo-tnt-petit.jpg'>&nbsp;"+logo_point+"</td>"+
+				"<td style='font-size:10px; padding:0 0 3px' class='tntRCrelaisColis' width=''>"+nomRelais+" - "+adresse+" - "+codePostal+" - "+commune+"<BR>&nbsp;&nbsp;&nbsp;&nbsp;>> Ouvert jusqu'&agrave; "+heureFermeture+"</td>"+
 				"<td class='tntRCrelaisColis' width=''>&nbsp;</td>"+
 				"<td style='font-size:10px;  padding: 0;' class='tntRCrelaisColis' valign='middle' align='center' width=''>"+
 					"<img onclick='afficheDetail(" + i + ");' style='vertical-align:middle;cursor:pointer' src='"+baseDir+"/modules/tntcarrier/img/loupe.gif' class='tntRCBoutonLoupe'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
-					"<input type='radio' style='vertical-align: middle;margin-left:0px' name='tntRCchoixRelais' value='" + codeRelais + "'" + ( i==0 ? "checked" : "") + " onclick='tntRCSetSelectedInfo(" + i + ")'/>"+
+					"<input type='radio' style='vertical-align: middle;margin-left:0px' name='tntRCchoixRelais' value='"+codeRelais+"'"+(i==0 ? "checked" : "")+" onclick='tntRCSetSelectedInfo("+i+")'/>"+
 				"</td>"+
 				"<td class='tntRCblanc' width=''></td>"+
 			"</tr>"+
@@ -247,7 +247,7 @@ function listeCommunes(tabCommunes)
 	tntRCSetSelectedInfo();
 	if (mapDetected) resetMap();
 
-	var tntRCjTable = $("<table style='border:1px solid gray;' cellpadding='0' cellspacing='0' width='100%'></table>");
+	var tntRCjTable = $("<table style='border:1px solid gray;' cellpadding='2px' cellspacing='0' width='100%'></table>");
 	tntRCjTable.append("<tr><td class='tntRCblanc' width=''></td><td class='tntRCgris' colspan='2' width=''>&nbsp;Les diff&eacute;rents Relais Colis&#174;</td><td class='tntRCblanc' width=''></td><td class='tntRCgris' width=''>&nbsp;Mon choix</td><td class='tntRCblanc' width=''></td></tr>");
 
 	var jData = tabCommunes;
@@ -284,7 +284,7 @@ function listeCommunes(tabCommunes)
 			"<td class='tntRCblanc' align='center' width=''>"+
 				"<a href='javascript:tntRCgetRelaisColis();'><img class='tntRCButton' src='"+baseDir+"/modules/tntcarrier/img/bt-Continuer-2.jpg' onmouseover='this.src=\"/modules/tntcarrier/img/bt-Continuer-1.jpg\"' onmouseout='this.src=\"/modules/tntcarrier/img/bt-Continuer-2.jpg\"'></a>" +
 			"</td>"+
-			"<td class='tntRCblanc' width='></td>"+
+			"<td class='tntRCblanc' width=''></td>"+
 		"</tr>");
 	
 	blocCodePostal.html(tntRCjTable);	
@@ -431,6 +431,7 @@ function setInfoMarker(codeRelais, nomRelais, adresse, codePostal, commune, mess
 
 	google.maps.event.addListener(infowindow, "domready", function() {  
 		$("#point_choisi").attr("value", adresse_pointclic);
+		$("#tabs").tabs();
 		$("#tabs").parent().removeAttr("style");
 	});
 
@@ -573,7 +574,7 @@ function switchFromTo(htmlContent) {
 
 function popup_roadmap() {
 	if($("#saisie").val() == "") return false;
-	window.open("http://www.tnt.fr/public/geolocalisation/print_roadmap.do?mode="+ $("#mode").val() +"&point_choisi="+ $("#point_choisi").val() +"&saisie="+ $("#saisie").val());
+	window.open("https://www.tnt.fr/public/geolocalisation/print_roadmap.do?mode="+ $("#mode").val() +"&point_choisi="+ $("#point_choisi").val() +"&saisie="+ $("#saisie").val());
     return false;
 }
 

@@ -15,12 +15,12 @@
 	padding-right: 10px;
 	padding-top: 25px;
 	text-align: right;
-	width: 490px;
+	width: 490px
 }
 
 #tntRCdetailRelaisEntete .tntRCHeader
 {
-	width:590px;
+	width:590px
 }
 
 .tntRCSubHeader {
@@ -33,7 +33,7 @@
 	font-weight: bold;
 	padding-bottom: 3px;
 	padding-top: 3px;	
-	width: 500px;
+	width: 500px
 }
 
 .tntRCBody {
@@ -48,7 +48,7 @@
 	padding-bottom: 10px;	
 	padding-left: 10px;
 	padding-top: 10px;	
-	width: 490px;
+	width: 490px
 }
 
 .tntRCBodySearch {
@@ -63,7 +63,7 @@
 	padding-left: 3px;
 	padding-top: 8px;
 	padding-bottom: 8px;
-	width: 497px;
+	width: 497px
 }
 
 .tntRCError {
@@ -73,7 +73,7 @@
 	font-family: arial,helvetica,sans-serif;
 	font-size: 12pt;
 	font-weight: bold;
-	width: 480px;
+	width: 480px
 }
 
 .tntRCGray {
@@ -83,7 +83,7 @@
 	font-family: arial,helvetica,sans-serif;
 	font-size: 10pt;
 	heigth: 12px;
-	width: 480px;
+	width: 480px
 }
 
 .tntRCInput {
@@ -92,7 +92,7 @@
 	font-size: 10pt;
 	font-weight: normal;
 	text-align: center;
-	width: 50px;
+	width: 50px
 }
 
 .tntRCWhite {
@@ -101,7 +101,7 @@
 	display: bloc;
 	font-family: arial,helvetica,sans-serif;
 	font-size: 14pt;
-	width: 500px;
+	width: 500px
 }
 
 .tntRCrelaisColis {
@@ -113,7 +113,7 @@
 	border-bottom-width: 1px;	
 	background-color: #ffffff;
 	padding-bottom: 3px;	
-	vertical-align: middle;
+	vertical-align: middle
 }
 		
 .tntRCtitreMode {
@@ -129,20 +129,20 @@
 	font-size: 14px;
 	color: #a0a0a0;
 	font-weight: bold;
-	background-color: #ffffff;
+	background-color: #ffffff
 }	
 .tntRCdetailGros {
 	font-family: arial,helvetica,sans-serif;
 	font-size: 14pt;
 	color: #a0a0a0;
-	background-color: #ffffff;
+	background-color: #ffffff
 }
 
 .tntRCnoirPetit {
 	font-family: arial,helvetica,sans-serif;
 	font-size: 12pt;
 	color: #000000;
-	background-color: #ffffff;
+	background-color: #ffffff
 }	
 
 .tntRCdetailPetit {
@@ -150,7 +150,7 @@
 	font-size: 12pt;
 	color: #a0a0a0;
 	background-color: #ffffff;
-	font-weight: bold;
+	font-weight: bold
 }	
 
 .tntRCentree {
@@ -158,7 +158,7 @@
 	font-size: 12pt;
 	color: #000000;
 	background-color: #ffffff;
-	vertical-align: middle;
+	vertical-align: middle
 }	
 
 .tntRCgris {
@@ -166,14 +166,14 @@
 	font-size: 10pt;
 	color: #ffffff;
 	background-color: #a0a0a0;
-	font-weight: bold;
+	font-weight: bold
 }
 
 table.tntRCHoraire td {
 	border: 1px solid gray;
 	font-family: arial,helvetica,sans-serif;
 	font-size: 10pt;
-	vertical-align: middle;
+	vertical-align: middle
 }
 
 .tntRCHoraireJour{
@@ -182,13 +182,13 @@ table.tntRCHoraire td {
 	padding-right: 10px;
 	height: 36px;
 	width: 79px;
-	font-weight: bold;
+	font-weight: bold
 }
 
 .tntRCHoraireHeure {
 	color: #000000;
 	padding-left: 10px;			
-	width: 84px;
+	width: 84px
 }				
 
 .tntRCblanc {
@@ -208,7 +208,7 @@ table.tntRCHoraire td {
 	padding-bottom: 3px;					
 }	
  .tntRCfermeture {
-	padding-left: 585px;
+	padding-left: 585px
 }
 
  .tntRCBack2Communes {
@@ -219,19 +219,19 @@ table.tntRCHoraire td {
 	font-size: 11pt;
 	font-weight: bold;
 	padding-top: 18px;
-	text-align: right;
+	text-align: right
 }
 
  .tntRCBack2Communes a {
 	color: #a0a0a0;
 	text-decoration: none;
-	padding-right: 5px;
+	padding-right: 5px
 }
 
  .tntRCBack2Communes a img{
 	border: 0;
 	padding-right: 5px;
-	vertical-align: text-bottom;
+	vertical-align: text-bottom
 }
 
  .tntRCBoutonLoupe {
@@ -243,7 +243,7 @@ table.tntRCHoraire td {
 	padding-top: 4px;
 	padding-bottom: 3px;	
 	text-decoration: none;
-	vertical-align: middle;
+	vertical-align: middle
 }	
  .jqmWindow {
 	background-color: #FFF;
@@ -255,7 +255,7 @@ table.tntRCHoraire td {
 	left: 50%;
 	margin-left: -300px;
 	margin-top: -240px;
-	width: 500px;
+	width: 500px
 }
 
  div.tntRCfermeture .jqmClose em{display:none;}
@@ -263,25 +263,25 @@ table.tntRCHoraire td {
 	background: transparent url(../modules/tntcarrier/img/close_icon_double.png) 0 0 no-repeat;
 	display: block;
 	width: 20px;
-	height: 20px;
+	height: 20px
 }
 
  div.tntRCfermeture a.jqmClose:hover{ background-position: 0 -20px; }
 
  .jqmOverlay { 
 	background-color: #000; 
-	overflow: hidden;
+	overflow: hidden
 }
 
  * html .jqmWindow {
 	position: absolute;
-	top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px');
+	top: expression((document.documentElement.scrollTop || document.body.scrollTop) + Math.round(17 * (document.documentElement.offsetHeight || document.body.clientHeight) / 100) + 'px')
 }
 
  img.tntRCButton {
 	border: 0px;
 	vertical-align: middle;
-	text-decoration: none;
+	text-decoration: none
 }
 
  sup.tntRCSup {
@@ -342,30 +342,30 @@ table.tntRCHoraire td {
 	font-family: arial,helvetica,sans-serif;
 	font-weight: bold;
 	font-size : 15px;
-	text-decoration:none;
+	text-decoration:none
 }
 
 #googleMapTnt a {
 	color: #f60;
 	outline-color: #f60 !important;
-	outline: none;
+	outline: none
 }
 				
 #googleMapTnt a:hover {
-	text-decoration: none;
+	text-decoration: none
 }
 
 #googleMapTnt .exemplePresentation {
 	display: inline; 
-	margin-top: 10px;
+	margin-top: 10px
 }
 
  #tntB2CRelaisColis {
-	width: 610px;
+	width: 610px
 }
 
 .detailRelais
 {
 	background: url("../img/ui-dialog/fcfdfd_40x100_textures_06_inset_hard_100.png") repeat-x scroll 0 bottom #FCFDFD;
-	height:400px;
+	height:400px
 }
