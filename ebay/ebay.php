@@ -62,7 +62,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.4.0';
+		$this->version = '1.4.1';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -2071,6 +2071,12 @@ class Ebay extends Module
 			else
 				$quantityProduct = $product->quantity;
 
+			//Fix for payment modules validating orders out of context, $link will not  generate fatal error.
+			if(is_object($this->context->link))
+				$link = $this->context->link;
+			else
+				$link = new Link();
+
 			if (Validate::isLoadedObject($product) && $product->id_category_default > 0) 
 			{
 				// Load default category matched in cache
@@ -2087,9 +2093,9 @@ class Ebay extends Module
 				$images = $product->getImages($this->id_lang);
 				foreach ($images as $image) 
 				{
-					$pictures[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
-					$picturesMedium[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
-					$picturesLarge[] = str_replace('https://', 'http://', $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
+					$pictures[] = str_replace('https://', 'http://', $prefix . $link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
+					$picturesMedium[] = str_replace('https://', 'http://', $prefix . $link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'medium' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
+					$picturesLarge[] = str_replace('https://', 'http://', $prefix . $link->getImageLink('ebay', $product->id . '-' . $image['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : '')));
 				}
 				// Load Variations
 				$variations = array();
@@ -2132,7 +2138,7 @@ class Ebay extends Module
 				if (isset($combinationsImages) && !empty($combinationsImages) && count($combinationsImages) > 0)
 					foreach ($combinationsImages as $ci)
 						foreach ($ci as $i)
-							$variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $this->context->link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : ''));
+							$variations[$product->id . '-' . $i['id_product_attribute']]['pictures'][] = $prefix . $link->getImageLink('ebay', $product->id . '-' . $i['id_image'], 'large' . ($this->isVersionOneDotFive('>=', '1.5.1') ? '_default' : ''));
 
 
 				// Load basic price

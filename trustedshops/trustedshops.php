@@ -55,7 +55,7 @@ class TrustedShops extends Module
 
 		$this->name = 'trustedshops';
 		$this->tab = 'payment_security';
-		$this->version = '1.3.6';
+		$this->version = '1.3.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();

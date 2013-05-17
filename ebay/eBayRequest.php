@@ -61,10 +61,9 @@ class eBayRequest
 	private $siteExtension;
 	private $currency;
 
-	/*      * *************************************************************** */
-
-	/** Constructor And Request Methods ****************************** */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Constructor And Request Methods *******************************/
+	/******************************************************************/
 
 
 	public function __construct($apiCall = '') 
@@ -80,7 +79,7 @@ class eBayRequest
 		$this->currency = $ebayCountry->getCurrency();
 		$this->itemConditionError = false;
 
-		/*           * * SAND BOX PARAMS ** */
+		/* SAND BOX PARAMS */
 
 		if ($this->dev) 
 		{
@@ -193,10 +192,9 @@ class eBayRequest
 
 		return $headers;
 	}
-	/*      * *************************************************************** */
-
-	/** Authentication Methods *************************************** */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Authentication Methods ****************************************/
+	/******************************************************************/
 
 
 	function fetchToken() 
@@ -253,9 +251,9 @@ class eBayRequest
 		$this->session = (string) $this->response->SessionID;
 	}
 
-	/*      * *************************************************************** */
-	/*      * ** Get User Informations ************************************** */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/**** Get User Informations ***************************************/
+	/******************************************************************/
 
 	function getUserProfile() 
 	{
@@ -269,14 +267,13 @@ class eBayRequest
 
 
 		///Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-		$requestXml .= '<GetUserProfileRequest xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
-		$requestXml .= '  <UserID>' . $this->username . '</UserID>' . "\n";
-		$requestXml .= '  <IncludeSelector>Details</IncludeSelector>' . "\n";
-		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>' . "\n";
-		$requestXml .= '  <Version>719</Version>' . "\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
-
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
+		$requestXml .= '<GetUserProfileRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
+		$requestXml .= '  <UserID>'.$this->username.'</UserID>'."\n";
+		$requestXml .= '  <IncludeSelector>Details</IncludeSelector>'."\n";
+		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
+		$requestXml .= '  <Version>719</Version>'."\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
 		$requestXml .= '</GetUserProfileRequest>' . "\n";
 
 
@@ -305,10 +302,9 @@ class eBayRequest
 		return $userProfile;
 	}
 
-	/*      * *************************************************************** */
-
-	/** Retrieve Categories Methods ********************************** */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Retrieve Categories Methods ***********************************/
+	/******************************************************************/
 
 
 	function saveCategories()
@@ -443,10 +439,9 @@ class eBayRequest
 		return 0;
 	}
 
-	/*      * *************************************************************** */
-
-	/** Methods to retrieve the global informations about eBay ******* */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Methods to retrieve the global informations about eBay ********/
+	/******************************************************************/
 
 	function getReturnsPolicy() 
 	{
@@ -649,10 +644,9 @@ class eBayRequest
 	}
 
 
-	/*      * *************************************************************** */
-
-	/** Add / Update / End Product Methods *************************** */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Add / Update / End Product Methods ****************************/
+	/******************************************************************/
 
 
 	function addFixedPriceItem($datas = array()) 
@@ -671,7 +665,7 @@ class eBayRequest
 		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
 		$requestXml .= '  <Item>' . "\n";
 		$requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
-		$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 		if (isset($datas['pictures'])) 
 		{
 			$requestXml .= '    <PictureDetails>' . "\n";
@@ -703,7 +697,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		if (isset($datas['attributes']))
 			foreach ($datas['attributes'] as $name => $value) 
@@ -816,7 +810,7 @@ class eBayRequest
 			$requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
 		{//We resynchronize everything, not only quantity and price
-			$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 			$requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
 			$requestXml .= '    <ShippingDetails>' . "\n";
 			$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
@@ -986,7 +980,7 @@ class eBayRequest
 		$requestXml .= '    <PrimaryCategory>' . "\n";
 		$requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
 		$requestXml .= '    </PrimaryCategory>' . "\n";
-		$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 		if (isset($datas['pictures'])) 
 		{
 			$requestXml .= '    <PictureDetails>' . "\n";
@@ -1000,7 +994,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		$requestXml .= '    </ItemSpecifics>' . "\n";
 		$requestXml .= $this->_getReturnPolicy($datas);
@@ -1238,7 +1232,7 @@ class eBayRequest
 		$requestXml .= '    <ItemSpecifics>' . "\n";
 		$requestXml .= '      <NameValueList>' . "\n";
 		$requestXml .= '        <Name>Marque</Name>' . "\n";
-		$requestXml .= '        <Value>' . htmlentities($datas['brand']) . '</Value>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
 		$requestXml .= '      </NameValueList>' . "\n";
 		$requestXml .= '    </ItemSpecifics>' . "\n";
 		$requestXml .= $this->_getReturnPolicy($datas);
@@ -1302,7 +1296,7 @@ class eBayRequest
 		$requestXml .= '    </Variations>' . "\n";
 		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
 		{
-			$requestXml .= '    <Title>' . substr($datas['name'], 0, 55) . '</Title>' . "\n";
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
 			$requestXml .= '    <Description>' . "\n";
 			$requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
 			$requestXml .= '    </Description>' . "\n";
@@ -1370,10 +1364,9 @@ class eBayRequest
 		return true;
 	}
 
-	/*      * *************************************************************** */
-
-	/** Order Methods ************************************************ */
-	/*      * *************************************************************** */
+	/******************************************************************/
+	/** Order Methods *************************************************/
+	/******************************************************************/
 
 
 
