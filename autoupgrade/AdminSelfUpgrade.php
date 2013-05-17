@@ -3827,7 +3827,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 							$this->_html .= '<option value="'.$backup_name.'">'.$backup_name.'</option>';
 		$this->_html .= '</select>
 				</div>
-				<div class="clear">&nbsp</div>
+				<div class="clear">&nbsp;</div>
 			</div>
 		</fieldset>';
 	}
