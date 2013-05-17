@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 <br/>
 <fieldset style="width:400px">
 			<legend><img src="../img/admin/delivery.gif" />{l s='Shipping information'}</legend>
