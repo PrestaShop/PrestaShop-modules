@@ -917,12 +917,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			foreach ($langs as $lang)
 			{
-				// ssl needs to be activated on the vhost, currently not the case
-				$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? '' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
+				$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
 
 				if (!$lang_pack)
 					continue;
-				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? '' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
+				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
 				{
 					$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 					if ((bool)@file_put_contents($file, $content))
