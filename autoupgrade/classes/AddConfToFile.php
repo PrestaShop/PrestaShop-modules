@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class	AddConfToFile
+class AddConfToFile
 {
 	public $fd;
 	public $file;
