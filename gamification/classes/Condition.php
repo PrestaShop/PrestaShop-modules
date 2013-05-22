@@ -181,8 +181,13 @@ class Condition extends ObjectModel
 	{
 		if (preg_match('/'.implode('|', self::$unauthorized).'/', $this->request))
 			return false;
-			
-		$this->result = (int)Db::getInstance()->getValue(GamificationTools::parseMetaData($this->request));
+		
+		try {
+			$this->result = (int)Db::getInstance()->getValue(GamificationTools::parseMetaData($this->request));
+		} catch (Exception $e) {
+			return false;
+		}	
+		
 		if ($this->makeCalculation($this->operator, $this->result, $this->value))
 			$this->validated = 1;
 		$this->save();

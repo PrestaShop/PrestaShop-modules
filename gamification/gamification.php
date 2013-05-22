@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -203,14 +203,18 @@ class Gamification extends Module
 					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
-				if (isset($data->conditions))
-					$this->processImportConditions($data->conditions, $id_lang);
-
-				if (isset($data->badges))
-					$this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
-					
-				if (isset($data->advices))
-					$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
+				try {
+					if (isset($data->conditions))
+						$this->processImportConditions($data->conditions, $id_lang);
+	
+					if (isset($data->badges))
+						$this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
+						
+					if (isset($data->advices))
+						$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
+				} catch (Exception $e) {
+					die('tototo');
+				}
 			}
 	}
 	
