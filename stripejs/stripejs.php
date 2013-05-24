@@ -38,7 +38,7 @@ class StripeJs extends PaymentModule
 	{
 		$this->name = 'stripejs';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.9.4';
+		$this->version = '0.9.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -361,6 +361,9 @@ class StripeJs extends PaymentModule
 	 */
 	public function hookOrderConfirmation($params)
 	{
+		if (!isset($params['objOrder']) || ($params['objOrder']->module != $this->name))
+			return false;
+		
 		if ($params['objOrder'] && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid))
 
 			$this->smarty->assign('stripe_order', array('reference' => isset($params['objOrder']->reference) ? $params['objOrder']->reference : '#'.sprintf('%06d', $params['objOrder']->id), 'valid' => $params['objOrder']->valid));
