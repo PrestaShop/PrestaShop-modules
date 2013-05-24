@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.0';
+		$this->version = '3.5.1';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -209,6 +209,18 @@ class PayPal extends PaymentModule
 		
 		if (Tools::getValue('paypal_ec_canceled') || $this->context->cart === false)
 			unset($this->context->cookie->express_checkout);
+		
+		if (_PS_VERSION_ >= '1.5.0.2')
+		{
+			$version = Db::getInstance()->getValue('SELECT version FROM `'._DB_PREFIX_.'module` WHERE name = \''.$this->name.'\'');
+			if (empty($version) === true)
+			{
+				Db::getInstance()->execute('
+					UPDATE `'._DB_PREFIX_.'module` m
+					SET m.version = \''.bqSQL($this->version).'\'
+					WHERE m.name = \''.bqSQL($this->name).'\'');
+			}
+		}
 		
 		if (defined('_PS_ADMIN_DIR_'))
 		{
