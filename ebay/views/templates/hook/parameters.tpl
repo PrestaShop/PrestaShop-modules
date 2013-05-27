@@ -105,7 +105,7 @@
 		<legend>{l s='Return policy' mod='ebay'}</legend>
 		<label>{l s='Please define your returns policy' mod='ebay'} : </label>
 		<div class="margin-form">
-			<select name="ebay_returns_accepted_option">';
+			<select name="ebay_returns_accepted_option">
 			{foreach from=$policies item=policy}
 				<option value="{$policy.value}" {if $returnsConditionAccepted == $policy.value} selected="selected"{/if}>{$policy.description}</option>
 			{/foreach}							   

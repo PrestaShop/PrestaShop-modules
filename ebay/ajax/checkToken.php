@@ -25,27 +25,21 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$configPath = '../../../config/config.inc.php';
-if (file_exists($configPath))
+$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
+if (file_exists($config_path))
 {
-	include('../../../config/config.inc.php');
+	include($config_path);
 	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 		die('ERROR :X');
 
-	if (file_exists(dirname(__FILE__).'/../eBayRequest.php'))
+	if (file_exists($ebay_request_path = dirname(__FILE__).'/../EbayRequest.php'))
 	{
-		include(dirname(__FILE__).'/../eBayRequest.php');
+		include($ebay_request_path);
 
-		$ebay = new eBayRequest();
-		$ebay->session = Configuration::get('EBAY_API_SESSION');
-		$ebay->username = Configuration::get('EBAY_API_USERNAME');
-		$ebay->fetchToken();
-		if (!empty($ebay->token))
+		$ebay = new EbayRequest();
+		if ($token = $ebay->fetchToken(Configuration::get('EBAY_API_USERNAME'), Configuration::get('EBAY_API_SESSION')))
 		{
-			if(version_compare(_PS_VERSION_,'1.5','>'))
-				Configuration::updateValue('EBAY_API_TOKEN', $ebay->token, false, 0, 0);
-			else
-				Configuration::updateValue('EBAY_API_TOKEN', $ebay->token);
+			Configuration::updateValue('EBAY_API_TOKEN', $token, false, 0, 0);
 			echo 'OK';
 		}
 		else

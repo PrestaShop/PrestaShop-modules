@@ -25,31 +25,31 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$configPath = '../../../config/config.inc.php';
-if (file_exists($configPath))
+$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
+if (file_exists($config_path))
 {
-	include('../../../config/config.inc.php');
+	include($config_path);
 	
-	$sql = "SELECT * FROM " . _DB_PREFIX_ . "ebay_shipping_zone_excluded WHERE region = '" . pSQL(Tools::getValue('region')) . "'";
+	$sql = 'SELECT * FROM '._DB_PREFIX_.'ebay_shipping_zone_excluded WHERE region = \''.pSQL(Tools::getValue('region')).'\'';
 	$countries = Db::getInstance()->ExecuteS($sql);
-	$string = '';
-	if(count($countries) > 0){
-		foreach ($countries as $country) {
-			
-			$string .= '<div class="excludeCountry">';
-			$string .= '<input type="checkbox" name="excludeLocation['.$country['location'].']" ';
-				if($country['excluded'] == 1)
-					$string .= ' checked="checked" ';
+	if (count($countries)) 
+	{
+		$string = '';
+		foreach ($countries as $country) 
+		{	
+			$string .= '<div class="excludeCountry">
+				<input type="checkbox" name="excludeLocation['.$country['location'].']" ';
+			if ($country['excluded'] == 1)
+				$string .= ' checked="checked" ';
 
-			$string .= '/>'.$country['description'];
-			$string .= '</div>';
+			$string .= '/>'.$country['description'].'</div>';
 		}	
 		echo $string;	
 	}
 	else
-		echo "No countries were found for this region";	
+		echo 'No countries were found for this region';
 }
 else
-	echo "Problem with configuration file";
+	echo 'Problem with configuration file';
 
 	
