@@ -57,7 +57,7 @@
 				<th style="width:128px;">
 					{l s='Price adjustment' mod='ebay'}
 					<a title="{l s='Help' mod='ebay'}" href="{$request_uri}{$tabHelp}" >
-						<img src="{$_path}img/help.png" width="25" alt="help_picture"/>
+						<img src="{$_path}views/img/help.png" width="25" alt="help_picture"/>
 					</a>
 				</th>
 			</tr>
@@ -65,7 +65,7 @@
 		<tbody>
 			<tr id="removeRow">
 				<td class="center" colspan="3">
-					<img src="{$_path}img/loading-small.gif" alt="" />
+					<img src="{$_path}views/img/loading-small.gif" alt="" />
 				</td>
 			</tr>
 		</tbody>
@@ -111,7 +111,7 @@
 			});
 			
 			$("#configForm2SuggestedCategories input[type=submit]").click(function(){
-				$('<div class="center"><img src="{/literal}{$_path}{literal}img/loading-small.gif" alt="" />{/literal}{l s='Thank you for waiting while creating suggestions' mod='ebay'}{literal}</div>').insertAfter($(this));
+				$('<div class="center"><img src="{/literal}{$_path}{literal}views/img/loading-small.gif" alt="" />{/literal}{l s='Thank you for waiting while creating suggestions' mod='ebay'}{literal}</div>').insertAfter($(this));
 				$(this).fadeOut();
 				$.ajax({
 					url: "{/literal}{$_module_dir_}{literal}ebay/ajax/suggestCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",

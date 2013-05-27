@@ -125,7 +125,7 @@
 	function getShippingLocation(lastId, zone)
 	{literal}{{/literal}
 		var string = '';
-		{foreach from=$internationalShippingLocation item=shippingLocation}
+		{foreach from=$internationalShippingLocations item=shippingLocation}
 			if(zone != undefined && zone.indexOf('{$shippingLocation.location}') != -1)
 			{literal}{{/literal}
 			string += '<div class="shippinglocationOption"><input type="checkbox" checked="checked" name="internationalShippingLocation['+lastId+'][{$shippingLocation.location}] value="{$shippingLocation.location}">{$shippingLocation.description}</option></div>';

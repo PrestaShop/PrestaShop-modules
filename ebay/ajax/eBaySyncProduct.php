@@ -25,10 +25,10 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$configPath = '../../../config/config.inc.php';
-if (file_exists($configPath))
+$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
+if (file_exists($config_path))
 {
-	include('../../../config/config.inc.php');
+	include($config_path);
 	include('../../../init.php');
 	include('../../../modules/ebay/ebay.php');
 	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
