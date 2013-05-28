@@ -231,7 +231,7 @@ class Trustly extends PaymentModule
 			$this->context->smarty->assign('trustly_url', $this->context->link->getModuleLink('trustly', 'iframe', array(), true));
 		else
 			$this->context->smarty->assign('trustly_url', __PS_BASE_URI__.'modules/'.$this->name.'/controllers/front/iframe.php?compat14');
-		$this->context->smarty->assign('module_dir', __PS_BASE_URI__.'modules/'.$this->name.'/');
+		$this->context->smarty->assign('module_dir', __PS_BASE_URI__.((int)Configuration::get('PS_REWRITING_SETTINGS') && isset($smarty->ps_language) && !empty($smarty->ps_language) ? $smarty->ps_language->iso_code.'/' : '').'modules/'.$this->name.'/');
 		
 		// This template is just a text and a logo that redirect to a new page that contains Trustly's iframe
 		return $this->context->smarty->fetch(dirname(__FILE__).'/views/templates/hook/payment.tpl');
