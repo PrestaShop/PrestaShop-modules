@@ -197,7 +197,7 @@ class UpgraderCore
 						$this->version_num = (string)$branch->num;
 						$this->link = (string)$branch->download->link;
 						$this->md5 = (string)$branch->download->md5;
-						$this->changelog = (string)$branch->download->changelog;
+						$this->changelog = (string)$branch->changelog;
 						if (extension_loaded('openssl'))
 						{
 							$this->link = str_replace('http', 'https', $this->link);
