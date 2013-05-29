@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{trustly}prestashop>trustly_f4b80249fd3be1e9ec861742046935cf'] = 'Permita a sus clientes pagar por transferencia bancaria directa online desde su banca en internet y sin salir de su comercio online. Único en España con el 90% de cobertura bancaria.';
-$_MODULE['<{trustly}prestashop>trustly_0851f7a0844553fa1168718de0f87262'] = 'No está autorizado a abrir URLs externas';
+$_MODULE['<{trustly}prestashop>trustly_aea29018bc59f84cbbc679ccdfd71552'] = 'No está autorizado a abrir URLs externas';
 $_MODULE['<{trustly}prestashop>trustly_f8b94463fa8b5591e5edbbb8021e8038'] = 'OpenSSL no está activado';
 $_MODULE['<{trustly}prestashop>trustly_41359b050fc5d26ae7a0583844f9f07a'] = 'No se puede acceder a la pasarela de pagos';
 $_MODULE['<{trustly}prestashop>trustly_1d78b260cd672d7727240fca765086e6'] = 'Compruebe su firewall o contacte con su proveedor de alojamiento para comprobarlo en su lugar';
@@ -14,7 +14,7 @@ $_MODULE['<{trustly}prestashop>trustly_336e7d09c3e8933f82a4594346604fb1'] = 'Con
 $_MODULE['<{trustly}prestashop>trustly_2787b36159fabb4e0c48e04ffb4f3ef1'] = '¿No tienes una cuenta de Trustly?';
 $_MODULE['<{trustly}prestashop>trustly_043c201cdce8f2368b86ef75d8f210b3'] = 'Sigue los siguientes pasos:';
 $_MODULE['<{trustly}prestashop>trustly_22fe6de889af67de1a4ea49e1ebacd22'] = 'Regístrate para obtener una cuenta Trustly pulsando el botón \"Abrir una cuenta nueva de Trustly\" en la parte de arriba y rellena el formulario de registro.';
-$_MODULE['<{trustly}prestashop>trustly_a54f2648648d502838d92532a826c4d2'] = 'Introduce el nombre de usuario y contraseña que has creado en el formulario de registro, en los campos correspondientes de abajo.';
+$_MODULE['<{trustly}prestashop>trustly_94c34972f85f427270edd1f2e4dcef77'] = 'Introduce el nombre de usuario y contraseña que has creado en el formulario de registro, en los campos correspondientes de abajo.';
 $_MODULE['<{trustly}prestashop>trustly_9dafa75e6f7c16d0e50c160ce919e711'] = '3. Pulsa el botón \"Actualización de la configuración\"';
 $_MODULE['<{trustly}prestashop>trustly_405201a1b09ecdfbe2d8e46c64045a95'] = '¿Tienes ya una cuenta de Trustly?';
 $_MODULE['<{trustly}prestashop>trustly_54dd3a8f83ddc92742601ded71396fa9'] = 'Reemplaza en el campo de abajo, la Private Key actual, por la que te hemos mostrado una vez aceptaste y firmaste el formulario de registro.';
@@ -40,5 +40,5 @@ $_MODULE['<{trustly}prestashop>iframe_879f6b8877752685a966564d072f498f'] = 'Su c
 $_MODULE['<{trustly}prestashop>payment_c284d99371241889d0c343430e4ed584'] = 'Transferencia bancaria directa online con Trustly';
 $_MODULE['<{trustly}prestashop>payment_31797189117cf605565c9d330601cc7f'] = 'Trustly';
 $_MODULE['<{trustly}prestashop>payment_feeb7afecaad846a07aae5fef6faa0ed'] = '¡Nuevo método de pago!';
-$_MODULE['<{trustly}prestashop>payment_1e42943681e6394bcd73837e8f9ee3ad'] = 'Realiza tu pago por transferencia bancaria directa online sin abandonar este sitio web. Te conectaremos con tu banca en internet, en un entorno de máxima seguridad. Usar Trustly es fácil, gratis y sin  necesidad de registros. ';
-$_MODULE['<{trustly}prestashop>payment_01699d9f09fac65175021091ffd686b9'] = 'Ejemplos de bancos disponibles con Trustly: BBVA, Santander, La Caixa, Bankia, Sabadell, Banco Popular, Banco Pastor, Bankinter y ING Direct.';
+$_MODULE['<{trustly}prestashop>payment_6c72c76b58d603940d01b9ca897989d0'] = 'Realiza tu pago por transferencia bancaria directa online sin abandonar este sitio web. Te conectaremos con tu banca en internet, en un entorno de máxima seguridad. Usar Trustly es fácil, gratis y sin necesidad de registros.';
+$_MODULE['<{trustly}prestashop>payment_01699d9f09fac65175021091ffd686b9'] = 'Bancos disponibles con Trustly: BBVA, Santander, La Caixa, Bankia, Sabadell, Banco Popular, Banco Pastor, Bankinter e ING Direct.';
