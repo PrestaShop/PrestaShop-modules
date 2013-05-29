@@ -2,7 +2,7 @@
 <module>
 	<name>trustly</name>
 	<displayName><![CDATA[Trustly]]></displayName>
-	<version><![CDATA[1.0]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[Allow your customers to pay from their online bank account directly in your web-shop. The only payment method in Spain with 90% bank coverage.]]></description>
 	<author><![CDATA[]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
