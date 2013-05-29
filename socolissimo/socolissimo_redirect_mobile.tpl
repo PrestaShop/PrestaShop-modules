@@ -23,54 +23,46 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-    var soInputs = new Object();
+ var soInputs = new Object();
 var soBwdCompat = "{$SOBWD_C}";
 var initialCost = "{$initialCost}";
 var soCarrierId = "{$id_carrier}";
 var baseDir = '{$content_dir}';
-    {foreach from=$inputs item=input key=name name=myLoop}
+ {foreach from=$inputs item=input key=name name=myLoop}
         soInputs.{$name} = "{$input|strip_tags|addslashes}";
     {/foreach}
-    {literal}
-    function change_action_form()
-    {
+{literal}
+	function change_action_form()
+	{
 
             if(!soBwdCompat){
-        if ($('#id_carrier{/literal}{$id_carrier}{literal}').is(':not(:checked)'))
-            $('#form').attr("action", 'order.php');
-        else
-            $('#form').attr("action", baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
+		if ($('#id_carrier'+soCarrierId).is(':not(:checked)'))
+			$('#form').attr("action", 'order.php');
+		else
+			$('#form').attr("action", baseDir+'modules/socolissimo/redirect_mobile.php' + serialiseInput(soInputs));
             }
             else{
-            if ($("input[name*='delivery_option[']:checked").val().replace(",", "") != soCarrierId){
-            $('#form').attr("action", 'order.php');
-                }
-        else{
-            $('#form').attr("action", baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
-                }
-
-}
-    }
-    $(document).ready(function()
-    {
-                if(!soBwdCompat){
+                if ($("input[name*='delivery_option[']:checked").val().replace(",", "") != soCarrierId)
+                    $('#form').attr("action", 'order.php');
+		else
+                    $('#form').attr("action", baseDir+'modules/socolissimo/redirect_mobile.php' + serialiseInput(soInputs));
+            }
+	}
+	$(document).ready(function()
+	{
+                if(!soBwdCompat)
                     $($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').text(initialCost);
-                    $($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price').css('white-space','nowrap');
-            }
-            else{
-                $('input.delivery_option_radio').each(function(){
-                if($(this).val() == soCarrierId+','){
-                 $(this).next().children().children().find('div.delivery_option_price').text(initialCost+" TTC");
+                else{
+                    $('input.delivery_option_radio').each(function(){
+                        if($(this).val() == soCarrierId+',')
+                            $(this).next().children().children().find('div.delivery_option_price').text(initialCost + " TTC");
+                    });
                 }
-                });
-            }
-
-        $('input[name=id_carrier]').change(function() {
-            change_action_form();
-        });
-        change_action_form();
-
-    });
+		$('input[name=id_carrier]').change(function() {
+			change_action_form();
+		});
+		change_action_form();
+	});
 function serialiseInput(inputs)
 {
     var str = '?first_call=1&';
@@ -78,7 +70,8 @@ function serialiseInput(inputs)
         str += cle + '=' + inputs[cle] + '&';
     return (str + 'gift=' + $('#gift').attr('checked') + '&gift_message='+ $('#gift_message').attr('value'));
 }
-    {/literal}
-
+{/literal}
 </script>
-
+{foreach from=$inputs item=input key=name name=myLoop}
+	<input type="hidden" name="{$name|escape:'htmlall':'UTF-8'}" value="{$input|strip_tags|escape:'htmlall'}"/>
+{/foreach}
