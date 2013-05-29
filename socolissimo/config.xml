@@ -2,8 +2,8 @@
         <module>
             <name>socolissimo</name>
             <displayName><![CDATA[So Colissimo]]></displayName>
-            <version><![CDATA[2.7.5]]></version>
-            <description><![CDATA[Offer your customer 5 different delivery methods with LaPoste.]]></description>
+            <version><![CDATA[2.8.0]]></version>
+            <description><![CDATA[Proposez &agrave; vos clients 5 modes de livraison via La Poste.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[shipping_logistics]]></tab>
             <is_configurable>1</is_configurable>
