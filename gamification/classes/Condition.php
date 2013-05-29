@@ -106,13 +106,32 @@ class Condition extends ObjectModel
 		
 		foreach($result as $r)
 			$ids[] = $r['id_condition'];
-		return $ids;
+		
+		$sub_query = new DbQuery();
+		$sub_query->select('id_advice');
+		$sub_query->from('advice', 'a');
+		
+		$query = new DbQuery();
+		$query->select('c.`id_condition`');
+		$query->from('condition', 'c');
+		$query->join('LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_condition` = c.`id_condition`');
+		$query->where('c.`calculation_type` = \'hook\'');
+		$query->where('c.`calculation_detail` = \''.pSQL($hook_name).'\'');
+		$query->where('c.`validated` = 0');
+		$query->where('ca.`id_advice` IN ('.$sub_query.')');
+		$query->groupBy('c.`id_condition`');
+		$result = Db::getInstance()->executeS($query);
+		
+		foreach($result as $r)
+			$ids[] = $r['id_condition'];
+		
+		return array_unique($ids);
 	}
 	
 	public static function getIdsDailyCalculation()
 	{
 		$ids = array();
-		
+		//badges conditions validation
 		$sub_query = new DbQuery();
 		$sub_query->select('id_badge');
 		$sub_query->from('badge', 'b');
@@ -131,8 +150,28 @@ class Condition extends ObjectModel
 		$result = Db::getInstance()->executeS($query);
 		foreach($result as $r)
 			$ids[] = $r['id_condition'];
+		
+		//advice conditions validation
+		$sub_query = new DbQuery();
+		$sub_query->select('id_advice');
+		$sub_query->from('advice', 'a');
+		
+		$query = new DbQuery();
+		$query->select('c.`id_condition`');
+		$query->from('condition', 'c');
+		$query->join('LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_condition` = c.`id_condition`');
+		$query->where('c.`calculation_type` = \'time\'');
+		$query->where('DATEDIFF(NOW(), `date_upd`) >= `calculation_detail`');
+		$query->where('c.`validated` = 0');
+		$query->where('ca.`id_advice` IN ('.$sub_query.')');
+		$query->groupBy('c.`id_condition`');
+		
+		$result = Db::getInstance()->executeS($query);
+		foreach($result as $r)
+			$ids[] = $r['id_condition'];
+		
 
-		return $ids;
+		return array_unique($ids);
 	}
 	
 	public static function getIdsByBadgeGroupPosition($badge_group_position)
