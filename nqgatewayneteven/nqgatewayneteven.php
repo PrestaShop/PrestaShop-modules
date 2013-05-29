@@ -153,16 +153,19 @@ class NqGatewayNeteven extends Module
 	public function installDB()
 	{
 		// Creation of the tables in a database
-		$result = Db::getInstance()->Execute('
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_order_state` (
+		$result = true;
+		$queries = array();
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_order_state` (
 			`id_order_gateway_order_state` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_order` INT UNSIGNED NOT NULL,
 			`id_order_state` INT UNSIGNED NOT NULL,
 			`date_add` DATETIME NOT NULL,
 			`date_upd` DATETIME NOT NULL,
 			PRIMARY KEY (`id_order_gateway_order_state`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway` (
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway` (
 			`id_order_gateway` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_order_neteven` INT UNSIGNED NOT NULL,
 			`id_order_detail_neteven` INT UNSIGNED NOT NULL,
@@ -170,36 +173,44 @@ class NqGatewayNeteven extends Module
 			`date_add` DATETIME NOT NULL,
 			`date_upd` DATETIME NOT NULL,
 			PRIMARY KEY (`id_order_gateway`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_customer` (
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_customer` (
 			`id_order_gateway_customer` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_customer_neteven` INT UNSIGNED,
 			`id_customer` INT UNSIGNED NOT NULL,
 			`mail_customer_neteven` VARCHAR(255),
 			`date_add` DATETIME NOT NULL,
 			PRIMARY KEY (`id_order_gateway_customer`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_configuration` (
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_configuration` (
 			`id_order_gateway_configuration` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`name` VARCHAR(255),
 			`value` VARCHAR(255),
 			PRIMARY KEY (`id_order_gateway_configuration`),
 			KEY `name` (`name`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_feature_link` (
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_feature_link` (
 			`id_order_gateway_feature_link` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`id_order_gateway_feature` INT UNSIGNED NOT NULL,
 			`id_feature` INT UNSIGNED,
 			`id_attribute_group` INT UNSIGNED,
 			PRIMARY KEY (`id_order_gateway_feature_link`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_feature` (
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+		
+		$queries[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'orders_gateway_feature` (
 			`id_order_gateway_feature` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 			`name` VARCHAR(255),
 			`value` VARCHAR(255),
 			`category` VARCHAR(255),
 			PRIMARY KEY (`id_order_gateway_feature`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+
+		foreach ($queries as $query) {
+			$result &= Db::getInstance()->Execute($query);
+		}
 
 		if (!$result)
 			return false;
@@ -221,13 +232,15 @@ class NqGatewayNeteven extends Module
 		$customer->delete();
 		
 		// Removing tables from the database
-		$result = Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'orders_gateway`;
-											  DROP TABLE `'._DB_PREFIX_.'orders_gateway_order_state`;
-											  DROP TABLE `'._DB_PREFIX_.'orders_gateway_customer`;
-											  DROP TABLE `'._DB_PREFIX_.'orders_gateway_configuration`;
-											  DROP TABLE `'._DB_PREFIX_.'orders_gateway_feature_link`;
-											  DROP TABLE `'._DB_PREFIX_.'orders_gateway_feature`;
-										');
+		$result = Db::getInstance()->Execute('
+			DROP TABLE IF EXISTS
+				`'._DB_PREFIX_.'orders_gateway`,
+				`'._DB_PREFIX_.'orders_gateway_order_state`,
+				`'._DB_PREFIX_.'orders_gateway_customer`,
+				`'._DB_PREFIX_.'orders_gateway_configuration`,
+				`'._DB_PREFIX_.'orders_gateway_feature_link`,
+				`'._DB_PREFIX_.'orders_gateway_feature`
+		');
 		
 		if (!$result)
 			return false;
