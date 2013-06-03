@@ -44,7 +44,7 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->limited_countries = array('es');
 		$this->currencies = false;
 
