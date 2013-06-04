@@ -193,7 +193,7 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
 
-		$this->_installUpgradeOneFour();
+		$this->installUpgradeOneFour();
 
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
@@ -569,7 +569,7 @@ class Ebay extends Module
 	{
 		$this->hookAddProduct($params);
 	}
-
+		
 	public function hookBackOfficeTop($params)
 	{
 		if (!((version_compare(_PS_VERSION_, '1.5.1', '>=')
@@ -670,7 +670,7 @@ class Ebay extends Module
 		));
 		
 		return $this->display(__FILE__, 'views/templates/admin/form.tpl').
-			Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister();
+			(Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister());
 	}
 	
 	private function _postValidation()
@@ -1532,7 +1532,7 @@ class Ebay extends Module
 			return EbayShippingLocation::getEbayShippingLocations();
 
 		$ebay = new EbayRequest();
-		$locations = $ebay->_getInternationalShippingLocations();
+		$locations = $ebay->getInternationalShippingLocations();
 		foreach ($locations as $location)
 			EbayShippingLocation::insert(array_map('pSQL', $location));
 		
@@ -1545,7 +1545,7 @@ class Ebay extends Module
 			return EbayDeliveryTimeOptions::getAll();
 
 		$ebay = new EbayRequest();
-		$delivery_time_options = $ebay->_getDeliveryTimeOptions();
+		$delivery_time_options = $ebay->getDeliveryTimeOptions();
 		foreach ($delivery_time_options as $delivery_time_option)
 			EbayDeliveryTimeOptions::insert(array_map('pSQL', $delivery_time_option));
 		
@@ -1558,7 +1558,7 @@ class Ebay extends Module
 			return EbayShippingService::getAll();
 
 		$ebay = new EbayRequest();
-		$carriers = $ebay->_getCarriers();
+		$carriers = $ebay->getCarriers();
 		foreach ($carriers as $carrier)
 			EbayShippingService::insert(array_map('pSQL', $carrier));
 		
@@ -1705,7 +1705,7 @@ class Ebay extends Module
 		return $alert;
 	}
 
-	private function setConfiguration($config_name, $config_value, $html = false)
+	public function setConfiguration($config_name, $config_value, $html = false)
 	{
 			return Configuration::updateValue($config_name, $config_value, $html, 0, 0);
 	}
