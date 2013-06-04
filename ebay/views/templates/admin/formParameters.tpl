@@ -22,9 +22,30 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if isset($relogin) && $relogin}
+	<script>
+		$(document).ready(function() {
+				win = window.redirect('{$redirect_url}');
+		});
+	</script>
+{/if}
 
-<form action="{$url}" method="post" class="form" id="configForm1">
+
 	<fieldset style="border: 0">
+		<legend>{l s='Token' mod='ebay'}</legend>
+		{if isset($check_token_tpl)}
+			{$check_token_tpl}
+		{else}
+			<label>{l s='Regenerate Token' mod='ebay'} :</label>
+			<form method="post" action="{$url}">
+				<input type="hidden" name="action" value="regenerate_token" /> 
+				<input type="submit" id="token-btn" class="button" value="Regenerate Token" />
+		{/if}
+	</fieldset>	
+	
+<form action="{$url}" method="post" class="form" id="configForm1">
+	
+	<fieldset style="border: 0;margin-top:10px;">
 		<legend>{l s='Global Configuration' mod='ebay'}</legend>
 		<h4>{l s='To list your products on eBay, you first need to create a business seller account on eBay and configure your eBay-Prestashop module' mod='ebay'}</h4>
 		<label>{l s='eBay Identifier' mod='ebay'} : </label>
@@ -148,6 +169,10 @@
 		<script>
 			$(document).ready(function() {
 				setTimeout(function(){tinyMCE.execCommand('mceRemoveControl', true, 'ebay_returns_description');$('#ebay_returns_description').val($('#ebayreturnshide').html());}, 1000);
+			});
+			
+			$('#token-btn').click(function() {
+				window.open('{/literal}{$ebay_sign_in_url}{literal}')				
 			});
 		</script>
 	{/literal}
