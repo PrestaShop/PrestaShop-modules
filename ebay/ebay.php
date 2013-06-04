@@ -59,7 +59,6 @@ if (!defined('_MYSQL_ENGINE_'))
 
 class Ebay extends Module
 {
-
 	private $html = '';
 	private $ebay_country;
 
@@ -193,7 +192,7 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
 
-		$this->_installUpgradeOneFour();
+		$this->installUpgradeOneFour();
 
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
@@ -290,7 +289,6 @@ class Ebay extends Module
 		Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
 		Configuration::deleteByName('EBAY_ZONE_NATIONAL');
 		Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
-		Configuration::deleteByName('EBAY_SECURITY_TOKEN');
 
 		// Uninstall Module
 		if (!parent::uninstall() ||
@@ -374,10 +372,10 @@ class Ebay extends Module
 	}
 
 	/**
-	* Called when a product is added to the shop
-	*
-	* @param array $params hook parameters
-	*/
+   * Called when a product is added to the shop
+	 *
+	 * @param array $params hook parameters
+	 */
 	public function hookAddProduct($params)
 	{
 		if (!isset($params['product']->id))
@@ -567,7 +565,10 @@ class Ebay extends Module
 
 	public function hookDeleteProduct($params)
 	{
-		$this->hookAddProduct($params);
+		if (!isset($params['product']->id))
+			return false;
+
+		EbaySynchronizer::endProductOnEbay(new EbayRequest(), $params['product']);
 	}
 
 	public function hookBackOfficeTop($params)
@@ -670,7 +671,7 @@ class Ebay extends Module
 		));
 		
 		return $this->display(__FILE__, 'views/templates/admin/form.tpl').
-			Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister();
+			(Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister());
 	}
 	
 	private function _postValidation()
@@ -723,7 +724,7 @@ class Ebay extends Module
 			
 			$smarty_vars = array_merge($smarty_vars, array(
 				'relogin' 		 => true,
-				'redirect_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession
+				'redirect_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
 			));
 		} else
 			$smarty_vars['relogin'] = false;
@@ -740,20 +741,7 @@ class Ebay extends Module
 				$this->setConfiguration('EBAY_IDENTIFIER', $ebay_username);
 			}
 			
-			$smarty_vars['url'] = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
-				'token' => Configuration::get('EBAY_SECURITY_TOKEN'),
-				'time'  =>pSQL(date('Ymdhis'))));
-			
-			$url_vars = array(
-				'action' 					=> 'validateToken',
-				'path' 						=> $this->path,
-				'request_uri' 		=> Tools::safeOutput($_SERVER['REQUEST_URI']),
-			);
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-				$url_vars['controller'] = Tools::safeOutput(Tools::getValue('controller'));
-			else
-				$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
-			$smarty_vars['window_location_href'] = $this->_getUrl($url_vars);
+			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
 		}
 		else // not logged yet
 		{
@@ -781,11 +769,47 @@ class Ebay extends Module
 
 		return $this->display(__FILE__, 'views/templates/admin/formRegister.tpl');
 	}
+	
+	/**
+	 *
+	 * Waiting screen when expecting eBay login to refresh the token
+	 *
+	 */
+	
+	private function _displayCheckToken()
+	{
+		$url_vars = array(
+			'action'	=> 'validateToken',
+			'path' 		=> $this->_path
+		);
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+			$url_vars['controller'] = Tools::safeOutput(Tools::getValue('controller'));
+		else
+			$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
+		
+		$url = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
+				'token' 			=> Configuration::get('EBAY_SECURITY_TOKEN'),
+				'time'  			=> pSQL(date('Ymdhis'))));
+		$smarty_vars = array(
+			'window_location_href' => $this->_getUrl($url_vars),
+			'url' 								 => $url,
+			'request_uri'					 => Tools::safeOutput($_SERVER['REQUEST_URI'])
+		);
+		
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+			$smarty = $this->context->smarty;
+		else
+			global $smarty;
+		$smarty->assign($smarty_vars);	 
+
+		return $this->display(__FILE__, 'views/templates/admin/checkToken.tpl');
+		
+	}
 
 	/**
-		* Parameters Form Config Methods
-		*
-		* */
+	 * Form Config Methods
+	 *
+	 */
 	private function _displayFormConfig()
 	{
 		$smarty_vars = array(
@@ -832,9 +856,14 @@ class Ebay extends Module
 		$ebay_identifier = Tools::safeOutput(Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER'))).'" '.((Tools::getValue('ebay_identifier', Configuration::get('EBAY_IDENTIFIER')) != '') ? ' readonly="readonly"' : '');
 		
 		$ebayShopValue = Tools::safeOutput(Tools::getValue('ebay_shop', Configuration::get('EBAY_SHOP')));
-		$createShopUrl = 'http://cgi3.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';		
-		$smarty->assign(array(
+		$createShopUrl = 'http://cgi3.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll?CreateProductSubscription&&productId=3&guest=1';
+		
+		$ebay = new EbayRequest();
+		$ebay_sign_in_url = $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession;
+		
+		$smarty_vars = array(
 				'url'                      => $url,
+				'ebay_sign_in_url'				 => $ebay_sign_in_url,
 				'ebayIdentifier'           => $ebay_identifier, 
 				'configCurrencysign'       => $config_currency->sign,
 				'policies'                 => $this->_getReturnsPolicies(),
@@ -853,11 +882,36 @@ class Ebay extends Module
 				'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
 				'ebayListingDuration'      => Configuration::get('EBAY_LISTING_DURATION'),
 				'automaticallyRelist'      => Configuration::get('EBAY_AUTOMATICALLY_RELIST')
-			)
 		);
-		// Display Form
 		
-		return $this->display(dirname(__FILE__), '/views/templates/hook/parameters.tpl');
+		if (Tools::getValue('relogin'))
+		{
+			$session_id = $ebay->login();
+			$this->context->cookie->eBaySession = $session_id;
+			echo 'SETTING SESSION ID TO:'.$session_id;
+			$this->setConfiguration('EBAY_API_SESSION', $session_id);
+			
+			$smarty_vars = array_merge($smarty_vars, array(
+				'relogin' 		 => true,
+				'redirect_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
+			));
+		} else
+			$smarty_vars['relogin'] = false;		
+		
+		if (Tools::getValue('action') == 'regenerate_token') {
+			$session_id = $ebay->login();
+			$this->context->cookie->eBaySession = $session_id;
+			$this->setConfiguration('EBAY_API_SESSION', $session_id);
+			echo 'SETTING SESSION ID TO:'.$session_id;			
+			$this->context->cookie->write();
+
+			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
+
+		}
+		
+		$smarty->assign($smarty_vars);
+		
+		return $this->display(dirname(__FILE__), '/views/templates/admin/formParameters.tpl');
 	}
 	
 	private function _getListingDurations()
@@ -1532,7 +1586,7 @@ class Ebay extends Module
 			return EbayShippingLocation::getEbayShippingLocations();
 
 		$ebay = new EbayRequest();
-		$locations = $ebay->_getInternationalShippingLocations();
+		$locations = $ebay->getInternationalShippingLocations();
 		foreach ($locations as $location)
 			EbayShippingLocation::insert(array_map('pSQL', $location));
 		
@@ -1545,7 +1599,7 @@ class Ebay extends Module
 			return EbayDeliveryTimeOptions::getAll();
 
 		$ebay = new EbayRequest();
-		$delivery_time_options = $ebay->_getDeliveryTimeOptions();
+		$delivery_time_options = $ebay->getDeliveryTimeOptions();
 		foreach ($delivery_time_options as $delivery_time_option)
 			EbayDeliveryTimeOptions::insert(array_map('pSQL', $delivery_time_option));
 		
@@ -1558,7 +1612,7 @@ class Ebay extends Module
 			return EbayShippingService::getAll();
 
 		$ebay = new EbayRequest();
-		$carriers = $ebay->_getCarriers();
+		$carriers = $ebay->getCarriers();
 		foreach ($carriers as $carrier)
 			EbayShippingService::insert(array_map('pSQL', $carrier));
 		
@@ -1705,7 +1759,7 @@ class Ebay extends Module
 		return $alert;
 	}
 
-	private function setConfiguration($config_name, $config_value, $html = false)
+	public function setConfiguration($config_name, $config_value, $html = false)
 	{
 			return Configuration::updateValue($config_name, $config_value, $html, 0, 0);
 	}
