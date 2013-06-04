@@ -26,7 +26,7 @@
  */
 
 function upgrade_module_1_4($module) {
-	include(dirname(__FILE__).'/sql/sql-upgrade-1-4.php')
+	include(dirname(__FILE__).'/sql/sql-upgrade-1-4.php');
 
 	if (!empty($sql) && is_array($sql))
 	{
