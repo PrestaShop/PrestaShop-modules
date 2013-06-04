@@ -120,13 +120,15 @@ class EbayRequest
 		));
 		if ($response === false)
 			return false;
-
+		
 		return (string)$response->eBayAuthToken;
 	}
 
-	/*      * *************************************************************** */
-	/*      * ** Get User Informations ************************************** */
-	/*      * *************************************************************** */
+	/**
+	 *
+	 * Get User Profile Information
+	 *
+	 */
 
 	public function getUserProfile($username) 
 	{
@@ -374,16 +376,16 @@ class EbayRequest
 		return $this->_checkForErrors($response);
 	}
 
-	public function endFixedPriceItem($data = array())
+	public function endFixedPriceItem($ebay_item_id, $id_product = null)
 	{
-		// Check data
-		if (!$data)
+		if (!$ebay_item_id)
 			return false;
-
-		$response = $this->_makeRequest('EndFixedPriceItem', array(
-			'item_id' => $data['itemID'],
-			'sku' 		=> 'prestashop-'.$data['id_product'],
-		));
+		
+		$response_vars = array('item_id' => $ebay_item_id);
+		if ($id_product)
+			$response_vars['sku'] = 'prestashop-'.$id_product;
+		
+		$response = $this->_makeRequest('EndFixedPriceItem', $response_vars);
 		if ($response === false)
 			return false;
 		return $this->_checkForErrors($response);
@@ -564,7 +566,7 @@ class EbayRequest
 							$variation_pictures[$key][$variation_key]['name'] = $variation_element['name'];
 					
 						$variation_pictures[$key][$variation_key]['value'] = $variation_element['value'];
-						$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$kv];
+						$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$variation_key];
 					
 						$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
 						$last_specific_name = $variation_element['name'];
