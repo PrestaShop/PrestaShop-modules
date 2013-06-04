@@ -32,18 +32,10 @@ if (file_exists($config_path))
 	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 		die('ERROR :X');
 
-	if (file_exists($ebay_request_path = dirname(__FILE__).'/../EbayRequest.php'))
+	if (file_exists($ebay_request_path = dirname(__FILE__).'/../classes/EbayConfiguration.php'))
 	{
 		include($ebay_request_path);
-
-		$ebay = new EbayRequest();
-		if ($token = $ebay->fetchToken(Configuration::get('EBAY_API_USERNAME'), Configuration::get('EBAY_API_SESSION')))
-		{
-			Configuration::updateValue('EBAY_API_TOKEN', $token, false, 0, 0);
-			echo 'OK';
-		}
-		else
-			echo 'KO';
+		echo EbayConfiguration::updateAPIToken() ? 'OK' : 'KO';
 	}
 	else
 		echo 'ERROR02';
