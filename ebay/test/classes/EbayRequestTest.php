@@ -1,4 +1,5 @@
 <?php
+
 define('_PS_ADMIN_DIR_', getcwd());
 
 include(dirname(__FILE__).'/../../../../config/config.inc.php');
@@ -26,7 +27,7 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$session_id = $this->ebay_request->login();
 		$this->ebay_request->fetchToken('testuser_prestab', $session_id);
 	}
-	
+
 	public function testGetUserProfile()
 	{
 		$res = $this->ebay_request->getUserProfile('testuser_prestab');
@@ -178,10 +179,7 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 
 	public function testEndFixedPriceItem()
 	{ 
-		$res = $this->ebay_request->endFixedPriceItem(array(
-			'itemID'			=> 1,
-			'id_product'	=> 1
-				));	
+		$res = $this->ebay_request->endFixedPriceItem(1,1);
 	}
 	
 	public function testAddFixedPriceItemMultiSku()

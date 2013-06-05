@@ -3,7 +3,9 @@
 	<ErrorLanguage>{$error_language}</ErrorLanguage>
 	<WarningLevel>High</WarningLevel>
 	<ItemID>{$item_id}</ItemID>
-	<SKU>{$sku}</SKU>
+	{if isset($sku)}
+		<SKU>{$sku}</SKU>
+	{/if}
 	<EndingReason>NotAvailable</EndingReason>
 	<RequesterCredentials>
 		<eBayAuthToken>{$ebay_auth_token}</eBayAuthToken>
