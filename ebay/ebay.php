@@ -567,9 +567,12 @@ class Ebay extends Module
 
 	public function hookDeleteProduct($params)
 	{
-		$this->hookAddProduct($params);
+		if (!isset($params['product']->id))
+			return false;
+
+		EbaySynchronizer::endProductOnEbay(new EbayRequest(), $params['product']);
 	}
-		
+			
 	public function hookBackOfficeTop($params)
 	{
 		if (!((version_compare(_PS_VERSION_, '1.5.1', '>=')
@@ -746,7 +749,7 @@ class Ebay extends Module
 			
 			$url_vars = array(
 				'action' 					=> 'validateToken',
-				'path' 						=> $this->path,
+				'path' 						=> $this->_path,
 				'request_uri' 		=> Tools::safeOutput($_SERVER['REQUEST_URI']),
 			);
 			if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -1380,7 +1383,7 @@ class Ebay extends Module
 			'nb_products_mode_a' 			=> $nb_products_mode_a,
 			'nb_products_mode_b' 			=> $nb_products_mode_b,
 			'nb_products_sync_url' 		=> $nb_products_sync_url,
-			'sync_products_url' 			=>  $sync_products_url,
+			'sync_products_url' 			=> $sync_products_url,
 			'action_url' 							=> $action_url,
 			'ebay_sync_option_resync' => Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
 			'categories' 							=> $categories,

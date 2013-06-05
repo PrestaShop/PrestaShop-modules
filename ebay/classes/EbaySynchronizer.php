@@ -34,8 +34,10 @@ class EbaySynchronizer
 			else
 				$quantity_product = $product->quantity;
 
-			// if product exists in the db and has a default category
-			if (Validate::isLoadedObject($product) && $product->id_category_default) 
+			if (Validate::isLoadedObject($product) && !$product->active) {
+				$ebay = EbaySynchronizer::endProductOnEbay($ebay, $product);
+			}
+			elseif (Validate::isLoadedObject($product) && $product->id_category_default) // if product exists in the db and has a default category
 			{
 				$category_cache = EbaySynchronizer::_updateCategoryCache($category_cache, $product->id_category_default);
 
@@ -128,7 +130,7 @@ class EbaySynchronizer
 				}
 
 				$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
-
+				
 				// Export on eBay
 				if (count($data['variations'])) 
 				{
@@ -178,7 +180,7 @@ class EbaySynchronizer
 
 								// Delete or Update
 								if ($data_variation['quantity'] < 1) 
-										if ($ebay->endFixedPriceItem($data_variation)) // Delete
+										if ($ebay->endFixedPriceItem($data_variation['itemID'], $data_variation['id_product'])) // Delete
 											EbayProduct::deleteByIdProductRef($data_variation['itemID']);
 								else 
 								{
@@ -222,7 +224,7 @@ class EbaySynchronizer
 						if ($data['quantity'] < 1) 
 						{
 							// Delete
-							if ($ebay->endFixedPriceItem($data))
+							if ($ebay->endFixedPriceItem($data['itemID'], $data['id_product']))
 								EbayProduct::deleteByIdProductRef($data['itemID']);
 						}
 						else 
@@ -361,6 +363,15 @@ class EbaySynchronizer
 						$product->name),
 						Configuration::get('EBAY_PRODUCT_TEMPLATE')
 		);
+	}
+	
+	public static function endProductOnEbay($ebay, Product $product)
+	{
+		if(($ebay_item_id = EbayProduct::getIdProductRefByIdProduct($product->id))
+			&& $ebay->endFixedPriceItem($ebay_item_id))
+			EbayProduct::deleteByIdProductRef($ebay_item_id);
+
+		return $ebay;
 	}
 	
 	private static function _fillDescription($description, $medium_pictures, $large_pictures, $product_price = '', $product_price_discount = '')
@@ -512,7 +523,6 @@ class EbaySynchronizer
 							FROM  `'._DB_PREFIX_.'product` AS p
 							INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s ON p.id_product = s.id_product
 							WHERE s.`quantity` >0
-							AND  `active` =1
 							AND  `id_category_default` 
 							IN (
 								SELECT  `id_category` 
@@ -532,7 +542,6 @@ class EbaySynchronizer
 					SELECT COUNT(`id_product`)
 					FROM `'._DB_PREFIX_.'product`
 					WHERE `quantity` > 0 
-					AND `active` = 1
 					AND `id_category_default` IN (
 						SELECT `id_category` 
 						FROM `'._DB_PREFIX_.'ebay_category_configuration` 
@@ -554,7 +563,6 @@ class EbaySynchronizer
 				FROM  `'._DB_PREFIX_.'product` AS p
 					INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s ON p.id_product = s.id_product
 				WHERE s.`quantity` >0
-				AND  `active` =1
 				AND  `id_category_default` 
 					IN (
 						SELECT  `id_category` 
@@ -575,7 +583,6 @@ class EbaySynchronizer
 				SELECT `id_product` 
 				FROM `'._DB_PREFIX_.'product`
 				WHERE `quantity` > 0 
-				AND `active` = 1
 				AND `id_category_default` IN (
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
@@ -596,7 +603,6 @@ class EbaySynchronizer
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '>')) 
 		{
-			// How Many Product Less ?
 			$sql = '
 				SELECT COUNT(id_supplier) FROM(
 					SELECT id_supplier 
@@ -620,7 +626,6 @@ class EbaySynchronizer
 		} 
 		else 
 		{
-			// How Many Product Less ?
 			$sql = '
 				SELECT COUNT(`id_product`) 
 				FROM `'._DB_PREFIX_.'product`
