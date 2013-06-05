@@ -32,7 +32,7 @@ if (file_exists($config_path))
 	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 		die('ERROR :X');
 
-	if (file_exists($ebay_request_path = dirname(__FILE__).'/../EbayRequest.php'))
+	if (file_exists($ebay_request_path = dirname(__FILE__).'/../classes/EbayRequest.php'))
 	{
 		include($ebay_request_path);
 
