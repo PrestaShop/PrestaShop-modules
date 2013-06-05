@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2011 PrestaShop 
+* 2007-2013 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
+*  @copyright  2007-20131 PrestaShop SA
 *  @version  Release: $Revision: 9844 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -42,7 +42,7 @@ class Fidbag extends Module
 	{
 		$this->name = 'fidbag';
 		$this->tab = 'pricing_promotion';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -187,7 +187,7 @@ class Fidbag extends Module
 	private function _postProcess()
 	{
 		Configuration::updateValue('FIDBAG_MERCHANT_CODE', Tools::getValue('fidbag_merchant_code'));
-		Configuration::updateValue('FIDBAG_TEST_ENVIRONMENT', (bool)Tools::getValue('fidbag_environment'));
+		Configuration::updateValue('FIDBAG_TEST_ENVIRONMENT', (int)Tools::getValue('fidbag_environment'));
 		Configuration::updateValue('FIDBAG_MERCHANT_ACTIVE', 'on');
 	}
 
@@ -255,6 +255,8 @@ class Fidbag extends Module
 		$smarty->assign('sub_zipcode', $address->postcode);
 		$smarty->assign('sub_city', $address->city);
 
+		if (_PS_VERSION_ < '1.5')
+			return $this->display( __FILE__, 'views/templates/hook/payment_top_14x.tpl' );
 		return $this->display( __FILE__, 'views/templates/hook/payment_top.tpl' );
 	}
 
@@ -294,14 +296,14 @@ class Fidbag extends Module
 			}
 			
 			$webService = new FidbagWebService();
-			$total_cart = $cart->getOrderTotal();
+			$total_cart = $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
 			
 			if (isset($discount_value) && ((int)$discount_value > 0))
 			{
 				$return = $webService->action('ConsumeImmediateRebate', array(
 					'CardNumber' => $fidbag_user->getCardNumber(),
 					'MerchantCode' => Configuration::get('FIDBAG_MERCHANT_CODE'),
-					'Amount' => (int)($total_cart + $discount_value),
+					'Amount' => (int)($total_cart),
 					'RebateUsed' => (int)$discount_value,
 					'AmountDo' => (int)$total_cart,
 				));
@@ -353,7 +355,7 @@ class Fidbag extends Module
 	protected function getMainUrl()
 	{
 		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
-		return $protocol_link.Tools::getShopDomainSsl();
+		return $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__;
 	}
 }
 
