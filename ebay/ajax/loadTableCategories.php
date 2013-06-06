@@ -103,7 +103,7 @@ if (file_exists($config_path))
 			}
 
 			foreach ($categoryConfigList as &$category)
-				$category['var'] = $this->getSelectors($refCats, $category['id_category_ref'], $category['id_category'], $category['level']).'<input type="hidden" name="category'.(int)$category['id_category'].'" value="'.(int)$category['id_ebay_category'].'" />';
+				$category['var'] = $this->getSelectors($refCats, $category['id_category_ref'], $category['id_category'], $category['level']).'<input type="hidden" name="category['.(int)$category['id_category'].']" value="'.(int)$category['id_ebay_category'].'" />';
 
 			// Smarty datas
 			$template_vars = array(
@@ -149,7 +149,7 @@ if (file_exists($config_path))
 							if ($v['id_category_ref'] != $v['id_category_ref_parent'])
 								$var .= $this->getSelectors($cats, $v['id_category_ref_parent'], $cat, (int)($niv - 1));
 							$var .= '
-								<select name="category'.$cat.'" id="categoryLevel'.(int)($v['level']).'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($v['level']).', '.(int)$cat.');">';
+								<select name="category['.$cat.']" id="categoryLevel'.(int)($v['level']).'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($v['level']).', '.(int)$cat.');">';
 							foreach ($cats[$v['id_category_ref_parent']]['children'] as $child)
 								$var .= '<option value="'.$cats[$child]['id_ebay_category'].'"'.($v['id_category_ref'] == $child ? ' selected' : '').'>'.$cats[$child]['name'].'</option>';
 							$var .= '
@@ -161,7 +161,7 @@ if (file_exists($config_path))
 			else
 			{
 				$var .= '
-					<select name="category'.$cat.'" id="categoryLevel'.(int)$niv.'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$niv.', '.(int)$cat.');">
+					<select name="category['.$cat.']" id="categoryLevel'.(int)$niv.'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$niv.', '.(int)$cat.');">
 							<option value="0">'.$this->l('No category selected').'</option>';
 		
 				foreach ($cats as $k => $v)

@@ -19,6 +19,8 @@ class EbaySynchronizer
 
 		// Up the time limit
 		@set_time_limit(3600);
+		
+		$sync_blacklisted_product_ids = EbaySyncBlacklistProduct::getBlacklistedProductIds();
 
 		// Run the products list
 		foreach ($products as $p) 
