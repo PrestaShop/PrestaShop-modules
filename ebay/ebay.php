@@ -44,7 +44,8 @@ $classes_to_load = array(
 	'EbayShippingZoneExcluded',
 	'EbayShippingInternationalZone',
 	'EbaySynchronizer',
-	'EbayPayment'
+	'EbayPayment',
+	'EbaySyncBlacklistProduct'
 );
 foreach ($classes_to_load as $classname)
 {
@@ -71,7 +72,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.4.1';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -334,6 +335,11 @@ class Ebay extends Module
 		{
 			include(dirname(__FILE__).'/upgrade/Upgrade-1.4.php');
 			upgrade_module_1_4($this);
+		}
+		elseif (version_compare($version, '1.5.0', '<'))
+		{
+			include(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
+			upgrade_module_1_5($this);
 		}
 
 		if (!empty($sql) && is_array($sql))
@@ -742,18 +748,19 @@ class Ebay extends Module
 			
 			$smarty_vars['url'] = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
 				'token' => Configuration::get('EBAY_SECURITY_TOKEN'),
-				'time'  =>pSQL(date('Ymdhis'))));
+				'time'  =>pSQL(date('Ymdhis')),
+			));
 			
 			$url_vars = array(
 				'action' 					=> 'validateToken',
-				'path' 						=> $this->path,
-				'request_uri' 		=> Tools::safeOutput($_SERVER['REQUEST_URI']),
+				'path' 						=> $this->_path
 			);
 			if (version_compare(_PS_VERSION_, '1.5', '>'))
 				$url_vars['controller'] = Tools::safeOutput(Tools::getValue('controller'));
 			else
 				$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
 			$smarty_vars['window_location_href'] = $this->_getUrl($url_vars);
+			$smarty_vars['request_uri']	= Tools::safeOutput($_SERVER['REQUEST_URI']);
 		}
 		else // not logged yet
 		{
@@ -999,45 +1006,40 @@ class Ebay extends Module
 
 	private function _postProcessCategory()
 	{
-			// Init Var
-		$date = date('Y-m-d H:i:s');
-		$services = Tools::getValue('service');
-
-		// Sort post datas
-		$post_value = array();
-		foreach ($_POST as $name => $value)
-		{
-			if (strlen($name) > 8 && substr($name, 0, 8) == 'category')
-				$post_value[substr($name, 8, strlen($name) - 8)]['id_ebay_category'] = $value;
-			
-			if (strlen($name) > 7 && substr($name, 0, 7) == 'percent')
-				$post_value[substr($name, 7, strlen($name) - 7)]['percent'] = $value;
-		}
-
-			// Insert and update configuration
-		foreach ($post_value as $id_category => $tab)
-		{
-			$data = array();
-			$date = date('Y-m-d H:i:s');
-			if ($tab['id_ebay_category'])
-				$data = array(
-					'id_country' 			 => 8, 
-					'id_ebay_category' => (int)$tab['id_ebay_category'], 
-					'id_category' 		 => (int)$id_category, 
-					'percent' 				 => pSQL($tab['percent']), 
-					'date_upd' 				 => pSQL($date));
-			if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
+		// Insert and update categories
+		if (($percents = Tools::getValue('percent')) && ($ebay_categories = Tools::getValue('category')))
+			foreach ($percents as $id_category => $percent)
 			{
-				if ($data)
-					EbayCategoryConfiguration::updateByIdCategory($id_category, $data);
-				else
-					EbayCategoryConfiguration::deleteByIdCategory($id_category);
-			}
-			elseif ($data)
-			{
-				$data['date_add'] = $date;
-				EbayCategoryConfiguration::add($data);
-			}
+				$data = array();
+				$date = date('Y-m-d H:i:s');
+				if (isset($ebay_categories[$id_category]))
+					$data = array(
+						'id_country' 			 => 8, 
+						'id_ebay_category' => (int)$ebay_categories[$id_category],
+						'id_category' 		 => (int)$id_category, 
+						'percent' 				 => pSQL($percent), 
+						'date_upd' 				 => pSQL($date));
+				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
+				{
+					if ($data)
+						EbayCategoryConfiguration::updateByIdCategory($id_category, $data);
+					else
+						EbayCategoryConfiguration::deleteByIdCategory($id_category);
+				}
+				elseif ($data)
+				{
+					$data['date_add'] = $date;
+					EbayCategoryConfiguration::add($data);
+				}
+			}			
+		
+		// update blacklisted products
+		if (is_array(Tools::getValue('showed_products')))
+		{
+			$showed_product_ids = array_keys(Tools::getValue('showed_products'));
+			$to_synchronize_product_ids = is_array(Tools::getValue('to_synchronize')) ? array_keys(Tools::getValue('to_synchronize')) : array();
+			EbaySyncBlacklistProduct::insertProductIds(array_diff($showed_product_ids, $to_synchronize_product_ids));
+			EbaySyncBlacklistProduct::deleteByProductIds($to_synchronize_product_ids);			
 		}
 
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
@@ -1676,8 +1678,8 @@ class Ebay extends Module
 		{
 			if ($cat['is_multi_sku'] != 1 && EbaySynchronizer::findIfCategoryParentIsMultiSku($cat['id_category_ref']) != 1) 
 			{
-				$categorie = new Category($cat['id_category']);
-				$products = $categorie->getProductsWs($this->ebay_country->getIdLang(), 0, 300);
+				$category = new Category($cat['id_category']);
+				$products = $category->getProductsWs($this->ebay_country->getIdLang(), 0, 300);
 				$catProblem = 0;
 				foreach ($products as $product_ar)
 				{
