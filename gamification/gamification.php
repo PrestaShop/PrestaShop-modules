@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.4.2';
+		$this->version = '1.4.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -238,7 +238,11 @@ class Gamification extends Module
 			
 			$cond = new Condition();
 			$cond->hydrate((array)$condition, (int)$id_lang);
-			$cond->date_upd = date('Y-m-d H:i:s', time() - 86400);
+			$time = 86400;
+			if ($cond->calculation_type == 'time')
+				$time = 86400 * (int)$cond->calculation_detail;
+			
+			$cond->date_upd = date('Y-m-d H:i:s', time() - $time);
 			$cond->date_add = date('Y-m-d H:i:s');
 			$condition->calculation_detail = trim($condition->calculation_detail);
 			$cond->add(false);
