@@ -63,7 +63,27 @@ else
 					$fidbag_user->createFidBagUser();
 
 				$fidbag_user->setIdCart((int)Tools::getValue('cart'));
-				$fidbag_user->setCartNumber($json_return->fidcardInformations->FidBagCardNumber);
+
+                $fidbag_cardnumber = $json_return->fidcardInformations->FidBagCardNumber;
+
+                if(empty($fidbag_cardnumber))
+                {
+                     $create_temp_fidcard_arg = array('MerchantCode' => Configuration::get('FIDBAG_MERCHANT_CODE'),
+                        'Email' => Tools::getValue('login'));
+
+                    $return_temp_fidcard_creation = $webService->action('CreateTempFidCard', $create_temp_fidcard_arg, $create_temp_fidcard_arg  );
+
+                    if ($return_temp_fidcard_creation != null && isset($return_temp_fidcard_creation->CreateTempFidCardResult))
+                    {
+                        $json_return = Tools::jsonDecode($return_temp_fidcard_creation->CreateTempFidCardResult);
+                        $fidbag_cardnumber=  $json_return->CardNumber;
+                    }
+                    else
+                        die(1);
+
+                }
+
+				$fidbag_user->setCartNumber($fidbag_cardnumber);
 				$fidbag_user->setPayed(false);
 
 				$fidbag_user->setLoginPassword(Tools::getValue('login'), Tools::getValue('password'));
