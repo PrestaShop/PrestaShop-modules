@@ -23,6 +23,37 @@ class EbayCategoryConfiguration
 		return $sql;			
 	}
 	
+	/**
+	 *
+	 * Returns the eBay category id and the full name including the name of the parent and the grandparent category
+	 *
+	 */
+	
+	public static function getEbayCategories()
+	{
+		$sql = 'SELECT 
+			DISTINCT(ec1.`id_category_ref`) as id, 
+			CONCAT(
+				IFNULL(ec3.`name`, \'\'), 
+				IF (ec3.`name` is not null, \' > \', \'\'),
+				IFNULL(ec2.`name`, \'\'), 
+				IF (ec2.`name` is not null, \' > \', \'\'),
+				ec1.`name`
+			) as name 
+			FROM `'._DB_PREFIX_.'ebay_category_configuration` e
+			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec1
+			ON e.`id_ebay_category` = ec1.`id_ebay_category`
+			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec2
+			ON ec1.`id_category_ref_parent` = ec2.`id_category_ref`
+			AND ec1.`id_category_ref_parent` <> \'1\'
+			and ec1.level <> 1
+			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec3
+			ON ec2.`id_category_ref_parent` = ec3.`id_category_ref`
+			AND ec2.`id_category_ref_parent` <> \'1\'
+			and ec2.level <> 1';	
+		return Db::getInstance()->executeS($sql);
+	}
+	
 	
 	public static function add($data)
 	{
