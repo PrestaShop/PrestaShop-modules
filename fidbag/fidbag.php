@@ -356,16 +356,16 @@ class Fidbag extends Module
     {
 
         $product = new Product((int)Tools::getValue('id_product'));
-        if(!isset($product) || !($product->getPrice()>0))
+        if( !($product->getPrice()>0))
             return false;
 
         $points = (int) round(10 * $product->getPrice());
         $pointsBefore =0;
 
         $cart = null;
-        if(isset($params) && isset($params['cart']))
+        if(  isset($params['cart']))
         {
-           $cart = new Cart($params['cart']->id);
+           $cart = new Cart((int) $params['cart']->id);
            $pointsBefore=  (int) round(10 * $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING));
         }
 
