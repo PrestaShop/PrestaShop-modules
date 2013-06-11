@@ -191,6 +191,29 @@ class EbayRequest
 				$categories[] = (string)$cat->CategoryID;
 		return $categories;
 	}
+	
+	public function GetCategoryFeatures() 
+	{
+		$response = $this->_makeRequest('GetCategoryFeatures', array(
+			'version' 			 => $this->compatibility_level
+		));
+		if ($response === false)
+			return false;
+
+		return $response;
+	}	
+
+	public function GetCategorySpecifics($category_id)
+	{
+		$response = $this->_makeRequest('GetCategorySpecifics', array(
+			'version' 			 => $this->compatibility_level,
+			'category_id'		 => $category_id
+		));
+		if ($response === false)
+			return false;
+
+		return $response;		
+	}
 
 	public function getSuggestedCategory($query) 
 	{
@@ -582,7 +605,7 @@ class EbayRequest
 		
 		$context = Context::getContext();
 		$context->smarty->assign($vars);
-		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetVariations.tpl');		
+		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetVariations.tpl');
 	}
 	
 	private function _buildHeadersShopping($api_call)

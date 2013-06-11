@@ -40,3 +40,7 @@ $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_shipping_location`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_delivery_time_options`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_shipping_service`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_returns_policy`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_specific`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_specific_value`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_condition`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_condition_configuration`;';

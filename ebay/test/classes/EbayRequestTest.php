@@ -15,6 +15,7 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$this->ebay_request = new EbayRequest();
   }
 	
+	/*
 	public function testLogin()
 	{
 		$this->ebay_request->login();
@@ -46,6 +47,20 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$res = $this->ebay_request->getSkuCompliantCategories();
 		$this->assertTrue(is_array($res));
 		$this->assertTrue(count($res) > 0);		
+	}
+	*/
+	
+	public function testGetCategoryFeatures()
+	{
+		$res = $this->ebay_request->getCategoryFeatures();
+		print_r($res);
+		die;
+	}
+
+	public function testGetCategorySpecifics()
+	{
+		$res = $this->ebay_request->getCategorySpecifics(53159);
+		print_r($res);
 	}
 
 	public function testGetSuggestedCategory()

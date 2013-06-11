@@ -792,6 +792,7 @@ class Ebay extends Module
 			'class_general' 				=> version_compare(_PS_VERSION_, '1.5', '>') ? 'uncinq' : 'unquatre',
 			'form_parameters' 			=> $this->_displayFormParameters(),
 			'form_category' 				=> $this->_displayFormCategory(),
+			'form_items_specifics'	=> $this->_displayFormItemsSpecifics(),
 			'form_shipping' 				=> $this->_displayFormShipping(),
 			'form_template_manager' => $this->_displayFormTemplateManager(),
 			'form_ebay_sync' 				=> $this->_displayFormEbaySync(),
@@ -995,6 +996,46 @@ class Ebay extends Module
 		$smarty->assign($template_vars);
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
+	}
+
+	private function _displayFormItemsSpecifics()
+	{
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+			$smarty = $this->context->smarty;
+			$cookie = $this->context->cookie;
+		}
+		else 
+			global $smarty, $cookie;
+		
+		// Smarty
+		$template_vars = array(
+			'controller'   					=> Tools::getValue('controller'),
+			'tab'          					=> Tools::getValue('tab'), 
+			'configure'    					=> Tools::getValue('configure'), 
+			'tab_module'   					=> Tools::getValue('tab_module'),
+			'module_name'  					=> Tools::getValue('module_name'), 
+			'token'        					=> Tools::getValue('token'),
+			'_module_dir_' 					=> _MODULE_DIR_,
+			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
+			'id_lang'      					=> $cookie->id_lang,
+			'_path'        					=> $this->_path,
+			'possible_attributes'		=> Attribute::getAttributes($cookie->id_lang),
+			'possible_features'			=> Feature::getFeatures($cookie->id_lang, true)
+
+//			'alerts'       => $this->_getAlertCategories(),
+			/*
+
+			'configs'      => $configs,
+			'isOneDotFive' => $is_one_dot_five,
+			'request_uri'  => $_SERVER['REQUEST_URI'],
+			'date'         => pSQL(date('Ymdhis'))
+			*/
+		);
+
+		$smarty->assign($template_vars);
+
+		return $this->display(dirname(__FILE__), '/views/templates/admin/formItemsSpecifics.tpl');
 	}
 
 	private function _postProcessCategory()
