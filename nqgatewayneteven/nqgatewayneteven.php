@@ -44,7 +44,7 @@ class NqGatewayNeteven extends Module
 		else
         	$this->tab = 'market_place';
 		
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
