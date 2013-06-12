@@ -27,7 +27,7 @@
 class Toolbox
 {
 	private static $_log ;
-	protected static $handle_instance;
+	protected static $handle_instance = false;
 
 	public static function manageError($e, $type_error)
 	{
@@ -37,7 +37,7 @@ class Toolbox
 	public static function writeLog($is_error = false, $message = "")
 	{
 		if (!self::$handle_instance)
-			self::$handle_instance = fopen(dirname(__FILE__).'/../logs/logs-'.date('Y-m-d').'.txt', 'a+');
+				self::$handle_instance = @fopen(dirname(__FILE__).'/../logs/logs-'.date('Y-m-d').'.txt', 'a+');
 		
 		if (!empty(self::$_log) && !$is_error)
 		{
