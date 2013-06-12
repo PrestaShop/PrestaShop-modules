@@ -29,6 +29,7 @@ global $smarty;
 require_once('../../config/config.inc.php');
 require_once(_PS_ROOT_DIR_ . '/init.php');
 require_once(dirname(__FILE__) . '/classes/SCFields.php');
+
 $so = new SCfields('API');
 
 $fields = $so->getFields();
@@ -50,7 +51,7 @@ $inputs['trParamPlus'] = implode('|', $param_plus);
 // Add signature to get the gift and gift message in the trParamPlus
 $inputs['signature'] = $so->generateKey($inputs);
 
-$socolissimo_url = Configuration::get('SOCOLISSIMO_URL');
+$socolissimo_url = Configuration::get('SOCOLISSIMO_URL_MOBILE');
 $smarty->assign(array('inputs' => $inputs,
     'socolissimo_url' => $socolissimo_url));
 $smarty->display(_PS_MODULE_DIR_ . 'socolissimo/views/templates/front/redirect.tpl');
