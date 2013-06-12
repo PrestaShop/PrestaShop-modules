@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2013 PrestaShop
  *
@@ -37,9 +36,10 @@ else
     $so = new SCFields(Tools::getValue('DELIVERYMODE')); //api 4.0
 
 
+
 // Init the Display
 $display = new BWDisplay();
-$display->setTemplate(dirname(__FILE__) . '/error.tpl');
+$display->setTemplate(dirname(__FILE__) . '/views/templates/front/error.tpl');
 
 $errors_list = array();
 $redirect = __PS_BASE_URI__ . ((_PS_VERSION_ < '1.5') ? 'order.php?' : 'index.php?controller=order&');
@@ -51,7 +51,8 @@ $return = array();
 $errors_codes = ($tab = Tools::getValue('ERRORCODE')) ? explode(' ', trim($tab)) : array();
 
 // If no required error code, start to get the POST data
-if (!$so->checkErrors($errors_codes, SCError::REQUIRED)) {
+if (!$so->checkErrors($errors_codes, SCError::REQUIRED))
+    {
     foreach ($_POST AS $key => $val)
         if ($so->isAvailableFields($key))
             if (!isset($_POST['CHARSET'])) // only way to know if api is 3.0 to get encode for accentued chars in key calculation
@@ -68,44 +69,49 @@ if (!$so->checkErrors($errors_codes, SCError::REQUIRED)) {
     foreach ($so->getFields(SCFields::REQUIRED) as $field)
         if (!isset($return[$field]))
             $errors_list[] = $so->l('This key is required for Socolissimo:') . $field;
-}
+    }
 else
     foreach ($errors_codes as $code)
         $errors_list[] = $so->l('Error code:') . ' ' . $so->getError($code);
 
-if (empty($errors_list)) {
+if (empty($errors_list))
+    {
     if ($so->isCorrectSignKey($return['SIGNATURE'], $return) &&
-            $so->context->cart->id && saveOrderShippingDetails($so->context->cart->id, (int) ($return['TRCLIENTNUMBER']), $return, $so)) {
+            $so->context->cart->id && saveOrderShippingDetails($so->context->cart->id, (int) ($return['TRCLIENTNUMBER']), $return, $so))
+        {
 
         $TRPARAMPLUS = explode('|', $return['TRPARAMPLUS']);
 
-        if (count($TRPARAMPLUS) > 1) {
+        if (count($TRPARAMPLUS) > 1)
+            {
             $so->context->cart->id_carrier = (int) $TRPARAMPLUS[0];
             if ($TRPARAMPLUS[1] == "checked" || $TRPARAMPLUS[1] == 1) // value can be "undefined" or "not checked"
                 $so->context->cart->gift = 1;
             else
                 $so->context->cart->gift = 0;
-        }
-        elseif (count($TRPARAMPLUS) == 1) {
+            }
+        elseif (count($TRPARAMPLUS) == 1)
+            {
             $so->context->cart->id_carrier = (int) $TRPARAMPLUS[0];
-        }
+            }
 
         if ((int) $so->context->cart->gift && Validate::isMessage($TRPARAMPLUS[2]))
             $so->context->cart->gift_message = strip_tags($TRPARAMPLUS[2]);
 
         if (!$so->context->cart->update())
-            $errors_list[] = $so->l('Cart can\'t be updated. Please try again your selection');
+            $errors_list[] = $so->l('Cart cannot be updated. Please try again your selection');
         else
             Tools::redirect($redirect . 'step=3&cgv=1&id_carrier=' . $so->context->cart->id_carrier);
-    }
+        }
     else
         $errors_list[] = $so->getError('999');
-}
+    }
 
 $so->context->smarty->assign('error_list', $errors_list);
 $display->run();
 
-function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object) {
+function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
+    {
     // if api use is 3.0 we need to decode for accentued chars
     if (!isset($soParams['CHARSET']))
         foreach ($soParams as $key => $value)
@@ -124,7 +130,8 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object) {
     $db = Db::getInstance();
     $db->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'socolissimo_delivery_info WHERE id_cart = ' . (int) ($idCart) . ' AND id_customer =' . (int) ($idCustomer));
     $numRows = (int) ($db->NumRows());
-    if ($numRows == 0) {
+    if ($numRows == 0)
+        {
         $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'socolissimo_delivery_info
 			( `id_cart`, `id_customer`, `delivery_mode`, `prid`, `prname`, `prfirstname`, `prcompladress`,
 			`pradress1`, `pradress2`, `pradress3`, `pradress4`, `przipcode`, `prtown`,`cecountry`, `cephonenumber`, `ceemail` ,
@@ -169,13 +176,15 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object) {
 					' . (isset($soParams['CEDOORCODE2']) ? '\'' . pSQL($soParams['CEDOORCODE2']) . '\'' : '\'\'') . ')';
         if (Db::getInstance()->execute($sql))
             return true;
-    }
-    else {
+        }
+    else
+        {
         $table = _DB_PREFIX_ . 'socolissimo_delivery_info';
         $values = array();
         $values['delivery_mode'] = pSQL($soParams['DELIVERYMODE']);
 
-        if ($so_object->delivery_mode == SCFields::RELAY_POINT) {
+        if ($so_object->delivery_mode == SCFields::RELAY_POINT)
+            {
             isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : '';
             isset($soParams['PRNAME']) ? $values['prname'] = ucfirst(pSQL($soParams['PRNAME'])) : '';
             isset($deliveryMode[$soParams['DELIVERYMODE']]) ? $values['prfirstname'] = $deliveryMode[$soParams['DELIVERYMODE']] : $values['prfirstname'] = 'So Colissimo';
@@ -193,7 +202,9 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object) {
             isset($soParams['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($soParams['CEDOORCODE1']) : '';
             isset($soParams['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($soParams['CEDOORCODE2']) : '';
             isset($soParams['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($soParams['CECOMPANYNAME']) : '';
-        } else {
+            }
+        else
+            {
             isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : $values['prid'] = '';
             isset($soParams['CENAME']) ? $values['prname'] = ucfirst(pSQL($soParams['CENAME'])) : '';
             isset($soParams['CEFIRSTNAME']) ? $values['prfirstname'] = ucfirst(pSQL($soParams['CEFIRSTNAME'])) : '';
@@ -211,10 +222,10 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object) {
             isset($soParams['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($soParams['CEDOORCODE1']) : '';
             isset($soParams['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($soParams['CEDOORCODE2']) : '';
             isset($soParams['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($soParams['CECOMPANYNAME']) : '';
-        }
+            }
         $where = ' `id_cart` =\'' . (int) ($idCart) . '\' AND `id_customer` =\'' . (int) ($idCustomer) . '\'';
 
         if (Db::getInstance()->autoExecute($table, $values, 'UPDATE', $where))
             return true;
+        }
     }
-}

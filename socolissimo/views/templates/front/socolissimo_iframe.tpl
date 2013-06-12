@@ -30,7 +30,7 @@
 </style>
 
 
-<iframe id="soFr" xml:lang="fr" width="575" height="800" style="border:none;display:none;"src=""></iframe>
+<iframe id="soFr" xml:lang="fr" width="100%" height="800" style="border:none;display:none;"src=""></iframe>
 <script type="text/javascript">
     var opc = false;
 </script>

@@ -1,9 +1,35 @@
 <?php
 
+/*
+ * 2007-2013 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @author Quadra Informatique <modules@quadra-informatique.fr>
+ *  @copyright  2007-2013 PrestaShop SA / 1997-2013 Quadra Informatique
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 require_once(dirname(__FILE__) . '/../socolissimo.php');
 
 // Inherit of Socolissimo to have acces to the module method and objet model method
-class SCError extends Socolissimo {
+class SCError extends Socolissimo
+    {
     // Const for better understanding
     const WARNING = 0;
     const REQUIRED = 1;
@@ -11,7 +37,8 @@ class SCError extends Socolissimo {
     // Available error list
     private $errors_list = array();
 
-    public function __construct() {
+    public function __construct()
+        {
         // Get the parent stuff with Backward Compatibility
         parent::__construct();
 
@@ -59,7 +86,7 @@ class SCError extends Socolissimo {
                 '999' => $this->l('Error occurred during shipping step.'),
             )
         );
-    }
+        }
 
     /**
      * Return error type
@@ -68,7 +95,8 @@ class SCError extends Socolissimo {
      * @param bool $type (SCError::REQUIRED or SCError::WARNING)
      * @return mixed string|bool
      */
-    public function getError($number, $type = false) {
+    public function getError($number, $type = false)
+        {
         $number = (string) trim($number);
 
         if ($type === false || !isset($this->errors_list[$type]))
@@ -77,7 +105,7 @@ class SCError extends Socolissimo {
             $tab = $this->errors_list[$type];
 
         return isset($tab[$number]) ? $tab[$number] : false;
-    }
+        }
 
     /**
      * Check the errors list.
@@ -86,12 +114,13 @@ class SCError extends Socolissimo {
      * @param bool $type
      * @return bool
      */
-    public function checkErrors($errors, $type = false) {
+    public function checkErrors($errors, $type = false)
+        {
         foreach ($errors as $num)
             if (($str = $this->getError($num, $type)))
                 return $str;
 
         return false;
-    }
+        }
 
-}
+    }

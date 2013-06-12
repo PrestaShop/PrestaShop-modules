@@ -1,3 +1,5 @@
+<?php
+
 /*
  * 2007-2013 PrestaShop
  *
@@ -23,21 +25,13 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-Socolissimo
-2.8 :
 
-- API socolissimo 4.0
-- Add seller unique cost for seller delivery
-- Add delivery in Belgium
-- Add so mobile device for smartphone(use API 3.0)
-- New Params in Back office
-- Fix various from previous versions :
-    - Gift message now working
-    - OPC now working for both 1.4 and 1.5
-- Note : OPC mobile theme 1.5 not available yet , will be soon.
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 
-2.3 :
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
-- Add Backward compatibility to use the module on 1.4 / 1.5 PrestaShop version.
-	(OPC and 5 steps process works)
-
+header("Location: ../");
+exit;

@@ -122,6 +122,7 @@ var initialCost = "{$initialCost}";
                 {
                     if($(this).val() == soCarrierId+','){
                     $(this).next().children().children().find('div.delivery_option_price').text(initialCost+' TTC');
+
                     }
                 });
                 if (soCarrierId)
@@ -136,10 +137,7 @@ var initialCost = "{$initialCost}";
         if (opc)
         {
             if (!already_select_delivery || !$('#edit_socolissimo').length)
-                interval = setInterval(function()
-                    {
                         modifyCarrierLine();
-                    },100);
         }
         else if ((!soBwdCompat && $('#id_carrier' + soCarrierId).is(':not(:checked)')) ||
             (soBwdCompat && soCarrierId == 0))
@@ -166,37 +164,22 @@ function modifyCarrierLine()
 {
     if(soBwdCompat)
         var carrier = $('input.delivery_option_radio:checked');
-    else
+
+    else{
         var carrier = $('input[name=id_carrier]:checked');
+            var container = '#id_carrier' + soCarrierId;
+}
 
-    var container = '#id_carrier' + soCarrierId;
-
-    if (soBwdCompat && soCarrierId > 0)
-    {
-        var carrier_block = carrier.parent('div.delivery_option');
-            // Simulate 1.4 table to store the fetched relay point
-            $(carrier_block).append(
-                '<div><table width="' + $(carrier_block).width() + '"><tr>'
-                    +	  '<td class="soBackward_compat_tab"><input type="hidden" id="id_carrier' + soCarrierId + '" value="' + soCarrierId + '" /></td>'
-                    + '</tr></table></div>');
-    }
-
-    if ($('#button_socolissimo').length != 0)
-    {
-        clearInterval(interval);
-        // delete interval value
-        interval = null;
-    }
-
-    $('#button_socolissimo').remove();
 
     if ((carrier.val() == soCarrierId) || (carrier.val() == soCarrierId+',')) {
          if(soBwdCompat)
-            $(container).parent().prepend('<a style="margin-left:5px;" class="exclusive" id="button_socolissimo" href="#" onclick="redirect();return;" >{/literal}{$select_label}{literal}</a>');
-        else
+              carrier.next().children().children().find('div.delivery_option_delay').append('<div><a class="exclusive_large" id="button_socolissimo" href="#" onclick="redirect();return;" >{/literal}{$select_label}{literal}</a></div>');
+         else
             $(container).parent().siblings('.carrier_infos').append('<a class="exclusive_large" id="button_socolissimo" href="#" onclick="redirect();return;" >{/literal}{$select_label}{literal}</a>');
      }
-
+else{
+        $('#button_socolissimo').remove();
+    }
     if (already_select_delivery)
     {
         $(container).css('display', 'block');
