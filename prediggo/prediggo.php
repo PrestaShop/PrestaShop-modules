@@ -557,7 +557,10 @@ class Prediggo extends Module
   		// so put prediggo registration after layered registration due to js override
   		if($oModule = Module::getInstanceByName('blocklayered'))
   		{
-	  		$id_hook = (int)Hook::get('header');
+  			if (_PS_VERSION_ >= '1.5')
+  				$id_hook = (int)Hook::getIdByName('displayHeader');
+	  		else
+	  			$id_hook = (int)Hook::get('header');
 	  		if(($iPos = (int)$oModule->getPosition((int)$id_hook)) &&
 			(int)$this->getPosition((int)$id_hook) < (int)$iPos)
 				$this->updatePosition((int)$id_hook, true, (int)$iPos);
