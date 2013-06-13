@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.1';
+		$this->version = '3.5.3';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -447,7 +447,8 @@ class PayPal extends PaymentModule
 				'cancel_return' => $this->context->link->getPageLink('order.php'),
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/notifier.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
-				'tracking_code' => $this->getTrackingCode()
+				'tracking_code' => $this->getTrackingCode(), 
+				'iso_code' => strtoupper($this->context->language->iso_code)
 			));
 
 			return $this->fetchTemplate('integral_evolution_payment.tpl');
@@ -1185,7 +1186,7 @@ class PayPal extends PaymentModule
 	{
 		$paypal_country_default	= (int)Configuration::get('PAYPAL_COUNTRY_DEFAULT');
 		$this->default_country	= ($paypal_country_default ? (int)$paypal_country_default : (int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->iso_code	= $this->getCountryDependency(Country::getIsoById((int)$this->default_country));
+		$this->iso_code	= $this->getCountryDependency(strtoupper($this->context->language->iso_code));
 	}
 
 	public function formatMessage($response, &$message)

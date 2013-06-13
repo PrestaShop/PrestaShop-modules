@@ -997,6 +997,9 @@ class Socolissimo extends CarrierModule
 		else
 		{
 			$gender = new Gender($customer->id_gender, $this->context->language->id);
+
+			if ($gender->name == "M.")
+				return "MR";
 			return $gender->name;
 		}
 		return $title;
