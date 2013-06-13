@@ -70,6 +70,7 @@
 	<input type="hidden" name="cancel_return" value="{$cancel_return}" />
 	<input type="hidden" name="return" value="{$return_url}" />
     <input type="hidden" name="bn" value="{$tracking_code}" />
+    <input type="hidden" name="lc" value="{$iso_code}" />
 </form>
 
 {literal}
