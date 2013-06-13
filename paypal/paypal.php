@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.1';
+		$this->version = '3.5.2';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -1185,7 +1185,7 @@ class PayPal extends PaymentModule
 	{
 		$paypal_country_default	= (int)Configuration::get('PAYPAL_COUNTRY_DEFAULT');
 		$this->default_country	= ($paypal_country_default ? (int)$paypal_country_default : (int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->iso_code	= $this->getCountryDependency(Country::getIsoById((int)$this->default_country));
+		$this->iso_code	= $this->getCountryDependency(strtoupper($this->context->language->iso_code));
 	}
 
 	public function formatMessage($response, &$message)
