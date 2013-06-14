@@ -293,7 +293,12 @@ class GatewayProduct extends Gateway
 			$product_price_without_reduction = Product::getPriceStatic((int)$product['id_product'], true, (int)$id_product_attribute, 2, NULL, false, false);
 			
 			$categories = $this->getProductCategories($product);
+
+            $categories = array_reverse($categories);
+
 			$classification = str_replace('//', '',implode('/', $categories));
+
+
 
 			$quantity = Product::getQuantity((int)$product['id_product'], !empty($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : NULL);
 			
