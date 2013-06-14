@@ -921,7 +921,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 				if (!$lang_pack)
 					continue;
-				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? '' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
+				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
 				{
 					$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
 					if ((bool)@file_put_contents($file, $content))
