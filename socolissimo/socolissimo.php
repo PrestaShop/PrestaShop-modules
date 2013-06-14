@@ -283,7 +283,7 @@ class Socolissimo extends CarrierModule
             'return_url' => $return_url
         ));
 
-        return $this->_html.= $this->fetchTemplate('/views/templates/admin/back_office.tpl');
+        return $this->_html.= $this->fetchTemplate('back_office.tpl');
         }
 
     protected function displayPersonalDataForm($validation = false)
@@ -312,7 +312,7 @@ class Socolissimo extends CarrierModule
             'personal_data_phone_error' => $this->personal_data_phone_error,
             'personal_data_zip_code_error' => $this->personal_data_zip_code_error
         ));
-        return $this->_html.=$this->fetchTemplate('/views/templates/admin/personnal_data.tpl');
+        return $this->_html.=$this->fetchTemplate('personnal_data.tpl');
         }
 
     protected function savePreactivationRequest()
@@ -1100,9 +1100,7 @@ class Socolissimo extends CarrierModule
         else
             {
             $views = 'views/templates/';
-            if (@filemtime(dirname(__FILE__) . '/' . $name))
-                return $this->display(__FILE__, $name);
-            elseif (@filemtime(dirname(__FILE__) . '/' . $views . 'hook/' . $name))
+            if (@filemtime(dirname(__FILE__) . '/' . $views . 'hook/' . $name))
                 return $this->display(__FILE__, $views . 'hook/' . $name);
             elseif (@filemtime(dirname(__FILE__) . '/' . $views . 'front/' . $name))
                 return $this->display(__FILE__, $views . 'front/' . $name);
