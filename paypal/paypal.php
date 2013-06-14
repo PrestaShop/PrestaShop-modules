@@ -1275,6 +1275,9 @@ class PayPal extends PaymentModule
 	protected function getCurrentUrl()
 	{
 		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
-		return $protocol_link.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'];
+		$params_pos = strpos($_SERVER['REQUEST_URI'], '?');
+		$script = substr($_SERVER['REQUEST_URI'], 0, $params_pos);
+		$params = substr($_SERVER['REQUEST_URI'], $params_pos + 1);
+		return $protocol_link.Tools::getShopDomainSsl().$script.'?'.urlencode($params);
 	}
 }
