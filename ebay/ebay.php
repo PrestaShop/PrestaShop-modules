@@ -44,7 +44,9 @@ $classes_to_load = array(
 	'EbayShippingZoneExcluded',
 	'EbayShippingInternationalZone',
 	'EbaySynchronizer',
-	'EbayPayment'
+	'EbayPayment',
+	'EbayCategoryConditionConfiguration',
+	'EbayCategorySpecific'
 );
 foreach ($classes_to_load as $classname)
 {
@@ -291,6 +293,7 @@ class Ebay extends Module
 		Configuration::deleteByName('EBAY_ZONE_NATIONAL');
 		Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
 		Configuration::deleteByName('EBAY_SECURITY_TOKEN');
+		Configuration::deleteByName('EBAY_SPECIFICS_LAST_UPDATE');		
 
 		// Uninstall Module
 		if (!parent::uninstall() ||
@@ -698,6 +701,8 @@ class Ebay extends Module
 			$this->_postProcessParameters();
 		elseif (Tools::getValue('section') == 'category')
 			$this->_postProcessCategory();
+		elseif (Tools::getValue('section') == 'specifics')
+			$this->_postProcessSpecifics();
 		elseif (Tools::getValue('section') == 'shipping')
 			$this->_postProcessShipping();
 		elseif (Tools::getValue('section') == 'template')
@@ -1010,6 +1015,7 @@ class Ebay extends Module
 		
 		// Smarty
 		$template_vars = array(
+			'id_tab'								=> Tools::safeOutput(Tools::getValue('id_tab')),
 			'controller'   					=> Tools::getValue('controller'),
 			'tab'          					=> Tools::getValue('tab'), 
 			'configure'    					=> Tools::getValue('configure'), 
@@ -1020,9 +1026,10 @@ class Ebay extends Module
 			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
 			'id_lang'      					=> $cookie->id_lang,
 			'_path'        					=> $this->_path,
-			'possible_attributes'		=> Attribute::getAttributes($cookie->id_lang),
-			'possible_features'			=> Feature::getFeatures($cookie->id_lang, true)
-
+			'possible_attributes'		=> AttributeGroup::getAttributesGroups($cookie->id_lang),
+			'possible_features'			=> Feature::getFeatures($cookie->id_lang, true),
+			'conditions'						=> EbayCategoryConditionConfiguration::getPSConditions(),
+			'date'         					=> pSQL(date('Ymdhis'))
 //			'alerts'       => $this->_getAlertCategories(),
 			/*
 
@@ -1078,11 +1085,43 @@ class Ebay extends Module
 			{
 				$data['date_add'] = $date;
 				EbayCategoryConfiguration::add($data);
+				$has_new_categories = true;
 			}
 		}
+		
+		// make sur the ItemSpecifics and Condition data are refresh when we load the dedicated config screen the next time
+		if (isset($has_new_categories)) 
+			Configuration::set('EBAY_SPECIFICS_LAST_UPDATE', null);
 
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
+	
+	private function _postProcessSpecifics()
+	{
+		
+		// Save specifics
+		foreach (Tools::getValue('specific') as $specific_id => $data)
+		{
+			if ($data)
+				list($data_type, $value) = explode('-', $data);
+			else
+				$data_type = null;
+			
+			$field_names = EbayCategorySpecific::getPrefixToFieldNames();
+			$data = array_combine(array_values($field_names), array(null, null, null));
+			if($data_type)
+				$data[$field_names[$data_type]] = $value;
+
+			DB::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '. $specific_id);
+		}
+		
+		// save conditions
+		foreach(Tools::getValue('condition') as $category_id => $condition)
+			foreach($condition as $type => $condition_ref)
+				DB::getInstance()->insert('ebay_category_condition_configuration', array('id_condition_ref' => $condition_ref, 'id_category_ref' => $category_id, 'condition_type' => $type), false, false, Db::REPLACE);
+
+		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+	}	
 
 	private function _getExistingInternationalCarrier()
 	{

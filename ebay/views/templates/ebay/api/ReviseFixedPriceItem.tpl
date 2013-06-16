@@ -36,11 +36,15 @@
 				{/foreach}
 			</PictureDetails>
 		{/if}
-		<SKU>{$sku}</SKU>
+		{if isset($sku)}
+			<SKU>{$sku}</SKU>
+		{/if}
 		<DispatchTimeMax>{$dispatch_time_max}</DispatchTimeMax>
 		<ListingDuration>{$listing_duration}</ListingDuration>
-		<Quantity>{$quantity}</Quantity>
-		{if $price_update}
+		{if isset($quantity)}
+			<Quantity>{$quantity}</Quantity>
+		{/if}
+		{if isset($price_update) && $price_update && isset($start_price)}
 			<StartPrice>{$start_price}</StartPrice>
 		{/if}
 		{if $resynchronize}
@@ -49,14 +53,20 @@
 			<ShippingDetails>{$shipping_details}</ShippingDetails>
 			{$buyer_requirements_details}
 		{/if}
-		{if isset($value)}
 			<ItemSpecifics>
-				<NameValueList>
-					<Name>Marque</Name>
-					<Value><![CDATA[{$value}]]></Value>
-				</NameValueList>
+				{if isset($value)}
+					<NameValueList>
+						<Name>Marque</Name>
+						<Value><![CDATA[{$value}]]></Value>
+					</NameValueList>
+				{/if}
+				{foreach from=$item_specifics key=name item=value}
+					<NameValueList>
+						<Name><![CDATA[{$name}]]></Name>
+						<Value><![CDATA[{$value}]]></Value>
+					</NameValueList>
+				{/foreach}				
 			</ItemSpecifics>
-		{/if}
 		{$return_policy}
 		{if isset($site)}
 			<Site>{$site}</Site>

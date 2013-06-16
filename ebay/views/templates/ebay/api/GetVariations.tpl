@@ -1,10 +1,10 @@
 <Variations>
 	<VariationSpecificsSet>
-	{foreach from=$variations_list key=group item=variations_list_item}
+	{foreach from=$variation_specifics_set key=name item=values}
 		<NameValueList>
-			<Name>{$group}</Name>
-			{foreach from=$variations_list_item key=attr item=val}
-				<Value>{$attr}</Value>
+			<Name>{$name}</Name>
+			{foreach from=$values item=value}
+				<Value>{$value}</Value>
 			{/foreach}
 		</NameValueList>
 	{/foreach}
@@ -17,12 +17,12 @@
 			{/if}
 			<Quantity>{$variation.quantity}</Quantity>
 			<VariationSpecifics>
-				{foreach from=$variation.variations item=v}
+				{foreach from=$variation.variation_specifics key=name item=value}
 					<NameValueList>
-						<Name>{$v.name}</Name>
-						<Value>{$v.value}</Value>
+						<Name>{$name}</Name>
+						<Value>{$value}</Value>
 					</NameValueList>
-				{/foreach}
+				{/foreach}				
 			</VariationSpecifics>
 		</Variation>
 	{/foreach}

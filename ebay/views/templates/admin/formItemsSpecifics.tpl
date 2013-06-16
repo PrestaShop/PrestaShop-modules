@@ -31,7 +31,8 @@
 		{l s='Match eBay Items\' Specifics with PrestasShop Characteristics' mod='ebay'}
 	</b>
 </p>
-<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=category" method="post" class="form" id="configForm8">	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
+<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
+	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
 				<th style="width:110px;">
@@ -60,106 +61,48 @@
 	<div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
 </form>
 
-{literal}
-	<script type="text/javascript">
+<script type="text/javascript">
+	var module_dir = "{$_module_dir_}";
+	var id_lang = "{$id_lang}";
+	
+	var l = {
+		'Attributes'				 : "{l s="Attributes" mod='ebay'}",
+		'Features'  				 : "{l s="Features" mod='ebay'}",
+		'eBay Specifications': "{l s="eBay Specifications" mod='ebay'}"
+	};
 
-		var categories_to_load = new Array();
-		{/literal}
-		{foreach from=$ebay_categories item=category}
-			categories_to_load.push({$category.id});
-		{/foreach}
-		{literal}		
+	var categories_to_load = new Array();
 
-		function loadCategoryItemsSpecifics(category_position)
-		{
-			if(categories_to_load[category_position] == undefined)
-				return;
-				
-			var category_id = categories_to_load[category_position];
-			
-			$.ajax({
-				async: true,
-				cache: false,
-				dataType: 'json',
-				url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadItemsSpecifics.php?ebay_category=" + category_id + "&id_lang={/literal}{$id_lang}{literal}",
-				success: function(data) {
-					$('#specifics-' + category_id + '-loader').hide();
-					if (data.length)
-						insertCategoryRow(category_id, data);
-					loadCategoryItemsSpecifics(++category_position);
-				}
-			});
-		}
+	{foreach from=$ebay_categories item=category}
+		categories_to_load.push({$category.id});
+	{/foreach}
+	
+	var conditions_data = new Array();
+	{foreach from=$conditions key=type item=condition}
+		conditions_data[{$type}] = "{{l s=$condition mod='ebay'}|capitalize}";
+	{/foreach}
+	
+	var possible_attributes = new Array();
+	{foreach from=$possible_attributes item=attribute}
+		possible_attributes[{$attribute.id_attribute_group}] = "{$attribute.name}";
+	{/foreach}		
 		
-		function insertCategoryRow(category_id, data)
-		{
-			var has_optionals = false;
-			var trs = '';
-			var trs_optionals = '';		
-			for (var i in data)
-			{
-				var specific = data[i];
-				
-				var specific_values = new Array();
-				if (specific.selection_mode == 0)
-				{
-					{/literal}
-					{foreach from=$possible_attributes item=attribute}
-						specific_values.push("{$attribute.name}");
-					{/foreach}
-					{foreach from=$possible_features item=feature}
-						specific_values.push("{$feature.name}");
-					{/foreach}
-					{literal}
-				}
-				for (var j in specific.values)
-					specific_values.push(specific.values[j].value);
-				
-				var tds = '<td>' + specific.name + '</td><td><select>';
-				for (var j in specific_values)
-				{
-					tds += '<option>' + specific_values[j] + '</option>';
-				}	
-				tds += '</select></td>';
+	var possible_features = new Array();
+	{foreach from=$possible_features item=feature}
+		possible_features[{$feature.id_feature}] = "{$feature.name}";
+	{/foreach}
 
-				if (parseInt(specific.required))
-					trs += '<tr ' + (i % 2 == 0 ? 'class="alt_row"' : '')+ 'category="'+ category_id + '>' + tds + '</tr>';
-				else
-				{
-					trs_optionals += '<tr ' + (parseInt(specific.required) ? '' : 'style="display:none"') + ' ' + (i % 2 == 0 ? 'class="alt_row"' : '') + 'category="'+ category_id + '">' + tds + '</tr>';
-					if (!has_optionals)
-						has_optionals = true;
-				}
-			}
-			
-			var nb_rows = 0;
-			if (has_optionals)
-			{
-				nb_rows = $(trs).length + 2;
-				trs += '<tr id="switch-optionals-' + category_id + '"><td><a href="#" onclick="return showOptionals(' + category_id + ')">See optional items</a></td><td></td></tr>';
-			} else
-				nb_rows = $(trs).length + 1;
+	{literal}			
+	$('#menuTab8').click(function() {
+		loadCategoriesItemsSpecifics();
+	})
 
-			var row = $('#specifics-' + category_id);
-			row.children('td::nth-child(1)').attr('rowspan', nb_rows);
-			$(trs + trs_optionals).insertAfter(row);
-		}
-		
-		function showOptionals(category_id)
-		{
-			var nb_rows_to_add = $('tr[category=' + category_id + ']').length;
-
-			var first_td = $('#specifics-' + category_id + ' td::nth-child(1)');
-			first_td.attr('rowspan', parseInt(first_td.attr('rowspan')) + nb_rows_to_add - 1);
-
-			$('tr[category=' + category_id + ']').show();
-
-			$('#switch-optionals-' + category_id).hide();
-			return false;
-		}
-		
-		$('#menuTab8').click(function() {
-			loadCategoryItemsSpecifics(0);
-		})
-	</script>
-{/literal}
+	$(document).ready(function() {
+		{/literal}{if $id_tab == 8}
+			loadCategoriesItemsSpecifics();
+		{/if}{literal}
+	})
+	{/literal}
+	
+</script>
+<script type="text/javascript" src="{$_module_dir_}ebay/views/js/itemsSpecifics.js?date={$date}"></script>

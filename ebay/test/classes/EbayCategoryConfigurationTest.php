@@ -13,6 +13,12 @@ class EbayCategoryConfigurationTest extends PHPUnit_Framework_TestCase
 	{
   }
 	
+	public function testGetEbayCategoryIds()
+	{
+		$res = EbayCategoryConfiguration::getEbayCategoryIds();
+		print_r($res);
+	}
+	
   public function testGetEbayCategories()
 	{
 		$res = EbayCategoryConfiguration::getEbayCategories();

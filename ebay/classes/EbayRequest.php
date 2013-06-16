@@ -192,10 +192,11 @@ class EbayRequest
 		return $categories;
 	}
 	
-	public function GetCategoryFeatures() 
+	public function GetCategoryFeatures($category_id)
 	{
 		$response = $this->_makeRequest('GetCategoryFeatures', array(
-			'version' 			 => $this->compatibility_level
+			'version' 			 => $this->compatibility_level,
+			'category_id'		 => $category_id
 		));
 		if ($response === false)
 			return false;
@@ -357,7 +358,8 @@ class EbayRequest
 			'pay_pal_email_address' 		 => Configuration::get('EBAY_PAYPAL_EMAIL'),
 			'postal_code' 							 => Configuration::get('EBAY_SHOP_POSTALCODE'),
 			'quantity'									 => $data['quantity'],
-			'value'						  				 => $data['brand'],
+			//'value'						  				 => $data['brand'],
+			'item_specifics'						 => $data['item_specifics'],
 			'attributes'								 => isset($data['attributes']) ? $data['attributes'] : array(),
 			'return_policy' 						 => $this->_getReturnPolicy(),
 			'shipping_details' 					 => $this->_getShippingDetails($data),
@@ -375,7 +377,7 @@ class EbayRequest
 		// Check data
 		if (!$data)
 			return false;
-
+		
 		$vars = array(
 			'item_id' 									 => $data['itemID'],
 			'condition_id' 							 => $data['condition'],
@@ -392,6 +394,7 @@ class EbayRequest
 			'shipping_details' 		 	   	 => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
 			'return_policy' 						 => $this->_getReturnPolicy(),
+			'item_specifics'						 => $data['item_specifics'],
 		);
 		$response = $this->_makeRequest('ReviseFixedPriceItem', $vars);
 		if ($response === false)
@@ -440,6 +443,7 @@ class EbayRequest
 			'shipping_details' 					  => $this->_getShippingDetails($data),
 			'buyer_requirements_details'  => $this->_getBuyerRequirementDetails($data),
 			'site' 											  => $this->ebay_country->getSiteName(),
+			'item_specifics'						 	=> $data['item_specifics'],			
 		);
 		
 		// Send the request and get response
@@ -488,14 +492,15 @@ class EbayRequest
 			'value'											 => htmlentities($data['brand']),
 			'return_policy' 						 => $this->_getReturnPolicy(),
 			'variations' 								 => $data['variations'],
-			'variations_list' 					 => $data['variationsList'],
+			//'variations_list' 					 => $data['variationsList'],
 			'resynchronize' 						 => Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
 			'title' 										 => substr($data['name'], 0, 80),
 			'description' 							 => $data['description'],
 			'shipping_details' 					 => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
 			'site' 											 => $this->ebay_country->getSiteName(),
-			'variations' 								 => $this->_getVariations($data)
+			'variations' 								 => $this->_getVariations($data),
+			'item_specifics'						 => $data['item_specifics'],			
 		);
 		
 		$response = $this->_makeRequest('ReviseFixedPriceItem', $vars);
@@ -577,11 +582,14 @@ class EbayRequest
 	private function _getVariations($data)
 	{		
 		$variation_pictures = array();
+		$variation_specifics_set = array();
+		
 		if (isset($data['variations']))
 		{
 			$last_specific_name = '';
 			$attribute_used = array();
 			foreach ($data['variations'] as $key => $variation)
+			{
 				foreach ($variation['variations'] as $variation_key => $variation_element)
 					if (!isset($attribute_used[md5($variation_element['name'].$variation_element['value'])]) && isset($variation['pictures'][$variation_key])) 
 					{
@@ -594,13 +602,18 @@ class EbayRequest
 						$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
 						$last_specific_name = $variation_element['name'];
 					}
+				
+				foreach ($variation['variation_specifics'] as $name => $value)
+					$variation_specifics_set[$name][] = $value;
+			}
 		}
 
 		$vars = array(
-			'variations'					=> isset($data['variations']) ? $data['variations'] : array(),
-			'variations_list' 		=> isset($data['variationsList']) ? $data['variationsList'] : array(),
-			'variations_pictures' => $variation_pictures,
-			'price_update'				=> !isset($data['noPriceUpdate'])
+			'variations'							=> isset($data['variations']) ? $data['variations'] : array(),
+			//'variations_list' 				=> isset($data['variationsList']) ? $data['variationsList'] : array(),
+			'variations_pictures' 		=> $variation_pictures,
+			'price_update'						=> !isset($data['noPriceUpdate']),
+			'variation_specifics_set' => $variation_specifics_set,
 		);
 		
 		$context = Context::getContext();
