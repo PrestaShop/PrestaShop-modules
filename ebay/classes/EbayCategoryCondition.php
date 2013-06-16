@@ -13,95 +13,41 @@ class EbayCategoryCondition
 	public static function loadCategoryConditions()
 	{
 		$request = new EbayRequest();
-		$xml_data = $request->GetCategoryFeatures();
 
-		$category_conditions = array();
-		$missing_data_category_ids = array();
-		foreach($xml_data->Category as $category)
+		$ebay_category_ids = EbayCategoryConfiguration::getEbayCategoryIds();
+		$conditions = array();		
+		foreach($ebay_category_ids as $category_id)
 		{
-			$category_id = (int)$category->CategoryID;
+			$xml_data = $request->GetCategoryFeatures($category_id);
+		
+			if (isset($xml_data->Category->ConditionEnabled))
+				$condition_enabled = $xml_data->Category->ConditionEnabled;
+			else
+				$condition_enabled = $xml_data->SiteDefaults->ConditionEnabled;
+
+			if (!$condition_enabled)
+				return;
+
+			if (isset($xml_data->Category->ConditionValues->Condition))
+				$xml_conditions = $xml_data->Category->ConditionValues->Condition;
+			else
+				$xml_conditions = $xml_data->SiteDefaults->ConditionValues->Condition;
 			
-			$category_data = array();
-			
-			if (isset($category->ConditionValues->Condition))
-				foreach($category->ConditionValues->Condition as $condition)
-					$category_data['conditions'][] = array(
-						'id' 		=> (int)$condition->ID,
-						'name'	=> pSQL((string)$condition->DisplayName)
-					);
-							
-			if (isset($category->ConditionEnabled))
-				$category_data['condition_enabled'] = ($category->ConditionEnabled == 'Enabled');
-			
-			if (!isset($category_data['condition_enabled']) && !isset($category_data['conditions']))
-				$missing_data_category_ids[] = $category_id;
-			elseif (isset($category_data['condition_enabled']) && $category_data['condition_enabled'] && !isset($category_data['conditions']))
-				$missing_data_category_ids[] = $category_id;
-			
-			$category_conditions[$category_id] = $category_data;
+			foreach($xml_conditions as $xml_condition)
+				$conditions[] = array(
+					'id_category_ref' 		=> (int)$category_id,
+					'id_condition_ref' 		=> (int)$xml_condition->ID,
+					'name'								=> pSQL((string)$xml_condition->DisplayName)
+				);
 		}
 		
-		echo count($missing_data_category_ids).'/'.count($category_conditions)."\n";
-		
-		$db = DB::getInstance();
-		$categories = $db->executeS('SELECT id_category_ref, id_category_ref_parent, level
-			FROM '._DB_PREFIX_.'ebay_category
-			WHERE id_category_ref in ('.implode(',', $missing_data_category_ids).') 
-			ORDER BY level ASC');
-
-		foreach ($categories as $category)
+		if ($conditions) // security to make sure there are values to enter befor truncating the table
 		{
-			$category_id = $category['id_category_ref'];
-			$parent_id = $category['id_category_ref_parent'];
+			$db = Db::getInstance();
+			$db->Execute('TRUNCATE '._DB_PREFIX_.'ebay_category_condition');
+			$db->insert('ebay_category_condition', $conditions);			
+		}		
 		
-			if (!isset($category_conditions[$category_id]['condition_enabled'])
-				&& isset($category_conditions[$parent_id]['condition_enabled']))
-			{
-				$category_conditions[$category_id]['condition_enabled'] = $category_conditions[$parent_id]['condition_enabled'];
-				if ($category_conditions[$category_id]['condition_enabled'])
-				{
-					if (!isset($category_conditions[$category_id]['conditions'])
-						&& isset($category_conditions[$parent_id]['conditions']))
-					{
-						$category_conditions[$category_id]['conditions'] = $category_conditions[$parent_id]['conditions'];
-						unset($missing_data_category_ids[array_search($category_id, $missing_data_category_ids)]);
-					}
-				}
-				else
-					unset($missing_data_category_ids[array_search($category_id, $missing_data_category_ids)]);
-			}
-			elseif (!isset($category_conditions[$category_id]['conditions'])
-				&& isset($category_conditions[$parent_id]['conditions']))
-			{
-				$category_conditions[$category_id]['condition_enabled'] = true;
-				$category_conditions[$category_id]['conditions'] = $category_conditions[$parent_id]['conditions'];
-				unset($missing_data_category_ids[array_search($category_id, $missing_data_category_ids)]);
-			}
-		}
-		
-		echo count($missing_data_category_ids);
-		foreach($missing_data_category_ids as $id)
-		{
-			foreach ($categories as $category)
-			{
-				if ($id == $category['id_category_ref'])
-					echo $category['level'].'-'.$category['id_category_ref']."\n";
-			}
-		}
-				
-//		}
-		
-
-//		$db = Db::getInstance();
-//		$db->insert('ebay_category_condition', $insert_data);
-
-		/*
-					$insert_data[] = array(
-						'id_category_ref'  => $category_id,
-						'id_condition_ref' => (int)$condition->ID,
-						'name'						 => pSQL((string)$condition->DisplayName)
-					);
-		*/
 	}
 	
 }

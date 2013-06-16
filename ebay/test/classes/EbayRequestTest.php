@@ -52,11 +52,11 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetCategoryFeatures()
 	{
-		$res = $this->ebay_request->getCategoryFeatures();
+		$res = $this->ebay_request->getCategoryFeatures(73839);
 		print_r($res);
-		die;
 	}
-
+	
+	/*
 	public function testGetCategorySpecifics()
 	{
 		$res = $this->ebay_request->getCategorySpecifics(53159);
@@ -228,5 +228,6 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$res = $this->ebay_request->getOrders(date('Y-m-d', strtotime('10 September 2000')), date('Y-m-d'), 1);
 		$this->assertTrue(is_array($res));
 	}
+	*/
 	
 }

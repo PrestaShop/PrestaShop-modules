@@ -25,6 +25,24 @@ class EbayCategoryConfiguration
 	
 	/**
 	 *
+	 * Returns the eBay category ids
+	 *
+	 */
+	
+	public static function getEbayCategoryIds()
+	{
+		$sql = 'SELECT 
+			DISTINCT(ec.`id_category_ref`) as id
+			FROM `'._DB_PREFIX_.'ebay_category_configuration` e
+			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec
+			ON e.`id_ebay_category` = ec.`id_ebay_category`';	
+		$res = Db::getInstance()->executeS($sql);
+		return array_map(function($row) {return $row['id'];}, $res);
+	}
+	
+	
+	/**
+	 *
 	 * Returns the eBay category id and the full name including the name of the parent and the grandparent category
 	 *
 	 */

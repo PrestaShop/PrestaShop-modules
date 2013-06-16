@@ -15,7 +15,6 @@ class EbayCategoryConditionTest extends PHPUnit_Framework_TestCase
 	
   public function testLoadCategoryConditions()
 	{
-		$res = EbayCategoryCondition::loadCategoryConditions();
-		print_r($res);
+		$res = EbayCategoryCondition::loadCategoryConditions(73839);
   }
 }
