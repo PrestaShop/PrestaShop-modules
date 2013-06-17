@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.3';
+		$this->version = '3.5.4';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -474,7 +474,7 @@ class PayPal extends PaymentModule
 	{
 		// No active
 		if (!$this->active || (((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
-			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()))
+			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) || isset($this->context->cookie->express_checkout))
 			return null;
 
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
