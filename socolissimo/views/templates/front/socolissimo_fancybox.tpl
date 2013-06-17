@@ -53,6 +53,7 @@ var soBwdCompat = "{$SOBWD_C}";
 var soCarrierId = "{$id_carrier}";
 var soToken = "{$token}";
 var initialCost = "{$initialCost}";
+var baseDir = '{$content_dir}';
 
     {foreach from=$inputs item=input key=name name=myLoop}
         soInputs.{$name} = "{$input|strip_tags|addslashes}";
@@ -74,7 +75,7 @@ var initialCost = "{$initialCost}";
             'enableEscapeButton'	: true,
             'type'				: 'iframe',
             onStart		:	function() {
-                $('#soLink').attr('href', 'modules/socolissimo/redirect.php' + serialiseInput(soInputs))
+                $('#soLink').attr('href', baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs))
             },
             onClosed    :   function() {
                $.ajax({
@@ -193,7 +194,7 @@ else{
 
 function redirect()
 {
-    $('#soLink').attr('href', 'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
+    $('#soLink').attr('href',  baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
     $("#soLink").trigger("click");
     return false;
 }

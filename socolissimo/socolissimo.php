@@ -780,13 +780,7 @@ class Socolissimo extends CarrierModule
             $rangeWeight->delimiter2 = '10000';
             $rangeWeight->add();
 
-            $zones = Zone::getZones(true);
-            foreach ($zones as $zone)
-                {
-                Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'carrier_zone  (id_carrier, id_zone) VALUE (\'' . (int) ($carrier->id) . '\',\'' . (int) ($zone['id_zone']) . '\')');
-                Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUE (\'' . (int) ($carrier->id) . '\',\'' . (int) ($rangePrice->id) . '\',NULL,\'' . (int) ($zone['id_zone']) . '\',\'1\')');
-                Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price) VALUE (\'' . (int) ($carrier->id) . '\',NULL,\'' . (int) ($rangeWeight->id) . '\',\'' . (int) ($zone['id_zone']) . '\',\'1\')');
-                }
+
             //copy logo
             if (!copy(dirname(__FILE__) . '/img/socolissimo.jpg', _PS_SHIP_IMG_DIR_ . '/' . $carrier->id . '.jpg'))
                 return false;
