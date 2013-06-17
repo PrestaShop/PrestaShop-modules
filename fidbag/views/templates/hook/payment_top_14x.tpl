@@ -60,7 +60,7 @@ var fidbagRedirect = "{$redirect|escape:'htmlall':'UTF-8'}";
 <style>
 	#fidbag_title {font-size:1.2em}
 	#fidbag_menuTab {float:left;padding:0;margin:0;margin-left:10px;text-align:center;}
-	#fidbag_menuTab li {margin-left:-1px;text-align:left;float:left;display:inline;padding:5px 10px;background:#EFEFEF;font-weight:bold;cursor:pointer;border:1px solid #CCCCCC;-webkit-border-radius: 0px 5px 0px 0px;border-radius: 0px 5px 0px 0px}
+	#fidbag_menuTab li {margin-left:-1px;text-align:left;float:left;display:inline;padding:5px 5px;background:#EFEFEF;font-weight:bold;cursor:pointer;border:1px solid #CCCCCC;-webkit-border-radius: 0px 5px 0px 0px;border-radius: 0px 5px 0px 0px}
 	#fidbag_menuTab li.fidbag_menuTabButton.selected {background:#FEF6DD;border-bottom:1px solid #FEF6DD;}
 	#fidbag_menuTab li:first-child {margin-left:0}
 	#fidbag_tabList {padding-top:25px}
