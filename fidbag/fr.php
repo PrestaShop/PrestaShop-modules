@@ -90,6 +90,14 @@ $_MODULE['<{fidbag}prestashop>payment_top_14x_15a192eed2833482e367f880fa6d8580']
 $_MODULE['<{fidbag}prestashop>payment_top_14x_96614a7f27f16767558348cfae69eff6'] = 'Rattachement à votre compte Fid\'Bag';
 $_MODULE['<{fidbag}prestashop>payment_top_14x_ad50e9a7deb149b4511d45f44ee60bb0'] = 'Le montant total de la remise ne peut dépasser';
 $_MODULE['<{fidbag}prestashop>payment_top_14x_9ad259ab3ddf04e32a5e484e89ed9e1f'] = 'L\'utilisateur ne peut pas être vérifié';
+$_MODULE['<{fidbag}prestashop>product_054a9c66cc92b7f1bfcacee3b7c7ad54'] = 'Pas de point de fidélité pour ce produit car il y a déjà une promotion';
+$_MODULE['<{fidbag}prestashop>product_e94d481804904a48c1a8093e7a069570'] = 'Pas de point de fidélité offert pour ce produit';
+$_MODULE['<{fidbag}prestashop>product_08ef6b34ab8e7039ef0ee69378f0ac0b'] = 'En achetant ce produit vous pouvez gagner jusqu\'à';
+$_MODULE['<{fidbag}prestashop>product_2996152bb442bf98c80c515c6055de5f'] = ' points de fidélité Fid\'Bag';
+$_MODULE['<{fidbag}prestashop>product_b40d5c523ee75453134b1449dd9cd13a'] = ' point de fidélité Fid\'Bag';
+$_MODULE['<{fidbag}prestashop>product_b9cb3a85529dd593c14c838e22976cff'] = 'Votre panier totalisera';
+$_MODULE['<{fidbag}prestashop>product_0aab81de5c4c87021772015efc184d67'] = ' points';
+$_MODULE['<{fidbag}prestashop>product_78ee54aa8f813885fe2fe20d232518b9'] = 'point';
 $_MODULE['<{fidbag}prestashop>subscription_81670272952995d8d0d431099cf55587'] = 'Le même mot de passe est requis pour les deux champs';
 $_MODULE['<{fidbag}prestashop>subscription_1c26135d81d85473fcbd51bd014d6ea6'] = 'Erreur technique, merci de réessayer plus tard';
 $_MODULE['<{fidbag}prestashop>subscription_837443f874aac872640df5dbca52749a'] = 'Pas de compte Fid\'Bag, inscrivez vous :';
