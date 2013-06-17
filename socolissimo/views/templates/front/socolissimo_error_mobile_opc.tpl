@@ -22,16 +22,25 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <script type="text/javascript">
+        var soBwdCompat = "{$SOBWD_C}";
     {literal}
-	$(document).ready(function(){
+        $(document).ready(function(){
     {/literal}
     {foreach from=$ids item=id}
-{literal}$('#opc_carrier_{/literal}{$id}{literal}').remove();{/literal}
-{literal}$("label[for='opc_carrier_{/literal}{$id}{literal}']").remove();{/literal}
-{/foreach}
-{literal}
-	});
-{/literal}
-</script>
+        {literal}
+                if(soBwdCompat){
+    $('.delivery_option').each(function( ) {
+         if ($(this).children().children('.delivery_option_radio').val() == '{/literal}{$id}{literal},')
+            {
+                 $(this).remove();
+               }
+        });
+            }
+           else
+            $('#id_carrier{/literal}{$id}{literal}').parent().parent().parent().remove();{/literal}
+            {/foreach}
+                {literal}
+        });
+                {/literal}
+            </script>
