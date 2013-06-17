@@ -579,7 +579,7 @@ class Socolissimo extends CarrierModule
                         $tabIdSoco = explode('|', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST'));
                         $tabIdSoco[] = $id_carrier;
                         $this->context->smarty->assign('ids', $tabIdSoco);
-                        return $this->fetchTemplate('socolissimo_error.tpl');
+                        return $this->fetchTemplate('socolissimo_error_mobile_opc.tpl');
                         }
                     else
                         return $this->fetchTemplate('socolissimo_redirect_mobile.tpl');
@@ -591,10 +591,7 @@ class Socolissimo extends CarrierModule
                     $tabIdSoco = explode('|', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST'));
                     $tabIdSoco[] = $id_carrier;
                     $this->context->smarty->assign('ids', $tabIdSoco);
-                    if (Configuration::get('PS_ORDER_PROCESS_TYPE'))
-                        return $this->fetchTemplate('socolissimo_error_mobile_opc.tpl');
-                    else
-                        return $this->fetchTemplate('socolissimo_error.tpl');
+                    return $this->fetchTemplate('socolissimo_error_mobile_opc.tpl');
                     }
                 else
                     return $this->fetchTemplate('socolissimo_redirect_mobile.tpl');

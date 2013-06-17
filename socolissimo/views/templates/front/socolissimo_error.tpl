@@ -28,8 +28,14 @@
 	$(document).ready(function(){
     {/literal}
     {foreach from=$ids item=id}
-{literal}$($('#id_carrier{/literal}{$id}{literal}').parent().parent()).remove();{/literal}
-{literal}$($('.delivery_option_radio').val('{/literal}{$id}{literal},').parents('div:eq(0)')).remove();{/literal}
+        {literal}    $('.delivery_option').each(function( ) {
+     if ($(this).children('.delivery_option_radio').val() == '{/literal}{$id}{literal},')
+        {
+             $(this).remove();
+           }
+        });
+        {/literal}
+{literal}$('#id_carrier{/literal}{$id}{literal}').parent().parent().remove();{/literal}
 {/foreach}
 {literal}
 	});
