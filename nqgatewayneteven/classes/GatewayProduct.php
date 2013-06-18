@@ -284,7 +284,13 @@ class GatewayProduct extends Gateway
 				
 			}
 
-			$codeEan = sprintf('%013s', !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13']);
+            $ean_ps = !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13'];
+
+            $codeEan = "";
+            if(!empty($ean_ps)){
+                $codeEan = sprintf('%013s', $ean_ps);
+            }
+
 			$id_product_attribute = NULL;
 			if (!empty($product['id_product_attribute']))
 				$id_product_attribute = (int)$product['id_product_attribute'];
