@@ -45,7 +45,8 @@ $classes_to_load = array(
 	'EbayShippingInternationalZone',
 	'EbaySynchronizer',
 	'EbayPayment',
-	'EbaySyncBlacklistProduct'
+	'EbayCategoryConditionConfiguration',
+	'EbayCategorySpecific'
 );
 foreach ($classes_to_load as $classname)
 {
@@ -290,6 +291,7 @@ class Ebay extends Module
 		Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
 		Configuration::deleteByName('EBAY_ZONE_NATIONAL');
 		Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
+		Configuration::deleteByName('EBAY_SPECIFICS_LAST_UPDATE');		
 
 		// Uninstall Module
 		if (!parent::uninstall() ||
@@ -705,6 +707,8 @@ class Ebay extends Module
 			$this->_postProcessParameters();
 		elseif (Tools::getValue('section') == 'category')
 			$this->_postProcessCategory();
+		elseif (Tools::getValue('section') == 'specifics')
+			$this->_postProcessSpecifics();
 		elseif (Tools::getValue('section') == 'shipping')
 			$this->_postProcessShipping();
 		elseif (Tools::getValue('section') == 'template')
@@ -749,8 +753,7 @@ class Ebay extends Module
 			
 			$smarty_vars['url'] = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
 				'token' => Configuration::get('EBAY_SECURITY_TOKEN'),
-				'time'  =>pSQL(date('Ymdhis')),
-			));
+				'time'  =>pSQL(date('Ymdhis'))));
 			
 			$url_vars = array(
 				'action' 					=> 'validateToken',
@@ -837,6 +840,7 @@ class Ebay extends Module
 			'class_general' 				=> version_compare(_PS_VERSION_, '1.5', '>') ? 'uncinq' : 'unquatre',
 			'form_parameters' 			=> $this->_displayFormParameters(),
 			'form_category' 				=> $this->_displayFormCategory(),
+			'form_items_specifics'	=> $this->_displayFormItemsSpecifics(),
 			'form_shipping' 				=> $this->_displayFormShipping(),
 			'form_template_manager' => $this->_displayFormTemplateManager(),
 			'form_ebay_sync' 				=> $this->_displayFormEbaySync(),
@@ -1072,6 +1076,48 @@ class Ebay extends Module
 		return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
 	}
 
+	private function _displayFormItemsSpecifics()
+	{
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+			$smarty = $this->context->smarty;
+			$cookie = $this->context->cookie;
+		}
+		else 
+			global $smarty, $cookie;
+		
+		// Smarty
+		$template_vars = array(
+			'id_tab'								=> Tools::safeOutput(Tools::getValue('id_tab')),
+			'controller'   					=> Tools::getValue('controller'),
+			'tab'          					=> Tools::getValue('tab'), 
+			'configure'    					=> Tools::getValue('configure'), 
+			'tab_module'   					=> Tools::getValue('tab_module'),
+			'module_name'  					=> Tools::getValue('module_name'), 
+			'token'        					=> Tools::getValue('token'),
+			'_module_dir_' 					=> _MODULE_DIR_,
+			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
+			'id_lang'      					=> $cookie->id_lang,
+			'_path'        					=> $this->_path,
+			'possible_attributes'		=> AttributeGroup::getAttributesGroups($cookie->id_lang),
+			'possible_features'			=> Feature::getFeatures($cookie->id_lang, true),
+			'conditions'						=> EbayCategoryConditionConfiguration::getPSConditions(),
+			'date'         					=> pSQL(date('Ymdhis'))
+//			'alerts'       => $this->_getAlertCategories(),
+			/*
+
+			'configs'      => $configs,
+			'isOneDotFive' => $is_one_dot_five,
+			'request_uri'  => $_SERVER['REQUEST_URI'],
+			'date'         => pSQL(date('Ymdhis'))
+			*/
+		);
+
+		$smarty->assign($template_vars);
+
+		return $this->display(dirname(__FILE__), '/views/templates/admin/formItemsSpecifics.tpl');
+	}
+
 	private function _postProcessCategory()
 	{
 		// Insert and update categories
@@ -1110,8 +1156,66 @@ class Ebay extends Module
 			EbaySyncBlacklistProduct::deleteByProductIds($to_synchronize_product_ids);			
 		}
 
+			// Insert and update configuration
+		foreach ($post_value as $id_category => $tab)
+		{
+			$data = array();
+			$date = date('Y-m-d H:i:s');
+			if ($tab['id_ebay_category'])
+				$data = array(
+					'id_country' 			 => 8, 
+					'id_ebay_category' => (int)$tab['id_ebay_category'], 
+					'id_category' 		 => (int)$id_category, 
+					'percent' 				 => pSQL($tab['percent']), 
+					'date_upd' 				 => pSQL($date));
+			if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
+			{
+				if ($data)
+					EbayCategoryConfiguration::updateByIdCategory($id_category, $data);
+				else
+					EbayCategoryConfiguration::deleteByIdCategory($id_category);
+			}
+			elseif ($data)
+			{
+				$data['date_add'] = $date;
+				EbayCategoryConfiguration::add($data);
+				$has_new_categories = true;
+			}
+		}
+		
+		// make sur the ItemSpecifics and Condition data are refresh when we load the dedicated config screen the next time
+		if (isset($has_new_categories)) 
+			Configuration::set('EBAY_SPECIFICS_LAST_UPDATE', null);
+
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
+	
+	private function _postProcessSpecifics()
+	{
+		
+		// Save specifics
+		foreach (Tools::getValue('specific') as $specific_id => $data)
+		{
+			if ($data)
+				list($data_type, $value) = explode('-', $data);
+			else
+				$data_type = null;
+			
+			$field_names = EbayCategorySpecific::getPrefixToFieldNames();
+			$data = array_combine(array_values($field_names), array(null, null, null));
+			if($data_type)
+				$data[$field_names[$data_type]] = $value;
+
+			DB::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '. $specific_id);
+		}
+		
+		// save conditions
+		foreach(Tools::getValue('condition') as $category_id => $condition)
+			foreach($condition as $type => $condition_ref)
+				DB::getInstance()->insert('ebay_category_condition_configuration', array('id_condition_ref' => $condition_ref, 'id_category_ref' => $category_id, 'condition_type' => $type), false, false, Db::REPLACE);
+
+		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+	}	
 
 	private function _getExistingInternationalCarrier()
 	{

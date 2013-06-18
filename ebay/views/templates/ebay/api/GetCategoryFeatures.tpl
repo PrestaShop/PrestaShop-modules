@@ -4,7 +4,12 @@
 		<eBayAuthToken>{$ebay_auth_token}</eBayAuthToken>
 	</RequesterCredentials>
 	<DetailLevel>ReturnAll</DetailLevel>
-	<FeatureID>{$feature_id}</FeatureID>
+	{if isset($feature_id)}
+		<FeatureID>{$feature_id}</FeatureID>
+	{/if}
+	{if isset($category_id)}
+		<CategoryID>{$category_id}</CategoryID>
+	{/if}
 	<ErrorLanguage>{$error_language}</ErrorLanguage>
 	<Version>{$version}</Version>
 	<WarningLevel>High</WarningLevel>

@@ -19,7 +19,7 @@ class EbaySynchronizerTest
 	{
 		$this->ebay_synchronizer->syncProducts(array(
 			array(
-				'id_product' => 1
+				'id_product' => 7
 			)
 		));
 	}

@@ -26,15 +26,17 @@
 <ul id="menuTab">
 	<li id="menuTab1" class="menuTabButton selected">1. {l s='Parameters' mod='ebay'}</li>
 	<li id="menuTab2" class="menuTabButton">2. {l s='Categories settings' mod='ebay'}</li>
-	<li id="menuTab3" class="menuTabButton">3. {l s='Shipping' mod='ebay'}</li>
-	<li id="menuTab4" class="menuTabButton">4. {l s='Template manager' mod='ebay'}</li>
-	<li id="menuTab5" class="menuTabButton">5. {l s='eBay Sync' mod='ebay'}</li>
-	<li id="menuTab6" class="menuTabButton">6. {l s='Orders history' mod='ebay'}</li>
-	<li id="menuTab7" class="menuTabButton">7. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab8" class="menuTabButton">3. {l s='Items Specifics' mod='ebay'}</li>
+	<li id="menuTab3" class="menuTabButton">4. {l s='Shipping' mod='ebay'}</li>
+	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
+	<li id="menuTab5" class="menuTabButton">6. {l s='eBay Sync' mod='ebay'}</li>
+	<li id="menuTab6" class="menuTabButton">7. {l s='Orders history' mod='ebay'}</li>
+	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
 	<div id="menuTab1Sheet" class="tabItem selected">{$form_parameters}</div>
 	<div id="menuTab2Sheet" class="tabItem">{$form_category}</div>
+	<div id="menuTab8Sheet" class="tabItem">{$form_items_specifics}</div>
 	<div id="menuTab3Sheet" class="tabItem">{$form_shipping}</div>
 	<div id="menuTab4Sheet" class="tabItem">{$form_template_manager}</div>
 	<div id="menuTab5Sheet" class="tabItem">{$form_ebay_sync}</div>
