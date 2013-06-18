@@ -29,8 +29,6 @@ class EbaySynchronizer
 {
 	public static function syncProducts($products, $context, $id_lang) 
 	{
-		$count = 0;
-		$count_success = 0;
 		$count_error = 0;
 		$date = date('Y-m-d H:i:s');
 		$ebay = new EbayRequest();
@@ -72,32 +70,13 @@ class EbaySynchronizer
 					$product_category_cache = $category_cache[$product->id_category_default];
 
 					// Load Pictures
-					$pictures = array();
-					$picturesMedium = array();
-					$picturesLarge = array();
-					$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_pictures']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
-					foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
-					{
-						$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-						if (count($pictures) < $nb_pictures)
-							$pictures[] = $large_pict;					
-						
-						$picturesMedium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
-						$picturesLarge[] = $large_pict;
-					}
+					list($pictures, $pictures_medium, $pictures_large) = EbaySynchronizer::_getPictures($product, $id_lang, $context, $products_configuration);
 				
 					// Load Variations
-					//list($variations, $variationsList) = EbaySynchronizer::_loadVariations($product, $context, $category_cache);
 					$variations = EbaySynchronizer::_loadVariations($product, $context, $product_category_cache);
 
 					// Load basic price
-					$price = Product::getPriceStatic((int)$product->id, true);
-					$price_original = $price;
-					if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $product_category_cache['percent'])) 
-						$price *= (1 + ($product_category_cache['percent'] / 100));
-					else 
-						$price += $product_category_cache['percent'];
-					$price = round($price, 2);
+					list($price, $price_original) = EbaySynchronizer::_getPrices($product->id, $product_category_cache['percent']);
 				
 					// Generate array and try insert in database
 					$data = array(
@@ -110,47 +89,24 @@ class EbaySynchronizer
 							'price' 						=> $price,
 							'quantity' 					=> $quantity_product,
 							'categoryId' 				=> $product_category_cache['id_category_ref'],
-							//'variationsList' 		=> $variationsList,
 							'variations' 				=> $variations,
 							'pictures' 					=> $pictures,
-							'picturesMedium' 		=> $picturesMedium,
-							'picturesLarge' 		=> $picturesLarge,
+							'picturesMedium' 		=> $pictures_medium,
+							'picturesLarge' 		=> $pictures_large,
 							'condition'				  => EbaySynchronizer::_getEbayCondition($product_category_cache['conditions'], $product),
 							'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
 							'item_specifics'		=> EbaySynchronizer::_getProductItemSpecifics($product_category_cache, $product->id, $id_lang)
 					);
 
 					// Fix hook update product
-					if (isset($context->employee) 
-						&& (int)$context->employee->id 
-						&& Tools::getValue('submitProductAttribute') 
-						&& Tools::getValue('id_product_attribute') 
-						&& Tools::getValue('attribute_mvt_quantity')
-						&& Tools::getValue('id_mvt_reason')) 
+					if (Tools::getValue('id_product_attribute'))
 					{
 						$id_product_attribute_fix = (int)Tools::getValue('id_product_attribute');
-						$key = $product->id.'-'.$id_product_attribute_fix;
-
-						if (substr(_PS_VERSION_, 0, 3) == '1.3') 
-						{
-							$quantity_fix = (int)Tools::getValue('attribute_quantity');
-							if ($id_product_attribute_fix > 0 && $quantity_fix > 0 && isset($data['variations'][$key]['quantity']))
-								$data['variations'][$key]['quantity'] = (int)$quantity_fix;
-						}
-						else 
-						{
-							$action = Db::getInstance()->getValue('SELECT `sign` 
-								FROM `'._DB_PREFIX_.'stock_mvt_reason` 
-								WHERE `id_stock_mvt_reason` = '.(int)Tools::getValue('id_mvt_reason'));
-							$quantity_fix = (int)Tools::getValue('attribute_mvt_quantity');
-							if ($id_product_attribute_fix > 0 
-								&& $quantity_fix > 0 
-								&& isset($data['variations'][$key]['quantity'])
-								&& $action)
-									$data['variations'][$key]['quantity'] += (int)$action * (int)$quantity_fix;
-						}
+						$key = $product_id.'-'.$id_product_attribute_fix;					
+						if (isset($data['variations'][$key]['quantity']))
+							$data['variations'][$key]['quantity'] = EbaySynchronizer::_fixHookUpdateProduct($context, $product_id, $data['variations'][$key]['quantity']);						
 					}
-
+					
 					// Price Update
 					if (isset($p['noPriceUpdate']))
 						$data['noPriceUpdate'] = $p['noPriceUpdate'];
@@ -303,9 +259,6 @@ class EbaySynchronizer
 					
 						$count_error++;
 					}
-					else
-						$count_success++;                    
-					$count++;
 				}
 			}
 		}
@@ -337,6 +290,28 @@ class EbaySynchronizer
 		
 		return $category_cache;
 	}
+	
+	private static function _getPictures($product, $id_lang, $context, $products_configuration)
+	{
+		$pictures = array();
+		$pictures_medium = array();
+		$pictures_large = array();
+		
+		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_pictures']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
+		
+		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
+		{
+			$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
+			if (count($pictures) < $nb_pictures)
+				$pictures[] = $large_pict;					
+			
+			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
+			$pictures_large[] = $large_pict;
+		}
+		
+		return array($pictures, $pictures_medium, $pictures_large);
+	}
+
 	
 	private static function _loadVariations($product, $context, $product_category_cache)
 	{
@@ -385,6 +360,19 @@ class EbaySynchronizer
 		
 		//return array($variations, $variationsList);
 		return $variations;
+	}
+	
+	private static function _getPrices($product_id, $percent)
+	{
+		$price = Product::getPriceStatic((int)$product_id, true);
+		$price_original = $price;
+		if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $percent)) 
+			$price *= (1 + ($percent / 100));
+		else 
+			$price += $percent;
+		$price = round($price, 2);
+		
+		return array($price, $price_original);		
 	}
 	
 	private static function _getEbayDescription($product, $id_lang)
@@ -736,6 +724,39 @@ class EbaySynchronizer
 		}
 		
 		return $item_specifics_pairs;
+	}
+	
+	private static function _fixHookUpdateProduct($context, $product_id, $quantity)
+	{
+		if (isset($context->employee) 
+			&& (int)$context->employee->id 
+			&& Tools::getValue('submitProductAttribute') 
+			&& Tools::getValue('attribute_mvt_quantity')
+			&& Tools::getValue('id_mvt_reason')) 
+		{
+			$id_product_attribute_fix = (int)Tools::getValue('id_product_attribute');
+			$key = $product_id.'-'.$id_product_attribute_fix;
+
+			if (substr(_PS_VERSION_, 0, 3) == '1.3') 
+			{
+				$quantity_fix = (int)Tools::getValue('attribute_quantity');
+				if ($id_product_attribute_fix > 0 && $quantity_fix > 0)
+					$quantity = (int)$quantity_fix;
+			}
+			else 
+			{
+				$action = Db::getInstance()->getValue('SELECT `sign` 
+					FROM `'._DB_PREFIX_.'stock_mvt_reason` 
+					WHERE `id_stock_mvt_reason` = '.(int)Tools::getValue('id_mvt_reason'));
+				$quantity_fix = (int)Tools::getValue('attribute_mvt_quantity');
+				if ($id_product_attribute_fix > 0 
+					&& $quantity_fix > 0 
+					&& $action)
+						$quantity += (int)$action * (int)$quantity_fix;
+			}
+		}
+		
+		return $quantity;
 	}
 	
 	/**
