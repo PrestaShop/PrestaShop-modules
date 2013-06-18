@@ -72,8 +72,12 @@ function insertCategoryRow(category_id, data)
     
 		if (specific.selection_mode == 0)
 		{
-      tds += '<option disabled="disabled">' + l['Attributes'] + '</option>';
-      tds += writeOptions('attr', possible_attributes, specific.id_attribute_group);
+      if (!data.is_multi_sku || specific.can_variation)
+      {
+        tds += '<option disabled="disabled">' + l['Attributes'] + '</option>';
+        tds += writeOptions('attr', possible_attributes, specific.id_attribute_group);        
+      }
+      
       tds += '<option disabled="disabled">' + l['Features'] + '</option>';
       tds += writeOptions('feat', possible_features, specific.id_feature);
 		}

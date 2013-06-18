@@ -68,7 +68,8 @@ class EbayCategoryConfiguration
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec3
 			ON ec2.`id_category_ref_parent` = ec3.`id_category_ref`
 			AND ec2.`id_category_ref_parent` <> \'1\'
-			and ec2.level <> 1';	
+			and ec2.level <> 1
+			WHERE ec1.`id_category_ref` is not null';
 		return Db::getInstance()->executeS($sql);
 	}
 	
