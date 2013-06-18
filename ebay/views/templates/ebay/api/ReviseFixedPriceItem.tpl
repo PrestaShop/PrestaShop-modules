@@ -36,11 +36,15 @@
 				{/foreach}
 			</PictureDetails>
 		{/if}
-		<SKU>{$sku}</SKU>
+		{if isset($sku)}
+			<SKU>{$sku}</SKU>
+		{/if}		
 		<DispatchTimeMax>{$dispatch_time_max}</DispatchTimeMax>
 		<ListingDuration>{$listing_duration}</ListingDuration>
-		<Quantity>{$quantity}</Quantity>
-		{if $price_update}
+		{if isset($quantity)}
+			<Quantity>{$quantity}</Quantity>
+		{/if}
+		{if $price_update && isset($start_price)}
 			<StartPrice>{$start_price}</StartPrice>
 		{/if}
 		{if $resynchronize}

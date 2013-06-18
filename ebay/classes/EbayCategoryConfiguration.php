@@ -22,6 +22,22 @@ class EbayCategoryConfiguration
 
 		return $sql;			
 	}
+
+	/**
+	 * Returns the product ids of all product for which the category is matched with an eBay category
+	 *
+	 */
+	public static function getAllProductIds()
+	{
+		$res = Db::getInstance()->executeS('SELECT `id_product` 
+			FROM `'._DB_PREFIX_.'category_product` c
+			WHERE c.`id_category` 
+			IN (
+				SELECT e.`id_category`
+				FROM `'._DB_PREFIX_.'ebay_category_configuration` e
+			)');
+		return array_map(function($row) { return $row['id_product']; }, $res);					
+	}
 	
 	
 	public static function add($data)
