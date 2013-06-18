@@ -38,6 +38,7 @@ class EbaySynchronizer
 			if (Validate::isLoadedObject($product) && $product->id_category_default) 
 			{
 				$category_cache = EbaySynchronizer::_updateCategoryCache($category_cache, $product->id_category_default);
+				$product_category_cache = $category_cache[$product->id_category_default];
 
 				// Load Pictures
 				$pictures = array();
@@ -53,19 +54,17 @@ class EbaySynchronizer
 				
 				// Load Variations
 				//list($variations, $variationsList) = EbaySynchronizer::_loadVariations($product, $context, $category_cache);
-				$variations = EbaySynchronizer::_loadVariations($product, $context, $category_cache);
+				$variations = EbaySynchronizer::_loadVariations($product, $context, $product_category_cache);
 
 				// Load basic price
 				$price = Product::getPriceStatic((int)$product->id, true);
 				$price_original = $price;
-				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $category_cache[$product->id_category_default]['percent'])) 
-					$price *= (1 + ($category_cache[$product->id_category_default]['percent'] / 100));
+				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $product_category_cache['percent'])) 
+					$price *= (1 + ($product_category_cache['percent'] / 100));
 				else 
-					$price += $category_cache[$product->id_category_default]['percent'];
+					$price += $product_category_cache['percent'];
 				$price = round($price, 2);
 				
-				$items_specifics = $category_cache[$product->id_category_default]['items_specifics'];
-
 				// Generate array and try insert in database
 				$data = array(
 						'id_product' 				=> $product->id,
@@ -76,15 +75,15 @@ class EbaySynchronizer
 						'description_short' => $product->description_short,
 						'price' 						=> $price,
 						'quantity' 					=> $quantity_product,
-						'categoryId' 				=> $category_cache[$product->id_category_default]['id_category_ref'],
+						'categoryId' 				=> $product_category_cache['id_category_ref'],
 						//'variationsList' 		=> $variationsList,
 						'variations' 				=> $variations,
 						'pictures' 					=> $pictures,
 						'picturesMedium' 		=> $picturesMedium,
 						'picturesLarge' 		=> $picturesLarge,
-						'condition'				  => EbaySynchronizer::_getEbayCondition($category_cache[$product->id_category_default]['conditions'], $product),
+						'condition'				  => EbaySynchronizer::_getEbayCondition($product_category_cache['conditions'], $product),
 						'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
-						'item_specifics'		=> EbaySynchronizer::_getProductItemSpecifics($items_specifics, $product->id, $id_lang)
+						'item_specifics'		=> EbaySynchronizer::_getProductItemSpecifics($product_category_cache, $product->id, $id_lang)
 				);
 
 				// Fix hook update product
@@ -122,13 +121,13 @@ class EbaySynchronizer
 				if (isset($p['noPriceUpdate']))
 					$data['noPriceUpdate'] = $p['noPriceUpdate'];
 
-				$category_cache[$product->id_category_default]['percent'] = preg_replace('#%$#is', '', $category_cache[$product->id_category_default]['percent']);
+				$product_category_cache['percent'] = preg_replace('#%$#is', '', $product_category_cache['percent']);
 
 				// Save percent and price discount
-				if ($category_cache[$product->id_category_default]['percent'] < 0) 
+				if ($product_category_cache['percent'] < 0) 
 				{
 					$data['price_original'] = round($price_original, 2);
-					$data['price_percent'] = round($category_cache[$product->id_category_default]['percent']);
+					$data['price_percent'] = round($product_category_cache['percent']);
 				}
 
 				$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
@@ -137,7 +136,7 @@ class EbaySynchronizer
 				if (count($data['variations'])) 
 				{
 					// Variations Case
-					if ($category_cache[$product->id_category_default]['is_multi_sku'] == 1) 
+					if ($product_category_cache['is_multi_sku'] == 1) 
 					{
 						// Load eBay Description
 						$data['description'] = EbaySynchronizer::_fillDescription($data['description'], $data['picturesMedium'], $data['picturesLarge'], '', '');
@@ -304,7 +303,7 @@ class EbaySynchronizer
 		return $category_cache;
 	}
 	
-	private static function _loadVariations($product, $context, $category_cache)
+	private static function _loadVariations($product, $context, $product_category_cache)
 	{
 		$variations = array();
 		//$variationsList = array();
@@ -322,23 +321,23 @@ class EbaySynchronizer
 					'reference' 		 => $combinaison['reference'],
 					'quantity' 			 => $combinaison['quantity'],
 					'price_static'	 => $price,
-					'variation_specifics' => EbaySynchronizer::_getVariationSpecifics($category_cache[$product->id_category_default]['items_specifics'], $combinaison['id_product'], $combinaison['id_product_attribute'], $context->cookie->id_lang)
+					'variation_specifics' => EbaySynchronizer::_getVariationSpecifics($product_category_cache['items_specifics'], $combinaison['id_product'], $combinaison['id_product_attribute'], $context->cookie->id_lang)
 				);
 				$variations[$variation_key]['variations'][] = array(
 					'name'  => $combinaison['group_name'], 
 					'value' => $combinaison['attribute_name']);
 				
 				$price_original = $price;						
-				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $category_cache[$product->id_category_default]['percent']))
-					$price *= (1 + ($category_cache[$product->id_category_default]['percent'] / 100));
+				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $product_category_cache['percent']))
+					$price *= (1 + ($product_category_cache['percent'] / 100));
 				else 
-					$price += $category_cache[$product->id_category_default]['percent'];
+					$price += $product_category_cache['percent'];
 				$variations[$variation_key]['price'] = round($price, 2);
 				
-				if ($category_cache[$product->id_category_default]['percent'] < 0) 
+				if ($product_category_cache['percent'] < 0) 
 				{
 					$variations[$variation_key]['price_original'] = round($price_original, 2);
-					$variations[$variation_key]['price_percent'] = round($category_cache[$product->id_category_default]['percent']);
+					$variations[$variation_key]['price_percent'] = round($product_category_cache['percent']);
 				}
 			}
 
@@ -657,23 +656,30 @@ class EbaySynchronizer
 		return Db::getInstance()->getValue($sql);
 	}
 	
-	private static function _getProductItemSpecifics($items_specifics, $product_id, $id_lang)
+	private static function _getProductItemSpecifics($product_category_cache, $product_id, $id_lang)
 	{
+		$items_specifics = $product_category_cache['items_specifics'];
+		$is_multi_sku = $product_category_cache['is_multi_sku'];
+		
 		$item_specifics_pairs = array();
 		foreach ($items_specifics as $item_specific)
 		{
+			$value = null;
 			if ($item_specific['id_attribute_group'])
-				$value = Db::getInstance()->getValue('SELECT al.`name` 
-					FROM `'._DB_PREFIX_.'attribute_lang` al
-					INNER JOIN `'._DB_PREFIX_.'attribute` a
-					ON al.`id_attribute` = a.`id_attribute`
-					AND a.`id_attribute_group` = '.(int)$item_specific['id_attribute_group'].'
-					INNER JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
-					ON a.`id_attribute` = pac.`id_attribute`
-					INNER JOIN `'._DB_PREFIX_.'product_attribute` pa
-					ON pac.`id_product_attribute` = pa.`id_product_attribute`
-					AND pa.`id_product` = '.(int)$product_id.'
-					WHERE al.`id_lang` = '.(int)$id_lang);
+			{
+				if (($is_multi_sku && !$item_specific['can_variation']) || !$is_multi_sku)
+					$value = Db::getInstance()->getValue('SELECT al.`name` 
+						FROM `'._DB_PREFIX_.'attribute_lang` al
+						INNER JOIN `'._DB_PREFIX_.'attribute` a
+						ON al.`id_attribute` = a.`id_attribute`
+						AND a.`id_attribute_group` = '.(int)$item_specific['id_attribute_group'].'
+						INNER JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
+						ON a.`id_attribute` = pac.`id_attribute`
+						INNER JOIN `'._DB_PREFIX_.'product_attribute` pa
+						ON pac.`id_product_attribute` = pa.`id_product_attribute`
+						AND pa.`id_product` = '.(int)$product_id.'
+						WHERE al.`id_lang` = '.(int)$id_lang);				
+			}
 			elseif($item_specific['id_feature'])
 				$value = Db::getInstance()->getValue('SELECT fvl.`value`
 					FROM `'._DB_PREFIX_.'feature_value_lang` fvl

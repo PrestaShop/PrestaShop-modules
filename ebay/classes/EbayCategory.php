@@ -4,10 +4,20 @@ class EbayCategory
 {
 	// the eBay category id
 	private $category_id;
+	private $is_multi_sku = null;
 
 	public function __construct($category_id)
 	{
 		$this->category_id = (int)$category_id;
+	}
+	
+	public function isMultiSku()
+	{
+		if ($this->is_multi_sku === null)
+			$this->is_multi_sku = Db::getInstance()->getValue('SELECT is_multi_sku
+				FROM '._DB_PREFIX_.'ebay_category
+				WHERE `id_category_ref` = '.$this->category_id);
+		return $this->is_multi_sku;
 	}
 	
 	/**
@@ -17,7 +27,7 @@ class EbayCategory
 	 */
 	public function getItemsSpecifics()
 	{
-		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value
+		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value, e.`can_variation`
 			FROM `'._DB_PREFIX_.'ebay_category_specific` e
 			WHERE e.`id_category_ref` = '.$this->category_id;		
 		return DB::getInstance()->executeS($sql);

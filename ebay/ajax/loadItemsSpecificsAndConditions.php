@@ -34,8 +34,7 @@ include(dirname(__FILE__).'/../classes/EbayCategoryCondition.php');
 /* Fix for limit db sql request in time */
 sleep(1);
 
-$ebay_category = (int)Tools::getValue('ebay_category');
-$category = new EbayCategory($ebay_category);
+$category = new EbayCategory((int)Tools::getValue('ebay_category'));
 
 if (!Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') || (Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
 {
@@ -63,5 +62,6 @@ foreach($item_specifics as &$item_specific)
 
 echo json_encode(array(
 	'specifics' 		 => $item_specifics,
-	'conditions'		 => $category->getConditionsWithConfiguration()
+	'conditions'		 => $category->getConditionsWithConfiguration(),
+	'is_multi_sku'	 => $category->isMultiSku()
 ));
