@@ -100,7 +100,7 @@
 	var module_time = '{$date}';
 	var module_path = '{$_path}';
 	var id_lang = '{$id_lang}';
-	var l = {
+	var ebay_l = {
 		'thank you for waiting': "{l s='Thank you for waiting while creating suggestions' mod='ebay'}"
 	};
 	

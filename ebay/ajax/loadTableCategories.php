@@ -25,158 +25,147 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
-if (file_exists($config_path))
+include_once dirname(__FILE__).'/../../../config/config.inc.php';
+include_once dirname(__FILE__).'/../ebay.php';
+$ebay = new Ebay();
+
+if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	return $ebay->l('You are not logged in');
+
+$category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
+
+$ebay_category_list = Db::getInstance()->executeS('SELECT * 
+	FROM `'._DB_PREFIX_.'ebay_category` 
+	WHERE `id_category_ref` = `id_category_ref_parent`');
+
+if (version_compare(_PS_VERSION_, '1.5', '>'))
 {
-	include_once $config_path;
-	include_once dirname(__FILE__).'/../ebay.php';
-
-	class EbayLoadCat extends ebay
-	{
-		
-		public function getTable()
-		{
-			if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-				return $this->l('You are not logged in');
-
-			$categoryList = $this->_getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
-
-			$eBayCategoryList = Db::getInstance()->executeS('SELECT * 
-				FROM `'._DB_PREFIX_.'ebay_category` 
-				WHERE `id_category_ref` = `id_category_ref_parent`');
-
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-			{
-				$rq_getCatInStock = '
-					SELECT SUM(s.`quantity`) AS instockProduct, p.`id_category_default`
-					FROM `'._DB_PREFIX_.'product` AS p
-					INNER JOIN `'._DB_PREFIX_.'stock_available` AS s ON p.`id_product` = s.`id_product`
-					WHERE 1 '.$this->addSqlRestrictionOnLang('s').'
-					GROUP BY p.`id_category_default`';
-			}
-			else
-			{
-				$rq_getCatInStock = '
-					SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
-					FROM `'._DB_PREFIX_.'product`	
-					GROUP BY `id_category_default`';
-			}
-
-			$getCatsStock = Db::getInstance()->ExecuteS($rq_getCatInStock);
-			$getCatInStock = array();
-			foreach ($getCatsStock as $v)
-				$getCatInStock[$v['id_category_default']] = $v['instockProduct'];
-
-			// Loading categories
-			$categoryConfigList = array();
-			// init refcats
-			$refCats = array();
-			// init levels
-			$levels = array();
-			// init selects
-			$SQL = '
-				SELECT *, ec.`id_ebay_category` AS id_ebay_category
-				FROM `'._DB_PREFIX_.'ebay_category` AS ec
-				LEFT OUTER JOIN `'._DB_PREFIX_.'ebay_category_configuration` AS ecc
-				ON ec.`id_ebay_category` = ecc.`id_ebay_category`
-				ORDER BY `level`';
-			$categoryConfigListTmp = Db::getInstance()->executeS($SQL);
-			foreach ($categoryConfigListTmp as $category)
-			{
-				// Add datas
-				if (isset($category['id_category']))
-					$categoryConfigList[$category['id_category']] = $category;
-				
-				// add refcats
-				if (!isset($refCats[$category['id_category_ref']]))
-				{
-					$refCats[$category['id_category_ref']] = $category;
-					// Create children in refcats
-					if ($category['id_category_ref'] != $category['id_category_ref_parent'])
-					{
-						if (!isset($refCats[$category['id_category_ref_parent']]['children']))
-							$refCats[$category['id_category_ref_parent']]['children'] = array();
-						if (!in_array($category['id_category_ref'], $refCats[$category['id_category_ref_parent']]['children']))
-							$refCats[$category['id_category_ref_parent']]['children'][] = $category['id_category_ref'];
-					}
-				}
-			}
-
-			foreach ($categoryConfigList as &$category)
-				$category['var'] = $this->getSelectors($refCats, $category['id_category_ref'], $category['id_category'], $category['level']).'<input type="hidden" name="category['.(int)$category['id_category'].']" value="'.(int)$category['id_ebay_category'].'" />';
-
-			// Smarty datas
-			$template_vars = array(
-				'tabHelp' 					 => '&id_tab=7',
-				'_path' 						 => $this->_path,
-				'categoryList' 			 => $categoryList,
-				'eBayCategoryList' 	 => $eBayCategoryList,
-				'getCatInStock' 		 => $getCatInStock,
-				'categoryConfigList' => $categoryConfigList,
-				'request_uri' 			 => $_SERVER['REQUEST_URI'],
-				'noCatSelected' 		 => $this->l('No category selected'),
-				'noCatFound'				 => $this->l('No category found')
-			);
-
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-				$smarty = $this->context->smarty;
-			else
-				global $smarty;
-
-			$smarty->assign($template_vars);
-			return $this->display(realpath(dirname(__FILE__).'/../'), '/views/templates/hook/table_categories.tpl');
-		}
-		
-		/**
-		* Create selectors
-		* @param array $cats
-		* @param int $id
-		* @param int $cat
-		* @param int $niv
-		* @return string
-		*/
-		private function getSelectors($cats, $id, $cat, $niv)
-		{
-			$var = null;
-			if ($niv > 1)
-			{
-				foreach ($cats as $k => $v)
-				{
-					if ($k == $id)
-					{
-						if (isset($cats[$v['id_category_ref_parent']]['children']))
-						{
-							if ($v['id_category_ref'] != $v['id_category_ref_parent'])
-								$var .= $this->getSelectors($cats, $v['id_category_ref_parent'], $cat, (int)($niv - 1));
-							$var .= '
-								<select name="category['.$cat.']" id="categoryLevel'.(int)($v['level']).'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($v['level']).', '.(int)$cat.');">';
-							foreach ($cats[$v['id_category_ref_parent']]['children'] as $child)
-								$var .= '<option value="'.$cats[$child]['id_ebay_category'].'"'.($v['id_category_ref'] == $child ? ' selected' : '').'>'.$cats[$child]['name'].'</option>';
-							$var .= '
-								</select>';
-						}
-					}
-				}
-			}
-			else
-			{
-				$var .= '
-					<select name="category['.$cat.']" id="categoryLevel'.(int)$niv.'-'.(int)$cat.'" rel="'.(int)$cat.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$niv.', '.(int)$cat.');">
-							<option value="0">'.$this->l('No category selected').'</option>';
-		
-				foreach ($cats as $k => $v)
-				{
-					if (isset($v['id_category_ref']) && $v['id_category_ref'] == $v['id_category_ref_parent'] && !empty($v['id_ebay_category']))
-						$var .= '<option value="'.$v['id_ebay_category'].'"'.($v['id_category_ref'] == $id ? ' selected' : '').'>'.$v['name'].'</option>';
-				}
-				$var .= '
-					</select>';
-			}
-			return $var;
-		}
-
-	}
-
-	$ebay_cats = new EbayLoadCat();
-	echo $ebay_cats->getTable();
+	$rq_get_cat_in_stock = '
+		SELECT SUM(s.`quantity`) AS instockProduct, p.`id_category_default`
+		FROM `'._DB_PREFIX_.'product` AS p
+		INNER JOIN `'._DB_PREFIX_.'stock_available` AS s ON p.`id_product` = s.`id_product`
+		WHERE 1 '.$ebay->addSqlRestrictionOnLang('s').'
+		GROUP BY p.`id_category_default`';
 }
+else
+{
+	$rq_get_cat_in_stock = '
+		SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
+		FROM `'._DB_PREFIX_.'product`	
+		GROUP BY `id_category_default`';
+}
+
+$get_cats_stock = Db::getInstance()->ExecuteS($rq_get_cat_in_stock);
+$get_cat_in_stock = array();
+foreach ($get_cats_stock as $data)
+	$get_cat_in_stock[$data['id_category_default']] = $data['instockProduct'];
+
+// Loading categories
+$category_config_list = array();
+// init refcats
+$ref_categories = array();
+// init levels
+$levels = array();
+// init selects
+$sql = '
+	SELECT *, ec.`id_ebay_category` AS id_ebay_category
+	FROM `'._DB_PREFIX_.'ebay_category` AS ec
+	LEFT OUTER JOIN `'._DB_PREFIX_.'ebay_category_configuration` AS ecc
+	ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+	ORDER BY `level`';
+foreach (Db::getInstance()->executeS($sql) as $category)
+{
+	// Add datas
+	if (isset($category['id_category']))
+		$category_config_list[$category['id_category']] = $category;
+	
+	// add refcats
+	if (!isset($ref_categories[$category['id_category_ref']]))
+	{
+		$ref_categories[$category['id_category_ref']] = $category;
+		// Create children in refcats
+		if ($category['id_category_ref'] != $category['id_category_ref_parent'])
+		{
+			if (!isset($ref_categories[$category['id_category_ref_parent']]['children']))
+				$ref_categories[$category['id_category_ref_parent']]['children'] = array();
+			if (!in_array($category['id_category_ref'], $ref_categories[$category['id_category_ref_parent']]['children']))
+				$ref_categories[$category['id_category_ref_parent']]['children'][] = $category['id_category_ref'];
+		}
+	}
+}
+
+foreach ($category_config_list as &$category)
+	$category['var'] = getSelectors($ref_categories, $category['id_category_ref'], $category['id_category'], $category['level'], $ebay).'<input type="hidden" name="category['.(int)$category['id_category'].']" value="'.(int)$category['id_ebay_category'].'" />';
+
+// Smarty datas
+$template_vars = array(
+	'tabHelp' 					 => '&id_tab=7',
+	'_path' 						 => $ebay->getPath(),
+	'categoryList' 			 => $category_list,
+	'eBayCategoryList' 	 => $ebay_category_list,
+	'getCatInStock' 		 => $get_cat_in_stock,
+	'categoryConfigList' => $category_config_list,
+	'request_uri' 			 => $_SERVER['REQUEST_URI'],
+	'noCatSelected' 		 => $ebay->l('No category selected'),
+	'noCatFound'				 => $ebay->l('No category found')
+);
+
+if (version_compare(_PS_VERSION_, '1.5', '>'))
+	$smarty = $ebay->getContext()->smarty;
+else
+	global $smarty;
+
+$smarty->assign($template_vars);
+echo $ebay->display(realpath(dirname(__FILE__).'/../'), '/views/templates/hook/table_categories.tpl');
+
+/**
+ * Create selectors
+ *
+ * @param array $ref_categories
+ * @param int $id_category_ref
+ * @param int $id_category
+ * @param int $level
+ * @param object $ebay
+ *
+ * @return string
+ */
+function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $ebay)
+{
+	$var = null;
+	if ($level > 1)
+	{
+		foreach ($ref_categories as $ref_id_category_ref => $category)
+		{
+			if ($ref_id_category_ref == $id_category_ref)
+			{
+				if (isset($ref_categories[$category['id_category_ref_parent']]['children']))
+				{
+					if ($category['id_category_ref'] != $category['id_category_ref_parent'])
+						$var .= getSelectors($ref_categories, $category['id_category_ref_parent'], $id_category, (int)($level - 1), $ebay);
+					$var .= '
+						<select name="category['.$id_category.']" id="categoryLevel'.(int)($category['level']).'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($category['level']).', '.(int)$id_category.');">';
+					foreach ($ref_categories[$category['id_category_ref_parent']]['children'] as $child)
+						$var .= '<option value="'.$ref_categories[$child]['id_ebay_category'].'"'.($category['id_category_ref'] == $child ? ' selected' : '').'>'.$ref_categories[$child]['name'].'</option>';
+					$var .= '
+						</select>';
+				}
+			}
+		}
+	}
+	else
+	{
+		$var .= '
+			<select name="category['.$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
+					<option value="0">'.$ebay->l('No category selected').'</option>';
+
+		foreach ($ref_categories as $ref_id_category_ref => $category)
+		{
+			if (isset($category['id_category_ref']) && $category['id_category_ref'] == $category['id_category_ref_parent'] && !empty($category['id_ebay_category']))
+				$var .= '<option value="'.$category['id_ebay_category'].'"'.($category['id_category_ref'] == $id_category_ref ? ' selected' : '').'>'.$category['name'].'</option>';
+		}
+		$var .= '
+			</select>';
+	}
+	return $var;
+}
+
