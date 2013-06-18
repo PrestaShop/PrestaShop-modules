@@ -158,9 +158,11 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_returns_policy` (
 		  PRIMARY KEY (`id_return_policy`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 		
-$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_sync_blacklist_product` (
-			`id_ebay_sync_product_blacklist` int(11) NOT NULL AUTO_INCREMENT,
-			`id_product` int(16),
-			UNIQUE(`id_product`),				
-			PRIMARY KEY (`id_ebay_sync_product_blacklist`)
-		) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
+$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_product_configuration` (
+			  `id_ebay_product_configuration` int(11) NOT NULL AUTO_INCREMENT,
+				`id_product` int(16),
+				`blacklisted` tinyint(1) NOT NULL,
+				`extra_images` int(4) NOT NULL,
+				UNIQUE(`id_product`),				
+			  PRIMARY KEY (`id_ebay_product_configuration`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';

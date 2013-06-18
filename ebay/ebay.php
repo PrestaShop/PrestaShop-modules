@@ -45,7 +45,7 @@ $classes_to_load = array(
 	'EbayShippingInternationalZone',
 	'EbaySynchronizer',
 	'EbayPayment',
-	'EbaySyncBlacklistProduct'
+	'EbayProductConfiguration'
 );
 foreach ($classes_to_load as $classname)
 {
@@ -1035,16 +1035,42 @@ class Ebay extends Module
 					$data['date_add'] = $date;
 					EbayCategoryConfiguration::add($data);
 				}
-			}			
+			}
 		
-		// update blacklisted products
+
+		$insert_data = array();
+
+		// update extra_images for all products
+		if (($all_nb_extra_images = Tools::getValue('all-extra-images-value', -1)) != -1)
+		{
+			$product_ids = EbayCategoryConfiguration::getAllProductIds();
+			foreach ($product_ids as $product_id)
+				EbayProductConfiguration::insertOrUpdate($product_id, array(
+					'extra_images' => $all_nb_extra_images ? $all_nb_extra_images : 0
+				));
+		}
+		
+		// update products configuration
 		if (is_array(Tools::getValue('showed_products')))
 		{
 			$showed_product_ids = array_keys(Tools::getValue('showed_products'));
-			$to_synchronize_product_ids = is_array(Tools::getValue('to_synchronize')) ? array_keys(Tools::getValue('to_synchronize')) : array();
-			EbaySyncBlacklistProduct::insertProductIds(array_diff($showed_product_ids, $to_synchronize_product_ids));
-			EbaySyncBlacklistProduct::deleteByProductIds($to_synchronize_product_ids);			
+			if (Tools::getValue('to_synchronize'))
+				$to_synchronize_product_ids = array_keys(Tools::getValue('to_synchronize'));
+			else
+				$to_synchronize_product_ids = array();
+			
+			$extra_images = Tools::getValue('extra_images');
+			
+			$insert_data = array();			
+			foreach($showed_product_ids as $product_id)
+			{
+				EbayProductConfiguration::insertOrUpdate($product_id, array(
+					'blacklisted'  => in_array($product_id, $to_synchronize_product_ids) ? 0 : 1,
+					'extra_images' => $extra_images[$product_id] ? $extra_images[$product_id] : 0
+				));				
+			}
 		}
+
 
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 	}

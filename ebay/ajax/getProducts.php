@@ -30,19 +30,19 @@ if (file_exists($config_path))
 {
 	include_once ($config_path);
 	include_once dirname(__FILE__).'/../classes/EbayCountrySpec.php';
-	include_once dirname(__FILE__).'/../classes/EbaySyncBlacklistProduct.php';
+	include_once dirname(__FILE__).'/../classes/EbayProductConfiguration.php';
 	
 	$ebay_country = new EbayCountrySpec();
 	$id_lang = $ebay_country->getIdLang();
 	
-	$sql = 'SELECT p.id_product as id, pl.`name`, not ISNULL(es.`id_ebay_sync_product_blacklist`) as blacklisted
+	$sql = 'SELECT p.`id_product` as id, pl.`name`, epc.`blacklisted`, epc.`extra_images`
 			FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 				ON (p.`id_product` = pl.`id_product`
 				AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-			LEFT JOIN `'._DB_PREFIX_.'ebay_sync_blacklist_product` es
-				ON p.`id_product` = es.`id_product`
+			LEFT JOIN `'._DB_PREFIX_.'ebay_product_configuration` epc
+				ON p.`id_product` = epc.`id_product`
 			WHERE product_shop.`id_shop` = 1
 				AND p.`id_category_default` = '.(int)Tools::getValue('category');
 	echo json_encode(Db::getInstance()->ExecuteS($sql));

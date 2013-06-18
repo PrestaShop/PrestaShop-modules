@@ -20,9 +20,9 @@ class EbaySynchronizer
 		// Up the time limit
 		@set_time_limit(3600);
 		
-		$sync_blacklisted_product_ids = EbaySyncBlacklistProduct::getBlacklistedProductIds();
-
-		// Run the products list
+		$product_ids = array_map(function($product) {return $product['id_product'];}, $products);
+		$products_configuration = EbayProductConfiguration::getByProductIds($product_ids);
+		
 		foreach ($products as $p) 
 		{
 			// Product instanciation
@@ -38,7 +38,7 @@ class EbaySynchronizer
 
 			if (Validate::isLoadedObject($product))
 			{
-				if (!$product->active || in_array($product->id, $sync_blacklisted_product_ids))
+				if (!$product->active || (isset($products_configuration[$product->id]) && $products_configuration[$product->id]['blacklisted']))
 					$ebay = EbaySynchronizer::endProductOnEbay($ebay, $product);					
 				elseif ($product->id_category_default) // if product exists in the db and has a default category
 				{
@@ -48,10 +48,13 @@ class EbaySynchronizer
 					$pictures = array();
 					$picturesMedium = array();
 					$picturesLarge = array();
-					foreach ($product->getImages($id_lang) as $image) 
+					$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_pictures']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
+					foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
 					{
 						$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-						$pictures[] = $large_pict;					
+						if (count($pictures) < $nb_pictures)
+							$pictures[] = $large_pict;					
+						
 						$picturesMedium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
 						$picturesLarge[] = $large_pict;
 					}
@@ -676,6 +679,23 @@ class EbaySynchronizer
 			SELECT `id_product` 
 			FROM `'._DB_PREFIX_.'ebay_product`
 		)';		
+	}
+	
+	/**
+	 * If there is a cover puts it at the top of the list
+	 * otherwise returns the images in their position order
+	 *
+	 */
+	private static function orderImages($images)
+	{
+		$covers = array();
+		foreach ($images as $key => $image)
+			if ($image['cover'])
+			{
+				$covers[] = $image;
+				unset($images[$key]);
+			}
+		return array_merge($covers, $images);
 	}
 		
 }
