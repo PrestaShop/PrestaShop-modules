@@ -1,3 +1,28 @@
+{*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*}
+
 {if $relogin}
 	<script>
 		$(document).ready(function() {
@@ -6,30 +31,11 @@
 	</script>
 {/if}
 
+<fieldset>
+	<legend><img src="{$path}logo.gif" alt="" title="" />{l s='Register the module on eBay' mod='ebay'}</legend>
+
 {if $logged}
-	<script>
-		function checkToken()
-		{
-			$.ajax({
-				url: '{$url}',
-				cache: false,
-				success: function(data)
-				{
-					if (data == 'OK')
-						window.location.href = '{$window_location_href}';
-					else
-						setTimeout ("checkToken()", 5000);
-				}
-				});
-			}
-			checkToken();
-	</script>
-	<fieldset>
-		<legend><img src="{$path}logo.gif" alt="" title="" />{l s='Register the module on eBay' mod='ebay'}</legend>
-		<p align="center" class="warning"><a href="{$request_uri}&action=logged&relogin=1" target="_blank" class="button">{l s='If you\'ve been logged out of eBay and not redirected to the configuration page, please click here' mod='ebay'}</a></p>
-		<p align="center"><img src="{$path}views/img/loading.gif" alt="{l s='Loading' mod='ebay'}" title="{l s='Loading' mod='ebay'}" /></p>
-		<p align="center">{l s='Once you sign in via the new eBay window, the module will automatically finish the installation' mod='ebay'}</p>
-	</fieldset>
+{$check_token_tpl}
 {else}
 	<style>
 		{literal}
@@ -54,8 +60,6 @@
 		{/literal}
 	</script>
 	<form action="{$action_url}" method="post">
-		<fieldset>
-			<legend><img src="{$path}logo.gif" alt="" title="" />{l s='Register the module on eBay' mod='ebay'}</legend>
 			<strong>{l s='Do you have an eBay business account?' mod='ebay'}</strong>
 
 			<dl class="ebay_dl">
@@ -77,6 +81,6 @@
 			<br /><br />
 			<br /><u><a href="{l s='http://pages.ebay.com/help/sell/businessfees.html' mod='ebay'}" target="_blank">{l s='Review the eBay business seller fees page' mod='ebay'}</a></u>
 			<br />{l s='Consult our "Help" section for more information' mod='ebay'}
-		</fieldset>
 	</form>
 {/if}
+</fieldset>
