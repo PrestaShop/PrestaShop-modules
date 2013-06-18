@@ -54,6 +54,9 @@
 				<th>
 					{l s='eBay Category' mod='ebay'}
 				</th>
+				<th class="center">
+					{l s='Synchronize Product' mod='ebay'}
+				</th>
 				<th style="width:128px;">
 					{l s='Price adjustment' mod='ebay'}
 					<a title="{l s='Help' mod='ebay'}" href="{$request_uri}{$tabHelp}" >
@@ -104,6 +107,53 @@
 				success: function(data) { $("#categoryPath" + id_category).html(data); }
 			});
 		}
+		
+		var loadedCategories = new Array();
+		function showProducts(id_category) {
+			var elem = $('#show-products-switch-' + id_category);
+			if (elem.attr('showing') == true) 
+			{
+				$('.product-row[category=' + id_category +']').hide();
+				elem.attr('showing', 0);
+				elem.html('&#9654;');
+			} 
+			else 
+			{
+				elem.attr('showing', 1);
+				elem.html('&#9660;');
+				
+				if (loadedCategories[id_category])
+					$('.product-row[category=' + id_category +']').show();
+				else
+				{
+					$('<img src="{/literal}{$_path}{literal}views/img/loading-small.gif" id="loading-' + id_category +'" alt="" />').insertAfter(elem);
+
+					$.ajax({
+						dataType: 'json',
+						url: '{/literal}{$_module_dir_}{literal}ebay/ajax/getProducts.php?category=' + id_category,
+						success: function(products) { 
+							loadedCategories[id_category] = true;
+							for (var i in products)
+							{
+								product = products[i];
+
+								$('#category-' + id_category).after('<tr class="product-row ' + (i%2 == 0 ? 'alt_row':'') + '" category="' + id_category + '"> \
+									<td >' + product.name + '</td> \
+									<td ></td> \
+									<td class="center"> \
+										<input name="to_synchronize[' + product.id + ']" type="checkbox" ' + (product.blacklisted == 1 ? '' : 'checked') + ' /> \
+										<input name="showed_products[' + product.id + ']" type="hidden" value="1" /> \
+									</td> \
+									<td></td> \
+								</tr>');
+							}
+							$('#loading-' + id_category).remove();							
+						}
+					});
+				}
+			}
+		}
+		
 		$(document).ready(function(){
 			$.ajax({
 				url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadTableCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",
@@ -119,6 +169,8 @@
 				});
 				return false;
 			});
+			
 		});
+		
 	</script>
 {/literal}
