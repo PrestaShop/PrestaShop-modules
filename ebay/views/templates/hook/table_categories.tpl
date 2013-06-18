@@ -30,7 +30,7 @@
 {else}
 	{foreach from=$categoryList key=k  item=c}
 		<tr{if $k % 2 !== 0} class="alt_row"{/if} id="category-{$c.id_category}">
-			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category}); return false;" href="#">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
+			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category})" href="#">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
 				{$getCatInStock[$c.id_category]}
 				{/if})
 			</td>
@@ -46,10 +46,11 @@
 					</select>
 				{/if}
 			</td>
-			<td></td>
 			<td>
 				<input type="text" size="4" maxlength="4" name="percent[{$c.id_category}]" id="percent{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px;" value="{if isset($categoryConfigList[$c.id_category]) && isset($categoryConfigList[$c.id_category].var)}{$categoryConfigList[$c.id_category].percent}{/if}" />
 			</td>
+			<td></td>
+			<td></td>
 		</tr>
 	{/foreach}
 {/if}
