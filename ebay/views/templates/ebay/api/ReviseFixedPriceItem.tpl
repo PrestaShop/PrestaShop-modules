@@ -44,7 +44,7 @@
 		{if isset($quantity)}
 			<Quantity>{$quantity}</Quantity>
 		{/if}
-		{if isset($price_update) && $price_update && isset($start_price)}
+		{if $price_update && isset($start_price)}
 			<StartPrice>{$start_price}</StartPrice>
 		{/if}
 		{if $resynchronize}
@@ -54,12 +54,6 @@
 			{$buyer_requirements_details}
 		{/if}
 			<ItemSpecifics>
-				{if isset($value)}
-					<NameValueList>
-						<Name>Marque</Name>
-						<Value><![CDATA[{$value}]]></Value>
-					</NameValueList>
-				{/if}
 				{foreach from=$item_specifics key=name item=value}
 					<NameValueList>
 						<Name><![CDATA[{$name}]]></Name>

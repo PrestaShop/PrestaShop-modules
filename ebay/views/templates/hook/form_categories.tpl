@@ -54,15 +54,18 @@
 				<th>
 					{l s='eBay Category' mod='ebay'}
 				</th>
-				<th class="center">
-					{l s='Synchronize Product' mod='ebay'}
-				</th>
 				<th style="width:128px;">
 					{l s='Price adjustment' mod='ebay'}
 					<a title="{l s='Help' mod='ebay'}" href="{$request_uri}{$tabHelp}" >
 						<img src="{$_path}views/img/help.png" width="25" alt="help_picture"/>
 					</a>
+				</th>				
+				<th class="center">
+					{l s='Synchronize Product' mod='ebay'}
 				</th>
+				<th class="center">
+					{l s='Extra Images (paying option)' mod='ebay'}
+				</th>				
 			</tr>
 		</thead>
 		<tbody>
@@ -73,6 +76,11 @@
 			</tr>
 		</tbody>
 	</table>
+	<div style="text-align: right; margin-top: 5px">
+		Change extra pictures numbers (paying option) for all products <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> <input id="update-all-extra-images" type="button" value='Apply'>
+		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" val="-1"/>
+	</div>
+	
 	<div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
 </form>
 
@@ -83,94 +91,18 @@
 	{l s='Warning: For categories that do not have this functionality, one listing will be added for each version of the product' mod='ebay'}<br />
 	<a href="{l s='http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings' mod='ebay'}" target="_blank">{l s='Click here for more informations on multi-variation listings' mod='ebay'}</a>
 </p><br /><br />
-{literal}
-	<script type="text/javascript">
-			
-		var $selects = false;
+<script type="text/javascript">
 		
-		function loadCategoryMatch(id_category) {
-			$.ajax({
-				async: false,
-				url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadCategoryMatch.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_category=" + id_category + "&time={/literal}{$date}{literal}",
-				success: function(data) { $("#categoryPath" + id_category).html(data); }
-			});
-		}
-		function changeCategoryMatch(level, id_category) {
-			var levelParams = "&level1=" + $("#categoryLevel1-" + id_category).val();
-			if (level > 1) levelParams += "&level2=" + $("#categoryLevel2-" + id_category).val();
-			if (level > 2) levelParams += "&level3=" + $("#categoryLevel3-" + id_category).val();
-			if (level > 3) levelParams += "&level4=" + $("#categoryLevel4-" + id_category).val();
-			if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
-
-			$.ajax({
-				url: "{/literal}{$_module_dir_}{literal}ebay/ajax/changeCategoryMatch.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_category=" + id_category + "&time={/literal}{$date}{literal}&level=" + level + levelParams,
-				success: function(data) { $("#categoryPath" + id_category).html(data); }
-			});
-		}
-		
-		var loadedCategories = new Array();
-		function showProducts(id_category) {
-			var elem = $('#show-products-switch-' + id_category);
-			if (elem.attr('showing') == true) 
-			{
-				$('.product-row[category=' + id_category +']').hide();
-				elem.attr('showing', 0);
-				elem.html('&#9654;');
-			} 
-			else 
-			{
-				elem.attr('showing', 1);
-				elem.html('&#9660;');
-				
-				if (loadedCategories[id_category])
-					$('.product-row[category=' + id_category +']').show();
-				else
-				{
-					$('<img src="{/literal}{$_path}{literal}views/img/loading-small.gif" id="loading-' + id_category +'" alt="" />').insertAfter(elem);
-
-					$.ajax({
-						dataType: 'json',
-						url: '{/literal}{$_module_dir_}{literal}ebay/ajax/getProducts.php?category=' + id_category,
-						success: function(products) { 
-							loadedCategories[id_category] = true;
-							for (var i in products)
-							{
-								product = products[i];
-
-								$('#category-' + id_category).after('<tr class="product-row ' + (i%2 == 0 ? 'alt_row':'') + '" category="' + id_category + '"> \
-									<td >' + product.name + '</td> \
-									<td ></td> \
-									<td class="center"> \
-										<input name="to_synchronize[' + product.id + ']" type="checkbox" ' + (product.blacklisted == 1 ? '' : 'checked') + ' /> \
-										<input name="showed_products[' + product.id + ']" type="hidden" value="1" /> \
-									</td> \
-									<td></td> \
-								</tr>');
-							}
-							$('#loading-' + id_category).remove();							
-						}
-					});
-				}
-			}
-		}
-		
-		$(document).ready(function(){
-			$.ajax({
-				url: "{/literal}{$_module_dir_}{literal}ebay/ajax/loadTableCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",
-				success : function(data) { $("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data); }
-			});
-			
-			$("#configForm2SuggestedCategories input[type=submit]").click(function(){
-				$('<div class="center"><img src="{/literal}{$_path}{literal}views/img/loading-small.gif" alt="" />{/literal}{l s='Thank you for waiting while creating suggestions' mod='ebay'}{literal}</div>').insertAfter($(this));
-				$(this).fadeOut();
-				$.ajax({
-					url: "{/literal}{$_module_dir_}{literal}ebay/ajax/suggestCategories.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}&id_lang={/literal}{$id_lang}{literal}",
-					success : function(data) { window.location.href = window.location.href + "&conf=6"; }
-				});
-				return false;
-			});
-			
-		});
-		
-	</script>
-{/literal}
+	var $selects = false;
+	
+	var module_dir = '{$_module_dir_}';
+	var ebay_token = '{$configs.EBAY_SECURITY_TOKEN}';
+	var module_time = '{$date}';
+	var module_path = '{$_path}';
+	var id_lang = '{$id_lang}';
+	var l = {
+		'thank you for waiting': "{l s='Thank you for waiting while creating suggestions' mod='ebay'}"
+	};
+	
+</script>
+<script type="text/javascript" src="{$_module_dir_}ebay/views/js/categories.js?date={$date}"></script>

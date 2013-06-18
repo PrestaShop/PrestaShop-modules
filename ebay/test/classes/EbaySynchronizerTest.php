@@ -3,9 +3,9 @@
 define('_PS_ADMIN_DIR_', getcwd());
 
 include(dirname(__FILE__).'/../../../../config/config.inc.php');
-require_once __DIR__.'/../../classes/EbayRequest.php';
+require_once dirname(__FILE__).'/../../classes/EbaySynchronizer.php';
 
-class EbaySynchronizerTest
+class EbaySynchronizerTest extends PHPUnit_Framework_TestCase
 {
 	private $ebay_synchronizer;
 	
@@ -13,7 +13,6 @@ class EbaySynchronizerTest
 	{
 		$this->ebay_synchronizer = new EbaySynchronizer();
   }
-	
 	
 	public function testSyncProducts()
 	{
@@ -23,4 +22,5 @@ class EbaySynchronizerTest
 			)
 		));
 	}
+	
 }
