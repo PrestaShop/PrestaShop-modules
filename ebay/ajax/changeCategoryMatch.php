@@ -59,7 +59,7 @@ if (file_exists($config_path))
 					if ($ebay_category_list_level) 
 					{
 						$levelExists[$level + 1] = true;
-						echo '<select name="category'.(int)Tools::getValue('id_category').'" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
+						echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
 <option value="0">'.$this->l('No category selected').'</option>';
 
 						foreach ($ebay_category_list_level as $ebay_category)
@@ -69,7 +69,7 @@ if (file_exists($config_path))
 				}
 
 				if (!isset($levelExists[Tools::getValue('level') + 1]))
-					echo '<input type="hidden" name="category'.(int)Tools::getValue('id_category').'" value="'.(int)Tools::getValue('level'.Tools::getValue('level')).'" />';
+					echo '<input type="hidden" name="category['.(int)Tools::getValue('id_category').']" value="'.(int)Tools::getValue('level'.Tools::getValue('level')).'" />';
 		}
 	}
 
