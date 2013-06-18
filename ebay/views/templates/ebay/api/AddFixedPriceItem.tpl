@@ -36,10 +36,12 @@
 			<Quantity>{$quantity}</Quantity>
 		{/if}
 		<ItemSpecifics>
-			<NameValueList>
-				<Name>Marque</Name>
-				<Value><![CDATA[{$value}]]></Value>
-			</NameValueList>
+			{foreach from=$item_specifics key=name item=value}
+				<NameValueList>
+					<Name><![CDATA[{$name}]]></Name>
+					<Value><![CDATA[{$value}]]></Value>
+				</NameValueList>
+			{/foreach}
 			{if isset($attributes)}
 				{foreach from=$attributes key=name item=attribute}
 					<NameValueList>

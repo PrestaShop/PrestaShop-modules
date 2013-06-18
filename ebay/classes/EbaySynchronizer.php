@@ -19,8 +19,6 @@ class EbaySynchronizer
 
 		// Up the time limit
 		@set_time_limit(3600);
-		
-		$sync_blacklisted_product_ids = EbaySyncBlacklistProduct::getBlacklistedProductIds();
 
 		// Run the products list
 		foreach ($products as $p) 
@@ -36,57 +34,61 @@ class EbaySynchronizer
 			else
 				$quantity_product = $product->quantity;
 
-			if (Validate::isLoadedObject($product))
+			// if product exists in the db and has a default category
+			if (Validate::isLoadedObject($product) && $product->id_category_default) 
 			{
 				if (!$product->active || in_array($product->id, $sync_blacklisted_product_ids))
 					$ebay = EbaySynchronizer::endProductOnEbay($ebay, $product);					
 				elseif ($product->id_category_default) // if product exists in the db and has a default category
 				{
 					$category_cache = EbaySynchronizer::_updateCategoryCache($category_cache, $product->id_category_default);
+				$product_category_cache = $category_cache[$product->id_category_default];
 
-					// Load Pictures
-					$pictures = array();
-					$picturesMedium = array();
-					$picturesLarge = array();
-					foreach ($product->getImages($id_lang) as $image) 
-					{
-						$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-						$pictures[] = $large_pict;					
-						$picturesMedium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
-						$picturesLarge[] = $large_pict;
-					}
+				// Load Pictures
+				$pictures = array();
+				$picturesMedium = array();
+				$picturesLarge = array();
+				foreach ($product->getImages($id_lang) as $image) 
+				{
+					$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
+					$pictures[] = $large_pict;					
+					$picturesMedium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
+					$picturesLarge[] = $large_pict;
+				}
 				
-					// Load Variations
-					list($variations, $variationsList) = EbaySynchronizer::_loadVariations($product, $context, $category_cache);
+				// Load Variations
+				//list($variations, $variationsList) = EbaySynchronizer::_loadVariations($product, $context, $category_cache);
+				$variations = EbaySynchronizer::_loadVariations($product, $context, $product_category_cache);
 
-					// Load basic price
-					$price = Product::getPriceStatic((int)$product->id, true);
-					$price_original = $price;
-					if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $category_cache[$product->id_category_default]['percent'])) 
-						$price *= (1 + ($category_cache[$product->id_category_default]['percent'] / 100));
-					else 
-						$price += $category_cache[$product->id_category_default]['percent'];
-					$price = round($price, 2);
-
-					// Generate array and try insert in database
-					$data = array(
-							'id_product' 				=> $product->id,
-							'reference' 				=> $product->reference,
-							'name' 							=> str_replace('&', '&amp;', $product->name),
-							'brand' 						=> $product->manufacturer_name,
-							'description' 			=> $product->description,
-							'description_short' => $product->description_short,
-							'price' 						=> $price,
-							'quantity' 					=> $quantity_product,
-							'categoryId' 				=> $category_cache[$product->id_category_default]['id_category_ref'],
-							'variationsList' 		=> $variationsList,
-							'variations' 				=> $variations,
-							'pictures' 					=> $pictures,
-							'picturesMedium' 		=> $picturesMedium,
-							'picturesLarge' 		=> $picturesLarge,
-							'condition'				  => EbaySynchronizer::_getEbayCondition($product),
-							'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
-					);
+				// Load basic price
+				$price = Product::getPriceStatic((int)$product->id, true);
+				$price_original = $price;
+				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $product_category_cache['percent'])) 
+					$price *= (1 + ($product_category_cache['percent'] / 100));
+				else 
+					$price += $product_category_cache['percent'];
+				$price = round($price, 2);
+				
+				// Generate array and try insert in database
+				$data = array(
+						'id_product' 				=> $product->id,
+						'reference' 				=> $product->reference,
+						'name' 							=> str_replace('&', '&amp;', $product->name),
+						'brand' 						=> $product->manufacturer_name,
+						'description' 			=> $product->description,
+						'description_short' => $product->description_short,
+						'price' 						=> $price,
+						'quantity' 					=> $quantity_product,
+						'categoryId' 				=> $product_category_cache['id_category_ref'],
+						//'variationsList' 		=> $variationsList,
+						'variations' 				=> $variations,
+						'pictures' 					=> $pictures,
+						'picturesMedium' 		=> $picturesMedium,
+						'picturesLarge' 		=> $picturesLarge,
+						'condition'				  => EbaySynchronizer::_getEbayCondition($product_category_cache['conditions'], $product),
+						'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
+						'item_specifics'		=> EbaySynchronizer::_getProductItemSpecifics($product_category_cache, $product->id, $id_lang)
+				);
 
 					// Fix hook update product
 					if (isset($context->employee) 
@@ -123,160 +125,157 @@ class EbaySynchronizer
 					if (isset($p['noPriceUpdate']))
 						$data['noPriceUpdate'] = $p['noPriceUpdate'];
 
-					$category_cache[$product->id_category_default]['percent'] = preg_replace('#%$#is', '', $category_cache[$product->id_category_default]['percent']);
+				$product_category_cache['percent'] = preg_replace('#%$#is', '', $product_category_cache['percent']);
 
-					// Save percent and price discount
-					if ($category_cache[$product->id_category_default]['percent'] < 0) 
-					{
-						$data['price_original'] = round($price_original, 2);
-						$data['price_percent'] = round($category_cache[$product->id_category_default]['percent']);
-					}
+				// Save percent and price discount
+				if ($product_category_cache['percent'] < 0) 
+				{
+					$data['price_original'] = round($price_original, 2);
+					$data['price_percent'] = round($product_category_cache['percent']);
+				}
 
-					$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
-				
-					// Export on eBay
-					if (count($data['variations'])) 
+				$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
+
+				// Export to eBay
+				if (count($data['variations'])) 
+				{
+					// Variations Case
+					if ($product_category_cache['is_multi_sku'] == 1) 
 					{
-						// Variations Case
-						if ($category_cache[$product->id_category_default]['is_multi_sku'] == 1) 
+						// Load eBay Description
+						$data['description'] = EbaySynchronizer::_fillDescription($data['description'], $data['picturesMedium'], $data['picturesLarge'], '', '');
+
+						// Multi Sku case
+						if ($item_id = EbayProduct::getIdProductRefByIdProduct($product->id)) //if product exists on eBay
 						{
-							// Load eBay Description
-							$data['description'] = EbaySynchronizer::_fillDescription($data['description'], $data['picturesMedium'], $data['picturesLarge'], '', '');
+							// Update
+							$data['itemID'] = $item_id;
+							if ($ebay->reviseFixedPriceItemMultiSku($data))
+								EbayProduct::updateByIdProductRef($item_id, array('date_upd' => pSQL($date)));
 
-							// Multi Sku case
-							if ($item_id = EbayProduct::getIdProductRefByIdProduct($product->id)) //if product exists on eBay
+							// if product not on eBay we add it
+							if ($ebay->errorCode == 291) 
 							{
-								// Update
-								$data['itemID'] = $item_id;
-								if ($ebay->reviseFixedPriceItemMultiSku($data))
-									EbayProduct::updateByIdProductRef($item_id, array('date_upd' => pSQL($date)));
-
-								// if product not on eBay we add it
-								if ($ebay->errorCode == 291) 
-								{
-									// We delete from DB and Add it on eBay
-									EbayProduct::deleteByIdProductRef($data['itemID']);
-									$ebay->addFixedPriceItemMultiSku($data);
-									if ($ebay->itemID > 0)
-										EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
-								}
-							}
-							else 
-							{
-								// Add
+								// We delete from DB and Add it on eBay
+								EbayProduct::deleteByIdProductRef($data['itemID']);
 								$ebay->addFixedPriceItemMultiSku($data);
 								if ($ebay->itemID > 0)
-										EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
-							}
-						}
-						else 
-						{
-							// No Multi Sku case
-							foreach ($data['variations'] as $variation) 
-							{
-								$data_variation = EbaySynchronizer::_getVariationData($data, $variation);
-
-								// Check if product exists on eBay
-								if ($itemID = EbayProduct::getIdProductRefByIdProduct($product->id, $data_variation['id_attribute'])) 
-								{
-									$data_variation['itemID'] = $itemID;
-
-									// Delete or Update
-									if ($data_variation['quantity'] < 1) 
-											if ($ebay->endFixedPriceItem($data_variation['itemID'], $data_variation['id_product'])) // Delete
-												EbayProduct::deleteByIdProductRef($data_variation['itemID']);
-									else 
-									{
-										// Update
-										if ($ebay->reviseFixedPriceItem($data_variation))
-											EbayProduct::updateByIdProductRef($itemID, array('date_upd' => pSQL($date)));
-
-										// if product not on eBay we add it
-										if ($ebay->errorCode == 291) 
-										{
-											// We delete from DB and Add it on eBay
-											EbayProduct::deleteByIdProductRef($data_variation['itemID']);
-											$ebay->addFixedPriceItem($data_variation);
-											if ($ebay->itemID > 0)
-												EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date, $data_variation['id_attribute']);
-										}
-									}
-								}
-								else 
-								{
-									// Add
-									$ebay->addFixedPriceItem($data_variation);
-									if ($ebay->itemID > 0)
-										EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date, $data_variation['id_attribute']);
-								}
-							}
-						}
-					}
-					else 
-					{
-						// No variations case
-						// Load eBay Description
-						$data['description'] = EbaySynchronizer::_fillDescription($data['description'], $data['picturesMedium'], $data['picturesLarge'], Tools::displayPrice($data['price']), isset($data['price_original']) ? 'au lieu de <del>'.Tools::displayPrice($data['price_original']).'</del> (remise de '.round($data['price_percent']).')' : '');
-
-						// Check if product exists on eBay
-						if ($itemID = EbayProduct::getIdProductRefByIdProduct($product->id)) 
-						{
-							$data['itemID'] = $itemID;
-
-							// Delete or Update
-							if ($data['quantity'] < 1) 
-							{
-								// Delete
-								if ($ebay->endFixedPriceItem($data['itemID'], $data['id_product']))
-									EbayProduct::deleteByIdProductRef($data['itemID']);
-							}
-							else 
-							{
-								// Update
-								if ($ebay->reviseFixedPriceItem($data))
-									EbayProduct::updateByIdProductRef($itemID, array('date_upd' => pSQL($date)));
-
-								// if product not on eBay we add it
-								if ($ebay->errorCode == 291) 
-								{
-									// We delete from DB and Add it on eBay
-									EbayProduct::deleteByIdProductRef($data['itemID']);
-									$ebay->addFixedPriceItem($data);
-									if ($ebay->itemID > 0)
-										EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
-								}
+									EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
 							}
 						}
 						else 
 						{
 							// Add
-							$ebay->addFixedPriceItem($data);
+							$ebay->addFixedPriceItemMultiSku($data);
 							if ($ebay->itemID > 0)
-								EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
+									EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
 						}
 					}
-
-					// Check error
-					if (!empty($ebay->error)) 
+					else 
 					{
-						$error_key = md5($ebay->error);
-						$tab_error[$error_key]['msg'] = $ebay->error;
-					
-						if (!isset($tab_error[$error_key]['products']))
-								$tab_error[$error_key]['products'] = array();
-					
-						if (count($tab_error[$error_key]['products']) < 10)
-								$tab_error[$error_key]['products'][] = $data['name'];
-					
-						if (count($tab_error[$error_key]['products']) == 10)
-								$tab_error[$error_key]['products'][] = '...';
-					
-						$count_error++;
+						// No Multi Sku case
+						foreach ($data['variations'] as $variation) 
+						{
+							$data_variation = EbaySynchronizer::_getVariationData($data, $variation);
+
+							// Check if product exists on eBay
+							if ($itemID = EbayProduct::getIdProductRefByIdProduct($product->id, $data_variation['id_attribute'])) 
+							{
+								$data_variation['itemID'] = $itemID;
+
+								// Delete or Update
+								if ($data_variation['quantity'] < 1) 
+										if ($ebay->endFixedPriceItem($data_variation)) // Delete
+											EbayProduct::deleteByIdProductRef($data_variation['itemID']);
+								else 
+								{
+									// Update
+									if ($ebay->reviseFixedPriceItem($data_variation))
+										EbayProduct::updateByIdProductRef($itemID, array('date_upd' => pSQL($date)));
+
+									// if product not on eBay we add it
+									if ($ebay->errorCode == 291) 
+									{
+										// We delete from DB and Add it on eBay
+										EbayProduct::deleteByIdProductRef($data_variation['itemID']);
+										$ebay->addFixedPriceItem($data_variation);
+										if ($ebay->itemID > 0)
+											EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date, $data_variation['id_attribute']);
+									}
+								}
+							}
+							else 
+							{
+								// Add
+								$ebay->addFixedPriceItem($data_variation);
+								if ($ebay->itemID > 0)
+									EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date, $data_variation['id_attribute']);
+							}
+						}
 					}
-					else
-						$count_success++;                    
-					$count++;
 				}
+				else 
+				{
+					// No variations case
+					// Load eBay Description
+					$data['description'] = EbaySynchronizer::_fillDescription($data['description'], $data['picturesMedium'], $data['picturesLarge'], Tools::displayPrice($data['price']), isset($data['price_original']) ? 'au lieu de <del>'.Tools::displayPrice($data['price_original']).'</del> (remise de '.round($data['price_percent']).')' : '');
+
+					// Check if product exists on eBay
+					if ($itemID = EbayProduct::getIdProductRefByIdProduct($product->id)) 
+					{
+						$data['itemID'] = $itemID;
+
+						// Delete or Update
+						if ($data['quantity'] < 1) 
+						{
+							// Delete
+							if ($ebay->endFixedPriceItem($data))
+								EbayProduct::deleteByIdProductRef($data['itemID']);
+						}
+						else 
+						{
+							if ($ebay->reviseFixedPriceItem($data))	// Update
+								EbayProduct::updateByIdProductRef($itemID, array('date_upd' => pSQL($date)));
+
+							// if product not on eBay we add it
+							if ($ebay->errorCode == 291) 
+							{
+								// We delete from DB and Add it on eBay
+								EbayProduct::deleteByIdProductRef($data['itemID']);
+								$ebay->addFixedPriceItem($data);
+								if ($ebay->itemID > 0)
+									EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
+							}
+						}
+					}
+					else 
+					{
+						// Add
+						$ebay->addFixedPriceItem($data);
+						if ($ebay->itemID > 0)
+							EbaySynchronizer::_insertEbayProduct($product->id, $ebay->itemID, $date);
+					}
+				}
+
+				if (!empty($ebay->error)) // Check error
+				{
+					$error_key = md5($ebay->error);
+					$tab_error[$error_key]['msg'] = $ebay->error;
+					
+					if (!isset($tab_error[$error_key]['products']))
+							$tab_error[$error_key]['products'] = array();
+					
+					if (count($tab_error[$error_key]['products']) < 10)
+							$tab_error[$error_key]['products'][] = $data['name'];
+					
+					if (count($tab_error[$error_key]['products']) == 10)
+							$tab_error[$error_key]['products'][] = '...';
+					
+					$count_error++;
+				}
+				else
+					$count_success++;                    
+				$count++;
 			}
 		}
 
@@ -292,43 +291,57 @@ class EbaySynchronizer
 		if ($category_cache[$id_category]['is_multi_sku'] != 1)
 			$category_cache[$id_category]['is_multi_sku'] = EbaySynchronizer::findIfCategoryParentIsMultiSku($category_cache[$id_category]['id_category_ref']);
 		
+		if (!isset($category_cache[$id_category]['items_specifics']))
+		{
+			$ebay_category = new EbayCategory($category_cache[$id_category]['id_category_ref']);
+			$category_cache[$id_category]['items_specifics'] = $ebay_category->getItemsSpecificValues();					
+		}
+		
+		if (!isset($category_cache[$id_category]['conditions']))
+		{
+			if (!isset($ebay_category))
+				$ebay_category = new EbayCategory($category_cache[$id_category]['id_category_ref']);
+			$category_cache[$id_category]['conditions'] = $ebay_category->getConditionsValues();
+		}		
+		
 		return $category_cache;
 	}
 	
-	private static function _loadVariations($product, $context, $category_cache)
+	private static function _loadVariations($product, $context, $product_category_cache)
 	{
 		$variations = array();
-		$variationsList = array();
+		//$variationsList = array();
 		$combinations = $product->getAttributeCombinations($context->cookie->id_lang);
 		if (isset($combinations))
 			foreach ($combinations as $combinaison) 
 			{
 				$price = Product::getPriceStatic((int)$combinaison['id_product'], true, (int)$combinaison['id_product_attribute']);						
 
-				$variationsList[$combinaison['group_name']][$combinaison['attribute_name']] = 1;
+				//$variationsList[$combinaison['group_name']][$combinaison['attribute_name']] = 1;
 				
 				$variation_key = $combinaison['id_product'].'-'.$combinaison['id_product_attribute'];
 				$variations[$variation_key] = array(
-					'id_attribute' => $combinaison['id_product_attribute'],
-					'reference' 	 => $combinaison['reference'],
-					'quantity' 		 => $combinaison['quantity'],
-					'price_static' => $price
+					'id_attribute' 	 => $combinaison['id_product_attribute'],
+					'reference' 		 => $combinaison['reference'],
+					'quantity' 			 => $combinaison['quantity'],
+					'price_static'	 => $price,
+					'variation_specifics' => EbaySynchronizer::_getVariationSpecifics($product_category_cache['items_specifics'], $combinaison['id_product'], $combinaison['id_product_attribute'], $context->cookie->id_lang)
 				);
 				$variations[$variation_key]['variations'][] = array(
 					'name'  => $combinaison['group_name'], 
 					'value' => $combinaison['attribute_name']);
 				
 				$price_original = $price;						
-				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $category_cache[$product->id_category_default]['percent']))
-					$price *= (1 + ($category_cache[$product->id_category_default]['percent'] / 100));
+				if (preg_match('#[-]{0,1}[0-9]{1,2}%$#is', $product_category_cache['percent']))
+					$price *= (1 + ($product_category_cache['percent'] / 100));
 				else 
-					$price += $category_cache[$product->id_category_default]['percent'];
+					$price += $product_category_cache['percent'];
 				$variations[$variation_key]['price'] = round($price, 2);
 				
-				if ($category_cache[$product->id_category_default]['percent'] < 0) 
+				if ($product_category_cache['percent'] < 0) 
 				{
 					$variations[$variation_key]['price_original'] = round($price_original, 2);
-					$variations[$variation_key]['price_percent'] = round($category_cache[$product->id_category_default]['percent']);
+					$variations[$variation_key]['price_percent'] = round($product_category_cache['percent']);
 				}
 			}
 
@@ -339,7 +352,8 @@ class EbaySynchronizer
 				foreach ($combination_image as $image)
 					$variations[$product->id.'-'.$image['id_product_attribute']]['pictures'][] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large'); // if issue, it's because of https/http in the url		
 		
-		return array($variations, $variationsList);
+		//return array($variations, $variationsList);
+		return $variations;
 	}
 	
 	private static function _getEbayDescription($product, $id_lang)
@@ -426,7 +440,7 @@ class EbaySynchronizer
 		$data['quantity'] = $variation['quantity'];
 		$data['id_attribute'] = $variation['id_attribute'];
 		unset($data['variations']);
-		unset($data['variationsList']);
+		//unset($data['variationsList']);
 
 		// Load eBay Description
 		$data['description'] = EbaySynchronizer::_fillDescription(
@@ -649,8 +663,88 @@ class EbaySynchronizer
 		return Db::getInstance()->getValue($sql);
 	}
 	
-	private static function _getEbayCondition($product)
+	private static function _getProductItemSpecifics($product_category_cache, $product_id, $id_lang)
 	{
+		$items_specifics = $product_category_cache['items_specifics'];
+		$is_multi_sku = $product_category_cache['is_multi_sku'];
+		
+		$item_specifics_pairs = array();
+		foreach ($items_specifics as $item_specific)
+		{
+			$value = null;
+			if ($item_specific['id_attribute_group'])
+			{
+				if (($is_multi_sku && !$item_specific['can_variation']) || !$is_multi_sku)
+					$value = Db::getInstance()->getValue('SELECT al.`name` 
+						FROM `'._DB_PREFIX_.'attribute_lang` al
+						INNER JOIN `'._DB_PREFIX_.'attribute` a
+						ON al.`id_attribute` = a.`id_attribute`
+						AND a.`id_attribute_group` = '.(int)$item_specific['id_attribute_group'].'
+						INNER JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
+						ON a.`id_attribute` = pac.`id_attribute`
+						INNER JOIN `'._DB_PREFIX_.'product_attribute` pa
+						ON pac.`id_product_attribute` = pa.`id_product_attribute`
+						AND pa.`id_product` = '.(int)$product_id.'
+						WHERE al.`id_lang` = '.(int)$id_lang);				
+			}
+			elseif($item_specific['id_feature'])
+				$value = Db::getInstance()->getValue('SELECT fvl.`value`
+					FROM `'._DB_PREFIX_.'feature_value_lang` fvl
+					INNER JOIN `'._DB_PREFIX_.'feature_value` fv
+					ON fvl.`id_feature_value` = fv.`id_feature_value`
+					INNER JOIN `'._DB_PREFIX_.'feature_product` fp
+					ON fv.`id_feature_value` = fp.`id_feature_value`	
+					AND fp.`id_feature` = '.(int)$item_specific['id_feature'].'
+					AND fp.`id_product` = '.(int)$product_id.'
+					WHERE fvl.`id_lang` = '.(int)$id_lang);
+			else
+				$value = $item_specific['specific_value'];
+
+			if ($value)
+				$item_specifics_pairs[$item_specific['name']] = $value;
+		}
+		
+		return $item_specifics_pairs;
+	}
+	
+	/**
+	 *
+	 * Returns the item specifics that correspond to a variation and not to the product in general
+	 *
+	 */
+	private static function _getVariationSpecifics($items_specifics, $product_id, $product_attribute_id, $id_lang)
+	{
+		$item_specifics_pairs = array();
+		foreach ($items_specifics as $item_specific)
+		{
+			if (!$item_specific['id_attribute_group'] || !$item_specific['can_variation'])
+				continue;
+			
+			$value = Db::getInstance()->getValue('SELECT al.`name` 
+				FROM `'._DB_PREFIX_.'attribute_lang` al
+				INNER JOIN `'._DB_PREFIX_.'attribute` a
+				ON al.`id_attribute` = a.`id_attribute`
+				AND a.`id_attribute_group` = '.(int)$item_specific['id_attribute_group'].'
+				INNER JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
+				ON a.`id_attribute` = pac.`id_attribute`
+				AND pac.`id_product_attribute` = '.$product_attribute_id.'
+				INNER JOIN `'._DB_PREFIX_.'product_attribute` pa
+				ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				AND pa.`id_product` = '.(int)$product_id.'
+				WHERE al.`id_lang` = '.(int)$id_lang);
+
+			if ($value)
+				$item_specifics_pairs[$item_specific['name']] = $value;
+		}
+		
+		return $item_specifics_pairs;
+	}
+	
+	private static function _getEbayCondition($conditions, $product)
+	{
+		return $conditions[$product->condition];
+		// now there is no default value
+		/*
 		switch ($product->condition)
 		{
 			case 'new' :
@@ -662,6 +756,7 @@ class EbaySynchronizer
 			default:
 				return Configuration::get('EBAY_CONDITION_NEW');
 		}
+		*/
 	}
 	
 	private static function _addSqlRestrictionOnLang($alias) 
