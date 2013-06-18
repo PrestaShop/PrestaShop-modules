@@ -1043,10 +1043,10 @@ class Ebay extends Module
 			'token'        					=> Tools::getValue('token'),
 			'_module_dir_' 					=> _MODULE_DIR_,
 			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
-			'id_lang'      					=> $this->cookie->id_lang,
+			'id_lang'      					=> $this->context->cookie->id_lang,
 			'_path'        					=> $this->_path,
-			'possible_attributes'		=> AttributeGroup::getAttributesGroups($this->cookie->id_lang),
-			'possible_features'			=> Feature::getFeatures($this->cookie->id_lang, true),
+			'possible_attributes'		=> AttributeGroup::getAttributesGroups($this->context->cookie->id_lang),
+			'possible_features'			=> Feature::getFeatures($this->context->cookie->id_lang, true),
 			'conditions'						=> EbayCategoryConditionConfiguration::getPSConditions(),
 			'date'         					=> pSQL(date('Ymdhis'))
 		);
