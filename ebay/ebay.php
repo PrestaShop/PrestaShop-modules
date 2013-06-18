@@ -372,10 +372,10 @@ class Ebay extends Module
 	}
 
 	/**
-   * Called when a product is added to the shop
-	 *
-	 * @param array $params hook parameters
-	 */
+	* Called when a product is added to the shop
+	*
+	* @param array $params hook parameters
+	*/
 	public function hookAddProduct($params)
 	{
 		if (!isset($params['product']->id))
@@ -741,7 +741,20 @@ class Ebay extends Module
 				$this->setConfiguration('EBAY_IDENTIFIER', $ebay_username);
 			}
 			
-			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
+			$smarty_vars['url'] = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
+				'token' => Configuration::get('EBAY_SECURITY_TOKEN'),
+				'time'  =>pSQL(date('Ymdhis'))));
+			
+			$url_vars = array(
+				'action' 					=> 'validateToken',
+				'path' 						=> $this->_path,
+				'request_uri' 		=> Tools::safeOutput($_SERVER['REQUEST_URI']),
+			);
+			if (version_compare(_PS_VERSION_, '1.5', '>'))
+				$url_vars['controller'] = Tools::safeOutput(Tools::getValue('controller'));
+			else
+				$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
+			$smarty_vars['window_location_href'] = $this->_getUrl($url_vars);
 		}
 		else // not logged yet
 		{
@@ -1434,7 +1447,7 @@ class Ebay extends Module
 			'nb_products_mode_a' 			=> $nb_products_mode_a,
 			'nb_products_mode_b' 			=> $nb_products_mode_b,
 			'nb_products_sync_url' 		=> $nb_products_sync_url,
-			'sync_products_url' 			=>  $sync_products_url,
+			'sync_products_url' 			=> $sync_products_url,
 			'action_url' 							=> $action_url,
 			'ebay_sync_option_resync' => Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
 			'categories' 							=> $categories,

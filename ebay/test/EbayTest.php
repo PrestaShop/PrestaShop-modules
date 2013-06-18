@@ -79,8 +79,19 @@ class EbayTest extends PHPUnit_Framework_TestCase
 		$this->ebay->getContent();
 	}
 	
+	public function testHookDeleteProduct()
+	{
+		$params = array(
+			'product' => new Product(10)
+		);
+		$this->ebay->hookDeleteProduct($params);
+	}
+	
 	public function testAjaxProductSync()
 	{
+		$this->ebay->setConfiguration('EBAY_SYNC_LAST_PRODUCT', 0);		
+		$this->ebay->ajaxProductSync();
+		$this->ebay->ajaxProductSync();
 		$this->ebay->ajaxProductSync();
 	}
 	
