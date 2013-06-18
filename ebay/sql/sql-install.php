@@ -102,8 +102,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_sync_history_product` 
 	) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 
-/****************** SHIPPING CARRIER ******************/
-
+// SHIPPING CARRIER
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping` (
 		  `id_ebay_shipping` int(11) NOT NULL AUTO_INCREMENT,
 		  `ebay_carrier` varchar(256) NOT NULL,

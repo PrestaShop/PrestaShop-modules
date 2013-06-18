@@ -25,23 +25,16 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
-if (file_exists($config_path))
-{
-	include($config_path);
-	include('../../../init.php');
-	include('../../../modules/ebay/ebay.php');
-	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-		die('ERROR : Invalid Token');
+include(dirname(__FILE__).'/../../../config/config.inc.php');
+include('../../../init.php');
+include('../../../modules/ebay/ebay.php');
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR: Invalid Token');
 
-	global $cookie;
-	$cookie = new Cookie('psEbay', '', 3600);
+global $cookie;
+$cookie = new Cookie('psEbay', '', 3600);
 
-	$ebay = new eBay();
-	$ebay->ajaxProductSync();
+$ebay = new eBay();
+$ebay->ajaxProductSync();
 
-	unset($cookie);
-}
-else
-	echo 'ERROR';
-
+unset($cookie);

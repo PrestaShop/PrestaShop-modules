@@ -25,56 +25,43 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
-if (file_exists($config_path)) 
-{
-	include($config_path);
-	include('../ebay.php');
-	class EbayAjax extends Ebay 
+include(dirname(__FILE__).'/../../../config/config.inc.php');
+include('../ebay.php');
+$ebay = new Ebay();
+
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR: Invalid Token');
+
+$levelExists = array();
+for ($level = 0; $level <= 5; $level++)
+	if (Tools::getValue('level') >= $level) 
 	{
-		public function select() 
+		if ($level == 0)
+			$ebay_category_list_level = Db::getInstance()->executeS('SELECT * 
+			FROM `'._DB_PREFIX_.'ebay_category` 
+			WHERE `level` = 1 
+			AND `id_category_ref` = `id_category_ref_parent`');
+		else
+			$ebay_category_list_level = Db::getInstance()->executeS('SELECT * 
+				FROM `'._DB_PREFIX_.'ebay_category` 
+				WHERE `level` = '.(int)($level + 1).' 
+				AND `id_category_ref_parent` 
+				IN (
+					SELECT `id_category_ref` 
+					FROM `'._DB_PREFIX_.'ebay_category` 
+					WHERE `id_ebay_category` = '.(int)(Tools::getValue('level'.$level)).')');
+	
+		if ($ebay_category_list_level) 
 		{
-			if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-				die('ERROR :X');
+			$levelExists[$level + 1] = true;
+			echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
+<option value="0">'.$ebay->l('No category selected').'</option>';
 
-			$levelExists = array();
-			for ($level = 0; $level <= 5; $level++)
-				if (Tools::getValue('level') >= $level) 
-				{
-					if ($level == 0)
-						$ebay_category_list_level = Db::getInstance()->executeS('SELECT * 
-						FROM `'._DB_PREFIX_.'ebay_category` 
-						WHERE `level` = 1 
-						AND `id_category_ref` = `id_category_ref_parent`');
-					else
-						$ebay_category_list_level = Db::getInstance()->executeS('SELECT * 
-							FROM `'._DB_PREFIX_.'ebay_category` 
-							WHERE `level` = '.(int)($level + 1).' 
-							AND `id_category_ref_parent` 
-							IN (
-								SELECT `id_category_ref` 
-								FROM `'._DB_PREFIX_.'ebay_category` 
-								WHERE `id_ebay_category` = '.(int)(Tools::getValue('level'.$level)).')');
-				
-					if ($ebay_category_list_level) 
-					{
-						$levelExists[$level + 1] = true;
-						echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
-<option value="0">'.$this->l('No category selected').'</option>';
-
-						foreach ($ebay_category_list_level as $ebay_category)
-							echo '<option value="'.(int)$ebay_category['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ebay_category['id_ebay_category']) ? 'selected="selected"' : '').'>'.$ebay_category['name'].($ebay_category['is_multi_sku'] == 1 ? ' *' : '').'</option>';
-						echo '</select> ';
-					}
-				}
-
-				if (!isset($levelExists[Tools::getValue('level') + 1]))
-					echo '<input type="hidden" name="category['.(int)Tools::getValue('id_category').']" value="'.(int)Tools::getValue('level'.Tools::getValue('level')).'" />';
+			foreach ($ebay_category_list_level as $ebay_category)
+				echo '<option value="'.(int)$ebay_category['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ebay_category['id_ebay_category']) ? 'selected="selected"' : '').'>'.$ebay_category['name'].($ebay_category['is_multi_sku'] == 1 ? ' *' : '').'</option>';
+			echo '</select> ';
 		}
 	}
 
-	$ebay_ajax = new EbayAjax();
-	$ebay_ajax->select();
-}
-else
-     echo 'ERROR';
+	if (!isset($levelExists[Tools::getValue('level') + 1]))
+		echo '<input type="hidden" name="category['.(int)Tools::getValue('id_category').']" value="'.(int)Tools::getValue('level'.Tools::getValue('level')).'" />';

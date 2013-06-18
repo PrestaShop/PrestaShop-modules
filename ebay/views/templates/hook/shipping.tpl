@@ -404,7 +404,7 @@
 		</select>
 		{if $psCarrierModule|count > 0}
 			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
 			</a>
 			
 		{/if}
@@ -429,7 +429,7 @@
 		</select>
 		{if $psCarrierModule|count > 0}
 			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
 			</a>
 			
 		{/if}

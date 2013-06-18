@@ -49,16 +49,13 @@ class EbayRequest
 	private $country;
 	private $ebay_country;
 	
-	private $smarty;
-
-	/*      * *************************************************************** */
-
-	/** Constructor And Request Methods ****************************** */
-	/*      * *************************************************************** */
-
+	private $smarty_data;
 
 	public function __construct() 
 	{
+		/** Backward compatibility */
+		require(dirname(__FILE__).'/../backward_compatibility/backward.php');		
+		
 		$this->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 		$this->ebay_country = new EbayCountrySpec($this->country);
 		$this->itemConditionError = false;
@@ -86,14 +83,8 @@ class EbayRequest
 			$this->loginURL = 'https://signin.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
 		}
 		
-		$context = Context::getContext();
-		$this->smarty = $context->smarty->createData($context->smarty);		
+		//$this->smarty = $this->smarty->createData($this->smarty);		
 	}
-
-	/*      * *************************************************************** */
-
-	/** Authentication Methods *************************************** */
-	/*      * *************************************************************** */
 
 	public function getLoginUrl() 
 	{
@@ -149,12 +140,6 @@ class EbayRequest
 		$this->apiUrl = $apiUrl;
 		return $userProfile;
 	}
-
-	/*      * *************************************************************** */
-
-	/** Retrieve Categories Methods ********************************** */
-	/*      * *************************************************************** */
-
 
 	public function getCategories()
 	{
@@ -230,11 +215,10 @@ class EbayRequest
 		return 0;
 	}
 
-	/*      * *************************************************************** */
-
-	/** Methods to retrieve the global informations about eBay ******* */
-	/*      * *************************************************************** */
-
+	/**
+	 * Methods to retrieve the eBay global returns policies
+	 *
+	 */
 	public function getReturnsPolicies() 
 	{
 		$response = $this->_makeRequest('GeteBayDetails', array(
@@ -510,13 +494,6 @@ class EbayRequest
 		return $this->_checkForErrors($response);
 	}
 
-	/*      * *************************************************************** */
-
-	/** Order Methods ************************************************ */
-	/*      * *************************************************************** */
-
-
-
 	public function getOrders($create_time_from, $create_time_to, $page)
 	{
 		// Check data
@@ -553,9 +530,8 @@ class EbayRequest
 			'international_services' => $data['shipping']['internationalShip'],
 			'currency_id'						 => $this->ebay_country->getCurrency(),
 		);
-		$context = Context::getContext();
-		$context->smarty->assign($vars);
-		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetShippingDetails.tpl');
+		$this->smarty->assign($vars);
+		return $this->smarty->fetch(dirname(__FILE__).'/../ebay/api/GetShippingDetails.tpl');
 	}
 
 	private function _getBuyerRequirementDetails($datas)
@@ -563,9 +539,8 @@ class EbayRequest
 		$vars = array(
 			'has_excluded_zones'	=> (boolean)count($datas['shipping']['excludedZone']),
 		);
-		$context = Context::getContext();
-		$context->smarty->assign($vars);
-		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetBuyerRequirementDetails.tpl');
+		$this->smarty->assign($vars);
+		return $this->smarty->fetch(dirname(__FILE__).'/../ebay/api/GetBuyerRequirementDetails.tpl');
 	}
 
 	private function _getReturnPolicy()
@@ -574,9 +549,8 @@ class EbayRequest
 			'returns_accepted_option'	=> Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'),
 			'description'							=> preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
 		);
-		$context = Context::getContext();
-		$context->smarty->assign($vars);
-		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetReturnPolicy.tpl');
+		$this->smarty->assign($vars);
+		return $this->smarty->fetch(dirname(__FILE__).'/../ebay/api/GetReturnPolicy.tpl');
 	}
 	
 	private function _getVariations($data)
@@ -616,9 +590,8 @@ class EbayRequest
 			'variation_specifics_set' => $variation_specifics_set,
 		);
 		
-		$context = Context::getContext();
-		$context->smarty->assign($vars);
-		return $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/GetVariations.tpl');
+		$this->smarty->assign($vars);
+		return $this->smarty->fetch(dirname(__FILE__).'/../ebay/api/GetVariations.tpl');
 	}
 	
 	private function _buildHeadersShopping($api_call)
@@ -666,15 +639,14 @@ class EbayRequest
 			'ebay_auth_token' => Configuration::get('EBAY_API_TOKEN'),
 			'error_language'  => $this->ebay_country->getLanguage(),			
 		));
-		
-		$context = Context::getContext();
-		$context->smarty->assign($vars);
-		$request = $context->smarty->fetch(dirname(__FILE__).'/../views/templates/ebay/api/'.$api_call.'.tpl');
-		
+
+		$this->smarty->assign($vars);
+		$request = $this->smarty->fetch(dirname(__FILE__).'/../ebay/api/'.$api_call.'.tpl');
+
 		$connection = curl_init();
 		curl_setopt($connection, CURLOPT_URL, $this->apiUrl);
 		curl_setopt($connection, CURLINFO_HEADER_OUT, true);
-		
+
 		// Stop CURL from verifying the peer's certificate
 		curl_setopt($connection, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($connection, CURLOPT_SSL_VERIFYHOST, 0);
@@ -684,13 +656,13 @@ class EbayRequest
 			curl_setopt($connection, CURLOPT_HTTPHEADER, $this->_buildHeadersShopping($api_call));
 		else
 			curl_setopt($connection, CURLOPT_HTTPHEADER, $this->_buildHeaders($api_call));
-		
+
 		curl_setopt($connection, CURLOPT_POST, 1);
 		curl_setopt($connection, CURLOPT_POSTFIELDS, $request); // Set the XML body of the request
 		curl_setopt($connection, CURLOPT_RETURNTRANSFER, 1); // Set it to return the transfer as a string from curl_exec
 
 		$response = curl_exec($connection); // Send the Request
-		
+
 		curl_close($connection); // Close the connection
 
 		// Debug

@@ -46,7 +46,7 @@ $classes_to_load = array(
 	'EbaySynchronizer',
 	'EbayPayment',
 	'EbayCategoryConditionConfiguration',
-	'EbayCategorySpecific'
+	'EbayCategorySpecific',
 	'EbayProductConfiguration'
 );
 foreach ($classes_to_load as $classname)
@@ -172,8 +172,6 @@ class Ebay extends Module
 	*/
 	public function install()
 	{
-		global $cookie;
-
 		// Install SQL
 		include(dirname(__FILE__).'/sql/sql-install.php');
 		foreach ($sql as $s)
@@ -212,22 +210,20 @@ class Ebay extends Module
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
-			$smarty = $this->context->smarty;
 			$logo_url = Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/'._PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
 		}
 		else
 		{
-			global $smarty;
 			$logo_url = Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/img/logo.jpg';
 		}
 
-		$smarty->assign(array(
+		$this->smarty->assign(array(
 			'shop_logo'  => $logo_url,
 			'shop_name'  => Configuration::get('PS_SHOP_NAME'),
 			'module_url' => $this->_getModuleUrl(),
 		));
 
-		return $this->display(__FILE__, 'views/templates/ebay/ebay.tpl');
+		return $this->display(__FILE__, 'ebay/ebay.tpl');
 	}
 
 	/**
@@ -436,60 +432,63 @@ class Ebay extends Module
 			{
 				foreach ($orders as &$order)
 				{
-					if ($order->isCompleted())
+					if (!$order->isCompleted())
 					{
-						if (!$order->exists()) // no order in ebay order table with this order_ref
-						{
-							if ($order->hasValidContact())
-							{
-								$id_customer = $order->getOrAddCustomer();
-								$id_address = $order->updateOrAddAddress();
-
-								if ($order->hasAllProductsWithAttributes())
-								{
-									$order->addCart($this->ebay_country); //Create a Cart for the order
-
-									if ($order->updateCartQuantities()) // if products in the cart
-									{
-										// Fix on sending e-mail
-										Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-										$customer_clear = new Customer();
-										if (method_exists($customer_clear, 'clearCache'))
-											$customer_clear->clearCache(true);
-
-										// Validate order
-										$id_order = $order->validate();
-
-										// Fix on sending e-mail
-										Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order->getEmail())), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-
-										// Update price (because of possibility of price impact)		
-										$order->updatePrice();
-
-										$order->add();
-
-										if (!version_compare(_PS_VERSION_, '1.5', '>'))
-											foreach ($order->getProducts() as $product)
-												$this->hookAddProduct(new Product((int)$product['id_product']));
-									}
-									else
-									{
-										$order->deleteCart();
-
-										$order->addErrorMessage($this->l('Could not add product to cart (maybe your stock quantity is 0)'));
-									}
-								}
-								else
-									$order->addErrorMessage($this->l('Could not find the products in database'));
-							}
-							else
-								$order->addErrorMessage($this->l('Invalid e-mail'));
-						}
-						else
-							$order->addErrorMessage($this->l('Order already imported'));
-					}
-					else
 						$order->addErrorMessage($this->l('Status not complete, amount less than 0.1 or no matching product'));
+						continue;
+					}
+					
+					if ($order->exists())
+					{
+						$order->addErrorMessage($this->l('Order already imported'));
+						continue;
+					}
+						
+					// no order in ebay order table with this order_ref
+					if (!$order->hasValidContact())
+					{
+						$order->addErrorMessage($this->l('Invalid e-mail'));
+						continue;
+					}
+					
+					$id_customer = $order->getOrAddCustomer();
+					$id_address = $order->updateOrAddAddress();
+
+					if (!$order->hasAllProductsWithAttributes())
+					{
+						$order->addErrorMessage($this->l('Could not find the products in database'));
+						continue;
+					}
+					
+					$order->addCart($this->ebay_country); //Create a Cart for the order
+
+					if (!$order->updateCartQuantities()) // if products in the cart
+					{
+						$order->deleteCart();
+						$order->addErrorMessage($this->l('Could not add product to cart (maybe your stock quantity is 0)'));
+						continue;
+					}
+					
+					// Fix on sending e-mail
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+					$customer_clear = new Customer();
+					if (method_exists($customer_clear, 'clearCache'))
+						$customer_clear->clearCache(true);
+
+					// Validate order
+					$id_order = $order->validate();
+
+					// Fix on sending e-mail
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order->getEmail())), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+
+					// Update price (because of possibility of price impact)		
+					$order->updatePrice();
+
+					$order->add();
+
+					if (!version_compare(_PS_VERSION_, '1.5', '>'))
+						foreach ($order->getProducts() as $product)
+							$this->hookAddProduct(new Product((int)$product['id_product']));
 				}
 				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders, true).";\n\n");
 			}
@@ -663,12 +662,7 @@ class Ebay extends Module
 		if (!Validate::isCleanHtml($prestashop_content))
 			$prestashop_content = '';
 
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-		
-		$smarty->assign(array(
+		$this->smarty->assign(array(
 			'img_stats' 				 							=> $this->ebay_country->getImgStats(),
 			'alert' 						 							=> $alerts,
 			'prestashop_content' 							=> $prestashop_content,
@@ -752,21 +746,7 @@ class Ebay extends Module
 				$this->setConfiguration('EBAY_IDENTIFIER', $ebay_username);
 			}
 			
-			$smarty_vars['url'] = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
-				'token' => Configuration::get('EBAY_SECURITY_TOKEN'),
-				'time'  =>pSQL(date('Ymdhis'))));
-			
-			$url_vars = array(
-				'action' 					=> 'validateToken',
-				'path' 						=> $this->_path,
-				'request_uri' 		=> Tools::safeOutput($_SERVER['REQUEST_URI']),
-			);
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-				$url_vars['controller'] = Tools::safeOutput(Tools::getValue('controller'));
-			else
-				$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
-			$smarty_vars['window_location_href'] = $this->_getUrl($url_vars);
-			$smarty_vars['request_uri']	= Tools::safeOutput($_SERVER['REQUEST_URI']);
+			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
 		}
 		else // not logged yet
 		{
@@ -786,11 +766,7 @@ class Ebay extends Module
 			
 		}
 		
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-		$smarty->assign($smarty_vars);	 
+		$this->smarty->assign($smarty_vars);	 
 
 		return $this->display(__FILE__, 'views/templates/admin/formRegister.tpl');
 	}
@@ -821,11 +797,7 @@ class Ebay extends Module
 			'request_uri'					 => Tools::safeOutput($_SERVER['REQUEST_URI'])
 		);
 		
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-		$smarty->assign($smarty_vars);	 
+		$this->smarty->assign($smarty_vars);	 
 
 		return $this->display(__FILE__, 'views/templates/admin/checkToken.tpl');
 		
@@ -850,22 +822,13 @@ class Ebay extends Module
 			'id_tab' 								=> Tools::safeOutput(Tools::getValue('id_tab'))
 		);
 		
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-		$smarty->assign($smarty_vars);	 
+		$this->smarty->assign($smarty_vars);	 
 
 		return $this->display(__FILE__, 'views/templates/admin/formConfig.tpl');
 	}
 	
 	private function _displayFormParameters()
 	{
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-
 		// Loading config currency
 		$config_currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
 		
@@ -914,7 +877,6 @@ class Ebay extends Module
 		{
 			$session_id = $ebay->login();
 			$this->context->cookie->eBaySession = $session_id;
-			echo 'SETTING SESSION ID TO:'.$session_id;
 			$this->setConfiguration('EBAY_API_SESSION', $session_id);
 			
 			$smarty_vars = array_merge($smarty_vars, array(
@@ -928,14 +890,13 @@ class Ebay extends Module
 			$session_id = $ebay->login();
 			$this->context->cookie->eBaySession = $session_id;
 			$this->setConfiguration('EBAY_API_SESSION', $session_id);
-			echo 'SETTING SESSION ID TO:'.$session_id;			
 			$this->context->cookie->write();
 
 			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
 
 		}
 		
-		$smarty->assign($smarty_vars);
+		$this->smarty->assign($smarty_vars);
 		
 		return $this->display(dirname(__FILE__), '/views/templates/admin/formParameters.tpl');
 	}
@@ -989,7 +950,7 @@ class Ebay extends Module
 		* Category Form Config Methods
 		*
 	*/
-	protected function _getChildCategories($categories, $id, $path = array(), $path_add = '')
+	public function getChildCategories($categories, $id, $path = array(), $path_add = '')
 	{
 		$category_tab = array();
 		if ($path_add != '')
@@ -1004,7 +965,7 @@ class Ebay extends Module
 						$name .= $p.' > ';
 				$name .= $cc['infos']['name'];
 				$category_tab[] = array('id_category' => $cc['infos']['id_category'], 'name' => $name);
-				$categoryTmp = $this->_getChildCategories($categories, $idc, $path, $cc['infos']['name']);
+				$categoryTmp = $this->getChildCategories($categories, $idc, $path, $cc['infos']['name']);
 				$category_tab = array_merge($category_tab, $categoryTmp);
 			}
 		return $category_tab;
@@ -1013,14 +974,6 @@ class Ebay extends Module
 	private function _displayFormCategory()
 	{
 		$is_one_dot_five = version_compare(_PS_VERSION_, '1.5', '>');
-
-		if ($is_one_dot_five)
-		{
-			$smarty = $this->context->smarty;
-			$cookie = $this->context->cookie;
-		}
-		else 
-			global $smarty, $cookie;
 
 		// Load prestashop ebay's configuration
 		$configs = Configuration::getMultiple(array('EBAY_PAYPAL_EMAIL', 'EBAY_CATEGORY_LOADED', 'EBAY_SECURITY_TOKEN'));
@@ -1032,7 +985,7 @@ class Ebay extends Module
 		// Load categories only if necessary
 		if (EbayCategoryConfiguration::getTotalCategoryConfigurations() && Tools::getValue('section') != 'category')
 		{
-			$smarty->assign(array(
+			$this->smarty->assign(array(
 			'isOneDotFive' => $is_one_dot_five,
 			'controller'   => Tools::getValue('controller'),
 			'tab'          => Tools::getValue('tab'), 
@@ -1057,7 +1010,7 @@ class Ebay extends Module
 		$template_vars = array(
 			'alerts'       => $this->_getAlertCategories(),
 			'tabHelp'      => '&id_tab=7',
-			'id_lang'      => $cookie->id_lang,
+			'id_lang'      => $this->context->cookie->id_lang,
 			'_path'        => $this->_path,
 			'configs'      => $configs,
 			'_module_dir_' => _MODULE_DIR_,
@@ -1072,21 +1025,13 @@ class Ebay extends Module
 			'date'         => pSQL(date('Ymdhis'))
 		);
 
-		$smarty->assign($template_vars);
+		$this->smarty->assign($template_vars);
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/form_categories.tpl');
 	}
 
 	private function _displayFormItemsSpecifics()
 	{
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-		{
-			$smarty = $this->context->smarty;
-			$cookie = $this->context->cookie;
-		}
-		else 
-			global $smarty, $cookie;
-		
 		// Smarty
 		$template_vars = array(
 			'id_tab'								=> Tools::safeOutput(Tools::getValue('id_tab')),
@@ -1098,23 +1043,15 @@ class Ebay extends Module
 			'token'        					=> Tools::getValue('token'),
 			'_module_dir_' 					=> _MODULE_DIR_,
 			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
-			'id_lang'      					=> $cookie->id_lang,
+			'id_lang'      					=> $this->cookie->id_lang,
 			'_path'        					=> $this->_path,
-			'possible_attributes'		=> AttributeGroup::getAttributesGroups($cookie->id_lang),
-			'possible_features'			=> Feature::getFeatures($cookie->id_lang, true),
+			'possible_attributes'		=> AttributeGroup::getAttributesGroups($this->cookie->id_lang),
+			'possible_features'			=> Feature::getFeatures($this->cookie->id_lang, true),
 			'conditions'						=> EbayCategoryConditionConfiguration::getPSConditions(),
 			'date'         					=> pSQL(date('Ymdhis'))
-//			'alerts'       => $this->_getAlertCategories(),
-			/*
-
-			'configs'      => $configs,
-			'isOneDotFive' => $is_one_dot_five,
-			'request_uri'  => $_SERVER['REQUEST_URI'],
-			'date'         => pSQL(date('Ymdhis'))
-			*/
 		);
 
-		$smarty->assign($template_vars);
+		$this->smarty->assign($template_vars);
 
 		return $this->display(dirname(__FILE__), '/views/templates/admin/formItemsSpecifics.tpl');
 	}
@@ -1179,33 +1116,6 @@ class Ebay extends Module
 					'blacklisted'  => in_array($product_id, $to_synchronize_product_ids) ? 0 : 1,
 					'extra_images' => $extra_images[$product_id] ? $extra_images[$product_id] : 0
 				));				
-			}
-		}
-
-			// Insert and update configuration
-		foreach ($post_value as $id_category => $tab)
-		{
-			$data = array();
-			$date = date('Y-m-d H:i:s');
-			if ($tab['id_ebay_category'])
-				$data = array(
-					'id_country' 			 => 8, 
-					'id_ebay_category' => (int)$tab['id_ebay_category'], 
-					'id_category' 		 => (int)$id_category, 
-					'percent' 				 => pSQL($tab['percent']), 
-					'date_upd' 				 => pSQL($date));
-			if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
-			{
-				if ($data)
-					EbayCategoryConfiguration::updateByIdCategory($id_category, $data);
-				else
-					EbayCategoryConfiguration::deleteByIdCategory($id_category);
-			}
-			elseif ($data)
-			{
-				$data['date_add'] = $date;
-				EbayCategoryConfiguration::add($data);
-				$has_new_categories = true;
 			}
 		}
 		
@@ -1316,15 +1226,15 @@ class Ebay extends Module
 					foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
 						EbayShippingInternationalZone::insert($last_id, $id_ebay_zone);
 				}
-				if (isset($international_excluded_shipping_locations[$key]))	
-					foreach ($international_excluded_shipping_locations[$key] as $key2 => $value2)
-						if ($value2 != -1)
-						{
-							// Rarbuz: this table doesn't exist so commenting the code
+				// RArbuz: this table doesn't exist so commenting the code
+				//if (isset($international_excluded_shipping_locations[$key]))	
+				//	foreach ($international_excluded_shipping_locations[$key] as $key2 => $value2)
+						//if ($value2 != -1)
+						//{
 							//$rq_ins = 'INSERT INTO '._DB_PREFIX_.'ebay_shipping_international_zone_excluded 
 							//	VALUES(\''.(int)$last_id.'\', \''.pSQL($value2).'\')';
 							//DB::getInstance()->Execute($rq_ins);
-						}
+						//}
 			}
 		}
 	}
@@ -1357,12 +1267,7 @@ class Ebay extends Module
 		else 
 			$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
 		
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else 
-			global $smarty;		
-
-		$smarty->assign(array(
+		$this->smarty->assign(array(
 			'eBayCarrier'                    => $this->_getCarriers(),
 			'psCarrier'                      => Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT')),
 			'psCarrierModule'                => $psCarrierModule,
@@ -1432,11 +1337,7 @@ class Ebay extends Module
 			$smarty_vars['ps_js_dir'] = _PS_JS_DIR_;
 		}
 
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else 
-			global $smarty;
-		$smarty->assign($smarty_vars);
+		$this->smarty->assign($smarty_vars);
 		
 		return $this->display(dirname(__FILE__), '/views/templates/admin/formTemplateManager.tpl');
 	}
@@ -1549,7 +1450,7 @@ class Ebay extends Module
 		$category_config_list = array();
 		foreach (EbayCategoryConfiguration::getEbayCategoryConfigurations() as $c)
 			$category_config_list[$c['id_category']] = $c;
-		$category_list = $this->_getChildCategories(Category::getCategories($this->context->language->id), 0);
+		$category_list = $this->getChildCategories(Category::getCategories($this->context->language->id), 0);
 		
 		$categories = array();
 		if ($category_list)
@@ -1589,11 +1490,7 @@ class Ebay extends Module
 			'is_sync_mode_b' 					=> (Configuration::get('EBAY_SYNC_MODE') == 'B'),
 		);		
 		
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else 
-			global $smarty;
-		$smarty->assign($smarty_vars);
+		$this->smarty->assign($smarty_vars);
 		
 		return $this->display(dirname(__FILE__), '/views/templates/admin/formEbaySync.tpl');
 	}
@@ -1817,12 +1714,7 @@ class Ebay extends Module
 		if (file_exists(dirname(__FILE__).'/log/orders.php'))
 			include(dirname(__FILE__).'/log/orders.php');
 
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			$smarty = $this->context->smarty;
-		else
-			global $smarty;
-		
-		$smarty->assign(array(
+		$this->smarty->assign(array(
 			'date_last_import' => $dateLastImport,
 			'orders'					 => isset($orders) ? $orders : array()
 		));	
@@ -1839,7 +1731,7 @@ class Ebay extends Module
 		if (!file_exists($help_file))
 				$help_file = dirname(__FILE__).'/help/help-gb.html';
 
-		return file_get_contents($help_file);
+		return Tools::file_get_contents($help_file);
 	}
 
 	private function _getAlerts()
@@ -1953,10 +1845,28 @@ class Ebay extends Module
 			Shop::setContext(Shop::CONTEXT_SHOP, Configuration::get('PS_SHOP_DEFAULT'));
 	}
 
-	protected function addSqlRestrictionOnLang($alias)
+	public function addSqlRestrictionOnLang($alias)
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 			Shop::addSqlRestrictionOnLang($alias);
 	}
+	
+	/**
+	 * used by loadTableCategories
+	 *
+	 */
+	public function getPath()
+	{
+		return $this->_path;
+	}
+	
+	/**
+	 * used by loadTableCategories & suggestCategories
+	 *
+	 */
+	public function getContext()
+	{
+		return $this->context;
+	}	
 
 }

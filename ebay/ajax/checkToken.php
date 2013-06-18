@@ -25,25 +25,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-$config_path = dirname(__FILE__).'/../../../config/config.inc.php';
-if (file_exists($config_path))
-{
-	include($config_path);
-	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-		die('ERROR :X');
+include(dirname(__FILE__).'/../../../config/config.inc.php');
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR: Invalid Token');
 
-<<<<<<< HEAD
-	if (file_exists($ebay_request_path = dirname(__FILE__).'/../classes/EbayRequest.php'))
-=======
-	if (file_exists($ebay_request_path = dirname(__FILE__).'/../classes/EbayConfiguration.php'))
->>>>>>> evo570
-	{
-		include($ebay_request_path);
-		echo EbayConfiguration::updateAPIToken() ? 'OK' : 'KO';
-	}
-	else
-		echo 'ERROR02';
-}
-else
-	echo 'ERROR01';
-
+include(dirname(__FILE__).'/../classes/EbayConfiguration.php');
+echo EbayConfiguration::updateAPIToken() ? 'OK' : 'KO';

@@ -79,7 +79,7 @@ $(document).ready(function(){
 	});
 	
 	$("#configForm2SuggestedCategories input[type=submit]").click(function(){
-		$('<div class="center"><img src="' + module_path + 'views/img/loading-small.gif" alt="" />' + l['thank you for waiting'] + '</div>').insertAfter($(this));
+		$('<div class="center"><img src="' + module_path + 'views/img/loading-small.gif" alt="" />' + ebay_l['thank you for waiting'] + '</div>').insertAfter($(this));
 		$(this).fadeOut();
 		$.ajax({
 			url: module_dir + "ebay/ajax/suggestCategories.php?token=" + ebay_token + "&id_lang=" + id_lang,
