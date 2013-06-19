@@ -1,0 +1,77 @@
+.firstdata-wrap { clear: both; margin: 0px auto; max-width: 1024px; min-width: 930px; overflow: hidden; }
+
+.firstdata-header { clear: both; margin-bottom: 25px; padding-top: 15px; overflow: hidden; }
+.firstdata-header img.firstdata-logo { float: left; margin: 0px 50px 0px 0px; }
+.firstdata-header span.firstdata-intro { border-left: #A7A8AB solid 1px; color: #00A9E0; display: block; float: left; font-size: 24px; height: 55px; line-height: 24px; margin: 0px; padding: 10px 0px 0px 50px; }
+.firstdata-header a.firstdata-create-btn { background-color: #00A9E0; color: #FFF; display: inline-block; float: right; font-size: 16px; font-weight: bold; height: 35px; line-height: 33px; margin: 18px 0px 0px 0px; padding: 0px 15px; }
+.firstdata-header a.firstdata-create-btn:hover { background-color: #0099E0; }
+
+.firstdata-content { border: #A7A8AB solid 1px; clear: both; margin: 0px 0px 10px 0px; overflow: hidden; padding: 15px; }
+.firstdata-content h3 { color: #00A9E0; font-size: 22px; font-weight: normal; line-height: 22px; margin: 0px 0px 15px 0px; padding: 0px; }
+.firstdata-content h3 sup { font-size: 12px; vertical-align: super; }
+.firstdata-content h3 strong { color: #CC0000; vertical-align: text-top; }
+.firstdata-content p, .firstdata-content ul li { color: #535353; font-size: 14px; line-height: 22px; margin: 0px; padding: 0px; }
+.firstdata-content a.firstdata-btn { background-color: #CCC; color: #008CDD; display: inline-block; margin: 7px 0px; padding-left: 8px; text-decoration: none; }
+.firstdata-content a.firstdata-btn:hover { background-color: #666; text-decoration: underline; }
+.firstdata-content ul { list-style: none; margin: 0px 0px 15px 0px; padding: 0px; }
+.firstdata-content ul li { background: url(../img/bullet.png) 2px 7px no-repeat; margin: 0px; padding: 0px 0px 0px 15px; }
+.firstdata-content p.firstdata-note { color: #7F7F7F; font-size: 1em; font-style: italic; line-height: 1.2em; margin-bottom: 10px; }
+.firstdata-content p.firstdata-note sup { font-size: 0.8em; vertical-align: super; }
+
+.firstdata-full { border-top: #A7A8AB solid 1px; clear: both; overflow: hidden; padding-top: 15px; }
+.firstdata-full p { color: #00A9E0; font-size: 16px; line-height: 20px; padding: 0px 0px 0px 410px; }
+img.firstdata-cc { float: left; margin: 0px 0px 0px -410px; }
+ 
+#firstdata-configuration fieldset { background-image: url(../img/sep.png); background-position: center top; background-repeat: repeat-y; }
+#firstdata-configuration input.text { width: 90%; }
+
+.firstdata-wrap fieldset { overflow: hidden }
+.firstdata-wrap .MB10 { margin-bottom: 10px; }
+.firstdata-wrap .L { float: left; }
+.firstdata-wrap .R { float: right; }
+.firstdata-wrap fieldset p { text-shadow: 0px 1px 0px #FFFFFF; }
+
+fieldset h4 { margin-top: 0px; }
+fieldset span.small { color: #7F7F7F; }
+div.firstdata-half { width: 48%; }
+div.firstdata-half ol { color: #585A69; font-size: 0.85em; font-weight: bold; list-style-type: decimal; margin: 0px; overflow: hidden; padding: 0px 0px 0px 25px; }
+div.firstdata-half ol li { margin: 0px 0px 8px 0px; padding: 0px; }
+div.firstdata-half ol li p { color: #7F7F7F; font-size: inherit; font-weight: normal; margin: 0px; padding: 0px; }
+div.firstdata-half ol li p a, a.firstdata-credentials-link { color: #268CCD; text-decoration: underline; }
+a.firstdata-credentials-link { font-size: 12px; }
+div.firstdata-half ol li p a:hover, a.firstdata-credentials-link:hover { text-decoration: none; }
+
+/* Forn-office styles */
+div.payment_module { padding-bottom: 20px; text-transform: none; }
+div.payment_module .firstdata-logo { clear: both; float: none; margin-bottom: 20px; }
+.payment_module #firstdata_form img { float: none; }
+.block-left { display: inline-block; float: left; margin-right: 20px; }
+#firstdata_form label { display: inline-block; margin-bottom: 4px; text-transform: uppercase; }
+#firstdata_form input[type="text"], #firstdata_form select { border: #CCCCCC solid 1px; margin: 0px 0px 15px 0px; padding: 3px; }
+#firstdata_form a { display: inline; position: relative; }
+#firstdata_form img.cc-firstdata-icon { border: #CCCCCC solid 1px; float: left; margin-right: 5px; }
+#firstdata_form img.cc-firstdata-disable { opacity: 0.3; }
+#firstdata_form img.cc-firstdata-enable { opacity: 1; }
+a.firstdata-card-cvc-info { cursor: default; font-style: italic; margin-left: 5px; }
+img#firstdata_cvv_help { margin-right: 4px; vertical-align: text-bottom; }
+a.firstdata-card-cvc-info div.cvc-info {
+	background-color: #BDE5F8;
+	border: #00529B solid 1px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #00529B!important;
+	display: none;
+	font-style: normal;
+	padding: 8px;
+	position: absolute;
+	right: -320px; top: -85px;
+	text-decoration: none;
+	width: 300px;
+}
+a.firstdata-card-cvc-info:hover { background-color: none; }
+a.firstdata-card-cvc-info:hover div.cvc-info { display: block; z-index: 10; }
+div.cvc-info:hover { cursor: default; }
+#firstdata_cvv_help_img { display: block; margin: 0px; }
+#firstdata_form .button { float: left; margin-right: 20px; }
+#firstdata_submitload { float: left; margin-top: 2px; }
