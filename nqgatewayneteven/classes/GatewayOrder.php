@@ -145,20 +145,30 @@ class GatewayOrder extends Gateway
 			$address->phone_mobile = substr(Toolbox::numericFilter($shipping_address->Mobile), 0, 16);
 			$address->id_country = $id_country;
 			$address->date_upd = $date_now;
+
+            if(!empty($shipping_address->Company)){
+                $address->company		= $shipping_address->Company;
+            }
+
 			$address->save();
-			
-			$order_infos = $shipping_address->BillingAddress;
+
+            $billing_address = $neteven_order->BillingAddress;
 			$address = new Address((int)$order->id_address_invoice);
-			$address->lastname = (!empty($shipping_address->LastName)) ? substr(Toolbox::stringFilter($shipping_address->LastName), 0, 32) : ' ';
-			$address->firstname	= (!empty($shipping_address->FirstName)) ? substr(Toolbox::stringFilter($shipping_address->FirstName), 0, 32) : ' ';
-			$address->address1 = (!empty($shipping_address->Address1)) ? Toolbox::stringWithNumericFilter($shipping_address->Address1):' ';
-			$address->address2 = Toolbox::stringWithNumericFilter($shipping_address->Address2);
-			$address->postcode = Toolbox::numericFilter($shipping_address->PostalCode);
-			$address->city = (!empty($shipping_address->CityName)) ? Toolbox::stringFilter($shipping_address->CityName) : ' ';
-			$address->phone	= substr(Toolbox::numericFilter($shipping_address->Phone), 0, 16);
-			$address->phone_mobile = substr(Toolbox::numericFilter($shipping_address->Mobile), 0, 16);
+			$address->lastname = (!empty($billing_address->LastName)) ? substr(Toolbox::stringFilter($billing_address->LastName), 0, 32) : ' ';
+			$address->firstname	= (!empty($billing_address->FirstName)) ? substr(Toolbox::stringFilter($billing_address->FirstName), 0, 32) : ' ';
+			$address->address1 = (!empty($billing_address->Address1)) ? Toolbox::stringWithNumericFilter($billing_address->Address1):' ';
+			$address->address2 = Toolbox::stringWithNumericFilter($billing_address->Address2);
+			$address->postcode = Toolbox::numericFilter($billing_address->PostalCode);
+			$address->city = (!empty($billing_address->CityName)) ? Toolbox::stringFilter($billing_address->CityName) : ' ';
+			$address->phone	= substr(Toolbox::numericFilter($billing_address->Phone), 0, 16);
+			$address->phone_mobile = substr(Toolbox::numericFilter($billing_address->Mobile), 0, 16);
 			$address->id_country = $id_country;
 			$address->date_upd = $date_now;
+
+            if(!empty($billing_address->Company)){
+                $address->company		= $billing_address->Company;
+            }
+
 			$address->save();			
 		}
 	}
@@ -747,6 +757,10 @@ class GatewayOrder extends Gateway
 			$new_address->id_customer = $id_customer;
 			$new_address->date_add = $date_now;
 			$new_address->date_upd = $date_now;
+
+            if(!empty($neteven_address->Company)){
+                $new_address->company		= $neteven_address->Company;
+            }
 
 			if (!$new_address->add())
 				Toolbox::addLogLine(self::getL('Failed for creation of address of NetEven order Id').' '.$order_id);
