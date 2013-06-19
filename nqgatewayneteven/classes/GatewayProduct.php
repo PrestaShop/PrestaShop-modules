@@ -368,7 +368,7 @@ class GatewayProduct extends Gateway
 				$features_attributes = explode($this->getValue('separator'), $product['attribute_name']);
 
             if (!empty($product['feature_name']))
-                $features_attributes = explode($this->getValue('separator'), $product['feature_name']);
+                $features_attributes = array_merge($features_attributes, explode($this->getValue('separator'), $product['feature_name']));
 
 			$feature_links = $this->getValue('feature_links');
 			foreach ($features_attributes as $value)
