@@ -316,8 +316,9 @@ class EbaySynchronizer
 	private static function _loadVariations($product, $context, $product_category_cache)
 	{
 		$variations = array();
-		//$variationsList = array();
-		$combinations = $product->getAttributeCombinations($context->cookie->id_lang);
+
+		$combinations = version_compare(_PS_VERSION_, '1.5', '>') ? $product->getAttributeCombinations($context->cookie->id_lang) : $product->getAttributeCombinaisons($context->cookie->id_lang);		
+
 		if (isset($combinations))
 			foreach ($combinations as $combinaison) 
 			{

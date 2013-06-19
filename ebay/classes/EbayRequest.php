@@ -54,7 +54,7 @@ class EbayRequest
 	public function __construct() 
 	{
 		/** Backward compatibility */
-		require(dirname(__FILE__).'/../backward_compatibility/backward.php');		
+		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 		
 		$this->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 		$this->ebay_country = new EbayCountrySpec($this->country);

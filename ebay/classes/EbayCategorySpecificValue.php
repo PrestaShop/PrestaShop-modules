@@ -25,33 +25,33 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class EbayCategoryConditionConfiguration 
+class EbayCategorySpecificValue
 {
-	const PS_CONDITION_NEW 				 = 1,
-				PS_CONDITION_USED 			 = 2,
-				PS_CONDITION_REFURBISHED = 3;
-	
-	public static function getPSConditions($condition_type = null)
+	public static function insertIgnore($data)
 	{
-		$condition_types = array(
-			EbayCategoryConditionConfiguration::PS_CONDITION_NEW 				 => 'new',
-			EbayCategoryConditionConfiguration::PS_CONDITION_USED 			 => 'used',
-			EbayCategoryConditionConfiguration::PS_CONDITION_REFURBISHED => 'refurbished'
-		);
+		if (!$data)
+			return false;
 		
-		if ($condition_type)
-			return $condition_types[$condition_type];
-		return $condition_types;
-	}
-	
-	public static function replace($data)
-	{
-		foreach ($data as &$value)
-			$value = pSQL($value);
-		
+		$db = Db::getInstance();
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			Db::getInstance()->insert('ebay_category_condition_configuration', $data, false, false, Db::REPLACE);
+			$db->insert('ebay_category_specific_value', $data, false, true, Db::INSERT_IGNORE);
 		else
-			Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'ebay_category_condition_configuration` (`'.implode('` , `', array_keys($data)).'`) VALUES (\''.implode('\', \'', $data).'\')');
+		{
+			// Check if $data is a list of row
+			$current = current($data);
+			if (!is_array($current) || isset($current['type']))
+				$data = array($data);
+			
+			$keys = array_keys($data[0]);
+			$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.'ebay_category_specific_value`
+				(`'.implode('`,`', $keys).'`) VALUES ';
+			
+			$rows = array();
+			foreach ($data as $values)
+				$rows[] = '(\''.implode('\',\'', $values).'\')';
+			$sql .= implode(' , ', $rows);
+			$db->execute($sql);
+		}
 	}
+	
 }

@@ -667,7 +667,7 @@ class Ebay extends Module
 			'alert' 						 							=> $alerts,
 			'prestashop_content' 							=> $prestashop_content,
 			'path' 							 							=> $this->_path,
-			'multishop' 											=>  Shop::isFeatureActive(),
+			'multishop' 											=> (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
 			'site_extension' 									=> $this->ebay_country->getSiteExtension(),
 			'is_version_one_dot_five' 				=> version_compare(_PS_VERSION_, '1.5', '>'),
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
@@ -998,7 +998,7 @@ class Ebay extends Module
 		}
 
 		// Display eBay Categories
-		if (!$configs['EBAY_CATEGORY_LOADED'])
+		if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED'])
 		{
 			$ebay = new EbayRequest();
 			EbayCategory::insertCategories($ebay->getCategories(), $ebay->GetSkuCompliantCategories());
@@ -1142,13 +1142,16 @@ class Ebay extends Module
 			if($data_type)
 				$data[$field_names[$data_type]] = $value;
 
-			DB::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '. $specific_id);
+			if (version_compare(_PS_VERSION_, '1.5', '>'))		
+				Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '. $specific_id);
+			else
+				Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '. $specific_id);
 		}
 		
 		// save conditions
 		foreach(Tools::getValue('condition') as $category_id => $condition)
 			foreach($condition as $type => $condition_ref)
-				DB::getInstance()->insert('ebay_category_condition_configuration', array('id_condition_ref' => $condition_ref, 'id_category_ref' => $category_id, 'condition_type' => $type), false, false, Db::REPLACE);
+				EbayCategoryConditionConfiguration::replace(array('id_condition_ref' => $condition_ref, 'id_category_ref' => $category_id, 'condition_type' => $type));
 
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 	}	
@@ -1620,7 +1623,7 @@ class Ebay extends Module
 			Db::getInstance()->insert('ebay_shipping_zone_excluded', $excluded_locations);
 		else 
 			foreach ($excluded_locations as $location)
-				EbayShippingZoneExclude::insert($location);
+				EbayShippingZoneExcluded::insert($location);
 	}
 
 	private function _getInternationalShippingLocations()

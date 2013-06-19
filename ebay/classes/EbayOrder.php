@@ -64,7 +64,7 @@ class EbayOrder
 			return;
 		
 		/** Backward compatibility */
-		require(_PS_MODULE_DIR_.$this->name.'/../backward_compatibility/backward.php');
+		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 		
 		list($this->firstname, $this->familyname) = $this->_formatShippingAddressName($order_xml->ShippingAddress->Name);
     $this->id_order_ref = (string)$order_xml->OrderID;

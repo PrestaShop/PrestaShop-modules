@@ -70,7 +70,12 @@ class EbayCategoryCondition
 		{
 			$db = Db::getInstance();
 			$db->Execute('TRUNCATE '._DB_PREFIX_.'ebay_category_condition');
-			$db->insert('ebay_category_condition', $conditions);			
+			
+			if (version_compare(_PS_VERSION_, '1.5', '>'))
+				$db->insert('ebay_category_condition', $conditions);
+			else
+				foreach ($conditions as $condition)
+					$db->autoExecute(_DB_PREFIX_.'ebay_category_condition', $condition, 'INSERT');
 		}		
 		
 	}

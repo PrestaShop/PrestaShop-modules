@@ -25,8 +25,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-if (file_exists(dirname(__FILE__).'/EbayRequest.php'))
-	require_once(dirname(__FILE__).'/EbayRequest.php');
+require_once(dirname(__FILE__).'/EbayRequest.php');
+require_once(dirname(__FILE__).'/EbayCategorySpecificValue.php');
 
 class EbayCategorySpecific
 {
@@ -99,12 +99,15 @@ class EbayCategorySpecific
 						FROM `'._DB_PREFIX_.'ebay_category_specific`
 						WHERE `id_category_ref` = '.$ebay_category_id.'
 						AND `name` = \''.pSQL((string)$recommendation->Name).'\'');
-					
+				
+				$insert_data = array();
 				foreach ($values as $value)
-					$db->insert('ebay_category_specific_value', array(
-							'id_ebay_category_specific' => $ebay_category_specific_id,
-							'value'											=> pSQL($value),
-						), false, true, Db::INSERT_IGNORE);
+					$insert_data[] = array(
+						'id_ebay_category_specific' => $ebay_category_specific_id,
+						'value'											=> pSQL($value),
+					);
+				EbayCategorySpecificValue::insertIgnore($insert_data);
+				
 			}
 			
 		}
