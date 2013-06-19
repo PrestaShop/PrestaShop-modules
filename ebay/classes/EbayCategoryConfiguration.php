@@ -76,7 +76,8 @@ class EbayCategoryConfiguration
 			DISTINCT(ec.`id_category_ref`) as id
 			FROM `'._DB_PREFIX_.'ebay_category_configuration` e
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec
-			ON e.`id_ebay_category` = ec.`id_ebay_category`';	
+			ON e.`id_ebay_category` = ec.`id_ebay_category`
+			WHERE ec.`id_category_ref` is not null';
 		$res = Db::getInstance()->executeS($sql);
 		return array_map(function($row) {return $row['id'];}, $res);
 	}
