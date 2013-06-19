@@ -61,3 +61,11 @@
 		$("#" + this.id + "Sheet").addClass("selected");
 	});
 </script>
+{if $id_tab}
+	<script>
+		$(".menuTabButton.selected").removeClass("selected");
+		$("#menuTab{$id_tab}").addClass("selected");
+		$(".tabItem.selected").removeClass("selected");
+		$("#menuTab{$id_tab}Sheet").addClass("selected");
+	</script>
+{/if}
