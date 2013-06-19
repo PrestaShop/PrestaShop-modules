@@ -4104,7 +4104,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<p id="upgradeResultCheck"></p>
 			<div id="upgradeResultToDoList"></div>
 			<div id="currentlyProcessing" style="display:none;float:left">
-			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img id="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
+			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img class="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 			<div id="infoStep" class="processing" >'.$this->l('Analyzing the situation ...').'</div>
 			</div>';
 		// this block will show errors and important warnings that happens during upgrade
@@ -4666,7 +4666,7 @@ function afterUpgradeComplete(res)
 	else
 	{
 		params = res.nextParams
-		//$("#pleaseWait").hide();
+		$("#pleaseWait").hide();
 		$("#upgradeResultCheck")
 			.addClass("fail")
 			.removeClass("ok")
@@ -4703,7 +4703,7 @@ function afterError(res)
 	params = res.nextParams;
 	if (params.next == "")
 		$(window).unbind("beforeunload");
-	//$("#pleaseWait").hide();
+	$("#pleaseWait").hide();
 
 	addQuickInfo(["unbind :) "]);
 }
@@ -4716,7 +4716,7 @@ function afterRollback(res)
 function afterRollbackComplete(res)
 {
 	params = res.nextParams
-	//$("#pleaseWait").hide();
+	$("#pleaseWait").hide();
 	$("#upgradeResultCheck")
 		.addClass("ok")
 		.removeClass("fail")
@@ -4770,7 +4770,7 @@ function doAjaxRequest(action, nextParams){
 	var _PS_MODE_DEV_;
 	if (typeof(_PS_MODE_DEV_) != "undefined" && _PS_MODE_DEV_ == "true")
 		addQuickInfo(["[DEV] ajax request : "+action]);
-	//$("#pleaseWait").show();
+	$("#pleaseWait").show();
 	req = $.ajax({
 		type:"POST",
 		url : "'. __PS_BASE_URI__.$admin_dir.'/autoupgrade/ajax-upgradetab.php'.'",
@@ -4795,7 +4795,7 @@ function doAjaxRequest(action, nextParams){
 		},
 		success : function(res, textStatus, jqXHR)
 		{
-			//$("#pleaseWait").hide();
+			$("#pleaseWait").hide();
 			try{
 				res = $.parseJSON(res);
 			}
@@ -4840,7 +4840,7 @@ function doAjaxRequest(action, nextParams){
 		},
 		error: function(jqXHR, textStatus, errorThrown)
 		{
-			//$("#pleaseWait").hide();
+			$("#pleaseWait").hide();
 			if (textStatus == "timeout")
 			{
 				if (action == "download")
