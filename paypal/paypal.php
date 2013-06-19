@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.1';
+		$this->version = '3.5.4';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -447,7 +447,8 @@ class PayPal extends PaymentModule
 				'cancel_return' => $this->context->link->getPageLink('order.php'),
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/notifier.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
-				'tracking_code' => $this->getTrackingCode()
+				'tracking_code' => $this->getTrackingCode(), 
+				'iso_code' => strtoupper($this->context->language->iso_code)
 			));
 
 			return $this->fetchTemplate('integral_evolution_payment.tpl');
@@ -473,7 +474,7 @@ class PayPal extends PaymentModule
 	{
 		// No active
 		if (!$this->active || (((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
-			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()))
+			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) || isset($this->context->cookie->express_checkout))
 			return null;
 
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
@@ -1185,7 +1186,7 @@ class PayPal extends PaymentModule
 	{
 		$paypal_country_default	= (int)Configuration::get('PAYPAL_COUNTRY_DEFAULT');
 		$this->default_country	= ($paypal_country_default ? (int)$paypal_country_default : (int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->iso_code	= $this->getCountryDependency(Country::getIsoById((int)$this->default_country));
+		$this->iso_code	= $this->getCountryDependency(strtoupper($this->context->language->iso_code));
 	}
 
 	public function formatMessage($response, &$message)
@@ -1274,6 +1275,9 @@ class PayPal extends PaymentModule
 	protected function getCurrentUrl()
 	{
 		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
-		return $protocol_link.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'];
+		$params_pos = strpos($_SERVER['REQUEST_URI'], '?');
+		$script = substr($_SERVER['REQUEST_URI'], 0, $params_pos);
+		$params = substr($_SERVER['REQUEST_URI'], $params_pos + 1);
+		return $protocol_link.Tools::getShopDomainSsl().$script.'?'.urlencode($params);
 	}
 }

@@ -41,7 +41,7 @@ class PrestaFraud extends Module
 	{
 		$this->name = 'prestafraud';
 	 	$this->tab = 'payment_security';
-		$this->version = '0.99';
+		$this->version = '1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->module_key = '755a646c90363062eacab8fa7c047605';
@@ -157,7 +157,7 @@ class PrestaFraud extends Module
 						<input id="terms_and_conditions" type="checkbox" value="1" /> '.$this->l('I agree with the terms of PrestaShop Security service and I adhere to them unconditionally.').'</label>
 					</div>
 					<div id="terms" class="margin-form">';
-					$terms = file_get_contents($this->_trustUrl.'terms.php?lang='.$this->context->language->iso_code);
+					$terms = Tools::file_get_contents($this->_trustUrl.'terms.php?lang='.$this->context->language->iso_code);
 					$this->_html .= '<div style="height:300px;border:1px solid #E0D0B1;overflow-y:scroll;padding:8px;color:black">'.Tools::nl2br(strip_tags($terms)).'</div>';
 					$this->_html .= '</div>
 					<div class="margin-form">
@@ -578,6 +578,6 @@ class PrestaFraud extends Module
 	private function _pushDatas($xml)
 	{
 		$stream_context = stream_context_create(array('http' => array('timeout' => 5)));
-		return file_get_contents($this->_trustUrl.'?xml='.urlencode(str_replace("/\r|\n/", '', $xml)), false, $stream_context);
+		return Tools::file_get_contents($this->_trustUrl.'?xml='.urlencode(str_replace("/\r|\n/", '', $xml)), false, $stream_context);
 	}
 }

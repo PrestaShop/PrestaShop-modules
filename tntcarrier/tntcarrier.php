@@ -51,7 +51,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.9.1';
+		$this->version = '1.9.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -955,7 +955,7 @@ class TntCarrier extends CarrierModule
 		);
 		
 		$output = null;
-		if (method_exists($this->context->controller, 'addJS'))
+		if (isset($this->context) && method_exists($this->context->controller, 'addJS'))
 		{
 			$this->context->controller->addJS('http://maps.google.com/maps/api/js?sensor=true');
 			$this->context->controller->addJS($this->_path.'js/relais.js');

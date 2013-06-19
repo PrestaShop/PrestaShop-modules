@@ -2,7 +2,7 @@
 <module>
 	<name>fidbag</name>
 	<displayName><![CDATA[Fid&#039;Bag]]></displayName>
-	<version><![CDATA[1.1]]></version>
+	<version><![CDATA[1.2]]></version>
 	<description><![CDATA[Propose un programme de fid&eacute;lit&eacute; &agrave; vos clients.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[pricing_promotion]]></tab>
