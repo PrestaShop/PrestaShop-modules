@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.4.3';
+		$this->version = '1.4.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -203,18 +203,16 @@ class Gamification extends Module
 					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
-				try {
-					if (isset($data->conditions))
-						$this->processImportConditions($data->conditions, $id_lang);
-	
-					if (isset($data->badges))
-						$this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
-						
-					if (isset($data->advices))
-						$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
-				} catch (Exception $e) {
-					die('tototo');
-				}
+				
+				if (isset($data->conditions))
+					$this->processImportConditions($data->conditions, $id_lang);
+
+				if (isset($data->badges))
+					$this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
+					
+				if (isset($data->advices))
+					$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
+				
 			}
 	}
 	
@@ -233,22 +231,27 @@ class Gamification extends Module
 	{
 		foreach ($conditions as $condition)
 		{
-			if (Condition::getIdByIdPs($condition->id_ps_condition))
-				continue;//only add new condition, if already exist we continue
-			
-			$cond = new Condition();
-			$cond->hydrate((array)$condition, (int)$id_lang);
-			$time = 86400;
-			if ($cond->calculation_type == 'time')
-				$time = 86400 * (int)$cond->calculation_detail;
-			
-			$cond->date_upd = date('Y-m-d H:i:s', time() - $time);
-			$cond->date_add = date('Y-m-d H:i:s');
-			$condition->calculation_detail = trim($condition->calculation_detail);
-			$cond->add(false);
-			if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
-				$this->registerHook($condition->calculation_detail);
-			unset($cond);
+			try 
+			{
+				if (Condition::getIdByIdPs($condition->id_ps_condition))
+					continue;//only add new condition, if already exist we continue
+				
+				$cond = new Condition();
+				$cond->hydrate((array)$condition, (int)$id_lang);
+				$time = 86400;
+				if ($cond->calculation_type == 'time')
+					$time = 86400 * (int)$cond->calculation_detail;
+				
+				$cond->date_upd = date('Y-m-d H:i:s', time() - $time);
+				$cond->date_add = date('Y-m-d H:i:s');
+				$condition->calculation_detail = trim($condition->calculation_detail);
+				$cond->add(false);
+				if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
+					$this->registerHook($condition->calculation_detail);
+				unset($cond);
+			} catch (Exception $e) {
+					continue;
+			}
 		}
 	}
 	
@@ -265,25 +268,30 @@ class Gamification extends Module
 
 		foreach ($badges as $badge)
 		{
-			if ($id_badge = Badge::getIdByIdPs($badge->id_ps_badge))//if badge already exist we update language data
+			try 
 			{
-				$bdg = new Badge($id_badge);
-				$bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
-				$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
-				$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
-				$bdg->update();
+				if ($id_badge = Badge::getIdByIdPs($badge->id_ps_badge))//if badge already exist we update language data
+				{
+					$bdg = new Badge($id_badge);
+					$bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
+					$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
+					$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
+					$bdg->update();
+				}
+				else
+				{
+					$badge_data = array_merge((array)$badge, $formated_badges_lang[$badge->id_ps_badge]);
+					$bdg = new Badge();
+					$bdg->hydrate($badge_data, (int)$id_lang);
+					$bdg->add();
+					
+					foreach ($badge->conditions as $cond)
+						Db::getInstance()->insert('condition_badge', array('id_condition' => $cond_ids[$cond], 'id_badge' => $bdg->id));				
+				}
+				unset($bdg);
+			} catch (Exception $e) {
+					continue;
 			}
-			else
-			{
-				$badge_data = array_merge((array)$badge, $formated_badges_lang[$badge->id_ps_badge]);
-				$bdg = new Badge();
-				$bdg->hydrate($badge_data, (int)$id_lang);
-				$bdg->add();
-				
-				foreach ($badge->conditions as $cond)
-					Db::getInstance()->insert('condition_badge', array('id_condition' => $cond_ids[$cond], 'id_badge' => $bdg->id));				
-			}
-			unset($bdg);
 		}
 	}
 	
@@ -296,27 +304,32 @@ class Gamification extends Module
 		$cond_ids = $this->getFormatedConditionsIds();
 		foreach ($advices as $advice)
 		{
-			if ($id_advice = Advice::getIdByIdPs($advice->id_ps_advice))//if advice already exist we update language data
+			try
 			{
-				$adv = new Advice($id_advice);
-				$bdg->html[$id_lang] = $formated_advices_lang[$advice->id_ps_advice]['html'][$id_lang];
-				$adv->update();
+				if ($id_advice = Advice::getIdByIdPs($advice->id_ps_advice))//if advice already exist we update language data
+				{
+					$adv = new Advice($id_advice);
+					$bdg->html[$id_lang] = $formated_advices_lang[$advice->id_ps_advice]['html'][$id_lang];
+					$adv->update();
+				}
+				else
+				{
+					$advice_data = array_merge((array)$advice, $formated_advices_lang[$advice->id_ps_advice]);
+					$adv = new Advice();
+					$adv->hydrate($advice_data, (int)$id_lang);
+					$adv->id_tab = (int)Tab::getIdFromClassName($advice->tab);
+	
+					$adv->add();
+					foreach ($advice->display_conditions as $cond)
+						Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 1));
+						
+					foreach ($advice->hide_conditions as $cond)
+						Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 0));				
+				}
+				unset($adv);
+			} catch (Exception $e) {
+					continue;
 			}
-			else
-			{
-				$advice_data = array_merge((array)$advice, $formated_advices_lang[$advice->id_ps_advice]);
-				$adv = new Advice();
-				$adv->hydrate($advice_data, (int)$id_lang);
-				$adv->id_tab = (int)Tab::getIdFromClassName($advice->tab);
-
-				$adv->add();
-				foreach ($advice->display_conditions as $cond)
-					Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 1));
-					
-				foreach ($advice->hide_conditions as $cond)
-					Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 0));				
-			}
-			unset($adv);
 		}
 	}
 	
