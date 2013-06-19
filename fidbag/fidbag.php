@@ -42,7 +42,7 @@ class Fidbag extends Module
 	{
 		$this->name = 'fidbag';
 		$this->tab = 'pricing_promotion';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -76,7 +76,7 @@ class Fidbag extends Module
 		foreach ($sql as $s)
 			if (!Db::getInstance()->Execute($s))
 				return false;
-		if (!parent::install() || !$this->registerHook('paymentTop') || !$this->registerHook('newOrder') || !$this->registerHook('orderDetailDisplayed'))
+		if (!parent::install() || !$this->registerHook('paymentTop') || !$this->registerHook('newOrder') || !$this->registerHook('orderDetailDisplayed') || !$this->registerHook('extraRight'))
 			return false;
 
 		Configuration::updateValue('FIDBAG_MERCHANT_CERTIFICAT', '120890882');
@@ -297,7 +297,7 @@ class Fidbag extends Module
 			
 			$webService = new FidbagWebService();
 			$total_cart = $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING);
-			
+
 			if (isset($discount_value) && ((int)$discount_value > 0))
 			{
 				$return = $webService->action('ConsumeImmediateRebate', array(
@@ -350,6 +350,39 @@ class Fidbag extends Module
 			$smarty->assign('fidbag', $json_return);
 		}
 		return $this->display( __FILE__, 'views/templates/hook/order.tpl' );
+	}
+
+	public function hookExtraRight($params)
+	{
+		$product = new Product((int)Tools::getValue('id_product'));
+
+		if ($product->getPrice() <= 0)
+			return false;
+
+		$points = (int)round(10 * $product->getPrice());
+		$pointsBefore = 0;
+		$cart = null;
+
+		if (isset($params['cart']))
+		{
+			$cart = new Cart((int)$params['cart']->id);
+			$pointsBefore = (int)round(10 * $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING));
+		}
+
+		$pointsAfter = $pointsBefore + $points;
+
+		if (_PS_VERSION_ < '1.5')
+			$this->smarty->assign('base_dir', Tools::getProtocol().Tools::getHttpHost().__PS_BASE_URI__);
+
+		$this->smarty->assign(
+			array(
+				'points' => (int)$points,
+				'total_points' => (int)$pointsAfter,
+				'points_in_cart' => (int)$pointsBefore
+			)
+		);
+
+		return $this->display(__FILE__, 'views/templates/hook/product.tpl');
 	}
 	
 	protected function getMainUrl()

@@ -94,6 +94,7 @@ function setCustomerAddress($ppec, $customer)
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
+	$address->id_state = (int)State::getIdByIso($ppec->result['SHIPTOSTATE'], $address->id_country);
 	$address->postcode = $ppec->result['SHIPTOZIP'];
 	$address->id_customer = $customer->id;
 	return $address;
@@ -105,7 +106,6 @@ if ($request_type && $ppec->type)
 	$product_quantity = (int)Tools::getValue('quantity');
 	$id_product_attribute = Tools::getValue('id_p_attr');
 
-	//d(var_dump($id_product, $product_quantity, $id_product_attribute));
 	if (($id_product > 0) && $id_product_attribute !== false && ($product_quantity > 0))
 	{
 		setContextData($ppec);
