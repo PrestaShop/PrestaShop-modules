@@ -30,6 +30,8 @@ if (!defined('_PS_VERSION_'))
 
 function upgrade_module_2_8_0($object, $install = false)
     {
+    // update value so url mobile
+    Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws.colissimo.fr/');
     // add column cecountry in table socolissimo_delivery_info, checking exitence first (2.8 update)
     $query = ' SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 						WHERE COLUMN_NAME= "cecountry"
