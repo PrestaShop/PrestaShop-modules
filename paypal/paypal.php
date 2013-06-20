@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.4';
+		$this->version = '3.5.5';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -1275,9 +1275,14 @@ class PayPal extends PaymentModule
 	protected function getCurrentUrl()
 	{
 		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
-		$params_pos = strpos($_SERVER['REQUEST_URI'], '?');
-		$script = substr($_SERVER['REQUEST_URI'], 0, $params_pos);
-		$params = substr($_SERVER['REQUEST_URI'], $params_pos + 1);
-		return $protocol_link.Tools::getShopDomainSsl().$script.'?'.urlencode($params);
+		$request = $_SERVER['REQUEST_URI'];
+		$pos = strpos($request, '?');
+		
+		if (($pos !== false) && ($pos >= 0))
+			$request = substr($request, 0, $pos);
+
+		$params = urlencode($_SERVER['QUERY_STRING']);
+
+		return $protocol_link.Tools::getShopDomainSsl().$request.'?'.$params;
 	}
 }
