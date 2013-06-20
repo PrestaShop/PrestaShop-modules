@@ -149,6 +149,7 @@ class GatewayProduct extends Gateway
 				p.`id_category_default` as id_category,
 				cl.`name` as category_name,
 				p.`ean13`,
+				pl.`meta_keywords`,
 				pa.`ean13` as ean13_declinaison,
 				pa.`id_product_attribute` as id_product_attribute,
 				p.`quantity`,
@@ -215,6 +216,7 @@ class GatewayProduct extends Gateway
 			p.`quantity`,
 			pa.`quantity` as pa_quantity,
 			p.`wholesale_price`,
+			pl.`meta_keywords`,
 			m.`name` as name_manufacturer,
 			p.`reference` as product_reference,
 			pa.`reference` as product_attribute_reference,
@@ -329,6 +331,12 @@ class GatewayProduct extends Gateway
 				'Comment' => $this->getValue('comment'),
 				'Brand' => !empty($product['name_manufacturer']) ? $product['name_manufacturer'] : $this->getValue('default_brand')
 			);
+
+
+            if(!empty($product['meta_keywords'])){
+                $t_retour[$indice]["Keywords"] = $product['meta_keywords'];
+            }
+
 			
 			if ($shipping_price_local == '-')
 				unset($products_temp[$indice]['shipping_price_local']);
