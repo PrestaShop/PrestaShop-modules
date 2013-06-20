@@ -333,12 +333,24 @@ class GatewayProduct extends Gateway
 			);
 
 
-            if(!empty($product['meta_keywords'])){
-                $t_retour[$indice]["Keywords"] = $product['meta_keywords'];
+            $id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
+            $sql = '
+				SELECT t.name
+				FROM
+				'._DB_PREFIX_.'product_tag pt
+				INNER JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.intval($id_lang).')
+				WHERE pt.id_product = '.intval($product['id_product']).'
+			';
+
+            $t_tags_bdd = Db::getInstance()->getRow($sql);
+
+            if(!empty($t_tags_bdd['name'])){
+                $products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
             }
 
-			
-			if ($shipping_price_local == '-')
+
+
+            if ($shipping_price_local == '-')
 				unset($products_temp[$indice]['shipping_price_local']);
 			
 			if (empty($products_temp[$indice]['shipping_price_international']))
