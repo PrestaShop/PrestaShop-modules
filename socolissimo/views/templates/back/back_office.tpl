@@ -81,7 +81,7 @@
         <label>{l s='Additional cost' mod='socolissimo'} : </label>
         <div class="margin-form">
             <input size="11" type="text" size="5" name="overcost" onkeyup="this.value = this.value.replace(/,/g, '.');"
-                   value="{if isset($supcostbelg)}{$supcostbelg}{else}0{/if}" />
+                   value="{if isset($overcost)}{$overcost}{else}0{/if}" />
             <p>{l s='Additional cost of delivery with appointment.' mod='socolissimo'} <br><span style="color:red">
                     {l s='Additional cost must match that of Coliposte back office.' mod='socolissimo'}</span></p>
         </div>
