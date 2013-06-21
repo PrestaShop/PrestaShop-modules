@@ -30,17 +30,27 @@ class EbayProductConfiguration
 	
 	public static function getByProductIds($product_ids)
 	{
-		return Db::getInstance()->executeS('SELECT `blacklisted`, `extra_images`
+		$res = Db::getInstance()->executeS('SELECT `id_product`, `blacklisted`, `extra_images`
 			FROM `'._DB_PREFIX_.'ebay_product_configuration`
 			WHERE `id_product` IN ('.implode(',', $product_ids).')');
+		$ret = array();
+		foreach ($res as $row)
+			$ret[$row['id_product']] = $row;
+		
+		return $ret;
 	}
-
+	
 	public static function getBlacklistedProductIds()
 	{
-		$res = Db::getInstance()->executeS('SELECT `id_product` 
-			FROM `'._DB_PREFIX_.'ebay_product_configuration`
-			WHERE `blacklisted` = 1');
+		$res = Db::getInstance()->executeS(EbayProductConfiguration::getBlacklistedProductIdsQuery());
 		return array_map(function($row) {return $row['id_product'];}, $res);
+	}
+
+	public static function getBlacklistedProductIdsQuery()
+	{
+		return 'SELECT `id_product` 
+			FROM `'._DB_PREFIX_.'ebay_product_configuration`
+			WHERE `blacklisted` = 1';
 	}
 
 	public static function insertOrUpdate($product_id, $data)

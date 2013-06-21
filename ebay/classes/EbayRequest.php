@@ -160,8 +160,13 @@ class EbayRequest
 		}
 		return $categories;
 	}
-
-	public function GetSkuCompliantCategories() 
+	
+	/*
+	 * Returns what categories accept multi_sku
+	 * Warning: no row is returned if the value is inherited from the parent category
+	 *
+	 */
+	public function getCategoriesSkuCompliancy() 
 	{
 		$response = $this->_makeRequest('GetCategoryFeatures', array(
 			'feature_id' 		 => 'VariationsEnabled',
@@ -170,11 +175,9 @@ class EbayRequest
 		if ($response === false)
 			return false;
 
-		$categories = array();
 		foreach ($response->Category as $cat)
-			if ($cat->VariationsEnabled)
-				$categories[] = (string)$cat->CategoryID;
-		return $categories;
+				$compliancies[(string)$cat->CategoryID] = ((string)$cat->VariationsEnabled === 'true' ? 1 : 0);
+		return $compliancies;
 	}
 	
 	public function GetCategoryFeatures($category_id)
@@ -475,8 +478,7 @@ class EbayRequest
 			'pictures' 									 => isset($data['pictures']) ? $data['pictures'] : array(),
 			'value'											 => htmlentities($data['brand']),
 			'return_policy' 						 => $this->_getReturnPolicy(),
-			'variations' 								 => $data['variations'],
-			//'variations_list' 					 => $data['variationsList'],
+//			'variations' 								 => $data['variations'],
 			'resynchronize' 						 => Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
 			'title' 										 => substr($data['name'], 0, 80),
 			'description' 							 => $data['description'],
@@ -584,7 +586,6 @@ class EbayRequest
 
 		$vars = array(
 			'variations'							=> isset($data['variations']) ? $data['variations'] : array(),
-			//'variations_list' 				=> isset($data['variationsList']) ? $data['variationsList'] : array(),
 			'variations_pictures' 		=> $variation_pictures,
 			'price_update'						=> !isset($data['noPriceUpdate']),
 			'variation_specifics_set' => $variation_specifics_set,
