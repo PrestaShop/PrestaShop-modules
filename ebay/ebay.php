@@ -576,7 +576,7 @@ class Ebay extends Module
 		if (!isset($params['product']->id))
 			return false;
 
-		EbaySynchronizer::endProductOnEbay(new EbayRequest(), $params['product']);
+		EbaySynchronizer::endProductOnEbay(new EbayRequest(), null, $params['product']->id);
 	}
 		
 	public function hookBackOfficeTop($params)
@@ -1001,7 +1001,7 @@ class Ebay extends Module
 		if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED'])
 		{
 			$ebay = new EbayRequest();
-			EbayCategory::insertCategories($ebay->getCategories(), $ebay->GetSkuCompliantCategories());
+			EbayCategory::insertCategories($ebay->getCategories(), $ebay->getCategoriesSkuCompliancy());
 			$this->setConfiguration('EBAY_CATEGORY_LOADED', 1);
 			$this->setConfiguration('EBAY_CATEGORY_LOADED_DATE', date('Y-m-d H:i:s'));
 		}
@@ -1388,13 +1388,14 @@ class Ebay extends Module
 							WHERE  `id_ebay_category` > 0
 						)
 						'.$this->addSqlRestrictionOnLang('s').'
+						AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')
 						GROUP BY p.id_product
 				)TableReponse');
 			$nb_products_mode_b = Db::getInstance()->getValue('
 				SELECT COUNT( * ) FROM (
 					SELECT COUNT( p.id_product ) AS nb
 						FROM  `'._DB_PREFIX_.'product` AS p
-						INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s ON p.id_product = s.id_product
+						INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s ON p.id_product = s.id_product						
 						WHERE s.`quantity` > 0
 						AND  `active` = 1
 						AND  `id_category_default`
@@ -1403,6 +1404,7 @@ class Ebay extends Module
 							FROM  `'._DB_PREFIX_.'ebay_category_configuration` 
 							WHERE  `id_ebay_category` > 0 AND `sync` = 1
 						)'.$this->addSqlRestrictionOnLang('s').'
+						AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')
 						GROUP BY p.id_product
 				)TableReponse');
 		}
@@ -1415,7 +1417,8 @@ class Ebay extends Module
 				AND `id_category_default` IN (
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
-					WHERE `id_ebay_category` > 0)');
+					WHERE `id_ebay_category` > 0)
+				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 					
 			$nb_products_mode_b = Db::getInstance()->getValue('
 				SELECT COUNT(`id_product`) as nb
@@ -1425,11 +1428,12 @@ class Ebay extends Module
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 					WHERE `id_ebay_category` > 0 
-					AND `sync` = 1)');
+					AND `sync` = 1)
+				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 		}
 		
 		if (Configuration::get('EBAY_SYNC_MODE') == 'B')
-				$nb_products = $nb_products_mode_b;
+			$nb_products = $nb_products_mode_b;
 		else
 			$nb_products = $nb_products_mode_a;
 
@@ -1546,9 +1550,9 @@ class Ebay extends Module
 			echo 'OK|'.$this->displayConfirmation($this->l('Settings updated').' ('.$this->l('Option').' '.Configuration::get('EBAY_SYNC_MODE').' : '.($nb_products - $nb_products_less).' / '.$nb_products.' '.$this->l('product(s) sync with eBay').')');
 			if (file_exists(dirname(__FILE__).'/log/syncError.php'))
 			{
-				global $tab_error;
+				global $all_error;
 				include(dirname(__FILE__).'/log/syncError.php');
-				foreach ($tab_error as $error)
+				foreach ($all_error as $error)
 				{
 					$products_details = '<br /><u>'.$this->l('Product(s) concerned').' :</u>';
 					foreach ($error['products'] as $product)

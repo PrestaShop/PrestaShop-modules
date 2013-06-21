@@ -35,7 +35,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category` (
 		  `id_category_ref_parent` int(16) NOT NULL,
 		  `id_country` int(16) NOT NULL,
 		  `level` tinyint(1) NOT NULL,
-		  `is_multi_sku` tinyint(1) NOT NULL,
+		  `is_multi_sku` tinyint(1),
 		  `name` varchar(255) NOT NULL,
 		  UNIQUE(`id_category_ref`),
 		  PRIMARY KEY  (`id_ebay_category`)

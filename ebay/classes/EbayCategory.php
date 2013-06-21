@@ -27,22 +27,68 @@
 
 class EbayCategory
 {
-	// the eBay category id
-	private $category_id;
-	private $is_multi_sku = null;
+	private $id_category; // PrestaShop category id
+	private $id_category_ref; // eBay Category id
+	private $is_multi_sku;
+	
+	private $percent;
+	
+	private $items_specific_values;
+	private $conditions_values;
 
-	public function __construct($category_id)
+	public function __construct($id_category_ref, $id_category = null)
 	{
-		$this->category_id = (int)$category_id;
+		if ($id_category_ref)
+			$this->id_category_ref = (int)$id_category_ref;
+		if ($id_category)
+			$this->id_category = (int)$id_category;
 	}
 	
+	private function _loadFromDb()
+	{
+		$sql = 'SELECT ecc.`id_category`, ec.`id_category_ref`, ec.`is_multi_sku`, ecc.`percent` FROM `'._DB_PREFIX_.'ebay_category` ec 
+			LEFT JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc 
+			ON (ecc.`id_ebay_category` = ec.`id_ebay_category`)			
+			WHERE ';
+		if ($this->id_category_ref)
+			$sql .= 'ec.`id_category_ref` = '.$this->id_category_ref;
+		else
+			$sql .= 'ecc.`id_category` = '.$this->id_category;
+		$res = Db::getInstance()->getRow($sql);
+		foreach ($res as $attribute => $value)
+			$this->$attribute = $value;
+	}
+	
+	public function getIdCategoryRef()
+	{
+		if ($this->id_category_ref === null)
+			$this->_loadFromDb();
+		
+		return $this->id_category_ref;
+	}
+
 	public function isMultiSku()
 	{
 		if ($this->is_multi_sku === null)
-			$this->is_multi_sku = Db::getInstance()->getValue('SELECT is_multi_sku
-				FROM '._DB_PREFIX_.'ebay_category
-				WHERE `id_category_ref` = '.$this->category_id);
+			$this->_loadFromDb();
+		
+		if ($this->is_multi_sku === null)
+			$this->is_multi_sku = EbayCategory::_getInheritedIsMultiSku($this->id_category_ref);
+		
 		return $this->is_multi_sku;
+	}
+	
+	public function getPercent()
+	{
+		if ($this->percent === null)
+			$this->_loadFromDb();
+		
+		return $this->percent;
+	}
+	
+	public function cleanPercent()
+	{
+		$this->percent = preg_replace('#%$#is', '', $this->percent);
 	}
 	
 	/**
@@ -54,7 +100,7 @@ class EbayCategory
 	{
 		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value, e.`can_variation`
 			FROM `'._DB_PREFIX_.'ebay_category_specific` e
-			WHERE e.`id_category_ref` = '.$this->category_id;		
+			WHERE e.`id_category_ref` = '.$this->id_category_ref;		
 		return DB::getInstance()->executeS($sql);
 	}
 	
@@ -65,12 +111,20 @@ class EbayCategory
 	 */
 	public function getItemsSpecificValues()
 	{
-		$sql = 'SELECT e.`name`, e.`can_variation`, e.`id_attribute_group`, e.`id_feature`, ec.`value` AS specific_value
-			FROM `'._DB_PREFIX_.'ebay_category_specific` e
-			LEFT JOIN `'._DB_PREFIX_.'ebay_category_specific_value` ec
-			ON e.`id_ebay_category_specific_value` = ec.`id_ebay_category_specific_value`		
-			WHERE e.`id_category_ref` = '.$this->category_id;		
-		return DB::getInstance()->executeS($sql);		
+		if (!$this->items_specific_values)
+		{
+			if (!$this->id_category_ref)
+				$this->_loadFromDb();
+			
+			$sql = 'SELECT e.`name`, e.`can_variation`, e.`id_attribute_group`, e.`id_feature`, ec.`value` AS specific_value
+				FROM `'._DB_PREFIX_.'ebay_category_specific` e
+				LEFT JOIN `'._DB_PREFIX_.'ebay_category_specific_value` ec
+				ON e.`id_ebay_category_specific_value` = ec.`id_ebay_category_specific_value`
+				WHERE e.`id_category_ref` = '.$this->id_category_ref;
+			$this->items_specific_values = Db::getInstance()->executeS($sql);
+		}
+
+		return $this->items_specific_values;
 	}	
 
 	/**
@@ -85,7 +139,7 @@ class EbayCategory
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category_condition_configuration` ec
 			ON e.`id_category_ref` = ec.`id_category_ref`
 			AND e.`id_condition_ref` = ec.`id_condition_ref`
-			WHERE e.`id_category_ref` = '.$this->category_id;
+			WHERE e.`id_category_ref` = '.$this->id_category_ref;
 		$res = Db::getInstance()->executeS($sql);
 		
 		$ret = array();
@@ -112,21 +166,26 @@ class EbayCategory
 	 */
 	public function getConditionsValues()
 	{
-		$sql = 'SELECT e.condition_type, e.id_condition_ref as condition_id
-			FROM '._DB_PREFIX_.'ebay_category_condition_configuration e
-			WHERE e.id_category_ref = '.$this->category_id;
-		$res = Db::getInstance()->executeS($sql);
+		if (!$this->conditions_values)
+		{
+			$sql = 'SELECT e.condition_type, e.id_condition_ref as condition_id
+				FROM '._DB_PREFIX_.'ebay_category_condition_configuration e
+				WHERE e.id_category_ref = '.$this->id_category_ref;
+			$res = Db::getInstance()->executeS($sql);
 		
-		$ret = array(
-			'new' 				=> null,
-			'used' 				=> null,
-			'refurbished' => null
-		);
+			$ret = array(
+				'new' 				=> null,
+				'used' 				=> null,
+				'refurbished' => null
+			);
 		
-		foreach($res as $row)
-			$ret[EbayCategoryConditionConfiguration::getPSConditions($row['condition_type'])] = $row['condition_id'];
+			foreach($res as $row)
+				$ret[EbayCategoryConditionConfiguration::getPSConditions($row['condition_type'])] = $row['condition_id'];
 		
-		return $ret;
+			$this->conditions_values = $ret;			
+		}
+		
+		return $this->conditions_values;
 	}	
 	
 	public static function getEbayCategoryByCategoryId($id_category)
@@ -138,7 +197,7 @@ class EbayCategory
 			WHERE ecc.`id_category` = '.(int)$id_category);
 	}
 
-	public static function insertCategories($categories, $multi_sku_compliant_categories)
+	public static function insertCategories($categories, $categories_multi_sku)
 	{
 		$db = Db::getInstance();
 		foreach ($categories as $category)
@@ -147,9 +206,29 @@ class EbayCategory
 				'id_category_ref_parent' => pSQL($category['CategoryParentID']), 
 				'id_country' 						 => '8', 
 				'level' 								 => pSQL($category['CategoryLevel']), 
-				'is_multi_sku' 					 => in_array($category['CategoryID'], $multi_sku_compliant_categories) ? 1 : 0, 
+				'is_multi_sku' 					 => isset($categories_multi_sku[$category['CategoryID']]) ? $categories_multi_sku[$category['CategoryID']] : null, 
 				'name' 									 => pSQL($category['CategoryName'])
-			), 'INSERT');
+			), 'INSERT', '', 0, true, true);
 	}
+	
+	/*
+	 * Climbs up the categories hierarchy until finding the value inherited for is_multi_sku
+	 *
+	 */
+	
+	private static function _getInheritedIsMultiSku($id_category_ref) 
+	{
+		$row = Db::getInstance()->getRow('SELECT `id_category_ref_parent`, `is_multi_sku` 
+			FROM `'._DB_PREFIX_.'ebay_category` 
+			WHERE `id_category_ref` = '.(int)$id_category_ref);
+
+		if ($row['is_multi_sku'] !== null)
+			return $row['is_multi_sku'];
+		
+		if ($row['id_category_ref_parent'] != $id_category_ref)
+			return EBayCategory::_findIfCategoryParentIsMultiSku($row['id_category_ref_parent']);
+		
+		return $row['is_multi_sku']; // RArbuz: shall we not return the category default in this case?
+	}	
 	
 }
