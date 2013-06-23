@@ -39,6 +39,7 @@ class EbaySynchronizerTest extends PHPUnit_Framework_TestCase
 		$this->ebay_synchronizer = new EbaySynchronizer();
   }
 	
+	/*
 	public function testSyncProducts()
 	{
 		$this->ebay_synchronizer->syncProducts(array(
@@ -46,6 +47,13 @@ class EbaySynchronizerTest extends PHPUnit_Framework_TestCase
 				'id_product' => 7
 			)
 		));
+	}
+	*/
+	
+	public function testGetVariationSpecifics()
+	{
+		$res = EbaySynchronizer::_getVariationSpecifics(5, 20, Configuration::get('PS_LANG_DEFAULT'));
+		print_r($res);
 	}
 	
 }

@@ -68,7 +68,8 @@
 	var l = {
 		'Attributes'				 : "{l s="Attributes" mod='ebay'}",
 		'Features'  				 : "{l s="Features" mod='ebay'}",
-		'eBay Specifications': "{l s="eBay Specifications" mod='ebay'}"
+		'eBay Specifications': "{l s="eBay Specifications" mod='ebay'}",
+		'Brand'							 : "{l s="Brand" mod='ebay'}"
 	};
 
 	var categories_to_load = new Array();

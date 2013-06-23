@@ -79,6 +79,7 @@ function insertCategoryRow(category_id, data)
       }
       
       tds += '<option disabled="disabled">' + l['Features'] + '</option>';
+      tds += '<option value="brand-1" ' + (specific.is_brand == 1 ? 'selected' : '') + '>' + l['Brand'] + '</option>';
       tds += writeOptions('feat', possible_features, specific.id_feature);
 		}
 

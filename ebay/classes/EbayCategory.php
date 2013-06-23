@@ -98,7 +98,7 @@ class EbayCategory
 	 */
 	public function getItemsSpecifics()
 	{
-		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value, e.`can_variation`
+		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value, e.`is_brand`, e.`can_variation`
 			FROM `'._DB_PREFIX_.'ebay_category_specific` e
 			WHERE e.`id_category_ref` = '.$this->id_category_ref;		
 		return DB::getInstance()->executeS($sql);
@@ -116,7 +116,7 @@ class EbayCategory
 			if (!$this->id_category_ref)
 				$this->_loadFromDb();
 			
-			$sql = 'SELECT e.`name`, e.`can_variation`, e.`id_attribute_group`, e.`id_feature`, ec.`value` AS specific_value
+			$sql = 'SELECT e.`name`, e.`can_variation`, e.`id_attribute_group`, e.`id_feature`, ec.`value` AS specific_value, e.`is_brand`
 				FROM `'._DB_PREFIX_.'ebay_category_specific` e
 				LEFT JOIN `'._DB_PREFIX_.'ebay_category_specific_value` ec
 				ON e.`id_ebay_category_specific_value` = ec.`id_ebay_category_specific_value`

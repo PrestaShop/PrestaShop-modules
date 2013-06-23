@@ -1138,7 +1138,7 @@ class Ebay extends Module
 				$data_type = null;
 			
 			$field_names = EbayCategorySpecific::getPrefixToFieldNames();
-			$data = array_combine(array_values($field_names), array(null, null, null));
+			$data = array_combine(array_values($field_names), array(null, null, null, null));
 			if($data_type)
 				$data[$field_names[$data_type]] = $value;
 
