@@ -345,7 +345,6 @@ class EbayRequest
 			'pay_pal_email_address' 		 => Configuration::get('EBAY_PAYPAL_EMAIL'),
 			'postal_code' 							 => Configuration::get('EBAY_SHOP_POSTALCODE'),
 			'quantity'									 => $data['quantity'],
-			//'value'						  				 => $data['brand'],
 			'item_specifics'						 => $data['item_specifics'],
 			'attributes'								 => isset($data['attributes']) ? $data['attributes'] : array(),
 			'return_policy' 						 => $this->_getReturnPolicy(),
@@ -580,7 +579,8 @@ class EbayRequest
 					}
 				
 				foreach ($variation['variation_specifics'] as $name => $value)
-					$variation_specifics_set[$name][] = $value;
+					if (!in_array($value, $variation_specifics_set[$name]))
+						$variation_specifics_set[$name][] = $value;
 			}
 		}
 
