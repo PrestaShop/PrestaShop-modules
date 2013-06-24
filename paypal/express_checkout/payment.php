@@ -106,7 +106,6 @@ if ($request_type && $ppec->type)
 	$product_quantity = (int)Tools::getValue('quantity');
 	$id_product_attribute = Tools::getValue('id_p_attr');
 
-	//d(var_dump($id_product, $product_quantity, $id_product_attribute));
 	if (($id_product > 0) && $id_product_attribute !== false && ($product_quantity > 0))
 	{
 		setContextData($ppec);
