@@ -42,7 +42,7 @@ if (!isset($_POST['dir']))
 	die('no directory');
 	
 if (realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir'] !== realpath(realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']))
-	die('wrong directory :'.(isset($_POST['dir']) ? $_POST['dir'] : ''));
+	die('wrong directory :'.(isset($_POST['dir']) ? Tools::safeOutput(Tools::getValue('dir')) : ''));
 
 define('_PS_ADMIN_DIR_', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']);
 
