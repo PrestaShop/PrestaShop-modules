@@ -78,50 +78,6 @@
 		</div>
 	</fieldset>
 	
-	<fieldset style="margin-top:10px;">
-		<legend>{l s='Item Conditions' mod='ebay'}</legend>
-		<p>{l s='Please align your item condition settings on PrestaShop and eBay' mod='ebay'}</p>
-		<table class="table">
-			<tr>
-				<th>{l s='PrestaShop item condition' mod='ebay'}</th>
-				<th>{l s='Ebay item condition' mod='ebay'}</th>
-			</tr>
-			<tr>
-				<td>{l s='New' mod='ebay'}</td>
-				<td>
-					<select name="newConditionID" id="">
-					{foreach from=$ebayItemConditions item=itemCondition key=key}
-						<option value="{$key}" {if $key == $ebayConditionNew} selected="selected"{/if}>{$itemCondition}</option>
-					{/foreach}
-					</select>
-				</td>					
-			</tr>
-			<tr>
-				<td>{l s='Used' mod='ebay'}</td>
-				<td>
-					<select name="usedConditionID" id="">
-					{foreach from=$ebayItemConditions item=itemCondition key=key}
-						<option value="{$key}" {if $key == $ebayConditionUsed} selected="selected"{/if}>{$itemCondition}</option>
-					{/foreach}
-					</select>
-				</td>					
-			</tr>
-			<tr>
-				<td>{l s='Refurbished' mod='ebay'}</td>
-				<td>
-					<select name="refurbishedConditionID" id="">
-					{foreach from=$ebayItemConditions item=itemCondition key=key}
-						<option value="{$key}" {if $key == $ebayConditionRefurbished} selected="selected"{/if}>{$itemCondition}</option>
-					{/foreach}
-					</select>
-				</td>
-			</tr>
-		</table>
-
-		<p><a href="{l s='http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}">{l s='Learn more about eBay item condition: http://pages.ebay.com/help/sell/item-condition.html' mod='ebay'}</a></p>
-	</fieldset>
-
-
    <fieldset style="margin-top:10px;">
 		<legend>{l s='Return policy' mod='ebay'}</legend>
 		<label>{l s='Please define your returns policy' mod='ebay'} : </label>

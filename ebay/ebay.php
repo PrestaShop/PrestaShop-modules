@@ -280,9 +280,6 @@ class Ebay extends Module
 		Configuration::deleteByName('EBAY_LISTING_DURATION');
 		Configuration::deleteByName('EBAY_AUTOMATICALLY_RELIST');
 		Configuration::deleteByName('EBAY_LAST_RELIST');
-		Configuration::deleteByName('EBAY_CONDITION_NEW');
-		Configuration::deleteByName('EBAY_CONDITION_USED');
-		Configuration::deleteByName('EBAY_CONDITION_REFURBISHED');
 		Configuration::deleteByName('EBAY_SYNC_OPTION_RESYNC');
 		Configuration::deleteByName('EBAY_SYNC_LAST_PRODUCT');
 		Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
@@ -314,9 +311,6 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
 		$this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
 		$this->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
-		$this->setConfiguration('EBAY_CONDITION_NEW', 1000);
-		$this->setConfiguration('EBAY_CONDITION_USED', 3000);
-		$this->setConfiguration('EBAY_CONDITION_REFURBISHED', 2500);
 		$this->setConfiguration('EBAY_RETURNS_DESCRIPTION', '');
 		$this->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', 'ReturnsAccepted');
 	}
@@ -871,9 +865,6 @@ class Ebay extends Module
 				'listingDurations'         => $this->_getListingDurations(),
 				'ebayShop'                 => Configuration::get('EBAY_SHOP'),
 				'ebay_paypal_email'        => Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))),
-				'ebayConditionNew'         => Configuration::get('EBAY_CONDITION_NEW'),
-				'ebayConditionUsed'        => Configuration::get('EBAY_CONDITION_USED'),
-				'ebayConditionRefurbished' => Configuration::get('EBAY_CONDITION_REFURBISHED'),
 				'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
 				'ebayListingDuration'      => Configuration::get('EBAY_LISTING_DURATION'),
 				'automaticallyRelist'      => Configuration::get('EBAY_AUTOMATICALLY_RELIST')
@@ -943,10 +934,7 @@ class Ebay extends Module
 			$this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop'))) &&
 			$this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode'))) &&
 			$this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations')) &&
-			$this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist')) &&
-			$this->setConfiguration('EBAY_CONDITION_NEW', Tools::getValue('newConditionID')) &&
-			$this->setConfiguration('EBAY_CONDITION_USED', Tools::getValue('usedConditionID')) &&
-			$this->setConfiguration('EBAY_CONDITION_REFURBISHED', Tools::getValue('refurbishedConditionID')))
+			$this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist')))
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
