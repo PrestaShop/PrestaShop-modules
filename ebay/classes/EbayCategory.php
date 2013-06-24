@@ -73,7 +73,7 @@ class EbayCategory
 			$this->_loadFromDb();
 		
 		if ($this->is_multi_sku === null)
-			$this->is_multi_sku = EbayCategory::_getInheritedIsMultiSku($this->id_category_ref);
+			$this->is_multi_sku = EbayCategory::getInheritedIsMultiSku($this->id_category_ref);
 		
 		return $this->is_multi_sku;
 	}
@@ -216,7 +216,7 @@ class EbayCategory
 	 *
 	 */
 	
-	private static function _getInheritedIsMultiSku($id_category_ref) 
+	public static function getInheritedIsMultiSku($id_category_ref) 
 	{
 		$row = Db::getInstance()->getRow('SELECT `id_category_ref_parent`, `is_multi_sku` 
 			FROM `'._DB_PREFIX_.'ebay_category` 
@@ -226,7 +226,7 @@ class EbayCategory
 			return $row['is_multi_sku'];
 		
 		if ($row['id_category_ref_parent'] != $id_category_ref)
-			return EBayCategory::_getInheritedIsMultiSku($row['id_category_ref_parent']);
+			return EbayCategory::getInheritedIsMultiSku($row['id_category_ref_parent']);
 		
 		return $row['is_multi_sku']; // RArbuz: shall we not return the category default in this case?
 	}	
