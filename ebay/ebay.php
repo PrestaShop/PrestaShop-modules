@@ -470,8 +470,24 @@ class Ebay extends Module
 					if (method_exists($customer_clear, 'clearCache'))
 						$customer_clear->clearCache(true);
 					
+					// if the carrier is disabled, we enable it for the order validation and then disable it again
+					$carrier = new Carrier((int)order->id_carrier);
+					if (!$carrier->active)
+					{
+						$carrier->active = true;
+						$carrier->save();
+						$has_disabled_carrier = true;
+					}
+					
 					// Validate order
 					$id_order = $order->validate();
+					
+					// we now disable the carrier if required
+					if (isset($has_disabled_carrier) && $has_disabled_carrier)
+					{
+						$carrier->active = false;
+						$carrier->save();
+					}
 
 					// Fix on sending e-mail
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order->getEmail())), 'UPDATE', '`id_customer` = '.(int)$id_customer);
