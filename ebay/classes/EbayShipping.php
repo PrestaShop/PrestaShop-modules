@@ -53,7 +53,7 @@ class EbayShipping
 			VALUES(\'\', 
 		\''.pSQL($ebay_carrier).'\',
 		\''.(int)$ps_carrier.'\', 
-		\''.(int)$extra_fee.'\', 
+		\''.(float)$extra_fee.'\', 
 		\''.(int)$international.'\')';
 		DB::getInstance()->Execute($sql);		
 	}
