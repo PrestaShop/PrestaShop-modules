@@ -63,7 +63,7 @@ if (Tools::isSubmit('first_call'))
 		<form id="socoForm" name="form" action="<?php echo Configuration::get('SOCOLISSIMO_URL'); ?>" method="POST">
 			<?php
 				foreach($inputs as $key => $val)
-					echo '<input type="hidden" name="'.$key.'" value="'.$val.'"/>';
+					echo '<input type="hidden" name="'.Tools::safeOutput($key).'" value="'.Tools::safeOutput($val).'"/>';
 			?>
 		</form>
 	</body>
