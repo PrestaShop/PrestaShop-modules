@@ -71,6 +71,8 @@ class EbaySynchronizer
 		
 			// Load basic price
 			list($price, $price_original) = EbaySynchronizer::_getPrices($product->id, $ebay_category->getPercent());
+			
+			$conditions = $ebay_category->getConditionsValues();
 		
 			// Generate array and try insert in database
 			$data = array(
@@ -81,7 +83,7 @@ class EbaySynchronizer
 					'pictures' 					=> $pictures['general'],
 					'picturesMedium' 		=> $pictures['medium'],
 					'picturesLarge' 		=> $pictures['large'],
-					'condition'				  => EbaySynchronizer::_getEbayCondition($ebay_category->getConditionsValues(), $product),
+					'condition'				  => $conditions[$product->condition],
 					'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
 			);
 			$data = array_merge($data, EbaySynchronizer::_getProductData($product));
@@ -863,25 +865,6 @@ class EbaySynchronizer
 			*/
 			
 			return $item_specifics_pairs;
-	}
-	
-	private static function _getEbayCondition($conditions, $product)
-	{
-		return $conditions[$product->condition];
-		// now there is no default value
-		/*
-		switch ($product->condition)
-		{
-			case 'new' :
-				return Configuration::get('EBAY_CONDITION_NEW');
-			case 'used' : 
-				return Configuration::get('EBAY_CONDITION_USED');
-			case 'refurbished' : 
-				return Configuration::get('EBAY_CONDITION_REFURBISHED');
-			default:
-				return Configuration::get('EBAY_CONDITION_NEW');
-		}
-		*/
 	}
 	
 	private static function _addSqlRestrictionOnLang($alias) 
