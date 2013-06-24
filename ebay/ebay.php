@@ -182,7 +182,7 @@ class Ebay extends Module
 		if (!parent::install() ||
 				!$this->registerHook('addProduct') ||
 				!$this->registerHook('updateProduct') ||
-				!$this->registerHook('updateProductAttribute') || // RArbuz: what is this hook for? it's not called
+				!$this->registerHook('actionUpdateQuantity') || // RArbuz: what is this hook for? it's not called
 				!$this->registerHook('deleteProduct') ||
 				!$this->registerHook('newOrder') ||
 				!$this->registerHook('backOfficeTop') ||
@@ -294,6 +294,7 @@ class Ebay extends Module
 		if (!parent::uninstall() ||
 			!$this->unregisterHook('addProduct') ||
 			!$this->unregisterHook('updateProduct') ||
+			!$this->unregisterHook('actionUpdateQuantity') ||
 			!$this->unregisterHook('updateProductAttribute') ||
 			!$this->unregisterHook('deleteProduct') ||
 			!$this->unregisterHook('newOrder') ||
@@ -474,6 +475,8 @@ class Ebay extends Module
 					$customer_clear = new Customer();
 					if (method_exists($customer_clear, 'clearCache'))
 						$customer_clear->clearCache(true);
+					
+					
 
 					// Validate order
 					$id_order = $order->validate();
@@ -552,6 +555,11 @@ class Ebay extends Module
 	public function hookUpdateProduct($params)
 	{
 		$this->hookAddProduct($params);
+	}
+	
+	public function hookActionUpdateQuantity($params)
+	{
+		$this->hookUpdateProduct($params);
 	}
 
 	public function hookUpdateProductAttributeEbay()
