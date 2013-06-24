@@ -1552,8 +1552,11 @@ class Ebay extends Module
 			$this->setConfiguration('EBAY_SYNC_LAST_PRODUCT', (int)$products[0]['id_product']);
 
 			EbaySynchronizer::syncProducts($products, $this->context, $this->ebay_country->getIdLang());
+			
+			// we cheat a bit to display a consistent number of products done
+			$nb_products_done = min($nb_products - $nb_products_less + 1, $nb_products);
 
-			echo 'KO|<br /><br /> <img src="../modules/ebay/views/img/loading-small.gif" border="0" /> '.$this->l('Products').' : '.($nb_products - $nb_products_less + 1).' / '.$nb_products.'<br /><br />';
+			echo 'KO|<br /><br /> <img src="../modules/ebay/views/img/loading-small.gif" border="0" /> '.$this->l('Products').' : '.$nb_products_done.' / '.$nb_products.'<br /><br />';
 		}
 		else 
 		{

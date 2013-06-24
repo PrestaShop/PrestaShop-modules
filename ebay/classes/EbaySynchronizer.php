@@ -616,7 +616,8 @@ class EbaySynchronizer
 								AND `id_ebay_category` > 0'.
 								(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : ''). 
 							')
-							'.EbaySynchronizer::_addSqlRestrictionOnLang('s').'
+							AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')'.
+								EbaySynchronizer::_addSqlRestrictionOnLang('s').'
 							GROUP BY p.id_product
 					)TableReponse');
 		} 
@@ -633,7 +634,8 @@ class EbaySynchronizer
 						WHERE `id_category` > 0 
 						AND `id_ebay_category` > 0'.
 						(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
-					)');
+					)
+					AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 		}
 		
 		return $nb_products;
@@ -705,6 +707,7 @@ class EbaySynchronizer
 						')
 						'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 						AND p.`id_product` >'.$ebay_sync_last_product.'
+						AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')
 						'.EbaySynchronizer::_addSqlRestrictionOnLang('s').'
 						GROUP BY p.id_product
 				)TableRequete';
@@ -724,7 +727,8 @@ class EbaySynchronizer
 					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
-				AND `id_product` > '.$ebay_sync_last_product;
+				AND `id_product` > '.$ebay_sync_last_product.'
+				AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')';
 		}
 			
 		return Db::getInstance()->getValue($sql);
