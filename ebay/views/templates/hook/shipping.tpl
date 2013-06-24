@@ -368,7 +368,7 @@
 <script>
 	{literal}
 	$(document).ready(function() {
-		if(!$.fancybox){
+		if(!typeof $.fancybox == 'function') {
 			$(".fancyboxeBay").fancybox({
 				maxWidth	: '500px',
 				maxHeight	: '300px',
