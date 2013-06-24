@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.3';
+		$this->version = '3.5.5';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -474,7 +474,7 @@ class PayPal extends PaymentModule
 	{
 		// No active
 		if (!$this->active || (((int)Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice()) ||
-			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()))
+			!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || !in_array(ECS, $this->getPaymentMethods()) || isset($this->context->cookie->express_checkout))
 			return null;
 
 		$values = array('en' => 'en_US', 'fr' => 'fr_FR');
@@ -1275,6 +1275,14 @@ class PayPal extends PaymentModule
 	protected function getCurrentUrl()
 	{
 		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
-		return $protocol_link.Tools::getShopDomainSsl().$_SERVER['REQUEST_URI'];
+		$request = $_SERVER['REQUEST_URI'];
+		$pos = strpos($request, '?');
+		
+		if (($pos !== false) && ($pos >= 0))
+			$request = substr($request, 0, $pos);
+
+		$params = urlencode($_SERVER['QUERY_STRING']);
+
+		return $protocol_link.Tools::getShopDomainSsl().$request.'?'.$params;
 	}
 }

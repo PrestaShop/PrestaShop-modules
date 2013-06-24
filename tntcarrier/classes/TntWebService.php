@@ -103,20 +103,24 @@ class TntWebService
 	public function getFaisability($dest, $postcode, $city,	$date_exp)
 	{
 		$service = array();
-		try
+		foreach ($dest as $key => $val)
 		{
-			foreach ($dest as $key => $val)
-				$service[] = $this->faisabilite($date_exp, Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE'), Configuration::get('TNT_CARRIER_SHIPPING_CITY'), $postcode, $city, $val);
+			try
+			{
+				$faisability = $this->faisabilite($date_exp, Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE'), Configuration::get('TNT_CARRIER_SHIPPING_CITY'), $postcode, $city, $val);
+				$service[] = $faisability;
+			}
+			catch (SoapFault $e)
+			{
+				if (strrpos($e->faultstring, "shippingDate") != false)
+					$service = $this->getFaisability($dest, $postcode, $city, date("Y-m-d", strtotime($date_exp.' + 1 day')));
+				elseif (strrpos($e->faultstring, "(zip code / city)") === 0)
+					return $e->faultstring;
+				else
+					return null;
+			}
 		}
-		catch (SoapFault $e)
-		{
-			if (strrpos($e->faultstring, "shippingDate") != false)
-				$service = $this->getFaisability($dest, $postcode, $city, date("Y-m-d", strtotime($date_exp.' + 1 day')));
-			elseif (strrpos($e->faultstring, "(zip code / city)") === 0)
-				return $e->faultstring;
-			else
-				return null;
-		}
+
 		return $service;
 	}
 
@@ -129,6 +133,7 @@ class TntWebService
 		$receiver = array("zipCode" => $codePostalArrivee, "city" => $communeArrivee, "type" => $typeDestinataire);
 		$parameters = array("accountNumber" => $this->_account, "shippingDate" => $dateExpedition, "sender" => $sender, "receiver" => $receiver);
 		$services = $soapclient->feasibility(array('parameters' => $parameters));
+		
 		return ($services);
 	}
 
