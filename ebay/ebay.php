@@ -476,8 +476,6 @@ class Ebay extends Module
 					if (method_exists($customer_clear, 'clearCache'))
 						$customer_clear->clearCache(true);
 					
-					
-
 					// Validate order
 					$id_order = $order->validate();
 
@@ -1781,7 +1779,7 @@ class Ebay extends Module
 		$cat_with_problem = array();
 		foreach (Db::getInstance()->ExecuteS($sql_get_cat_non_multi_sku) as $cat)
 		{
-			if ($cat['is_multi_sku'] != 1 && EbaySynchronizer::findIfCategoryParentIsMultiSku($cat['id_category_ref']) != 1) 
+			if ($cat['is_multi_sku'] != 1 && EbayCategory::getInheritedIsMultiSku($cat['id_category_ref']) != 1) 
 			{
 				$category = new Category($cat['id_category']);
 				$products = $category->getProductsWs($this->ebay_country->getIdLang(), 0, 300);
