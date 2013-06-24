@@ -471,7 +471,7 @@ class Ebay extends Module
 						$customer_clear->clearCache(true);
 					
 					// if the carrier is disabled, we enable it for the order validation and then disable it again
-					$carrier = new Carrier((int)order->id_carrier);
+					$carrier = new Carrier((int)$order->id_carrier);
 					if (!$carrier->active)
 					{
 						$carrier->active = true;
