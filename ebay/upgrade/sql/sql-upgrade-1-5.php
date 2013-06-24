@@ -74,4 +74,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_product_configurat
 			  PRIMARY KEY (`id_ebay_product_configuration`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
 				
-$sql[] = 'ALTER TABLE '._DB_PREFIX_.'ebay_category MODIFY `is_multi_sku` tinyint(1);
+$sql[] = 'ALTER TABLE '._DB_PREFIX_.'ebay_category MODIFY `is_multi_sku` tinyint(1)';
+
+$sql[] = 'ALTER TABLE '._DB_PREFIX_.'ebay_shipping MODIFY `extra_fee` float(8,2)';
