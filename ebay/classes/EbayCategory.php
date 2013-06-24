@@ -226,7 +226,7 @@ class EbayCategory
 			return $row['is_multi_sku'];
 		
 		if ($row['id_category_ref_parent'] != $id_category_ref)
-			return EBayCategory::_findIfCategoryParentIsMultiSku($row['id_category_ref_parent']);
+			return EBayCategory::_getInheritedIsMultiSku($row['id_category_ref_parent']);
 		
 		return $row['is_multi_sku']; // RArbuz: shall we not return the category default in this case?
 	}	
