@@ -27,7 +27,7 @@
 require('./../../config/config.inc.php');
 
 $id_cart = pSQL(Tools::getValue('id'));
-$city = pSQL($Tools::getValue('city'));
+$city = pSQL(Tools::getValue('city'));
 
 if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('TNT_CARRIER_TOKEN'))
 	die('Invalid Token');
