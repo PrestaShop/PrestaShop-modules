@@ -156,7 +156,10 @@ class EbaySynchronizer
 				if ($item_id = EbayProduct::getIdProductRefByIdProduct($product->id)) //if product already exists on eBay
 				{
 					$data['itemID'] = $item_id;
-					$ebay = EbaySynchronizer::_updateMultiSkuItem($product->id, $data, $ebay, $date);
+					if (!EbaySynchronizer::_hasVariationProducts($data['variations']))
+						EbaySynchronizer::endProductOnEbay($ebay, $item_id);
+					else
+						$ebay = EbaySynchronizer::_updateMultiSkuItem($product->id, $data, $ebay, $date);
 				}
 				else 
 					EbaySynchronizer::_addMultiSkuItem($product->id, $data, $ebay, $date);
@@ -208,6 +211,14 @@ class EbaySynchronizer
 		}
 		
 		return $ebay;
+	}
+	
+	private static function _hasVariationProducts($variations)
+	{
+		foreach ($variations as $variation)
+			if ($variation['quantity'] >= 1)
+				return true;
+		return false;
 	}
 	
 	private static function _addItem($product_id, $data, $ebay, $date, $id_attribute = 0)
