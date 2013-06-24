@@ -142,7 +142,7 @@ class EbayOrder
 			$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
 			$customer->last_passwd_gen = pSQL(date('Y-m-d H:i:s'));
 			$customer->newsletter = 0;
-			$customer->lastname = pSQL($this->familyname);
+			$customer->lastname = EbayOrder::_formatFamilyName($this->familyname);
 			$customer->firstname = pSQL($this->firstname);
 			$customer->active = 1;
 			$customer->add();
@@ -171,7 +171,7 @@ class EbayOrder
 
 		$address->id_country = (int)Country::getByIso($this->country_iso_code);
 		$address->alias = 'eBay';
-		$address->lastname = pSQL($this->familyname);
+		$address->lastname = EbayOrder::_formatFamilyName($this->familyname);
 		$address->firstname = pSQL($this->firstname);
 		$address->address1 = pSQL($this->address1);
 		$address->address2 = pSQL($this->address2);
@@ -189,6 +189,17 @@ class EbayOrder
 		$this->id_address = $id_address;
 		
 		return $id_address;
+	}
+	
+	/**
+	 * Formats the family name to match eBay constraints:
+	 * - length < 32 chars
+	 * - no brackets ()
+	 *
+	 */
+	private function _formatFamilyName($family_name)
+	{
+		return str_replace(array('(', ')'), '', substr(pSQL($family_name), 0, 32));
 	}
 	
 	public function hasAllProductsWithAttributes()
