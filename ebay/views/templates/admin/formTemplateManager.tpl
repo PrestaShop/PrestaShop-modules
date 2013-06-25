@@ -31,7 +31,7 @@
 			<li>{l s='Look more professional to consumers helping to differentiate from other merchants' mod='ebay'}</li>
 			<li>{l s='Give customers all needed information' mod='ebay'}</li>
 		</ul>
-		<br/>
+		<br/>		
 		<textarea class="rte" cols="100" rows="50" name="ebay_product_template">{$ebay_product_template}</textarea><br />
 		{if $is_one_dot_three}
 			<script type="text/javascript" src="{$base_uri}js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -85,7 +85,7 @@
 			</script>
 		{else}
 			<script type="text/javascript">
-				var iso = '{$is_type_mce}';
+				var iso = '{if isset($is_type_mce)}{$is_type_mce}{else}false{/if}';
 				var pathCSS = '{$theme_css_dir}';
 				var ad = '{$ad}';
 			</script>

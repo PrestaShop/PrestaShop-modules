@@ -27,7 +27,7 @@
 	{if $img_stats}
 		<center><img src="{$path}{$img_stats}" alt="eBay stats"/></center><br />
 	{/if}
-	<u><a href="{l s='http://pages.ebay.fr/professionnels/index.html' mod='ebay' }" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></u>
+	<u><a href="{l s="http://pages.ebay.fr/professionnels/index.html" mod='ebay'}" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></u>
 </fieldset>
 <br />  
 	

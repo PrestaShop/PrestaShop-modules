@@ -182,12 +182,15 @@ class Ebay extends Module
 		if (!parent::install() ||
 				!$this->registerHook('addProduct') ||
 				!$this->registerHook('updateProduct') ||
-				!$this->registerHook('actionUpdateQuantity') || // RArbuz: what is this hook for? it's not called
 				!$this->registerHook('deleteProduct') ||
 				!$this->registerHook('newOrder') ||
 				!$this->registerHook('backOfficeTop') ||
 				!$this->registerHook('header'))
 				return false;
+		
+		$hook_update_quantity = version_compare(_PS_VERSION_, '1.5', '>') ? 'actionUpdateQuantity' : 'updateQuantity';
+		if (!$this->registerHook($hook_update_quantity))
+			return false;
 
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', ''); // fix to work around the PrestaShop bug when saving html for a configuration key that doesn't exist yet 
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
@@ -195,10 +198,10 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
 
 		$this->installUpgradeOneFour();
-
+		
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
-
+		
 		return true;
 	}
 
@@ -286,6 +289,7 @@ class Ebay extends Module
 			!$this->unregisterHook('addProduct') ||
 			!$this->unregisterHook('updateProduct') ||
 			!$this->unregisterHook('actionUpdateQuantity') ||
+			!$this->unregisterHook('updateQuantity') ||
 			!$this->unregisterHook('updateProductAttribute') ||
 			!$this->unregisterHook('deleteProduct') ||
 			!$this->unregisterHook('newOrder') ||
@@ -557,6 +561,15 @@ class Ebay extends Module
 	public function hookUpdateProduct($params)
 	{
 		$this->hookAddProduct($params);
+	}
+	
+	/*
+	 * for PrestaShop 1.4
+	 *
+	 */
+	public function hookUpdateQuantity($params)
+	{
+		$this->hookUpdateProduct($params);
 	}
 	
 	public function hookActionUpdateQuantity($params)

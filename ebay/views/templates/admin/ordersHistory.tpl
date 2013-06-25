@@ -80,7 +80,7 @@
 				{/foreach}
 			</table>
 		{/if}
-		{if count($order->getErrorMessages()) }
+		{if $order->getErrorMessages()|count}
 			<b>{l s='Status Import' mod='ebay'} :</b> KO<br />
 			<b>{l s='Failure details' mod='ebay'} :</b><br />
 			{foreach from=$order->getErrorMessages() item="error"}
