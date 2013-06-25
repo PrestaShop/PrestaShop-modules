@@ -1455,7 +1455,7 @@ class Ebay extends Module
 			$nb_products = $nb_products_mode_b;
 		else
 			$nb_products = $nb_products_mode_a;
-
+		
 		if ($nb_products < 2)
 				$prod_nb = $this->l('product');
 		else
@@ -1503,9 +1503,9 @@ class Ebay extends Module
 		
 		$smarty_vars = array(
 			'path' 										=> $this->_path,
-			'nb_products' 						=> $nb_products,
-			'nb_products_mode_a' 			=> $nb_products_mode_a,
-			'nb_products_mode_b' 			=> $nb_products_mode_b,
+			'nb_products' 						=> $nb_products ? $nb_products : 0,
+			'nb_products_mode_a' 			=> $nb_products_mode_a ? $nb_products_mode_a : 0,
+			'nb_products_mode_b' 			=> $nb_products_mode_b ? $nb_products_mode_b : 0,
 			'nb_products_sync_url' 		=> $nb_products_sync_url,
 			'sync_products_url' 			=> $sync_products_url,
 			'action_url' 							=> $action_url,
