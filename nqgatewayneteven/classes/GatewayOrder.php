@@ -405,7 +405,12 @@ class GatewayOrder extends Gateway
 			$order->reference = $neteven_order->MarketPlaceOrderId;
 			
 			$carrier = new Carrier((int)$order->id_carrier);
-			$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+            $carrier_tax_rate = false;
+            if(method_exists($carrier, 'getTaxesRate')){
+                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+            }
+
 			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
@@ -628,11 +633,28 @@ class GatewayOrder extends Gateway
 					Toolbox::addLogLine(self::getL('Creation of order detail for NetEven order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.(int)$neteven_order->OrderLineID);
 
 					// Update quantity of product
-					if ($control_attribute_product)
-						StockAvailable::setQuantity($res_product['id_product'], $id_product_attribute, StockAvailable::getQuantityAvailableByProduct($res_product['id_product'], $id_product_attribute) - $neteven_order->Quantity);
-					else
-						StockAvailable::setQuantity($res_product['id_product'], 0, StockAvailable::getQuantityAvailableByProduct($res_product['id_product']) - $neteven_order->Quantity);
-					
+                    if(class_exists('StockAvailable')){
+                        // Update quantity of product
+                        if ($control_attribute_product){
+                            StockAvailable::setQuantity($res_product['id_product'], $id_product_attribute, StockAvailable::getQuantityAvailableByProduct($res_product['id_product'], $id_product_attribute) - $neteven_order->Quantity);
+                        }else{
+                            StockAvailable::setQuantity($res_product['id_product'], 0, StockAvailable::getQuantityAvailableByProduct($res_product['id_product']) - $neteven_order->Quantity);
+                        }
+                    }else{
+
+
+                        $t_info_product = array();
+
+                        $t_info_product['id_product'] = $res_product["id_product"];
+                        $t_info_product['cart_quantity'] = $t_info_order->Quantity;
+                        $t_info_product['id_product_attribute'] = NULL;
+                        if($control_attribute_product){
+                            $t_info_product['id_product_attribute'] = $id_product_attribute;
+                        }
+                        Product::updateQuantity($t_info_product);
+
+                    }
+
 					if ($this->time_analyse)
 					{
 						$this->current_time_0 = time();
@@ -795,7 +817,7 @@ class GatewayOrder extends Gateway
 		if (!self::$send_order_state_to_neteven)
 			return;
 		
-		if ($res = Db::getInstance()->getRow('SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders_gateway` WHERE `id_order` = '.(int)$params['id_order']))
+		if ($res = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'orders_gateway` WHERE `id_order` = '.(int)$params['id_order']))
 		{
 			$status = '';
 			$track = '';
@@ -807,7 +829,7 @@ class GatewayOrder extends Gateway
 			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_CANCELED'))
 				$status = 'Canceled';
 
-			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_SHIPPING'))
+			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_DELIVERED'))
 			{
 				$res_order = Db::getInstance()->getRow('SELECT `shipping_number` FROM `'._DB_PREFIX_.'orders` WHERE `id_order` = '.(int)$params['id_order']);
 				$status = 'Shipped';
