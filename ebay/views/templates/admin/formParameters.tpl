@@ -125,11 +125,15 @@
 	{literal}
 		<script>
 			$(document).ready(function() {
-				setTimeout(function(){tinyMCE.execCommand('mceRemoveControl', true, 'ebay_returns_description');$('#ebay_returns_description').val($('#ebayreturnshide').html());}, 1000);
+				setTimeout(function(){
+					if (tinyMCE.editors.length)
+						tinyMCE.execCommand('mceRemoveControl', true, 'ebay_returns_description');
+					$('#ebay_returns_description').val($('#ebayreturnshide').html());
+				}, 1000);
 			});
 			
 			$('#token-btn').click(function() {
-				window.open('{/literal}{$ebay_sign_in_url}{literal}')				
+					window.open(module_dir + 'ebay/pages/getSession.php?token={/literal}{$ebay_token}{literal}');			
 			});
 		</script>
 	{/literal}
