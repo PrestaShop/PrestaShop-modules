@@ -1070,6 +1070,7 @@ class Ebay extends Module
 	{
 		// Insert and update categories
 		if (($percents = Tools::getValue('percent')) && ($ebay_categories = Tools::getValue('category')))
+		{
 			foreach ($percents as $id_category => $percent)
 			{
 				$data = array();
@@ -1081,6 +1082,7 @@ class Ebay extends Module
 						'id_category' 		 => (int)$id_category, 
 						'percent' 				 => pSQL($percent), 
 						'date_upd' 				 => pSQL($date));
+
 				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
 				{
 					if ($data)
@@ -1094,7 +1096,11 @@ class Ebay extends Module
 					EbayCategoryConfiguration::add($data);
 				}
 			}
-		
+			
+			// make sur the ItemSpecifics and Condition data are refresh when we load the dedicated config screen the next time
+			Configuration::deleteByName('EBAY_SPECIFICS_LAST_UPDATE');
+		}
+
 
 		$insert_data = array();
 
@@ -1129,10 +1135,6 @@ class Ebay extends Module
 			}
 		}
 		
-		// make sur the ItemSpecifics and Condition data are refresh when we load the dedicated config screen the next time
-		if (isset($has_new_categories)) 
-			Configuration::set('EBAY_SPECIFICS_LAST_UPDATE', null);
-
 		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
 	
