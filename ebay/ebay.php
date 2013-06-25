@@ -876,11 +876,11 @@ class Ebay extends Module
 		$smarty_vars = array(
 				'url'                      => $url,
 				'ebay_sign_in_url'				 => $ebay_sign_in_url,
-				'ebayIdentifier'           => $ebay_identifier, 
+				'ebay_token'							 => Configuration::get('EBAY_SECURITY_TOKEN'),
+				'ebayIdentifier'           => $ebay_identifier,
 				'configCurrencysign'       => $config_currency->sign,
 				'policies'                 => $this->_getReturnsPolicies(),
 				'catLoaded'                => !Configuration::get('EBAY_CATEGORY_LOADED'),
-				'ebayItemConditions'       => $this->_getEbayItemConditions(),
 				'createShopUrl'            => $createShopUrl,
 				'ebayReturns'              => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
 				'ebayShopValue'            => $ebayShopValue, 
@@ -895,9 +895,7 @@ class Ebay extends Module
 		
 		if (Tools::getValue('relogin'))
 		{
-			$session_id = $ebay->login();
-			$this->context->cookie->eBaySession = $session_id;
-			$this->setConfiguration('EBAY_API_SESSION', $session_id);
+			$this->login();
 			
 			$smarty_vars = array_merge($smarty_vars, array(
 				'relogin' 		 => true,
@@ -907,11 +905,7 @@ class Ebay extends Module
 			$smarty_vars['relogin'] = false;		
 		
 		if (Tools::getValue('action') == 'regenerate_token') {
-			$session_id = $ebay->login();
-			$this->context->cookie->eBaySession = $session_id;
-			$this->setConfiguration('EBAY_API_SESSION', $session_id);
-			$this->context->cookie->write();
-
+			$this->login();
 			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
 
 		}
@@ -919,6 +913,17 @@ class Ebay extends Module
 		$this->smarty->assign($smarty_vars);
 		
 		return $this->display(dirname(__FILE__), '/views/templates/admin/formParameters.tpl');
+	}
+	
+	
+	public function login()
+	{
+		$ebay = new EbayRequest();
+		$session_id = $ebay->login();
+		$this->context->cookie->eBaySession = $session_id;
+		$this->setConfiguration('EBAY_API_SESSION', $session_id);
+		$this->context->cookie->write();
+		return $session_id;		
 	}
 	
 	private function _getListingDurations()
@@ -933,19 +938,6 @@ class Ebay extends Module
 			'GTC'     => $this->l('Good \'Till Canceled'));		
 	}
 	
-	private function _getEbayItemConditions()
-	{
-		return array(
-			'1000' => $this->l('New'),
-			'1500' => $this->l('New other'),
-			'1750' => $this->l('New with defects'), 
-			'2000' => $this->l('Manufacturer refurbished'), 
-			'2500' => $this->l('Seller refurbished'),
-			'3000' => $this->l('Used'),
-			'7000' => $this->l('For parts or not working')
-		);		
-	}
-
 	private function _postProcessParameters()
 	{
 			// Saving new configurations
