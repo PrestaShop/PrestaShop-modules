@@ -63,7 +63,9 @@
 
 	<p class="neteven-description-title">Configuration du module</p>
 	<p>Créez votre compte client <a href="http://www.neteven.com/neteven-inscription.html" target="_blank" style="text-decoration: underline;">ici</a> puis paramétrez le module en remplissant les formulaires ci-dessous.</p>
-	
+
+    <p class="neteven-description-title">Documentation</p>
+    <a href="/modules/nqgatewayneteven/NETEVEN-Module-Prestashop.pdf" target="_blank">Voir la documentation</a>
 </fieldset>
 
 <form action="" method="post">
