@@ -189,6 +189,7 @@ class Ebay extends Module
 				!$this->registerHook('header'))
 				return false;
 
+		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', ''); // fix to work around the PrestaShop bug when saving html for a configuration key that doesn't exist yet 
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
 		$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
@@ -208,14 +209,7 @@ class Ebay extends Module
 	*/
 	private function _getProductTemplateContent()
 	{
-		if (version_compare(_PS_VERSION_, '1.5', '>'))
-		{
-			$logo_url = Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/'._PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME');
-		}
-		else
-		{
-			$logo_url = Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/img/logo.jpg';
-		}
+		$logo_url = version_compare(_PS_VERSION_, '1.5', '>') ?  (Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/'._PS_IMG_.Configuration::get('PS_LOGO').'?'.Configuration::get('PS_IMG_UPDATE_TIME')) : (Tools::getShopDomain(true).'/'.__PS_BASE_URI__.'/img/logo.jpg');
 
 		$this->smarty->assign(array(
 			'shop_logo'  => $logo_url,
