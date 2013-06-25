@@ -40,6 +40,7 @@
 			<form method="post" action="{$url}">
 				<input type="hidden" name="action" value="regenerate_token" /> 
 				<input type="submit" id="token-btn" class="button" value="Regenerate Token" />
+			</form>
 		{/if}
 	</fieldset>	
 	
