@@ -24,9 +24,9 @@
 *}
 
 {if $nb_products < 2}
-	{$prod_str = {l s='product' mod='ebay'} }
+{assign var="prod_str" value={l s='product' mod='ebay'}}
 {else}
-	{$prod_str = {l s='products' mod='ebay'} }
+	{assign var="prod_str" value={l s='products' mod='ebay'}}
 {/if}
 
 <style> 
