@@ -31,7 +31,7 @@
 {/if}
 
 
-	<fieldset style="border: 0">
+	<fieldset>
 		<legend>{l s='Token' mod='ebay'}</legend>
 		{if isset($check_token_tpl)}
 			{$check_token_tpl}
@@ -46,7 +46,7 @@
 	
 <form action="{$url}" method="post" class="form" id="configForm1">
 	
-	<fieldset style="border: 0;margin-top:10px;">
+	<fieldset style="margin-top:10px;">
 		<legend>{l s='Global Configuration' mod='ebay'}</legend>
 		<h4>{l s='To list your products on eBay, you first need to create a business seller account on eBay and configure your eBay-Prestashop module' mod='ebay'}</h4>
 		<label>{l s='eBay Identifier' mod='ebay'} : </label>
