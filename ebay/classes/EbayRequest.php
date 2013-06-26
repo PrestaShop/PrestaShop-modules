@@ -346,7 +346,6 @@ class EbayRequest
 			'postal_code' 							 => Configuration::get('EBAY_SHOP_POSTALCODE'),
 			'quantity'									 => $data['quantity'],
 			'item_specifics'						 => $data['item_specifics'],
-			'attributes'								 => isset($data['attributes']) ? $data['attributes'] : array(),
 			'return_policy' 						 => $this->_getReturnPolicy(),
 			'shipping_details' 					 => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
