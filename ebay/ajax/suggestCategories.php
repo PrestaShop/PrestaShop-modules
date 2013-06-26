@@ -51,11 +51,11 @@ $category_list = Db::getInstance()->executeS('SELECT `id_category`, `name`
 	WHERE `id_lang` = '.(int)Tools::getValue('id_lang').' '.(_PS_VERSION_ >= '1.5' ? $ebay->getContext()->shop->addSqlRestrictionOnLang() : ''));
 
 // GET One Product by category
-$sql = '
-	SELECT pl.`name`, pl.`description`, p.`id_category_default`
+$sql = 'SELECT pl.`name`, pl.`description`, p.`id_category_default`
 	FROM `'._DB_PREFIX_.'product` p 
 	LEFT JOIN `'._DB_PREFIX_.'product_lang` pl 
-	ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)Tools::getValue('id_lang').' 
+	ON (pl.`id_product` = p.`id_product` 
+	AND pl.`id_lang` = '.(int)Tools::getValue('id_lang').' 
 	'.(_PS_VERSION_ >= '1.5' ? $ebay->getContext()->shop->addSqlRestrictionOnLang('pl') : '').')
 	GROUP BY p.`id_category_default`';
 $products = Db::getInstance()->executeS($sql);
@@ -65,16 +65,15 @@ $product_test = array();
 foreach ($products as $product)
 	$product_test[$product['id_category_default']] = array(
 		'description' => $product['description'], 
-		'name' => $product['name']);
-
+		'name' 				=> $product['name']);
+		
 // cats ref
 $ref_cats = Db::getInstance()->executeS('SELECT `id_ebay_category`, `id_category_ref` 
 	FROM `'._DB_PREFIX_.'ebay_category` ');
-if (is_array($ref_cats) && count($ref_cats))
-	foreach ($ref_cats as $cat)
-		$ref_categories[$cat['id_category_ref']] = $cat['id_ebay_category'];
-else
+if (!is_array($ref_cats) || !count($ref_cats))
 	return;
+foreach ($ref_cats as $cat)
+	$ref_categories[$cat['id_category_ref']] = $cat['id_ebay_category'];
 
 $i = 0;
 $sql = 'REPLACE INTO `'._DB_PREFIX_.'ebay_category_configuration` (`id_country`, `id_ebay_category`, `id_category`, `percent`, `date_add`, `date_upd`) VALUES ';
@@ -82,10 +81,11 @@ if (is_array($category_list) && count($category_list))
 {
 	// while categoryList
 	foreach ($category_list as $category)
-		if (!isset($category_config_list[$category['id_category']]))
+		if (!isset($category_config_list[$category['id_category']]) || !$category_config_list[$category['id_category']]['id_ebay_category'])
 		{
 			if (isset($product_test[$category['id_category']]) && !empty($product_test[$category['id_category']]))
 			{
+				echo $category['id_category'].'$';
 				$id_category_ref_suggested = $ebay_request->getSuggestedCategory($category['name'].' '.$product_test[$category['id_category']]['name']);
 				$id_ebay_category_suggested = isset($ref_categories[$id_category_ref_suggested]) ? $ref_categories[$id_category_ref_suggested] : 1;
 			
