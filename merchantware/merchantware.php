@@ -470,7 +470,7 @@ class MerchantWare extends PaymentModule
 			}
 			catch (Exception $e)
 			{
-				Logger::AddLog('[MerchantWare] Problem to verify a payment. Cart id: '.$cardId.', token: '.$token.'.', 2);
+				Logger::AddLog('[MerchantWare] Problem to verify a payment. Cart id: '.$id_cart.', token: '.$token.'.', 2);
 			}
 			if (isset($result->TransactionsByReferenceResult->TransactionReference4->ApprovalStatus))
 			{
