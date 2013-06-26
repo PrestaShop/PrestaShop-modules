@@ -534,12 +534,10 @@ class EbaySynchronizer
 				$data['picturesMedium'] = $variation['picturesMedium'];
 		if (!empty($variation['picturesLarge']))
 				$data['picturesLarge'] = $variation['picturesLarge'];
+
+		foreach ($variation['variation_specifics'] as $variation_specific)
+			$data['name'] .= ' '.$variation_specific;
 		
-		foreach ($variation['variations'] as $variation_label)
-		{
-			$data['name'] .= ' '.$variation_label['value'];
-			$data['attributes'][$variation_label['name']] = $variation_label['value'];
-		}
 		$data['price'] = $variation['price'];
 		if (isset($variation['price_original'])) 
 		{
