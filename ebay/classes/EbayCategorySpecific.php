@@ -112,6 +112,8 @@ class EbayCategorySpecific
 			}
 			
 		}
+		
+		return true;
 	}
 
 }
