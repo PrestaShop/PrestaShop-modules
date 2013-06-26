@@ -905,7 +905,6 @@ class Ebay extends Module
 			$smarty_vars['relogin'] = false;		
 		
 		if (Tools::getValue('action') == 'regenerate_token') {
-			$this->login();
 			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
 
 		}
