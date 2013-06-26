@@ -25,23 +25,19 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once '../../config/settings.inc.php';
-require_once '../../config/defines.inc.php';
-
-if (_PS_VERSION_ < '1.5')
+/**
+ * UrlsysFrontController class for PS 1.5
+ * Manage Urlsys
+ * 
+ */
+class KwixoUrlsysModuleFrontController extends ModuleFrontController
 {
-	require_once 'KwixoUrlSysFrontController.php';
-	$kwixo = new KwixoPayment();
 
-	//token security for PS 1.4
-	if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey()))
-	//Manage urlsys push, for PS 1.4
+	public function initContent()
+	{
+		parent::initContent();
+
 		KwixoURLSysFrontController::ManageUrlSys();
-	else
-		header("Location: ../");
-}
-else
-{
-	header("Location: ../");
-}
+	}
 
+}

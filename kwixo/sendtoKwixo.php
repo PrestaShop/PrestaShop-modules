@@ -30,18 +30,19 @@ require_once '../../config/defines.inc.php';
 
 if (_PS_VERSION_ < '1.5')
 {
-	require_once 'KwixoUrlSysFrontController.php';
+	require_once 'KwixoFrontController.php';
 	$kwixo = new KwixoPayment();
 
 	//token security for PS 1.4
 	if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey()))
-	//Manage urlsys push, for PS 1.4
-		KwixoURLSysFrontController::ManageUrlSys();
-	else
+	{
+		//build xml order and redirect to Kwixo payment, for PS 1.4
+		$controller = new KwixoFrontController();
+		echo '<center><h4>Vous allez être redirigé sur la page de paiement dans quelques secondes. Merci de votre patience.</h4></center>';
+		$form = $controller->generateForm();
+		echo $form;
+	} else
 		header("Location: ../");
 }
 else
-{
 	header("Location: ../");
-}
-

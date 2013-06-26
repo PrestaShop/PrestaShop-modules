@@ -25,23 +25,39 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once '../../config/settings.inc.php';
-require_once '../../config/defines.inc.php';
+include_once 'lib/includes/includes.inc.php';
+
+require_once(dirname(__FILE__).'/../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../init.php');
+
+include_once 'kwixo.php';
+
+$id_order = Tools::getValue('id_order');
+$order = new Order((int) $id_order);
 
 if (_PS_VERSION_ < '1.5')
-{
-	require_once 'KwixoUrlSysFrontController.php';
 	$kwixo = new KwixoPayment();
-
-	//token security for PS 1.4
-	if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey()))
-	//Manage urlsys push, for PS 1.4
-		KwixoURLSysFrontController::ManageUrlSys();
-	else
-		header("Location: ../");
-}
 else
+	$kwixo = new KwixoPayment($order->id_shop);
+
+//token security
+if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey().$kwixo->getLogin()))
 {
+	$module = new Kwixo();
+
+	$res = $kwixo->getTagline($order->id_cart, Tools::getValue('tid'));
+	$tag = new KwixoTaglineResponse($res);
+	$module->manageKwixoTagline($tag, $order, Tools::getValue('tid'));
+	$info_order = $module->getInfoKwixoOrder($id_order);
+
+	foreach ($info_order as $info)
+	{
+		$kwixo_tagline_state = $info['kwixo_tagline_state'];
+		$date_tagline = $info['date_tagline'];
+	}
+
+	echo $tag." => ".$module->_kwixo_order_statuses[$kwixo_tagline_state]."__".$date_tagline;
+} else
 	header("Location: ../");
-}
+
 
