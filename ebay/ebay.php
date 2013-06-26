@@ -921,7 +921,6 @@ class Ebay extends Module
 		$session_id = $ebay->login();
 		$this->context->cookie->eBaySession = $session_id;
 		$this->setConfiguration('EBAY_API_SESSION', $session_id);
-		$this->context->cookie->write();
 		return $session_id;		
 	}
 	
