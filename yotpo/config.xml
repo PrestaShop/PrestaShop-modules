@@ -2,7 +2,7 @@
 <module>
 	<name>yotpo</name>
 	<displayName><![CDATA[Yotpo - Social Reviews and Testimonials]]></displayName>
-	<version><![CDATA[1.2.5]]></version>
+	<version><![CDATA[1.2.6]]></version>
 	<description><![CDATA[The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.]]></description>
 	<author><![CDATA[Yotpo]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>

@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.2.5';
+		$this->version = '1.2.6';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -147,10 +147,10 @@ class Yotpo extends Module
 
 		if(!empty($app_key) && !is_null($order_id)) {
 			global $smarty;
-			$conversion_params = "app_key="	 .$app_key.
-							 "&order_id="	.$order_id.
-							 "&order_amount=".$order_amount.
-							 "&order_currency="  .$order_currency;
+			$conversion_params = "app_key="      .$app_key.
+                 				 "&order_id="    .$order_id.
+                 				 "&order_amount=".$order_amount.
+                 				 "&order_currency="  .$order_currency;
 			$conversion_url = "https://api.yotpo.com/conversion_tracking.gif?$conversion_params";
 			$smarty->assign('yotpoConversionUrl', $conversion_url);
 			return $this->display(__FILE__,'tpl/conversionImage.tpl');
@@ -573,6 +573,11 @@ class Yotpo extends Module
 		if(Validate::isLoadedObject($cart))
 		{
 			$products = $cart->getProducts();
+			if(count($products) == 0 && method_exists('Shop','getContextShopID') && Shop::getContextShopID() != (int)$cart->id_shop) 
+			{
+				Shop::initialize();
+				$products = $cart->getProducts(true);
+			}					
 			$currency = Currency::getCurrencyInstance((int)$cart->id_currency);
 			if (!is_null($products) && is_array($products) && Validate::isLoadedObject($currency))
 			{
