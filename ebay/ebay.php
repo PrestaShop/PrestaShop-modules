@@ -696,7 +696,7 @@ class Ebay extends Module
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 		));
 		
-		return $this->display(__FILE__, 'views/templates/admin/form.tpl').
+		return $this->display(__FILE__, 'views/templates/hook/form.tpl').
 			(Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister());
 	}
 	
@@ -791,7 +791,7 @@ class Ebay extends Module
 		
 		$this->smarty->assign($smarty_vars);	 
 
-		return $this->display(__FILE__, 'views/templates/admin/formRegister.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/formRegister.tpl');
 	}
 	
 	/**
@@ -822,7 +822,7 @@ class Ebay extends Module
 		
 		$this->smarty->assign($smarty_vars);	 
 
-		return $this->display(__FILE__, 'views/templates/admin/checkToken.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/checkToken.tpl');
 		
 	}
 
@@ -847,7 +847,7 @@ class Ebay extends Module
 		
 		$this->smarty->assign($smarty_vars);	 
 
-		return $this->display(__FILE__, 'views/templates/admin/formConfig.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/formConfig.tpl');
 	}
 	
 	private function _displayFormParameters()
@@ -911,7 +911,7 @@ class Ebay extends Module
 		
 		$this->smarty->assign($smarty_vars);
 		
-		return $this->display(dirname(__FILE__), '/views/templates/admin/formParameters.tpl');
+		return $this->display(dirname(__FILE__), '/views/templates/hook/formParameters.tpl');
 	}
 	
 	
@@ -1060,7 +1060,7 @@ class Ebay extends Module
 
 		$this->smarty->assign($template_vars);
 
-		return $this->display(dirname(__FILE__), '/views/templates/admin/formItemsSpecifics.tpl');
+		return $this->display(dirname(__FILE__), '/views/templates/hook/formItemsSpecifics.tpl');
 	}
 
 	private function _postProcessCategory()
@@ -1351,7 +1351,7 @@ class Ebay extends Module
 
 		$this->smarty->assign($smarty_vars);
 		
-		return $this->display(dirname(__FILE__), '/views/templates/admin/formTemplateManager.tpl');
+		return $this->display(dirname(__FILE__), '/views/templates/hook/formTemplateManager.tpl');
 	}
 
 	private function _postProcessTemplateManager()
@@ -1504,7 +1504,7 @@ class Ebay extends Module
 		
 		$this->smarty->assign($smarty_vars);
 		
-		return $this->display(dirname(__FILE__), '/views/templates/admin/formEbaySync.tpl');
+		return $this->display(dirname(__FILE__), '/views/templates/hook/formEbaySync.tpl');
 	}
 
 	private function _postProcessEbaySync()
@@ -1733,7 +1733,7 @@ class Ebay extends Module
 			'date_last_import' => $dateLastImport,
 			'orders'					 => isset($orders) ? $orders : array()
 		));	
-		return $this->display(dirname(__FILE__), '/views/templates/admin/ordersHistory.tpl');
+		return $this->display(dirname(__FILE__), '/views/templates/hook/ordersHistory.tpl');
 	}
 
 	/**
