@@ -76,8 +76,10 @@ class EbayCategoryCondition
 			else
 				foreach ($conditions as $condition)
 					$db->autoExecute(_DB_PREFIX_.'ebay_category_condition', $condition, 'INSERT');
-		}		
+			return true;
+		}
 		
+		return false;
 	}
 	
 }
