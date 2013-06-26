@@ -38,9 +38,10 @@ $category = new EbayCategory((int)Tools::getValue('ebay_category'));
 
 if (!Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') || (Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
 {
-	EbayCategorySpecific::loadCategorySpecifics();
-	EbayCategoryCondition::loadCategoryConditions();
-	Configuration::updateValue('EBAY_SPECIFICS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'), false, 0, 0);
+	$res =  EbayCategorySpecific::loadCategorySpecifics();
+	$res &= EbayCategoryCondition::loadCategoryConditions();
+	if ($res)
+		Configuration::updateValue('EBAY_SPECIFICS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'), false, 0, 0);
 }
 
 $item_specifics = $category->getItemsSpecifics();
