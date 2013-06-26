@@ -56,17 +56,21 @@ class EbaySynchronizer
 				continue;
 
 			$quantity_product = EbaySynchronizer::_getProductQuantity($product, (int)$p['id_product']);
+			
+			$ebay_category = EbaySynchronizer::_getEbayCategory($product->id_category_default);
+			
+			$variations = EbaySynchronizer::_loadVariations($product, $context, $ebay_category);
 
 			if (!$product->active || (isset($products_configuration[$product->id]) && $products_configuration[$product->id]['blacklisted']))
 			{ // try to stop sale on eBay
-				$ebay = EbaySynchronizer::endProductOnEbay($ebay, null, $product->id);
+				
+				$ebay = EbaySynchronizer::endProductOnEbay($ebay, $context, $id_lang, null, $product->id);
+				
 				if (!empty($ebay->error))
 					$tab_error = EbaySynchronizer::_updateTabError($ebay->error, str_replace('&', '&amp;', $product->name));
 				continue;
 			}
 			
-			$ebay_category = EbaySynchronizer::_getEbayCategory($product->id_category_default);
-
 			$pictures = EbaySynchronizer::_getPictures($product, $id_lang, $context, $products_configuration);
 		
 			// Load basic price
@@ -79,7 +83,7 @@ class EbaySynchronizer
 					'price' 						=> $price,
 					'quantity' 					=> $quantity_product,
 					'categoryId' 				=> $ebay_category->getIdCategoryRef(),
-					'variations' 				=> EbaySynchronizer::_loadVariations($product, $context, $ebay_category),
+					'variations' 				=> $variations,
 					'pictures' 					=> $pictures['general'],
 					'picturesMedium' 		=> $pictures['medium'],
 					'picturesLarge' 		=> $pictures['large'],
@@ -113,7 +117,7 @@ class EbaySynchronizer
 			$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
 
 			// Export to eBay
-			$ebay = EbaySynchronizer::_exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $id_lang);
+			$ebay = EbaySynchronizer::_exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $context, $id_lang);
 			
 			if (!empty($ebay->error)) // Check for errors
 				$tab_error = EbaySynchronizer::_updateTabError($ebay->error, $data['name']);
@@ -142,13 +146,13 @@ class EbaySynchronizer
 	 * Exports the product to eBay and updates the ebay_product table
 	 *
 	 */
-	private static function _exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $id_lang)
+	private static function _exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $context, $id_lang)
 	{
 		if (count($data['variations']))
 		{
 			// the product is multivariation
 			
-			if ($ebay_category->isMultiSku() && EbaySynchronizer::_hasVariationsMatching($product->id, $id_lang))
+			if (EbaySynchronizer::_isProductMultiSku($ebay_category, $product->id, $id_lang))
 			{
 				// the category accepts multisku products and there is variables matching
 
@@ -159,7 +163,7 @@ class EbaySynchronizer
 				{
 					$data['itemID'] = $item_id;
 					if (!EbaySynchronizer::_hasVariationProducts($data['variations']))
-						EbaySynchronizer::endProductOnEbay($ebay, $item_id);
+						EbaySynchronizer::endProductOnEbay($ebay, $context, $id_lang, $item_id);
 					else
 						$ebay = EbaySynchronizer::_updateMultiSkuItem($product->id, $data, $ebay, $date);
 				}
@@ -181,7 +185,7 @@ class EbaySynchronizer
 						$data_variation['itemID'] = $itemID;
 
 						if ($data_variation['quantity'] < 1) // no more products 
-							EbaySynchronizer::endProductOnEbay($ebay, $itemID);
+							EbaySynchronizer::endProductOnEbay($ebay, $context, $id_lang, $itemID);
 						else 
 							EbaySynchronizer::_updateItem($product->id, $data_variation, $ebay, $date, $data_variation['id_attribute']);
 					}
@@ -204,7 +208,7 @@ class EbaySynchronizer
 
 				// Delete or Update
 				if ($data['quantity'] < 1) 
-					EbaySynchronizer::endProductOnEbay($ebay, $itemID);
+					EbaySynchronizer::endProductOnEbay($ebay, $context, $id_lang, $itemID);
 				else
 					EbaySynchronizer::_updateItem($product->id, $data, $ebay, $date);
 			}
@@ -213,6 +217,16 @@ class EbaySynchronizer
 		}
 		
 		return $ebay;
+	}
+	
+	/*
+	 * Returns true if the product can be sent as a multisku product on eBay, false otherwise
+	 * (this doesn't test if the product has variations)
+	 *
+	 */
+	private static function _isProductMultiSku($ebay_category, $product_id, $id_lang)
+	{
+		return $ebay_category->isMultiSku() && EbaySynchronizer::_hasVariationsMatching($product_id, $id_lang);
 	}
 	
 	private static function _hasVariationProducts($variations)
@@ -443,17 +457,37 @@ class EbaySynchronizer
 		);
 	}
 	
-	public static function endProductOnEbay($ebay, $ebay_item_id, $product_id = null)
+	public static function endProductOnEbay($ebay, $context, $id_lang, $ebay_item_id, $product_id = null)
 	{
-		if (!$ebay_item_id)
+		if ($product_id)
+		{
+			$product = new Product((int)$product_id, true, $id_lang);
+			$ebay_category = EbaySynchronizer::_getEbayCategory($product->id_category_default);
+			$variations = EbaySynchronizer::_loadVariations($product, $context, $ebay_category);
+
+			//case where the product is multisku and could have been sent a several products
+			if (count($variations) && !EbaySynchronizer::_isProductMultiSku($ebay_category, $product->id, $id_lang))
+			{
+				foreach($variations as $variation)
+					if ($itemID = EbayProduct::getIdProductRefByIdProduct($product->id, $variation['id_attribute'])) 
+					{
+						$ebay->endFixedPriceItem($itemID);
+						EbayProduct::deleteByIdProductRef($itemID);
+					}
+			}
+			
+			return $ebay;
+		}
+
+		if (!$ebay_item_id && $product_id)
 			$ebay_item_id = EbayProduct::getIdProductRefByIdProduct($product_id);
-		
+			
 		if ($ebay_item_id)
 		{
 			$ebay->endFixedPriceItem($ebay_item_id);
 			EbayProduct::deleteByIdProductRef($ebay_item_id);
-		}
-
+		}			
+		
 		return $ebay;
 	}
 	
@@ -626,9 +660,9 @@ class EbaySynchronizer
 			// Retrieve total nb products for eBay (which have matched categories)
 			$nb_products = Db::getInstance()->getValue('
 					SELECT COUNT(`id_product`)
-					FROM `'._DB_PREFIX_.'product`
-					WHERE `quantity` > 0 
-					AND `id_category_default` IN (
+					FROM `'._DB_PREFIX_.'product` AS p
+					WHERE p.`quantity` > 0 
+					AND p.`id_category_default` IN (
 						SELECT `id_category` 
 						FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 						WHERE `id_category` > 0 
@@ -716,10 +750,10 @@ class EbaySynchronizer
 		{
 			$sql = '
 				SELECT COUNT(`id_product`) 
-				FROM `'._DB_PREFIX_.'product`
-				WHERE `quantity` > 0 
-				AND `active` = 1
-				AND `id_category_default` IN (
+				FROM `'._DB_PREFIX_.'product` AS p
+				WHERE p.`quantity` > 0 
+				AND p.`active` = 1
+				AND p.`id_category_default` IN (
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 					WHERE `id_category` > 0 
@@ -727,7 +761,7 @@ class EbaySynchronizer
 					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
-				AND `id_product` > '.$ebay_sync_last_product.'
+				AND p.`id_product` > '.$ebay_sync_last_product.'
 				AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')';
 		}
 			

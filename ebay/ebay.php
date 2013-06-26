@@ -598,8 +598,8 @@ class Ebay extends Module
 	{
 		if (!isset($params['product']->id))
 			return false;
-
-		EbaySynchronizer::endProductOnEbay(new EbayRequest(), null, $params['product']->id);
+		
+		EbaySynchronizer::endProductOnEbay(new EbayRequest(), $this->context, $this->ebay_country->getIdLang(), null, $params['product']->id);
 	}
 		
 	public function hookBackOfficeTop($params)
@@ -1421,35 +1421,31 @@ class Ebay extends Module
 		{
 			$nb_products_mode_a = Db::getInstance()->getValue('
 				SELECT COUNT(`id_product`) as nb
-				FROM `'._DB_PREFIX_.'product`
-				WHERE `quantity` > 0 AND `active` = 1
-				AND `id_category_default` IN (
+				FROM `'._DB_PREFIX_.'product` AS p
+				WHERE p.`quantity` > 0 
+				AND p.`active` = 1
+				AND p.`id_category_default` IN (
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 					WHERE `id_ebay_category` > 0)
-				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
+				AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 					
 			$nb_products_mode_b = Db::getInstance()->getValue('
 				SELECT COUNT(`id_product`) as nb
-				FROM `'._DB_PREFIX_.'product`
-				WHERE `quantity` > 0 AND `active` = 1
-				AND `id_category_default` IN (
+				FROM `'._DB_PREFIX_.'product` AS p
+				WHERE p.`quantity` > 0 
+				AND p.`active` = 1
+				AND p.`id_category_default` IN (
 					SELECT `id_category` 
 					FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 					WHERE `id_ebay_category` > 0 
 					AND `sync` = 1)
-				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
+				AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 		}
 		
-		if (Configuration::get('EBAY_SYNC_MODE') == 'B')
-			$nb_products = $nb_products_mode_b;
-		else
-			$nb_products = $nb_products_mode_a;
+		$nb_products = (Configuration::get('EBAY_SYNC_MODE') == 'B' ? $nb_products_mode_b : $nb_products_mode_a);
 		
-		if ($nb_products < 2)
-				$prod_nb = $this->l('product');
-		else
-				$prod_nb = $this->l('products');
+		$prod_nb = ($nb_products < 2 ? $this->l('product') : $this->l('products'));
 		// Display Form
 		
 		$url_vars = array(

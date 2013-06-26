@@ -52,10 +52,10 @@ else
 {
 	$nb_products = Db::getInstance()->getValue('
 		SELECT COUNT(`id_product`) as nb
-		FROM `'._DB_PREFIX_.'product`
-		WHERE `quantity` > 0 
-		AND `active` = 1
-		AND `id_category_default` IN (
+		FROM `'._DB_PREFIX_.'product` AS p
+		WHERE p.`quantity` > 0 
+		AND p.`active` = 1
+		AND p.`id_category_default` IN (
 			SELECT `id_category` 
 			FROM `'._DB_PREFIX_.'ebay_category_configuration` 
 			WHERE `id_ebay_category` > 0 
