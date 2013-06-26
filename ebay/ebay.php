@@ -681,7 +681,7 @@ class Ebay extends Module
 		);
 		$url = 'http://api.prestashop.com/partner/modules/ebay.php?'.http_build_query($url_data);
 		
-		$prestashop_content = @file_get_contents($url, false, $stream_context);
+		$prestashop_content = @Tools::file_get_contents($url, false, $stream_context);
 		if (!Validate::isCleanHtml($prestashop_content))
 			$prestashop_content = '';
 
@@ -1883,5 +1883,5 @@ class Ebay extends Module
 	{
 		return $this->context;
 	}	
-
+	
 }
