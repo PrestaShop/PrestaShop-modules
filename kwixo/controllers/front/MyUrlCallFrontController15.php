@@ -25,20 +25,18 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once '../../config/settings.inc.php';
-require_once '../../config/defines.inc.php';
-
-
-
-if (_PS_VERSION_ < '1.5')
+/**
+ * UrlCallFrontController class for PS 1.5
+ * Manage Urlcall
+ * 
+ */
+class KwixoUrlcallModuleFrontController extends ModuleFrontController
 {
-	require_once 'KwixoUrlCallFrontController.php';
-	$kwixo = new KwixoPayment();
 
-	if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey()))
+	public function initContent()
 	{
-		global $smarty;
-		//Manage urlcall push, for PS 1.4
+		parent::initContent();
+
 		$params = KwixoURLCallFrontController::ManageUrlCall();
 
 		$payment_ok = $params['payment_status'];
@@ -50,7 +48,7 @@ if (_PS_VERSION_ < '1.5')
 			$order = new Order($id_order);
 			$cart = new Cart($order->id_cart);
 			$products = $cart->getProducts();
-			$amount = $order->total_paid_real;
+			$amount = $order->total_paid_tax_incl;
 			$total_shipping = $order->total_shipping;
 		} else
 		{
@@ -59,22 +57,18 @@ if (_PS_VERSION_ < '1.5')
 			$total_shipping = false;
 		}
 
-		$smarty->assign('payment_ok', $payment_ok);
-		$smarty->assign('errors', $errors);
-		$smarty->assign('amount', $amount);
-		$smarty->assign('products', $products);
-		$smarty->assign('total_shipping', $total_shipping);
-		$smarty->assign('path_order', __PS_BASE_URI__.'order.php');
-		$smarty->assign('path_history', __PS_BASE_URI__.'history.php');
-		$smarty->assign('path_contact', __PS_BASE_URI__.'contact-form.php');
+		$link = new Link();
 
-		echo $smarty->display(dirname(__FILE__).'/views/templates/front/urlcall.tpl');
-		require_once(dirname(__FILE__).'/../../footer.php');
+		$this->context->smarty->assign('payment_ok', $payment_ok);
+		$this->context->smarty->assign('errors', $errors);
+		$this->context->smarty->assign('amount', $amount);
+		$this->context->smarty->assign('total_shipping', $total_shipping);
+		$this->context->smarty->assign('products', $products);
+		$this->context->smarty->assign('path_order', $link->getPageLink('order', true));
+		$this->context->smarty->assign('path_history', $link->getPageLink('history', true));
+		$this->context->smarty->assign('path_contact', $link->getPageLink('contact', true));
+
+		$this->setTemplate('urlcall.tpl');
 	}
-	else
-		header("Location: ../");
-}
-else
-{
-	header("Location: ../");
+
 }
