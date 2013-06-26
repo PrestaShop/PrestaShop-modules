@@ -191,7 +191,9 @@ ul#gamification_badges_list li.locked .gamification_badges_name{
 	-o-border-radius: 15px;
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
-	border:1px solid #8aa96d
+	border:1px solid #8aa96d;
+	position: absolute;
+	top: 0;
 }
 
 #gamification_progressbar_tab .ui-widget-header{
@@ -271,11 +273,6 @@ ul#gamification_badges_list li.locked .gamification_badges_name{
 	display: block;
 }
 
-
-.ui-progressbar-value {
-	position: absolute;
-    top: 0;
-}
 
 ul.badge_list 
 {
