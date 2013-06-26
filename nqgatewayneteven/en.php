@@ -23,7 +23,7 @@ $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_16d2b386b2034b948899646
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_58930025e1f95d65035e0df5d6c2ae41']='Order Information';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_1ed94d36d645c22f77807b47707e309b']='Order Details';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_e76e238f2f1f7d5794ecaaca615a1092']='Products of the basket';
-$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_24b0f46356b8889ddfca63b7e30ca2ae']='No products to send!'
+$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_24b0f46356b8889ddfca63b7e30ca2ae']='No products to send!';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_689da9735e1bcffb861c523b7278570c']='Data sent to Neteven';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_a4ffc7419848f59682651b2b598e8039']='Error while \ sending data Neteven';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_b2c410fe827e3e0e7c5fd38aba21c174']='EAN13 code missing for the product';
@@ -75,12 +75,12 @@ $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_28e3b61568a8b12e99d8411
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_19bfef3140e9df9638d4a5a7687aba8e']='Used for non-branded products';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_506ed10c722a2500f47e18058fcff4a4']='Image Size product';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_cfab1ba8c67c7c838db98d666f02a132']='-';
-$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_aed88202e2432ee2a613f9120ef7486b']='Save'
+$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_aed88202e2432ee2a613f9120ef7486b']='Save';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_77efa457f4180b1b64c51a38736515e8']='Delivery';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_ff8b77e3979980292365b585617f5b63']='Delivery info';
-$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_1902e24924c330d651b1562c778f0ac3']='Delivery'
-$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_3ac7290c8c59e3838b01f3840a3f212f']='In days'
-$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_4c82581f81f4320b1d254677214a08d9']='Shipping'
+$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_1902e24924c330d651b1562c778f0ac3']='Delivery';
+$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_3ac7290c8c59e3838b01f3840a3f212f']='In days';
+$_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_4c82581f81f4320b1d254677214a08d9']='Shipping';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_9cfefed8fb9497baa5cd519d7d2bb5d7']='En';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_01822f83819bb3d8b79c24d023131fcb']='Shipping \' s International';
 $_MODULE['<{nqgatewayneteven}prestashop>nqgatewayneteven_1a249e9cdfb42ab7778380d6c025681e']='Shipping by product';
