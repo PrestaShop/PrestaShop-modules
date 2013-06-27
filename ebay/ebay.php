@@ -1259,8 +1259,10 @@ class Ebay extends Module
 		if (!$nb_shipping_zones_excluded)
 			$this->_loadEbayExcludedLocations();
 
+		$module_filters = version_compare(_PS_VERSION_, '1.4.5', '>=') ? Carrier::CARRIERS_MODULE : 2;
+
 		//INITIALIZE CACHE
-		$psCarrierModule = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, Carrier::CARRIERS_MODULE);
+		$psCarrierModule = Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT'), false, false, false, null, $module_filters);
 
 		$url_vars = array(
 		 'id_tab' 			=> '3',
