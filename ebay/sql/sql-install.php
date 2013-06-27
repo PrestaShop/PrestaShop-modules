@@ -196,11 +196,20 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category_condition_con
 		  UNIQUE(`id_category_ref`, `condition_type`),
 		  PRIMARY KEY (`id_ebay_category_condition_configuration`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_product_configuration` (
+		
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_configuration` (
 			  `id_ebay_product_configuration` int(11) NOT NULL AUTO_INCREMENT,
 				`id_product` int(16),
 				`blacklisted` tinyint(1) NOT NULL,
 				`extra_images` int(4) NOT NULL,
 				UNIQUE(`id_product`),				
 			  PRIMARY KEY (`id_ebay_product_configuration`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
+				
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_image` (
+			  `id_ebay_product_image` int(11) NOT NULL AUTO_INCREMENT,
+				`ps_image_url` varchar(255),
+				`ebay_image_url` varchar(255),
+				UNIQUE(`ps_image_url`),				
+			  PRIMARY KEY (`id_ebay_product_image`)
 				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';

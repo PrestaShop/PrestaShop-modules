@@ -47,7 +47,8 @@ $classes_to_load = array(
 	'EbayPayment',
 	'EbayCategoryConditionConfiguration',
 	'EbayCategorySpecific',
-	'EbayProductConfiguration'
+	'EbayProductConfiguration',
+	'EbayProductImage'
 );
 foreach ($classes_to_load as $classname)
 {

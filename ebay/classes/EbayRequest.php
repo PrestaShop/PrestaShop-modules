@@ -82,8 +82,7 @@ class EbayRequest
 			$this->runame = 'Prestashop-Prestash-70a5-4-pepwa';
 			$this->loginURL = 'https://signin.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
 		}
-		
-		//$this->smarty = $this->smarty->createData($this->smarty);		
+
 	}
 
 	public function getLoginUrl() 
@@ -421,7 +420,6 @@ class EbayRequest
 			'category_id'			 					  => $data['categoryId'],
 			'title'						 					  => substr($data['name'], 0, 80),
 			'pictures'				 					  => isset($data['pictures']) ? $data['pictures'] : array(),
-			'value'						  				  => htmlentities($data['brand']),
 			'return_policy' 						  => $this->_getReturnPolicy(),
 			'price_update'							  => !isset($data['noPriceUpdate']),
 			'variations'								  => $this->_getVariations($data),
@@ -522,6 +520,31 @@ class EbayRequest
 		return isset($response->OrderArray->Order) ? $response->OrderArray->Order : array();
 	}
 	
+	/**
+	 * Add / Update / End Product Methods
+	 *
+	 */
+
+	public function uploadSiteHostedPicture($picture_url, $picture_name) 
+	{
+		if (!$picture_url || !$picture_name)
+			return false;
+		
+		$vars = array(
+			'picture_url' 	=> $picture_url,
+			'picture_name'	=> $picture_name,
+			'version'				=> $this->compatibility_level
+		);
+		$response = $this->_makeRequest('UploadSiteHostedPictures', $vars);
+		if ($response === false)
+			return false;
+		
+		if ($this->_checkForErrors($response))
+			return (string)$response->SiteHostedPictureDetails->FullURL;
+
+		return null;
+	}	
+	
 	private function _getShippingDetails($data)
 	{
 		$vars = array(
@@ -578,8 +601,13 @@ class EbayRequest
 					}
 				
 				foreach ($variation['variation_specifics'] as $name => $value)
+				{
+					if (!isset($variation_specifics_set[$name]))
+						$variation_specifics_set[$name] = array();
+					
 					if (!in_array($value, $variation_specifics_set[$name]))
 						$variation_specifics_set[$name][] = $value;
+				}
 			}
 		}
 

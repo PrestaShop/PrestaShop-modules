@@ -77,3 +77,11 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_product_configurat
 $sql[] = 'ALTER TABLE '._DB_PREFIX_.'ebay_category MODIFY `is_multi_sku` tinyint(1)';
 
 $sql[] = 'ALTER TABLE '._DB_PREFIX_.'ebay_shipping MODIFY `extra_fee` float(8,2)';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_image` (
+			  `id_ebay_product_image` int(11) NOT NULL AUTO_INCREMENT,
+				`ps_image_url` varchar(255),
+				`ebay_image_url` varchar(255),
+				UNIQUE(`ps_image_url`),				
+			  PRIMARY KEY (`id_ebay_product_image`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';

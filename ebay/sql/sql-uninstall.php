@@ -46,4 +46,5 @@ $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_specific_value`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_condition`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_category_condition_configuration`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_product_configuration`;';
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'ebay_product_image`;';
 */
