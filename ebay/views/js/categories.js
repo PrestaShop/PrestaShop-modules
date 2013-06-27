@@ -1,7 +1,7 @@
 function loadCategoryMatch(id_category) {
 	$.ajax({
 		async: false,
-		url: module_dir + 'ebay/ajax/loadCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time,
+		url: module_dir + 'ebay/ajax/loadCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&ch_cat_str=' + ebay_l['no category selected'],
 		success: function(data) { $("#categoryPath" + id_category).html(data); }
 	});
 }
@@ -14,7 +14,7 @@ function changeCategoryMatch(level, id_category) {
 	if (level > 4) levelParams += "&level5=" + $("#categoryLevel5-" + id_category).val();
 
 	$.ajax({
-		url: module_dir + 'ebay/ajax/changeCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&level=' + level + levelParams,
+		url: module_dir + 'ebay/ajax/changeCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&level=' + level + levelParams + '&ch_cat_str=' + ebay_l['no category selected'],
 		success: function(data) { $("#categoryPath" + id_category).html(data); }
 	});
 }
@@ -74,7 +74,7 @@ function toggleSyncProduct(obj)
 
 $(document).ready(function(){
 	$.ajax({
-		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang,
+		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'],
 		success : function(data) { $("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data); }
 	});
 	
@@ -82,7 +82,7 @@ $(document).ready(function(){
 		$('<div class="center"><img src="' + module_path + 'views/img/loading-small.gif" alt="" />' + ebay_l['thank you for waiting'] + '</div>').insertAfter($(this));
 		$(this).fadeOut();
 		$.ajax({
-			url: module_dir + "ebay/ajax/suggestCategories.php?token=" + ebay_token + "&id_lang=" + id_lang,
+			url: module_dir + "ebay/ajax/suggestCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&not_logged_str=' + ebay_l['You are not logged in'] + '&settings_updated_str=' + ebay_l['Settings updated'],
 			success : function(data) { window.location.href = window.location.href + "&conf=6"; }
 		});
 		return false;

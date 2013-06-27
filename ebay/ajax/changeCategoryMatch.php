@@ -27,7 +27,6 @@
 
 include(dirname(__FILE__).'/../../../config/config.inc.php');
 include('../ebay.php');
-$ebay = new Ebay();
 
 if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	die('ERROR: Invalid Token');
@@ -55,7 +54,7 @@ for ($level = 0; $level <= 5; $level++)
 		{
 			$levelExists[$level + 1] = true;
 			echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
-<option value="0">'.$ebay->l('No category selected').'</option>';
+<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
 
 			foreach ($ebay_category_list_level as $ebay_category)
 				echo '<option value="'.(int)$ebay_category['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ebay_category['id_ebay_category']) ? 'selected="selected"' : '').'>'.$ebay_category['name'].($ebay_category['is_multi_sku'] == 1 ? ' *' : '').'</option>';
