@@ -30,7 +30,7 @@ include_once dirname(__FILE__).'/../ebay.php';
 $ebay = new Ebay();
 
 if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-	return $ebay->l('You are not logged in');
+	return Tools::getValue('not_logged_str');
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
 
@@ -106,8 +106,8 @@ $template_vars = array(
 	'getCatInStock' 		 => $get_cat_in_stock,
 	'categoryConfigList' => $category_config_list,
 	'request_uri' 			 => $_SERVER['REQUEST_URI'],
-	'noCatSelected' 		 => $ebay->l('No category selected'),
-	'noCatFound'				 => $ebay->l('No category found')
+	'noCatSelected' 		 => Tools::getValue('ch_cat_str'),
+	'noCatFound'				 => Tools::getValue('ch_no_cat_str')
 );
 
 if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -156,7 +156,7 @@ function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $
 	{
 		$var .= '
 			<select name="category['.$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
-					<option value="0">'.$ebay->l('No category selected').'</option>';
+					<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
 
 		foreach ($ref_categories as $ref_id_category_ref => $category)
 		{

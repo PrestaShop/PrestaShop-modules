@@ -101,7 +101,11 @@
 	var module_path = '{$_path}';
 	var id_lang = '{$id_lang}';
 	var ebay_l = {
-		'thank you for waiting': "{l s='Thank you for waiting while creating suggestions' mod='ebay'}"
+		'thank you for waiting': "{l s='Thank you for waiting while creating suggestions' mod='ebay'}",
+		'no category selected' : "{l s='No category selected' mod='ebay'}",
+		'No category found'		 : "{l s='No category found' mod='ebay'}",
+		'You are not logged in': "{l s='You are not logged in' mod='ebay'}",
+		'Settings updated'		 : "{l s='Settings updated' mod='ebay'}"
 	};
 	
 </script>

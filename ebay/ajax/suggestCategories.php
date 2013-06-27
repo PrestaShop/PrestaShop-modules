@@ -32,7 +32,7 @@ $ebay = new Ebay();
 
 if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 {
-	echo $ebay->l('You are not logged in');
+	echo Tools::getValue('not_logged_str');
 	return;
 }
 
