@@ -316,13 +316,10 @@ class EbaySynchronizer
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
 		{
 			$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-			if (count($pictures) < $nb_pictures)
-			{
-				if (count($pictures) === 0)
-					$pictures[] = $large_pict;
-				else // extra picture
-					$pictures[] = EbayProductImage::getEbayUrl($large_pict, $product->name.'_'.(count($pictures)+1));
-			}
+			if ((count($pictures) == 0) && ($nb_pictures == 1)) // no extra picture, we don't upload the image
+				$pictures[] = $large_pict;
+			elseif (count($pictures) < $nb_pictures) // we upload every image if there are extra pictures
+				$pictures[] = EbayProductImage::getEbayUrl($large_pict, $product->name.'_'.(count($pictures)+1));
 			
 			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
 			$pictures_large[] = $large_pict;

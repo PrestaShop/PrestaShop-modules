@@ -34,6 +34,9 @@
 		{if count($pictures)}
 			<PictureDetails>
 				<GalleryType>Gallery</GalleryType>
+				{if $pictures|count > 1}
+					<PhotoDisplay>PicturePack</PhotoDisplay>
+				{/if}
 				{foreach from=$pictures item=picture}
 					<PictureURL>{$picture}</PictureURL>
 				{/foreach}
@@ -66,14 +69,6 @@
 					<Value><![CDATA[{$value}]]></Value>
 				</NameValueList>
 			{/foreach}
-			{if isset($attributes)}
-				{foreach from=$attributes key=name item=attribute}
-					<NameValueList>
-						<Name>{$name}</Name>
-						<Value>{$attribute}</Value>
-					</NameValueList>
-				{/foreach}
-			{/if}
 		</ItemSpecifics>
 		{$return_policy}
 		{if isset($variations)}
