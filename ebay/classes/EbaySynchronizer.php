@@ -510,10 +510,10 @@ class EbaySynchronizer
 	{
 		return str_replace(
 				array('{MAIN_IMAGE}', '{MEDIUM_IMAGE_1}', '{MEDIUM_IMAGE_2}', '{MEDIUM_IMAGE_3}', '{PRODUCT_PRICE}', '{PRODUCT_PRICE_DISCOUNT}'), array(
-			(isset($data['picturesLarge'][0]) ? '<img src="'.$data['picturesLarge'][0].'" class="bodyMainImageProductPrestashop" />' : ''),
-			(isset($data['picturesMedium'][1]) ? '<img src="'.$data['picturesMedium'][1].'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
-			(isset($data['picturesMedium'][2]) ? '<img src="'.$data['picturesMedium'][2].'" class="bodyMediumImageProductPrestashop" />' : ''),
-			(isset($data['picturesMedium'][3]) ? '<img src="'.$data['picturesMedium'][3].'" class="bodyMediumImageProductPrestashop" />' : ''),
+			(isset($large_pictures[0]) ? '<img src="'.$large_pictures[0].'" class="bodyMainImageProductPrestashop" />' : ''),
+			(isset($medium_pictures[1]) ? '<img src="'.$medium_pictures[1].'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
+			(isset($medium_pictures[2]) ? '<img src="'.$medium_pictures[2].'" class="bodyMediumImageProductPrestashop" />' : ''),
+			(isset($medium_pictures[3]) ? '<img src="'.$medium_pictures[3].'" class="bodyMediumImageProductPrestashop" />' : ''),
 			$product_price,
 			$product_price_discount
 				), $description
