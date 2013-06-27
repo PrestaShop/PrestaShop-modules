@@ -51,9 +51,9 @@
       stock: "{/literal}{$stock}{literal}"
       {/literal}{if isset($instock)},instock: {$instock}{/if}{literal}
   {/literal}{else}{literal}
-      name: '{/literal}{$meta_title|escape:'htmlall':'UTF-8'}{literal}',
-      description: '{/literal}{$meta_description|escape:html:'UTF-8'}{literal}',
-      image: '{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}'
+      name: "{/literal}{$meta_title|escape:'htmlall':'UTF-8'}{literal}",
+      description: "{/literal}{$meta_description|escape:html:'UTF-8'}{literal}",
+      image: "{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}"
   {/literal}{/if}{literal}
   };
 
