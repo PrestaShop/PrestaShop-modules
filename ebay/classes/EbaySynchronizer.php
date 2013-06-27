@@ -311,7 +311,7 @@ class EbaySynchronizer
 		$pictures_medium = array();
 		$pictures_large = array();
 		
-		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
+		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_images'] : 0);
 		
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
 		{
@@ -876,31 +876,6 @@ class EbaySynchronizer
 			$item_specifics_pairs[$attribute_value['name']] = $attribute_value['value'];
 			
 		return $item_specifics_pairs;
-			/*
-		foreach ($items_specifics as $item_specific)
-		{
-			if (!$item_specific['id_attribute_group'])
-				continue;
-			
-			$value = Db::getInstance()->getValue('SELECT al.`name` 
-				FROM `'._DB_PREFIX_.'attribute_lang` al
-				INNER JOIN `'._DB_PREFIX_.'attribute` a
-				ON al.`id_attribute` = a.`id_attribute`
-				AND a.`id_attribute_group` = '.(int)$item_specific['id_attribute_group'].'
-				INNER JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
-				ON a.`id_attribute` = pac.`id_attribute`
-				AND pac.`id_product_attribute` = '.$product_attribute_id.'
-				INNER JOIN `'._DB_PREFIX_.'product_attribute` pa
-				ON pac.`id_product_attribute` = pa.`id_product_attribute`
-				AND pa.`id_product` = '.(int)$product_id.'
-				WHERE al.`id_lang` = '.(int)$id_lang);
-				
-			if ($value)
-				$item_specifics_pairs[$item_specific['name']] = $value;
-		}
-			*/
-			
-			return $item_specifics_pairs;
 	}
 	
 	private static function _addSqlRestrictionOnLang($alias) 
