@@ -1093,8 +1093,6 @@ class Ebay extends Module
 		}
 
 
-		$insert_data = array();
-
 		// update extra_images for all products
 		if (($all_nb_extra_images = Tools::getValue('all-extra-images-value', -1)) != -1)
 		{
@@ -1116,7 +1114,6 @@ class Ebay extends Module
 			
 			$extra_images = Tools::getValue('extra_images');
 			
-			$insert_data = array();			
 			foreach($showed_product_ids as $product_id)
 			{
 				EbayProductConfiguration::insertOrUpdate($product_id, array(
