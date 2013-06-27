@@ -311,7 +311,7 @@ class EbaySynchronizer
 		$pictures_medium = array();
 		$pictures_large = array();
 		
-		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_pictures']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
+		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_pictures'] : 0);
 		
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image) 
 		{
