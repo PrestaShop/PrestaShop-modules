@@ -55,6 +55,9 @@
 		{if count($pictures)}
 			<PictureDetails>
 				<GalleryType>Gallery</GalleryType>
+				{if $pictures|count > 1}
+					<PhotoDisplay>PicturePack</PhotoDisplay>
+				{/if}				
 				{foreach from=$pictures item=picture}
 					<PictureURL>{$picture}</PictureURL>
 				{/foreach}
