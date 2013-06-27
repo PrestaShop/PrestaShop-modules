@@ -78,7 +78,7 @@
 	</table>
 	<div style="text-align: right; margin-top: 5px">
 		Change extra pictures numbers (paying option) for all products <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> <input id="update-all-extra-images" type="button" value='Apply'>
-		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" val="-1"/>
+		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" value="-1"/>
 	</div>
 	
 	<div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
