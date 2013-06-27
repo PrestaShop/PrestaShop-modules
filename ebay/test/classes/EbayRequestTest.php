@@ -67,14 +67,14 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(is_array($res));
 		$this->assertTrue(count($res) > 0);
 	}
-	*/		
+	
 	public function testGetCategoriesSkuCompliancy()
 	{
 		$res = $this->ebay_request->getCategoriesSkuCompliancy();
 		$this->assertTrue(is_array($res));
 		$this->assertTrue(count($res) > 0);		
 	}
-	/*
+
 	public function testGetCategoryFeatures()
 	{
 		$res = $this->ebay_request->getCategoryFeatures(73839);
@@ -252,5 +252,11 @@ class EbayRequestTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(is_array($res));
 	}
 	*/
+	
+	public function testUploadSiteHostedPicture()
+	{
+		$res = $this->ebay_request->uploadSiteHostedPicture('http://eofdreams.com/data_images/dreams/dog/dog-03.jpg', 'dog');
+		echo $res;
+	}
 	
 }

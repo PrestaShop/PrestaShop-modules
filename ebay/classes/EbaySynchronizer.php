@@ -317,7 +317,12 @@ class EbaySynchronizer
 		{
 			$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
 			if (count($pictures) < $nb_pictures)
-				$pictures[] = $large_pict;					
+			{
+				if (count($pictures) === 0)
+					$pictures[] = $large_pict;
+				else // extra picture
+					$pictures[] = EbayProductImage::getEbayUrl($large_pict, $product->name.'_'.(count($pictures)+1));
+			}
 			
 			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
 			$pictures_large[] = $large_pict;
