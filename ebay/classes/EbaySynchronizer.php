@@ -859,7 +859,7 @@ class EbaySynchronizer
 		$item_specifics_pairs = array();
 		
 		$attributes_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT IF(ecs.name <> null, ecs.name, agl.name) AS name, al.name AS value
+			SELECT IF(ecs.name is not null, ecs.name, agl.name) AS name, al.name AS value
 			FROM '._DB_PREFIX_.'product_attribute_combination pac
 			JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
 			JOIN '._DB_PREFIX_.'attribute a
