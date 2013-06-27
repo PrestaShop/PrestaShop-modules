@@ -239,50 +239,44 @@ class Ebay extends Module
 	*/
 	public function uninstall()
 	{
-			// Uninstall Config
-			/* unused
-		foreach ($this->_fieldsList as $keyConfiguration => $name)
-			if (!Configuration::deleteByName($keyConfiguration))
-				return false;
-		*/
 
 		// Uninstall SQL
 		include(dirname(__FILE__).'/sql/sql-uninstall.php');
 		foreach ($sql as $s)
 			if (!Db::getInstance()->execute($s))
 				return false;
-
-		Configuration::deleteByName('EBAY_API_SESSION');
-		Configuration::deleteByName('EBAY_API_USERNAME');
+		
+		//Configuration::deleteByName('EBAY_API_SESSION');
+		//Configuration::deleteByName('EBAY_API_USERNAME');
 		Configuration::deleteByName('EBAY_API_TOKEN');
-		Configuration::deleteByName('EBAY_IDENTIFIER');
-		Configuration::deleteByName('EBAY_SHOP');
-		Configuration::deleteByName('EBAY_PAYPAL_EMAIL');
-		Configuration::deleteByName('EBAY_SHIPPING_CARRIER_ID');
-		Configuration::deleteByName('EBAY_SHIPPING_COST');
-		Configuration::deleteByName('EBAY_SHIPPING_COST_CURRENCY');
-		Configuration::deleteByName('EBAY_SHOP_POSTALCODE');
-		Configuration::deleteByName('EBAY_CATEGORY_LOADED');
-		Configuration::deleteByName('EBAY_CATEGORY_LOADED_DATE');
-		Configuration::deleteByName('EBAY_PRODUCT_TEMPLATE');
-		Configuration::deleteByName('EBAY_SYNC_MODE');
-		Configuration::deleteByName('EBAY_ORDER_LAST_UPDATE');
-		Configuration::deleteByName('EBAY_VERSION');
-		Configuration::deleteByName('EBAY_SECURITY_TOKEN');
-		Configuration::deleteByName('EBAY_INSTALL_DATE');
-		Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
-		Configuration::deleteByName('EBAY_DELIVERY_TIME');
-		Configuration::deleteByName('EBAY_RETURNS_DESCRIPTION');
-		Configuration::deleteByName('EBAY_RETURNS_ACCEPTED_OPTION');
-		Configuration::deleteByName('EBAY_LISTING_DURATION');
-		Configuration::deleteByName('EBAY_AUTOMATICALLY_RELIST');
-		Configuration::deleteByName('EBAY_LAST_RELIST');
-		Configuration::deleteByName('EBAY_SYNC_OPTION_RESYNC');
-		Configuration::deleteByName('EBAY_SYNC_LAST_PRODUCT');
-		Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
-		Configuration::deleteByName('EBAY_ZONE_NATIONAL');
-		Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
-		Configuration::deleteByName('EBAY_SPECIFICS_LAST_UPDATE');		
+		//Configuration::deleteByName('EBAY_IDENTIFIER');
+		//Configuration::deleteByName('EBAY_SHOP');
+		//Configuration::deleteByName('EBAY_PAYPAL_EMAIL');
+		//Configuration::deleteByName('EBAY_SHIPPING_CARRIER_ID');
+		//Configuration::deleteByName('EBAY_SHIPPING_COST');
+		//Configuration::deleteByName('EBAY_SHIPPING_COST_CURRENCY');
+		//Configuration::deleteByName('EBAY_SHOP_POSTALCODE');
+		//Configuration::deleteByName('EBAY_CATEGORY_LOADED');
+		//Configuration::deleteByName('EBAY_CATEGORY_LOADED_DATE');
+		//Configuration::deleteByName('EBAY_PRODUCT_TEMPLATE');
+		//Configuration::deleteByName('EBAY_SYNC_MODE');
+		//Configuration::deleteByName('EBAY_ORDER_LAST_UPDATE');
+		//Configuration::deleteByName('EBAY_VERSION');
+		//Configuration::deleteByName('EBAY_SECURITY_TOKEN');
+		//Configuration::deleteByName('EBAY_INSTALL_DATE');
+		//Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
+		//Configuration::deleteByName('EBAY_DELIVERY_TIME');
+		//Configuration::deleteByName('EBAY_RETURNS_DESCRIPTION');
+		//Configuration::deleteByName('EBAY_RETURNS_ACCEPTED_OPTION');
+		//Configuration::deleteByName('EBAY_LISTING_DURATION');
+		//Configuration::deleteByName('EBAY_AUTOMATICALLY_RELIST');
+		//Configuration::deleteByName('EBAY_LAST_RELIST');
+		//Configuration::deleteByName('EBAY_SYNC_OPTION_RESYNC');
+		//Configuration::deleteByName('EBAY_SYNC_LAST_PRODUCT');
+		//Configuration::deleteByName('EBAY_ZONE_INTERNATIONAL');
+		//Configuration::deleteByName('EBAY_ZONE_NATIONAL');
+		//Configuration::deleteByName('EBAY_COUNTRY_DEFAULT');
+		//Configuration::deleteByName('EBAY_SPECIFICS_LAST_UPDATE');		
 
 		// Uninstall Module
 		if (!parent::uninstall() ||
