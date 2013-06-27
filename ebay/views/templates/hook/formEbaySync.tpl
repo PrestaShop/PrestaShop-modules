@@ -153,7 +153,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{if count($categories) == 0}
+					{if $categories|count == 0}
 						<tr><td colspan="2">{l s='No category found.' mod='ebay'}</td></tr>
 					{else}
 						{foreach from=$categories item=category}
