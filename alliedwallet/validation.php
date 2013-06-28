@@ -49,16 +49,18 @@ if ($allied->active)
 		Logger::AddLog('[AlliedWallet] Hack attempt: Someone tried to validate a payment with a different site ID - '.Tools::safeOutput($siteId), 2);
 		die($allied->l('Forbidden Action.'));
 	}
+	
+	$amount = str_replace(',', '.', Tools::getValue('Amount'));
 
 	$message = '
-	Amount: '.(float)Tools::getValue('Amount').'
+	Amount: '.(float)$amount.'
 	Pay Reference ID: '.Tools::getValue('PayReferenceID').'
 	Transaction ID: '.Tools::getValue('TransactionID').'
 	Card mask: '.Tools::getValue('CardMask');
 	
 	$cart = new Cart((int)Tools::getValue('MerchantReference'));
 	if (Validate::isLoadedObject($cart))
-		$allied->validateOrder((int)$cart->id, (int)Configuration::get('PS_OS_PAYMENT'), (float)Tools::getValue('Amount'), $allied->displayName, $message, array(), NULL, false, $cart->secure_key);
+		$allied->validateOrder((int)$cart->id, (int)Configuration::get('PS_OS_PAYMENT'), (float)$amount, $allied->displayName, $message, array(), NULL, false, $cart->secure_key);
 	else
 		Logger::AddLog('[AlliedWallet] The Shopping cart #'.(int)Tools::getValue('MerchantReference').' was not found during the payment validation step.', 2);
 }
