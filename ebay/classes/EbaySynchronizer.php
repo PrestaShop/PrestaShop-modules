@@ -226,7 +226,7 @@ class EbaySynchronizer
 	 */
 	private static function _isProductMultiSku($ebay_category, $product_id, $id_lang)
 	{
-		return $ebay_category->isMultiSku() && EbaySynchronizer::_hasVariationsMatching($product_id, $id_lang);
+		return $ebay_category->isMultiSku() && EbaySynchronizer::_hasVariationsMatching($product_id, $id_lang, $ebay_category);
 	}
 	
 	private static function _hasVariationProducts($variations)
@@ -356,7 +356,6 @@ class EbaySynchronizer
 		return EbaySynchronizer::$ebay_categories[$category_id];
 	}
 
-	
 	private static function _loadVariations($product, $context, $ebay_category)
 	{
 		$variations = array();
@@ -405,18 +404,45 @@ class EbaySynchronizer
 		return $variations;
 	}
 	
-	private static function _hasVariationsMatching($product_id, $id_lang)
+	private static function _hasVariationsMatching($product_id, $id_lang, $ebay_category)
 	{
 		$product = new Product($product_id); 
-		$atribute_groups = $product->getAttributesGroups($id_lang);
-		$attribute_group_ids = array_unique(array_map(function($row) { return $row['id_attribute_group']; }, $atribute_groups));
+		$attribute_groups = $product->getAttributesGroups($id_lang);
+		$attribute_group_ids = array_unique(array_map(function($row) { return $row['id_attribute_group']; }, $attribute_groups));
 		
+		/*
 		$nb_variation_attribute_groups = Db::getInstance()->getValue('SELECT COUNT(*) 
 			FROM `'._DB_PREFIX_.'ebay_category_specific`
 			WHERE `can_variation` = 1 
 			AND `id_attribute_group` IN ('.implode(', ', $attribute_group_ids).')');
+		*/
 		
-		return (count($attribute_group_ids) == $nb_variation_attribute_groups);
+		// test if has attribute that are not can_variation, in that case => no multisku
+		$nb_no_variation_attribute_groups = Db::getInstance()->getValue('SELECT COUNT(*) 
+			FROM `'._DB_PREFIX_.'ebay_category_specific`
+			WHERE `can_variation` = 0
+			AND `id_attribute_group` IN ('.implode(', ', $attribute_group_ids).')');
+		if ($nb_no_variation_attribute_groups)
+			return false;
+			
+		// test if all the attribute_groups without matching are not conflicting with an item_specific name
+		$category_specifics = Db::getInstance()->executeS('SELECT `id_attribute_group`
+			FROM `'._DB_PREFIX_.'ebay_category_specific`
+			WHERE `id_attribute_group` IN ('.implode(', ', $attribute_group_ids).')');
+		$with_settings_attribute_group_ids = array_map(function($row) { return $row['id_attribute_group']; }, $category_specifics);
+		
+		$without_settings_attribute_group_ids = array_diff($attribute_group_ids, $with_settings_attribute_group_ids);
+		foreach($attribute_groups as $attribute_group)
+		{
+			if (!in_array($attribute_group['id_attribute_group'], $without_settings_attribute_group_ids))
+				continue;
+			
+			foreach($ebay_category->getItemsSpecificValues() as $item_specific)
+				if ($item_specific['name'] === $attribute_group['group_name'])
+					return false;
+		}
+		
+		return true;
 	}
 	
 	private static function _getPrices($product_id, $percent)
@@ -858,7 +884,7 @@ class EbaySynchronizer
 	 */
 	public static function _getVariationSpecifics($product_id, $product_attribute_id, $id_lang)
 	{
-		$item_specifics_pairs = array();
+		$variation_specifics_pairs = array();
 		
 		$attributes_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT IF(ecs.name is not null, ecs.name, agl.name) AS name, al.name AS value
@@ -873,11 +899,11 @@ class EbaySynchronizer
 			ON a.id_attribute_group = ecs.id_attribute_group
 			WHERE pac.id_product_attribute='.(int)$product_attribute_id);
 			
-		$item_specifics_pairs = array();
+		$variation_specifics_pairs = array();
 		foreach ($attributes_values as $attribute_value)
-			$item_specifics_pairs[$attribute_value['name']] = $attribute_value['value'];
+			$variation_specifics_pairs[$attribute_value['name']] = $attribute_value['value'];
 			
-		return $item_specifics_pairs;
+		return $variation_specifics_pairs;
 	}
 	
 	private static function _addSqlRestrictionOnLang($alias) 
