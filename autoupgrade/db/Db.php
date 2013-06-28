@@ -209,10 +209,10 @@ abstract class DbCore
 	public static function getClass()
 	{
 		$class = 'MySQL';
-		if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql'))
+		/*if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql'))
 			$class = 'DbPDO';
 		else if (extension_loaded('mysqli'))
-			$class = 'DbMySQLi';
+			$class = 'DbMySQLi';*/
 		return $class;
 	}
 
