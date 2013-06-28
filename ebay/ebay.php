@@ -316,17 +316,17 @@ class Ebay extends Module
 			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.2.php');
 			upgrade_module_1_2($this);
 		}
-		elseif (version_compare($version, '1.4.0', '<'))
+		if (version_compare($version, '1.4.0', '<'))
 		{
 			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.4.php');
 			upgrade_module_1_4($this);
 		}
-		elseif (version_compare($version, '1.5.0', '<'))
+		if (version_compare($version, '1.5.0', '<'))
 		{
 			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
 			upgrade_module_1_5($this);
 		}
-
+		/*
 		if (!empty($sql) && is_array($sql))
 		{
 			foreach ($sql as $request)
@@ -337,6 +337,7 @@ class Ebay extends Module
 				}
 			$this->setConfiguration('EBAY_VERSION', $this->version);
 		}
+		*/
 	}
 
 	/**
