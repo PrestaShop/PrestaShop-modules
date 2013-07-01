@@ -1822,12 +1822,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 				WHERE m.`name` LIKE \'backwardcompatibility\'');
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'backwardcompatibility\'');
 
-				$dibsPath = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR.'dibs.php';
-				if (file_exists($dibsPath))
-					if (Tools14::deleteDirectory(str_replace('dibs.php', '', $dibsPath)))
+				$dibsPath = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR;
+				if (file_exists($dibsPath.'dibs.php'))
+                {
+					if (Tools14::deleteDirectory($dibsPath))
 						$this->nextQuickInfo[] = $this->l('Dibs module is not compatible with 1.5.X, it will be removed from your ftp.');
 					else																			
 						$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
+                }
 			}
 
 			$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
@@ -2680,7 +2682,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		// 1st, need to analyse what was wrong.
 		$this->nextParams = $this->currentParams;
 		$this->restoreFilesFilename = $this->restoreName;
-		if (!empty($this->restoreName) && $this->getConfig('PS_AUTOUP_BACKUP'))
+		if (!empty($this->restoreName))
 		{
 			$files = scandir($this->backupPath);
 			// find backup filenames, and be sure they exists

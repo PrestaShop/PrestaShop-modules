@@ -531,17 +531,21 @@ class Tools14
 			if ($files = @scandir($dirname))
 			{
 				foreach ($files as $file)
-				if ($file != '.' && $file != '..' && $file != '.svn')
-				{
-					if (is_dir($dirname.$file))
-						Tools::deleteDirectory($dirname.$file, true);
-					elseif (file_exists($dirname.$file))
-						@unlink($dirname.$file);
-				}
+    				if ($file != '.' && $file != '..' && $file != '.svn')
+    				{
+    					if (is_dir($dirname.$file))
+    						Tools::deleteDirectory($dirname.$file, true);
+    					elseif (file_exists($dirname.$file))
+    						@unlink($dirname.$file);
+    				}
 				if ($delete_self)
 					@rmdir($dirname);
+                else
+                    return false;
+                return true;                    
 			}
-	}
+        return false;
+    }
 
 	/**
 	* Display an error according to an error code
