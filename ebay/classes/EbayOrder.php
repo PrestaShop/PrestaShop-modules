@@ -327,7 +327,7 @@ class EbayOrder
 				AND `product_id` = '.(int)$product['id_product'].' 
 				AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
 
-			Db::getInstance()->autoExecute(DB_PREFIX.'order_detail', array(
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', array(
 				'product_price' 		=> floatval($product['price'] / (1 + ($tax_rate / 100))), 
 				'reduction_percent' => 0, 
 				'reduction_amount' 	=> 0), 'UPDATE', '`id_order` = '.(int)$id_order.' 
