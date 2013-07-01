@@ -42,19 +42,19 @@
 		</style>
 		<p>
 		<b>{l s='Order Ref eBay' mod='ebay'} :</b> 
-		{if $order->getIdOrderRef()}{$order->getIdOrderRef()}{/if}<br />
+		{if $order.id_order_ref}{$order.id_order_ref}{/if}<br />
 		<b>{l s='Id Order Seller' mod='ebay'} :</b> 
-		{if $order->getIdOrderSeller()}{$order->getIdOrderSeller()}{/if}<br />
+		{if $order.id_order_seller}{$order.id_order_seller}{/if}<br />
 		<b>{l s='Amount' mod='ebay'} :</b> 
-		{if $order->getAmount()}{$order->getAmount()}{/if}<br />
+		{if $order.amount}{$order.amount}{/if}<br />
 		<b>{l s='Status' mod='ebay'} :</b> 
-		{if $order->getStatus()}{$order->getStatus()}{/if}<br />
+		{if $order.status}{$order.status}{/if}<br />
 		<b>{l s='Date' mod='ebay'} :</b>
-		{if $order->getDate()}{$order->getDate()}{/if}<br />
+		{if $order.date}{$order.date}{/if}<br />
 		<b>{l s='E-mail' mod='ebay'} :</b>
-		{if $order->getEmail()}{$order->getEmail()}{/if}<br />
+		{if $order.email}{$order.email}{/if}<br />
 		<b>{l s='Products' mod='ebay'} :</b><br />
-		{if $order->getProducts() && count($order->getProducts()) > 0}
+		{if $order.products && ($order.products|count > 0)}
 			<table border="0" cellpadding="4" cellspacing="0">
 				<tr>
 					<td class="orderImportTd1">
@@ -70,7 +70,7 @@
 						<b>{l s='Price' mod='ebay'}</b>
 					</td>
 				</tr>
-				{foreach from=$order->getProducts() item="product"}
+				{foreach from=$order.products item="product"}
 					<tr>
 						<td class="orderImportTd2">{$product.id_product}</td>
 						<td class="orderImportTd2">{$product.id_product}</td>
@@ -80,10 +80,10 @@
 				{/foreach}
 			</table>
 		{/if}
-		{if $order->getErrorMessages()|count}
+		{if $order.error_messages|count}
 			<b>{l s='Status Import' mod='ebay'} :</b> KO<br />
 			<b>{l s='Failure details' mod='ebay'} :</b><br />
-			{foreach from=$order->getErrorMessages() item="error"}
+			{foreach from=$order.error_messages item="error"}
 				{$error}t<br />
 			{/foreach}
 		{else}
