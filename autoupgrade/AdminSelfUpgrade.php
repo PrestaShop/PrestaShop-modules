@@ -824,9 +824,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 	public function postProcess()
 	{
-		/* Bug with backwardcompatibility ovverind currentIndex */
-		$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
-
 		$this->_setFields();
 
 		// set default configuration to default channel & dafault configuration for backup and upgrade 
