@@ -788,39 +788,29 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->autoupgradePath = $this->adminDir.DIRECTORY_SEPARATOR.$this->autoupgradeDir;
 		// directory missing
 		if (!file_exists($this->autoupgradePath))
-			if (!@mkdir($this->autoupgradePath, 0775))
+			if (!@mkdir($this->autoupgradePath))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->autoupgradePath);
-			else
-				@chmod($this->autoupgradePath, 0775);
 
 		$this->downloadPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'download';
 		if (!file_exists($this->downloadPath))
-			if (!@mkdir($this->downloadPath, 0775))
-				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->downloadPath);
-			else
-				@chmod($this->downloadPath, 0775);				
+			if (!@mkdir($this->downloadPath))
+				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->downloadPath);			
 
 		$this->backupPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'backup';
 		if (!file_exists($this->backupPath))
-			if (!@mkdir($this->backupPath, 0775))
-				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->backupPath);
-			else
-				@chmod($this->backupPath, 0775);				
+			if (!@mkdir($this->backupPath))
+				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->backupPath);				
 
 		// directory missing
 		$this->latestPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'latest';
 		if (!file_exists($this->latestPath))
-			if (!@mkdir($this->latestPath, 0775))
-				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->latestPath);
-			else
-				@chmod($this->latestPath, 0775);				
+			if (!@mkdir($this->latestPath))
+				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->latestPath);				
 
 		$this->tmpPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'tmp';
 		if (!file_exists($this->tmpPath))
-			if (!@mkdir($this->tmpPath, 0775))
-				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->tmpPath);
-			else
-				@chmod($this->tmpPath, 0775);				
+			if (!@mkdir($this->tmpPath))
+				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->tmpPath);				
 
 		$this->latestRootDir = $this->latestPath.DIRECTORY_SEPARATOR.'prestashop';
 	}
@@ -2604,9 +2594,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				}
 				if (!file_exists($dest))
 				{
-					if (@mkdir($dest, 0775))
+					if (@mkdir($dest))
 					{
-						@chmod($dest, 0775);
 						$this->nextQuickInfo[] = sprintf($this->l('directory %1$s created.'), $file);
 						return true;
 					}
@@ -3123,8 +3112,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (!is_dir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName))
 			{
-				mkdir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName, 0775);
-				@chmod($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName, 0775);
+				mkdir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName);
 			}
 			$this->nextParams['dbStep'] = 0;
 			$tablesToBackup = $this->db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%"', true, false);
@@ -5225,7 +5213,7 @@ $(document).ready(function()
 		}
 
 		if (!file_exists($to_dir))
-			if (!@mkdir($to_dir, 0775))
+			if (!@mkdir($to_dir))
 			{
 				$this->next = 'error';
 				$this->nextQuickInfo[] = sprintf($this->l('unable to create directory %s'), $to_dir);
