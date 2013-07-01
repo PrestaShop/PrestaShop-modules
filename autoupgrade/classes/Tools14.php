@@ -539,9 +539,8 @@ class Tools14
     						@unlink($dirname.$file);
     				}
 				if ($delete_self)
-					@rmdir($dirname);
-                else
-                    return false;
+					if (!@rmdir($dirname)
+                        return false;
                 return true;                    
 			}
         return false;
