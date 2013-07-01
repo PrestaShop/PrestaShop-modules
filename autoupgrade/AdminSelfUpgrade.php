@@ -376,7 +376,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		@set_time_limit(0);
 		@ini_set('max_execution_time', '0');
 
-		global $ajax;
+		global $ajax, $currentIndex;
 
 		if (!empty($ajax))
 			$this->ajax = true;
@@ -433,8 +433,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 				foreach ($perf_array as $property => $values)
 					self::$$property = $values[0];
 		}
-		/* Bug with backwardcompatibility overrinding currentIndex */		
-		$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
+		/* Bug with backwardcompatibility overrinding currentIndex */
+		if (version_compare(_PS_VERSION_,'1.5.0.0','>'))	
+			$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
+		else
+			$this->currentIndex = $currentIndex;
 	}
 
 	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
