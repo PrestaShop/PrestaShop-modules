@@ -965,7 +965,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (!$this->warning_exists)
 			$this->next_desc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
 		else
-			$this->next_desc = $this->l('Upgrade process done, but some warnings has been found. Please restore your shop.');
+			$this->next_desc = $this->l('Upgrade process done, but some warnings has been found.');
 		$this->next = '';
 		
 		$conf_clear = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_UPGRADE_CLEAR_CACHE\' ');
@@ -1822,8 +1822,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 				WHERE m.`name` LIKE \'backwardcompatibility\'');
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'backwardcompatibility\'');
 
-				if (file_exists($this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR.'dibs.php'))
-					$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
+				$dibsPath = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR.'dibs.php';
+				if (file_exists($dibsPath))
+					if (Tools14::deleteDirectory(str_replace('dibs.php', '', $dibsPath)))
+						$this->nextQuickInfo[] = $this->l('Dibs module is not compatible with 1.5.X, it will be removed from your ftp.');
+					else																			
+						$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
 			}
 
 			$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
@@ -4682,9 +4686,9 @@ function afterUpgradeComplete(res)
 		$("#upgradeResultCheck")
 			.addClass("fail")
 			.removeClass("ok")
-			.html("<p>'.$this->l('Upgrade complete, but warnings has been found. Please restore your shop.').'</p>")
+			.html("<p>'.$this->l('Upgrade complete, but warnings has been found.').'</p>")
 			.show("slow");
-		$("#infoStep").html("<h3>'.$this->l('Upgrade Complete, but warnings has been found.', 'AdminSelfUpgrade', true).'</h3>");
+		$("#infoStep").html("<h3>'.$this->l('Upgrade complete, but warnings has been found.', 'AdminSelfUpgrade', true).'</h3>");
 	}
 
 	todo_list = [
