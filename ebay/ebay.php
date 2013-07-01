@@ -495,7 +495,21 @@ class Ebay extends Module
 						foreach ($order->getProducts() as $product)
 							$this->hookAddProduct(new Product((int)$product['id_product']));
 				}
-				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders, true).";\n\n");
+				$orders_ar = array();
+				foreach ($orders as $order)
+				{
+					$orders_ar[] = array(
+						'id_order_ref' 		=> $order->getIdOrderRef(),
+						'id_order_seller' => $order->getIdOrderSeller(),
+						'amount'					=> $order->getAmount(),
+						'status'					=> $order->getStatus(),
+						'date'						=> $order->getDate(),
+						'email'						=> $order->getEmail(),
+						'products'				=> $order->getProducts(),
+						'error_messages'	=> $order->getErrorMessages()
+					);
+				}
+				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders_ar, true).";\n\n");
 			}
 		}
 
