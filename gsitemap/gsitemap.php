@@ -440,6 +440,9 @@ class Gsitemap extends Module
 		foreach ($cmss_id as $cms_id)
 		{
 			$cms = new CMS((int)$cms_id['id_cms'], $lang['id_lang']);
+			$cms_category = new CMSCategory((int)$cms->id_cms_category);
+			if(!$cmsCategory->active)
+				continue;
 			$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).$this->context->shop->physical_uri.$this->context->shop->virtual_uri;
 			$url .= str_replace(_PS_BASE_URL_.__PS_BASE_URI__, '', $link->getCmsLink($cms, null, null, null, $lang['id_lang']));
 			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'cms', 'page' => 'cms', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $cms_id['id_cms']))
