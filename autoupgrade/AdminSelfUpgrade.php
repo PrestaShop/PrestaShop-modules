@@ -437,7 +437,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (version_compare(_PS_VERSION_,'1.5.0.0','>'))	
 			$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 		else
-			$this->currentIndex = $currentIndex;
+		$this->currentIndex = $currentIndex;
 	}
 
 	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
@@ -614,7 +614,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		foreach($this->tmp_files as $tmp_file)
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->$tmp_file))
-				unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->$tmp_file);
+				@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->$tmp_file);
 	}
 
 	/**
@@ -788,29 +788,39 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->autoupgradePath = $this->adminDir.DIRECTORY_SEPARATOR.$this->autoupgradeDir;
 		// directory missing
 		if (!file_exists($this->autoupgradePath))
-			if (!@mkdir($this->autoupgradePath,0777))
+			if (!@mkdir($this->autoupgradePath, 0775))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->autoupgradePath);
+			else
+				@chmod($this->autoupgradePath, 0775);
 
 		$this->downloadPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'download';
 		if (!file_exists($this->downloadPath))
-			if (!@mkdir($this->downloadPath,0777))
+			if (!@mkdir($this->downloadPath, 0775))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->downloadPath);
+			else
+				@chmod($this->downloadPath, 0775);				
 
 		$this->backupPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'backup';
 		if (!file_exists($this->backupPath))
-			if (!@mkdir($this->backupPath,0777))
+			if (!@mkdir($this->backupPath, 0775))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->backupPath);
+			else
+				@chmod($this->backupPath, 0775);				
 
 		// directory missing
 		$this->latestPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'latest';
 		if (!file_exists($this->latestPath))
-			if (!@mkdir($this->latestPath,0777))
+			if (!@mkdir($this->latestPath, 0775))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->latestPath);
+			else
+				@chmod($this->latestPath, 0775);				
 
 		$this->tmpPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'tmp';
 		if (!file_exists($this->tmpPath))
-			if (!@mkdir($this->tmpPath,0777))
+			if (!@mkdir($this->tmpPath, 0775))
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->tmpPath);
+			else
+				@chmod($this->tmpPath, 0775);				
 
 		$this->latestRootDir = $this->latestPath.DIRECTORY_SEPARATOR.'prestashop';
 	}
@@ -875,7 +885,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (preg_match('#^.*'.preg_quote($name).'.*$#', $filename, $matches))
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
-						$res &= unlink($this->backupPath.DIRECTORY_SEPARATOR.$filename);
+						$res &= @unlink($this->backupPath.DIRECTORY_SEPARATOR.$filename);
 
 					if (!empty($name) && is_dir($this->backupPath.DIRECTORY_SEPARATOR.$name))
 						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name);
@@ -1662,7 +1672,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (count($filesToUpgrade) <= 0)
 			{
 				$this->next = 'upgradeDb';
-				unlink($this->nextParams['filesToUpgrade']);
+				@unlink($this->nextParams['filesToUpgrade']);
 				$this->next_desc = $this->l('All files upgraded. Now upgrading database');
 				$this->nextResponseType = 'json';
 				break;
@@ -1705,7 +1715,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		for ($i = 0; $i < strlen($chars); $i++)
 		{
 			$new_dir = $directory.$chars[$i].'/';
-			if (mkdir($new_dir) && chmod($new_dir, 0777) && $level_depth - 1 > 0)
+			if (@mkdir($new_dir, 0775) && @chmod($new_dir, 0775) && $level_depth - 1 > 0)
 				self::createCacheFsDirectories($level_depth - 1, $new_dir);
 		}
 	}
@@ -1877,7 +1887,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					if ($this->ZipExtract($zip_fullpath, $dest_extract))
 					{
 						$this->nextQuickInfo[] = sprintf($this->l('module %s files has been upgraded'), $name);
-						unlink($zip_fullpath);
+						@unlink($zip_fullpath);
 					}
 					else
 					{
@@ -2301,7 +2311,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 					{
-						unlink($dir.$file);
+						@unlink($dir.$file);
 						$this->nextQuickInfo[] = sprintf($this->l('[cleaning cache] %s removed'), $file);
 					}
 
@@ -2526,7 +2536,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			// in that particular case : file exists, but variable missing, we need to delete that file
 			// (if not, this invalid file will be copied in /translations during upgradeDb process)
 			if ('module' == $type)
-				unlink($dest);
+				@unlink($dest);
 			$this->nextQuickInfo[] = sprintf('[WARNING] %1$s variable missing in file %2$s. file %2$s deleted and merge skipped.', $var_name, $dest);
 			return false;
 		}
@@ -2583,13 +2593,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 				// if $dest is not a directory (that can happen), just remove that file
 				if (!is_dir($dest) AND file_exists($dest))
 				{
-					unlink($dest);
+					@unlink($dest);
 					$this->nextQuickInfo[] = sprintf('[WARNING] file %1$s has been deleted.', $file);
 				}
 				if (!file_exists($dest))
 				{
-					if (@mkdir($dest, 0777))
+					if (@mkdir($dest, 0775))
 					{
+						@chmod($dest, 0775);
 						$this->nextQuickInfo[] = sprintf($this->l('directory %1$s created.'), $file);
 						return true;
 					}
@@ -2644,7 +2655,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			}
 			elseif (is_file($dest))
 			{
-				unlink($dest);
+				@unlink($dest);
 				$this->nextQuickInfo[] = sprintf('removed file %1$s.', $file);
 				return true;
 			}
@@ -2703,9 +2714,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next_desc = $this->l('Restoring files ...');
 			// remove tmp files related to restoreFiles
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList))
-				unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList);
+				@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList);
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList))
-				unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList);
+				@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList);
 		}
 		else
 			$this->next = 'noRollbackFound';
@@ -2869,7 +2880,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (is_dir($dirname.$file))
 					self::deleteDirectory($dirname.$file, true);
 				elseif (file_exists($dirname.$file))
-					unlink($dirname.$file);
+					@unlink($dirname.$file);
 			}
 		if ($delete_self && is_dir($dirname))
 			rmdir($dirname);
@@ -2990,7 +3001,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			{
 				if (count($listQuery)<=0)
 				{
-					unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList);
+					@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList);
 					$currentDbFilename = '';
 					if (count($this->restoreDbFilenames) > 0)
 					{
@@ -3105,7 +3116,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (!file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList))
 		{
 			if (!is_dir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName))
-				mkdir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName, 0755);
+			{
+				mkdir($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName, 0775);
+				@chmod($this->backupPath.DIRECTORY_SEPARATOR.$this->backupName, 0775);
+			}
 			$this->nextParams['dbStep'] = 0;
 			$tablesToBackup = $this->db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%"', true, false);
 			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList, serialize($tablesToBackup));
@@ -3197,7 +3211,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						|| (isset($schema[0]['View']) && isset($schema[0]['Create View']))))
 				{
 					fclose($fp);
-					unlink($backupfile);
+					@unlink($backupfile);
 					$this->nextQuickInfo[] = sprintf($this->l('An error occurred while backing up. Unable to obtain the schema of %s'), $table);
 					$this->nextErrors[] = sprintf($this->l('An error occurred while backing up. Unable to obtain the schema of %s'), $table);
 					$this->next = 'error';
@@ -3316,7 +3330,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if ($found == 0)
 		{
 			if (isset($backupfile))
-				unlink($backupfile);
+				@unlink($backupfile);
 			$this->nextQuickInfo[] = $this->l('No valid tables were found to backup. Backup cancelled.');
 			$this->nextErrors[] = $this->l('No valid tables were found to backup. Backup cancelled.');
 			$this->next = 'error';
@@ -3375,7 +3389,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 			// delete old backup, create new
 			if (!empty($this->backupFilesFilename) && file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
-				unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
+				@unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
 
 			$this->nextQuickInfo[]	= sprintf($this->l('backup files initialized in %s'), $this->backupFilesFilename);
 		}
@@ -3431,7 +3445,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 							// if an error occur, it's more safe to delete the corrupted backup
 							$zip->close();
 							if (file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
-								unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
+								@unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
 							$this->next = 'error';
 							$this->next_desc = sprintf($this->l('error when trying to add %1$s to archive %2$s.', 'AdminSelfUpgrade', true),$file, $archiveFilename);
 							break;
@@ -3482,7 +3496,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		if (is_array($removeList) AND count($removeList) > 0)
 		{
-			if (file_exists($removeList[0]) AND unlink($removeList[0]))
+			if (file_exists($removeList[0]) AND @unlink($removeList[0]))
 			{
 				$item = str_replace($this->prodRootDir, '', array_shift($removeList));
 				$this->next = 'removeSamples';
@@ -5205,13 +5219,15 @@ $(document).ready(function()
 		}
 
 		if (!file_exists($to_dir))
-			if (!@mkdir($to_dir, 0777))
+			if (!@mkdir($to_dir, 0775))
 			{
 				$this->next = 'error';
 				$this->nextQuickInfo[] = sprintf($this->l('unable to create directory %s'), $to_dir);
 				$this->nextErrors[] = sprintf($this->l('unable to create directory %s'), $to_dir);
 				return false;
 			}
+			else
+				@chmod($to_dir, 0775);
 
 		if (!self::$force_pclZip && class_exists('ZipArchive', false))
 		{

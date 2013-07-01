@@ -86,8 +86,10 @@ class Autoupgrade extends Module
 
 		/* Check that the 1-click upgrade working directory is existing or create it */
 		$autoupgrade_dir = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade';
-		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir, 0755))
+		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir, 0775))
 			return $this->_abortInstall(sprintf($this->l('Unable to create the directory "%s"'), $autoupgrade_dir));
+		else
+			@chmod($autoupgrade_dir, 0775);
 		
 		/* Make sure that the 1-click upgrade working directory is writeable */
 		if (!is_writable($autoupgrade_dir))
@@ -103,8 +105,10 @@ class Autoupgrade extends Module
 
 		/* Make sure that the XML config directory exists */
 		if (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml') &&
-		!@mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0755))
+		!@mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0775))
 			return $this->_abortInstall(sprintf($this->l('Unable to create the directory "%s"'), _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'));
+		else
+			@chmod(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0775);
 		
 		/* Create a dummy index.php file in the XML config directory to avoid directory listing */
 		if (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'index.php') &&
