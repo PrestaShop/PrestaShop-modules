@@ -86,10 +86,8 @@ class Autoupgrade extends Module
 
 		/* Check that the 1-click upgrade working directory is existing or create it */
 		$autoupgrade_dir = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade';
-		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir, 0775))
+		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir))
 			return $this->_abortInstall(sprintf($this->l('Unable to create the directory "%s"'), $autoupgrade_dir));
-		else
-			@chmod($autoupgrade_dir, 0775);
 		
 		/* Make sure that the 1-click upgrade working directory is writeable */
 		if (!is_writable($autoupgrade_dir))
