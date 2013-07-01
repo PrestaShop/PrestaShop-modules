@@ -377,6 +377,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		@ini_set('max_execution_time', '0');
 
 		global $ajax;
+
 		if (!empty($ajax))
 			$this->ajax = true;
 
@@ -432,6 +433,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				foreach ($perf_array as $property => $values)
 					self::$$property = $values[0];
 		}
+		/* Bug with backwardcompatibility overrinding currentIndex */		
+		$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 	}
 
 	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
@@ -821,7 +824,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 	public function postProcess()
 	{
-		global $currentIndex;
+		/* Bug with backwardcompatibility ovverind currentIndex */
+		$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 
 		$this->_setFields();
 
@@ -858,7 +862,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$config[$key] = $_POST[$key];
 			$res = $this->writeConfig($config);
 			if ($res)
-				Tools14::redirectAdmin($currentIndex.'&conf=6&token='.Tools14::getValue('token'));
+				Tools14::redirectAdmin($this->currentIndex.'&conf=6&token='.Tools14::getValue('token'));
 		}
 
 		if (Tools14::isSubmit('deletebackup'))
@@ -877,7 +881,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name);
 				}
 			if ($res)
-				Tools14::redirectAdmin($currentIndex.'&conf=1&token='.Tools14::getValue('token'));
+				Tools14::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools14::getValue('token'));
 			else
 				$this->_errors[] = sprintf($this->l('Error when trying to delete backups %s'), $name);
 		}
@@ -966,8 +970,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 	// Simplification of _displayForm original function
 	protected function _displayForm($name, $fields, $tabname, $size, $icon)
 	{
-		global $currentIndex;
-
 		$confValues = $this->getConfig();
 		$required = false;
 
@@ -3836,9 +3838,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	 * @return string
 	 */
 	private function _displayCurrentConfiguration()
-	{
-		global $currentIndex;
-		
+	{	
 		$current_ps_config = $this->getcheckCurrentPsConfig();
 		
 		$this->_html .= '
@@ -3874,7 +3874,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<td>'.((ConfigurationTest::test_fopen() || ConfigurationTest::test_curl()) ? $pic_ok : $pic_nok).'</td></tr>';
 
 		// shop enabled
-		$this->_html .= '<th>'.$this->l('You must put your store under maintenance').' '.(!$current_ps_config['shop_deactivated'] ? '<br><form method="post" action="'.$currentIndex.'&token='.$this->token.'"><input type="submit" class="button" name="putUnderMaintenance" value="'.$this->l('Click here to put your shop under maintenance').'"></form>' : '').'</th>
+		$this->_html .= '<th>'.$this->l('You must put your store under maintenance').' '.(!$current_ps_config['shop_deactivated'] ? '<br><form method="post" action="'.$this->currentIndex.'&token='.$this->token.'"><input type="submit" class="button" name="putUnderMaintenance" value="'.$this->l('Click here to put your shop under maintenance').'"></form>' : '').'</th>
 			<td>'.($current_ps_config['shop_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
 
 		$this->_html .= '<th>'.$this->l('You must disable the Caching features of PrestaShop').'</th>
@@ -4255,8 +4255,6 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	public function display()
 	{
-		global $currentIndex;
-
 		$this->_html .= '<script type="text/javascript">var jQueryVersionPS = parseFloat("."+$().jquery.replace(/\./g, ""));</script>
 		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript">if (jQueryVersionPS >= 0.162) jq162 = jQuery.noConflict(true);</script>';
@@ -4302,7 +4300,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 					else
 						$upgrader->checkPSVersion(true, array('minor'));
 					
-					Tools14::redirectAdmin($currentIndex.'&conf=5&token='.Tools14::getValue('token'));
+					Tools14::redirectAdmin($this->currentIndex.'&conf=5&token='.Tools14::getValue('token'));
 				}
 				else
 				{
@@ -4347,7 +4345,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$this->_displayRollbackForm();
 
 		$this->_html .= '<br/>';
-		$this->_html .= '<form action="'.$currentIndex.'&customSubmitAutoUpgrade=1&token='.$this->token.'"
+		$this->_html .= '<form action="'.$this->currentIndex.'&customSubmitAutoUpgrade=1&token='.$this->token.'"
 			method="post" enctype="multipart/form-data">';
 		$this->_displayForm('backupOptions',$this->_fieldsBackupOptions,'<a href="#" name="backup-options" id="backup-options">'.$this->l('Backup Options').'</a>', '','database_gear');
 		$this->_displayForm('upgradeOptions',$this->_fieldsUpgradeOptions,'<a href="#" name="upgrade-options" id="upgrade-options">'.$this->l('Upgrade Options').'</a>', '','prefs');
@@ -4360,7 +4358,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	private function _getJsInit()
 	{
-		global $currentIndex, $cookie;
+		global $cookie;	
 		$js = '';
 
 		if (method_exists('Tools','getAdminTokenLite'))
@@ -4602,7 +4600,7 @@ function afterUpdateConfig(res)
 	}
 	showConfigResult(res.next_desc);
 	$("#upgradeNow").unbind();
-	$("#upgradeNow").replaceWith("<a class=\"button-autoupgrade\" href=\"'.$currentIndex.'&token='.$this->token.'\" >'.$this->l('Click to refresh the page and use the new configuration', 'AdminSelfUpgrade', true).'</a>");
+	$("#upgradeNow").replaceWith("<a class=\"button-autoupgrade\" href=\"'.$this->currentIndex.'&token='.$this->token.'\" >'.$this->l('Click to refresh the page and use the new configuration', 'AdminSelfUpgrade', true).'</a>");
 }
 function startProcess(type){
 	if (type == "upgrade")
