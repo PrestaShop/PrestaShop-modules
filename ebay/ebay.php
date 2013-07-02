@@ -372,8 +372,8 @@ class Ebay extends Module
 	*/
 	public function hookAddProduct($params)
 	{
-	
-		if (!isset($params['product']->id_product))
+		
+		if (!isset($params['product']))
 			return false;
 		if (!($id_product = (int)$params['product']->id))
 			return false;
@@ -580,11 +580,13 @@ class Ebay extends Module
 	 */
 	public function hookUpdateQuantity($params)
 	{
+		die;
 		$this->hookUpdateProduct($params);
 	}
 	
 	public function hookActionUpdateQuantity($params)
 	{
+		die;
 		$this->hookUpdateProduct($params);
 	}
 
