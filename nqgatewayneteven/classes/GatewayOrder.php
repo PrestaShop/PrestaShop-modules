@@ -441,6 +441,10 @@ class GatewayOrder extends Gateway
 			$order->date_add = $date_now;
 			$order->date_upd = $date_now;
 
+
+            if(Configuration::get('PS_SHOP_ENABLE'))
+                $order->id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
+
 			if (!$order->add())
 				Toolbox::addLogLine(self::getL('Failed for order creation / NetEven Order Id').' '.(int)$neteven_order->OrderID);
 			else
