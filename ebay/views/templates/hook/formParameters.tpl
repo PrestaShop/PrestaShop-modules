@@ -23,11 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($relogin) && $relogin}
+	{literal}
 	<script>
 		$(document).ready(function() {
 				win = window.redirect('{$redirect_url}');
 		});
 	</script>
+	{/literal}
 {/if}
 
 

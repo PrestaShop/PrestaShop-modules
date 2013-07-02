@@ -45,21 +45,24 @@
 </div>
 <br clear="left" />
 <br />
-<style>
+<style>{literal}
 	#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
 	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
 	#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
 	#tabList { clear: left; }
 	.tabItem { display: none; }
 	.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+	{/literal}
 </style>
 <script>
+	{literal}
 	$(".menuTabButton").click(function () {
 		$(".menuTabButton.selected").removeClass("selected");
 		$(this).addClass("selected");
 		$(".tabItem.selected").removeClass("selected");
 		$("#" + this.id + "Sheet").addClass("selected");
 	});
+	{/literal}
 </script>
 {if $id_tab}
 	<script>

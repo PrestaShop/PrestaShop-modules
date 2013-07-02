@@ -65,12 +65,12 @@
 	var module_dir = "{$_module_dir_}";
 	var id_lang = "{$id_lang}";
 	
-	var l = {
+	var l = {ldelim}
 		'Attributes'				 : "{l s="Attributes" mod='ebay'}",
 		'Features'  				 : "{l s="Features" mod='ebay'}",
 		'eBay Specifications': "{l s="eBay Specifications" mod='ebay'}",
 		'Brand'							 : "{l s="Brand" mod='ebay'}"
-	};
+	{rdelim};
 
 	var categories_to_load = new Array();
 
@@ -80,7 +80,7 @@
 	
 	var conditions_data = new Array();
 	{foreach from=$conditions key=type item=condition}
-		conditions_data[{$type}] = "{{l s=$condition mod='ebay'}|capitalize}";
+		conditions_data[{$type}] = "{$condition}";
 	{/foreach}
 	
 	var possible_attributes = new Array();
@@ -98,12 +98,12 @@
 		loadCategoriesItemsSpecifics();
 	})
 
-	$(document).ready(function() {
+	$(document).ready(function() 
+	{
 		{/literal}{if $id_tab == 8}
 			loadCategoriesItemsSpecifics();
-		{/if}{literal}
-	})
-	{/literal}
+		{/if}
+	{rdelim})
 	
 </script>
 <script type="text/javascript" src="{$_module_dir_}ebay/views/js/itemsSpecifics.js?date={$date}"></script>
