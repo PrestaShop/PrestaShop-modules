@@ -42,7 +42,7 @@ class EbayOrder
   private $country_name;
   private $phone;
   private $postalcode;
-  private $shippingService;
+  public $shippingService;
   private $shippingServiceCost;
   private $email;
   private $product_list;
@@ -330,7 +330,7 @@ class EbayOrder
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', array(
 				'product_price' 		=> floatval($product['price'] / (1 + ($tax_rate / 100))), 
 				'reduction_percent' => 0, 
-				'reduction_amount' 	=> 0), 'UPDATE', '`id_order` = '.(int)$id_order.' 
+				'reduction_amount' 	=> 0), 'UPDATE', '`id_order` = '.(int)$this->id_order.' 
 					AND `product_id` = '.(int)$product['id_product'].' 
 					AND `product_attribute_id` = '.(int)$product['id_product_attribute']);				
 		}

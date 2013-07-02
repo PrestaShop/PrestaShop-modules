@@ -372,7 +372,8 @@ class Ebay extends Module
 	*/
 	public function hookAddProduct($params)
 	{
-		if (!isset($params['product']->id))
+	
+		if (!isset($params['product']->id_product))
 			return false;
 		if (!($id_product = (int)$params['product']->id))
 			return false;
@@ -408,7 +409,7 @@ class Ebay extends Module
 		$this->hookUpdateProductAttributeEbay(); // Fix hook update product attribute
 
 		// update if not update for more than 30 min
-		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z')
+		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-0 minutes')).'.000Z')
 		{
 			$current_date = date('Y-m-d\TH:i:s').'.000Z';
 
@@ -465,7 +466,7 @@ class Ebay extends Module
 						$customer_clear->clearCache(true);
 					
 					// if the carrier is disabled, we enable it for the order validation and then disable it again
-					$carrier = new Carrier((int)$order->id_carrier);
+					$carrier = new Carrier((int)EbayShipping::getPsCarrierByEbayCarrier($order->shippingService));
 					if (!$carrier->active)
 					{
 						$carrier->active = true;
@@ -493,7 +494,7 @@ class Ebay extends Module
 
 					if (!version_compare(_PS_VERSION_, '1.5', '>'))
 						foreach ($order->getProducts() as $product)
-							$this->hookAddProduct(new Product((int)$product['id_product']));
+							$this->hookAddProduct(array('product' => new Product((int)$product['id_product'])));
 				}
 				$orders_ar = array();
 				foreach ($orders as $order)
