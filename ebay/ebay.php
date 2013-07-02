@@ -99,18 +99,18 @@ class Ebay extends Module
 
 		// For 1.4.3 and less compatibility
 		$update_config = array(
-			'PS_OS_CHEQUE' 			=> 1,
-			'PS_OS_PAYMENT' 		=> 2,
-			'PS_OS_PREPARATION' => 3,
-			'PS_OS_SHIPPING' 		=> 4,
-			'PS_OS_DELIVERED' 	=> 5,
-			'PS_OS_CANCELED' 		=> 6,
-			'PS_OS_REFUND' 			=> 7,
-			'PS_OS_ERROR' 			=> 8,
-			'PS_OS_OUTOFSTOCK' 	=> 9,
-			'PS_OS_BANKWIRE' 		=> 10,
-			'PS_OS_PAYPAL' 			=> 11,
-			'PS_OS_WS_PAYMENT' 	=> 12
+			'PS_OS_CHEQUE'		=> 1,
+			'PS_OS_PAYMENT'		=> 2,
+			'PS_OS_PREPARATION'	=> 3,
+			'PS_OS_SHIPPING'	=> 4,
+			'PS_OS_DELIVERED'	=> 5,
+			'PS_OS_CANCELED'	=> 6,
+			'PS_OS_REFUND'		=> 7,
+			'PS_OS_ERROR'		=> 8,
+			'PS_OS_OUTOFSTOCK'	=> 9,
+			'PS_OS_BANKWIRE'	=> 10,
+			'PS_OS_PAYPAL'		=> 11,
+			'PS_OS_WS_PAYMENT'	=> 12
 		);
 
 		foreach ($update_config as $key => $value)
@@ -500,13 +500,13 @@ class Ebay extends Module
 				foreach ($orders as $order)
 				{
 					$orders_ar[] = array(
-						'id_order_ref' 		=> $order->getIdOrderRef(),
-						'id_order_seller' => $order->getIdOrderSeller(),
-						'amount'					=> $order->getAmount(),
-						'status'					=> $order->getStatus(),
-						'date'						=> $order->getDate(),
-						'email'						=> $order->getEmail(),
-						'products'				=> $order->getProducts(),
+						'id_order_ref'		=> $order->getIdOrderRef(),
+						'id_order_seller'	=> $order->getIdOrderSeller(),
+						'amount'			=> $order->getAmount(),
+						'status'			=> $order->getStatus(),
+						'date'				=> $order->getDate(),
+						'email'				=> $order->getEmail(),
+						'products'			=> $order->getProducts(),
 						'error_messages'	=> $order->getErrorMessages()
 					);
 				}
@@ -680,15 +680,15 @@ class Ebay extends Module
 		$stream_context = @stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 2)));
 		
 		$url_data = array(
-			'version' 				=> $this->version,
-			'shop' 						=> urlencode(Configuration::get('PS_SHOP_NAME')),
-			'registered' 			=> in_array('registration', $alerts) ? 'no' : 'yes',
-			'url' 						=> urlencode($_SERVER['HTTP_HOST']),
-			'iso_country' 		=> Tools::strtolower($this->ebay_country->getIsoCode()),
-			'iso_lang' 				=> Tools::strtolower($this->context->language->iso_code),
-			'id_lang' 				=> (int)$this->context->language->id,
-			'email' 					=> urlencode(Configuration::get('PS_SHOP_EMAIL')),
-			'security' 				=> md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_)
+			'version'		=> $this->version,
+			'shop'			=> urlencode(Configuration::get('PS_SHOP_NAME')),
+			'registered'	=> in_array('registration', $alerts) ? 'no' : 'yes',
+			'url'			=> urlencode($_SERVER['HTTP_HOST']),
+			'iso_country'	=> Tools::strtolower($this->ebay_country->getIsoCode()),
+			'iso_lang'		=> Tools::strtolower($this->context->language->iso_code),
+			'id_lang'		=> (int)$this->context->language->id,
+			'email'			=> urlencode(Configuration::get('PS_SHOP_EMAIL')),
+			'security'		=> md5(Configuration::get('PS_SHOP_EMAIL')._COOKIE_IV_)
 		);
 		$url = 'http://api.prestashop.com/partner/modules/ebay.php?'.http_build_query($url_data);
 		
@@ -697,14 +697,14 @@ class Ebay extends Module
 			$prestashop_content = '';
 
 		$this->smarty->assign(array(
-			'img_stats' 				 							=> $this->ebay_country->getImgStats(),
-			'alert' 						 							=> $alerts,
-			'prestashop_content' 							=> $prestashop_content,
-			'path' 							 							=> $this->_path,
-			'multishop' 											=> (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
-			'site_extension' 									=> $this->ebay_country->getSiteExtension(),
-			'is_version_one_dot_five' 				=> version_compare(_PS_VERSION_, '1.5', '>'),
-			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
+			'img_stats'							=> $this->ebay_country->getImgStats(),
+			'alert'								=> $alerts,
+			'prestashop_content'				=> $prestashop_content,
+			'path'								=> $this->_path,
+			'multishop'							=> (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
+			'site_extension'					=> $this->ebay_country->getSiteExtension(),
+			'is_version_one_dot_five'			=> version_compare(_PS_VERSION_, '1.5', '>'),
+			'is_version_one_dot_five_dot_one'	=> (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 		));
 		
 		return $this->display(__FILE__, 'views/templates/hook/form.tpl').
@@ -762,8 +762,8 @@ class Ebay extends Module
 			$this->setConfiguration('EBAY_API_SESSION', $session_id);
 			
 			$smarty_vars = array_merge($smarty_vars, array(
-				'relogin' 		 => true,
-				'redirect_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
+				'relogin'		=> true,
+				'redirect_url'	=> $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
 			));
 		} else
 			$smarty_vars['relogin'] = false;
@@ -793,9 +793,9 @@ class Ebay extends Module
 			}
 			
 			$smarty_vars = array_merge($smarty_vars, array(
-				'action_url' 			=> Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged',
-				'ebay_username' 	=> $this->context->cookie->eBayUsername,
-				'window_open_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
+				'action_url'		=> Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged',
+				'ebay_username'		=> $this->context->cookie->eBayUsername,
+				'window_open_url'	=> $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
 			));
 			
 		}
@@ -823,12 +823,12 @@ class Ebay extends Module
 			$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
 		
 		$url = _MODULE_DIR_.'ebay/ajax/checkToken.php?'.http_build_query(array(
-				'token' 			=> Configuration::get('EBAY_SECURITY_TOKEN'),
-				'time'  			=> pSQL(date('Ymdhis'))));
+				'token'	=> Configuration::get('EBAY_SECURITY_TOKEN'),
+				'time'	=> pSQL(date('Ymdhis'))));
 		$smarty_vars = array(
-			'window_location_href' => $this->_getUrl($url_vars),
-			'url' 								 => $url,
-			'request_uri'					 => Tools::safeOutput($_SERVER['REQUEST_URI'])
+			'window_location_href'	=> $this->_getUrl($url_vars),
+			'url'					=> $url,
+			'request_uri'			=> Tools::safeOutput($_SERVER['REQUEST_URI'])
 		);
 		
 		$this->smarty->assign($smarty_vars);	 
@@ -844,16 +844,16 @@ class Ebay extends Module
 	private function _displayFormConfig()
 	{
 		$smarty_vars = array(
-			'class_general' 				=> version_compare(_PS_VERSION_, '1.5', '>') ? 'uncinq' : 'unquatre',
-			'form_parameters' 			=> $this->_displayFormParameters(),
-			'form_category' 				=> $this->_displayFormCategory(),
+			'class_general'			=> version_compare(_PS_VERSION_, '1.5', '>') ? 'uncinq' : 'unquatre',
+			'form_parameters'		=> $this->_displayFormParameters(),
+			'form_category'			=> $this->_displayFormCategory(),
 			'form_items_specifics'	=> $this->_displayFormItemsSpecifics(),
-			'form_shipping' 				=> $this->_displayFormShipping(),
-			'form_template_manager' => $this->_displayFormTemplateManager(),
-			'form_ebay_sync' 				=> $this->_displayFormEbaySync(),
-			'orders_history' 				=> $this->_displayOrdersHistory(),
-			'help' 									=> $this->_displayHelp(),
-			'id_tab' 								=> Tools::safeOutput(Tools::getValue('id_tab'))
+			'form_shipping'			=> $this->_displayFormShipping(),
+			'form_template_manager'	=> $this->_displayFormTemplateManager(),
+			'form_ebay_sync'		=> $this->_displayFormEbaySync(),
+			'orders_history'		=> $this->_displayOrdersHistory(),
+			'help'					=> $this->_displayHelp(),
+			'id_tab'				=> Tools::safeOutput(Tools::getValue('id_tab'))
 		);
 		
 		$this->smarty->assign($smarty_vars);	 
@@ -885,23 +885,23 @@ class Ebay extends Module
 		$ebay_sign_in_url = $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession;
 		
 		$smarty_vars = array(
-				'url'                      => $url,
-				'ebay_sign_in_url'				 => $ebay_sign_in_url,
-				'ebay_token'							 => Configuration::get('EBAY_SECURITY_TOKEN'),
-				'ebayIdentifier'           => $ebay_identifier,
-				'configCurrencysign'       => $config_currency->sign,
-				'policies'                 => $this->_getReturnsPolicies(),
-				'catLoaded'                => !Configuration::get('EBAY_CATEGORY_LOADED'),
-				'createShopUrl'            => $createShopUrl,
-				'ebayReturns'              => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
-				'ebayShopValue'            => $ebayShopValue, 
-				'shopPostalCode'           => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
-				'listingDurations'         => $this->_getListingDurations(),
-				'ebayShop'                 => Configuration::get('EBAY_SHOP'),
-				'ebay_paypal_email'        => Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))),
-				'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
-				'ebayListingDuration'      => Configuration::get('EBAY_LISTING_DURATION'),
-				'automaticallyRelist'      => Configuration::get('EBAY_AUTOMATICALLY_RELIST')
+				'url'						=> $url,
+				'ebay_sign_in_url'			=> $ebay_sign_in_url,
+				'ebay_token'				=> Configuration::get('EBAY_SECURITY_TOKEN'),
+				'ebayIdentifier'			=> $ebay_identifier,
+				'configCurrencysign'		=> $config_currency->sign,
+				'policies'					=> $this->_getReturnsPolicies(),
+				'catLoaded'					=> !Configuration::get('EBAY_CATEGORY_LOADED'),
+				'createShopUrl'				=> $createShopUrl,
+				'ebayReturns'				=> preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
+				'ebayShopValue'				=> $ebayShopValue, 
+				'shopPostalCode'			=> Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
+				'listingDurations'			=> $this->_getListingDurations(),
+				'ebayShop'					=> Configuration::get('EBAY_SHOP'),
+				'ebay_paypal_email'			=> Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))),
+				'returnsConditionAccepted'	=> Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
+				'ebayListingDuration'		=> Configuration::get('EBAY_LISTING_DURATION'),
+				'automaticallyRelist'		=> Configuration::get('EBAY_AUTOMATICALLY_RELIST')
 		);
 		
 		if (Tools::getValue('relogin'))
@@ -938,13 +938,13 @@ class Ebay extends Module
 	private function _getListingDurations()
 	{
 		return array(
-			'Days_1'  => $this->l('1 Day'),
-			'Days_3'  => $this->l('3 Days'),
-			'Days_5'  => $this->l('5 Days'),
-			'Days_7'  => $this->l('7 Days'),
-			'Days_10' => $this->l('10 Days'),
-			'Days_30' => $this->l('30 Days'),
-			'GTC'     => $this->l('Good \'Till Canceled'));		
+			'Days_1'	=> $this->l('1 Day'),
+			'Days_3'	=> $this->l('3 Days'),
+			'Days_5'	=> $this->l('5 Days'),
+			'Days_7'	=> $this->l('7 Days'),
+			'Days_10'	=> $this->l('10 Days'),
+			'Days_30'	=> $this->l('30 Days'),
+			'GTC'		=> $this->l('Good \'Till Canceled'));		
 	}
 	
 	private function _postProcessParameters()
@@ -1004,13 +1004,13 @@ class Ebay extends Module
 		if (EbayCategoryConfiguration::getTotalCategoryConfigurations() && Tools::getValue('section') != 'category')
 		{
 			$this->smarty->assign(array(
-			'isOneDotFive' => $is_one_dot_five,
-			'controller'   => Tools::getValue('controller'),
-			'tab'          => Tools::getValue('tab'), 
-			'configure'    => Tools::getValue('configure'), 
-			'token'        => Tools::getValue('token'),
-			'tab_module'   => Tools::getValue('tab_module'),
-			'module_name'  => Tools::getValue('module_name')
+			'isOneDotFive'	=> $is_one_dot_five,
+			'controller'	=> Tools::getValue('controller'),
+			'tab'			=> Tools::getValue('tab'), 
+			'configure'		=> Tools::getValue('configure'), 
+			'token'			=> Tools::getValue('token'),
+			'tab_module'	=> Tools::getValue('tab_module'),
+			'module_name'	=> Tools::getValue('module_name')
 			));
 			return $this->display(dirname(__FILE__), '/views/templates/hook/pre_form_categories.tpl');
 		}
@@ -1026,21 +1026,21 @@ class Ebay extends Module
 
 		// Smarty
 		$template_vars = array(
-			'alerts'       => $this->_getAlertCategories(),
-			'tabHelp'      => '&id_tab=7',
-			'id_lang'      => $this->context->cookie->id_lang,
-			'_path'        => $this->_path,
-			'configs'      => $configs,
-			'_module_dir_' => _MODULE_DIR_,
-			'isOneDotFive' => $is_one_dot_five,
-			'request_uri'  => $_SERVER['REQUEST_URI'],
-			'controller'   => Tools::getValue('controller'),
-			'tab'          => Tools::getValue('tab'), 
-			'configure'    => Tools::getValue('configure'), 
-			'token'        => Tools::getValue('token'),
-			'tab_module'   => Tools::getValue('tab_module'),
-			'module_name'  => Tools::getValue('module_name'), 
-			'date'         => pSQL(date('Ymdhis'))
+			'alerts'		=> $this->_getAlertCategories(),
+			'tabHelp'		=> '&id_tab=7',
+			'id_lang'		=> $this->context->cookie->id_lang,
+			'_path'			=> $this->_path,
+			'configs'		=> $configs,
+			'_module_dir_'	=> _MODULE_DIR_,
+			'isOneDotFive'	=> $is_one_dot_five,
+			'request_uri'	=> $_SERVER['REQUEST_URI'],
+			'controller'	=> Tools::getValue('controller'),
+			'tab'			=> Tools::getValue('tab'), 
+			'configure'		=> Tools::getValue('configure'), 
+			'token'			=> Tools::getValue('token'),
+			'tab_module'	=> Tools::getValue('tab_module'),
+			'module_name'	=> Tools::getValue('module_name'), 
+			'date'			=> pSQL(date('Ymdhis'))
 		);
 
 		$this->smarty->assign($template_vars);
@@ -1052,21 +1052,21 @@ class Ebay extends Module
 	{
 		// Smarty
 		$template_vars = array(
-			'id_tab'								=> Tools::safeOutput(Tools::getValue('id_tab')),
-			'controller'   					=> Tools::getValue('controller'),
-			'tab'          					=> Tools::getValue('tab'), 
-			'configure'    					=> Tools::getValue('configure'), 
-			'tab_module'   					=> Tools::getValue('tab_module'),
-			'module_name'  					=> Tools::getValue('module_name'), 
-			'token'        					=> Tools::getValue('token'),
-			'_module_dir_' 					=> _MODULE_DIR_,
-			'ebay_categories'			  => EbayCategoryConfiguration::getEbayCategories(),
-			'id_lang'      					=> $this->context->cookie->id_lang,
-			'_path'        					=> $this->_path,
-			'possible_attributes'		=> AttributeGroup::getAttributesGroups($this->context->cookie->id_lang),
-			'possible_features'			=> Feature::getFeatures($this->context->cookie->id_lang, true),
-			'conditions'						=> EbayCategoryConditionConfiguration::getPSConditions(),
-			'date'         					=> pSQL(date('Ymdhis'))
+			'id_tab'				=> Tools::safeOutput(Tools::getValue('id_tab')),
+			'controller'			=> Tools::getValue('controller'),
+			'tab'					=> Tools::getValue('tab'), 
+			'configure'				=> Tools::getValue('configure'), 
+			'tab_module'			=> Tools::getValue('tab_module'),
+			'module_name'			=> Tools::getValue('module_name'), 
+			'token'					=> Tools::getValue('token'),
+			'_module_dir_'			=> _MODULE_DIR_,
+			'ebay_categories'		=> EbayCategoryConfiguration::getEbayCategories(),
+			'id_lang'				=> $this->context->cookie->id_lang,
+			'_path'					=> $this->_path,
+			'possible_attributes'	=> AttributeGroup::getAttributesGroups($this->context->cookie->id_lang),
+			'possible_features'		=> Feature::getFeatures($this->context->cookie->id_lang, true),
+			'conditions'			=> EbayCategoryConditionConfiguration::getPSConditions(),
+			'date'					=> pSQL(date('Ymdhis'))
 		);
 
 		$this->smarty->assign($template_vars);
@@ -1085,11 +1085,11 @@ class Ebay extends Module
 				$date = date('Y-m-d H:i:s');
 				if (isset($ebay_categories[$id_category]))
 					$data = array(
-						'id_country' 			 => 8, 
-						'id_ebay_category' => (int)$ebay_categories[$id_category],
-						'id_category' 		 => (int)$id_category, 
-						'percent' 				 => pSQL($percent), 
-						'date_upd' 				 => pSQL($date));
+						'id_country'		=> 8, 
+						'id_ebay_category'	=> (int)$ebay_categories[$id_category],
+						'id_category'		=> (int)$id_category, 
+						'percent'			=> pSQL($percent), 
+						'date_upd'			=> pSQL($date));
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
 				{
@@ -1116,7 +1116,7 @@ class Ebay extends Module
 			$product_ids = EbayCategoryConfiguration::getAllProductIds();
 			foreach ($product_ids as $product_id)
 				EbayProductConfiguration::insertOrUpdate($product_id, array(
-					'extra_images' => $all_nb_extra_images ? $all_nb_extra_images : 0
+					'extra_images'	=> $all_nb_extra_images ? $all_nb_extra_images : 0
 				));
 		}
 		
@@ -1134,8 +1134,8 @@ class Ebay extends Module
 			foreach($showed_product_ids as $product_id)
 			{
 				EbayProductConfiguration::insertOrUpdate($product_id, array(
-					'blacklisted'  => in_array($product_id, $to_synchronize_product_ids) ? 0 : 1,
-					'extra_images' => $extra_images[$product_id] ? $extra_images[$product_id] : 0
+					'blacklisted'	=> in_array($product_id, $to_synchronize_product_ids) ? 0 : 1,
+					'extra_images'	=> $extra_images[$product_id] ? $extra_images[$product_id] : 0
 				));				
 			}
 		}
@@ -1290,19 +1290,19 @@ class Ebay extends Module
 			$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
 		
 		$this->smarty->assign(array(
-			'eBayCarrier'                    => $this->_getCarriers(),
-			'psCarrier'                      => Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT')),
-			'psCarrierModule'                => $psCarrierModule,
-			'existingNationalCarrier'        => EbayShipping::getNationalShippings(),
-			'existingInternationalCarrier'   => $this->_getExistingInternationalCarrier(),
-			'deliveryTime'                   => Configuration::get('EBAY_DELIVERY_TIME'),
-			'prestashopZone'                 => Zone::getZones(), 
-			'excludeShippingLocation'        => $this->_cacheEbayExcludedLocation(),
-			'internationalShippingLocations' => $this->_getInternationalShippingLocations(),
-			'deliveryTimeOptions'            => $this->_getDeliveryTimeOptions(),
-			'formUrl'                        => $this->_getUrl($url_vars),
-			'ebayZoneNational'               => Configuration::get('EBAY_ZONE_NATIONAL'),
-			'ebayZoneInternational'          => Configuration::get('EBAY_ZONE_INTERNATIONAL'),
+			'eBayCarrier'						=> $this->_getCarriers(),
+			'psCarrier'							=> Carrier::getCarriers(Configuration::get('PS_LANG_DEFAULT')),
+			'psCarrierModule'					=> $psCarrierModule,
+			'existingNationalCarrier'			=> EbayShipping::getNationalShippings(),
+			'existingInternationalCarrier'		=> $this->_getExistingInternationalCarrier(),
+			'deliveryTime'						=> Configuration::get('EBAY_DELIVERY_TIME'),
+			'prestashopZone'					=> Zone::getZones(), 
+			'excludeShippingLocation'			=> $this->_cacheEbayExcludedLocation(),
+			'internationalShippingLocations'	=> $this->_getInternationalShippingLocations(),
+			'deliveryTimeOptions'				=> $this->_getDeliveryTimeOptions(),
+			'formUrl'							=> $this->_getUrl($url_vars),
+			'ebayZoneNational'					=> Configuration::get('EBAY_ZONE_NATIONAL'),
+			'ebayZoneInternational'				=> Configuration::get('EBAY_ZONE_INTERNATIONAL'),
 		));
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
@@ -1337,13 +1337,13 @@ class Ebay extends Module
 		$ebay_product_template = str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE')));
 		
 		$smarty_vars = array(
-			'action_url' 						=> $action_url,
-			'ebay_product_template' => $ebay_product_template,
-			'ad' 										=> dirname($_SERVER['PHP_SELF']),
-			'base_uri'							=> __PS_BASE_URI__,
-			'is_one_dot_three' 			=> (substr(_PS_VERSION_, 0, 3) == '1.3'),
-			'is_one_dot_five'				=> version_compare(_PS_VERSION_, '1.5', '>'),
-			'theme_css_dir' 				=> _THEME_CSS_DIR_
+			'action_url'			=> $action_url,
+			'ebay_product_template'	=> $ebay_product_template,
+			'ad'					=> dirname($_SERVER['PHP_SELF']),
+			'base_uri'				=> __PS_BASE_URI__,
+			'is_one_dot_three'		=> (substr(_PS_VERSION_, 0, 3) == '1.3'),
+			'is_one_dot_five'		=> version_compare(_PS_VERSION_, '1.5', '>'),
+			'theme_css_dir'			=> _THEME_CSS_DIR_
 		);
 		
 		if (substr(_PS_VERSION_, 0, 3) == '1.3')
@@ -1484,10 +1484,10 @@ class Ebay extends Module
 					&& $category_config_list[$category['id_category']]['id_ebay_category'] > 0)
 				{
 					$categories[] = array(
-						'row_class' => $alt_row ? 'alt_row' : '',
-						'value' 		=> $category['id_category'],
-						'checked'		=> ($category_config_list[$category['id_category']]['sync'] == 1 ? 'checked="checked"' : ''),
-						'name'			=> $category['name']
+						'row_class'	=> $alt_row ? 'alt_row' : '',
+						'value'		=> $category['id_category'],
+						'checked'	=> ($category_config_list[$category['id_category']]['sync'] == 1 ? 'checked="checked"' : ''),
+						'name'		=> $category['name']
 					);
 					$alt_row = !$alt_row;
 				}
@@ -1498,18 +1498,19 @@ class Ebay extends Module
 		$sync_products_url = _MODULE_DIR_.'ebay/ajax/eBaySyncProduct.php?token='.Configuration::get('EBAY_SECURITY_TOKEN').'&option=\'+option+\'&time='.pSQL(date('Ymdhis'));
 		
 		$smarty_vars = array(
-			'path' 										=> $this->_path,
-			'nb_products' 						=> $nb_products ? $nb_products : 0,
-			'nb_products_mode_a' 			=> $nb_products_mode_a ? $nb_products_mode_a : 0,
-			'nb_products_mode_b' 			=> $nb_products_mode_b ? $nb_products_mode_b : 0,
-			'nb_products_sync_url' 		=> $nb_products_sync_url,
-			'sync_products_url' 			=> $sync_products_url,
-			'action_url' 							=> $action_url,
-			'ebay_sync_option_resync' => Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
-			'categories' 							=> $categories,
-			'sync_1' 									=> (Tools::getValue('section') == 'sync' && Tools::getValue('submitSave1') != ''),
-			'sync_2' 									=> (Tools::getValue('section') == 'sync' && Tools::getValue('submitSave2') != ''),
-			'is_sync_mode_b' 					=> (Configuration::get('EBAY_SYNC_MODE') == 'B'),
+			'path'						=> $this->_path,
+			'nb_products'				=> $nb_products ? $nb_products : 0,
+			'nb_products_mode_a'		=> $nb_products_mode_a ? $nb_products_mode_a : 0,
+			'nb_products_mode_b'		=> $nb_products_mode_b ? $nb_products_mode_b : 0,
+			'nb_products_sync_url'		=> $nb_products_sync_url,
+			'sync_products_url'			=> $sync_products_url,
+			'action_url'				=> $action_url,
+			'ebay_sync_option_resync'	=> Configuration::get('EBAY_SYNC_OPTION_RESYNC'),
+			'categories'				=> $categories,
+			'sync_1'					=> (Tools::getValue('section') == 'sync' && Tools::getValue('submitSave1') != ''),
+			'sync_2'					=> (Tools::getValue('section') == 'sync' && Tools::getValue('submitSave2') != ''),
+			'is_sync_mode_b'			=> (Configuration::get('EBAY_SYNC_MODE') == 'B'),
+			'prod_str'					=>	$nb_products >= 2 ? $this->l('products') : $this->l('product')
 		);		
 		
 		$this->smarty->assign($smarty_vars);
@@ -1604,9 +1605,9 @@ class Ebay extends Module
 				$regions[] = $zone['region'];
 			
 			$all[$zone['region']]['country'][] = array(
-				'location' 		=> $zone['location'],
-				'description' => $zone['description'],
-				'excluded' 		=> $zone['excluded']);
+				'location'		=> $zone['location'],
+				'description'	=> $zone['description'],
+				'excluded'		=> $zone['excluded']);
 		}
 		
 		foreach ($ebay_excluded_zones as $key => $zone)
@@ -1719,8 +1720,8 @@ class Ebay extends Module
 				
 				//Update of the product so that we don't take it in the next 10 products to relist ! 
 				EbayProduct::updateByIdProductRef($item['id_product_ref'], array(
-					'id_product_ref' => pSQL($new_item_id), 
-					'date_upd' => date('Y-m-d h:i:s')));
+					'id_product_ref'	=> pSQL($new_item_id), 
+					'date_upd'			=> date('Y-m-d h:i:s')));
 			}
 		}
 	}
@@ -1740,8 +1741,8 @@ class Ebay extends Module
 			include(dirname(__FILE__).'/log/orders.php');
 
 		$this->smarty->assign(array(
-			'date_last_import' => $dateLastImport,
-			'orders'					 => isset($orders) ? $orders : array()
+			'date_last_import'	=> $dateLastImport,
+			'orders'			=> isset($orders) ? $orders : array()
 		));	
 		return $this->display(dirname(__FILE__), '/views/templates/hook/ordersHistory.tpl');
 	}
@@ -1848,10 +1849,10 @@ class Ebay extends Module
 	private function _getUrl($extra_vars = array())
 	{
 		$url_vars = array(
-			'configure' 	=> Tools::safeOutput(Tools::getValue('configure')),
-			'token' 			=> Tools::safeOutput(Tools::getValue('token')),
-			'tab_module'  => Tools::safeOutput(Tools::getValue('tab_module')),
-			'module_name' => Tools::safeOutput(Tools::getValue('module_name')),
+			'configure'		=> Tools::safeOutput(Tools::getValue('configure')),
+			'token'			=> Tools::safeOutput(Tools::getValue('token')),
+			'tab_module'	=> Tools::safeOutput(Tools::getValue('tab_module')),
+			'module_name'	=> Tools::safeOutput(Tools::getValue('module_name')),
 		);
 		return 'index.php?'.http_build_query(array_merge($url_vars, $extra_vars));
 	}
