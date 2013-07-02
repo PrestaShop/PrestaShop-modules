@@ -23,11 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $nb_products < 2}
-{assign var="prod_str" value={l s='product' mod='ebay'}}
-{else}
-	{assign var="prod_str" value={l s='products' mod='ebay'}}
-{/if}
+
 
 <style> 
 	{literal}
@@ -195,12 +191,9 @@
 			<td style="color: #268CCD"><h4>{l s='"Sync and update with eBay" will sync both the products not already in sync and update the products already in sync with eBay ' mod='ebay'}</h4></td>
 		</tr>
 		<tr>
-			<td><input id="button_ebay_sync1" class="button" name="submitSave1" value="{l s='Sync with eBay' mod='ebay'}
-				({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit"></td>
+			<td><input id="button_ebay_sync1" class="button" name="submitSave1" value="{l s='Sync with eBay' mod='ebay'} ({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit"></td>
 			<td style="width: 50px">&nbsp;</td>
-			<td><input id="button_ebay_sync2" class="button" name="submitSave2" value="{l s='Sync with eBay' mod='ebay'}
-				{l s='and update' mod='ebay'}
-				({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit">
+			<td><input id="button_ebay_sync2" class="button" name="submitSave2" value="{l s='Sync with eBay' mod='ebay'} {l s='and update' mod='ebay'} ({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit">
 			</td>
 		</tr>
 	</table>
