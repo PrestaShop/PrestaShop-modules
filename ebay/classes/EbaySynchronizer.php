@@ -159,6 +159,7 @@ class EbaySynchronizer
 				$data['item_specifics']	= EbaySynchronizer::_getProductItemSpecifics($ebay_category, $product, $id_lang);				
 				$data['description'] = EbaySynchronizer::_getMultiSkuItemDescription($data);
 
+
 				if ($item_id = EbayProduct::getIdProductRefByIdProduct($product->id)) //if product already exists on eBay
 				{
 					$data['itemID'] = $item_id;
@@ -264,6 +265,7 @@ class EbaySynchronizer
 	
 	private static function _addMultiSkuItem($product_id, $data, $ebay, $date)
 	{
+
 		$ebay->addFixedPriceItemMultiSku($data);
 		if ($ebay->itemID > 0)
 			EbaySynchronizer::_insertEbayProduct($product_id, $ebay->itemID, $date);
@@ -361,7 +363,6 @@ class EbaySynchronizer
 		$variations = array();
 
 		$combinations = version_compare(_PS_VERSION_, '1.5', '>') ? $product->getAttributeCombinations($context->cookie->id_lang) : $product->getAttributeCombinaisons($context->cookie->id_lang);		
-
 		foreach ($combinations as $combinaison) 
 		{
 			$price = Product::getPriceStatic((int)$combinaison['id_product'], true, (int)$combinaison['id_product_attribute']);
@@ -432,13 +433,16 @@ class EbaySynchronizer
 		$with_settings_attribute_group_ids = array_map(function($row) { return $row['id_attribute_group']; }, $category_specifics);
 		
 		$without_settings_attribute_group_ids = array_diff($attribute_group_ids, $with_settings_attribute_group_ids);
+		
 		foreach($attribute_groups as $attribute_group)
 		{
+
 			if (!in_array($attribute_group['id_attribute_group'], $without_settings_attribute_group_ids))
 				continue;
-			
+
+			// Check if items specifics no variation has the same name as the attribute => multi product
 			foreach($ebay_category->getItemsSpecificValues() as $item_specific)
-				if ($item_specific['name'] === $attribute_group['group_name'])
+				if ($item_specific['name'] === $attribute_group['group_name'] && $item_specific['can_variation'] == 0)
 					return false;
 		}
 		
@@ -797,7 +801,7 @@ class EbaySynchronizer
 	private static function _getProductItemSpecifics($ebay_category, $product, $id_lang)
 	{
 		$item_specifics = $ebay_category->getItemsSpecificValues();
-		
+		echo('<pre style="text-align:left">'.print_r($item_specifics,true).'</pre>');
 		$item_specifics_pairs = array();
 		foreach ($item_specifics as $item_specific)
 		{
@@ -898,6 +902,18 @@ class EbaySynchronizer
 			LEFT JOIN '._DB_PREFIX_.'ebay_category_specific ecs
 			ON a.id_attribute_group = ecs.id_attribute_group
 			WHERE pac.id_product_attribute='.(int)$product_attribute_id);
+
+		// echo('SELECT IF(ecs.name is not null, ecs.name, agl.name) AS name, al.name AS value
+		// 	FROM '._DB_PREFIX_.'product_attribute_combination pac
+		// 	JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
+		// 	JOIN '._DB_PREFIX_.'attribute a
+		// 	ON a.id_attribute = al.id_attribute			
+		// 	JOIN '._DB_PREFIX_.'attribute_group_lang agl
+		// 	ON a.id_attribute_group = agl.id_attribute_group
+		// 	AND agl.id_lang = '.(int)$id_lang.'
+		// 	LEFT JOIN '._DB_PREFIX_.'ebay_category_specific ecs
+		// 	ON a.id_attribute_group = ecs.id_attribute_group
+		// 	WHERE pac.id_product_attribute='.(int)$product_attribute_id);
 			
 		$variation_specifics_pairs = array();
 		foreach ($attributes_values as $attribute_value)
