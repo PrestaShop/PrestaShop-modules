@@ -164,24 +164,24 @@
 			</table>
 			{if $sync_1}
 				<script>
-					$(document).ready(function() { 
+					$(document).ready(function() {ldelim}
 						eBaySync(1); 
-					});
+					{rdelim});
 				</script>				
 			{/if}
 			{if $sync_2}
 				<script>
-					$(document).ready(function() { 
+					$(document).ready(function() {ldelim}
 						eBaySync(2); 
-					});
+					{rdelim});
 				</script>				
 			{/if}
 			{if $is_sync_mode_b}
 				<script>
-					$(document).ready(function() {
+					$(document).ready(function() {ldelim}
 						$("#catSync").show("slow");
 						$("#ebay_sync_mode2").attr("checked", true);
-					});
+					{rdelim});
 				</script>
 			{/if}
 		</div>

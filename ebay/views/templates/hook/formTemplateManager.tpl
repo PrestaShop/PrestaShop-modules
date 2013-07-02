@@ -36,7 +36,7 @@
 		{if $is_one_dot_three}
 			<script type="text/javascript" src="{$base_uri}js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript">
-					tinyMCE.init({
+					tinyMCE.init({ldelim}
 						mode : "textareas",
 						theme : "advanced",
 						plugins : "safari,pagebreak,style,layer,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,directionality,fullscreen",
@@ -62,7 +62,7 @@
 						elements : "nourlconvert",
 						convert_urls : false,
 						language : "{$language}"
-					});
+					{rdelim}});
 			</script>			
 		{elseif $is_one_dot_five}
 			<script type="text/javascript">	
@@ -73,6 +73,7 @@
 			<script type="text/javascript" src="{$base_uri}js/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="{$base_uri}js/tinymce.inc.js"></script>
 			<script type="text/javascript">
+			{literal}
 				$(document).ready(function(){
 					tinySetup({
 						editor_selector :"rte",
@@ -82,10 +83,11 @@
 						theme_advanced_buttons4 : ""
 					});
 				});
+			{/literal}
 			</script>
 		{else}
 			<script type="text/javascript">
-				var iso = '{if isset($is_type_mce)}{$is_type_mce}{else}false{/if}';
+				var iso = '{if isset($iso_type_mce)}{$iso_type_mce}{else}false{/if}';
 				var pathCSS = '{$theme_css_dir}';
 				var ad = '{$ad}';
 			</script>
