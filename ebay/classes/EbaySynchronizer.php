@@ -80,15 +80,15 @@ class EbaySynchronizer
 		
 			// Generate array and try insert in database
 			$data = array(
-					'price' 						=> $price,
-					'quantity' 					=> $quantity_product,
-					'categoryId' 				=> $ebay_category->getIdCategoryRef(),
-					'variations' 				=> $variations,
-					'pictures' 					=> $pictures['general'],
-					'picturesMedium' 		=> $pictures['medium'],
-					'picturesLarge' 		=> $pictures['large'],
-					'condition'				  => $conditions[$product->condition],
-					'shipping'					=> EbaySynchronizer::_getShippingDetailsForProduct($product),
+					'price'				=> $price,
+					'quantity'			=> $quantity_product,
+					'categoryId'		=> $ebay_category->getIdCategoryRef(),
+					'variations'		=> $variations,
+					'pictures'			=> $pictures['general'],
+					'picturesMedium'	=> $pictures['medium'],
+					'picturesLarge'		=> $pictures['large'],
+					'condition'			=> $conditions[$product->condition],
+					'shipping'			=> EbaySynchronizer::_getShippingDetailsForProduct($product),
 			);
 			$data = array_merge($data, EbaySynchronizer::_getProductData($product));
 
@@ -653,11 +653,11 @@ class EbaySynchronizer
 		else // Shipping by price
 			$price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
 		
+
 		if ($carrier->shipping_handling) //Add shipping handling fee
 			$price += Configuration::get('PS_SHIPPING_HANDLING');
 
 		$price += $price * Tax::getCarrierTaxRate($carrier_id) / 100;
-
 		return $price;
 	}
 	
@@ -801,7 +801,6 @@ class EbaySynchronizer
 	private static function _getProductItemSpecifics($ebay_category, $product, $id_lang)
 	{
 		$item_specifics = $ebay_category->getItemsSpecificValues();
-		echo('<pre style="text-align:left">'.print_r($item_specifics,true).'</pre>');
 		$item_specifics_pairs = array();
 		foreach ($item_specifics as $item_specific)
 		{
