@@ -381,12 +381,10 @@ class Ebay extends Module
 	*/
 	public function hookAddProduct($params)
 	{
-	
-		if (!isset($params['product']->id_product))
+		if (!isset($params['product']->id))
 			return false;
 		if (!($id_product = (int)$params['product']->id))
-			return false;
-
+			return false;	
 		$sql = 'SELECT `id_product`
 			FROM `'._DB_PREFIX_.'product`
 			WHERE `id_product` = '.$id_product.'
@@ -418,7 +416,7 @@ class Ebay extends Module
 		$this->hookUpdateProductAttributeEbay(); // Fix hook update product attribute
 
 		// update if not update for more than 30 min
-		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-0 minutes')).'.000Z')
+		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('0 minutes')).'.000Z')
 		{
 			$current_date = date('Y-m-d\TH:i:s').'.000Z';
 
@@ -571,7 +569,7 @@ class Ebay extends Module
 			$page++;
 		}
 
-		return $orders;
+	return $orders;
 	}
 	
 	/**
@@ -592,9 +590,12 @@ class Ebay extends Module
 		$this->hookUpdateProduct($params);
 	}
 	
-	public function hookActionUpdateQuantity($params)
+	public function hookActionUpdateQuantity($params) 
 	{
-		$this->hookUpdateProduct($params);
+        if (isset($params["id_product"])) {        
+            $params["product"] = new Product($params["id_product"]);            
+            $this->hookAddProduct($params);
+        }
 	}
 
 	public function hookUpdateProductAttributeEbay()
