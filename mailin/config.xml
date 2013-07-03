@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>mailin</name>
+	<displayName><![CDATA[Mailin]]></displayName>
+	<version><![CDATA[1]]></version>
+	<description><![CDATA[Synchronize your Prestashop contacts with Mailin plateforme, track customers orders and send easily transactional emails to your customers.]]></description>
+	<author><![CDATA[]]></author>
+	<tab><![CDATA[advertising_marketing]]></tab>
+	<confirmUninstall>Are you sure you want to remove Mailin module? N.B: Mailin SMTP and tracking code will be removed as well and we will enable php mail() send function (If you were using smtp info before using mailin smtp, please update your configuration for the emails)</confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
