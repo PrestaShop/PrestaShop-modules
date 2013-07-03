@@ -135,6 +135,7 @@ $_MODULE['<{socolissimo}prestashop>personnal_data_5b208a9315eacba80fb231724ea47e
 $_MODULE['<{socolissimo}prestashop>personnal_data_70d9be9b139893aa6c69b5e77e614311'] = 'Confirmer';
 $_MODULE['<{socolissimo}prestashop>personnal_data_a54c596b03b4a6857bbf031c6045f57e'] = 'Demandez moi plus tard';
 $_MODULE['<{socolissimo}prestashop>personnal_data_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
+$_MODULE['<{socolissimo}prestashop>back_office_a35782c91a086c9a633f86696b57a19c'] = 'Attention l\'utilisation du module en mode OPC pour le mobile n\'est pas recommandé en production.';
 $_MODULE['<{socolissimo}prestashop>error_58d256f5c88c3a887c1c3b8c9ee76f4d'] = 'Liste des erreurs SoColissimo :';
 $_MODULE['<{socolissimo}prestashop>error_0557fa923dcee4d0f86b1409f5c2167f'] = 'Retour';
 $_MODULE['<{socolissimo}prestashop>redirect_611a8475d4cbe64a9a2f5633a82fe314'] = 'Vous allez être redirigé vers Socolissimo dans quelques instants.Si ce n\'est pas le cas, veuillez cliquez sur le bouton.';

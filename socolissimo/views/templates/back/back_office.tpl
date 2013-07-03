@@ -100,6 +100,7 @@
         <div class="margin-form">
             <input type="text" size="45" name="url_so_mobile" value="{if isset($url_so_mobile)}{$url_so_mobile}{/if}" />
             <p>{l s='Url of back office SoColissimo Mobile. Customers with smartphones or ipad will be redirect there. Warning, this url do not allow delivery in belgium' mod='socolissimo'}</p>
+            <p><span style="color:red">{l s='Warning, usage of this module in opc mobile theme is not recommended in production mode for your website.' mod='socolissimo'}</span></p>
         </div>
         <label>{l s='Display Mode' mod='socolissimo'} : </label>
         <div class="margin-form">
