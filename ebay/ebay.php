@@ -427,97 +427,7 @@ class Ebay extends Module
 
 			if ($orders)
 			{
-				foreach ($orders as &$order)
-				{
-					if (!$order->isCompleted())
-					{
-						$order->addErrorMessage($this->l('Status not complete, amount less than 0.1 or no matching product'));
-						continue;
-					}
-					
-					if ($order->exists())
-					{
-						$order->addErrorMessage($this->l('Order already imported'));
-						continue;
-					}
-						
-					// no order in ebay order table with this order_ref
-					if (!$order->hasValidContact())
-					{
-						$order->addErrorMessage($this->l('Invalid e-mail'));
-						continue;
-					}
-					
-					$id_customer = $order->getOrAddCustomer();
-					$id_address = $order->updateOrAddAddress();
-
-					if (!$order->hasAllProductsWithAttributes())
-					{
-						$order->addErrorMessage($this->l('Could not find the products in database'));
-						continue;
-					}
-					
-					$order->addCart($this->ebay_country); //Create a Cart for the order
-
-					if (!$order->updateCartQuantities()) // if products in the cart
-					{
-						$order->deleteCart();
-						$order->addErrorMessage($this->l('Could not add product to cart (maybe your stock quantity is 0)'));
-						continue;
-					}
-					
-					// Fix on sending e-mail
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-					$customer_clear = new Customer();
-					if (method_exists($customer_clear, 'clearCache'))
-						$customer_clear->clearCache(true);
-					
-					// if the carrier is disabled, we enable it for the order validation and then disable it again
-					$carrier = new Carrier((int)EbayShipping::getPsCarrierByEbayCarrier($order->shippingService));
-					if (!$carrier->active)
-					{
-						$carrier->active = true;
-						$carrier->save();
-						$has_disabled_carrier = true;
-					}
-					
-					// Validate order
-					$id_order = $order->validate();
-					
-					// we now disable the carrier if required
-					if (isset($has_disabled_carrier) && $has_disabled_carrier)
-					{
-						$carrier->active = false;
-						$carrier->save();
-					}
-
-					// Fix on sending e-mail
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order->getEmail())), 'UPDATE', '`id_customer` = '.(int)$id_customer);
-
-					// Update price (because of possibility of price impact)		
-					$order->updatePrice();
-
-					$order->add();
-
-					if (!version_compare(_PS_VERSION_, '1.5', '>'))
-						foreach ($order->getProducts() as $product)
-							$this->hookAddProduct(array('product' => new Product((int)$product['id_product'])));
-				}
-				$orders_ar = array();
-				foreach ($orders as $order)
-				{
-					$orders_ar[] = array(
-						'id_order_ref'		=> $order->getIdOrderRef(),
-						'id_order_seller'	=> $order->getIdOrderSeller(),
-						'amount'			=> $order->getAmount(),
-						'status'			=> $order->getStatus(),
-						'date'				=> $order->getDate(),
-						'email'				=> $order->getEmail(),
-						'products'			=> $order->getProducts(),
-						'error_messages'	=> $order->getErrorMessages()
-					);
-				}
-				file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders_ar, true).";\n\n");
+				$this->importOrders($orders);
 			}
 		}
 
@@ -527,6 +437,102 @@ class Ebay extends Module
 
 		$this->_relistItems();
 	}
+
+	public function importOrders($orders)
+	{
+		foreach ($orders as $order)
+		{
+			
+			if (!$order->isCompleted())
+			{
+				$order->addErrorMessage($this->l('Status not complete, amount less than 0.1 or no matching product'));
+				continue;
+			}
+			
+			if ($order->exists())
+			{
+				$order->addErrorMessage($this->l('Order already imported'));
+				continue;
+			}
+				
+			// no order in ebay order table with this order_ref
+			if (!$order->hasValidContact())
+			{
+				$order->addErrorMessage($this->l('Invalid e-mail'));
+				continue;
+			}
+
+			$id_customer = $order->getOrAddCustomer();
+			$id_address = $order->updateOrAddAddress();
+
+			if (!$order->hasAllProductsWithAttributes())
+			{
+				$order->addErrorMessage($this->l('Could not find the products in database'));
+				continue;
+			}
+
+			$order->addCart($this->ebay_country); //Create a Cart for the order
+
+			if (!$order->updateCartQuantities()) // if products in the cart
+			{
+				$order->deleteCart();
+				$order->addErrorMessage($this->l('Could not add product to cart (maybe your stock quantity is 0)'));
+				continue;
+			}
+			
+			// Fix on sending e-mail
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'NOSEND-EBAY'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+			$customer_clear = new Customer();
+			if (method_exists($customer_clear, 'clearCache'))
+				$customer_clear->clearCache(true);
+			
+			// if the carrier is disabled, we enable it for the order validation and then disable it again
+			$carrier = new Carrier((int)EbayShipping::getPsCarrierByEbayCarrier($order->shippingService));
+			if (!$carrier->active)
+			{
+				$carrier->active = true;
+				$carrier->save();
+				$has_disabled_carrier = true;
+			}
+			
+			// Validate order
+			$id_order = $order->validate();
+			// we now disable the carrier if required
+			if (isset($has_disabled_carrier) && $has_disabled_carrier)
+			{
+				$carrier->active = false;
+				$carrier->save();
+			}
+
+			// Fix on sending e-mail
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($order->getEmail())), 'UPDATE', '`id_customer` = '.(int)$id_customer);
+
+			// Update price (because of possibility of price impact)		
+			$order->updatePrice();
+
+			$order->add();
+
+			if (!version_compare(_PS_VERSION_, '1.5', '>'))
+				foreach ($order->getProducts() as $product)
+					$this->hookAddProduct(array('product' => new Product((int)$product['id_product'])));
+		}
+		$orders_ar = array();
+		foreach ($orders as $order)
+		{
+			$orders_ar[] = array(
+				'id_order_ref'		=> $order->getIdOrderRef(),
+				'id_order_seller'	=> $order->getIdOrderSeller(),
+				'amount'			=> $order->getAmount(),
+				'status'			=> $order->getStatus(),
+				'date'				=> $order->getDate(),
+				'email'				=> $order->getEmail(),
+				'products'			=> $order->getProducts(),
+				'error_messages'	=> $order->getErrorMessages()
+			);
+		}
+		file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders_ar, true).";\n\n");
+	}
+
 
 	/**
 	* Returns Ebay last passed orders as an array of EbayOrder objects
