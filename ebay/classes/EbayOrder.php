@@ -67,22 +67,22 @@ class EbayOrder
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 		
 		list($this->firstname, $this->familyname) = $this->_formatShippingAddressName($order_xml->ShippingAddress->Name);
-    $this->id_order_ref = (string)$order_xml->OrderID;
-    $this->amount = (string)$order_xml->AmountPaid;
-    $this->status = (string)$order_xml->CheckoutStatus->Status;
-    $this->name = (string)$order_xml->ShippingAddress->Name;
-    $this->address1 = (string)$order_xml->ShippingAddress->Street1;
-    $this->address2 = (string)$order_xml->ShippingAddress->Street2;
-    $this->city = (string)$order_xml->ShippingAddress->CityName;
-    $this->state = (string)$order_xml->ShippingAddress->StateOrProvince;
-    $this->country_iso_code = (string)$order_xml->ShippingAddress->Country;
-    $this->country_name = (string)$order_xml->ShippingAddress->CountryName;
-    $this->postalcode = (string)$order_xml->ShippingAddress->PostalCode;
-    $this->shippingService = (string)$order_xml->ShippingServiceSelected->ShippingService;
-    $this->shippingServiceCost = (string)$order_xml->ShippingServiceSelected->ShippingServiceCost;
-    $this->payment_method = (string)$order_xml->CheckoutStatus->PaymentMethod;
-    $this->id_order_seller = (string)$order_xml->ShippingDetails->SellingManagerSalesRecordNumber;
-		
+		$this->id_order_ref = (string)$order_xml->OrderID;
+		$this->amount = (string)$order_xml->AmountPaid;
+		$this->status = (string)$order_xml->CheckoutStatus->Status;
+		$this->name = (string)$order_xml->ShippingAddress->Name;
+		$this->address1 = (string)$order_xml->ShippingAddress->Street1;
+		$this->address2 = (string)$order_xml->ShippingAddress->Street2;
+		$this->city = (string)$order_xml->ShippingAddress->CityName;
+		$this->state = (string)$order_xml->ShippingAddress->StateOrProvince;
+		$this->country_iso_code = (string)$order_xml->ShippingAddress->Country;
+		$this->country_name = (string)$order_xml->ShippingAddress->CountryName;
+		$this->postalcode = (string)$order_xml->ShippingAddress->PostalCode;
+		$this->shippingService = (string)$order_xml->ShippingServiceSelected->ShippingService;
+		$this->shippingServiceCost = (string)$order_xml->ShippingServiceSelected->ShippingServiceCost;
+		$this->payment_method = (string)$order_xml->CheckoutStatus->PaymentMethod;
+		$this->id_order_seller = (string)$order_xml->ShippingDetails->SellingManagerSalesRecordNumber;
+
 		if (count($order_xml->TransactionArray->Transaction))
 			$this->email = (string)$order_xml->TransactionArray->Transaction[0]->Buyer->Email;
 		
@@ -228,6 +228,11 @@ class EbayOrder
 		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
 		
 		$cart = new Cart();
+		if(version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+			$cart->getPackageList(true);
+			$cart->getDeliveryOptionList(null, true);
+		}
 		$this->context->customer = new Customer($this->id_customer);
 		$cart->id_customer = $this->id_customer;
 		$cart->id_address_invoice = $this->id_address;
