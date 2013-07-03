@@ -313,17 +313,20 @@ class Ebay extends Module
 		$version = Configuration::get('EBAY_VERSION');
 		if ($version == '1.1' || empty($version))
 		{
-			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.2.php');
+			if(version_compare(_PS_VERSION_, '1.5', '<'))
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.2.php');
 			upgrade_module_1_2($this);
 		}
 		if (version_compare($version, '1.4.0', '<'))
 		{
-			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.4.php');
+			if(version_compare(_PS_VERSION_, '1.5', '<'))
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.4.php');
 			upgrade_module_1_4($this);
 		}
 		if (version_compare($version, '1.5.0', '<'))
 		{
-			include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
+			if(version_compare(_PS_VERSION_, '1.5', '<'))
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
 			upgrade_module_1_5($this);
 		}
 		/*
@@ -372,8 +375,8 @@ class Ebay extends Module
 	*/
 	public function hookAddProduct($params)
 	{
-		
-		if (!isset($params['product']))
+	
+		if (!isset($params['product']->id_product))
 			return false;
 		if (!($id_product = (int)$params['product']->id))
 			return false;
@@ -580,13 +583,11 @@ class Ebay extends Module
 	 */
 	public function hookUpdateQuantity($params)
 	{
-		die;
 		$this->hookUpdateProduct($params);
 	}
 	
 	public function hookActionUpdateQuantity($params)
 	{
-		die;
 		$this->hookUpdateProduct($params);
 	}
 
