@@ -1,0 +1,3 @@
+This email has been sent using Mailinblue SMTP.
+Congratulation, your Mailin SMTP module has been set up well.
+Mailinblue team
