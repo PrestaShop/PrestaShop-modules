@@ -13,3 +13,5 @@
 "Cuisine";"Capacite (Litres)";"capacite"
 "Cuisine";"Usage";"usage"
 "Cuisine";"Puissance (W)";"puissance_w"
+"Cuisine";"Garantie constructeur";"garantie_constructeur"
+"Cuisine";"Garantie Marchand";"garantie_marchand"

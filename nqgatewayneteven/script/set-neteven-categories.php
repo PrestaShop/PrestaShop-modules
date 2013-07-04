@@ -31,3 +31,5 @@ if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME'
 	die(Tools::displayError());
 
 ToolBox::setNetEvenCategories();
+
+d('');
