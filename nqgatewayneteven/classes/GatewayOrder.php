@@ -466,9 +466,10 @@ class GatewayOrder extends Gateway
 				$id_order_temp = $order->id;
 
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) VALUES ('.(int)$id_order_temp.', '.(int)Configuration::get('PS_CARRIER_DEFAULT').', 0, 0, 0, 0, 0,"'.pSQL(date('Y-m-d H:i:s')).'")');
-					
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "Numéro de commande '.$neteven_order->MarketPlaceName.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
-				
+
+                Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "Place de marché '.$neteven_order->MarketPlaceName.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
+                Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "ID order NetEven '.$neteven_order->MarketPlaceOrderId.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
+
 				if ($this->time_analyse)
 				{
 					$this->current_time_2 = time();
