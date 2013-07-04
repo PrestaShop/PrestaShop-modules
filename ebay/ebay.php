@@ -416,7 +416,7 @@ class Ebay extends Module
 		$this->hookUpdateProductAttributeEbay(); // Fix hook update product attribute
 
 		// update if not update for more than 30 min
-		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('0 minutes')).'.000Z')
+		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z')
 		{
 			$current_date = date('Y-m-d\TH:i:s').'.000Z';
 
