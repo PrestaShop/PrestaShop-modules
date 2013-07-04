@@ -44,14 +44,17 @@ class NqGatewayNeteven extends Module
 		else
         	$this->tab = 'market_place';
 		
-		$this->version = '1.1';
+		$this->version = '1.6';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
 
 		$this->displayName = $this->l('NetEven');
 		$this->description = $this->l('Vendez sur toutes les marketplaces depuis votre PrestaShop');
+
 		$this->feature_url = '/script/set-neteven-categories.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME'));
+        $this->order_url = '/script/import-order.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
+        $this->product_url = '/script/update-product.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
 		
 		if (!$this->getSOAP())
 			$this->warning = $this->l('SOAP should be installed for this module');
@@ -442,7 +445,9 @@ class NqGatewayNeteven extends Module
 					'default_currency' => new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT')),
 					'format_images' => ImageType::getImagesTypes('products'),
 					'cron_feature_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->feature_url,
-					'customizable_fields' => $customizable_fields,
+                    'cron_order_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->order_url,
+                    'cron_product_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->product_url,
+                    'customizable_fields' => $customizable_fields,
 					'neteven_token' => Tools::encrypt(Configuration::get('PS_SHOP_NAME')),
 					'NETEVEN_LOGIN' => Tools::safeOutput(Tools::getValue('NETEVEN_LOGIN', Gateway::getConfig('NETEVEN_LOGIN'))),
 					'NETEVEN_PASSWORD' => Tools::safeOutput(Tools::getValue('NETEVEN_PASSWORD', Gateway::getConfig('NETEVEN_PASSWORD'))),

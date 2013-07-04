@@ -402,7 +402,21 @@ class GatewayOrder extends Gateway
 			$order->gift = 0;
 			$order->gift_message = '';
 			$order->shipping_number = '';
-			$order->reference = $neteven_order->MarketPlaceOrderId;
+
+            //generate reference order
+            $nbr_order_neteven = Configuration::get('NUMBER_ORDER_NETEVEN');
+
+            if(false === $nbr_order_neteven){
+                $nbr_order_neteven = 1;
+            }else{
+                $nbr_order_neteven = (int)(str_replace('N', '', $nbr_order_neteven));
+                $nbr_order_neteven++;
+            }
+
+            $next_ref_gen_order_neteven = 'N'.sprintf('%07s', $nbr_order_neteven);
+            Configuration::updateValue('NUMBER_ORDER_NETEVEN', $next_ref_gen_order_neteven);
+            $order->reference = $next_ref_gen_order_neteven;
+            //-----
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
@@ -620,7 +634,9 @@ class GatewayOrder extends Gateway
 				$order_detail->download_nb = 0;
 				$order_detail->download_deadline = '0000-00-00 00:00:00';
 				$order_detail->id_warehouse	= 0;
-				$order_detail->id_shop = 1;
+
+                if(Configuration::get('PS_SHOP_ENABLE'))
+                    $order_detail->id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
 				if (!$order_detail->add())
 					Toolbox::addLogLine(self::getL('Failed for creation of order detail / NetEven Order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.$neteven_order->OrderLineID);
