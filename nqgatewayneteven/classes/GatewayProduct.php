@@ -149,6 +149,7 @@ class GatewayProduct extends Gateway
 				p.`id_category_default` as id_category,
 				cl.`name` as category_name,
 				p.`ean13`,
+				pl.`meta_keywords`,
 				pa.`ean13` as ean13_declinaison,
 				pa.`id_product_attribute` as id_product_attribute,
 				p.`quantity`,
@@ -215,6 +216,7 @@ class GatewayProduct extends Gateway
 			p.`quantity`,
 			pa.`quantity` as pa_quantity,
 			p.`wholesale_price`,
+			pl.`meta_keywords`,
 			m.`name` as name_manufacturer,
 			p.`reference` as product_reference,
 			pa.`reference` as product_attribute_reference,
@@ -232,7 +234,6 @@ class GatewayProduct extends Gateway
 		LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (al.`id_attribute`=a.`id_attribute` AND al.`id_lang`='.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (agl.`id_attribute_group`=a.`id_attribute_group` AND agl.`id_lang`='.(int)$id_lang.')
 		WHERE '.(isset($_GET['product_no']) ? ' p.`active` = 0' : ' p.`active` = 1 AND p.`available_for_order` = 1').'
-		'.((!empty($neteven_date_export_product)) ? ' AND p.`date_upd` > "'.pSQL($neteven_date_export_product).'"' : '').'
 		'.((is_array($products_exlusion) && count($products_exlusion) > 0) ? ' AND (p.`reference` NOT IN ('.implode(',', pSQL($products_exlusion)).') AND pa.`reference` NOT IN ('.implode(',', pSQL($products_exlusion)).'))' : '');
 		$sql .= '
 		GROUP BY p.`id_product`, pa.`id_product_attribute`
@@ -285,7 +286,13 @@ class GatewayProduct extends Gateway
 				
 			}
 
-			$codeEan = sprintf('%013s', !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13']);
+            $ean_ps = !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13'];
+
+            $codeEan = "";
+            if(!empty($ean_ps)){
+                $codeEan = sprintf('%013s', $ean_ps);
+            }
+
 			$id_product_attribute = NULL;
 			if (!empty($product['id_product_attribute']))
 				$id_product_attribute = (int)$product['id_product_attribute'];
@@ -294,7 +301,12 @@ class GatewayProduct extends Gateway
 			$product_price_without_reduction = Product::getPriceStatic((int)$product['id_product'], true, (int)$id_product_attribute, 2, NULL, false, false);
 			
 			$categories = $this->getProductCategories($product);
+
+            $categories = array_reverse($categories);
+
 			$classification = str_replace('//', '',implode('/', $categories));
+
+
 
 			$quantity = Product::getQuantity((int)$product['id_product'], !empty($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : NULL);
 			
@@ -319,8 +331,26 @@ class GatewayProduct extends Gateway
 				'Comment' => $this->getValue('comment'),
 				'Brand' => !empty($product['name_manufacturer']) ? $product['name_manufacturer'] : $this->getValue('default_brand')
 			);
-			
-			if ($shipping_price_local == '-')
+
+
+            $id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
+            $sql = '
+				SELECT t.name
+				FROM
+				'._DB_PREFIX_.'product_tag pt
+				INNER JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.intval($id_lang).')
+				WHERE pt.id_product = '.intval($product['id_product']).'
+			';
+
+            $t_tags_bdd = Db::getInstance()->getRow($sql);
+
+            if(!empty($t_tags_bdd['name'])){
+                $products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
+            }
+
+
+
+            if ($shipping_price_local == '-')
 				unset($products_temp[$indice]['shipping_price_local']);
 			
 			if (empty($products_temp[$indice]['shipping_price_international']))
@@ -335,6 +365,7 @@ class GatewayProduct extends Gateway
 				}
 
 			// Attributes and fetures of product
+            $category_default = new Category((int)$product['id_category_default'], (int)$cookie->id_lang);
 			$products_temp[$indice]['ArrayOfSpecificFields'] = array();
 			$products_temp[$indice]['ArrayOfSpecificFields'][] = array('Name' => 'categorie', 'Value' => $category_default->name);
 			
@@ -356,8 +387,8 @@ class GatewayProduct extends Gateway
 			if (!empty($product['attribute_name']))
 				$features_attributes = explode($this->getValue('separator'), $product['attribute_name']);
 
-			if (!empty($product['feature_name'])) 
-				$features_attributes = array_merge($t_carac_attr, explode($this->getValue('separator'), $product['feature_name']));
+            if (!empty($product['feature_name']))
+                $features_attributes = array_merge($features_attributes, explode($this->getValue('separator'), $product['feature_name']));
 
 			$feature_links = $this->getValue('feature_links');
 			foreach ($features_attributes as $value)
@@ -381,6 +412,7 @@ class GatewayProduct extends Gateway
 
 	public function getProductCategories($product)
 	{
+        global $cookie;
 		$category = $category_default = new Category((int)$product['id_category_default'], (int)$cookie->id_lang);
 		$categories = array();
 		$categories[] = $category->name;

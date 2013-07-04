@@ -127,7 +127,8 @@ class Toolbox
 								continue;
 							
 							Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_feature` (`name`, `value`, `category`) VALUES ("'.pSQL($data[1]).'", "'.pSQL($data[2]).'", "'.pSQL($data[0]).'")');
-						}
+                            echo 'Add '.$data[1].' into '.$data[2].'<br/>';
+                        }
 						$row++;
 					}
 					fclose($handle);
