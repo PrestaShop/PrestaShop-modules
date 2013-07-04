@@ -65,7 +65,7 @@
     <p>{l s='Créez votre compte client' mod='nqgatewayneteven'} <a href="http://www.neteven.com/neteven-inscription.html" target="_blank" style="text-decoration: underline;">{l s='ici' mod='nqgatewayneteven'}</a> {l s='puis paramétrez le module en remplissant les formulaires ci-dessous.' mod='nqgatewayneteven'}</p>
 
     <p class="neteven-description-title">{l s='Documentation' mod='nqgatewayneteven'}</p>
-    <a href="/modules/nqgatewayneteven/NETEVEN-Module-Prestashop.pdf" target="_blank">{l s='Voir la documentation' mod='nqgatewayneteven'}</a>
+    <a href="/modules/nqgatewayneteven/Neteven_module_Prestashop.pdf" target="_blank">{l s='Voir la documentation' mod='nqgatewayneteven'}</a>
 </fieldset>
 
 <form action="" method="post">
