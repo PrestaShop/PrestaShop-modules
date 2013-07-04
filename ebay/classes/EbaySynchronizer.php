@@ -30,6 +30,11 @@ class EbaySynchronizer
 	
 	private static $ebay_categories = array();
 	
+	public static function getIdProduct($product)
+	{
+		return $product['id_product'];
+	}
+
 	public static function syncProducts($products, $context, $id_lang) 
 	{
 		$date = date('Y-m-d H:i:s');
@@ -44,7 +49,7 @@ class EbaySynchronizer
 		// Up the time limit
 		@set_time_limit(3600);
 		
-		$product_ids = array_map(function($product) {return $product['id_product'];}, $products);
+		$product_ids = array_map(array('EbaySynchronizer', 'getIdProduct'), $products);
 		$products_configuration = EbayProductConfiguration::getByProductIds($product_ids);
 		
 		foreach ($products as $p) 
@@ -405,11 +410,16 @@ class EbaySynchronizer
 		return $variations;
 	}
 	
+	public static function getIdAttributeGroup($row)
+	{
+		return $row['id_attribute_group'];
+	}
+
 	private static function _hasVariationsMatching($product_id, $id_lang, $ebay_category)
 	{
 		$product = new Product($product_id); 
 		$attribute_groups = $product->getAttributesGroups($id_lang);
-		$attribute_group_ids = array_unique(array_map(function($row) { return $row['id_attribute_group']; }, $attribute_groups));
+		$attribute_group_ids = array_unique(array_map(array('EbaySynchronizer','getIdAttributeGroup'), $attribute_groups));
 		
 		/*
 		$nb_variation_attribute_groups = Db::getInstance()->getValue('SELECT COUNT(*) 
@@ -430,7 +440,7 @@ class EbaySynchronizer
 		$category_specifics = Db::getInstance()->executeS('SELECT `id_attribute_group`
 			FROM `'._DB_PREFIX_.'ebay_category_specific`
 			WHERE `id_attribute_group` IN ('.implode(', ', $attribute_group_ids).')');
-		$with_settings_attribute_group_ids = array_map(function($row) { return $row['id_attribute_group']; }, $category_specifics);
+		$with_settings_attribute_group_ids = array_map(array('EbaySynchronizer','getIdAttributeGroup'), $category_specifics);
 		
 		$without_settings_attribute_group_ids = array_diff($attribute_group_ids, $with_settings_attribute_group_ids);
 		
