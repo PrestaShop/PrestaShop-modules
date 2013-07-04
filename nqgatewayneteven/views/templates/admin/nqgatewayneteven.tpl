@@ -38,7 +38,7 @@
     <p class="neteven-description-title">{l s='NetEven, logiciel et services dediés à la gestion des marketplaces européennes'}</p>
     <p>
     {l s='Synchronisez votre site PrestaShop avec Neteven et pilotez tout le cycle de vente sur les marketplaces de manière simple et intégrée.'}<br />
-    {l s='Distribuez vos produits en Europe sur les plus grands sites e-commerce depuis une interface unique :  La Redoute - Amazon - eBay – Pixmania – PriceMinister - Cdiscount.com – SFR – RueDuCommerce – Fnac - BrandAlley - OneWorldAvenue - Zalando – Atosho – Play – Hmv - Otto.de - Rakuten.de ...'}<br />
+    {l s='Distribuez vos produits en Europe sur les plus grands sites e-commerce depuis une interface unique :'  mod='nqgatewayneteven'}  La Redoute - Amazon - eBay – Pixmania – PriceMinister - Cdiscount.com – SFR – RueDuCommerce – Fnac - BrandAlley - OneWorldAvenue - Zalando – Atosho – Play – Hmv - Otto.de - Rakuten.de ...<br />
     {l s='Vos produits seront à la disposition de plus de 20 millions d\’acheteurs français et 50 millions d’européens !'}<br/>
         <br />
         <span style="font-size: 1.1em;">{l s='Parmi les fonctionnalités disponibles :' mod='nqgatewayneteven'}</span>
@@ -87,13 +87,18 @@
         <label class="t" for="SYNCHRONISATION_ORDER_on"> <img src="../img/admin/enabled.gif" alt="{l s='Oui' mod='nqgatewayneteven'}" title="{l s='Oui' mod='nqgatewayneteven'}" /></label>
         <input type="radio" name="SYNCHRONISATION_ORDER" id="SYNCHRONISATION_ORDER_off" value="0"{if !$SYNCHRONISATION_ORDER} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_ORDER_off"> <img src="../img/admin/disabled.gif" alt="{l s='Non' mod='nqgatewayneteven'}" title="{l s='Non' mod='nqgatewayneteven'}" /></label>
+        <br class="clear"/>
+        <a target="_blank" href="{$cron_order_url}"><input style="margin-top:10px;" type="button" value="{l s='Forcer la synchonisation des commandes' mod='nqgatewayneteven'}"/></a>
     </div>
-    <label>{l s='Synchronisation des produits' mod='nqgatewayneteven'}</label>
+
+    <label>{l s='Forcer la synchronisation des produits' mod='nqgatewayneteven'}</label>
     <div class="margin-form">
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_on" value="1"{if $SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_on"> <img src="../img/admin/enabled.gif" alt="{l s='Oui' mod='nqgatewayneteven'}" title="{l s='Oui' mod='nqgatewayneteven'}" /></label>
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_off" value="0"{if !$SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_off"> <img src="../img/admin/disabled.gif" alt="{l s='Non' mod='nqgatewayneteven'}" title="{l s='Non' mod='nqgatewayneteven'}" /></label>
+        <br class="clear"/>
+        <a target="_blank" href="{$cron_product_url}"><input style="margin-top:10px;" type="button" value="{l s='Synchonisation des produits' mod='nqgatewayneteven'}"/></a>
     </div>
     <br /><br />
     <label>{l s='Nom de la marque par défaut' mod='nqgatewayneteven'}</label>
@@ -207,9 +212,7 @@
     <div class="error">{l s='Aucune catégorie disponible actuellement, veuillez lancer manuellement le script ci-dessous' mod='nqgatewayneteven'}</div>
 {/if}
 
-    <div class="warning">
-    {l s='Vous pouvez définir une tâche cron pour mettre à jour les caractéristiques NetEven en utilisant l\'URL suivante :' mod='nqgatewayneteven'}<br /><b>{$cron_feature_url}</b>
-    </div>
+    <a target="_blank" href="{$cron_feature_url}"><input style="margin-top:10px;" type="button" value="{l s='Synchonisation les caractéristiques NetEven' mod='nqgatewayneteven'}"/></a>
     <br /><br />
 
     <label>{l s='Caractéristiques PrestaShop' mod='nqgatewayneteven'}</label>
