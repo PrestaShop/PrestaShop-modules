@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
+<div class="warn">  <p>{l s='Warning, usage of this module in opc mobile theme is not recommended in production mode for your website.' mod='socolissimo'}</p></div>
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall'}" method="post" class="form">
     <fieldset><legend><img src="{$moduleDir}/logo.gif" alt="" />{l s='Description' mod='socolissimo'}</legend>
         {l s='SoColissimo is a service offered by La Poste, which allows you to offer buyers 5 modes of delivery.' mod='socolissimo'} :
@@ -100,7 +100,7 @@
         <div class="margin-form">
             <input type="text" size="45" name="url_so_mobile" value="{if isset($url_so_mobile)}{$url_so_mobile}{/if}" />
             <p>{l s='Url of back office SoColissimo Mobile. Customers with smartphones or ipad will be redirect there. Warning, this url do not allow delivery in belgium' mod='socolissimo'}</p>
-            <p><span style="color:red">{l s='Warning, usage of this module in opc mobile theme is not recommended in production mode for your website.' mod='socolissimo'}</span></p>
+
         </div>
         <label>{l s='Display Mode' mod='socolissimo'} : </label>
         <div class="margin-form">
