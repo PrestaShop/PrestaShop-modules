@@ -61,9 +61,14 @@ class EbayCategoryConfiguration
 				SELECT e.`id_category`
 				FROM `'._DB_PREFIX_.'ebay_category_configuration` e
 			)');
-		return array_map(function($row) { return $row['id_product']; }, $res);					
+		return array_map(array('EbayCategoryConfiguration', 'getAllProductIdsMap'), $res);					
 	}
 	
+	public static function getAllProductIdsMap($row)
+	{
+		return $row['id_product'];
+	}
+
 	/**
 	 *
 	 * Returns the eBay category ids
@@ -79,9 +84,13 @@ class EbayCategoryConfiguration
 			ON e.`id_ebay_category` = ec.`id_ebay_category`
 			WHERE ec.`id_category_ref` is not null';
 		$res = Db::getInstance()->executeS($sql);
-		return array_map(function($row) {return $row['id'];}, $res);
+		return array_map(array('EbayCategoryConfiguration', 'getEbayCategoryIdsMap'), $res);
 	}
 	
+	public static function getEbayCategoryIdsMap($row)
+	{
+		return $row['id'];
+	}
 	
 	/**
 	 *

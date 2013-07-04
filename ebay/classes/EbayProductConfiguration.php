@@ -43,7 +43,12 @@ class EbayProductConfiguration
 	public static function getBlacklistedProductIds()
 	{
 		$res = Db::getInstance()->executeS(EbayProductConfiguration::getBlacklistedProductIdsQuery());
-		return array_map(function($row) {return $row['id_product'];}, $res);
+		return array_map(array('EbayProductConfiguration', 'getBlacklistedProductIdsMap'), $res);
+	}
+
+	public static function getBlacklistedProductIdsMap($row)
+	{
+		return $row['id_product'];
 	}
 
 	public static function getBlacklistedProductIdsQuery()

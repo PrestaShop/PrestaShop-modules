@@ -31,6 +31,11 @@ include(dirname(__FILE__).'/../classes/EbayCategoryCondition.php');
 //	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 //		die('ERROR : INVALID TOKEN');
 
+function loadItemsMap($row)
+{
+	return $row['id'];
+}
+
 /* Fix for limit db sql request in time */
 sleep(1);
 
@@ -45,7 +50,7 @@ if (!Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') || (Configuration::get('EB
 }
 
 $item_specifics = $category->getItemsSpecifics();
-$item_specifics_ids = array_map(function($row) {return $row['id'];}, $item_specifics);
+$item_specifics_ids = array_map('loadItemsMap', $item_specifics);
 
 if (count($item_specifics_ids))
 {
