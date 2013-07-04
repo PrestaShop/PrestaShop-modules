@@ -1,5 +1,4 @@
 "Categorie";"Champ spécifique";"Nom Web Service"
-"Maroquinerie et Accessoires";"Année";"annee"
 "Maroquinerie et Accessoires";"Saison";"saison"
 "Maroquinerie et Accessoires";"Sous-type de produit";"sous_type"
 "Maroquinerie et Accessoires";"Accessoires inclus";"accessoires"
@@ -17,4 +16,7 @@
 "Maroquinerie et Accessoires";"Autres informations";"informations"
 "Maroquinerie et Accessoires";"Couleur Verres";"couleur_verres"
 "Maroquinerie et Accessoires";"Indice de protection";"indice_protection"
+"Maroquinerie et Accessoires";"Année";"annee"
 "Maroquinerie et Accessoires";"Grille de taille";"grille_taille"
+"Maroquinerie et Accessoires";"Garantie constructeur";"garantie_constructeur"
+"Maroquinerie et Accessoires";"Garantie Marchand";"garantie_marchand"

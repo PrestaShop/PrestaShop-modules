@@ -9,3 +9,5 @@
 "Cartes Postales";"Type";"type_1"
 "Cartes Postales";"Pays, Departement";"pays"
 "Cartes Postales";"Date d'emission";"date_emission"
+"Cartes Postales";"Garantie constructeur";"garantie_constructeur"
+"Cartes Postales";"Garantie Marchand";"garantie_marchand"
