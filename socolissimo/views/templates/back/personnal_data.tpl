@@ -49,12 +49,12 @@
     <form action="" method="post" style="margin-top: 30px; text-align: center">
         <dl style="margin: 0 auto; width: auto; text-align: left">
             <dt style="width: 40%"><label for="personal_phone" style="width: 100%; line-height: 18px; vertical-align: middle">{l s='Phone number' mod='socolissimo'}* :</label></dt>
-            <dd><input type="text" value="{if isset($phone)}{$phone}{else}{$shop_phone}{/if}" name="SOCOLISSIMO_PERSONAL_PHONE" id="personal_phone" />
+            <dd><input type="text" value="{if isset($phone)}{$phone|escape:'htmlall':'UTF-8'}{else}{$shop_phone|escape:'htmlall':'UTF-8'}{/if}" name="SOCOLISSIMO_PERSONAL_PHONE" id="personal_phone" />
                 &nbsp;&nbsp;<em style="font-size: .8em; {if isset($personal_data_phone_error) && $personal_data_phone_error} color: red; {else} color: #999;{/if}">({l s='Example  0144183004' mod='socolissimo'})</em>
             </dd><br>
 
             <dt style="width: 40%"><label for="personal_city" style="width: 100%; line-height: 18px; vertical-align: middle">{l s='Zip code' mod='socolissimo'} * :</label></dt>
-            <dd><input type="text" value="{if isset($zip_code)} {$zip_code}{else}{ $shop_zip_code}{/if}" name="SOCOLISSIMO_PERSONAL_ZIP_CODE" id="personal_zip_code" />
+            <dd><input type="text" value="{if isset($zip_code)}{$zip_code|escape:'htmlall':'UTF-8'}{else}{ $shop_zip_code|escape:'htmlall':'UTF-8'}{/if}" name="SOCOLISSIMO_PERSONAL_ZIP_CODE" id="personal_zip_code" />
                 &nbsp;&nbsp;<em style="font-size: .8em;{if isset($personal_data_zip_code_error) && $personal_data_zip_code_error}color: red;{else} color: #999;{/if}">({l s='Example  92300' mod='socolissimo'})</em>						</dd><br>
 
             <dt style="width: 40%"><label for="personal_quantities" style="width: 100%; line-height: 18px; vertical-align: middle">{l s='Mean number of parcels' mod='socolissimo'}* :</label></dt>
@@ -65,8 +65,8 @@
                 </select>
             </dd><br>
 
-            <dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod="socolissimo"} :</label></dt>
-            <dd><input type="text" value="{$siret}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" /></dd>
+            <dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod='socolissimo'} :</label></dt>
+            <dd><input type="text" value="{$siret|escape:'htmlall':'UTF-8'}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" /></dd>
         </dl>
 
         <input type="submit" class="button" name="submitPersonalSave" value="{l s='Confirm' mod='socolissimo'}" style="float: right; margin-top: 30px; padding: 10px 20px" />

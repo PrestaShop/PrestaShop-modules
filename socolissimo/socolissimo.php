@@ -638,7 +638,7 @@ class Socolissimo extends CarrierModule
         // in 2.8.0 country is mandatory
         $sql = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'country c
              LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON cl.id_lang = ' . (int) $params['cookie']->id_lang . '
-                 AND cl.id_country = c.id_country WHERE iso_code = "' . $deliveryInfos ['cecountry'] . '"');
+                 AND cl.id_country = c.id_country WHERE iso_code = "' . pSql($deliveryInfos ['cecountry']) . '"');
         $nameCountry = $sql['name'];
 
         if (((int) ($order->id_carrier) == (int) ($soCarrier->id) OR in_array((int) ($order->id_carrier), explode('|', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST')))) AND !empty($deliveryInfos))
@@ -801,7 +801,7 @@ class Socolissimo extends CarrierModule
         $newAddress = new Address();
         $sql = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'country c
              LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON cl.id_lang = ' . (int) $this->context->language->id . '
-                 AND cl.id_country = c.id_country WHERE iso_code = "' . $return ['cecountry'] . '"');
+                 AND cl.id_country = c.id_country WHERE iso_code = "' . pSql($return ['cecountry']) . '"');
         $nameCountry = $sql['name'];
         $isoCode = $sql['id_country'];
 
