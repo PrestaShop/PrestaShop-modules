@@ -174,6 +174,7 @@ class EbayRequest
 		if ($response === false)
 			return false;
 
+		$compliancies = array();
 		foreach ($response->Category as $cat)
 				$compliancies[(string)$cat->CategoryID] = ((string)$cat->VariationsEnabled === 'true' ? 1 : 0);
 		return $compliancies;
