@@ -210,12 +210,25 @@ class EbayCategory
 				'name' 									 => pSQL($category['CategoryName'])
 			), 'INSERT', '', 0, true, true);
 	}
+
+	public static function updateCategoryTable($categories_multi_sku)
+	{
+		$db = Db::getInstance();
+		$categories = Db::getInstance()->ExecuteS("SELECT * FROM "._DB_PREFIX_."ebay_category");
+		foreach ($categories as $category) {
+			$db->autoExecute(_DB_PREFIX_.'ebay_category', array(
+				'is_multi_sku' => isset($categories_multi_sku[$category['id_category_ref']]) ? $categories_multi_sku[$category['id_category_ref']] : null, 
+			), 'UPDATE', '`id_category_ref` = '.$category['id_category_ref']);
+		}
+
+		Configuration::updateValue('EBAY_CATEGORY_MULTI_SKU_UPDATE', 1, 0, true, true);
+
+	}
 	
 	/*
 	 * Climbs up the categories hierarchy until finding the value inherited for is_multi_sku
 	 *
-	 */
-	
+	 */	
 	public static function getInheritedIsMultiSku($id_category_ref) 
 	{
 		$row = Db::getInstance()->getRow('SELECT `id_category_ref_parent`, `is_multi_sku` 

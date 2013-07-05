@@ -335,6 +335,13 @@ class Ebay extends Module
 				upgrade_module_1_5($this);
 			}
 		}
+
+		if(!Configuration::get('EBAY_CATEGORY_MULTI_SKU_UPDATE'))
+		{
+			$ebay = new EbayRequest();
+			EbayCategory::updateCategoryTable($ebay->getCategoriesSkuCompliancy());
+		}
+
 		/*
 		if (!empty($sql) && is_array($sql))
 		{
