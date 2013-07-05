@@ -141,7 +141,7 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
             $sql .= '\'' . pSQL($soParams['DELIVERYMODE']) . '\'' . ',
 					' . (isset($soParams['PRID']) ? '\'' . pSQL($soParams['PRID']) . '\'' : '\'\'') . ',
 					' . (isset($soParams['PRNAME']) ? '\'' . pSQL($soParams['PRNAME']) . '\'' : '\'\'') . ',
-					' . (isset($deliveryMode[$soParams['DELIVERYMODE']]) ? '\'' . $deliveryMode[$soParams['DELIVERYMODE']] . '\'' : '\'So Colissimo\'') . ',
+					' . (isset($deliveryMode[$soParams['DELIVERYMODE']]) ? '\'' . pSql($deliveryMode[$soParams['DELIVERYMODE']]) . '\'' : '\'So Colissimo\'') . ',
 					' . (isset($soParams['PRCOMPLADRESS']) ? '\'' . pSQL($soParams['PRCOMPLADRESS']) . '\'' : '\'\'') . ',
 					' . (isset($soParams['PRADRESS1']) ? '\'' . pSQL($soParams['PRADRESS1']) . '\'' : '\'\'') . ',
 					' . (isset($soParams['PRADRESS2']) ? '\'' . pSQL($soParams['PRADRESS2']) . '\'' : '\'\'') . ',
@@ -187,7 +187,7 @@ function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
             {
             isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : '';
             isset($soParams['PRNAME']) ? $values['prname'] = ucfirst(pSQL($soParams['PRNAME'])) : '';
-            isset($deliveryMode[$soParams['DELIVERYMODE']]) ? $values['prfirstname'] = $deliveryMode[$soParams['DELIVERYMODE']] : $values['prfirstname'] = 'So Colissimo';
+            isset($deliveryMode[$soParams['DELIVERYMODE']]) ? $values['prfirstname'] = pSql($deliveryMode[$soParams['DELIVERYMODE']]) : $values['prfirstname'] = 'So Colissimo';
             isset($soParams['PRCOMPLADRESS']) ? $values['prcompladress'] = pSQL($soParams['PRCOMPLADRESS']) : '';
             isset($soParams['PRADRESS1']) ? $values['pradress1'] = pSQL($soParams['PRADRESS1']) : '';
             isset($soParams['PRADRESS2']) ? $values['pradress2'] = pSQL($soParams['PRADRESS2']) : '';

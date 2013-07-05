@@ -93,12 +93,12 @@
         </div>
         <label>{l s='Url So' mod='socolissimo'} : </label>
         <div class="margin-form">
-            <input type="text" size="45" name="url_so" value="{if isset($url_so)}{$url_so}{/if}" />
+            <input type="text" size="45" name="url_so" value="{if isset($url_so)}{$url_so|escape:'htmlall':'UTF-8'}{/if}" />
             <p>{l s='Url of back office SoColissimo.' mod='socolissimo'}</p>
         </div>
         <label>{l s='Url So Mobile' mod='socolissimo'} : </label>
         <div class="margin-form">
-            <input type="text" size="45" name="url_so_mobile" value="{if isset($url_so_mobile)}{$url_so_mobile}{/if}" />
+            <input type="text" size="45" name="url_so_mobile" value="{if isset($url_so_mobile)}{$url_so_mobile|escape:'htmlall':'UTF-8'}{/if}" />
             <p>{l s='Url of back office SoColissimo Mobile. Customers with smartphones or ipad will be redirect there. Warning, this url do not allow delivery in belgium' mod='socolissimo'}</p>
 
         </div>
@@ -122,7 +122,7 @@
         </div>
         <label>{l s='Url Supervision' mod='socolissimo'} : </label>
         <div class="margin-form">
-            <input type="text" size="45" name="url_sup" value="{if isset($url_sup)}{$url_sup}{/if}" />
+            <input type="text" size="45" name="url_sup" value="{if isset($url_sup)}{$url_sup|escape:'htmlall':'UTF-8'}{/if}" />
             <p>{l s='The monitor URL is to ensure the availability of the socolissimo service. We strongly recommend that you do not disable it' mod='socolissimo'}</p>
         </div>
         <div class="margin-form">

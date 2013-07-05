@@ -29,7 +29,7 @@
     </head>
     <body onload="document.getElementById('socoForm').submit();">
         <div style="width:320px;margin:0 auto;text-align:center;">
-            <form id="socoForm" name="form" action="{$socolissimo_url}" method="POST">
+            <form id="socoForm" name="form" action="{$socolissimo_url|escape:'htmlall':'UTF-8'}" method="POST">
 
                 {foreach from=$inputs key=key item=val}
                     <input type="hidden" name="{$key}" value="{$val}"/>
