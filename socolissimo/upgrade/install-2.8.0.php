@@ -25,37 +25,32 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registred Trademark & Property of PrestaShop SA
  */
-global $smarty;
+if (!defined('_PS_VERSION_'))
+	exit;
 
-require_once('../../config/config.inc.php');
-require_once(_PS_ROOT_DIR_ . '/init.php');
-require_once(dirname(__FILE__) . '/classes/SCFields.php');
+function upgrade_module_2_8_0($object, $install = false)
+{
+	// update value so url mobile
+	Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws.colissimo.fr/');
+	// add column cecountry in table socolissimo_delivery_info, checking exitence first (2.8 update)
+	$query = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			  WHERE COLUMN_NAME= "cecountry"
+			  AND TABLE_NAME=  "' . _DB_PREFIX_ . 'socolissimo_delivery_info"
+			  AND TABLE_SCHEMA = "' . _DB_NAME_ . '"';
 
-$so = new SCfields('API');
+	$result = Db::getInstance()->ExecuteS($query);
+	
+	// adding column
+	if (!$result)
+	{
+		$query = 'ALTER TABLE ' . _DB_PREFIX_ . 'socolissimo_delivery_info add  `cecountry` varchar(10) NOT NULL AFTER `prtown`';
+		if (Db::getInstance()->Execute($query))
+			$query = 'UPDATE ' . _DB_PREFIX_ . 'socolissimo_delivery_info SET `cecountry` = "FR" where `cecountry` =""'; // updating value
+		if (Db::getInstance()->Execute($query))
+			Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.0');
+	}
+	else
+		Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.0');
 
-$fields = $so->getFields();
-
-// Build back the fields list for SoColissimo, gift infos are send using the JS
-$inputs = array();
-foreach ($_GET as $key => $value)
-	if (in_array($key, $fields))
-		$inputs[$key] = Tools::getValue($key);
-
-$param_plus = array(
-	// Get the data set before
-	Tools::getValue('trParamPlus'),
-	Tools::getValue('gift'),
-	$so->replaceAccentedChars(Tools::getValue('gift_message'))
-);
-
-$inputs['trParamPlus'] = implode('|', $param_plus);
-// Add signature to get the gift and gift message in the trParamPlus
-$inputs['signature'] = $so->generateKey($inputs);
-
-$socolissimo_url = Configuration::get('SOCOLISSIMO_URL');
-$smarty->assign(array(
-	'inputs' => $inputs,
-	'socolissimo_url' => $socolissimo_url
-));
-
-$smarty->display(_PS_MODULE_DIR_ . 'socolissimo/views/templates/front/redirect.tpl');
+	return true;
+}

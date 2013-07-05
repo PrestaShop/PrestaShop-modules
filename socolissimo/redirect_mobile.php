@@ -25,6 +25,7 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registred Trademark & Property of PrestaShop SA
  */
+
 global $smarty;
 
 require_once('../../config/config.inc.php');
@@ -52,7 +53,8 @@ $inputs['trParamPlus'] = implode('|', $param_plus);
 // Add signature to get the gift and gift message in the trParamPlus
 $inputs['signature'] = $so->generateKey($inputs);
 
-$socolissimo_url = Configuration::get('SOCOLISSIMO_URL');
+$socolissimo_url = Configuration::get('SOCOLISSIMO_URL_MOBILE');
+
 $smarty->assign(array(
 	'inputs' => $inputs,
 	'socolissimo_url' => $socolissimo_url

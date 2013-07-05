@@ -22,24 +22,23 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-{literal}
-	function change_action_form() 
-	{
-		if ($('#id_carrier{/literal}{$id_carrier}{literal}').is(':not(:checked)'))
-			$('#form').attr("action", 'order.php');
-		else
-			$('#form').attr("action", '{/literal}{$urlSo}{literal}');
-	}
-	$(document).ready(function() 
-	{
-		$('input[name=id_carrier]').change(function() {
-			change_action_form();	
-		});
-		change_action_form();
-	});
-{/literal}
-</script>
-{foreach from=$inputs item=input key=name name=myLoop}
-	<input type="hidden" name="{$name|escape:'htmlall':'UTF-8'}" value="{$input|strip_tags|escape:'htmlall'}"/>
-{/foreach}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+	<head>
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+	</head>
+	<body onload="document.getElementById('socoForm').submit();">
+		<div style="width:320px;margin:0 auto;text-align:center;">
+			<form id="socoForm" name="form" action="{$socolissimo_url|escape:'htmlall':'UTF-8'}" method="POST">
+
+				{foreach from=$inputs key=key item=val}
+					<input type="hidden" name="{$key}" value="{$val}"/>
+				{/foreach}
+				<img src="logo.gif" />
+				<p>{l s='You will be redirect to socolissimo in few moment. If it is not the case, please click button.' mod='socolissimo'}</p>
+				<p><img src="img/ajax-loader.gif" /></p>
+				<input type="submit" value="Envoyer" />
+			</form>
+		</div>
+	</body>
+</html>
