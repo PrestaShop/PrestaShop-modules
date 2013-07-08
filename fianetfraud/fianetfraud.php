@@ -89,7 +89,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.3';
+		$this->version = '3.4';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -425,7 +425,10 @@ class fianetfraud extends Module
 		}
 
 		//lists all payment methods
-		$payments = PaymentModule::getPaymentModules();
+		if (_PS_VERSION_ < '1.5')
+			$payments = $this->getInstalledPaymentModules();
+		else
+			$payments = PaymentModule::getPaymentModules();
 		//looks for the payment module used
 		$found = false;
 		$payment_name = $params['order']->module;
