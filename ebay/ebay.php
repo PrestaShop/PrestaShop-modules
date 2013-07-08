@@ -143,6 +143,7 @@ class Ebay extends Module
 			if (!Configuration::get('EBAY_API_TOKEN'))
 				$this->warning = $this->l('You must register your module on eBay.');
 
+
 			// Warning uninstall
 			$this->confirmUninstall = $this->l('Are you sure you want to uninistall this module? All configuration settings will be lost');
 		}
@@ -334,12 +335,6 @@ class Ebay extends Module
 				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
 				upgrade_module_1_5($this);
 			}
-		}
-
-		if(!Configuration::get('EBAY_CATEGORY_MULTI_SKU_UPDATE'))
-		{
-			$ebay = new EbayRequest();
-			EbayCategory::updateCategoryTable($ebay->getCategoriesSkuCompliancy());
 		}
 
 		/*
@@ -657,6 +652,12 @@ class Ebay extends Module
 			$this->_setContextShop();
 		}
 
+		if(!Configuration::get('EBAY_CATEGORY_MULTI_SKU_UPDATE'))
+		{
+			$ebay = new EbayRequest();
+			EbayCategory::updateCategoryTable($ebay->getCategoriesSkuCompliancy());
+		}
+		
 		// Checking Country
 		if (Tools::getValue('ebay_country_default_fr') == 'ok')
 			$this->setConfiguration('EBAY_COUNTRY_DEFAULT', 8);
