@@ -283,7 +283,7 @@ class Gsitemap extends Module
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
 		
-		$products_id = Db::getInstance()->ExecuteS('SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product WHERE p.`active` = 1 AND p.`id_product` > '.(int)$id_product.' AND pl.`id_shop` = '.(int)$this->context->shop->id.' AND pl.`id_lang` = '.(int)$lang.' ORDER BY `id_product` ASC');
+		$products_id = Db::getInstance()->ExecuteS('SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product WHERE p.`active` = 1 AND p.`id_product` > '.(int)$id_product.' AND pl.`id_shop` = '.(int)$this->context->shop->id.' AND pl.`id_lang` = '.(int)$lang['lang'].' ORDER BY `id_product` ASC');
 		foreach ($products_id as $product_id)
 		{
 			$product = new Product((int)$product_id['id_product'], false, (int)$lang['id_lang']);
@@ -329,7 +329,7 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$categories_id = Db::getInstance()->ExecuteS('SELECT c.`id_category` FROM `'._DB_PREFIX_.'category` c INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category` WHERE c.`active` = 1 AND c.`id_category` != 1 AND c.`id_category` > '.(int)$id_category.' AND cl.`id_shop` = '.(int)$this->context->shop->id.' AND cl.`id_lang` = '.(int)$lang.' ORDER BY c.`id_category` ASC');
+		$categories_id = Db::getInstance()->ExecuteS('SELECT c.`id_category` FROM `'._DB_PREFIX_.'category` c INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category` WHERE c.`active` = 1 AND c.`id_category` != 1 AND c.`id_category` > '.(int)$id_category.' AND cl.`id_shop` = '.(int)$this->context->shop->id.' AND cl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY c.`id_category` ASC');
 		foreach ($categories_id as $category_id)
 		{
 			$category = new Category((int)$category_id['id_category'], (int)$lang['id_lang']);
@@ -371,7 +371,7 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$manufacturers_id = Db::getInstance()->ExecuteS('SELECT m.`id_manufacturer` FROM `'._DB_PREFIX_.'manufacturer` m INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml on m.`id_manufacturer` = ml.`id_manufacturer` INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON m.`id_manufacturer` = ms.`id_manufacturer` WHERE m.`active` = 1  AND m.`id_manufacturer` > '.(int)$id_manufacturer.' AND ms.`id_shop` = '.(int)$this->context->shop->id.' AND ml.`id_lang` = '.(int)$lang.' ORDER BY m.`id_manufacturer` ASC');
+		$manufacturers_id = Db::getInstance()->ExecuteS('SELECT m.`id_manufacturer` FROM `'._DB_PREFIX_.'manufacturer` m INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml on m.`id_manufacturer` = ml.`id_manufacturer` INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON m.`id_manufacturer` = ms.`id_manufacturer` WHERE m.`active` = 1  AND m.`id_manufacturer` > '.(int)$id_manufacturer.' AND ms.`id_shop` = '.(int)$this->context->shop->id.' AND ml.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY m.`id_manufacturer` ASC');
 		foreach ($manufacturers_id as $manufacturer_id)
 		{
 			$manufacturer = new Manufacturer((int)$manufacturer_id['id_manufacturer'], $lang['id_lang']);
@@ -403,7 +403,7 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$suppliers_id = Db::getInstance()->ExecuteS('SELECT s.`id_supplier` FROM `'._DB_PREFIX_.'supplier` s INNER JOIN `'._DB_PREFIX_.'supplier_lang` sl ON s.`id_supplier` = sl.`id_supplier` INNER JOIN `'._DB_PREFIX_.'supplier_shop` ss ON s.`id_supplier` = ss.`id_supplier` WHERE s.`active` = 1 AND s.`id_supplier` > '.(int)$id_supplier.' AND ss.`id_shop` = '.(int)$this->context->shop->id.' AND sl.`id_lang` = '.(int)$lang.' ORDER BY s.`id_supplier` ASC');
+		$suppliers_id = Db::getInstance()->ExecuteS('SELECT s.`id_supplier` FROM `'._DB_PREFIX_.'supplier` s INNER JOIN `'._DB_PREFIX_.'supplier_lang` sl ON s.`id_supplier` = sl.`id_supplier` INNER JOIN `'._DB_PREFIX_.'supplier_shop` ss ON s.`id_supplier` = ss.`id_supplier` WHERE s.`active` = 1 AND s.`id_supplier` > '.(int)$id_supplier.' AND ss.`id_shop` = '.(int)$this->context->shop->id.' AND sl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY s.`id_supplier` ASC');
 		foreach ($suppliers_id as $supplier_id)
 		{
 			$supplier = new Supplier((int)$supplier_id['id_supplier'], $lang['id_lang']);
@@ -436,7 +436,7 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms` INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` WHERE c.`active` = 1 AND c.`id_cms` > '.(int)$id_cms.' AND cs.id_shop = '.(int)$this->context->shop->id.' AND cl.`id_lang` = '.(int)$lang.' ORDER BY c.`id_cms` ASC');
+		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms` INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` WHERE c.`active` = 1 AND c.`id_cms` > '.(int)$id_cms.' AND cs.id_shop = '.(int)$this->context->shop->id.' AND cl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY c.`id_cms` ASC');
 		foreach ($cmss_id as $cms_id)
 		{
 			$cms = new CMS((int)$cms_id['id_cms'], $lang['id_lang']);
