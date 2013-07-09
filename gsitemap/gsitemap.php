@@ -493,7 +493,7 @@ class Gsitemap extends Module
 				if ($type == '' || $type == $type_val)
 				{
 					$function = '_get'.ucfirst($type_val).'Link';
-					if (!$this->$function($link_sitemap, $lang, $index, $i, $id_obj))
+					if (!$this->$function($link_sitemap, $lang['id_lang'], $index, $i, $id_obj))
 						return false;
 					$type = '';
 					$id_obj = 0;
