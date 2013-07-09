@@ -29,7 +29,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-function upgrade_module_2_0($object, $install = false)
+function upgrade_module_2_2($object, $install = false)
 {
 	if ($object->active || $install)
 	{
@@ -42,8 +42,8 @@ function upgrade_module_2_0($object, $install = false)
 		Configuration::updateValue('GSITEMAP_FREQUENCY', 'weekly');
 		Configuration::updateValue('GSITEMAP_LAST_EXPORT', false);
 
-		return Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'gsitemap_sitemap` (`link` varchar(255) DEFAULT NULL) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
+		return Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'gsitemap_sitemap` (`link` varchar(255) DEFAULT NULL, `id_shop` int(11) DEFAULT 0) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;');
 	}
-	$object->upgrade_detail['2.0'][] = 'GSitemap upgrade error !';
+	$object->upgrade_detail['2.2'][] = 'GSitemap upgrade error !';
 	return false;
 }
