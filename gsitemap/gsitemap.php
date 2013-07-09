@@ -35,7 +35,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.2.3';
+		$this->version = '2.2.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -132,7 +132,7 @@ class Gsitemap extends Module
 
 		$this->context->smarty->assign(array(
 			'gsitemap_form' => './index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap',
-			'gsitemap_cron' => _PS_BASE_URL_._MODULE_DIR_.'gsitemap/gsitemap-cron.php?token = '.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&id_shop = '.$this->context->shop->id,
+			'gsitemap_cron' => _PS_BASE_URL_._MODULE_DIR_.'gsitemap/gsitemap-cron.php?token='.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&id_shop='.$this->context->shop->id,
 			'gsitemap_feed_exists' => file_exists(dirname(__FILE__).'/../../index_sitemap.xml'),
 			'gsitemap_last_export' => Configuration::get('GSITEMAP_LAST_EXPORT'),
 			'gsitemap_frequency' => Configuration::get('GSITEMAP_FREQUENCY'),
@@ -209,7 +209,7 @@ class Gsitemap extends Module
 				else
 				{
 					$admin_folder = str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
-					$admin_folder = substr($admin_folder, 1); //p($new_link);
+					$admin_folder = substr($admin_folder, 1);
 					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.$admin_folder.'/index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&continue=1&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1).'&id_shop='.$this->context->shop->id);
 				}
 				die();
@@ -282,12 +282,11 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		
+
 		$products_id = Db::getInstance()->ExecuteS('SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product WHERE p.`active` = 1 AND p.`id_product` > '.(int)$id_product.' AND pl.`id_shop` = '.(int)$this->context->shop->id.' AND pl.`id_lang` = '.(int)$lang.' ORDER BY `id_product` ASC');
 		foreach ($products_id as $product_id)
 		{
 			$product = new Product((int)$product_id['id_product'], false, (int)$lang['id_lang']);
-
 			if (_PS_VERSION_ >= 1.5)
 			{
 				$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true));
@@ -296,7 +295,7 @@ class Gsitemap extends Module
 			else
 			{
 				$category = new Category((int)$product->id_category_default, (int)$lang['id_lang']);
-				$url = $link->getProductLink($product, $product->link_rewrite, $category->name, $product->ean13, (int)$lang['id_lang']);
+				$url = $link->getProductLink($product, Configuration::get('PS_REWRITING_SETTINGS')?$product->link_rewrite:false, $category->name, $product->ean13, (int)$lang['id_lang']);
 			}
 
 			$id_image = Product::getCover((int)$product_id['id_product']);
@@ -304,10 +303,11 @@ class Gsitemap extends Module
 				$image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.(int)$id_image['id_image']);
 
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
-			if (isset($image_link) && $file_headers[0] != 'HTTP/1.1 404 Not Found')
-				if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'link' => $image_link, 'image' => array('title_img' => Tools::safeOutput($product->name), 'caption' => Tools::safeOutput(strip_tags($product->description_short)))), $lang['iso_code'], $index, $i, $product_id['id_product']))
-					return false;
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $product_id['id_product']))
+			$image_product = array();
+			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
+				$image_product = array('title_img' => Tools::safeOutput($product->name), 'caption' => Tools::safeOutput(strip_tags($product->description_short)), 'link' => $image_link);
+			//p($image_product);
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'link' => $url, 'image' => $image_product), $lang['iso_code'], $index, $i, $product_id['id_product']))
 				return false;
 
 			unset($image_link);
@@ -345,10 +345,10 @@ class Gsitemap extends Module
 			if ($category->id_image)
 				$image_link = $this->context->link->getCatImageLink($category->link_rewrite, (int)$category->id_image, 'category_default');
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
-			if (isset($image_link) && $file_headers[0] != 'HTTP/1.1 404 Not Found')
-				if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'category', 'page' => 'category', 'link' => $image_link, 'image' => array('title_img' => Tools::safeOutput($category->name))), $lang['iso_code'], $index, $i, (int)$category_id['id_category']))
-					return false;
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'category', 'page' => 'category', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, (int)$category_id['id_category']))
+			$image_category = array();
+			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
+				$image_category = array('title_img' => Tools::safeOutput($category->name), 'link' => $image_link);
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'category', 'page' => 'category', 'link' => $url, 'image' => $image_category), $lang['iso_code'], $index, $i, (int)$category_id['id_category']))
 				return false;
 
 			unset($image_link);
@@ -380,10 +380,10 @@ class Gsitemap extends Module
 
 			$image_link = 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getMediaServer(_THEME_MANU_DIR_)._THEME_MANU_DIR_.((!file_exists(_PS_MANU_IMG_DIR_.'/'.(int)$manufacturer->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$manufacturer->id).'-medium_default.jpg';
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
-			if ($file_headers[0] != 'HTTP/1.1 404 Not Found')
-				if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'manufacturer', 'page' => 'manufacturer', 'link' => $image_link, 'image' => array('title_img' => $manufacturer->name, 'caption' => $manufacturer->short_description)), $lang['iso_code'], $index, $i, $manufacturer_id['id_manufacturer']))
-					return false;
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'manufacturer', 'page' => 'manufacturer', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $manufacturer_id['id_manufacturer']))
+			$manifacturer_image = array();
+			if ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true)
+				$manifacturer_image = array('title_img' => $manufacturer->name, 'caption' => $manufacturer->short_description, 'link' => $image_link);
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'manufacturer', 'page' => 'manufacturer', 'link' => $url, 'image' => $manifacturer_image), $lang['iso_code'], $index, $i, $manufacturer_id['id_manufacturer']))
 				return false;;
 		}
 		return true;
@@ -413,10 +413,10 @@ class Gsitemap extends Module
 			$image_link = 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getMediaServer(_THEME_SUP_DIR_)._THEME_SUP_DIR_.((!file_exists(_THEME_SUP_DIR_.'/'.(int)$supplier->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$supplier->id).'-medium_default.jpg';
 
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
-			if ($file_headers[0] != 'HTTP/1.1 404 Not Found')
-				if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'supplier', 'page' => 'supplier', 'link' => 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getMediaServer(_THEME_SUP_DIR_)._THEME_SUP_DIR_.((!file_exists(_THEME_SUP_DIR_.'/'.(int)$supplier->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$supplier->id).'-medium_default.jpg', 'image' => array('title_img' => $supplier->name)), $lang['iso_code'], $index, $i, $supplier_id['id_supplier']))
-					return false;
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'supplier', 'page' => 'supplier', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $supplier_id['id_supplier']))
+			$supplier_image = array();
+			if ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true)
+				$supplier_image = array('title_img' => $supplier->name, 'link' => 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getMediaServer(_THEME_SUP_DIR_)._THEME_SUP_DIR_.((!file_exists(_THEME_SUP_DIR_.'/'.(int)$supplier->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$supplier->id).'-medium_default.jpg');
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'supplier', 'page' => 'supplier', 'link' => $url, 'image' => $supplier_image), $lang['iso_code'], $index, $i, $supplier_id['id_supplier']))
 				return false;
 		}
 		return true;
@@ -436,13 +436,17 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms` INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` WHERE c.`active` = 1 AND c.`id_cms` > '.(int)$id_cms.' AND cs.id_shop = '.(int)$this->context->shop->id.' AND cl.`id_lang` = '.(int)$lang.' ORDER BY c.`id_cms` ASC');
+		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `ps_cms_lang` cl ON c.`id_cms` = cl.`id_cms` 
+				INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` 
+				INNER JOIN `'._DB_PREFIX_.'cms_category` cc ON c.id_cms_category = cc.id_cms_category AND cc.active = 1 
+				WHERE c.`active` =1 AND c.`id_cms` > '.(int)$id_cms.
+				' AND cs.id_shop = '.(int)$this->context->shop->id.
+				' AND cl.`id_lang` = '.(int)$lang.
+				' ORDER BY c.`id_cms` ASC');
+
 		foreach ($cmss_id as $cms_id)
 		{
 			$cms = new CMS((int)$cms_id['id_cms'], $lang['id_lang']);
-			$cms_category = new CMSCategory((int)$cms->id_cms_category);
-			if(!$cms_category->active)
-				continue;
 			$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).$this->context->shop->physical_uri.$this->context->shop->virtual_uri;
 			$url .= str_replace(_PS_BASE_URL_.__PS_BASE_URI__, '', $link->getCmsLink($cms, null, null, null, $lang['id_lang']));
 			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'cms', 'page' => 'cms', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $cms_id['id_cms']))
@@ -502,7 +506,7 @@ class Gsitemap extends Module
 			$page = '';
 			$index = 0;
 		}
-
+		
 		$this->_createIndexSitemap();
 		Configuration::updateValue('GSITEMAP_LAST_EXPORT', date('r'));
 
@@ -536,23 +540,18 @@ class Gsitemap extends Module
 	{
 		if (!count($link_sitemap))
 			return false;
+
 		$sitemap_link = $this->context->shop->id.'_'.$lang.'_'.$index.'_sitemap.xml';
 		$writeFd = fopen(dirname(__FILE__).'/../../'.$sitemap_link, 'w');
 
 		fwrite($writeFd, '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">');
-		$nourl = true;
 		foreach ($link_sitemap as $key => $file)
 		{
 			fwrite($writeFd, '<url>');
+			$this->_addSitemapNode($writeFd, htmlspecialchars($file['link']), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), date('c'));
 			if ($file['image'])
 			{
-				$this->_addSitemapNodeImage($writeFd, htmlspecialchars($file['link']), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', $file['image']['title_img'])) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', $file['image']['caption'])) : '');
-				$nourl = false;
-			}
-			else
-			{
-				$this->_addSitemapNode($writeFd, htmlspecialchars($file['link']), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), date('c'));
-				$nourl = true;
+				$this->_addSitemapNodeImage($writeFd, htmlspecialchars($file['image']['link']), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', $file['image']['title_img'])) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', $file['image']['caption'])) : '');
 			}
 			fwrite($writeFd, '</url>');
 		}
@@ -600,8 +599,7 @@ class Gsitemap extends Module
 		if (!$sitemaps)
 			return false;
 
-		$xml = '<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"></sitemapindex>';
+		$xml = '<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>';
 		$xml_feed = new SimpleXMLElement($xml);
 		$http = 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '');
 
