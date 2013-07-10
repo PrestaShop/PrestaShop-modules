@@ -228,11 +228,7 @@ class EbayOrder
 		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
 		
 		$cart = new Cart();
-		if(version_compare(_PS_VERSION_, '1.5', '>'))
-		{
-			$cart->getPackageList(true);
-			$cart->getDeliveryOptionList(null, true);
-		}
+		
 		$this->context->customer = new Customer($this->id_customer);
 		$cart->id_customer = $this->id_customer;
 		$cart->id_address_invoice = $this->id_address;
@@ -293,6 +289,12 @@ class EbayOrder
 		}
 
 		$this->cart->update();
+		if(version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+			$this->cart->getProducts(true);
+			$this->cart->getPackageList(true);
+			$this->cart->getDeliveryOptionList(null, true);
+		}
 		return (boolean)$cart_nb_products;
 	}
 	
