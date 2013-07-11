@@ -30,6 +30,6 @@ include_once(dirname(__FILE__).'/../classes/Toolbox.php');
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die(Tools::displayError());
 
-ToolBox::setNetEvenCategories();
+ToolBox::setNetEvenCategories(true);
 
 d('');
