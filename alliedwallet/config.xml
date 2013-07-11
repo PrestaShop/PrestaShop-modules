@@ -2,7 +2,7 @@
 <module>
 	<name>alliedwallet</name>
 	<displayName><![CDATA[Allied Wallet]]></displayName>
-	<version><![CDATA[1.2]]></version>
+	<version><![CDATA[1.3.1]]></version>
 	<description><![CDATA[Accept credit and debit cards online with Allied Wallet. You&#039;ll be able to accept 164 different currencies around the globe with safety and security.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

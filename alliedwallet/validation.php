@@ -24,36 +24,43 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-require_once(dirname(__FILE__).'/../../config/config.inc.php');
-require_once(_PS_MODULE_DIR_.'alliedwallet/alliedwallet.php');
+include_once(dirname(__FILE__).'/../../config/config.inc.php');
+include_once(dirname(__FILE__).'/../../init.php');
+include_once(_PS_MODULE_DIR_.'alliedwallet/alliedwallet.php');
 
 $allied = new AlliedWallet();
-
-/* First we need to check that this script is called by an authorized IP address (from Allied Wallet) */
-$ch = curl_init('https://sale.alliedwallet.com/ip_list.txt');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$content = curl_exec($ch);
-curl_close($ch);
-
-if (!in_array($_SERVER['REMOTE_ADDR'], explode('|', $content)))
+if ($allied->active)
 {
-	Logger::AddLog('[AlliedWallet] Hack attempt: Someone tried to validate a payment - '.Tools::safeOutput($_SERVER['REMOTE_ADDR']), 2);
-	die($allied->l('Forbidden Action.'));
+	/* First we need to check that this script is called by an authorized IP address (from Allied Wallet) */
+	$ch = curl_init('https://sale.alliedwallet.com/ip_list.txt');
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$content = curl_exec($ch);
+	curl_close($ch);
+
+	if (!in_array($_SERVER['REMOTE_ADDR'], explode('|', $content)))
+	{
+		Logger::AddLog('[AlliedWallet] Hack attempt: Someone tried to validate a payment - '.Tools::safeOutput($_SERVER['REMOTE_ADDR']), 2);
+		die($allied->l('Forbidden Action.'));
+	}
+
+	$siteId = Tools::getValue('SiteID');
+	if ($siteId != Configuration::get('ALLIEDWALLET_SITE_ID'))
+	{
+		Logger::AddLog('[AlliedWallet] Hack attempt: Someone tried to validate a payment with a different site ID - '.Tools::safeOutput($siteId), 2);
+		die($allied->l('Forbidden Action.'));
+	}
+	
+	$amount = str_replace(',', '.', Tools::getValue('Amount'));
+
+	$message = '
+	Amount: '.(float)$amount.'
+	Pay Reference ID: '.Tools::getValue('PayReferenceID').'
+	Transaction ID: '.Tools::getValue('TransactionID').'
+	Card mask: '.Tools::getValue('CardMask');
+	
+	$cart = new Cart((int)Tools::getValue('MerchantReference'));
+	if (Validate::isLoadedObject($cart))
+		$allied->validateOrder((int)$cart->id, (int)Configuration::get('PS_OS_PAYMENT'), (float)$amount, $allied->displayName, $message, array(), NULL, false, $cart->secure_key);
+	else
+		Logger::AddLog('[AlliedWallet] The Shopping cart #'.(int)Tools::getValue('MerchantReference').' was not found during the payment validation step.', 2);
 }
-
-$siteId = Tools::getValue('SiteID');
-if ($siteId != Configuration::get('ALLIEDWALLET_SITE_ID'))
-{
-	Logger::AddLog('[AlliedWallet] Hack attempt: Someone tried to validate a payment with a different site ID - '.Tools::safeOutput($siteId), 2);
-	die($allied->l('Forbidden Action.'));
-}
-
-/* Then we load the current Shopping cart */
-if (_PS_VERSION_ >= 1.5)
-	Context::getContext()->cart = new Cart((int)Tools::getValue('MerchantReference'));
-$cart = _PS_VERSION_ >= 1.5 ? Context::getContext()->cart : new Cart((int)Tools::getValue('MerchantReference'));
-
-if (Validate::isLoadedObject($cart))
-	$allied->validateOrder((int)$cart->id, Configuration::get('PS_OS_PAYMENT'), (float)Tools::getValue('Amount'), $allied->name, NULL, array(), NULL, false,	$cart->secure_key);
-else
-	Logger::AddLog('[AlliedWallet] The Shopping cart #'.(int)Tools::getValue('MerchantReference').' was not found during the payment validation step.', 2);

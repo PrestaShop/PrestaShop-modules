@@ -48,6 +48,9 @@ class AvalaraTax extends Module
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+		
+		if (!extension_loaded('soap') || !class_exists('SoapClient'))
+			$this->warning = $this->l('SOAP extension should be enabled on your server to use this module.');
 	}
 
 	/**

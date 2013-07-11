@@ -5,7 +5,6 @@
 	<input type="hidden" name="quantity" value="1" />
 	<input type="hidden" name="id_p_attr" value="" />
 	<input type="hidden" name="express_checkout" value="{$PayPal_payment_type}"/>
-	{assign var=paypal_base_uri value=$base_uri|regex_replace:"#(.*)(\/index\.php|\/)$#":"$1"}
-	<input type="hidden" name="current_shop_url" value="{$paypal_base_uri}{$smarty.server.REQUEST_URI|urlencode}" />
+	<input type="hidden" name="current_shop_url" value="{$PayPal_current_page}" />
 	<input type="hidden" name="bn" value="{$PayPal_tracking_code}" />
 </form>

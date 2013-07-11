@@ -94,6 +94,7 @@ function setCustomerAddress($ppec, $customer)
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
+	$address->id_state = (int)State::getIdByIso($ppec->result['SHIPTOSTATE'], $address->id_country);
 	$address->postcode = $ppec->result['SHIPTOZIP'];
 	$address->id_customer = $customer->id;
 	return $address;
@@ -105,7 +106,6 @@ if ($request_type && $ppec->type)
 	$product_quantity = (int)Tools::getValue('quantity');
 	$id_product_attribute = Tools::getValue('id_p_attr');
 
-	//d(var_dump($id_product, $product_quantity, $id_product_attribute));
 	if (($id_product > 0) && $id_product_attribute !== false && ($product_quantity > 0))
 	{
 		setContextData($ppec);
@@ -206,13 +206,12 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 				$ppec->logs[] = $ppec->l('Cannot update existing cart');
 			else
 			{
-				$payment_cart = (bool) ($ppec->type != 'payment_cart');
+				$payment_cart = (bool)($ppec->type != 'payment_cart');
 				$ppec->redirectToCheckout($customer, $payment_cart);
 			}
 		}
 	}
 }
-
 /**
  * Check payment return
  */
@@ -269,7 +268,7 @@ function validateOrder($customer, $cart, $ppec)
 }
 
 // If Previous steps succeed, ready (means 'ready to pay') will be set to true
-if (($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || $ppec->type == 'payment_cart')))
+if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || $ppec->type == 'payment_cart'))
 {
 	// Check modification on the product cart / quantity
 	if ($ppec->isProductsListStillRight())

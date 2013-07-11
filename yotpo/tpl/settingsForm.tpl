@@ -22,25 +22,12 @@
 		{/if}
 
 		<fieldset id="y-fieldset">
-			<div class="y-label">{l s='Select widget language' mod='yotpo'}
-				<select name="yotpo_language">
-					<option value="en" {if $yotpo_widgetLanguage == "en"}selected{/if}>{l s='English' mod='yotpo'}</option>
-					<option value="de" {if $yotpo_widgetLanguage == "de"}selected{/if}>{l s='German' mod='yotpo'}</option>
-					<option value="es" {if $yotpo_widgetLanguage == "es"}selected{/if}>{l s='Spanish' mod='yotpo'}</option>
-					<option value="fr" {if $yotpo_widgetLanguage == "fr"}selected{/if}>{l s='French' mod='yotpo'}</option>
-					<option value="he" {if $yotpo_widgetLanguage == "he"}selected{/if}>{l s='Hebrew' mod='yotpo'}</option>
-					<option value="hr" {if $yotpo_widgetLanguage == "hr"}selected{/if}>{l s='Croatian' mod='yotpo'}</option>
-					<option value="it" {if $yotpo_widgetLanguage == "it"}selected{/if}>{l s='Italian' mod='yotpo'}</option>
-					<option value="ja" {if $yotpo_widgetLanguage == "ja"}selected{/if}>{l s='Japanese' mod='yotpo'}</option>
-					<option value="nl" {if $yotpo_widgetLanguage == "nl"}selected{/if}>{l s='Dutch' mod='yotpo'}</option>
-					<option value="pt" {if $yotpo_widgetLanguage == "pt"}selected{/if}>{l s='Portuguese' mod='yotpo'}</option>
-					<option value="sv" {if $yotpo_widgetLanguage == "sv"}selected{/if}>{l s='Swedish' mod='yotpo'}</option>
-					<option value="vi" {if $yotpo_widgetLanguage == "vi"}selected{/if}>{l s='Vietnamese' mod='yotpo'}</option>
-					<option value="da" {if $yotpo_widgetLanguage == "da"}selected{/if}>{l s='Danish' mod='yotpo'}</option>
-					<option value="ru" {if $yotpo_widgetLanguage == "ru"}selected{/if}>{l s='Russian' mod='yotpo'}</option>
-					<option value="tr" {if $yotpo_widgetLanguage == "tr"}selected{/if}>{l s='Turkish' mod='yotpo'}</option>
-				</select>
-			</div>			
+      
+	        <div class="y-label">{l s='For multipule-language sites, mark this check box. This will choose the language according to the user\'s site language' mod='yotpo'}
+               <input type="checkbox" name="yotpo_language_as_site" value="1" {if $yotpo_language_as_site}checked="checked"{/if} />
+            </div> 
+            <div class="y-label">{l s='If you would like to choose a set language, please type the 2-letter language code here. You can find the supported langauge codes ' mod='yotpo'}<a class="y-href" href="http://support.yotpo.com/entries/21861473-Languages-Customization-" target="_blank">{l s='here.' mod='yotpo'}</a></div>
+    	    <div class="y-input"><input type="text" class="yotpo_language_code_text" name="yotpo_widget_language_code" maxlength="2" value="{$yotpo_widget_language_code|escape:'htmlall':'UTF-8'}" /></div>			
 			<div class="y-label">{l s='Select widget location' mod='yotpo'}
 				<select name="yotpo_widget_location">
 					<option value="footer" {if $yotpo_widgetLocation == 'footer'}selected{/if}>{l s='Page footer' mod='yotpo'}</option>

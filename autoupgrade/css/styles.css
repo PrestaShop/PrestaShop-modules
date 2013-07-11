@@ -1,7 +1,7 @@
 fieldset{margin-top:10px}
 .autoupgradeSteps div {  line-height: 30px; }
 .upgradestep { margin-right: 5px;padding-left: 10px; padding-right: 5px;}
-#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../../../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 15px;}
+#upgradeNow.stepok, .autoupgradeSteps a.stepok { background-image: url("../../../img/admin/enabled.gif");background-position: left center;background-repeat: no-repeat;padding-left: 20px;}
 #upgradeNow {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;font-size: medium;padding: 5px;}
 .button-autoupgrade {-moz-border-bottom-colors: none;-moz-border-image: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: #FFF6D3 #DFD5AF #DFD5AF #FFF6D3;border-right: 1px solid #DFD5AF;border-style: solid;border-width: 1px;color: #268CCD;display:inline-block;font-size: medium;margin:10px 0;padding: 5px;}
 .processing {border:2px outset gray;margin-top:1px;overflow: auto;}

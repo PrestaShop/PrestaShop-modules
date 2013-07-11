@@ -85,3 +85,9 @@
 [submodule "gsitemap/backward_compatibility"]
 	path = gsitemap/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "nqgatewayneteven/backward_compatibility"]
+	path = nqgatewayneteven/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "firstdata/backward_compatibility"]
+	path = firstdata/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

@@ -1,15 +1,40 @@
 <?php
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 include( '../../config/config.inc.php' );
 
 function genAuth($username, $password)
 	{
-		 return sprintf('
-				<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-				<wsse:UsernameToken>
-				<wsse:Username>%s</wsse:Username>
-				<wsse:Password>%s</wsse:Password>
-				</wsse:UsernameToken>
-				</wsse:Security>', htmlspecialchars($username), htmlspecialchars($password));
+		return sprintf('
+			<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+			<wsse:UsernameToken>
+			<wsse:Username>%s</wsse:Username>
+			<wsse:Password>%s</wsse:Password>
+			</wsse:UsernameToken>
+			</wsse:Security>', htmlspecialchars($username), htmlspecialchars($password));
 	}
 
 function getDepot($soapclient, $code)
@@ -28,21 +53,23 @@ else
 	$header = new SoapHeader("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", $authvars);
 	$file = "http://www.tnt.fr/service/?wsdl";
 
-	try {
+	try
+	{
 		$soapclient = new SoapClient($file, array('trace'=>1));
 		$soapclient->__setSOAPHeaders(array($header));
 		$follow = getDepot($soapclient, $code);
-		} 
-	catch( SoapFault $e ) {
+	} 
+	catch( SoapFault $e )
+	{
 		$erreur = $e->faultstring;
 		echo $erreur;
-		}
-	catch( Exception $e ) {
-		$erreur = "Problem : follow failed";      
+	}
+	catch( Exception $e )
+	{
+		$erreur = "Problem : follow failed";
 	}
 	if (isset($follow))
 	{
-		//var_dump($follow);
 		if (isset($follow->DepotInfo))
 		{	
 			$v = $follow->DepotInfo;
@@ -125,4 +152,3 @@ else
 			echo "Aucun d&eacute;p&ocirc;t trouv&eacute;";
 	}
 }
-?>

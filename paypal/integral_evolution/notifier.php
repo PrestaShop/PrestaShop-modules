@@ -61,8 +61,11 @@ class PayPalNotifier extends PayPal
 
 		if (strcmp($res, "VERIFIED") == 0)
 		{
+			$currency_decimals = is_array($this->context->currency) ? (int)$this->context->currency['decimals'] : (int)$this->context->currency->decimals;
+			$this->decimals = $currency_decimals * _PS_PRICE_DISPLAY_PRECISION_;
+			
 			$message = null;
-			$mc_gross = Tools::getValue('mc_gross');
+			$mc_gross = Tools::ps_round(Tools::getValue('mc_gross'), $this->decimals);
 			
 			$cart_details = $cart->getSummaryDetails(null, true);
 			
@@ -70,9 +73,9 @@ class PayPalNotifier extends PayPal
 			$subtotal = $cart_details['total_price_without_tax'] - $cart_details['total_shipping_tax_exc'];
 			$tax = $cart_details['total_tax'];
 			
-			$total_price = $shipping + $subtotal + $tax;
+			$total_price = Tools::ps_round($shipping + $subtotal + $tax, $this->decimals);
 		
-			if ($mc_gross != $total_price)
+			if (bccomp($mc_gross, $total_price, 2) !== 0)
 			{
 				$payment = (int)Configuration::get('PS_OS_ERROR');
 				$message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';

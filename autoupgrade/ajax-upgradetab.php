@@ -42,7 +42,7 @@ if (!isset($_POST['dir']))
 	die('no directory');
 	
 if (realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir'] !== realpath(realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']))
-	die('wrong directory :'.(isset($_POST['dir']) ? $_POST['dir'] : ''));
+	die('wrong directory :'.(isset($_POST['dir']) ? Tools::safeOutput(Tools::getValue('dir')) : ''));
 
 define('_PS_ADMIN_DIR_', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR.$_POST['dir']);
 
@@ -56,6 +56,9 @@ require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 
 if (!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
+	
+if (!defined('_PS_TOOL_DIR_'))
+	define('_PS_TOOL_DIR_', _PS_ROOT_DIR_.'/tools/');	
 
 //require(_PS_ADMIN_DIR_.'/functions.php');
 include(AUTOUPGRADE_MODULE_DIR.'init.php');

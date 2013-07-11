@@ -1,98 +1,87 @@
 <?php
 
 /*
-* 2007-2011 PrestaShop 
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2011 PrestaShop SA
-*  @version  Release: $Revision: 1.4 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2013 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2013 PrestaShop SA
+ *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
+// Loading eBay Class Country Specification
 
-class eBayRequest
+if (file_exists(dirname(__FILE__) . '/eBayCountrySpec.php'))
+	require_once(dirname(__FILE__) . '/eBayCountrySpec.php');
+
+class eBayRequest 
 {
 	public $response;
 	public $token;
 	public $expiration;
-
 	public $runame;
 	public $username;
 	public $session;
-
 	public $itemID;
 	public $fees;
 	public $error;
+	public $itemConditionError;
 	public $errorCode;
-
 	private $devID;
 	private $appID;
 	private $certID;
-
 	private $siteID;
 	private $apiUrl;
 	private $apiCall;
-
 	private $loginUrl;
-
 	private $findingUrl;
 	private $findingVersion;
-
 	private $compatibilityLevel;
-
 	private $debug = false;
 	private $dev = false;
-
-	
 	private $country;
 	private $language;
 	private $siteName;
 	private $siteExtension;
+	private $currency;
 
 	/******************************************************************/
 	/** Constructor And Request Methods *******************************/
 	/******************************************************************/
 
 
-	public function __construct($apiCall = '')
+	public function __construct($apiCall = '') 
 	{
-		$this->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-	
-		if(strtolower($this->country->iso_code) == 'it')
-			{
-			$this->siteID = 101;
-			$this->language = 'it_IT';
-			$this->siteName = 'Italy';
-			$this->siteExtension = 'it';
-			}
-		else
-			{
-			$this->siteID = 71;
-			$this->language = 'fr_FR';
-			$this->siteName = 'France';
-			$this->siteExtension = 'fr';
-			}
-		
-		/*** SAND BOX PARAMS ***/
-		
-		if($this->dev)
+		$this->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+
+		$ebayCountry = new eBayCountrySpec($this->country);
+
+		$this->siteID = $ebayCountry->getSiteID();
+		$this->language = $ebayCountry->getLanguage();
+		$this->siteName = $ebayCountry->getSiteName();
+		$this->siteExtension = $ebayCountry->getSiteExtension();
+		$this->currency = $ebayCountry->getCurrency();
+		$this->itemConditionError = false;
+
+		/* SAND BOX PARAMS */
+
+		if ($this->dev) 
 		{
 			$this->devID = '1db92af1-2824-4c45-8343-dfe68faa0280';
 			$this->appID = 'Prestash-2629-4880-ba43-368352aecc86';
@@ -104,9 +93,9 @@ class eBayRequest
 
 			$this->runame = 'Prestashop-Prestash-2629-4-hpehxegu';
 
-			$this->loginURL = 'https://signin.sandbox.ebay.'.$this->siteExtension.'/ws/eBayISAPI.dll';
-		}
-		else
+			$this->loginURL = 'https://signin.sandbox.ebay.' . $this->siteExtension . '/ws/eBayISAPI.dll';
+		} 
+		else 
 		{
 			$this->devID = '1db92af1-2824-4c45-8343-dfe68faa0280';
 			$this->appID = 'Prestash-70a5-419b-ae96-f03295c4581d';
@@ -117,14 +106,11 @@ class eBayRequest
 			$this->compatibilityLevel = 741;
 
 			$this->runame = 'Prestashop-Prestash-70a5-4-pepwa';
-			$this->loginURL = 'https://signin.ebay.'.$this->siteExtension.'/ws/eBayISAPI.dll';
+			$this->loginURL = 'https://signin.ebay.' . $this->siteExtension . '/ws/eBayISAPI.dll';
 		}
-
-		
 	}
 
-
-	public function makeRequest($request, $shoppingEndPoint = false)
+	public function makeRequest($request, $shoppingEndPoint = false) 
 	{
 		// Init
 		$connection = curl_init();
@@ -134,42 +120,39 @@ class eBayRequest
 		// Stop CURL from verifying the peer's certificate
 		curl_setopt($connection, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($connection, CURLOPT_SSL_VERIFYHOST, 0);
-		
+
 		// Set the headers (Different headers depending on the api call !)
-		if($shoppingEndPoint)
-		{
+		if ($shoppingEndPoint) {
 			curl_setopt($connection, CURLOPT_HTTPHEADER, $this->buildHeadersShopping());
-		}
-		else
-		{
+		} else {
 			curl_setopt($connection, CURLOPT_HTTPHEADER, $this->buildHeaders());
 		}
-		curl_setopt($connection, CURLOPT_POST, 1);	
-		
+		curl_setopt($connection, CURLOPT_POST, 1);
+
 		// Set the XML body of the request
 		curl_setopt($connection, CURLOPT_POSTFIELDS, $request);
-		
+
 		// Set it to return the transfer as a string from curl_exec
 		curl_setopt($connection, CURLOPT_RETURNTRANSFER, 1);
-        
+
 		// Send the Request
 		$response = curl_exec($connection);
 
 		// Close the connection
 		curl_close($connection);
-		
+
 		// Debug
-		if ($this->debug == true)
+		if ($this->debug == true) 
 		{
-			if (!file_exists(dirname(__FILE__).'/log/request.php'))
-				file_put_contents(dirname(__FILE__).'/log/request.php', "<?php\n\n", FILE_APPEND | LOCK_EX);
-			file_put_contents(dirname(__FILE__).'/log/request.php', date('d/m/Y H:i:s')."\n\n".$request."\n\n".$response."\n\n-------------------\n\n", FILE_APPEND | LOCK_EX); 
+			if (!file_exists(dirname(__FILE__) . '/log/request.php'))
+				file_put_contents(dirname(__FILE__) . '/log/request.php', "<?php\n\n", FILE_APPEND | LOCK_EX);
+			file_put_contents(dirname(__FILE__) . '/log/request.php', date('d/m/Y H:i:s') . "\n\n HEADERS : \n".print_r($this->buildHeaders(), true), FILE_APPEND | LOCK_EX);
+			file_put_contents(dirname(__FILE__) . '/log/request.php', date('d/m/Y H:i:s') . "\n\n" . $request . "\n\n" . $response . "\n\n-------------------\n\n", FILE_APPEND | LOCK_EX);
 		}
 
 		// Return the response
 		return $response;
 	}
-
 
 	private function buildHeadersShopping()
 	{
@@ -209,44 +192,42 @@ class eBayRequest
 
 		return $headers;
 	}
-
-
 	/******************************************************************/
 	/** Authentication Methods ****************************************/
 	/******************************************************************/
 
 
-	function fetchToken()
+	function fetchToken() 
 	{
 		// Set Api Call
-        	$this->apiCall = 'FetchToken';
+		$this->apiCall = 'FetchToken';
 
 		$requestXml = '<?xml version="1.0" encoding="utf-8" ?>';
 		$requestXml .= '<FetchTokenRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
-		$requestXml .= '<RequesterCredentials><Username>'.$this->username.'</Username></RequesterCredentials>';
-		$requestXml .= '<SessionID>'.$this->session.'</SessionID>';
+		$requestXml .= '<RequesterCredentials><Username>' . $this->username . '</Username></RequesterCredentials>';
+		$requestXml .= '<SessionID>' . $this->session . '</SessionID>';
 		$requestXml .= '</FetchTokenRequest>';
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
 		// Saving Datas // Need to cast token var to string (not SimpleXML element) to persist in SESSION
-	        $this->response = simplexml_load_string($responseXml);
-        	$this->token = (string)$this->response->eBayAuthToken;
-	        $this->expiration = $this->response->HardExpirationTime;
+		$this->response = simplexml_load_string($responseXml);
+		$this->token = (string) $this->response->eBayAuthToken;
+		$this->expiration = $this->response->HardExpirationTime;
 	}
 
-	function getLoginUrl()
+	function getLoginUrl() 
 	{
 		return $this->loginURL;
 	}
 
-	function login()
+	function login() 
 	{
 		// Set Api Call
 		$this->apiCall = 'GetSessionID';
@@ -254,28 +235,27 @@ class eBayRequest
 		///Build the request Xml string
 		$requestXml = '<?xml version="1.0" encoding="utf-8" ?>';
 		$requestXml .= '<GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
-		$requestXml .= '<Version>'.$this->compatibilityLevel.'</Version>';
-		$requestXml .= '<RuName>'.$this->runame.'</RuName>';
+		$requestXml .= '<Version>' . $this->compatibilityLevel . '</Version>';
+		$requestXml .= '<RuName>' . $this->runame . '</RuName>';
 		$requestXml .= '</GetSessionIDRequest>';
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
-	        $this->response = simplexml_load_string($responseXml);
-		$this->session = (string)$this->response->SessionID;
+		$this->response = simplexml_load_string($responseXml);
+		$this->session = (string) $this->response->SessionID;
 	}
 
 	/******************************************************************/
 	/**** Get User Informations ***************************************/
 	/******************************************************************/
 
-
-	function getUserProfile()
+	function getUserProfile() 
 	{
 
 		// Set Api Call
@@ -291,37 +271,37 @@ class eBayRequest
 		$requestXml .= '<GetUserProfileRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
 		$requestXml .= '  <UserID>'.$this->username.'</UserID>'."\n";
 		$requestXml .= '  <IncludeSelector>Details</IncludeSelector>'."\n";
-		$requestXml .= '  <ErrorLanguage>fr_FR</ErrorLanguage>'."\n";
+		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
 		$requestXml .= '  <Version>719</Version>'."\n";
 		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-
-		$requestXml .= '</GetUserProfileRequest>'."\n";
+		$requestXml .= '</GetUserProfileRequest>' . "\n";
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml, true);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
 
 		// Load xml in array
-		
+
 		$response = simplexml_load_string($responseXml);
 
 
 		$userProfile[] = array(
-			'StoreUrl' => $response->User->StoreURL, 
-			'StoreName' => $response->User->StoreName, 
-			'SellerBusinessType' => $response->User->SellerBusinessType
+		    'StoreUrl' => $response->User->StoreURL,
+		    'StoreName' => $response->User->StoreName,
+		    'SellerBusinessType' => $response->User->SellerBusinessType
 		);
 
 
 		$this->apiUrl = $apiUrl;
 		return $userProfile;
 	}
+
 	/******************************************************************/
 	/** Retrieve Categories Methods ***********************************/
 	/******************************************************************/
@@ -335,11 +315,11 @@ class eBayRequest
 		///Build the request Xml string
 		$requestXml = '<?xml version="1.0" encoding="utf-8"?>';
 		$requestXml .= '<GetCategories xmlns="urn:ebay:apis:eBLBaseComponents">';
-		$requestXml .= '<Version>'.$this->compatibilityLevel.'</Version>';
+		$requestXml .= '<Version>' . $this->compatibilityLevel . '</Version>';
 		$requestXml .= '<RequesterCredentials>';
-		$requestXml .= '<eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>';
+		$requestXml .= '<eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>';
 		$requestXml .= '</RequesterCredentials>';
-		$requestXml .= '<CategorySiteID>'.$this->siteID.'</CategorySiteID>';
+		$requestXml .= '<CategorySiteID>' . $this->siteID . '</CategorySiteID>';
 		$requestXml .= '<DetailLevel>ReturnAll</DetailLevel>';
 		$requestXml .= '<LevelLimit>5</LevelLimit>';
 		$requestXml .= '<ViewAllNodes>true</ViewAllNodes>';
@@ -347,14 +327,14 @@ class eBayRequest
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
 		// Load xml in array
-	        $this->response = simplexml_load_string($responseXml);
+		$this->response = simplexml_load_string($responseXml);
 
 		// Load categories multi sku compliant
 		$categoriesMultiSkuCompliant = $this->GetCategoryFeatures('VariationsEnabled');
@@ -362,16 +342,16 @@ class eBayRequest
 		// Save categories
 		if (count($this->response->CategoryArray->Category) > 0)
 		{
-			foreach ($this->response->CategoryArray->Category as $cat)
+			foreach ($this->response->CategoryArray->Category as $cat) 
 			{
 				$category = array();
 				foreach ($cat as $key => $value)
-					$category[(string)$key] = (string)$value;
+					$category[(string) $key] = (string) $value;
 				$category['IsMultiSku'] = 0;
 				if (isset($categoriesMultiSkuCompliant[$category['CategoryID']]))
 					$category['IsMultiSku'] = 1;
 
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category', array('id_category_ref' => pSQL($category['CategoryID']), 'id_category_ref_parent' => pSQL($category['CategoryParentID']), 'id_country' => '8', 'level' => pSQL($category['CategoryLevel']), 'is_multi_sku' => pSQL($category['IsMultiSku']), 'name' => pSQL($category['CategoryName'])), 'INSERT');
+				Db::getInstance()->autoExecute(_DB_PREFIX_ . 'ebay_category', array('id_category_ref' => pSQL($category['CategoryID']), 'id_category_ref_parent' => pSQL($category['CategoryParentID']), 'id_country' => '8', 'level' => pSQL($category['CategoryLevel']), 'is_multi_sku' => pSQL($category['IsMultiSku']), 'name' => pSQL($category['CategoryName'])), 'INSERT');
 			}
 		}
 
@@ -379,90 +359,289 @@ class eBayRequest
 		return true;
 	}
 
-	function GetCategoryFeatures($featureID)
+	function GetCategoryFeatures($featureID) 
 	{
 		// Set Api Call
 		$this->apiCall = 'GetCategoryFeatures';
 
 		///Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<GetCategoryFeatures xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>'."\n";
-		$requestXml .= '  <FeatureID>'.$featureID.'</FeatureID>'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <Version>'.$this->compatibilityLevel.'</Version>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <ViewAllNodes>true</ViewAllNodes>'."\n";
-		$requestXml .= '</GetCategoryFeatures>'."\n";
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GetCategoryFeatures xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>' . "\n";
+		$requestXml .= '  <FeatureID>' . $featureID . '</FeatureID>' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <Version>' . $this->compatibilityLevel . '</Version>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <ViewAllNodes>true</ViewAllNodes>' . "\n";
+		$requestXml .= '</GetCategoryFeatures>' . "\n";
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		// Load xml in array
+		$categoriesFeatures = array();
+		$response = simplexml_load_string($responseXml);
+
+		if ($featureID == 'VariationsEnabled') 
+		{
+			foreach ($response->Category as $cat)
+				if ($cat->VariationsEnabled == true)
+					$categoriesFeatures[(string) $cat->CategoryID] = true;
+		}
+		else
+			return array();
+		return $categoriesFeatures;
+	}
+
+	function getSuggestedCategories($query) 
+	{
+		// Set Api Call
+		$this->apiCall = 'GetSuggestedCategories';
+
+		///Build the request Xml string
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GetSuggestedCategoriesRequest xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <Version>' . $this->compatibilityLevel . '</Version>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Query>' . substr(strtolower($query), 0, 350) . '</Query>' . "\n";
+		$requestXml .= '</GetSuggestedCategoriesRequest>' . "\n";
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		// Load xml in array
+		$response = simplexml_load_string($responseXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		if (isset($response->SuggestedCategoryArray->SuggestedCategory[0]->Category->CategoryID))
+			return (int) $response->SuggestedCategoryArray->SuggestedCategory[0]->Category->CategoryID;
+		return 0;
+	}
+
+	/******************************************************************/
+	/** Methods to retrieve the global informations about eBay ********/
+	/******************************************************************/
+
+	function getReturnsPolicy() 
+	{
+		$this->apiCall = 'GeteBayDetails';
+
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+		$requestXml .= ' <DetailName>ReturnPolicyDetails</DetailName>';
+		$requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GeteBayDetailsRequest>';
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		// Load xml in array
+		$ReturnsAccepted = array();
+		$response = simplexml_load_string($responseXml);
+		foreach ($response->ReturnPolicyDetails as $ReturnPolicyDetails) 
+		{
+			foreach ($ReturnPolicyDetails as $key => $Returns) 
+			{
+				if ($key == 'ReturnsAccepted') 
+				{
+					$ReturnsAccepted[] = array("value" => $Returns->ReturnsAcceptedOption, "description" => $Returns->Description);
+				}
+			}
+		}
+
+		return $ReturnsAccepted;
+	}
+
+	function getInternationalShippingLocation()
+	{
+		$this->apiCall = 'GeteBayDetails';
+
+		$requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+		$requestXml .= ' <DetailName>ShippingLocationDetails</DetailName>';
+		$requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GeteBayDetailsRequest>';
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+
+
+		// Load xml in array
+		$categoriesFeatures = array();
+		$response = simplexml_load_string($responseXml);
+		$responseArray = array();
+		foreach ($response->ShippingLocationDetails as $line) 
+		{
+			$responseArray[] = array(
+			    'description' => strip_tags($line->Description->asXML()),
+			    'location' => strip_tags($line->ShippingLocation->asXML())
+			);
+		}
+
+		return $responseArray;
+	}
+
+	function getExcludeShippingLocation()
+	{
+		$this->apiCall = 'GeteBayDetails';
+
+		$requestXml =  '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+		$requestXml .= ' <DetailName>ExcludeShippingLocationDetails</DetailName>';
+		$requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GeteBayDetailsRequest>';
+
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
+
+		// Load xml in array
+		$categoriesFeatures = array();
+		$response = simplexml_load_string($responseXml);
+		$responseArraytmp = array();
+		foreach ($response->ExcludeShippingLocationDetails as $line) 
+		{
+			$responseArraytmp[] = array(
+				'region' => strip_tags($line->Region->asXML()),
+				'description' => strip_tags($line->Description->asXML()),
+				'location' => strip_tags($line->Location->asXML())
+			);
+		}
+		//Sort array by Region
+		return $responseArraytmp;
+	}
+
+	function getCarrier() 
+	{
+		$this->apiCall = 'GeteBayDetails';
+
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+		$requestXml .= ' <DetailName>ShippingServiceDetails</DetailName>';
+		$requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GeteBayDetailsRequest>';
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		// Load xml in array
+		$categoriesFeatures = array();
+		$response = simplexml_load_string($responseXml);
+
+		$responseCarrier = array();
+		foreach ($response->ShippingServiceDetails as $carrier) 
+		{
+			$responseCarrier[] = array(
+			    'description' => strip_tags($carrier->Description->asXML()),
+			    'shippingService' => strip_tags($carrier->ShippingService->asXML()),
+			    'shippingServiceID' => strip_tags($carrier->ShippingServiceID->asXML()),
+			    'InternationalService' => (isset($carrier->InternationalService) ? strip_tags($carrier->InternationalService->asXML()) : false),
+			    'ServiceType' => strip_tags($carrier->ServiceType->asXML())
+			);
+		}
+
+		return $responseCarrier;
+	}
+
+	function getDeliveryTimeOptions() 
+	{
+		$this->apiCall = 'GeteBayDetails';
+
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GeteBayDetailsRequest xmlns="urn:ebay:apis:eBLBaseComponents">';
+		$requestXml .= ' <DetailName>DispatchTimeMaxDetails</DetailName>';
+		$requestXml .= ' <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= ' <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GeteBayDetailsRequest>';
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
 
 
 		// Load xml in array
 		$categoriesFeatures = array();
 		$response = simplexml_load_string($responseXml);
 
-		if ($featureID == 'VariationsEnabled')
+		$responseDeliveryTimeOptions = array();
+		foreach ($response->DispatchTimeMaxDetails as $DeliveryTimeOption) 
 		{
-			foreach ($response->Category as $cat)
-				if ($cat->VariationsEnabled == true)
-					$categoriesFeatures[(string)$cat->CategoryID] = true;
+			$responseDeliveryTimeOptions[] = array(
+			    'DispatchTimeMax' => strip_tags($DeliveryTimeOption->DispatchTimeMax->asXML()),
+			    'description' => strip_tags($DeliveryTimeOption->Description->asXML())
+			);
 		}
-		else
-			return array();
+		array_multisort($responseDeliveryTimeOptions);
 
-		return $categoriesFeatures;
+		return $responseDeliveryTimeOptions;
 	}
-
-	function getSuggestedCategories($query)
-	{
-		// Set Api Call
-		$this->apiCall = 'GetSuggestedCategories';
-
-		///Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<GetSuggestedCategoriesRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <Version>'.$this->compatibilityLevel.'</Version>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <Query>'.substr(strtolower($query), 0, 350).'</Query>'."\n";
-		$requestXml .= '</GetSuggestedCategoriesRequest>'."\n";
-
-		// Send the request and get response
-		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
-		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
-			return false;
-		}
-
-		// Load xml in array
-	        $response = simplexml_load_string($responseXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
-		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
-			return false;
-		}
-
-		if (isset($response->SuggestedCategoryArray->SuggestedCategory[0]->Category->CategoryID))
-			return (int)$response->SuggestedCategoryArray->SuggestedCategory[0]->Category->CategoryID;
-		return 0;
-	}
-
-
 
 
 	/******************************************************************/
@@ -470,7 +649,7 @@ class eBayRequest
 	/******************************************************************/
 
 
-	function addFixedPriceItem($datas = array())
+	function addFixedPriceItem($datas = array()) 
 	{
 		// Check data
 		if (!$datas)
@@ -480,90 +659,73 @@ class eBayRequest
 		$this->apiCall = 'AddFixedPriceItem';
 
 		// Without variations
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<AddFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
-		$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
-		if (isset($datas['pictures']))
-		{	
-			$requestXml .= '    <PictureDetails>'."\n";
-			$requestXml .= '      <GalleryType>Gallery</GalleryType>'."\n";
-			foreach ($datas['pictures'] as $picture)
-			{
-					$requestXml .= '      <PictureURL>'.$picture.'</PictureURL>'."\n";
-			}
-				
-			$requestXml .= '    </PictureDetails>'."\n";
-		}
-		$requestXml .= '    <Description><![CDATA['.$datas['description'].']]></Description>'."\n";
-		$requestXml .= '    <PrimaryCategory>'."\n";
-		$requestXml .= '      <CategoryID>'.$datas['categoryId'].'</CategoryID>'."\n";
-		$requestXml .= '    </PrimaryCategory>'."\n";
-		$requestXml .= '    <ConditionID>1000</ConditionID>'."\n";
-		if (!isset($datas['noPriceUpdate']))
-		$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
-		$requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>'."\n";
-		$requestXml .= '    <Country>'.$this->country->iso_code.'</Country>'."\n";
-		$requestXml .= '    <Currency>EUR</Currency>'."\n";
-		$requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>'."\n";
-		$requestXml .= '    <ListingDuration>GTC</ListingDuration>'."\n";
-		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>'."\n";
-		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>'."\n";
-		$requestXml .= '    <PayPalEmailAddress>'.Configuration::get('EBAY_PAYPAL_EMAIL').'</PayPalEmailAddress>'."\n";
-		$requestXml .= '    <PostalCode>'.Configuration::get('EBAY_SHOP_POSTALCODE').'</PostalCode>'."\n";
-		$requestXml .= '    <Quantity>'.$datas['quantity'].'</Quantity>'."\n";
-		$requestXml .= '    <ItemSpecifics>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Etat</Name>'."\n";
-		$requestXml .= '        <Value>Neuf</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Marque</Name>'."\n";
-		$requestXml .= '        <Value>'.$datas['brand'].'</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		if (isset($datas['attributes']))
-			foreach ($datas['attributes'] as $name => $value)
-			{
-				$requestXml .= '      <NameValueList>'."\n";
-				$requestXml .= '        <Name>'.$name.'</Name>'."\n";
-				$requestXml .= '        <Value>'.$value.'</Value>'."\n";
-				$requestXml .= '      </NameValueList>'."\n";
-			}
-		$requestXml .= '    </ItemSpecifics>'."\n";
-		if($this->dev)
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<AddFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Item>' . "\n";
+		$requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
+		if (isset($datas['pictures'])) 
 		{
-			$requestXml .= '	<ReturnPolicy>'."\n";
-			$requestXml .= ' 		<ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption>'."\n";
-			$requestXml .= ' 		<RefundOption>MoneyBack</RefundOption>'."\n";
-			$requestXml .= '		<ReturnsWithinOption>Days_30</ReturnsWithinOption>'."\n";
-			$requestXml .= ' 		<Description>If you are not satisfied, return the item for refund.</Description>'."\n";
-			$requestXml .= ' 		<ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>'."\n";
-			$requestXml .= ' 	</ReturnPolicy>'."\n";
+			$requestXml .= '    <PictureDetails>' . "\n";
+			$requestXml .= '      <GalleryType>Gallery</GalleryType>' . "\n";
+			foreach ($datas['pictures'] as $picture) 
+			{
+				$requestXml .= '      <PictureURL>' . $picture . '</PictureURL>' . "\n";
+			}
+
+			$requestXml .= '    </PictureDetails>' . "\n";
 		}
-		$requestXml .= '    <ShippingDetails>'."\n";
-		$requestXml .= '      <ShippingServiceOptions>'."\n";
-		$requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>'."\n";
-		$requestXml .= '        <ShippingService>'.$datas['shippingService'].'</ShippingService>'."\n";
-		$requestXml .= '        <FreeShipping>false</FreeShipping>'."\n";
-		$requestXml .= '        <ShippingServiceCost currencyID="EUR">'.$datas['shippingCost'].'</ShippingServiceCost>'."\n";
-		$requestXml .= '      </ShippingServiceOptions>'."\n";
-		$requestXml .= '    </ShippingDetails>'."\n";
-		$requestXml .= '    <Site>'.$this->siteName.'</Site>'."\n";
-		$requestXml .= '  </Item>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '</AddFixedPriceItem>'."\n";
+		$requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
+		$requestXml .= '    <PrimaryCategory>' . "\n";
+		$requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
+		$requestXml .= '    </PrimaryCategory>' . "\n";
+		$requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
+		if (!isset($datas['noPriceUpdate']))
+			$requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
+		$requestXml .= '    <CategoryMappingAllowed>true</CategoryMappingAllowed>' . "\n";
+		$requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
+		$requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
+		$requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
+		$requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
+		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
+		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
+		$requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
+		$requestXml .= '    <PostalCode>' . Configuration::get('EBAY_SHOP_POSTALCODE') . '</PostalCode>' . "\n";
+		$requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
+		$requestXml .= '    <ItemSpecifics>' . "\n";
+		$requestXml .= '      <NameValueList>' . "\n";
+		$requestXml .= '        <Name>Marque</Name>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
+		$requestXml .= '      </NameValueList>' . "\n";
+		if (isset($datas['attributes']))
+			foreach ($datas['attributes'] as $name => $value) 
+			{
+				$requestXml .= '      <NameValueList>' . "\n";
+				$requestXml .= '        <Name>' . $name . '</Name>' . "\n";
+				$requestXml .= '        <Value>' . $value . '</Value>' . "\n";
+				$requestXml .= '      </NameValueList>' . "\n";
+			}
+		$requestXml .= '    </ItemSpecifics>' . "\n";
+		$requestXml .= $this->_getReturnPolicy($datas);
+		$requestXml .= '    <ShippingDetails>' . "\n";
+		$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
+		$requestXml .= '    </ShippingDetails>' . "\n";
+		$requestXml .= $this->_getBuyerRequirementDetails($datas);
+		$requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
+		$requestXml .= '  </Item>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</AddFixedPriceItem>' . "\n";
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -574,33 +736,36 @@ class eBayRequest
 		// Checking Errors
 		$this->error = '';
 		$this->errorCode = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
 			{
 				// if product no longer on eBay, we log the error code
-				if ((int)$e->ErrorCode == 291)
-					$this->errorCode = (int)$e->ErrorCode;
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
+
+				if((int) $e->ErrorCode == 21916883 || (int) $e->ErrorCode == 21916884)
+					$this->itemConditionError = true;
 
 				// We log error message
-				if ($e->SeverityCode == 'Error')
+				if ($e->SeverityCode == 'Error') 
 				{
 					if ($this->error != '')
 						$this->error .= '<br />';
-					$this->error .= (string)$e->LongMessage;
+					$this->error .= (string) $e->LongMessage;
 					if (isset($e->ErrorParameters->Value))
-						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
 				}
 			}
 
 		// Checking Success
 		$this->itemID = 0;
-		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
 		{
 			$this->fees = 0;
-			$this->itemID = (string)$this->response->ItemID;
+			$this->itemID = (string) $this->response->ItemID;
 			if (isset($this->response->Fees->Fee))
 				foreach ($this->response->Fees->Fee as $f)
-					$this->fees += (float)$f->Fee;
+					$this->fees += (float) $f->Fee;
 		}
 		else if ($this->error == '')
 			$this->error = 'Sorry, technical problem, try again later.';
@@ -610,8 +775,7 @@ class eBayRequest
 		return true;
 	}
 
-
-	function reviseFixedPriceItem($datas = array())
+	function reviseFixedPriceItem($datas = array()) 
 	{
 		// Check data
 		if (!$datas)
@@ -620,53 +784,53 @@ class eBayRequest
 		// Set Api Call
 		$this->apiCall = 'ReviseFixedPriceItem';
 		// Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<ReviseFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
-		if (isset($datas['pictures']))
-		{	
-			$requestXml .= '    <PictureDetails>'."\n";
-			$requestXml .= '      <GalleryType>Gallery</GalleryType>'."\n";
-			foreach ($datas['pictures'] as $picture)
-			{
-					$requestXml .= '      <PictureURL>'.$picture.'</PictureURL>'."\n";
-			}
-				
-			$requestXml .= '    </PictureDetails>'."\n";
-		}
-		$requestXml .= '    <SKU>prestashop-'.$datas['id_product'].'</SKU>';
-		$requestXml .= '    <Quantity>'.$datas['quantity'].'</Quantity>'."\n";
-		if (!isset($datas['noPriceUpdate']))
-			$requestXml .= '    <StartPrice>'.$datas['price'].'</StartPrice>'."\n";
-		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1)
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<ReviseFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Item>' . "\n";
+		$requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
+		$requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
+		if (isset($datas['pictures'])) 
 		{
-			$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
-			$requestXml .= '    <Description><![CDATA['.$datas['description'].']]></Description>'."\n";
-			$requestXml .= '    <ShippingDetails>'."\n";
-			$requestXml .= '      <ShippingServiceOptions>'."\n";
-			$requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>'."\n";
-			$requestXml .= '        <ShippingService>'.$datas['shippingService'].'</ShippingService>'."\n";
-			$requestXml .= '        <FreeShipping>false</FreeShipping>'."\n";
-			$requestXml .= '        <ShippingServiceCost currencyID="EUR">'.$datas['shippingCost'].'</ShippingServiceCost>'."\n";
-			$requestXml .= '      </ShippingServiceOptions>'."\n";
-			$requestXml .= '    </ShippingDetails>'."\n";
+			$requestXml .= '    <PictureDetails>' . "\n";
+			$requestXml .= '      <GalleryType>Gallery</GalleryType>' . "\n";
+			foreach ($datas['pictures'] as $picture) 
+			{
+				$requestXml .= '      <PictureURL>' . $picture . '</PictureURL>' . "\n";
+			}
+
+			$requestXml .= '    </PictureDetails>' . "\n";
 		}
-		$requestXml .= '  </Item>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '</ReviseFixedPriceItemRequest>'."\n";
+		$requestXml .= '    <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
+		$requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
+		$requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
+		$requestXml .= '    <Quantity>' . $datas['quantity'] . '</Quantity>' . "\n";
+		if (!isset($datas['noPriceUpdate']))
+			$requestXml .= '    <StartPrice>' . $datas['price'] . '</StartPrice>' . "\n";
+		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
+		{//We resynchronize everything, not only quantity and price
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
+			$requestXml .= '    <Description><![CDATA[' . $datas['description'] . ']]></Description>' . "\n";
+			$requestXml .= '    <ShippingDetails>' . "\n";
+			$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
+			$requestXml .= '    </ShippingDetails>' . "\n";
+			$requestXml .= $this->_getBuyerRequirementDetails($datas);  
+		}
+		$requestXml .= $this->_getReturnPolicy($datas);
+		$requestXml .= '  </Item>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '</ReviseFixedPriceItemRequest>' . "\n";
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -676,33 +840,33 @@ class eBayRequest
 		// Checking Errors
 		$this->error = '';
 		$this->errorCode = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
 			{
 				// if product no longer on eBay, we log the error code
-				if ((int)$e->ErrorCode == 291)
-					$this->errorCode = (int)$e->ErrorCode;
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
 
 				// We log error message
-				if ($e->SeverityCode == 'Error')
+				if ($e->SeverityCode == 'Error') 
 				{
 					if ($this->error != '')
 						$this->error .= '<br />';
-					$this->error .= (string)$e->LongMessage;
+					$this->error .= (string) $e->LongMessage;
 					if (isset($e->ErrorParameters->Value))
-						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
 				}
 			}
 
 		// Checking Success
 		$this->itemID = 0;
-		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
 		{
 			$this->fees = 0;
-			$this->itemID = (string)$this->response->ItemID;
+			$this->itemID = (string) $this->response->ItemID;
 			if (isset($this->response->Fees->Fee))
 				foreach ($this->response->Fees->Fee as $f)
-					$this->fees += (float)$f->Fee;
+					$this->fees += (float) $f->Fee;
 		}
 		else if ($this->error == '')
 			$this->error = 'Sorry, technical problem, try again later.';
@@ -711,8 +875,6 @@ class eBayRequest
 			return false;
 		return true;
 	}
-
-
 
 	function endFixedPriceItem($datas = array())
 	{
@@ -724,25 +886,25 @@ class eBayRequest
 		$this->apiCall = 'EndFixedPriceItem';
 
 		// Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
-		$requestXml .= '  <SKU>prestashop-'.$datas['id_product'].'</SKU>';
-		$requestXml .= '  <EndingReason>NotAvailable</EndingReason>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '</EndFixedPriceItemRequest>'."\n";
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<EndFixedPriceItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
+		$requestXml .= '  <SKU>prestashop-' . $datas['id_product'] . '</SKU>';
+		$requestXml .= '  <EndingReason>NotAvailable</EndingReason>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '</EndFixedPriceItemRequest>' . "\n";
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -753,33 +915,31 @@ class eBayRequest
 		// Checking Errors
 		$this->error = '';
 		$this->errorCode = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
-			{
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) {
 				// if product no longer on eBay, we log the error code
-				if ((int)$e->ErrorCode == 291)
-					$this->errorCode = (int)$e->ErrorCode;
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
 
 				// We log error message
-				if ($e->SeverityCode == 'Error')
-				{
+				if ($e->SeverityCode == 'Error') {
 					if ($this->error != '')
 						$this->error .= '<br />';
-					$this->error .= (string)$e->LongMessage;
+					$this->error .= (string) $e->LongMessage;
 					if (isset($e->ErrorParameters->Value))
-						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
 				}
 			}
 
 		// Checking Success
 		$this->itemID = 0;
-		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
 		{
 			$this->fees = 0;
-			$this->itemID = (string)$this->response->ItemID;
+			$this->itemID = (string) $this->response->ItemID;
 			if (isset($this->response->Fees->Fee))
 				foreach ($this->response->Fees->Fee as $f)
-					$this->fees += (float)$f->Fee;
+					$this->fees += (float) $f->Fee;
 		}
 		elseif ($this->error == '')
 			$this->error = 'Sorry, technical problem, try again later.';
@@ -790,18 +950,7 @@ class eBayRequest
 		return true;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-	function addFixedPriceItemMultiSku($datas = array())
+	function addFixedPriceItemMultiSku($datas = array()) 
 	{
 		// Check data
 		if (!$datas)
@@ -811,122 +960,116 @@ class eBayRequest
 		$this->apiCall = 'AddFixedPriceItem';
 
 		// Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<AddFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <Country>'.$this->country->iso_code.'</Country>'."\n";
-		$requestXml .= '    <Currency>EUR</Currency>'."\n";
-		$requestXml .= '    <Description>'."\n";
-		$requestXml .= '      <![CDATA['.$datas['description'].']]>'."\n";
-		$requestXml .= '    </Description>'."\n";
-		$requestXml .= '    <ConditionID>1000</ConditionID>'."\n";
-		$requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>'."\n";
-		$requestXml .= '    <ListingDuration>GTC</ListingDuration>'."\n";
-		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>'."\n";
-		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>'."\n";
-		$requestXml .= '    <PayPalEmailAddress>'.Configuration::get('EBAY_PAYPAL_EMAIL').'</PayPalEmailAddress>'."\n";
-		$requestXml .= '    <PostalCode>'.Configuration::get('EBAY_SHOP_POSTALCODE').'</PostalCode>'."\n";
-		$requestXml .= '    <PrimaryCategory>'."\n";
-		$requestXml .= '      <CategoryID>'.$datas['categoryId'].'</CategoryID>'."\n";
-		$requestXml .= '    </PrimaryCategory>'."\n";
-		$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
-		if (isset($datas['pictures']))
-		{	
-			$requestXml .= '    <PictureDetails>'."\n";
-			$requestXml .= '      <GalleryType>Gallery</GalleryType>'."\n";
-			foreach ($datas['pictures'] as $picture){
-				$requestXml .= '      <PictureURL>'.$picture.'</PictureURL>'."\n";
-			}				
-			$requestXml .= '    </PictureDetails>'."\n";
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<AddFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Item>' . "\n";
+		$requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
+		$requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
+		$requestXml .= '    <Description>' . "\n";
+		$requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
+		$requestXml .= '    </Description>' . "\n";
+		$requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
+		$requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
+		$requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
+		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
+		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
+		$requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
+		$requestXml .= '    <PostalCode>' . Configuration::get('EBAY_SHOP_POSTALCODE') . '</PostalCode>' . "\n";
+		$requestXml .= '    <PrimaryCategory>' . "\n";
+		$requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
+		$requestXml .= '    </PrimaryCategory>' . "\n";
+		$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
+		if (isset($datas['pictures'])) 
+		{
+			$requestXml .= '    <PictureDetails>' . "\n";
+			$requestXml .= '      <GalleryType>Gallery</GalleryType>' . "\n";
+			foreach ($datas['pictures'] as $picture) 
+			{
+				$requestXml .= '      <PictureURL>' . $picture . '</PictureURL>' . "\n";
+			}
+			$requestXml .= '    </PictureDetails>' . "\n";
 		}
-		$requestXml .= '    <ItemSpecifics>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Etat</Name>'."\n";
-		$requestXml .= '        <Value>Neuf</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Marque</Name>'."\n";
-		$requestXml .= '        <Value>'.$datas['brand'].'</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		$requestXml .= '    </ItemSpecifics>'."\n";
-		$requestXml .= '    <Variations>'."\n";
-		if (isset($datas['variations']))
+		$requestXml .= '    <ItemSpecifics>' . "\n";
+		$requestXml .= '      <NameValueList>' . "\n";
+		$requestXml .= '        <Name>Marque</Name>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
+		$requestXml .= '      </NameValueList>' . "\n";
+		$requestXml .= '    </ItemSpecifics>' . "\n";
+		$requestXml .= $this->_getReturnPolicy($datas);
+		$requestXml .= '    <Variations>' . "\n";
+		if (isset($datas['variations'])) 
 		{
 			// Generate Variations Set
-			$requestXml .= '      <VariationSpecificsSet>'."\n";
-			foreach ($datas['variationsList'] as $group => $v)
+			$requestXml .= '      <VariationSpecificsSet>' . "\n";
+			foreach ($datas['variationsList'] as $group => $v) 
 			{
-				$requestXml .= '        <NameValueList>'."\n";
-				$requestXml .= '          <Name>'.$group.'</Name>'."\n";
+				$requestXml .= '        <NameValueList>' . "\n";
+				$requestXml .= '          <Name>' . $group . '</Name>' . "\n";
 				foreach ($v as $attr => $val)
-					$requestXml .= '          <Value>'.$attr.'</Value>'."\n";
-				$requestXml .= '        </NameValueList>'."\n";
+					$requestXml .= '          <Value>' . $attr . '</Value>' . "\n";
+				$requestXml .= '        </NameValueList>' . "\n";
 			}
-			$requestXml .= '        </VariationSpecificsSet>'."\n";
+			$requestXml .= '        </VariationSpecificsSet>' . "\n";
 
 			// Generate Variations
 			foreach ($datas['variations'] as $key => $variation)
 			{
-				$requestXml .= '      <Variation>'."\n";
-				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
+				$requestXml .= '      <Variation>' . "\n";
+				$requestXml .= '        <SKU>prestashop-' . $key . '</SKU>' . "\n";
 				if (!isset($datas['noPriceUpdate']))
-					$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
-				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
-				$requestXml .= '        <VariationSpecifics>'."\n";
-				foreach ($variation['variations'] as $v)
+					$requestXml .= '        <StartPrice>' . $variation['price'] . '</StartPrice>' . "\n";
+				$requestXml .= '        <Quantity>' . $variation['quantity'] . '</Quantity>' . "\n";
+				$requestXml .= '        <VariationSpecifics>' . "\n";
+				foreach ($variation['variations'] as $v) 
 				{
-					$requestXml .= '          <NameValueList>'."\n";
-					$requestXml .= '            <Name>'.$v['name'].'</Name>'."\n";
-					$requestXml .= '            <Value>'.$v['value'].'</Value>'."\n";
-					$requestXml .= '          </NameValueList>'."\n";
+					$requestXml .= '          <NameValueList>' . "\n";
+					$requestXml .= '            <Name>' . $v['name'] . '</Name>' . "\n";
+					$requestXml .= '            <Value>' . $v['value'] . '</Value>' . "\n";
+					$requestXml .= '          </NameValueList>' . "\n";
 				}
-				$requestXml .= '        </VariationSpecifics>'."\n";
-				$requestXml .= '      </Variation>'."\n";
+				$requestXml .= '        </VariationSpecifics>' . "\n";
+				$requestXml .= '      </Variation>' . "\n";
 			}
 
 			// Generate Pictures Variations
 			$lastSpecificName = '';
 			$attributeUsed = array();
-			$requestXml .= '      <Pictures>'."\n";
+			$requestXml .= '      <Pictures>' . "\n";
 			foreach ($datas['variations'] as $key => $variation)
 				foreach ($variation['variations'] as $kv => $v)
-					if (!isset($attributeUsed[md5($v['name'].$v['value'])]) && isset($variation['pictures'][$kv]))
+					if (!isset($attributeUsed[md5($v['name'] . $v['value'])]) && isset($variation['pictures'][$kv])) 
 					{
 						if ($lastSpecificName != $v['name'])
-							$requestXml .= '        <VariationSpecificName>'.$v['name'].'</VariationSpecificName>'."\n";
-						$requestXml .= '        <VariationSpecificPictureSet>'."\n";
-						$requestXml .= '          <VariationSpecificValue>'.$v['value'].'</VariationSpecificValue>'."\n";
-						$requestXml .= '          <PictureURL>'.$variation['pictures'][$kv].'</PictureURL>'."\n";
-						$requestXml .= '        </VariationSpecificPictureSet>'."\n";
-						$attributeUsed[md5($v['name'].$v['value'])] = true;
+							$requestXml .= '        <VariationSpecificName>' . $v['name'] . '</VariationSpecificName>' . "\n";
+						$requestXml .= '        <VariationSpecificPictureSet>' . "\n";
+						$requestXml .= '          <VariationSpecificValue>' . $v['value'] . '</VariationSpecificValue>' . "\n";
+						$requestXml .= '          <PictureURL>' . $variation['pictures'][$kv] . '</PictureURL>' . "\n";
+						$requestXml .= '        </VariationSpecificPictureSet>' . "\n";
+						$attributeUsed[md5($v['name'] . $v['value'])] = true;
 						$lastSpecificName = $v['name'];
 					}
-			$requestXml .= '      </Pictures>'."\n";
+			$requestXml .= '      </Pictures>' . "\n";
 		}
-		$requestXml .= '    </Variations>'."\n";
-		$requestXml .= '    <ShippingDetails>'."\n";
-		$requestXml .= '      <ShippingServiceOptions>'."\n";
-		$requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>'."\n";
-		$requestXml .= '        <ShippingService>'.$datas['shippingService'].'</ShippingService>'."\n";
-		$requestXml .= '        <FreeShipping>false</FreeShipping>'."\n";
-		$requestXml .= '        <ShippingServiceCost currencyID="EUR">'.$datas['shippingCost'].'</ShippingServiceCost>'."\n";
-		$requestXml .= '      </ShippingServiceOptions>'."\n";
-		$requestXml .= '    </ShippingDetails>'."\n";
-		$requestXml .= '    <Site>'.$this->siteName.'</Site>'."\n";
-		$requestXml .= '  </Item>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '</AddFixedPriceItem>'."\n";
+		$requestXml .= '    </Variations>' . "\n";
+		$requestXml .= '    <ShippingDetails>' . "\n";
+		$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
+		$requestXml .= '    </ShippingDetails>' . "\n";
+		$requestXml .= $this->_getBuyerRequirementDetails($datas);
+		$requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
+		$requestXml .= '  </Item>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '</AddFixedPriceItem>' . "\n";
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -936,33 +1079,33 @@ class eBayRequest
 		// Checking Errors
 		$this->error = '';
 		$this->errorCode = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
 			{
 				// if product no longer on eBay, we log the error code
-				if ((int)$e->ErrorCode == 291)
-					$this->errorCode = (int)$e->ErrorCode;
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
 
 				// We log error message
-				if ($e->SeverityCode == 'Error')
+				if ($e->SeverityCode == 'Error') 
 				{
 					if ($this->error != '')
 						$this->error .= '<br />';
-					$this->error .= (string)$e->LongMessage;
+					$this->error .= (string) $e->LongMessage;
 					if (isset($e->ErrorParameters->Value))
-						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
 				}
 			}
 
 		// Checking Success
 		$this->itemID = 0;
-		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
 		{
 			$this->fees = 0;
-			$this->itemID = (string)$this->response->ItemID;
+			$this->itemID = (string) $this->response->ItemID;
 			if (isset($this->response->Fees->Fee))
 				foreach ($this->response->Fees->Fee as $f)
-					$this->fees += (float)$f->Fee;
+					$this->fees += (float) $f->Fee;
 		}
 		else if ($this->error == '')
 			$this->error = 'Sorry, technical problem, try again later.';
@@ -972,143 +1115,210 @@ class eBayRequest
 		return true;
 	}
 
+	function relistFixedPriceItem($datas = array())
+	{
+		 // Check data
+		if (!$datas)
+			return false;
 
-	function reviseFixedPriceItemMultiSku($datas = array())
+		// Set Api Call
+		$this->apiCall = 'RelistFixedPriceItem';
+
+		// Build the request Xml string
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<RelistFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Item>' . "\n";
+		$requestXml .= '    <ItemID>' . $datas['itemID'] .'</ItemID>' . "\n";
+		$requestXml .= '  </Item>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '</RelistFixedPriceItem>' . "\n";
+
+
+		// Send the request and get response
+		$responseXml = $this->makeRequest($requestXml);
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
+		{
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
+			return false;
+		}
+
+		// Loading XML tree in array
+		$this->response = simplexml_load_string($responseXml);
+
+		// Checking Errors
+		$this->error = '';
+		$this->errorCode = '';
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
+			{
+				// if product no longer on eBay, we log the error code
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
+
+				// We log error message
+				if ($e->SeverityCode == 'Error') 
+				{
+					if ($this->error != '')
+						$this->error .= '<br />';
+					$this->error .= (string) $e->LongMessage;
+					if (isset($e->ErrorParameters->Value))
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
+				}
+			}
+
+		// Checking Success
+		$this->itemID = 0;
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
+		{
+			$this->fees = 0;
+			$this->itemID = (string) $this->response->ItemID;
+			if (isset($this->response->Fees->Fee))
+				foreach ($this->response->Fees->Fee as $f)
+					$this->fees += (float) $f->Fee;
+		}
+		else if ($this->error == '')
+			$this->error = 'Sorry, technical problem, try again later.';
+
+		if (!empty($this->error))
+			return false;
+		return $this->itemID;
+	}
+
+	function reviseFixedPriceItemMultiSku($datas = array()) 
 	{
 		// Check data
 		if (!$datas)
 			return false;
-		
+
 		// Set Api Call
 		$this->apiCall = 'ReviseFixedPriceItem';
 
 		// Build the request Xml string
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<ReviseFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <Item>'."\n";
-		$requestXml .= '    <ItemID>'.$datas['itemID'].'</ItemID>'."\n";
-		$requestXml .= '    <Country>'.$this->country->iso_code.'</Country>'."\n";
-		$requestXml .= '    <Currency>EUR</Currency>'."\n";
-		$requestXml .= '    <ConditionID>1000</ConditionID>'."\n";
-		$requestXml .= '    <DispatchTimeMax>3</DispatchTimeMax>'."\n";
-		$requestXml .= '    <ListingDuration>GTC</ListingDuration>'."\n";
-		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>'."\n";
-		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>'."\n";
-		$requestXml .= '    <PayPalEmailAddress>'.Configuration::get('EBAY_PAYPAL_EMAIL').'</PayPalEmailAddress>'."\n";
-		$requestXml .= '    <PostalCode>'.Configuration::get('EBAY_SHOP_POSTALCODE').'</PostalCode>'."\n";
-		$requestXml .= '    <PrimaryCategory>'."\n";
-		$requestXml .= '      <CategoryID>'.$datas['categoryId'].'</CategoryID>'."\n";
-		$requestXml .= '    </PrimaryCategory>'."\n";
-		if (isset($datas['pictures']))
-		{	
-			
-			$requestXml .= '    <PictureDetails>'."\n";
-			$requestXml .= '      <GalleryType>Gallery</GalleryType>'."\n";
-			foreach ($datas['pictures'] as $picture){
-				$requestXml .= '      <PictureURL>'.$picture.'</PictureURL>'."\n";
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<ReviseFixedPriceItem xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <Item>' . "\n";
+		$requestXml .= '    <ItemID>' . $datas['itemID'] . '</ItemID>' . "\n";
+		$requestXml .= '    <Country>' . $this->country->iso_code . '</Country>' . "\n";
+		$requestXml .= '    <Currency>' . $this->currency .'</Currency>' . "\n";
+		$requestXml .= '    <ConditionID>' . $datas['condition'] . '</ConditionID>' . "\n";
+		$requestXml .= '    <DispatchTimeMax>' . Configuration::get('EBAY_DELIVERY_TIME') . '</DispatchTimeMax>' . "\n";
+		$requestXml .= '    <ListingDuration>' . Configuration::get('EBAY_LISTING_DURATION') . '</ListingDuration>' . "\n";
+		$requestXml .= '    <ListingType>FixedPriceItem</ListingType>' . "\n";
+		$requestXml .= '    <PaymentMethods>PayPal</PaymentMethods>' . "\n";
+		$requestXml .= '    <PayPalEmailAddress>' . Configuration::get('EBAY_PAYPAL_EMAIL') . '</PayPalEmailAddress>' . "\n";
+		$requestXml .= '    <PostalCode>' . Configuration::get('EBAY_SHOP_POSTALCODE') . '</PostalCode>' . "\n";
+		$requestXml .= '    <PrimaryCategory>' . "\n";
+		$requestXml .= '      <CategoryID>' . $datas['categoryId'] . '</CategoryID>' . "\n";
+		$requestXml .= '    </PrimaryCategory>' . "\n";
+		if (isset($datas['pictures'])) 
+		{
+
+			$requestXml .= '    <PictureDetails>' . "\n";
+			$requestXml .= '      <GalleryType>Gallery</GalleryType>' . "\n";
+			foreach ($datas['pictures'] as $picture) 
+			{
+				$requestXml .= '      <PictureURL>' . $picture . '</PictureURL>' . "\n";
 			}
-				
-			$requestXml .= '    </PictureDetails>'."\n";
+
+			$requestXml .= '    </PictureDetails>' . "\n";
 		}
-		$requestXml .= '    <ItemSpecifics>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Etat</Name>'."\n";
-		$requestXml .= '        <Value>Neuf</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		$requestXml .= '      <NameValueList>'."\n";
-		$requestXml .= '        <Name>Marque</Name>'."\n";
-		$requestXml .= '        <Value>'.$datas['brand'].'</Value>'."\n";
-		$requestXml .= '      </NameValueList>'."\n";
-		$requestXml .= '    </ItemSpecifics>'."\n";
-		$requestXml .= '    <Variations>'."\n";
+		$requestXml .= '    <ItemSpecifics>' . "\n";
+		$requestXml .= '      <NameValueList>' . "\n";
+		$requestXml .= '        <Name>Marque</Name>' . "\n";
+		$requestXml .= '        <Value> <![CDATA[' . $datas['brand'] . ']]></Value>' . "\n";
+		$requestXml .= '      </NameValueList>' . "\n";
+		$requestXml .= '    </ItemSpecifics>' . "\n";
+		$requestXml .= $this->_getReturnPolicy($datas);
+		$requestXml .= '    <Variations>' . "\n";
 		if (isset($datas['variations']))
 		{
 			// Generate Variations Set
-			$requestXml .= '      <VariationSpecificsSet>'."\n";
+			$requestXml .= '      <VariationSpecificsSet>' . "\n";
 			foreach ($datas['variationsList'] as $group => $v)
-				if (isset($group) && !empty($group))
+				if (isset($group) && !empty($group)) 
 				{
-					$requestXml .= '        <NameValueList>'."\n";
-					$requestXml .= '          <Name>'.$group.'</Name>'."\n";
+					$requestXml .= '        <NameValueList>' . "\n";
+					$requestXml .= '          <Name>' . $group . '</Name>' . "\n";
 					foreach ($v as $attr => $val)
-						$requestXml .= '          <Value>'.$attr.'</Value>'."\n";
-					$requestXml .= '        </NameValueList>'."\n";
+						$requestXml .= '          <Value>' . $attr . '</Value>' . "\n";
+					$requestXml .= '        </NameValueList>' . "\n";
 				}
-			$requestXml .= '        </VariationSpecificsSet>'."\n";
+			$requestXml .= '        </VariationSpecificsSet>' . "\n";
 
 			// Generate Variations
-			foreach ($datas['variations'] as $key => $variation)
+			foreach ($datas['variations'] as $key => $variation) 
 			{
-				$requestXml .= '      <Variation>'."\n";
-				$requestXml .= '        <SKU>prestashop-'.$key.'</SKU>'."\n";
+				$requestXml .= '      <Variation>' . "\n";
+				$requestXml .= '        <SKU>prestashop-' . $key . '</SKU>' . "\n";
 				if (!isset($datas['noPriceUpdate']))
-				$requestXml .= '        <StartPrice>'.$variation['price'].'</StartPrice>'."\n";
-				$requestXml .= '        <Quantity>'.$variation['quantity'].'</Quantity>'."\n";
-				$requestXml .= '        <VariationSpecifics>'."\n";
-				foreach ($variation['variations'] as $v)
+					$requestXml .= '        <StartPrice>' . $variation['price'] . '</StartPrice>' . "\n";
+				$requestXml .= '        <Quantity>' . $variation['quantity'] . '</Quantity>' . "\n";
+				$requestXml .= '        <VariationSpecifics>' . "\n";
+				foreach ($variation['variations'] as $v) 
 				{
-					$requestXml .= '          <NameValueList>'."\n";
-					$requestXml .= '            <Name>'.$v['name'].'</Name>'."\n";
-					$requestXml .= '            <Value>'.$v['value'].'</Value>'."\n";
-					$requestXml .= '          </NameValueList>'."\n";
+					$requestXml .= '          <NameValueList>' . "\n";
+					$requestXml .= '            <Name>' . $v['name'] . '</Name>' . "\n";
+					$requestXml .= '            <Value>' . $v['value'] . '</Value>' . "\n";
+					$requestXml .= '          </NameValueList>' . "\n";
 				}
-				$requestXml .= '        </VariationSpecifics>'."\n";
-				$requestXml .= '      </Variation>'."\n";
+				$requestXml .= '        </VariationSpecifics>' . "\n";
+				$requestXml .= '      </Variation>' . "\n";
 			}
 
 			// Generate Pictures Variations
 			$lastSpecificName = '';
 			$attributeUsed = array();
-			$requestXml .= '      <Pictures>'."\n";
+			$requestXml .= '      <Pictures>' . "\n";
 			foreach ($datas['variations'] as $key => $variation)
-				foreach ($variation['variations'] as $kv => $v){
-					if (!isset($attributeUsed[md5($v['name'].$v['value'])]) && (isset($variation['pictures'][$kv])))
-					{
+				foreach ($variation['variations'] as $kv => $v) 
+				{
+					if (!isset($attributeUsed[md5($v['name'] . $v['value'])]) && (isset($variation['pictures'][$kv]))) {
 						if ($lastSpecificName != $v['name'])
-							$requestXml .= '        <VariationSpecificName>'.$v['name'].'</VariationSpecificName>'."\n";
-						$requestXml .= '        <VariationSpecificPictureSet>'."\n";
-						$requestXml .= '          <VariationSpecificValue>'.$v['value'].'</VariationSpecificValue>'."\n";
-						$requestXml .= '          <PictureURL>'.$variation['pictures'][$kv].'</PictureURL>'."\n";
-						$requestXml .= '        </VariationSpecificPictureSet>'."\n";
-						$attributeUsed[md5($v['name'].$v['value'])] = true;
+							$requestXml .= '        <VariationSpecificName>' . $v['name'] . '</VariationSpecificName>' . "\n";
+						$requestXml .= '        <VariationSpecificPictureSet>' . "\n";
+						$requestXml .= '          <VariationSpecificValue>' . $v['value'] . '</VariationSpecificValue>' . "\n";
+						$requestXml .= '          <PictureURL>' . $variation['pictures'][$kv] . '</PictureURL>' . "\n";
+						$requestXml .= '        </VariationSpecificPictureSet>' . "\n";
+						$attributeUsed[md5($v['name'] . $v['value'])] = true;
 						$lastSpecificName = $v['name'];
 					}
-				}	
-			$requestXml .= '      </Pictures>'."\n";
+				}
+			$requestXml .= '      </Pictures>' . "\n";
 		}
 
-		$requestXml .= '    </Variations>'."\n";
-		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1)
+		$requestXml .= '    </Variations>' . "\n";
+		if (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1) 
 		{
-			$requestXml .= '    <Title>'.substr($datas['name'], 0, 55).'</Title>'."\n";
-			$requestXml .= '    <Description>'."\n";
-			$requestXml .= '      <![CDATA['.$datas['description'].']]>'."\n";
-			$requestXml .= '    </Description>'."\n";
-			$requestXml .= '    <ShippingDetails>'."\n";
-			$requestXml .= '      <ShippingServiceOptions>'."\n";
-			$requestXml .= '        <ShippingServicePriority>1</ShippingServicePriority>'."\n";
-			$requestXml .= '        <ShippingService>'.$datas['shippingService'].'</ShippingService>'."\n";
-			$requestXml .= '        <FreeShipping>false</FreeShipping>'."\n";
-			$requestXml .= '        <ShippingServiceCost currencyID="EUR">'.$datas['shippingCost'].'</ShippingServiceCost>'."\n";
-			$requestXml .= '      </ShippingServiceOptions>'."\n";
-			$requestXml .= '    </ShippingDetails>'."\n";
+			$requestXml .= '    <Title>' . substr($datas['name'], 0, 80) . '</Title>' . "\n";
+			$requestXml .= '    <Description>' . "\n";
+			$requestXml .= '      <![CDATA[' . $datas['description'] . ']]>' . "\n";
+			$requestXml .= '    </Description>' . "\n";
+			$requestXml .= '    <ShippingDetails>' . "\n";
+			$requestXml .= $this->_getShippingDetails($datas);//SHIPPING INFORMATIONS
+			$requestXml .= '    </ShippingDetails>' . "\n";
+			$requestXml .= $this->_getBuyerRequirementDetails($datas);
 		}
-		$requestXml .= '    <Site>'.$this->siteName.'</Site>'."\n";
-		$requestXml .= '  </Item>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '</ReviseFixedPriceItem>'."\n";
+		$requestXml .= '    <Site>' . $this->siteName . '</Site>' . "\n";
+		$requestXml .= '  </Item>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '</ReviseFixedPriceItem>' . "\n";
 
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
-		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
+		if (stristr($responseXml, 'HTTP 404') || $responseXml == '') 
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -1118,33 +1328,33 @@ class eBayRequest
 		// Checking Errors
 		$this->error = '';
 		$this->errorCode = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
 			{
 				// if product no longer on eBay, we log the error code
-				if ((int)$e->ErrorCode == 291)
-					$this->errorCode = (int)$e->ErrorCode;
+				if ((int) $e->ErrorCode == 291)
+					$this->errorCode = (int) $e->ErrorCode;
 
 				// We log error message
 				if ($e->SeverityCode == 'Error')
 				{
 					if ($this->error != '')
 						$this->error .= '<br />';
-					$this->error .= (string)$e->LongMessage;
+					$this->error .= (string) $e->LongMessage;
 					if (isset($e->ErrorParameters->Value))
-						$this->error .= '<br />'.(string)$e->ErrorParameters->Value;
+						$this->error .= '<br />' . (string) $e->ErrorParameters->Value;
 				}
 			}
 
 		// Checking Success
 		$this->itemID = 0;
-		if (isset($this->response->Ack) && ((string)$this->response->Ack == 'Success' || (string)$this->response->Ack == 'Warning'))
+		if (isset($this->response->Ack) && ((string) $this->response->Ack == 'Success' || (string) $this->response->Ack == 'Warning')) 
 		{
 			$this->fees = 0;
-			$this->itemID = (string)$this->response->ItemID;
+			$this->itemID = (string) $this->response->ItemID;
 			if (isset($this->response->Fees->Fee))
 				foreach ($this->response->Fees->Fee as $f)
-					$this->fees += (float)$f->Fee;
+					$this->fees += (float) $f->Fee;
 		}
 		else if ($this->error == '')
 			$this->error = 'Sorry, technical problem, try again later.';
@@ -1153,19 +1363,6 @@ class eBayRequest
 			return false;
 		return true;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/******************************************************************/
 	/** Order Methods *************************************************/
@@ -1183,29 +1380,29 @@ class eBayRequest
 		$this->apiCall = 'GetOrders';
 
 		// Without variations
-		$requestXml = '<?xml version="1.0" encoding="utf-8"?>'."\n";
-		$requestXml .= '<GetOrdersRequest xmlns="urn:ebay:apis:eBLBaseComponents">'."\n";
-		$requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>'."\n";
-		$requestXml .= '  <ErrorLanguage>'.$this->language.'</ErrorLanguage>'."\n";
-		$requestXml .= '  <WarningLevel>High</WarningLevel>'."\n";
-		$requestXml .= '  <CreateTimeFrom>'.$CreateTimeFrom.'</CreateTimeFrom>'."\n";
-		$requestXml .= '  <CreateTimeTo>'.$CreateTimeTo.'</CreateTimeTo>'."\n";
-		$requestXml .= '  <OrderRole>Seller</OrderRole>'."\n";
+		$requestXml = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+		$requestXml .= '<GetOrdersRequest xmlns="urn:ebay:apis:eBLBaseComponents">' . "\n";
+		$requestXml .= '  <DetailLevel>ReturnAll</DetailLevel>' . "\n";
+		$requestXml .= '  <ErrorLanguage>' . $this->language . '</ErrorLanguage>' . "\n";
+		$requestXml .= '  <WarningLevel>High</WarningLevel>' . "\n";
+		$requestXml .= '  <CreateTimeFrom>' . $CreateTimeFrom . '</CreateTimeFrom>' . "\n";
+		$requestXml .= '  <CreateTimeTo>' . $CreateTimeTo . '</CreateTimeTo>' . "\n";
+		$requestXml .= '  <OrderRole>Seller</OrderRole>' . "\n";
 		//$requestXml .= '  <OrderStatus>Completed</OrderStatus>'."\n";
-		$requestXml .= '  <Pagination>'."\n";
-		$requestXml .= '    <EntriesPerPage>100</EntriesPerPage>'."\n";
-		$requestXml .= '    <PageNumber>'.$page.'</PageNumber>'."\n";
-		$requestXml .= '  </Pagination>'."\n";
-		$requestXml .= '  <RequesterCredentials>'."\n";
-		$requestXml .= '    <eBayAuthToken>'.Configuration::get('EBAY_API_TOKEN').'</eBayAuthToken>'."\n";
-		$requestXml .= '  </RequesterCredentials>'."\n";
-		$requestXml .= '</GetOrdersRequest>'."\n";
+		$requestXml .= '  <Pagination>' . "\n";
+		$requestXml .= '    <EntriesPerPage>100</EntriesPerPage>' . "\n";
+		$requestXml .= '    <PageNumber>' . $page . '</PageNumber>' . "\n";
+		$requestXml .= '  </Pagination>' . "\n";
+		$requestXml .= '  <RequesterCredentials>' . "\n";
+		$requestXml .= '    <eBayAuthToken>' . Configuration::get('EBAY_API_TOKEN') . '</eBayAuthToken>' . "\n";
+		$requestXml .= '  </RequesterCredentials>' . "\n";
+		$requestXml .= '</GetOrdersRequest>' . "\n";
 
 		// Send the request and get response
 		$responseXml = $this->makeRequest($requestXml);
 		if (stristr($responseXml, 'HTTP 404') || $responseXml == '')
 		{
-			$this->error = 'Error sending '.$this->apiCall.' request';
+			$this->error = 'Error sending ' . $this->apiCall . ' request';
 			return false;
 		}
 
@@ -1215,126 +1412,186 @@ class eBayRequest
 
 		// Checking Errors
 		$this->error = '';
-		if (isset($this->response->Errors) && isset($this->response->Ack) && (string)$this->response->Ack != 'Success' && (string)$this->response->Ack != 'Warning')
-			foreach ($this->response->Errors as $e)
+		if (isset($this->response->Errors) && isset($this->response->Ack) && (string) $this->response->Ack != 'Success' && (string) $this->response->Ack != 'Warning')
+			foreach ($this->response->Errors as $e) 
 			{
 				if ($this->error != '')
 					$this->error .= '<br />';
-				$this->error .= (string)$e->LongMessage;
+				$this->error .= (string) $e->LongMessage;
 			}
 
 		// Checking Success
 		$orderList = array();
 		if (isset($this->response->OrderArray))
-			foreach ($this->response->OrderArray->Order as $order)
+			foreach ($this->response->OrderArray->Order as $order) 
 			{
-				$name = str_replace(array('_', ',', '  '), array('', '', ' '), (string)$order->ShippingAddress->Name); 
+				$name = str_replace(array('_', ',', '  '), array('', '', ' '), (string) $order->ShippingAddress->Name);
 				$name = preg_replace('/\-?\d+/', '', $name);
 				$name = explode(' ', $name, 2);
 				$itemList = array();
-				for ($i = 0; isset($order->TransactionArray->Transaction[$i]); $i++)
+				for ($i = 0; isset($order->TransactionArray->Transaction[$i]); $i++) 
 				{
 					$transaction = $order->TransactionArray->Transaction[$i];
 
 					$id_product = 0;
 					$id_product_attribute = 0;
-					$quantity = (string)$transaction->QuantityPurchased;
-					if (isset($transaction->Item->SKU))
+					$quantity = (string) $transaction->QuantityPurchased;
+					if (isset($transaction->Item->SKU)) 
 					{
-						$tmp = explode('-', (string)$transaction->Item->SKU);
+						$tmp = explode('-', (string) $transaction->Item->SKU);
 						if (isset($tmp[1]))
-						$id_product = $tmp[1];
+							$id_product = $tmp[1];
 						if (isset($tmp[2]))
 							$id_product_attribute = $tmp[2];
 					}
-					if (isset($transaction->Variation->SKU))
+					if (isset($transaction->Variation->SKU)) 
 					{
-						$tmp = explode('-', (string)$transaction->Variation->SKU);
+						$tmp = explode('-', (string) $transaction->Variation->SKU);
 						if (isset($tmp[1]))
-						$id_product = $tmp[1];
+							$id_product = $tmp[1];
 						if (isset($tmp[2]))
-						$id_product_attribute = $tmp[2];
+							$id_product_attribute = $tmp[2];
 					}
 
-					$id_product = (int)Db::getInstance()->getValue('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `id_product` = '.(int)$id_product);
-					$id_product_attribute = (int)Db::getInstance()->getValue('SELECT `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute` WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+					$id_product = (int) Db::getInstance()->getValue('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product` WHERE `id_product` = ' . (int) $id_product);
+					$id_product_attribute = (int) Db::getInstance()->getValue('SELECT `id_product_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute` WHERE `id_product` = ' . (int) $id_product . ' AND `id_product_attribute` = ' . (int) $id_product_attribute);
 					if ($id_product > 0)
-						$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => $id_product_attribute, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
-					else
+						$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => $id_product_attribute, 'quantity' => $quantity, 'price' => (string) $transaction->TransactionPrice);
+					else 
 					{
 						$reference = '-----------------------';
-						$skuItem = (string)$transaction->Item->SKU;
-						$skuVariation = (string)$transaction->Variation->SKU;
-						$customLabel = (string)$transaction->SellingManagerProductDetails->CustomLabel;
-						if ($customLabel != '') $reference = $customLabel;
-						else
+						$skuItem = (string) $transaction->Item->SKU;
+						$skuVariation = (string) $transaction->Variation->SKU;
+						$customLabel = (string) $transaction->SellingManagerProductDetails->CustomLabel;
+						if ($customLabel != '')
+							$reference = $customLabel;
+						else 
 						{
-							if ($skuVariation != '') $reference = $skuVariation;
-							else $reference = $skuItem;
+							if ($skuVariation != '')
+								$reference = $skuVariation;
+							else
+								$reference = $skuItem;
 						}
-						
+
 						$reference = trim($reference);
-						if (!empty($reference))
+						if (!empty($reference)) 
 						{
 							$id_product = Db::getInstance()->getValue('
-							SELECT `id_product` FROM `'._DB_PREFIX_.'product`
-							WHERE `reference` = \''.pSQL($reference).'\'');
-							if ((int)$id_product > 0)
-								$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => 0, 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
-							else
+							SELECT `id_product` FROM `' . _DB_PREFIX_ . 'product`
+							WHERE `reference` = \'' . pSQL($reference) . '\'');
+							if ((int) $id_product > 0)
+								$itemList[] = array('id_product' => $id_product, 'id_product_attribute' => 0, 'quantity' => $quantity, 'price' => (string) $transaction->TransactionPrice);
+							else 
 							{
 								$row = Db::getInstance()->getValue('
-								SELECT `id_product`, `id_product_attribute` FROM `'._DB_PREFIX_.'product_attribute`
-								WHERE `reference` = \''.pSQL($reference).'\'');
-								if ((int)$row['id_product'] > 0)
-									$itemList[] = array('id_product' => $row['id_product'], 'id_product_attribute' => $row['id_product_attribute'], 'quantity' => $quantity, 'price' => (string)$transaction->TransactionPrice);
+								SELECT `id_product`, `id_product_attribute` FROM `' . _DB_PREFIX_ . 'product_attribute`
+								WHERE `reference` = \'' . pSQL($reference) . '\'');
+								if ((int) $row['id_product'] > 0)
+									$itemList[] = array('id_product' => $row['id_product'], 'id_product_attribute' => $row['id_product_attribute'], 'quantity' => $quantity, 'price' => (string) $transaction->TransactionPrice);
 							}
 						}
 					}
 				}
 
 				$orderList[] = array(
-					'id_order_ref' => (string)$order->OrderID,
-					'amount' => (string)$order->AmountPaid,
-					'status' => (string)$order->CheckoutStatus->Status,
-					'date' => substr((string)$order->CreatedTime, 0, 10).' '.substr((string)$order->CreatedTime, 11, 8),
-					'name' => (string)$order->ShippingAddress->Name,
-					'firstname' => substr(trim($name[0]), 0, 32),
-					'familyname' => (isset($name[1]) ? substr(trim($name[1]), 0, 32) : substr(trim($name[0]), 0, 32)),
-					'address1' => (string)$order->ShippingAddress->Street1,
-					'address2' => (string)$order->ShippingAddress->Street2,
-					'city' => (string)$order->ShippingAddress->CityName,
-					'state' => (string)$order->ShippingAddress->StateOrProvince,
-					'country_iso_code' => (string)$order->ShippingAddress->Country,
-					'country_name' => (string)$order->ShippingAddress->CountryName,
-					'phone' => (string)$order->ShippingAddress->Phone,
-					'postalcode' => (string)$order->ShippingAddress->PostalCode,
-					'shippingService' => (string)$order->ShippingServiceSelected->ShippingService,
-					'shippingServiceCost' => (string)$order->ShippingServiceSelected->ShippingServiceCost,
-					'email' => (string)$order->TransactionArray->Transaction[0]->Buyer->Email,
-					'product_list' => $itemList,
-					'payment_method' => (string)$order->CheckoutStatus->PaymentMethod,
-					'id_order_seller' => (string)$order->ShippingDetails->SellingManagerSalesRecordNumber,
-					'date_add' => substr((string)$order->CreatedTime, 0, 10).' '.substr((string)$order->CreatedTime, 11, 8),
-					//'object' => $order
+				    'id_order_ref' => (string) $order->OrderID,
+				    'amount' => (string) $order->AmountPaid,
+				    'status' => (string) $order->CheckoutStatus->Status,
+				    'date' => substr((string) $order->CreatedTime, 0, 10) . ' ' . substr((string) $order->CreatedTime, 11, 8),
+				    'name' => (string) $order->ShippingAddress->Name,
+				    'firstname' => substr(trim($name[0]), 0, 32),
+				    'familyname' => (isset($name[1]) ? substr(trim($name[1]), 0, 32) : substr(trim($name[0]), 0, 32)),
+				    'address1' => (string) $order->ShippingAddress->Street1,
+				    'address2' => (string) $order->ShippingAddress->Street2,
+				    'city' => (string) $order->ShippingAddress->CityName,
+				    'state' => (string) $order->ShippingAddress->StateOrProvince,
+				    'country_iso_code' => (string) $order->ShippingAddress->Country,
+				    'country_name' => (string) $order->ShippingAddress->CountryName,
+				    'phone' => (string) $order->ShippingAddress->Phone,
+				    'postalcode' => (string) $order->ShippingAddress->PostalCode,
+				    'shippingService' => (string) $order->ShippingServiceSelected->ShippingService,
+				    'shippingServiceCost' => (string) $order->ShippingServiceSelected->ShippingServiceCost,
+				    'email' => (string) $order->TransactionArray->Transaction[0]->Buyer->Email,
+				    'product_list' => $itemList,
+				    'payment_method' => (string) $order->CheckoutStatus->PaymentMethod,
+				    'id_order_seller' => (string) $order->ShippingDetails->SellingManagerSalesRecordNumber,
+				    'date_add' => substr((string) $order->CreatedTime, 0, 10) . ' ' . substr((string) $order->CreatedTime, 11, 8),
+					   //'object' => $order
 				);
 			}
 
 		return $orderList;
 	}
 
+	public function _getShippingDetails($datas)
+	{
+		$requestXml = '';
+		foreach ($datas['shipping']['excludedZone'] as $excluded) 
+		{
+			$requestXml .= '      <ExcludeShipToLocation>' . $excluded['location'] . '</ExcludeShipToLocation>'  . "\n";
+		}
+		//National Shipping Service
+		foreach($datas['shipping']['nationalShip'] as $serviceShippingName => $serviceShipping)
+		{
+			$requestXml .= '      <ShippingServiceOptions>' . "\n";
+			$requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+			$requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+			$requestXml .= '        <FreeShipping>false</FreeShipping>' . "\n";
+			$requestXml .= '        <ShippingServiceCost currencyID="' . $this->currency .'">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+			$requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+			$requestXml .= '      </ShippingServiceOptions>' . "\n";
+		}
+		//International Shipping Service
+
+		foreach($datas['shipping']['internationalShip'] as $serviceShippingName => $serviceShipping)
+		{
+			$requestXml .= '      <InternationalShippingServiceOption>' . "\n";
+			$requestXml .= '        <ShippingServicePriority>' . $serviceShipping['servicePriority'] . '</ShippingServicePriority>' . "\n";
+			$requestXml .= '        <ShippingService>' . $serviceShippingName . '</ShippingService>' . "\n";
+			$requestXml .= '        <ShippingServiceCost currencyID="' . $this->currency .'">' . $serviceShipping['serviceCosts'] . '</ShippingServiceCost>' . "\n";
+			$requestXml .= '        <ShippingServiceAdditionalCost>' . $serviceShipping['serviceAdditionalCosts'] . '</ShippingServiceAdditionalCost>' . "\n";
+			foreach ($serviceShipping['locationToShip'] as $location) 
+			{
+				$requestXml .= '         <ShipToLocation>' . $location['id_ebay_zone'] . '</ShipToLocation>';
+			}
+			$requestXml .= '      </InternationalShippingServiceOption>' . "\n";
+		}
+		return $requestXml;
+	}
+
+	public function _getBuyerRequirementDetails($datas)
+	{
+		$requestXml = '<BuyerRequirementDetails>';
+		if(count($datas['shipping']['excludedZone']))
+			$requestXml .= '<ShipToRegistrationCountry>true</ShipToRegistrationCountry>';
+
+		$requestXml .= '</BuyerRequirementDetails>';
+		return $requestXml;
+	}
+
+	public function _getReturnPolicy($datas)
+	{
+		$requestXml = '    <ReturnPolicy>' . "\n";
+		$requestXml .= '         <ReturnsAcceptedOption>' . Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION') . '</ReturnsAcceptedOption>' . "\n";
+		//$requestXml .= '       <RefundOption>MoneyBack</RefundOption>' . "\n";
+		//$requestXml .= '       <ReturnsWithinOption>Days_30</ReturnsWithinOption>' . "\n";
+		$requestXml .= '         <Description>' . preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')) . '</Description>' . "\n";
+		//$requestXml .= '       <ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>' . "\n";
+		$requestXml .= '    </ReturnPolicy>' . "\n";
+		return $requestXml;
+	}
+    
 
 }
 
-
-
 class eBayPayment extends PaymentModule
 {
-	function __construct()
+
+	function __construct() 
 	{
 		$this->name = 'ebay';
 		parent::__construct();
 	}
-}
 
+}
 

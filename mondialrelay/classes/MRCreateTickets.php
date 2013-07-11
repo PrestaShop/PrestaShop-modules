@@ -436,7 +436,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 
 		$history = new OrderHistory();
 		$history->id_order = (int)$params['NDossier'];
-		$history->changeIdOrderState($orderState, $params['NDossier']);
+		$history->changeIdOrderState($orderState, (int)$params['NDossier']);
 		$history->id_employee = (int)Context::getContext()->employee->id;
 		$history->addWithemail(true, $templateVars);
 

@@ -89,7 +89,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.1';
+		$this->version = '3.3';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -221,7 +221,7 @@ class fianetfraud extends Module
 	private function loadPaymentMethods()
 	{
 		if (_PS_VERSION_ < '1.5')
-			$payments = PaymentModuleCore::getInstalledPaymentModules();
+			$payments = $this->getInstalledPaymentModules();
 		else
 			$payments = PaymentModule::getPaymentModules();
 		$payment_modules = array();
@@ -389,12 +389,12 @@ class fianetfraud extends Module
 			'shop_carriers' => $shop_carriers,
 			'certissim_payment_types' => $this->_payment_types,
 			'payment_modules' => $payment_modules,
-			'image_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/certissim.png',
-			'logo_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/logo.png',
-			'logo_account_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/account.gif',
-			'logo_categories_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/categories.gif',
-			'logo_carriers_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/carriers.gif',
-			'logo_payments_path' => __PS_BASE_URI__.'/modules/'.$this->name.'/img/payments.gif'
+			'image_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/certissim.png',
+			'logo_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/logo.png',
+			'logo_account_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/account.gif',
+			'logo_categories_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/categories.gif',
+			'logo_carriers_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/carriers.gif',
+			'logo_payments_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/payments.gif'
 		));
 
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
@@ -1253,6 +1253,25 @@ class fianetfraud extends Module
 			CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Mise à jour OK pour la requête : $sql");
 
 		return $updated;
+	}
+	
+	/**
+	 * List all installed and active payment modules
+	 * @see Module::getPaymentModules() if you need a list of module related to the user context
+	 *
+	 * @since 1.4.5
+	 * @return array module informations
+	 */
+	public static function getInstalledPaymentModules()
+	{
+		return Db::getInstance()->executeS('
+			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+			FROM `'._DB_PREFIX_.'module` m
+			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			WHERE h.`name` = \'payment\'
+			AND m.`active` = 1
+		');
 	}
 
 }
