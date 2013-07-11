@@ -91,14 +91,14 @@
         <a target="_blank" href="{$cron_order_url}"><input style="margin-top:10px;" type="button" value="{l s='Forcer la synchonisation des commandes' mod='nqgatewayneteven'}"/></a>
     </div>
 
-    <label>{l s='Forcer la synchronisation des produits' mod='nqgatewayneteven'}</label>
+    <label>{l s='Synchonisation des produits' mod='nqgatewayneteven'}</label>
     <div class="margin-form">
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_on" value="1"{if $SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_on"> <img src="../img/admin/enabled.gif" alt="{l s='Oui' mod='nqgatewayneteven'}" title="{l s='Oui' mod='nqgatewayneteven'}" /></label>
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_off" value="0"{if !$SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_off"> <img src="../img/admin/disabled.gif" alt="{l s='Non' mod='nqgatewayneteven'}" title="{l s='Non' mod='nqgatewayneteven'}" /></label>
         <br class="clear"/>
-        <a target="_blank" href="{$cron_product_url}"><input style="margin-top:10px;" type="button" value="{l s='Synchonisation des produits' mod='nqgatewayneteven'}"/></a>
+        <a target="_blank" href="{$cron_product_url}"><input style="margin-top:10px;" type="button" value="{l s='Forcer la synchronisation des produits' mod='nqgatewayneteven'}"/></a>
     </div>
     <br /><br />
     <label>{l s='Nom de la marque par défaut' mod='nqgatewayneteven'}</label>
