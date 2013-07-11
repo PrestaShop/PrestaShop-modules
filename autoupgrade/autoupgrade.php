@@ -30,7 +30,7 @@ class Autoupgrade extends Module
 	{
 		$this->name = 'autoupgrade';
 		$this->tab = 'administration';
-		$this->version = '1.0.16';
+		$this->version = '1.0.25';
 		
 		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
 			$this->multishop_context = Shop::CONTEXT_ALL;
@@ -86,7 +86,7 @@ class Autoupgrade extends Module
 
 		/* Check that the 1-click upgrade working directory is existing or create it */
 		$autoupgrade_dir = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade';
-		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir, 0755))
+		if (!file_exists($autoupgrade_dir) && !@mkdir($autoupgrade_dir))
 			return $this->_abortInstall(sprintf($this->l('Unable to create the directory "%s"'), $autoupgrade_dir));
 		
 		/* Make sure that the 1-click upgrade working directory is writeable */
@@ -103,8 +103,10 @@ class Autoupgrade extends Module
 
 		/* Make sure that the XML config directory exists */
 		if (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml') &&
-		!@mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0755))
+		!@mkdir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0775))
 			return $this->_abortInstall(sprintf($this->l('Unable to create the directory "%s"'), _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'));
+		else
+			@chmod(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml', 0775);
 		
 		/* Create a dummy index.php file in the XML config directory to avoid directory listing */
 		if (!file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'index.php') &&

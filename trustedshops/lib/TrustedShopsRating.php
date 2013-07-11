@@ -327,7 +327,7 @@ class TrustedShopsRating extends AbsTrustedShops
 					 	 {
 							$("#send_seperate_mail_infos").toggle();
 							
-							if (!$("input[name=send_seperate_mail]").attr("checked"))
+							if (!$("input[name=send_seperate_mail]").is(":checked"))
 								alert("'.$this->l('Warning, all the existing rating alerts will be deleted').'");
 						}
 						</script>';

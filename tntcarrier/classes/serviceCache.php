@@ -1,4 +1,28 @@
 <?php
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
 class serviceCache
 {
@@ -26,13 +50,13 @@ class serviceCache
 	public function getFaisabilityAtThisTime()
 	{
 		if (Db::getInstance()->getValue('SELECT * FROM `'._DB_PREFIX_.'tnt_carrier_cache_service` 
-		WHERE `date` >= "'.$this->_dateBefore.'" AND `date` <= "'.$this->_dateNow.'" 
-		AND id_card = "'.$this->_idCard.'" 
-		AND zipcode = "'.$this->_zipCode.'" 
-		AND city = "'.$this->_city.'" 
-		AND company = "'.$this->_company.'" 
-		AND company_city = "'.$this->_companyCity.'" 
-		AND ship_zip_code = "'.$this->_shipZipCode.'"'))
+			WHERE `date` >= "'.$this->_dateBefore.'" AND `date` <= "'.$this->_dateNow.'" 
+			AND id_card = "'.$this->_idCard.'" 
+			AND zipcode = "'.$this->_zipCode.'" 
+			AND city = "'.$this->_city.'" 
+			AND company = "'.$this->_company.'" 
+			AND company_city = "'.$this->_companyCity.'" 
+			AND ship_zip_code = "'.$this->_shipZipCode.'"'))
 			return true;
 		return false;
 	}
@@ -56,7 +80,7 @@ class serviceCache
 	public function errorCodePostal()
 	{
 		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'tnt_carrier_cache_service` (`id_card`, `date`, `zipcode`, `city`, `company`, `company_city`, `ship_zip_code`, `error`) 
-									VALUES ("'.(int)($this->_idCard).'", "'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'","'.$this->_shipZipCode.'", "1")');
+			VALUES ("'.(int)($this->_idCard).'", "'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'","'.$this->_shipZipCode.'", "1")');
 	}
 	
 	public static function getError($idCart)
@@ -91,7 +115,7 @@ class serviceCache
 					else
 						$serviceCode = $v->serviceCode.'S';
 					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'tnt_carrier_cache_service` (`id_card`, `code`, `date`, `zipcode`, `city`, `company`, `company_city`, `ship_zip_code`, `due_date`)
-												VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'","'.$this->_shipZipCode.'", "'.$v->dueDate.'")');
+						VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'","'.$this->_shipZipCode.'", "'.$v->dueDate.'")');
 				}
 			else
 			{
@@ -100,7 +124,7 @@ class serviceCache
 				else
 					$serviceCode = $val->Service->serviceCode.'S';
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'tnt_carrier_cache_service` (`id_card`, `code`, `date`, `zipcode`, `city`, `company`, `company_city`, `ship_zip_code`, `due_date`)
-											VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'", "'.$this->_shipZipCode.'", "'.$val->Service->dueDate.'")');
+					VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'", "'.$this->_shipZipCode.'", "'.$val->Service->dueDate.'")');
 			}
 		}
 	}
@@ -115,5 +139,3 @@ class serviceCache
 		return (Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'tnt_carrier_cache_service` WHERE id_card = "'.(int)($idCard).'"'));
 	}
 }
-
-?>

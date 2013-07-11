@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-        <module>
-            <name>ebay</name>
-            <displayName><![CDATA[eBay]]></displayName>
-            <version><![CDATA[1.3.6]]></version>
-            <description><![CDATA[Depuis Prestashop exportez facilement vos produits sur eBay, la plus grande place de march&eacute;, pour conqu&eacute;rir une nouvelle client&egrave;le et vendre plus.]]></description>
-            <author><![CDATA[PrestaShop]]></author>
-            <tab><![CDATA[market_place]]></tab>
-            <is_configurable>1</is_configurable>
-            <need_instance>1</need_instance>
+<module>
+	<name>ebay</name>
+	<displayName><![CDATA[eBay]]></displayName>
+	<version><![CDATA[1.4.1]]></version>
+	<description><![CDATA[Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[market_place]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
 	<limited_countries></limited_countries>
-        </module>
+</module>

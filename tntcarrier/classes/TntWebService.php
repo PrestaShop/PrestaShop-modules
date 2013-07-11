@@ -1,4 +1,29 @@
 <?php
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 class TntWebService
 {
 	private $_login;
@@ -39,12 +64,12 @@ class TntWebService
 	public function genAuth()
 	{
 		 return sprintf('
-				<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-				<wsse:UsernameToken>
-				<wsse:Username>%s</wsse:Username>
-				<wsse:Password>%s</wsse:Password>
-				</wsse:UsernameToken>
-				</wsse:Security>', htmlspecialchars($this->_login), htmlspecialchars($this->_password));
+			<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+			<wsse:UsernameToken>
+			<wsse:Username>%s</wsse:Username>
+			<wsse:Password>%s</wsse:Password>
+			</wsse:UsernameToken>
+			</wsse:Security>', htmlspecialchars($this->_login), htmlspecialchars($this->_password));
 	}
 
 	public function getCity($postal)
@@ -67,39 +92,35 @@ class TntWebService
 		if (is_array($cities->City))
 		{
 			foreach ($cities->City as $v)
-			{
 				if (Tools::strtoupper($v->name) == Tools::strtoupper($city))
 					return true;
-			}
 		}
-		else
-		{
-			if (Tools::strtoupper($city) == Tools::strtoupper($cities->City->name))
-				return true;
-		}
+		elseif (Tools::strtoupper($city) == Tools::strtoupper($cities->City->name))
+			return true;
 		return false;
 	}
 
 	public function getFaisability($dest, $postcode, $city,	$date_exp)
 	{
 		$service = array();
-		try
+		foreach ($dest as $key => $val)
 		{
-			foreach ($dest as $key => $val)
+			try
 			{
-				$service[] = $this->faisabilite($date_exp, Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE'), Configuration::get('TNT_CARRIER_SHIPPING_CITY'),
-										 $postcode, $city, $val);
+				$faisability = $this->faisabilite($date_exp, Configuration::get('TNT_CARRIER_SHIPPING_ZIPCODE'), Configuration::get('TNT_CARRIER_SHIPPING_CITY'), $postcode, $city, $val);
+				$service[] = $faisability;
+			}
+			catch (SoapFault $e)
+			{
+				if (strrpos($e->faultstring, "shippingDate") != false)
+					$service = $this->getFaisability($dest, $postcode, $city, date("Y-m-d", strtotime($date_exp.' + 1 day')));
+				elseif (strrpos($e->faultstring, "(zip code / city)") === 0)
+					return $e->faultstring;
+				else
+					return null;
 			}
 		}
-		catch (SoapFault $e)
-		{
-			if (strrpos($e->faultstring, "shippingDate") != false)
-				$service = $this->getFaisability($dest, $postcode, $city, date("Y-m-d", strtotime($date_exp.' + 1 day')));
-			else if (strrpos($e->faultstring, "(zip code / city)") === 0)
-				return $e->faultstring;
-			else
-				return null;
-		}
+
 		return $service;
 	}
 
@@ -112,6 +133,7 @@ class TntWebService
 		$receiver = array("zipCode" => $codePostalArrivee, "city" => $communeArrivee, "type" => $typeDestinataire);
 		$parameters = array("accountNumber" => $this->_account, "shippingDate" => $dateExpedition, "sender" => $sender, "receiver" => $receiver);
 		$services = $soapclient->feasibility(array('parameters' => $parameters));
+		
 		return ($services);
 	}
 
@@ -172,9 +194,6 @@ class TntWebService
 			$receiver = array(
 				'type' => 'DROPOFFPOINT', // ENTREPRISE DEPOT DROPOFFPOINT INDIVIDUAL
 				'typeId' => $info[4]['code'], // IF DEPOT => code PEX else if DROPOFFPOINT => XETT
-				//'name' => $info[4]['name'],
-				/*'address1' => $info[4]['address'],
-				'address2' => '',*/
 				'zipCode' => $info[4]['zipcode'],
 				'city' => $tntcarrier->putCityInNormeTnt((strlen($info[4]['city']) > 27 ? substr($info[4]['city'], 0, 27) : $info[4]['city'])),
 				'instructions' => '',
@@ -229,7 +248,6 @@ class TntWebService
 			'quantity' => count($info[1]['weight']), //number of package; count($parcelsRequest)
 			'parcelsRequest' => $parcelsRequest,
 			'saturdayDelivery' => ($info[5]['saturday'] ? '1' : '0'),
-			//'paybackInfo' => $paybackInfo,
 			'labelFormat' => (!Configuration::get('TNT_CARRIER_PRINT_STICKER') ? "STDA4" : Configuration::get('TNT_CARRIER_PRINT_STICKER'))
 			);
 		}
@@ -244,7 +262,6 @@ class TntWebService
 			'quantity' => count($info[1]['weight']), //number of package; count($parcelsRequest)
 			'parcelsRequest' => $parcelsRequest,
 			'saturdayDelivery' => ($info[5]['saturday'] ? '1' : '0'),
-			//'paybackInfo' => $paybackInfo,
 			'labelFormat' => (!Configuration::get('TNT_CARRIER_PRINT_STICKER') ? "STDA4" : Configuration::get('TNT_CARRIER_PRINT_STICKER'))
 			);
 		}
@@ -273,7 +290,7 @@ class TntWebService
 			$deliveryDate = new DateTime($evenements->deliveryDate);
 		}
 
-		$packageParam = array(
+		return array(
 			'number' => (isset($colis->consignmentNumber) ? $colis->consignmentNumber : ''),
 			'status' => (isset($colis->shortStatus) ? $colis->shortStatus : ''),
 			'account_number' => (isset($colis->accountNumber) ? $colis->accountNumber : ''),
@@ -306,7 +323,5 @@ class TntWebService
 			'long_status' => (isset($colis->longStatus) ? $colis->longStatus : ''),
 			'linkPicture' => (isset($colis->primaryPODUrl) ? $colis->primaryPODUrl : '')
 			);
-		return $packageParam;
 	}
 }
-?>

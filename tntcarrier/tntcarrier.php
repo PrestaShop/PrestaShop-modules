@@ -1,4 +1,29 @@
 <?php
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 // Avoid direct access to the file
 require_once(_PS_MODULE_DIR_."/tntcarrier/classes/PackageTnt.php");
 require_once(_PS_MODULE_DIR_."/tntcarrier/classes/TntWebService.php");
@@ -22,12 +47,11 @@ class TntCarrier extends CarrierModule
 	** Construct Method
 	**
 	*/
-
 	public function __construct()
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.5';
+		$this->version = '1.9.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -324,17 +348,20 @@ class TntCarrier extends CarrierModule
 	private function _displayFormConfig()
 	{
 		global $smarty;
+		
 		$var = array('account' => $this->_displayFormAccount(), 'shipping' => $this->_displayFormShipping(), 'service' => $this->_displayService(),
 					 'country' => $this->_displayCountry('Corse'), 'info' => $this->_displayInfo('weight'));
 		$smarty->assign('varMain', $var);
 		$html = $this->display( __FILE__, 'tpl/main.tpl' );
+		
 		if (isset($_GET['id_tab']))
 			$html .= '<script>
-				  $(".menuTabButton.selected").removeClass("selected");
-				  $("#menuTab'.htmlentities(Tools::getValue('id_tab')).'").addClass("selected");
-				  $(".tabItem.selected").removeClass("selected");
-				  $("#menuTab'.htmlentities(Tools::getValue('id_tab')).'Sheet").addClass("selected");
+				$(".menuTabButton.selected").removeClass("selected");
+				$("#menuTab'.htmlentities(Tools::getValue('id_tab')).'").addClass("selected");
+				$(".tabItem.selected").removeClass("selected");
+				$("#menuTab'.htmlentities(Tools::getValue('id_tab')).'Sheet").addClass("selected");
 			</script>';
+
 		return $html;
 	}
 
@@ -342,7 +369,7 @@ class TntCarrier extends CarrierModule
 	{
 		global $smarty;
 		$var = array('login' => Tools::getValue('tnt_carrier_login', Configuration::get('TNT_CARRIER_LOGIN')), 'password' => Tools::getValue('tnt_carrier_password', Configuration::get('TNT_CARRIER_PASSWORD')),
-					 'account' => Tools::getValue('tnt_carrier_number_account', Configuration::get('TNT_CARRIER_NUMBER_ACCOUNT')));
+					 'account' => str_replace(' ', '', Tools::getValue('tnt_carrier_number_account', Configuration::get('TNT_CARRIER_NUMBER_ACCOUNT'))));
 		$smarty->assign('varAccount', $var);
 		return $this->display( __FILE__, 'tpl/accountForm.tpl' );
 	}
@@ -554,7 +581,7 @@ class TntCarrier extends CarrierModule
 	{
 		$login = pSQL(Tools::getValue('tnt_carrier_login'));
 		$password = pSQL(Tools::getValue('tnt_carrier_password'));
-		$number = pSQL(Tools::getValue('tnt_carrier_number_account'));
+		$number = pSQL(str_replace(' ', '', Tools::getValue('tnt_carrier_number_account')));
 		if (!$login || !$password || !$number)
 			$this->_postErrors[] = $this->l('All the fields are required');
 		Configuration::updateValue('TNT_CARRIER_LOGIN', $login);
@@ -931,7 +958,7 @@ class TntCarrier extends CarrierModule
 		);
 		
 		$output = null;
-		if (method_exists($this->context->controller, 'addJS'))
+		if (isset($this->context) && method_exists($this->context->controller, 'addJS'))
 		{
 			$this->context->controller->addJS('http://maps.google.com/maps/api/js?sensor=true');
 			$this->context->controller->addJS($this->_path.'js/relais.js');
@@ -1126,7 +1153,7 @@ class TntCarrier extends CarrierModule
 			return false;
 		if (!extension_loaded('soap'))
 			return false;
-
+		
 		$product = $params->getProducts();
 		$weight = 0;
 		$add = 0;

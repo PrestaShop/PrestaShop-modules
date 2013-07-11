@@ -24,7 +24,7 @@
 *}
 
 <p class="payment_module clearfix">
-	<a href="javascript:document.ogone_form.submit();" title="{l s='Pay with Ogone' mod='ogone'}" style="height:48px">
+	<a onclick="document.forms['ogone_form'].submit();" href="#" title="{l s='Pay with Ogone' mod='ogone'}" style="height:48px">
 		<span style="float:left;"><img src="{$module_dir}ogone.gif" alt="{l s='Ogone logo' mod='ogone'}"/></span>
 		<span>{l s='Pay with Ogone' mod='ogone'}<br />{l s='Pay safely and quickly on the next page with IDEAL / Mastercard / Visa / Paypal / Mister Cash / Bancontact.' mod='ogone'}</span>
 	</a>

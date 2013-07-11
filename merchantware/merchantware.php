@@ -41,7 +41,7 @@ class MerchantWare extends PaymentModule
 	{
 		$this->name = 'merchantware';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.1';
+		$this->version = '1.2.2';
 		$this->author = 'PrestaShop';
 		$this->className = 'Merchantware';
 
@@ -470,7 +470,7 @@ class MerchantWare extends PaymentModule
 			}
 			catch (Exception $e)
 			{
-				Logger::AddLog('[MerchantWare] Problem to verify a payment. Cart id: '.$cardId.', token: '.$token.'.', 2);
+				Logger::AddLog('[MerchantWare] Problem to verify a payment. Cart id: '.$id_cart.', token: '.$token.'.', 2);
 			}
 			if (isset($result->TransactionsByReferenceResult->TransactionReference4->ApprovalStatus))
 			{
