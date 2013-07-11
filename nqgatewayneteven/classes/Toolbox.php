@@ -123,7 +123,10 @@ class Toolbox
 					{
 						if ($row != 0)
 						{
-							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders_gateway_feature` WHERE `value` LIKE "'.pSQL($data[2]).'"'))
+                            if(empty($data[0]) OR empty($data[1]) OR empty($data[2]))
+                                continue;
+
+							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders_gateway_feature` WHERE `value` = "'.pSQL($data[2]).'" AND `category` = "'.pSQL($data[0]).'" '))
 								continue;
 							
 							Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_feature` (`name`, `value`, `category`) VALUES ("'.pSQL($data[1]).'", "'.pSQL($data[2]).'", "'.pSQL($data[0]).'")');
