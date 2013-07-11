@@ -1574,7 +1574,8 @@ class Ebay extends Module
 		// Empty error result
 		$this->setConfiguration('EBAY_SYNC_LAST_PRODUCT', 0);
 
-		@unlink(dirname(__FILE__).'/log/syncError.php');
+		if (file_exists(dirname(__FILE__).'/log/syncError.php'))
+			@unlink(dirname(__FILE__).'/log/syncError.php');
 
 		if (Tools::getValue('ebay_sync_mode') == 'A')
 			$this->setConfiguration('EBAY_SYNC_MODE', 'A');
