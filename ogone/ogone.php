@@ -253,14 +253,6 @@ class Ogone extends PaymentModule
 	
 	public function validate($id_cart, $id_order_state, $amount, $message = '', $secure_key)
 	{
-		if (isset($this->pcc))
-		{
-			$this->pcc->transaction_id = Tools::getValue('PAYID');
-			$this->pcc->card_number = Tools::getValue('CARDNO');
-			$this->pcc->card_brand = Tools::getValue('BRAND');
-			$this->pcc->card_expiration = Tools::getValue('ED');
-			$this->pcc->card_holder = Tools::getValue('CN');
-		}
 		$this->validateOrder((int)$id_cart, $id_order_state, $amount, $this->displayName, $message, NULL, NULL, true, pSQL($secure_key));		
 	}
 }
