@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{alliedwallet}prestashop>alliedwallet_ee1e9cbe2a66a3a7ecc434049bd67339'] = 'Allied Wallet!!';
+$_MODULE['<{alliedwallet}prestashop>alliedwallet_ee1e9cbe2a66a3a7ecc434049bd67339'] = 'Allied Wallet';
 $_MODULE['<{alliedwallet}prestashop>alliedwallet_0e8331ca0283467f5c129fbc4ff873b2'] = 'Akzeptieren Sie ab sofort Zahlungen über Kreditkarten und Debitkarten mit Allied Wallet.';
 $_MODULE['<{alliedwallet}prestashop>alliedwallet_449602445d0a5f0612e7ccac073f6c9e'] = 'Akzeptieren Sie ab sofort Zahlungen mit Allied Wallet!';
 $_MODULE['<{alliedwallet}prestashop>alliedwallet_18071bcaa1bfb301a06e742589b0e671'] = 'Möchten Sie 164 unterschiedliche Währungen aus der ganzen Welt akzeptieren und das über fast alle Bankkarten?';
