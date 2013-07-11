@@ -121,7 +121,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.8.6';
+	 	$this->version = '1.8.7';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
@@ -393,10 +393,14 @@ class Twenga extends PaymentModule
 			$customer = new Customer($params['order']->id_customer);
 			$params_to_twenga = array();
 			$params_to_twenga['basket_id'] = (string)$params['order']->id_cart;
-			if (self::$obj_twenga->orderExist($params_to_twenga))
-			{
-				$bool = self::$obj_twenga->orderCancel($params_to_twenga);
-				self::$obj_ps_stats->cancelOrder();
+			try {
+				if (self::$obj_twenga->orderExist($params_to_twenga))
+				{
+					$bool = self::$obj_twenga->orderCancel($params_to_twenga);
+					self::$obj_ps_stats->cancelOrder();
+				}
+			} catch (Exception $e) {
+				return;
 			}
 		}
 	}
@@ -415,11 +419,15 @@ class Twenga extends PaymentModule
 			$params_to_twenga = array();
 			$params_to_twenga['basket_id'] = (int)$obj_order->id_cart;
 			$bool = false;
-			if (($params_to_twenga))
-			{
-				$cart = new Cart($params_to_twenga['basket_id']);
-				$bool = self::$obj_twenga->orderValidate($params_to_twenga);
-				self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
+			try {
+				if (($params_to_twenga))
+				{
+					$cart = new Cart($params_to_twenga['basket_id']);
+					$bool = self::$obj_twenga->orderValidate($params_to_twenga);
+					self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
+				}
+			} catch (Exception $e) {
+				return;
 			}
 		}
 	}
