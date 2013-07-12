@@ -175,7 +175,7 @@ class EbayOrder
 		$address->firstname = pSQL($this->firstname);
 		$address->address1 = pSQL($this->address1);
 		$address->address2 = pSQL($this->address2);
-		$address->postcode = pSQL($this->postalcode);
+		$address->postcode = pSQL(str_replace('.', '', $this->postalcode));
 		$address->city = pSQL($this->city);
 		$address->phone = pSQL($this->phone);
 		$address->active = 1;
