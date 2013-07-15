@@ -66,7 +66,7 @@ class GatewayOrder extends Gateway
 		}
 
 		if ($this->getValue('send_request_to_mail'))
-			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' getOrderNetEven', htmlspecialchars($this->_client->__getLastRequest()));
+			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' getOrderNetEven', $this->_client->__getLastRequest(), true);
 		
 		// if one command, transform this to array.
 		if (isset($neteven_orders['OrderID']))
@@ -883,7 +883,7 @@ class GatewayOrder extends Gateway
 				}
 
 				if ($this->getValue('send_request_to_mail'))
-					$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' setOrderNetEven', htmlspecialchars($this->_client->__getLastRequest()));
+					$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' setOrderNetEven', $this->_client->__getLastRequest(), true);
 
 				if (!isset($order_status->StatusResponse) || (isset($order_status->StatusResponse) && $order_status->StatusResponse != 'Updated') || is_null($order_status))
 				{
