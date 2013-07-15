@@ -26,25 +26,35 @@
 	{literal}
 	<script>
 		$(document).ready(function() {
-				win = window.redirect('{$redirect_url}');
+			win = window.redirect('{$redirect_url}');
+
 		});
 	</script>
 	{/literal}
 {/if}
+<script type="text/javascript">
+	$(document).ready(function(){ldelim}
+		if(regenerate_token_show)
+		{ldelim}
+			$('.regenerate_token_button').show();
+			$('.regenerate_token_button label').css('color', 'red').html('{l s='You must regenerate your authentication token' mod='ebay'}');
+			$('.regenerate_token_click').hide();
+		{rdelim}
+		$('.regenerate_token_click').click(function()
+		{ldelim}
+			$('.regenerate_token_button').show();
+			$('.regenerate_token_click').hide();
+		{rdelim});
+	})
+</script>
 
 
-	<fieldset>
+	{if isset($check_token_tpl)}
+	<fieldset id="regenerate_token">
 		<legend>{l s='Token' mod='ebay'}</legend>
-		{if isset($check_token_tpl)}
-			{$check_token_tpl}
-		{else}
-			<label>{l s='Regenerate Token' mod='ebay'} :</label>
-			<form method="post" action="{$url}">
-				<input type="hidden" name="action" value="regenerate_token" /> 
-				<input type="submit" id="token-btn" class="button" value="Regenerate Token" />
-			</form>
-		{/if}
+			{$check_token_tpl}	
 	</fieldset>	
+	{/if}
 	
 <form action="{$url}" method="post" class="form" id="configForm1">
 	
@@ -78,6 +88,16 @@
 		<div class="margin-form">
 			<input type="text" size="20" name="ebay_shop_postalcode" value="{$shopPostalCode}" />
 			<p>{l s='Your shop\'s postal code' mod='ebay'}</p>
+		</div>
+
+		<div class="show regenerate_token_click" style="display:block;text-align:center;cursor:pointer">
+			{l s='If you want to regenerate your authentication token click here' mod='ebay'}
+		</div>
+		<div class="hide regenerate_token_button" style="display:none;">
+			<label>{l s='Regenerate Token' mod='ebay'} :</label>
+			<a href="{$url}&action=regenerate_token">
+				<input type="button" id="token-btn" class="button" value="Regenerate Token" />
+			</a>
 		</div>
 	</fieldset>
 	

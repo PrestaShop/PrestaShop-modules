@@ -49,8 +49,7 @@
 			<td>
 				<input type="text" size="4" maxlength="4" name="percent[{$c.id_category}]" id="percent{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px;" value="{if isset($categoryConfigList[$c.id_category]) && isset($categoryConfigList[$c.id_category].var)}{$categoryConfigList[$c.id_category].percent}{/if}" />
 			</td>
-			<td></td>
-			<td></td>
+			<td colspan="2" class="show-products" style="text-align:center"><a  id="show-products-switch-string{$c.id_category}" href="javascript:showProducts({$c.id_category})">{l s='Uncheck for products that you do not want to list on eBay' mod='ebay'}</a></td>			
 		</tr>
 	{/foreach}
 {/if}

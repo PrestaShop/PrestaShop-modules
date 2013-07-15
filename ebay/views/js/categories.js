@@ -22,17 +22,20 @@ function changeCategoryMatch(level, id_category) {
 var loadedCategories = new Array();
 function showProducts(id_category) {
 	var elem = $('#show-products-switch-' + id_category);
+	var elem_string = $('#show-products-switch-string' + id_category);
 	if (elem.attr('showing') == true) 
 	{
 		$('.product-row[category=' + id_category +']').hide();
 		elem.attr('showing', 0);
 		elem.html('&#9654;');
+		elem_string.html(ebay_l['Unselect products']);
 	} 
 	else 
 	{
 		elem.attr('showing', 1);
 		elem.html('&#9660;');
-		
+		elem_string.html(ebay_l['Unselect products clicked']);
+
 		if (loadedCategories[id_category])
 			$('.product-row[category=' + id_category +']').show();
 		else
@@ -74,7 +77,7 @@ function toggleSyncProduct(obj)
 
 $(document).ready(function(){
 	$.ajax({
-		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'],
+		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'] + '&unselect_product=' + ebay_l['Unselect products'],
 		success : function(data) { $("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data); }
 	});
 	
