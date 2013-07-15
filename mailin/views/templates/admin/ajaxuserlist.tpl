@@ -40,13 +40,17 @@
 			{/if}
 		</td>
 		<td class="tipTd">
-			{if isset($data.{$sourceInfo.email}) && $data.{$sourceInfo.email} ===1}
+			
+			{assign var=emailid value=$sourceInfo.email}
+			
+			{if isset($data[$emailid]) && $data[$emailid] ===1}
 				{assign var=pstatus value=1}
-			{elseif isset($data.{$sourceInfo.email}) && $data.{$sourceInfo.email} ===0}
+			{elseif isset($data[$emailid]) && $data[$emailid] ===0}
 				{assign var=pstatus value=0}
 			{else}
 				{assign var=pstatus value=1}
 			{/if}
+			
 			<a href="javascript:void(0)" class="ajax_contacts_href" email="{$sourceInfo.email}" status="{$pstatus}">
 			{if $pstatus==1}
 			<img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='mailin'}" id="ajax_contact_status_{$counter}" src="../img/admin/disabled.gif" />
@@ -76,22 +80,24 @@
 				{/if}
 	
 				{if $previous_btn && $cur_page > 1}
-					{assign var=pre value=$cur_page -1}
+					{assign var=pre value=$cur_page-1}
 					<li p='{$pre}' class='active'>{l s='Previous' mod='mailin'}</li>
 				{elseif $previous_btn}
 					<li class='inactive'>{l s='Previous' mod='mailin'}</li>
 				{/if}
 	
-				{for $foo=$start_loop to $end_loop}
-					{if $cur_page == $foo}
-						<li p='{$foo}' style='color:#fff;background-color:#000;' class='active'>{$foo}</li>
+				{section name=cu start=$start_loop loop=$end_loop+1 step=1}
+					{if $cur_page == $smarty.section.cu.index}
+						<li p='{$smarty.section.cu.index}' style='color:#fff;background-color:#000;' class='active'>{$smarty.section.cu.index}</li>
 					{else}
-						<li p='{$foo}' class='active'>{$foo}</li>
+						<li p='{$smarty.section.cu.index}' class='active'>{$smarty.section.cu.index}</li>
 					{/if}
-				{/for}
+					
+				{/section}
+				
 	
 				{if $last_btn && $cur_page < $no_of_paginations}
-					{assign var=nex value=$cur_page + 1}
+					{assign var=nex value=$cur_page+1}
 					<li p='{$nex}' class='active'>{l s='Next' mod='mailin'}</li>
 				{elseif $next_btn}
 					<li class='inactive'>{l s='Next' mod='mailin'}</li>
