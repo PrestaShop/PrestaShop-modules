@@ -355,7 +355,24 @@ class GatewayProduct extends Gateway
 			
 			if (empty($products_temp[$indice]['shipping_price_international']))
 				unset($products_temp[$indice]['shipping_price_international']);
-			
+
+
+
+            $carrier_france = $this->getConfig('SHIPPING_CARRIER_FRANCE');
+            $carrier_zone_france = $this->getConfig('SHIPPING_ZONE_FRANCE');
+
+            if(!empty($carrier_france) && !empty($carrier_zone_france)){
+                $products_temp[$indice]['PriceShippingLocal1'] = $this->getShippingPrice($product['id_product'], $id_product_attribute, $carrier_france, $carrier_zone_france);
+            }
+
+            $carrier_inter = $this->getConfig('SHIPPING_CARRIER_INTERNATIONAL');
+            $carrier_zone_inter = $this->getConfig('SHIPPING_ZONE_INTERNATIONAL');
+
+            if(!empty($carrier_france) && !empty($carrier_zone_france)){
+                $products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
+            }
+
+
 			$images = $this->getProductImages($product);
 			foreach ($images as $key => $image)
 				if (is_object($link))
@@ -526,7 +543,53 @@ class GatewayProduct extends Gateway
 	}
 
 
-	/**
+    /**
+     * Récupération du prix de shipping pour un produit id
+     * @param $shipping
+     * @return float
+     */
+    public function getShippingPrice($product_id, $attribute_id, $id_carrier = 0, $id_zone = 0)
+    {
+        $product = new Product($product_id);
+        $shipping = 0;
+        $carrier = new Carrier((int)$id_carrier);
+
+        if($id_zone == 0){
+            $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+            $id_zone = (int)$defaultCountry->id_zone;
+        }
+
+        $carrierTax = Tax::getCarrierTaxRate((int)$carrier->id);
+
+        $free_weight = Configuration::get('PS_SHIPPING_FREE_WEIGHT');
+        $shipping_handling = Configuration::get('PS_SHIPPING_HANDLING');
+
+        if ($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1) >= (float)($free_weight) AND (float)($free_weight) > 0)
+            $shipping = 0;
+        elseif (isset($free_weight) AND $product->weight >= (float)($free_weight) AND (float)($free_weight) > 0)
+            $shipping = 0;
+        else
+        {
+
+
+            if (isset($shipping_handling) AND $carrier->shipping_handling)
+                $shipping = (float)($shipping_handling);
+
+            if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
+                $shipping += $carrier->getDeliveryPriceByWeight($product->weight, $id_zone);
+            else
+                $shipping += $carrier->getDeliveryPriceByPrice($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1), $id_zone);
+
+            $shipping *= 1 + ($carrierTax / 100);
+            $shipping = (float)(Tools::ps_round((float)($shipping), 2));
+        }
+
+        unset($product);
+        return $shipping;
+    }
+
+
+    /**
 	 * On supprime tous les produits qui n'ont pas de code EAN13.
 	 * @param $t_product
 	 * @param $is_display
