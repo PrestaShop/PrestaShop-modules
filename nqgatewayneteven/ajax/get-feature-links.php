@@ -78,7 +78,7 @@ foreach ($feature_links as $feature_link)
 		$element_netven_name = $feature_link['name'];
 	}
 	
-	$response .= '<li id="'.$element_id.'" ><span class="delete_link" style="cursor:pointer;"><img src="../../img/admin/delete.gif" alt="X" /></span><span class="prestashop_name">'.$element_prestashop_name.'</span>/<span class="netven_name">'.$element_netven_name.'</span></li>';
+	$response .= '<li id="'.$element_id.'" ><span class="delete_link" style="cursor:pointer;"><img src="../img/admin/disabled.gif" alt="X" /></span><span class="prestashop_name">'.$element_prestashop_name.'</span>/<span class="netven_name">'.$element_netven_name.'</span></li>';
 
 }
 
