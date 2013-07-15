@@ -421,11 +421,11 @@ class Ebay extends Module
 		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z')
 		{
 			$current_date = date('Y-m-d\TH:i:s').'.000Z';
-
-			$orders = $this->_getEbayLastOrders($current_date);
-
+			
 			// we set the new last update date after retrieving the last orders
 			$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', $current_date);
+
+			$orders = $this->_getEbayLastOrders($current_date);
 
 			if ($orders)
 			{
