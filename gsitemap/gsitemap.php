@@ -436,7 +436,7 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `ps_cms_lang` cl ON c.`id_cms` = cl.`id_cms` 
+		$cmss_id = Db::getInstance()->ExecuteS('SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms` 
 				INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` 
 				INNER JOIN `'._DB_PREFIX_.'cms_category` cc ON c.id_cms_category = cc.id_cms_category AND cc.active = 1 
 				WHERE c.`active` =1 AND c.`id_cms` > '.(int)$id_cms.
