@@ -231,7 +231,7 @@ class Gateway
 		
 	}
 	
-	public function sendDebugMail($emails, $subject, $message)
+	public function sendDebugMail($emails, $subject, $message, $classic_mail = false)
 	{
 		if (!$emails)
 			return;
@@ -239,8 +239,11 @@ class Gateway
 		foreach ($emails as $email)
 			if (Validate::isEmail($email))
 			{
-				Mail::Send(($this->id_lang ? (int)$this->id_lang : Configuration::get('PS_LANG_DEFAULT')), 'debug',	$subject, array('{message}' => $message), $email, NULL, Configuration::get('PS_SHOP_EMAIL'),	Configuration::get('PS_SHOP_NAME'), NULL, NULL,	dirname(__FILE__).'/../mails/');
-				
+                if(!$classic_mail)
+				    Mail::Send(($this->id_lang ? (int)$this->id_lang : Configuration::get('PS_LANG_DEFAULT')), 'debug',	$subject, array('{message}' => $message), $email, NULL, Configuration::get('PS_SHOP_EMAIL'),	Configuration::get('PS_SHOP_NAME'), NULL, NULL,	dirname(__FILE__).'/../mails/');
+				else
+                    mail($email, $subject, $message);
+
 				if ($this->getValue('debug'))
 					Toolbox::displayDebugMessage(self::getL('Send email to').' : '.$email);
 
