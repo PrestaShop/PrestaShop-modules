@@ -418,7 +418,7 @@ class Ebay extends Module
 		$this->hookUpdateProductAttributeEbay(); // Fix hook update product attribute
 
 		// update if not update for more than 30 min
-		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z')
+		if (Configuration::get('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z' || Tools::getValue('EBAY_SYNC_ORDERS') == 1)
 		{
 			$current_date = date('Y-m-d\TH:i:s').'.000Z';
 			
@@ -723,6 +723,7 @@ class Ebay extends Module
 		$this->smarty->assign(array(
 			'img_stats'							=> $this->ebay_country->getImgStats(),
 			'alert'								=> $alerts,
+			'regenerate_token' 					=> Configuration::get('EBAY_TOKEN_REGENERATE'),
 			'prestashop_content'				=> $prestashop_content,
 			'path'								=> $this->_path,
 			'multishop'							=> (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
