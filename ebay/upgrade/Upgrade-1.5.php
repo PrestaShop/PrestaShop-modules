@@ -25,6 +25,36 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Updates the template image links since the image files have moved
+ *
+ */
+function update_product_template($module)
+{
+	if ($product_template = Configuration::get('EBAY_PRODUCT_TEMPLATE'))
+	{
+		// we cannot just replace "template/images/" by "views/img" since the use may have added its own images in "template/images"
+		$product_template = str_replace(
+			array(
+				'template/images/favorite.png',
+				'template/images/footer.png',
+				'template/images/header.png',
+				'template/images/search.png',
+				'template/images/stats.png',
+			),
+			array(
+				'views/img/favorite.png',
+				'views/img/footer.png',
+				'views/img/header.png',
+				'views/img/search.png',
+				'views/img/stats.png',
+			),
+			$product_template
+		);
+		$module->setConfiguration('EBAY_PRODUCT_TEMPLATE', $product_template, true);
+	}
+}
+
 function upgrade_module_1_5($module) {
 	include(dirname(__FILE__).'/sql/sql-upgrade-1-5.php');
 
@@ -37,6 +67,9 @@ function upgrade_module_1_5($module) {
 				return false;
 			}
 	}
+	
+	update_product_template($module);
+	
 	$module->setConfiguration('EBAY_VERSION', $module->version);
 	
   return true;
