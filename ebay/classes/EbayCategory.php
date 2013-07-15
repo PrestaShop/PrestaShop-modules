@@ -86,9 +86,13 @@ class EbayCategory
 		return $this->percent;
 	}
 	
-	public function cleanPercent()
+	/*
+	 * returns the percent, without the percent sign if there is one
+	 *
+	 */
+	public function getCleanPercent()
 	{
-		$this->percent = preg_replace('#%$#is', '', $this->percent);
+		return preg_replace('#%$#is', '', $this->percent);
 	}
 	
 	/**
