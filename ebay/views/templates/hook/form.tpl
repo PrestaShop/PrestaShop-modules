@@ -22,6 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<script type="text/javascript">
+	regenerate_token_show = false;
+	{if $regenerate_token != false}
+	regenerate_token_show = true;
+	{/if}
+</script>
 
 <fieldset>
 	{if $img_stats}
