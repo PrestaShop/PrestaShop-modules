@@ -110,13 +110,13 @@ class EbaySynchronizer
 			if (isset($p['noPriceUpdate']))
 				$data['noPriceUpdate'] = $p['noPriceUpdate'];
 
-			$ebay_category->cleanPercent();
+			$clean_percent = $ebay_category->getCleanPercent();
 
 			// Save percent and price discount
-			if ($ebay_category->getPercent() < 0) 
+			if ($clean_percent < 0) 
 			{
 				$data['price_original'] = round($price_original, 2);
-				$data['price_percent'] = round($ebay_category->getPercent());
+				$data['price_percent'] = round($clean_percent);
 			}
 
 			$data['description'] = EbaySynchronizer::_getEbayDescription($product, $id_lang);
