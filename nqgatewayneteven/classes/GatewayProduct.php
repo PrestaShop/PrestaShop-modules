@@ -498,7 +498,7 @@ class GatewayProduct extends Gateway
 		}
 
 		if ($this->getValue('send_request_to_mail'))
-			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' addProductInNetEven', $this->_client->__getLastRequest());
+			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' addProductInNetEven', htmlspecialchars($this->_client->__getLastRequest()) );
 
 		if ($response != '' && $itemsStatus != '')
 		{
