@@ -48,7 +48,8 @@ class Mailin extends Module {
 	{
 		$this->name = 'mailin';
 		$this->tab = 'advertising_marketing';
-		$this->version = 1.0;
+		$this->author = 'Mailin';
+		$this->version = 1.1;
 
 		parent::__construct();
 
