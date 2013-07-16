@@ -86,15 +86,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public $ajaxParams = array(
 		// autoupgrade options
 		'install_version',
-
 		'backupName',
 		'backupFilesFilename',
 		'backupDbFilename',
-
 		'restoreName',
 		'restoreFilesFilename',
 		'restoreDbFilenames',
-
 		'installedLanguagesIso',
 		'modules_addons',
 		'warning_exists',
@@ -257,6 +254,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 	private $backupIgnoreAbsoluteFiles = array();
 	private $excludeFilesFromUpgrade = array();
 	private $excludeAbsoluteFilesFromUpgrade = array();
+
+	public static $classes14 = array('Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'ImportModule', 
+	'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine', 
+	'MySQL', 'Order', 'OrderDetail', 'OrderDiscount', 'OrderHistory', 'OrderMessage', 'OrderReturn', 
+	'OrderReturnState', 'OrderSlip', 'OrderState', 'PDF', 'RangePrice', 'RangeWeight', 'StockMvt', 
+	'StockMvtReason', 'SubDomain', 'Shop', 'Tax', 'TaxRule', 'TaxRulesGroup', 'WebserviceKey', 'WebserviceRequest');
 
 	private $restoreName = null;
 	private $backupName = null;
@@ -437,7 +440,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (version_compare(_PS_VERSION_,'1.5.0.0','>'))	
 			$this->currentIndex = $_SERVER['SCRIPT_NAME'].(($controller = Tools::getValue('controller')) ? '?controller='.$controller: '');
 		else
-		$this->currentIndex = $currentIndex;
+			$this->currentIndex = $currentIndex;
 	}
 
 	protected function l($string, $class = 'AdminTab', $addslashes = FALSE, $htmlentities = TRUE)
@@ -732,11 +735,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->backupIgnoreFiles[] = '.';
 		$this->backupIgnoreFiles[] = '..';
 		$this->backupIgnoreFiles[] = '.svn';
+		$this->backupIgnoreFiles[] = '.git';
 		$this->backupIgnoreFiles[] = 'autoupgrade';
 
 		$this->excludeFilesFromUpgrade[] = '.';
 		$this->excludeFilesFromUpgrade[] = '..';
 		$this->excludeFilesFromUpgrade[] = '.svn';
+		$this->excludeFilesFromUpgrade[] = '.git';
 		// do not copy install, neither settings.inc.php in case it would be present
 		$this->excludeAbsoluteFilesFromUpgrade[] = '/config/settings.inc.php';
 		$this->excludeAbsoluteFilesFromUpgrade[] = '/install';
@@ -760,7 +765,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (!$this->updateDefaultTheme) /* If set to false, we need to preserve the default themes */
 		{
 			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
-			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default';
+			if (version_compare(_PS_VERSION_, '1.5.0.0', '>'))
+				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default';
 		}
 	}
 
@@ -872,7 +878,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$filelist = scandir($this->backupPath);
 			foreach($filelist as $filename)
 				// the following will match file or dir related to the selected backup
-				if (preg_match('#^.*'.preg_quote($name).'.*$#', $filename, $matches))
+				if (!empty($name) && $name[0] != '.' && $name != 'index.php' && $name != '.htaccess' 
+					&& preg_match('#^(auto-backupfiles_|)'.preg_quote($name).'(\.zip|)$#', $filename, $matches))
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
 						$res &= @unlink($this->backupPath.DIRECTORY_SEPARATOR.$filename);
@@ -949,8 +956,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 				}
 			}
 			// Remove class_index Autoload cache
-			@unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
+			if (file_exists(_PS_ROOT_DIR_.'/cache/class_index.php'))
+				@unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
 		}
+
+
 		
 		if (!$this->warning_exists)
 			$this->next_desc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
@@ -1814,12 +1824,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 				$dibsPath = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR;
 				if (file_exists($dibsPath.'dibs.php'))
-                {
+				{
 					if (Tools14::deleteDirectory($dibsPath))
 						$this->nextQuickInfo[] = $this->l('Dibs module is not compatible with 1.5.X, it will be removed from your ftp.');
 					else																			
 						$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
-                }
+				}
 			}
 
 			$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
@@ -2296,6 +2306,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty/compile/';
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty_v2/cache/';
 		$arrayToClean[] = $this->prodRootDir.'/tools/smarty_v2/compile/';
+		if (version_compare(INSTALL_VERSION, '1.5.0.0', '>'))
+		{
+			$arrayToClean[] = $this->prodRootDir.'/cache/smarty/cache/';
+			$arrayToClean[] = $this->prodRootDir.'/cache/smarty/compile/';
+		}
 
 		foreach ($arrayToClean as $dir)
 			if (!file_exists($dir))
@@ -2310,6 +2325,45 @@ class AdminSelfUpgrade extends AdminSelfTab
 						@unlink($dir.$file);
 						$this->nextQuickInfo[] = sprintf($this->l('[cleaning cache] %s removed'), $file);
 					}
+		
+		if (version_compare(INSTALL_VERSION, '1.5.0.0', '>'))
+		{
+			// Remove class_index Autoload cache
+			if (file_exists(_PS_ROOT_DIR_.'/cache/class_index.php'))
+				@unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
+
+			if (defined('_THEME_NAME_') && $this->updateDefaultTheme && preg_match('#(default|prestashop)$#', _THEME_NAME_))
+			{
+				$separator = addslashes(DIRECTORY_SEPARATOR);
+				$file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
+				if (file_exists($file))
+					foreach (scandir($file) as $cache)
+						if ($cache[0] != '.' && $cache != 'index.php' && $cache != '.htaccess' && file_exists($file.$cache) && !is_dir($file.$cache))
+							@unlink($file.$cache);
+			}
+
+			if (version_compare(_PS_VERSION_, '1.5.0.0', '<='))
+			{
+				$dir = _PS_ROOT_DIR_.'/controllers/';
+				if (file_exists($dir))
+					foreach (scandir($dir) as $file)
+						if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
+							if (file_exists(_PS_ROOT_DIR_.'/controllers/'.basename(str_replace('.php', '', $file).'.php')))
+								@unlink(_PS_ROOT_DIR_.'/controllers/'.basename($file));
+
+				foreach(self::$classes14 as $class)
+					if (file_exists(_PS_ROOT_DIR_.'/classes/'.basename($class).'.php'))
+						@unlink(_PS_ROOT_DIR_.'/classes/'.basename($class).'.php');
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
+				if ($this->updateDefaultTheme)
+				{
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\') 
+						WHERE id_shop = 1 AND id_theme = 1');
+					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'prestashop\' LIMIT 1');
+				}
+			}
+		}
 
 		// delete cache filesystem if activated
 		if (defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_)
@@ -2850,7 +2904,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		return true;
 	}
 
-	public function isDirEmpty($dir, $ignore = array('.svn'))
+	public function isDirEmpty($dir, $ignore = array('.svn', '.git'))
 	{
 		$array_ignore = array_merge(array('.', '..'), $ignore);
 		$content = scandir($dir);
