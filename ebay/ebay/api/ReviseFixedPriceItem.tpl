@@ -34,7 +34,9 @@
 		{if isset($country_currency)}
 			<Currency>{$country_currency}</Currency>
 		{/if}
+		{if $condition_id > 0}
 		<ConditionID>{$condition_id}</ConditionID>
+		{/if}
 		{if isset($listing_type)}
 			<ListingType>{$listing_type}</ListingType>
 		{/if}
