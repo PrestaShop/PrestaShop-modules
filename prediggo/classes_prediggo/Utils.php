@@ -47,14 +47,14 @@ class Utils
         if( is_string($first) )
         {
             $first = trim($first);
-            if( empty ($first))
+            if( $first == "")
                 return;
         }
 
         if( is_string($second) )
         {
             $second = trim($second);
-            if( empty ($second))
+            if( $second == "")
                 return;
         }
 
@@ -67,13 +67,14 @@ class Utils
     }
 
 
+
     /**
       * Transform a collection of pairs into two elements (one for keys and one for values) separated by a given separator.
       * Results are affected to the two variables given in parameter.
       * @param array $collection a collection of key value pairs
       * @param string $separator the separator string
-      * @param string &$refStringFirst the string ref which will contains the concatened keys
-      * @param string &$refStringSecond the string ref which will contains the concatened values
+      * @param string &$refStringFirst the string ref which will contains the concatenated keys
+      * @param string &$refStringSecond the string ref which will contains the concatenated values
       */
      public static function implodeKeyValuePairsToSeparatedString( $collection, $separator, &$refStringFirst, &$refStringSecond )
      {

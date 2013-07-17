@@ -171,7 +171,7 @@ abstract class GetFilteredRecommendationParam extends RequestParamBase
 
 
     /**
-     * Adds a new condition to the filter.
+     * Adds a new condition to the filter (attribute == value).
      * @param string $attributeName The name of the attribute which you want to filter.
      * @param string $matchingValue The desired matching value.
      */
@@ -179,6 +179,25 @@ abstract class GetFilteredRecommendationParam extends RequestParamBase
     {
         Utils::addPairToUniqueArray($this->conditions, $attributeName, $matchingValue);
     }
+
+    /**
+     * Adds a range condition to the filter ( min <= value <=  max).
+     * @param string $attributeName The name of the attribute which you want to filter.
+     * @param string $minValue The minimum value
+     * @param string $maxValue The maximum value
+     * @param boolean $minInclusive true if values that are equal to the min boundary are accepted
+     * @param boolean $maxInclusive true if value that are equal to the max boundary are accepted
+     */
+    public function addConditionRange( $attributeName, $minValue, $maxValue, $minInclusive = true, $maxInclusive = true )
+    {
+        $filter = $minValue . ','. $maxValue;
+
+        $filter = ($minInclusive ? '[' : '(')  . $filter  ;
+        $filter = $filter . ($maxInclusive ? ']' : ')')  ;
+
+        Utils::addPairToUniqueArray($this->conditions, $attributeName, $filter);
+    }
+
 
 }
 

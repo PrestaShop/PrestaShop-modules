@@ -36,7 +36,7 @@ class SortingOption
     /**
      * Gets the sorting clause, see SortingClause.php for possible values
      * @see SortingClause
-     * @return string The sorting clause
+     * @return int The sorting clause
      */
     public function getClause()
     {
@@ -46,7 +46,7 @@ class SortingOption
     /**
      * Sets the sorting clause, see SortingClause.php for possible values
      * @see SortingClause
-     * @param string $clause The sorting clause
+     * @param int $clause The sorting clause
      */
     public function setClause( $clause)
     {

@@ -4,7 +4,7 @@ require_once "RequestResultBase.php";
 
 
 /**
- * Description of AutoCompleteResult
+ * Result class for AutoComplete queries
  *
  * @package prediggo4php
  * @subpackage types

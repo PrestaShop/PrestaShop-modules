@@ -1,17 +1,36 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 require_once(_PS_MODULE_DIR_.'prediggo/classes/DataExtractorToXML.php');
 
 class OrderExtractorToXML extends DataExtractorToXML
 {
-	/** @var integer Number of days to define that an order can be exported since its invoice_date */
-	public $nbDaysOrderValid;
+	/** @var array List of Prediggo configuration by shop */
+	private $aPrediggoConfigs;
 
 	/**
 	  * Initialise the object variables
@@ -19,16 +38,18 @@ class OrderExtractorToXML extends DataExtractorToXML
 	  * @param string $sRepositoryPath path of the XML repository
 	  * @param array $params Specific parameters of the object
 	  */
-	public function __construct($sRepositoryPath, $params)
+	public function __construct($sRepositoryPath, $params, $bLogEnable)
 	{
-		$this->sRepositoryPath = $sRepositoryPath;
-		$this->_logs = array();
-		$this->_errors = array();
-		$this->_confirmations = array();
-		$this->sEntity = 'transaction';
-		$this->sFileNameBase = 'transactions';
-		$this->sEntityRoot = 'transactions';
-		$this->nbDaysOrderValid = (int)$params['nbDaysOrderValid'];
+		$this->sRepositoryPath 	= $sRepositoryPath;
+		$this->bLogEnable 		= (int)$bLogEnable;
+		$this->_logs 			= array();
+		$this->_errors 			= array();
+		$this->_confirmations 	= array();
+		$this->sEntity 			= 'transaction';
+		$this->sFileNameBase 	= 'transactions';
+		$this->sEntityRoot 		= 'transactions';
+		
+		$this->aPrediggoConfigs = $params['aPrediggoConfigs'];
 	}
 
 	/**
@@ -38,10 +59,13 @@ class OrderExtractorToXML extends DataExtractorToXML
 	  */
 	public function getEntities()
 	{
+		$sWhere = '';
+		foreach($this->aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
+			$sWhere .= '(id_shop = '.(int)$iIDShop.' AND DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND invoice_date >= \''.pSQL(date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$oPrediggoConfig->nb_days_order_valide), date('Y')))).'\') OR';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT `id_order`
+		SELECT `id_order`, `id_shop`
 		FROM `'._DB_PREFIX_.'orders`
-		WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND invoice_date >= \''.pSQL(date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$this->nbDaysOrderValid), date('Y')))).'\'
+		WHERE '.substr($sWhere, 0, -2).'
 		ORDER BY invoice_date ASC', false);
 
 	}
@@ -81,7 +105,7 @@ class OrderExtractorToXML extends DataExtractorToXML
 				$itemid = $dom->createElement('itemid', (int)$aOrderProduct['product_id']);
 				$item->appendChild($itemid);
 
-				$profile = $dom->createElement('profile', (int)$oOrder->id_lang);
+				$profile = $dom->createElement('profile', (int)$aEntity['id_shop']);
 				$item->appendChild($profile);
 
 				if ($oOrder->getTaxCalculationMethod() == PS_TAX_EXC)

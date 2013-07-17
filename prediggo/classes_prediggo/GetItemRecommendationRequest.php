@@ -46,8 +46,8 @@ class GetItemRecommendationRequest extends GetFilteredRecommendationRequest
         $argMap = parent::getArgumentMap();
 
         //item infos
-        $argMap["itemID"] = $this->parameter->getItemInfo()->getItemId();
-        $argMap["name"] = $this->parameter->getItemInfo()->getItemName();
+        $this->addParameterToMap($argMap, "itemID", $this->parameter->getItemInfo()->getItemId());
+        $this->addParameterToMap($argMap, "name", $this->parameter->getItemInfo()->getItemName());
 
 
         $bufferKeys = "";
@@ -57,8 +57,8 @@ class GetItemRecommendationRequest extends GetFilteredRecommendationRequest
         Utils::implodeKeyValuePairsToSeparatedString( $this->parameter->getItemInfo()->getAttributes(), "_/_",  $bufferKeys, $bufferValues);
 
         //add parameters
-        $argMap["itemInfoAttributeNames"] = $bufferKeys;
-        $argMap["itemInfoAttributeValues"] = $bufferValues;
+        $this->addParameterToMap($argMap, "itemInfoAttributeNames", $bufferKeys);
+        $this->addParameterToMap($argMap, "itemInfoAttributeValues", $bufferValues);
 
         return $argMap;
     }

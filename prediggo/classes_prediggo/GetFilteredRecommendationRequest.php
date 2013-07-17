@@ -20,7 +20,7 @@ abstract class GetFilteredRecommendationRequest extends RequestTemplate
 
     /**
      * Constructs a new request
-     * @param GetItemRecommendationParam $param this query parameter object
+     * @param GetFilteredRecommendationParam $param this query parameter object
      */
     function __construct( GetFilteredRecommendationParam $param )
     {
@@ -38,12 +38,12 @@ abstract class GetFilteredRecommendationRequest extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //common paramters for all getXXXRecommendation style queries...
-        $argMap["nbRec"] = $this->parameter->getNbRecommendation() ;
-        $argMap["showAds"] = $this->parameter->getShowAds() ? "true" : "false" ;
-        $argMap["userID"] = $this->parameter->getUserId();
-        $argMap["classID"] = $this->parameter->getProfileMapId();
-        $argMap["languageCode"] = $this->parameter->getLanguageCode();
-        $argMap["referURL"] = $this->parameter->getRefererUrl();
+        $this->addParameterToMap($argMap, "nbRec", $this->parameter->getNbRecommendation() );
+        $this->addParameterToMap($argMap, "showAds", $this->parameter->getShowAds() ? "true" : "false" );
+        $this->addParameterToMap($argMap, "userID", $this->parameter->getUserId());
+        $this->addParameterToMap($argMap, "classID", $this->parameter->getProfileMapId());
+        $this->addParameterToMap($argMap, "languageCode", $this->parameter->getLanguageCode());
+        $this->addParameterToMap($argMap, "referURL", $this->parameter->getRefererUrl());
         
         $bufferKeys = "";
         $bufferValues = "";
@@ -52,8 +52,8 @@ abstract class GetFilteredRecommendationRequest extends RequestTemplate
         Utils::implodeKeyValuePairsToSeparatedString( $this->parameter->getConditions(), "_/_",  $bufferKeys, $bufferValues);
 
         //add parameters
-        $argMap["attributeNames"] = $bufferKeys;
-        $argMap["attributeValues"] = $bufferValues;
+        $this->addParameterToMap($argMap, "attributeNames", $bufferKeys);
+        $this->addParameterToMap($argMap, "attributeValues", $bufferValues);
 
         return $argMap;
     }

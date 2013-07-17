@@ -80,6 +80,11 @@ class GetSearchRecommendationBaseResultHandler extends GetRecommendationResultHa
                 case "nbResultsInCurrentPage":
                     $stats->setResultsInCurrentPage( intval($attribute->value) );
                     break;
+                
+                case "maxNbResultsPerPage":
+                    $stats->setMaxResultsPerPage( intval($attribute->value) );
+                    break;
+
 
                 case "totalNbSearchPages":
                     $stats->setTotalSearchPages( intval( $attribute->value) );
@@ -89,10 +94,15 @@ class GetSearchRecommendationBaseResultHandler extends GetRecommendationResultHa
                     $stats->setUserQuery( $attribute->value );
                     break;
 
-                case "sortingOptionUsed":
+                case "sortingCodeUsed":
            
-                    $stats->setCurrentSorting( $attribute->value );
+                    $stats->setCurrentSorting( intval( $attribute->value) );
                     break;
+
+                case "languageCode":
+                    $stats->setLanguageCode( $attribute->value );
+                    break;
+
             }
         }
 

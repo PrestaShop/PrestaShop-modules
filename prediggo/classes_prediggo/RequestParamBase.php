@@ -16,6 +16,7 @@ class RequestParamBase
 
     protected  $shopId = "";
     protected  $sessionId = "";
+    protected  $variantId = "";
 
 
     /**
@@ -25,8 +26,6 @@ class RequestParamBase
     public function getServerUrl() {
         return $this->serverUrl;
     }
-
-
 
     /**
      * Sets the server Url.
@@ -45,7 +44,7 @@ class RequestParamBase
     }
 
     /**
-     * Sets the timeout in millisecondes.
+     * Sets the timeout in milliseconds.
      * @param integer $timeout the timeout value
      */
     public function setTimeout($timeout) {
@@ -82,6 +81,25 @@ class RequestParamBase
      */
     public function setSessionId($sessionId) {
         $this->sessionId = $sessionId;
+    }
+    
+    /**
+     * Gets the variant id, some requests may use this parameter to tell prediggo to
+     * behave differently.
+     * 
+     * @return string the variant identifier
+     */
+    public function getVariantId() {
+        return $this->variantId;
+    }
+
+    /**
+     * Sets the variant id, some requests may use this parameter to tell prediggo to
+     * behave differently.
+     * @param string $variantId the variant identifier
+     */
+    public function setVariantId($variantId) {
+        $this->variantId = $variantId;
     }
 
 

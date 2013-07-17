@@ -1,20 +1,39 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
-require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoExportConfig.php');
+require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoConfig.php');
 require_once(_PS_MODULE_DIR_.'prediggo/classes/CustomerExtractorToXML.php');
 require_once(_PS_MODULE_DIR_.'prediggo/classes/OrderExtractorToXML.php');
 require_once(_PS_MODULE_DIR_.'prediggo/classes/ProductExtractorToXML.php');
 
 class DataExtractorController
 {
-	/** @var PrediggoExportConfig Object PrediggoExportConfig */
-	public $oPrediggoExportConfig;
+	/** @var PrediggoConfig Object PrediggoConfig */
+	public $oPrediggoConfig;
 
 	/** @var Prediggo Object Prediggo */
 	public $module;
@@ -38,8 +57,8 @@ class DataExtractorController
 	  */
 	public function __construct($oModule = false)
 	{
-		$this->oPrediggoExportConfig = PrediggoExportConfig::singleton();
-
+		$this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
+		
 		$this->sRepositoryPath = _PS_MODULE_DIR_.'prediggo/xmlfiles/';
 
 		// Set the module of the controller to get Content translations && set its errors / confirmations
@@ -61,46 +80,64 @@ class DataExtractorController
 	  */
 	public function launchExport()
 	{
+		// Addition of a secured token
+		if(!Tools::getValue('token')
+		|| Tools::getValue('token') != Tools::getAdminToken('DataExtractorController'))
+			return;
+		
 		@ini_set('max_execution_time', '3000');
 		@ini_set('max_input_time', '3000');
 		@ini_set('memory_limit', '384M');
 
 		$oDataExtractor = false;
 
+		$aPrediggoConfigs = array();
+		$oContext = Context::getContext();
+		foreach(Shop::getCompleteListOfShopsID() as $iIDShop)
+		{
+			$oContext->shop = new Shop((int)$iIDShop);
+			$aPrediggoConfigs[(int)$iIDShop] = new PrediggoConfig($oContext);
+		}
+		
 		// Launch Customers export process
-		if($this->oPrediggoExportConfig->customers_file_generation)
+		$params = array(
+			'aPrediggoConfigs' 	=> array(),
+		);
+		foreach($aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
+			if($oPrediggoConfig->customers_file_generation)
+				$params['aPrediggoConfigs'][$iIDShop] = $oPrediggoConfig;
+		
+		if(count($params['aPrediggoConfigs']))
 		{
-			$params = array(
-				'nbDaysCustomerValid' => (int)$this->oPrediggoExportConfig->nb_days_customer_last_visit_valide
-			);
-
-			$oDataExtractor = new CustomerExtractorToXML($this->sRepositoryPath, $params);
+			$oDataExtractor = new CustomerExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
 			$this->lauchFileExport($oDataExtractor);
 		}
-
+		
 		// Launch Orders export process
-		if($this->oPrediggoExportConfig->orders_file_generation)
+		$params = array(
+			'aPrediggoConfigs' 	=> array(),
+		);
+		foreach($aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
+			if($oPrediggoConfig->orders_file_generation)
+				$params['aPrediggoConfigs'][$iIDShop] = $oPrediggoConfig;
+		
+		if(count($params['aPrediggoConfigs']))
 		{
-			$params = array(
-				'nbDaysOrderValid' => (int)$this->oPrediggoExportConfig->nb_days_order_valide
-			);
-			$oDataExtractor = new OrderExtractorToXML($this->sRepositoryPath, $params);
+			$oDataExtractor = new OrderExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
 			$this->lauchFileExport($oDataExtractor);
 		}
-
+		
 		// Launch Products export process
-		if($this->oPrediggoExportConfig->products_file_generation)
+		$params = array(
+			'aPrediggoConfigs' 	=> array(),
+		);
+		foreach($aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
+			if($oPrediggoConfig->products_file_generation)
+				$params['aPrediggoConfigs'][$iIDShop] = $oPrediggoConfig;
+		
+		if(count($params['aPrediggoConfigs']))
 		{
-			$params = array(
-				'imageInExport' => $this->oPrediggoExportConfig->export_product_image,
-				'descInExport' => $this->oPrediggoExportConfig->export_product_description,
-				'productMinQuantity' => $this->oPrediggoExportConfig->export_product_min_quantity,
-				'aAttributesGroupsIds' => explode(',',$this->oPrediggoExportConfig->attributes_groups_ids),
-				'aFeaturesIds' => explode(',',$this->oPrediggoExportConfig->features_ids),
-				'aProductsNotRecommendable' => explode(',',$this->oPrediggoExportConfig->products_ids_not_recommendable),
-				'aProductsNotSearchable' => explode(',',$this->oPrediggoExportConfig->products_ids_not_searchable),
-			);
-			$oDataExtractor = new ProductExtractorToXML($this->sRepositoryPath, $params);
+			$oDataExtractor = new ProductExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
 			$this->lauchFileExport($oDataExtractor);
 		}
 	}
@@ -115,9 +152,7 @@ class DataExtractorController
 		$sEntity = $oDataExtractor->sEntity;
 		if(!$oDataExtractor->extract())
 			$this->module->_errors[] = ucfirst($sEntity).' '.$this->module->l(': An error occurred while creating the XML File', get_class($this));
-		if((int)$this->oPrediggoExportConfig->logs_file_generation)
-			$this->setLogFile($oDataExtractor->getLogs(), $sEntity);
-
+		$this->module->_errors = array_merge($oDataExtractor->_errors, $this->module->_errors);
 		$this->module->_confirmations[] = ucfirst($sEntity).' '.$this->module->l(': XML File created successfully : ', get_class($this)).$oDataExtractor->getXMLFileURL();
 
 		// Create Zip File
@@ -157,7 +192,7 @@ class DataExtractorController
 	  */
 	public function zipXMLFile($sXMLFilePath, $sZipFilePath)
 	{
-		require_once(_PS_MODULE_DIR_.'prediggo/pclzip/pclzip.lib.php');
+		require_once(dirname(__FILE__).'/../../../tools/pclzip/pclzip.lib.php');
 		$zip = new PclZip($sZipFilePath);
 		return $zip->create($sXMLFilePath, PCLZIP_OPT_REMOVE_ALL_PATH);
 	}
@@ -183,25 +218,5 @@ class DataExtractorController
 	public function getRepositoryPath()
 	{
 		return Tools::getShopDomain(true).str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $this->sRepositoryPath);
-	}
-
-	/**
-	  * Store the logs into the dedicated log file
-	  *
-	  * @param array $aLogs list of logs
-	  * @param string $sEntity Name of the entity
-	  */
-	private function setLogFile($aLogs, $sEntity)
-	{
-		$sEntityLogFileName = $this->sRepositoryPath.'../logs/log-'.$sEntity.'.txt';
-		if($handle = fopen($sEntityLogFileName, 'a'))
-		{
-			foreach($aLogs as $sLog)
-				if(!fwrite($handle, $sLog."\n"))
-					$this->module->_errors[] = $this->module->l('Error when writing in the log file').' : '.$sEntityLogFileName;
-			fclose($handle);
-		}
-		else
-			$this->module->_errors[] = $this->module->l('Error when creating the log file').' : '.$sEntityLogFileName;
 	}
 }

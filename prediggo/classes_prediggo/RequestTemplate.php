@@ -59,15 +59,28 @@ abstract class RequestTemplate {
     {
         $argMap = array();
 
-        $argMap["requestID"] = $this->parameter->getSessionId();
-        $argMap["shopID"] =  $this->parameter->getShopId() ;
-        $argMap["sysLang"] =  "XML" ;
-        $argMap["clientLib"] = self::LIBRARY_NAME ;
-        $argMap["apiVersion"] = self::API_VERSION ;
+        $this->addParameterToMap($argMap, "requestID", $this->parameter->getSessionId() );
+        $this->addParameterToMap($argMap, "shopID", $this->parameter->getShopId() );
+        $this->addParameterToMap($argMap, "sysLang", "XML" );
+        $this->addParameterToMap($argMap, "clientLib", self::LIBRARY_NAME );
+        $this->addParameterToMap($argMap, "apiVersion", self::API_VERSION );
+        $this->addParameterToMap($argMap, "variantID", $this->parameter->getVariantId() );
         
         return $argMap;
     }
 
+
+    protected function addParameterToMap( &$map, $parameter, $value )
+    {
+        if( array_key_exists( $parameter, $map ) ) {
+            $map[$parameter][] = $value;
+        }
+        else {
+
+            $map[$parameter] = array( $value );
+        }
+
+    }
 
     /**
      * Gets the name of the servlet which serves this kind of request on prediggo side.
@@ -95,9 +108,12 @@ abstract class RequestTemplate {
         $request .= "/Servlets/" . $this->GetServletName() . "?";
 
         //url parameters
-        foreach ( $this->getArgumentMap() as $key => $value )
-            $request .= $key. "=" . urlencode( $value ) . "&";
-
+        foreach ( $this->getArgumentMap() as $parameter => $arrayValue )
+        {
+            foreach(  $arrayValue as $value )   {
+                $request .= $parameter. "=" . urlencode( $value ) . "&";
+            }
+        }
 
         //suppress last "?" or "&"
         return substr($request, 0, strlen($request) - 1);

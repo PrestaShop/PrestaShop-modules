@@ -17,7 +17,7 @@ require_once "RequestTemplate.php";
 class AutoCompleteRequest  extends RequestTemplate
 {
     
-    
+
     /**
      * Constructs a new request
      * @param AutoCompleteParam $param this query parameter object
@@ -37,9 +37,9 @@ class AutoCompleteRequest  extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //autocomplete parameters
-        $argMap["languageCode"] = $this->parameter->getLanguageCode();
-        $argMap["classID"] = $this->parameter->getProfileMapId() ;
-        $argMap["queryString"] = $this->parameter->getInputQuery();
+        $this->addParameterToMap($argMap, "languageCode", $this->parameter->getLanguageCode());
+        $this->addParameterToMap($argMap, "classID", $this->parameter->getProfileMapId() );
+        $this->addParameterToMap($argMap, "queryString", $this->parameter->getInputQuery());
 
         return $argMap;
     }

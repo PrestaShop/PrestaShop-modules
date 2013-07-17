@@ -34,7 +34,7 @@ class GetUserRecommendationRequest extends GetFilteredRecommendationRequest
         $argMap = parent::getArgumentMap();
 
         //add method id...
-        $argMap["methodID"] = $this->parameter->GetRecommendationMethodToUse();
+        $this->addParameterToMap($argMap, "methodID", $this->parameter->GetRecommendationMethodToUse());
 
         return $argMap;
     }

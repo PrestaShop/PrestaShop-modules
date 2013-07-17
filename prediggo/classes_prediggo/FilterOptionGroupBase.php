@@ -3,7 +3,7 @@
 require_once 'FilterOptionBase.php';
 
 /**
- * Container class respresenting a set of filtering options regrouped by attribute.
+ * Container class representing a set of filtering options regrouped by attribute.
  *
  * @package prediggo4php
  * @subpackage types
@@ -14,6 +14,8 @@ class FilterOptionGroupBase
 {
     
     private $filteredAttributeName = "";
+
+    private $multiSelect = false;
 
     private $filteringOptions = array();
 
@@ -34,6 +36,8 @@ class FilterOptionGroupBase
     public function addFilteringOption(FilterOptionBase $option)
     {
         $option->setFilteredAttributeName( $this->filteredAttributeName );
+        $option->setGroupMultiSelect( $this->multiSelect );
+
         $this->filteringOptions[] = $option ;
     }
 
@@ -53,11 +57,43 @@ class FilterOptionGroupBase
     public function setFilteredAttributeName( $filteredAttributeName)
     {
         $this->filteredAttributeName = $filteredAttributeName;
+        $this->updateOptions();
+    }
 
-        foreach($this->filteringOptions as $opt   )
-            $opt->setFilteredAttributeName( $filteredAttributeName);
+    /**
+     * Sets multi selection support for attribute
+     * @param boolean $multiSelect true = yes
+     */
+    public function setMultiSelect($multiSelect)
+    {
+        $this->multiSelect = $multiSelect;
+        $this->updateOptions();
+    }
+
+
+    /**
+     * Sync all options properties within the group
+     */
+    protected function updateOptions()
+    {
+        foreach( $this->filteringOptions as $option )
+        {
+            $option->setFilteredAttributeName( $this->filteredAttributeName );
+            $option->setGroupMultiSelect( $this->multiSelect );
+        }
 
     }
+
+
+    /**
+     * Gets multi selection support for attribute
+     * @return bool True if the attribute supports multiple selection
+     */
+    public function isMultiSelect()
+    {
+        return $this->multiSelect;
+    }
+
 
 }
 

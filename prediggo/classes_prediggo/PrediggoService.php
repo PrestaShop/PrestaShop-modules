@@ -2,6 +2,7 @@
 
 
 require_once "AutoCompleteRequest.php";
+require_once "BeginProductImportRequest.php";
 require_once "GetSearchPageRecommendationRequest.php";
 require_once "GetLandingPageRecommendationRequest.php";
 require_once "GetCategoryRecommendationRequest.php";
@@ -11,7 +12,14 @@ require_once "SetCategoryRequest.php";
 require_once "GetItemRecommendationRequest.php";
 require_once "GetUserRecommendationRequest.php";
 require_once "GetTopNSalesRequest.php";
+require_once "GetTopNViewedRequest.php";
 require_once "NotifyPrediggoRequest.php";
+require_once "GetAdvertisementRequest.php";
+
+require_once "BeginProductImportRequest.php";
+require_once "ProductImportRequest.php";
+require_once "EndProductImportRequest.php";
+
 require_once "PrediggoException.php";
 
 
@@ -93,6 +101,23 @@ class PrediggoService
         self::executeCall($request);
         return $request->getResultObject();
     }
+
+
+
+    /**
+     * Executes a getTopNViewed query.
+     * @param GetTopNViewedParam $param An object containing all the necessary parameters for this query
+     * @return GetTopNViewedResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function getTopNViewed( GetTopNViewedParam $param)
+    {
+        $request = new GetTopNViewedRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
 
 
     /**
@@ -230,6 +255,125 @@ class PrediggoService
         self::executeCall($request);
         return $request->getResultObject();
     }
+
+
+    /**
+     * Executes a getAdvertisement query.
+     * @param GetAdvertisementParam $param An object containing all the necessary parameters for this query
+     * @return GetAdvertisementResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function getAdvertisement( GetAdvertisementParam $param)
+    {
+        $request = new GetAdvertisementRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+    /**
+     * Execute an beginProductImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param BeginProductImportParam $param An object containing all the necessary parameters for this query.
+     * @return BeginProductImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function beginProductImport(BeginProductImportParam $param)
+    {
+        $request = new BeginProductImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+
+    /**
+     * Execute an ProductImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param ProductImportParam $param An object containing all the necessary parameters for this query.
+     * @return ProductImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function productImport(ProductImportParam $param)
+    {
+        $request = new ProductImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+
+    /**
+     * Execute an endProductImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param EndProductImportParam $param An object containing all the necessary parameters for this query.
+     * @return EndProductImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function endProductImport(EndProductImportParam $param)
+    {
+        $request = new EndProductImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+
+
+    /**
+     * Execute an beginUserProfileImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param BeginUserProfileImportParam $param An object containing all the necessary parameters for this query.
+     * @return BeginUserProfileImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function beginUserProfileImport(BeginUserProfileImportParam $param)
+    {
+        $request = new BeginUserProfileImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+
+    /**
+     * Execute an UserProfileImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param UserProfileImportParam $param An object containing all the necessary parameters for this query.
+     * @return UserProfileImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function userProfileImport(UserProfileImportParam $param)
+    {
+        $request = new UserProfileImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
+
+    /**
+     * Execute an endUserProfileImport query.
+     * Please refer to the documentation for a complete description of use cases and parameters.
+     * @param EndUserProfileImportParam $param An object containing all the necessary parameters for this query.
+     * @return EndUserProfileImportResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function endUserProfileImport(EndUserProfileImportParam $param)
+    {
+        $request = new EndUserProfileImportRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+
+
 
 
 

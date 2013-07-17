@@ -79,13 +79,16 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                 $option = new CancellableOption();
                 $option->setTextValue( $domainNode->textContent );
 
+                $groupFilteredName = '';
+                $groupMultiSelection = false;
+
                 //read attributes
                 foreach ( $domainNode->attributes as $attribute )
                 {
                     switch ($attribute->name)
                     {
                         case "attname":
-                            $option->setFilteredAttributeName( $attribute->value );
+                            $groupFilteredName = $attribute->value ;
                             break;
 
                         case "searchRefiningOptions":
@@ -103,22 +106,28 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                         case "maxVal":
                             $option->setRangeValueMax(  $attribute->value );
                             break;
+
+                        case "multiplevaluesselection" :
+                            if($attribute->value == "true")
+                                $groupMultiSelection = true;
+                            break;
                     }
                 }
 
                 $group = NULL;
 
-                if( !array_key_exists( $option->getFilteredAttributeName(),  $this->backTrackHashed ) )
+                if( !array_key_exists( $groupFilteredName,  $this->backTrackHashed ) )
                 {
                     $group = new CancellableOptionGroup();
-                    $group->setFilteredAttributeName( $option->getFilteredAttributeName() );
+                    $group->setFilteredAttributeName( $groupFilteredName );
+                    $group->setMultiSelect( $groupMultiSelection ) ;
                     $resultObj->addCancellableFiltersGroup($group);
 
-                    $this->backTrackHashed[ $option->getFilteredAttributeName() ] = $group;
+                    $this->backTrackHashed[ $groupFilteredName ] = $group;
                 }
                 else
                 {
-                    $group = $this->backTrackHashed[ $option->getFilteredAttributeName() ];
+                    $group = $this->backTrackHashed[ $groupFilteredName ];
                 }
 
                 $group->addFilteringOption($option);
@@ -148,6 +157,13 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                         case "attname":
                             $group->setFilteredAttributeName(  $attribute->value );
                             break;
+
+                        case "multiplevaluesselection"  :
+                            if( $attribute->value == "true" )
+                                $group->setMultiSelect( true );
+
+                            break;
+
                     }
                 }
 
@@ -202,6 +218,12 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                         case "maxVal":
                             $drillOption->setRangeValueMax(  $attribute->value );
                             break;
+
+                        case "selected":
+
+                            if( $attribute->value == "true" )
+                                $drillOption->setSelected( true );
+                            break;
                     }
                 }
 
@@ -223,7 +245,6 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
             {
                 $sorting = new SortingOption();
 
-                $sorting->setClause( $optionNode->textContent );
 
                 //read attributes
                 foreach ( $optionNode->attributes as $attribute )
@@ -232,6 +253,10 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                     {
                         case "searchRefiningOptions":
                             $sorting->setSearchRefiningOption( $attribute->value );
+                            break;
+
+                        case "sortingCode":
+                            $sorting->setClause( $attribute->value );
                             break;
                     }
                 }

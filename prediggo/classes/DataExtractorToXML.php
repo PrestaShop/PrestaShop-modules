@@ -1,10 +1,29 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 abstract class DataExtractorToXML
 {
@@ -40,6 +59,9 @@ abstract class DataExtractorToXML
 
 	/** @var integer Last of the extraction */
 	public $execTime;
+	
+	/** @var boolean is log enable */
+	public $bLogEnable;
 
 	/**
 	  * Initialise the object variables
@@ -47,14 +69,15 @@ abstract class DataExtractorToXML
 	  * @param string $sRepositoryPath path of the XML repository
 	  * @param array $params Specific parameters of the object
 	  */
-	public function __construct($sRepositoryPath, $params)
+	public function __construct($sRepositoryPath, $params, $bLogEnable)
 	{
-		$this->sRepositoryPath = $sRepositoryPath;
-		$this->_logs = array();
-		$this->_errors = array();
-		$this->_confirmations = array();
-		$this->nbEntities = 0;
-		$this->nbEntitiesTreated = 0;
+		$this->sRepositoryPath 		= $sRepositoryPath;
+		$this->bLogEnable 			= (int)$bLogEnable;
+		$this->_logs 				= array();
+		$this->_errors 				= array();
+		$this->_confirmations 		= array();
+		$this->nbEntities 			= 0;
+		$this->nbEntitiesTreated 	= 0;
 	}
 
 	/**
@@ -77,12 +100,30 @@ abstract class DataExtractorToXML
 
 		// Set the name of XML File
 		$this->sFileName = $this->sFileNameBase.'-'.date('YmdHis').'.xml';
+		
+		// Open log file handler if needed
+		if($this->bLogEnable)
+		{
+			$sEntityLogFileName = $this->sRepositoryPath.'../logs/log-'.$this->sEntity.'.txt';
+			if(!($loghandle = fopen($sEntityLogFileName, 'a')))
+			{
+				$this->bLogEnable = false;
+				$this->_errors[] = 'Error when creating the log file : '.$sEntityLogFileName;
+			}
+		}
 
 		// Create the XML File
 		if($handle = fopen($this->sRepositoryPath.$this->sFileName, 'a'))
-			$this->_logs[] = '[BEGIN][OK] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+			$sLog = '[BEGIN][OK] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
 		else
-			$this->_logs[] = '[BEGIN][FAIL] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+			$sLog = '[BEGIN][FAIL] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+		
+		// Add the first export log and test if log file is in writting mode
+		if($this->bLogEnable && !fwrite($loghandle, $sLog."\n"))
+		{
+			$this->bLogEnable = false;
+			$this->_errors[] = 'Error when writing in the log file : '.$sEntityLogFileName;
+		}
 
 		// Write XML HEADER & Root tag
 		fwrite($handle, '<?xml version="1.0" encoding="utf-8"?>'."\n");
@@ -96,37 +137,65 @@ abstract class DataExtractorToXML
 				// Format entity data to xml
 				if($sContent = $this->formatEntityToXML($aEntity))
 				{
-					$this->_logs[] = '[OK] ACTION : FORMAT - Entity : '.$this->sEntity;
+					$sLog = '[OK] ACTION : FORMAT - Entity : '.$this->sEntity;
+					if($this->bLogEnable)
+						fwrite($loghandle, $sLog."\n");
+					
 					// Write xml as string into file
 					if(fwrite($handle, str_replace(array("\n","\r"),' ',$sContent)."\n"))
 					{
-						$this->_logs[] = '[OK] ACTION : WRITE - Entity : '.$this->sEntity;
+						$sLog = '[OK] ACTION : WRITE - Entity : '.$this->sEntity;
 						$this->nbEntitiesTreated++;
 					}
 					else
-						$this->_logs[] = '[FAIL] ACTION : WRITE - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
+						$sLog = '[FAIL] ACTION : WRITE - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
+					
+					if($this->bLogEnable)
+						fwrite($loghandle, $sLog."\n");
 				}
 				else
-					$this->_logs[] = '[FAIL] ACTION : FORMAT - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
+				{
+					$sLog = '[FAIL] ACTION : FORMAT - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
+				
+					if($this->bLogEnable)
+						fwrite($loghandle, $sLog."\n");
+				}
 			}
-			$this->_logs[]  = '[DATA] NB ENTITIES CREATED : '.$this->nbEntities;
+			$sLog  = '[DATA] NB ENTITIES CREATED : '.$this->nbEntities;
+			
+			if($this->bLogEnable)
+				fwrite($loghandle, $sLog."\n");
 		}
 		else
-			$this->_logs[] = '[FAIL] NO ENTITY TO EXPORT : '.$this->sEntity;
+		{
+			$sLog = '[FAIL] NO ENTITY TO EXPORT : '.$this->sEntity;
+			if($this->bLogEnable)
+				fwrite($loghandle, $sLog."\n");
+		}
 
 		// END Root tag
 		fwrite($handle, '</'.$this->sEntityRoot.'>');
 
 		// Close File
 		if(fclose($handle))
-			$this->_logs[] = '[OK] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+			$sLog = '[OK] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
 		else
-			$this->_logs[] = '[FAIL] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+			$sLog = '[FAIL] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
+		
+		if($this->bLogEnable)
+			fwrite($loghandle, $sLog."\n");
 
 		// Set the executino time
 		$this->execTime = number_format(microtime(true) - $this->execTime, 3, '.', '');
-		$this->_logs[] = '[END] [DATA] TOTAL EXPORT TIME ['.$this->sFileName.'] : '.$this->execTime.'s';
+		$sLog = '[END] [DATA] TOTAL EXPORT TIME ['.$this->sFileName.'] : '.$this->execTime.'s';
+		
+		if($this->bLogEnable)
+			fwrite($loghandle, $sLog."\n");
 
+		// Close log file handler
+		if($this->bLogEnable)
+			fclose($loghandle);
+		
 		if((int)$this->nbEntitiesTreated < (int)$this->nbEntities)
 			return false;
 		return true;
@@ -187,5 +256,4 @@ abstract class DataExtractorToXML
 	{
 		return $this->_logs;
 	}
-
 }
