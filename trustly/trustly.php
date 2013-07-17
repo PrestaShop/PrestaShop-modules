@@ -44,7 +44,7 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->limited_countries = array('es');
 		$this->currencies = false;
 
@@ -69,6 +69,8 @@ class Trustly extends PaymentModule
 	
 	public function install()
 	{
+		if (Tools::getValue('redirect') == "config")
+			return parent::install() && $this->registerHook('payment') && $this->registerHook('paymentReturn');
 		return parent::install() && $this->registerHook('payment') && $this->registerHook('paymentReturn') && $this->generateKeyPair();
 	}
 	
