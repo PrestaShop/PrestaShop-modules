@@ -284,6 +284,7 @@ class Gsitemap extends Module
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
 		$products_id = Db::getInstance()->ExecuteS('SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product WHERE p.`active` = 1 AND p.`id_product` > '.(int)$id_product.' AND pl.`id_shop` = '.(int)$this->context->shop->id.' AND pl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY `id_product` ASC');
+
 		foreach ($products_id as $product_id)
 		{
 			$product = new Product((int)$product_id['id_product'], false, (int)$lang['id_lang']);
