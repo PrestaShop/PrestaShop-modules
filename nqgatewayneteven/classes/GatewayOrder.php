@@ -204,16 +204,16 @@ class GatewayOrder extends Gateway
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
 			
-			$order->total_products = (float)number_format($total_product, 2);
-			$order->total_products_wt = (float)number_format($total_product_wt, 2);
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2);
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_paid_tax_excl = (float)number_format($total, 2);
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2);
-			$order->total_paid_real = (float)number_format($total_wt, 2);
-			$order->total_paid = (float)number_format($total_wt, 2);
-			$order->carrier_tax_rate = (float)number_format($carrier_tax_rate, 2);
+			$order->total_products = (float)number_format($total_product, 2, '.', '');
+			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
+			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
+			$order->carrier_tax_rate = (float)number_format($carrier_tax_rate, 2, '.', '');
 			$order->save();
 		}
 	}
@@ -436,15 +436,15 @@ class GatewayOrder extends Gateway
 			$order->total_wrapping_tax_excl = 0;
 			$order->total_wrapping_tax_incl = 0;
 			$order->total_wrapping = 0;
-			$order->total_products = (float)number_format($total_product, 2);
-			$order->total_products_wt = (float)number_format($total_product_wt, 2);
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2);
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_paid_tax_excl = (float)number_format($total, 2);
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2);
-			$order->total_paid_real = (float)number_format($total_wt, 2);
-			$order->total_paid = (float)number_format($total_wt, 2);
+			$order->total_products = (float)number_format($total_product, 2, '.', '');
+			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
+			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
 			$order->carrier_tax_rate = 0;
 			$order->total_wrapping = 0;
 			$order->invoice_number = 0;
@@ -613,10 +613,10 @@ class GatewayOrder extends Gateway
 				$order_detail->product_quantity_refunded = 0;
 				$order_detail->product_quantity_return = 0;
 				$order_detail->product_quantity_reinjected = 0;
-				$order_detail->product_price = number_format((float)$price_product, 4);
-				$order_detail->total_price_tax_excl	= number_format((float)$price_product, 4);
-				$order_detail->unit_price_tax_incl = number_format((float)$price_product, 4);
-				$order_detail->unit_price_tax_excl = $tax->rate ? number_format((float)$price_product / ((float)$tax->rate/100), 4) : $price_product;
+				$order_detail->product_price = number_format((float)$price_product, 4, '.', '');
+				$order_detail->total_price_tax_excl	= number_format((float)$price_product, 4, '.', '');
+				$order_detail->unit_price_tax_incl = number_format((float)$price_product, 4, '.', '');
+				$order_detail->unit_price_tax_excl = $tax->rate ? number_format((float)$price_product / ((float)$tax->rate/100), 4, '.', '') : $price_product;
 				$order_detail->reduction_percent = 0;
 				$order_detail->reduction_amount = 0;
 				$order_detail->group_reduction = 0;
