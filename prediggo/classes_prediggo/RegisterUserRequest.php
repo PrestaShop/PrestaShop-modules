@@ -35,7 +35,7 @@ class RegisterUserRequest extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //add user id...
-        $argMap["userID"] = $this->parameter->GetUserId();
+        $this->addParameterToMap($argMap, "userID", $this->parameter->getUserId());
 
         return $argMap;
     }

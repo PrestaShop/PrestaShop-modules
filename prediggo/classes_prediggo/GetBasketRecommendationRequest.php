@@ -40,8 +40,8 @@ class GetBasketRecommendationRequest extends GetFilteredRecommendationRequest
         Utils::implodeKeyValuePairsToSeparatedString( $this->parameter->getBasketItems(), "_/_",  $bufferKeys, $bufferValues);
 
         //add parameters
-        $argMap["classIDs"] = $bufferKeys;
-        $argMap["itemIDs"] = $bufferValues;
+        $this->addParameterToMap($argMap, "classIDs", $bufferKeys);
+        $this->addParameterToMap($argMap, "itemIDs", $bufferValues);
         
         return $argMap;
     }

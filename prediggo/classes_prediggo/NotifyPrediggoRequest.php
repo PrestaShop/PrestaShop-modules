@@ -38,7 +38,7 @@ class NotifyPrediggoRequest extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //add click parameter
-        $argMap["clickparameters"] = $this->parameter->getNotificationId();
+        $this->addParameterToMap($argMap, "clickparameters", $this->parameter->getNotificationId());
 
         return $argMap;
     }

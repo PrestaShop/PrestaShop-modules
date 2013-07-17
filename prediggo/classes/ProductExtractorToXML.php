@@ -1,10 +1,29 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 require_once(_PS_MODULE_DIR_.'prediggo/classes/DataExtractorToXML.php');
 
@@ -13,26 +32,8 @@ class ProductExtractorToXML extends DataExtractorToXML
 	/** @var array list of the active languages */
 	private $aLanguages;
 
-	/** @var bool is Product picture url included into the export */
-	private $imageInExport;
-
-	/** @var bool is Product description included into the export */
-	private $descInExport;
-
-	/** @var integer Number minimum of stock to export a product */
-	private $productMinQuantity;
-
-	/** @var array List of attributes groups which can be exported */
-	private $aAttributesGroupsIds;
-
-	/** @var array List of features which can be exported */
-	private $aFeaturesIds;
-
-	/** @var array List of products not allowed to be retrieved as recommendations */
-	private $aProductsNotRecommendable;
-
-	/** @var array List of products not allowed to be retrieved as search result */
-	private $aProductsNotSearchable;
+	/** @var array List of Prediggo configuration by shop */
+	private $aPrediggoConfigs;
 
 	/**
 	  * Initialise the object variables
@@ -40,23 +41,18 @@ class ProductExtractorToXML extends DataExtractorToXML
 	  * @param string $sRepositoryPath path of the XML repository
 	  * @param array $params Specific parameters of the object
 	  */
-	public function __construct($sRepositoryPath, $params)
+	public function __construct($sRepositoryPath, $params, $bLogEnable)
 	{
-		$this->sRepositoryPath = $sRepositoryPath;
-		$this->_logs = array();
-		$this->_errors = array();
-		$this->_confirmations = array();
-		$this->sEntity = 'item';
-		$this->sFileNameBase = 'items';
-		$this->sEntityRoot = 'items';
+		$this->sRepositoryPath 	= $sRepositoryPath;
+		$this->bLogEnable 		= (int)$bLogEnable;
+		$this->_logs 			= array();
+		$this->_errors 			= array();
+		$this->_confirmations 	= array();
+		$this->sEntity 			= 'item';
+		$this->sFileNameBase 	= 'items';
+		$this->sEntityRoot 		= 'items';
 
-		$this->imageInExport = (int)$params['imageInExport'];
-		$this->descInExport = (int)$params['descInExport'];
-		$this->productMinQuantity = (int)$params['productMinQuantity'];
-		$this->aAttributesGroupsIds = (array)$params['aAttributesGroupsIds'];
-		$this->aFeaturesIds = (array)$params['aFeaturesIds'];
-		$this->aProductsNotRecommendable = (array)$params['aProductsNotRecommendable'];
-		$this->aProductsNotSearchable = (array)$params['aProductsNotSearchable'];
+		$this->aPrediggoConfigs = $params['aPrediggoConfigs'];
 
 		$this->aLanguages = Language::getLanguages(true);
 
@@ -70,9 +66,10 @@ class ProductExtractorToXML extends DataExtractorToXML
 	public function getEntities()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT `id_product`
-		FROM `'._DB_PREFIX_.'product`
-		ORDER BY `id_product` ASC', false);
+		SELECT p.`id_product`, ps.`id_shop`
+		FROM `'._DB_PREFIX_.'product` p
+		INNER JOIN ps_product_shop ps ON (ps.`id_product` = p.`id_product` AND ps.`id_shop` IN('.join(',',array_keys($this->aPrediggoConfigs)).'))
+		ORDER BY p.`id_product` ASC', false);
 	}
 
 	/**
@@ -82,14 +79,33 @@ class ProductExtractorToXML extends DataExtractorToXML
 	  */
 	public function formatEntityToXML($aEntity)
 	{
-		global $link;
-
 		$sReturn = '';
 
 		$dom = new DOMDocument('1.0', 'utf-8');
+		
+		$bUseRoutes = (bool)Configuration::get('PS_REWRITING_SETTINGS');
+		
+		$oDispatcher = Dispatcher::getInstance();
+		
+		// Force the dispatcher to use custom routes because the use of custom routes is disabled in the BO Context 
+		foreach($oDispatcher->default_routes as $route_id => $route_data)
+			if($custom_route = Configuration::get('PS_ROUTE_'.$route_id))
+				foreach(Language::getLanguages() as $lang)
+					$oDispatcher->addRoute(
+						$route_id,
+						$custom_route,
+						$route_data['controller'],
+						$lang['id_lang'],
+						$route_data['keywords'],
+						isset($route_data['params']) ? $route_data['params'] : array()
+					);
 
-		$oProduct = new Product((int)$aEntity['id_product'], true);
-		if((int)$oProduct->quantity < (int)$this->productMinQuantity)
+		$oPrediggoConfig = $this->aPrediggoConfigs[(int)$aEntity['id_shop']];
+		
+		$link = $oPrediggoConfig->getContext()->link;
+				
+		$oProduct = new Product((int)$aEntity['id_product'], true, null, (int)$aEntity['id_shop'], $oPrediggoConfig->getContext());
+		if((int)StockAvailable::getQuantityAvailableByProduct((int)$aEntity['id_product'], 0, (int)$aEntity['id_shop']) < (int)$oPrediggoConfig->export_product_min_quantity)
 		{
 			$this->nbEntitiesTreated--;
 			$this->nbEntities--;
@@ -105,13 +121,13 @@ class ProductExtractorToXML extends DataExtractorToXML
 			// Set the root of the XML
 			$root = $dom->createElement($this->sEntity);
 			$dom->appendChild($root);
-			//$root->setAttribute('timestamp', date('c',strtotime($oProduct->date_add)));
+
 			$root->setAttribute('timestamp', (int)strtotime($oProduct->date_add));
 
 			$id = $dom->createElement('id', (int)$oProduct->id);
 			$root->appendChild($id);
 
-			$profile = $dom->createElement('profile', $id_lang);
+			$profile = $dom->createElement('profile', (int)$aEntity['id_shop']);
 			$root->appendChild($profile);
 
 			$name = $dom->createElement('name');
@@ -156,10 +172,9 @@ class ProductExtractorToXML extends DataExtractorToXML
 			}
 
 			$sDesc = trim(strip_tags($oProduct->description[$id_lang]));
-			if($this->descInExport
+			if($oPrediggoConfig->export_product_description
 			&& !empty($sDesc))
 			{
-
 				$description = $dom->createElement('description');
 				$description->appendChild($dom->createCDATASection($sDesc));
 				$root->appendChild($description);
@@ -171,10 +186,10 @@ class ProductExtractorToXML extends DataExtractorToXML
 				$root->appendChild($supplierid);
 			}
 
-			$recommendable = $dom->createElement('recommendable', in_array((int)$oProduct->id, $this->aProductsNotRecommendable)?'false':'true');
+			$recommendable = $dom->createElement('recommendable', in_array((int)$oProduct->id, explode(',',$oPrediggoConfig->products_ids_not_recommendable))?'false':'true');
 			$root->appendChild($recommendable);
 
-			$searchable = $dom->createElement('searchable', in_array((int)$oProduct->id, $this->aProductsNotSearchable)?'false':'true');
+			$searchable = $dom->createElement('searchable', in_array((int)$oProduct->id, explode(',',$oPrediggoConfig->products_ids_not_searchable))?'false':'true');
 			$root->appendChild($searchable);
 
 			// Set product URL
@@ -185,11 +200,11 @@ class ProductExtractorToXML extends DataExtractorToXML
 			$attribute->appendChild($attName);
 
 			$attValue = $dom->createElement('attValue');
-			$attValue->appendChild($dom->createCDATASection($link->getProductLink((int)$oProduct->id, $oProduct->link_rewrite[$id_lang], Category::getLinkRewrite((int)$oProduct->id_category_default, $id_lang), NULL, $id_lang)));
+			$attValue->appendChild($dom->createCDATASection($link->getProductLink((int)$oProduct->id, $oProduct->link_rewrite[$id_lang], Category::getLinkRewrite((int)$oProduct->id_category_default, $id_lang), NULL, $id_lang, (int)$aEntity['id_shop'], 0, $bUseRoutes)));
 			$attribute->appendChild($attValue);
 
 			// Set product picture
-			if($this->imageInExport)
+			if($oPrediggoConfig->export_product_image)
 			{
 				$attribute = $dom->createElement('attribute');
 				$root->appendChild($attribute);
@@ -204,22 +219,22 @@ class ProductExtractorToXML extends DataExtractorToXML
 			}
 
 			// Set combinations
-			$aProductCombinations = $oProduct->getAttributeCombinaisons($id_lang);
+			$aProductCombinations = Product::getAttributesInformationsByProduct((int)$oProduct->id);
 			if(sizeof($aProductCombinations))
 				foreach($aProductCombinations as $aProductCombination)
 				{
-					if(!is_array($this->aAttributesGroupsIds)
-					|| in_array((int)$aProductCombination['id_attribute_group'], $this->aAttributesGroupsIds))
+					if(!empty($oPrediggoConfig->attributes_groups_ids)
+					&& in_array((int)$aProductCombination['id_attribute_group'], explode(',',$oPrediggoConfig->attributes_groups_ids)))
 					{
 						$attribute = $dom->createElement('attribute');
 						$root->appendChild($attribute);
 
 						$attName = $dom->createElement('attName');
-						$attName->appendChild($dom->createCDATASection($aProductCombination['group_name']));
+						$attName->appendChild($dom->createCDATASection($aProductCombination['group']));
 						$attribute->appendChild($attName);
 
 						$attValue = $dom->createElement('attValue');
-						$attValue->appendChild($dom->createCDATASection($aProductCombination['attribute_name']));
+						$attValue->appendChild($dom->createCDATASection($aProductCombination['attribute']));
 						$attribute->appendChild($attValue);
 					}
 				}
@@ -230,8 +245,8 @@ class ProductExtractorToXML extends DataExtractorToXML
 			if(sizeof($aProductFeatures))
 				foreach($aProductFeatures as $aProductFeature)
 				{
-					if(!is_array($this->aFeaturesIds)
-					|| in_array((int)$aProductFeature['id_feature'], $this->aFeaturesIds))
+					if(!empty($oPrediggoConfig->features_ids)
+					&& in_array((int)$aProductFeature['id_feature'], explode(',',$oPrediggoConfig->features_ids)))
 					{
 						$attribute = $dom->createElement('attribute');
 						$root->appendChild($attribute);
@@ -259,7 +274,7 @@ class ProductExtractorToXML extends DataExtractorToXML
 					$attribute->appendChild($attName);
 
 					$attValue = $dom->createElement('attValue');
-					$attValue->appendChild($dom->createCDATASection($aAccessory['reference']));
+					$attValue->appendChild($dom->createCDATASection((int)$aAccessory['id_product']));
 					$attribute->appendChild($attValue);
 				}
 			unset($aAccessories);

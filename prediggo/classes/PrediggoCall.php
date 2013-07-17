@@ -1,10 +1,29 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 require_once(_PS_MODULE_DIR_.'prediggo/classes_prediggo/PrediggoService.php');
 
@@ -218,6 +237,8 @@ class PrediggoCall
 		$this->oRecoParam->setServerUrl($this->sServerUrl);
 		$this->oRecoParam->setShopId($this->sShopId);
 		$this->oRecoParam->setSessionId(md5(session_id()));
+		if(method_exists($this->oRecoParam, 'setLanguageCode'))
+			$this->oRecoParam->setLanguageCode(Language::getIsoById((int)$params['cookie']->id_lang));
 		return true;
 	}
 
@@ -233,8 +254,8 @@ class PrediggoCall
 
 		$this->oRecoParam->setNbRecommendation((int)$params['nb_items']);
 		$this->oRecoParam->setShowAds(false);
-		$this->oRecoParam->setProfileMapId((int)$params['cookie']->id_lang);
-		$this->oRecoParam->setUserId(($params['cookie']->isLogged())?(int)$params['cookie']->id_customer:'0');
+		$this->oRecoParam->setProfileMapId((int)Context::getContext()->shop->id);
+		$this->oRecoParam->setUserId(($params['customer']->isLogged())?(int)$params['customer']->id:'0');
 	}
 
 	/**
@@ -285,7 +306,7 @@ class PrediggoCall
 	public function setUserRegistered($params)
 	{
 		$this->oRecoParam = new RegisterUserParam();
-		$this->oRecoParam->setUserId((int)$params['cookie']->id_customer);
+		$this->oRecoParam->setUserId((int)$params['customer']->id);
 
 		$this->setNotification($params, 'RegisterUser');
 	}
@@ -319,7 +340,7 @@ class PrediggoCall
 		try
 		{
 			$this->_logs[] = '[LAUNCH] : '.$sFunction;
-			$this->_logs[] = '[CUSTOMER/GUEST] : '.(($params['cookie']->isLogged())?'customer'.(int)$params['cookie']->id_customer:'guest'.(int)$params['cookie']->id_guest);
+			$this->_logs[] = '[CUSTOMER/GUEST] : '.(($params['customer']->isLogged())?'customer'.(int)$params['customer']->id:'guest'.(int)$params['customer']->id_guest);
 			$this->_logs[] = '[SESSIONID] : '.$this->oRecoParam->getSessionId();
 
 			if($result = call_user_func(array('PrediggoService', $sFunction), $this->oRecoParam))
@@ -372,7 +393,8 @@ class PrediggoCall
 				$this->oRecoParam->addCondition($filter, $val);
 
 		$this->oRecoParam->setSearchString($params['query']);
-		$this->oRecoParam->setNbRecommendation((int)$params['nb_items']);
+		$this->oRecoParam->setNbRecommendation(0);
+		$this->oRecoParam->setMaxNbResultsPerPage((int)$params['nb_items']);
 		if(!empty($params['option']))
 			$this->oRecoParam->setSearchRefiningOption($params['option']);
 
@@ -397,7 +419,7 @@ class PrediggoCall
 		try
 		{
 			$this->_logs[] = '[LAUNCH] : '.$sFunction;
-			$this->_logs[] = '[CUSTOMER/GUEST] : '.(($params['cookie']->isLogged())?'customer'.(int)$params['cookie']->id_customer:'guest'.(int)$params['cookie']->id_guest);
+			$this->_logs[] = '[CUSTOMER/GUEST] : '.(($params['customer']->isLogged())?'customer'.(int)$params['customer']->id:'guest'.(int)$params['customer']->id_guest);
 			$this->_logs[] = '[SESSIONID] : '.$this->oRecoParam->getSessionId();
 			
 			if($oResult = call_user_func(array('PrediggoService', $sFunction), $this->oRecoParam))
@@ -476,7 +498,7 @@ class PrediggoCall
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-				                                           AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+				                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 			                                           	   AND tr.`id_state` = 0)
 			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')
@@ -533,7 +555,7 @@ class PrediggoCall
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product` AND i.`cover` = 1)
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)($id_lang).')
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (p.`id_tax_rules_group` = tr.`id_tax_rules_group`
-				                                           AND tr.`id_country` = '.(int)Country::getDefaultCountryId().'
+				                                           AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 			                                           	   AND tr.`id_state` = 0)
 			    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (t.`id_tax` = tl.`id_tax` AND tl.`id_lang` = '.(int)($id_lang).')

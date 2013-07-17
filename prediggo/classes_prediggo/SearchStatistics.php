@@ -1,6 +1,6 @@
 <?php
 
-
+include_once "SortingClause.php";
 
 /**
  * Search statistics, provide information about the search query. Can be used for setting up pagination (among others).
@@ -15,10 +15,12 @@ class SearchStatistics
     private $timeInMs = 0.0;
     private $totalSearchResults = 0;
     private $resultsInCurrentPage = 0;
+    private $maxResultsPerPage = 0;
     private $currentPageNumber = 0;
     private $totalSearchPages = 0;
     private $userQuery = '';
-    private $currentSorting = '';
+    private $currentSorting = 0;
+    private $languageCode = '';
 
     /**
      * Returns the server side duration of the query.
@@ -73,6 +75,25 @@ class SearchStatistics
     {
         $this->resultsInCurrentPage = $resultsInCurrentPage;
     }
+    
+    /**
+     * Gets the maximum number of search results displayed per page, by default the value returned is configured in the backoffice
+     * @return integer The number of results per page
+     */
+    public function getMaxResultsPerPage()
+    {
+        return $this->maxResultsPerPage;
+    }
+
+    /**
+     * Sets the maximum number of search results displayed per page, by default the value returned is configured in the backoffice
+     * @param integer $resultsPerPage The number of results per page
+     */
+    public function setMaxResultsPerPage( $resultsPerPage)
+    {
+        $this->maxResultsPerPage = $resultsPerPage;
+    }
+    
 
     /**
      * Returns the currently active page number
@@ -128,9 +149,27 @@ class SearchStatistics
         $this->userQuery = $userQuery;
     }
 
+    /**
+     * Returns the actual language code
+     * @return string the language code
+     */
+    public function getLanguageCode()
+    {
+        return $this->languageCode;
+    }
+
+    /**
+     * Sets the language code
+     * @param string languageCode the language code
+     */
+    public function setLanguageCode( $languageCode)
+    {
+        $this->languageCode = $languageCode;
+    }
+
      /**
      * Returns the currently active sorting
-     * @return string the currently active sorting, see SortingClause.php for possible values
+     * @return int the currently active sorting, see SortingClause.php for possible values
      * @see SortingClause
      */
     public function getCurrentSorting()
@@ -140,7 +179,7 @@ class SearchStatistics
 
     /**
      * Sets the currently active sorting
-     * @param string $sortingClause the currently active sorting, see SortingClause.php for possible values
+     * @param int $sortingClause the currently active sorting, see SortingClause.php for possible values
      * @see SortingClause
      */
     public function setCurrentSorting( $sortingClause )

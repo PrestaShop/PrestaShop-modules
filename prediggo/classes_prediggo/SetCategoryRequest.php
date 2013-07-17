@@ -34,8 +34,8 @@ class SetCategoryRequest extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //add category and profile id
-        $argMap["category"] = $this->parameter->getCategory();
-        $argMap["classID"] = $this->parameter->getProfileMapId();
+        $this->addParameterToMap($argMap, "category", $this->parameter->getCategory());
+        $this->addParameterToMap($argMap, "classID", $this->parameter->getProfileMapId());
 
         return $argMap;
     }

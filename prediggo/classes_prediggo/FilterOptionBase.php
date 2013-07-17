@@ -20,6 +20,8 @@ class FilterOptionBase
     private $searchRefiningOption;
 
     private $filteredAttributeName;
+    private $groupMultiSelect ;
+
 
 
     /**
@@ -32,17 +34,18 @@ class FilterOptionBase
     }
 
     /**
-     * Set the name of the attribute, options in the list will be updated
-     * @param string $filteredAttributeName the name of the attribute (ex : "genre", "brand")
+     * Sets the name of the attribute
+     * @param string $attName the name of the attribute (ex : "genre", "brand")
      */
-    public function setFilteredAttributeName( $filteredAttributeName)
+    public function setFilteredAttributeName($attName)
     {
-        $this->filteredAttributeName = $filteredAttributeName;
+        $this->filteredAttributeName = $attName;
     }
+
 
     /**
      * Tests if this filter is of range type.
-     * @return True = range, false = discrete
+     * @return boolean true = range, false = discrete
      */
     public function isRange()
     {
@@ -51,7 +54,7 @@ class FilterOptionBase
 
      /**
      * Tests if this filter is of discrete type.
-     * @return True = discrete, false = range
+     * @return boolean True = discrete, false = range
      */
     public function isDiscrete()
     {
@@ -149,5 +152,28 @@ class FilterOptionBase
     {
         $this->textValue = $textValue;
     }
+
+
+    /**
+     * Gets multi selection support for attribute
+     * @return boolean True if the attribute supports multiple selection within its group
+     */
+    public function isGroupMultiSelect()
+    {
+        if( $this->getParentGroup() == null )
+            return false;
+
+        return $this->getParentGroup()->isMultiSelect();
+    }
+
+    /**
+     * Sets multi selection support for attribute
+     * @param boolean $multiSelect True if the attribute supports multiple selection within its group
+     */
+    public function setGroupMultiSelect($multiSelect)
+    {
+        $this->groupMultiSelect = $multiSelect;
+    }
+
 }
 

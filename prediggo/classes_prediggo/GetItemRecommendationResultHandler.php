@@ -40,7 +40,7 @@ class GetItemRecommendationResultHandler extends GetRecommendationResultHandler
                     if ( $itemNode->nodeName == "item")
                     {
                         $item = new BundleRecommendation();
-                        readItem( $itemNode, $item);
+                        $this->readItem( $itemNode, $item);
 
                         $resultObj->addRecommendedBundles( $item);
                     }

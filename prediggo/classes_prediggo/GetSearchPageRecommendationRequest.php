@@ -36,9 +36,13 @@ class GetSearchPageRecommendationRequest extends GetFilteredRecommendationReques
     {
         $argMap = parent::getArgumentMap();
 
-        //add user id...
-        $argMap["queryString"] = $this->parameter->getSearchString();
-        $argMap["searchRefiningOptions"] = $this->parameter->getSearchRefiningOption();
+        //add query specific..
+        $this->addParameterToMap($argMap, "queryString", $this->parameter->getSearchString());
+        $this->addParameterToMap($argMap, "searchRefiningOptions", $this->parameter->getSearchRefiningOption());
+
+        $this->addParameterToMap($argMap, "pageNb", $this->parameter->getPageNumber());
+        $this->addParameterToMap($argMap, "nbResultsPerPage", $this->parameter->getMaxNbResultsPerPage());
+        $this->addParameterToMap($argMap, "methodID", $this->parameter->getSortingOrder());
 
         return $argMap;
     }

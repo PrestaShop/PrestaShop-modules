@@ -1,0 +1,4 @@
+deny from all
+<Files index.php>
+allow from all
+</Files>

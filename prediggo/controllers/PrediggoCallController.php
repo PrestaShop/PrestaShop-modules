@@ -1,19 +1,37 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoConfig.php');
-require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoRecommendationConfig.php');
 require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoCall.php');
 
 class PrediggoCallController
 {
-	/** @var PrediggoRecommendationConfig Object PrediggoRecommendationConfig */
-	private $oPrediggoRecommendationConfig;
+	/** @var PrediggoConfig Object PrediggoConfig */
+	private $oPrediggoConfig;
 	/** @var array list of the page where prediggo will be displayed */
 	private $aPagesAccessible;
 	/** @var string current page name */
@@ -30,8 +48,7 @@ class PrediggoCallController
 	  */
 	public function __construct()
 	{
-		$this->oPrediggoConfig = PrediggoConfig::singleton();
-		$this->oPrediggoRecommendationConfig = PrediggoRecommendationConfig::singleton();
+		$this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
 
 		$this->sRepositoryPath = _PS_MODULE_DIR_.'prediggo/logs/';
 
@@ -48,7 +65,7 @@ class PrediggoCallController
 	  */
 	public function notifyPrediggo($sType, $params)
 	{
-		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoRecommendationConfig->server_url_recommendations);
+		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 
 		switch($sType)
 		{
@@ -63,7 +80,7 @@ class PrediggoCallController
 			default : break;
 		}
 
-		if($this->oPrediggoRecommendationConfig->logs_fo_file_generation)
+		if($this->oPrediggoConfig->logs_reco_file_generation)
 			$this->setNotificationsLogFile($sType, $this->oPrediggoCall->getLogs());
 	}
 
@@ -79,41 +96,41 @@ class PrediggoCallController
 		if(!$this->isPageAccessible())
 			return false;
 
-		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoRecommendationConfig->server_url_recommendations);
+		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 
 		$aRecommendations = false;
 
 		switch($this->sPageName)
 		{
 			case 'index' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->home_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->home_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->home_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->home_block_title[(int)$params['cookie']->id_lang]);
 				$aRecommendations = $this->oPrediggoCall->getLandingPageRecommendations($params);
 			break;
 
 			case '404' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->error_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->error_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->error_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->error_block_title[(int)$params['cookie']->id_lang]);
 				$aRecommendations = $this->oPrediggoCall->getLandingPageRecommendations($params);
 			break;
 
 			case 'product' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->product_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->product_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title[(int)$params['cookie']->id_lang]);
 				$params['id_product'] = (int)Tools::getValue('id_product');
 				$aRecommendations = $this->oPrediggoCall->getProductRecommendations($params);
 			break;
 
 			case 'category' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->category_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->category_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title[(int)$params['cookie']->id_lang]);
 				$params['category'] = new Category((int)Tools::getValue('id_category'), (int)$params['cookie']->id_lang);
 				$aRecommendations = $this->oPrediggoCall->getCategoyRecommendations($params);
 			break;
 
 			case 'blocklayered' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->blocklayered_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->blocklayered_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->blocklayered_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->blocklayered_block_title[(int)$params['cookie']->id_lang]);
 				$params['category'] = new Category((int)$params['id_category_layered'], (int)$params['cookie']->id_lang);
 				$aRecommendations = $this->oPrediggoCall->getBlockLayeredRecommendations($params);
 			break;
@@ -122,28 +139,28 @@ class PrediggoCallController
 			case 'addresses' :
 			case 'history' :
 			case 'order-return' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->customer_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->customer_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->customer_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->customer_block_title[(int)$params['cookie']->id_lang]);
 				$aRecommendations = $this->oPrediggoCall->getCustomerRecommendations($params);
 			break;
 
 			case 'order' :
 			case 'order-opc' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->cart_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->cart_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->cart_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->cart_block_title[(int)$params['cookie']->id_lang]);
 				$aRecommendations = $this->oPrediggoCall->getCartRecommendations($params);
 			break;
 
 			case 'best-sales' :
-				$params['nb_items'] = (int)$this->oPrediggoRecommendationConfig->best_sales_nb_items;
-				$params['block_title'] = pSQL($this->oPrediggoRecommendationConfig->best_sales_block_title[(int)$params['cookie']->id_lang]);
+				$params['nb_items'] = (int)$this->oPrediggoConfig->best_sales_nb_items;
+				$params['block_title'] = pSQL($this->oPrediggoConfig->best_sales_block_title[(int)$params['cookie']->id_lang]);
 				$aRecommendations = $this->oPrediggoCall->getBestSalesRecommendations($params);
 			break;
 
 			default : break;
 		}
-
-		if($this->oPrediggoRecommendationConfig->logs_fo_file_generation)
+		
+		if($this->oPrediggoConfig->logs_reco_file_generation)
 			$this->setRecommendationsLogFile($sHookName, $this->oPrediggoCall->getLogs());
 
 		return $aRecommendations;
@@ -156,29 +173,29 @@ class PrediggoCallController
 	{
 		$this->aPagesAccessible = array();
 
-		if($this->oPrediggoRecommendationConfig->home_recommendations)
+		if($this->oPrediggoConfig->home_recommendations)
 			$this->aPagesAccessible[] = 'index';
-		if($this->oPrediggoRecommendationConfig->error_recommendations)
+		if($this->oPrediggoConfig->error_recommendations)
 			$this->aPagesAccessible[] = '404';
-		if($this->oPrediggoRecommendationConfig->product_recommendations)
+		if($this->oPrediggoConfig->product_recommendations)
 			$this->aPagesAccessible[] = 'product';
-		if($this->oPrediggoRecommendationConfig->category_recommendations)
+		if($this->oPrediggoConfig->category_recommendations)
 			$this->aPagesAccessible[] = 'category';
-		if($this->oPrediggoRecommendationConfig->customer_recommendations)
+		if($this->oPrediggoConfig->customer_recommendations)
 		{
 			$this->aPagesAccessible[] = 'my-account';
 			$this->aPagesAccessible[] = 'addresses';
 			$this->aPagesAccessible[] = 'history';
 			$this->aPagesAccessible[] = 'order-return';
 		}
-		if($this->oPrediggoRecommendationConfig->cart_recommendations)
+		if($this->oPrediggoConfig->cart_recommendations)
 		{
 			$this->aPagesAccessible[] = 'order';
 			$this->aPagesAccessible[] = 'order-opc';
 		}
-		if($this->oPrediggoRecommendationConfig->best_sales_recommendations)
+		if($this->oPrediggoConfig->best_sales_recommendations)
 			$this->aPagesAccessible[] = 'best-sales';
-		if($this->oPrediggoRecommendationConfig->blocklayered_recommendations)
+		if($this->oPrediggoConfig->blocklayered_recommendations)
 			$this->aPagesAccessible[] = 'blocklayered';
 	}
 

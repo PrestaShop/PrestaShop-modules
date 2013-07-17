@@ -1,17 +1,36 @@
 <?php
 
-/**
- * @author Cédric BOURGEOIS : Croissance NET <cbourgeois@croissance-net.com>
- * @copyright Croissance NET
- * @version 1.0
- */
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
+*/
 
 require_once(_PS_MODULE_DIR_.'prediggo/classes/DataExtractorToXML.php');
 
 class CustomerExtractorToXML extends DataExtractorToXML
 {
-	/** @var integer Number of days to define that a customer can be exported since its last visit */
-	private $nbDaysCustomerValid;
+	/** @var array List of Prediggo configuration by shop */
+	private $aPrediggoConfigs;
 
 	/**
 	  * Initialise the object variables
@@ -19,17 +38,18 @@ class CustomerExtractorToXML extends DataExtractorToXML
 	  * @param string $sRepositoryPath path of the XML repository
 	  * @param array $params Specific parameters of the object
 	  */
-	public function __construct($sRepositoryPath, $params)
+	public function __construct($sRepositoryPath, $params, $bLogEnable)
 	{
-		$this->sRepositoryPath = $sRepositoryPath;
-		$this->_logs = array();
-		$this->_errors = array();
-		$this->_confirmations = array();
-		$this->sEntity = 'user';
-		$this->sFileNameBase = 'users';
-		$this->sEntityRoot = 'users';
+		$this->sRepositoryPath 	= $sRepositoryPath;
+		$this->bLogEnable 		= (int)$bLogEnable;
+		$this->_logs 			= array();
+		$this->_errors 			= array();
+		$this->_confirmations 	= array();
+		$this->sEntity 			= 'user';
+		$this->sFileNameBase 	= 'users';
+		$this->sEntityRoot 		= 'users';
 
-		$this->nbDaysCustomerValid = (int)$params['nbDaysCustomerValid'];
+		$this->aPrediggoConfigs 	= $params['aPrediggoConfigs'];
 	}
 
 	/**
@@ -40,7 +60,7 @@ class CustomerExtractorToXML extends DataExtractorToXML
 	public function getEntities()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-		SELECT `id_customer`
+		SELECT `id_customer`, `id_shop`
 		FROM `'._DB_PREFIX_.'customer`
 		ORDER BY `id_customer` ASC', false);
 	}
@@ -59,9 +79,9 @@ class CustomerExtractorToXML extends DataExtractorToXML
 
 		$oCustomer = new Customer((int)$aEntity['id_customer']);
 
-		// Check if the customer has visited the website since a specific number of days $this->nbDaysCustomerValid
+		// Check if the customer has visited the website since a specific number of days $this->aPrediggoConfigs[(int)$aEntity['id_shop']]->nb_days_customer_last_visit_valide
 		$aLastConnection = $oCustomer->getLastConnections();
-		if($aLastConnection[0]['date_add'] < date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$this->nbDaysCustomerValid), date('Y'))))
+		if($aLastConnection && is_array($aLastConnection) && count($aLastConnection) && $aLastConnection[0]['date_add'] < date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$this->aPrediggoConfigs[(int)$aEntity['id_shop']]->nb_days_customer_last_visit_valide), date('Y'))))
 		{
 			$this->nbEntitiesTreated--;
 			$this->nbEntities--;
@@ -93,8 +113,8 @@ class CustomerExtractorToXML extends DataExtractorToXML
 			$root->appendChild($location);
 		}
 
-		if(($sCountry = Country::getIsoById((int)$oAddress->id_country))
-		&& !empty($sCountry))
+		$sCountry = Country::getIsoById((int)$oAddress->id_country);
+		if(!empty($sCountry))
 		{
 			$country = $dom->createElement('country', $sCountry);
 			$root->appendChild($country);

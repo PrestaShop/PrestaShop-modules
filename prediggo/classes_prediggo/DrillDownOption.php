@@ -13,8 +13,8 @@ require_once "FilterOptionBase.php";
  */
 class DrillDownOption extends FilterOptionBase
 {
-    private $nbOccurences;
-
+    private $nbOccurences = 0;
+    private $selected = false;
 
     /**
      * Get the number of results (items) matching the described filter.
@@ -32,6 +32,25 @@ class DrillDownOption extends FilterOptionBase
     public function setNbOccurences( $nbOccurences)
     {
         $this->nbOccurences = $nbOccurences;
+    }
+
+    /**
+     * Gets this option state (active or not)
+     * @return boolean True if the attribute supports multiple selection within its group
+     */
+    public function isSelected()
+    {
+        return $this->selected;
+    }
+
+
+    /**
+     * Sets the filter state (active or not)
+     * @param boolean $selected True = active
+     */
+    public function setSelected($selected)
+    {
+        $this->selected = $selected;
     }
 }
 
