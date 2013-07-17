@@ -143,7 +143,7 @@ class Kwixo extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'kwixo';
-		$this->version = '6.0';
+		$this->version = '6.1';
 		$this->tab = 'payments_gateways';
 
 		parent::__construct();
@@ -651,15 +651,9 @@ class Kwixo extends PaymentModule
 	public function hookHeader($params)
 	{
 		if (_PS_VERSION_ < '1.5')
-		{
-			Tools::addJS($this->_path.'/js/javascript.js', 'all');
 			Tools::addCSS($this->_path.'/css/kwixo.css', 'all');
-		}
 		else
-		{
-			$this->context->controller->addJS($this->_path.'/js/javascript.js', 'all');
 			$this->context->controller->addCSS($this->_path.'/css/kwixo.css', 'all');
-		}
 	}
 
 	/**
