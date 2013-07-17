@@ -57,7 +57,7 @@ class Gateway
 
 	// Possible order states for an order.
 	private $t_list_order_status = array('Canceled', 'Refunded', 'Shipped', 'toConfirmed');
-	private $t_list_order_status_traite = array('Shipped', 'toConfirmed', 'toConfirm');
+	private $t_list_order_status_traite = array('Shipped', 'toConfirmed', 'toConfirm', 'Confirmed');
 	private $t_list_order_status_retraite_order = array('Canceled', 'Refunded');
 	
 	private $debug = false;

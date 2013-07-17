@@ -127,7 +127,7 @@ class GatewayOrder extends Gateway
 			$customer = new Customer((int)$order->id_customer);
 			$customer->firstname = (!empty($neteven_order->BillingAddress->FirstName)) ? substr(Toolbox::stringFilter($neteven_order->BillingAddress->FirstName), 0, 32) : ' ';
 			$customer->lastname	= (!empty($last_name)) ? substr(Toolbox::stringFilter($last_name), 0, 32) : ' ';
-			$customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email)) ? '_'.$neteven_order->BillingAddress->Email : '_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
+			$customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email) && !empty($neteven_order->BillingAddress->Email)) ? '_'.$neteven_order->BillingAddress->Email : '_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
 			$customer->save();
 			$date_now = date('Y-m-d H:i:s');
 			
@@ -732,7 +732,7 @@ class GatewayOrder extends Gateway
 			$new_customer->firstname = (!empty($neteven_order->BillingAddress->FirstName))?substr(Toolbox::stringFilter($neteven_order->BillingAddress->FirstName), 0, 32):' ';
 			$new_customer->lastname	= (!empty($last_name))?substr(Toolbox::stringFilter($last_name), 0, 32):' ';
 			$new_customer->passwd = Tools::encrypt($this->getValue('default_passwd'));
-			$new_customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email))?'_'.$neteven_order->BillingAddress->Email:'_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
+			$new_customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email) && !empty($neteven_order->BillingAddress->Email))?'_'.$neteven_order->BillingAddress->Email:'_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
 			$new_customer->optin = 0;
 			if (isset($this->repere_customer) && $this->repere_customer)
 				$new_customer->is_neteven = 1;
