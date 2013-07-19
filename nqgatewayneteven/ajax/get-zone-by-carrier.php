@@ -25,11 +25,31 @@
 */
 
 include(dirname(__FILE__).'/../../../config/config.inc.php');
-include_once(dirname(__FILE__).'/../classes/Toolbox.php');
+include(dirname(__FILE__).'/../../../init.php');
+include(dirname(__FILE__).'/../classes/Gateway.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
-	die(Tools::displayError());
+    die(Tools::displayError());
 
-ToolBox::setNetEvenCategories(true);
+$id_carrier = Tools::getValue('id_carrier');
+$type = Tools::getValue('type');
+if(empty($id_carrier) OR empty($type)){
+    die(Tools::displayError());
+}
 
-d('');
+$default_val = Tools::getValue('default_val');
+
+$carrier = new Carrier($id_carrier);
+
+$zones = $carrier->getZones();
+
+
+echo '<select name="SHIPPING_ZONE_'.strtoupper($type).'" id="zone_'.$type.'">';
+echo '<option value="" >---------</option>';
+foreach($zones as $zone){
+    echo '<option value="'.$zone['id_zone'].'" '.(($default_val == $zone['id_zone'])?'selected="selected"':'').'>'.$zone['name'].'</option>';
+}
+echo '</select>';
+
+
+die();

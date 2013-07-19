@@ -44,7 +44,7 @@ class NqGatewayNeteven extends Module
 		else
         	$this->tab = 'market_place';
 		
-		$this->version = '1.6';
+		$this->version = '1.7.3';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -368,8 +368,14 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('SHIPPING_PRICE_INTERNATIONAL', Tools::getValue('SHIPPING_PRICE_INTERNATIONAL'));
 			Gateway::updateConfig('SHIPPING_BY_PRODUCT', (int)Tools::getValue('SHIPPING_BY_PRODUCT'));
 			Gateway::updateConfig('SHIPPING_BY_PRODUCT_FIELDNAME', Tools::getValue('SHIPPING_BY_PRODUCT_FIELDNAME'));
-			
-			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
+
+            Gateway::updateConfig('SHIPPING_CARRIER_FRANCE', Tools::getValue('SHIPPING_CARRIER_FRANCE'));
+            Gateway::updateConfig('SHIPPING_ZONE_FRANCE', Tools::getValue('SHIPPING_ZONE_FRANCE'));
+            Gateway::updateConfig('SHIPPING_CARRIER_INTERNATIONAL', Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL'));
+            Gateway::updateConfig('SHIPPING_ZONE_INTERNATIONAL', Tools::getValue('SHIPPING_ZONE_INTERNATIONAL'));
+
+
+            $this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitDev'))
 		{
@@ -434,8 +440,15 @@ class NqGatewayNeteven extends Module
 		if (Gateway::getConfig('CUSTOMIZABLE_FIELDS'))
 			foreach (explode('¤', Gateway::getConfig('CUSTOMIZABLE_FIELDS')) as $customizable_field)
 				$customizable_fields[] = explode('|', $customizable_field);
-		
+
+        $carriers = Carrier::getCarriers((int)$this->context->cookie->id_lang);
+
 		$this->context->smarty->assign(array(
+                    'SHIPPING_CARRIER_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_FRANCE', Gateway::getConfig('SHIPPING_CARRIER_FRANCE'))),
+                    'SHIPPING_ZONE_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_FRANCE', Gateway::getConfig('SHIPPING_ZONE_FRANCE'))),
+                    'SHIPPING_CARRIER_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL', Gateway::getConfig('SHIPPING_CARRIER_INTERNATIONAL'))),
+                    'SHIPPING_ZONE_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_INTERNATIONAL', Gateway::getConfig('SHIPPING_ZONE_INTERNATIONAL'))),
+                    'carriers' => $carriers,
 					'order_states' => $order_states,
 					'features' => $features,
 					'module_path' => $this->_path,
