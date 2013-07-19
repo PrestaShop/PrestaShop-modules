@@ -29,7 +29,7 @@ include(dirname(__FILE__).'/../../../init.php');
 include(dirname(__FILE__).'/../classes/Gateway.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
-	die(Tools::displayError());
+    die(Tools::displayError());
 
 $action = Tools::getValue('action');
 $id = Tools::getValue('id');
@@ -37,83 +37,97 @@ $field = Tools::getValue('field');
 $order_states = explode(':', Gateway::getConfig($field));
 
 if (empty($order_states[0]))
-	$order_states = array();
+    $order_states = array();
 
 if ($action != 'display')
 {
-	$position = 0;
-	if ($action == 'add')
-		array_push($order_states, $id);
-	elseif ($action == 'up')
-	{
-		foreach ($order_states as $key => $id_order_state )
-			if ($id_order_state == $id)
-			{
-				$position = (int)$id_order_state;
-				break;
-			}
+    $position = 0;
+    if ($action == 'add')
+        array_push($order_states, $id);
+    elseif ($action == 'up')
+    {
+        foreach ($order_states as $key => $id_order_state )
+            if ($id_order_state == $id)
+            {
+                $position = (int)$key;
+                break;
+            }
 
-		if ($position != 0)
-		{
-			$temp = $order_states[$position];
-			$order_states[$position] = $order_states[$position-1];
-			$order_states[$position-1] = $temp;
-		}
-	}
-	elseif ($action == 'del')
-	{
-		foreach ($order_states as $key => $id_order_state)
-			if ($id_order_state == $id)
-			{
-				unset($order_states[$key]);
-				break;
-			}
+        if ($position != 0)
+        {
+            $temp = $order_states[$position];
+            $order_states[$position] = $order_states[$position-1];
+            $order_states[$position-1] = $temp;
+        }
+    }
+    elseif ($action == 'delete')
+    {
+        foreach ($order_states as $key => $id_order_state)
+            if ($id_order_state == $id)
+            {
+                unset($order_states[$key]);
+                break;
+            }
 
-	}
-	else
-	{
-		foreach ($order_states as $key => $id_order_state)
-			if ($id_order_state == $id)
-			{
-				$position = $key;
-				break;
-			}
+    }
+    else
+    {
+        foreach ($order_states as $key => $id_order_state)
+            if ($id_order_state == $id)
+            {
+                $position = $key;
+                break;
+            }
 
-		if ($position != count($order_states)-1)
-		{
-			$temp = $order_states[$position];
-			$order_states[$position] = $order_states[$position+1];
-			$order_states[$position+1] = $temp;
-		}
-	}
+        if ($position != count($order_states)-1)
+        {
+            $temp = $order_states[$position];
+            $order_states[$position] = $order_states[$position+1];
+            $order_states[$position+1] = $temp;
+        }
+    }
 
-	Gateway::updateConfig($field, implode(':', $order_states));
+    $order_states = array_unique($order_states);
+    foreach($order_states as $key => $id_state){
+        if(empty($id_state) OR !Db::getInstance()->getRow('
+					SELECT `id_order_state`
+					FROM `'._DB_PREFIX_.'order_state`
+					WHERE `id_order_state` = '.((int)($id_state)).'
+		')){
+            unset($order_states[$key]);
+        }
+    }
+
+    Gateway::updateConfig($field, implode(':', $order_states));
 }
+
 
 //affichage des state en tableau.
 if (count($order_states) > 0)
 {
-	$result = Db::getInstance()->ExecuteS('
-					SELECT `id_order_state`, `name`
-					FROM `'._DB_PREFIX_.'order_state_lang`
-					WHERE `id_lang` = '.(int)$cookie->id_lang.'
-					AND `id_order_state` IN ('.implode(',', pSQL($order_states)).' )
-				');
 
-	$order_state_names = array();
-	foreach ($result as $key => $value)
-		$order_state_names[$value['id_order_state']] = $value['name'];
+    foreach($order_states as $state)
+    {
+        $state_infos = Db::getInstance()->getRow('
+			SELECT `id_order_state`, `name` 
+			FROM `'._DB_PREFIX_.'order_state_lang`
+			WHERE `id_lang` = '.(int)$cookie->id_lang.'
+			AND `id_order_state` = '.((int)($state)).'
+		');
 
-	if (count($order_state_names) > 0)
-		foreach ($order_state_names as $id_order_state => $order_state_name)
-		{
-			echo '
-			<li id="state_'.(int)$id_order_state.'" data="'.(int)$id_order_state.'" class="order_state_line">
-				<span class="delete_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'"  style="cursor:pointer;"><img src="../../img/admin/delete.gif" alt="X" /></span>
-				<span>'.$order_state_name.'</span>
-				<span class="up_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▲</span>
-				<span class="down_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▼</span>
-			</li>';
-		}
+        if($state_infos)
+        {
+            $id_order_state = $state_infos['id_order_state'];
+            $order_state_name = $state_infos['name'];
+
+            echo '
+				<li id="state_'.(int)$id_order_state.'" data="'.(int)$id_order_state.'" class="order_state_line">
+					<span class="delete_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'"  style="cursor:pointer;"><img src="../img/admin/disabled.gif" alt="X" /></span>
+					<span>'.$order_state_name.'</span>
+					<span class="up_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▲</span>
+					<span class="down_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▼</span>
+				</li>';
+        }
+    }
 
 }

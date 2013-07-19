@@ -28,6 +28,8 @@
     var text_field_name = "{l s='Nom du champs' mod='nqgatewayneteven' js=1}";
     var text_value = "{l s='Valeur' mod='nqgatewayneteven' js=1}";
     var neteven_token = "{$neteven_token}";
+    var SHIPPING_ZONE_FRANCE = "{$SHIPPING_ZONE_FRANCE}";
+    var SHIPPING_CARRIER_INTERNATIONAL = "{$SHIPPING_CARRIER_INTERNATIONAL}";
 </script>
 <script type="text/javascript" src="{$module_dir}js/nqgatewayneteven.js"></script>
 <link href="{$module_dir}css/nqgatewayneteven.css" rel="stylesheet" type="text/css" media="all" />
@@ -91,14 +93,14 @@
         <a target="_blank" href="{$cron_order_url}"><input style="margin-top:10px;" type="button" value="{l s='Forcer la synchonisation des commandes' mod='nqgatewayneteven'}"/></a>
     </div>
 
-    <label>{l s='Forcer la synchronisation des produits' mod='nqgatewayneteven'}</label>
+    <label>{l s='Synchonisation des produits' mod='nqgatewayneteven'}</label>
     <div class="margin-form">
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_on" value="1"{if $SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_on"> <img src="../img/admin/enabled.gif" alt="{l s='Oui' mod='nqgatewayneteven'}" title="{l s='Oui' mod='nqgatewayneteven'}" /></label>
         <input type="radio" name="SYNCHRONISATION_PRODUCT" id="SYNCHRONISATION_PRODUCT_off" value="0"{if !$SYNCHRONISATION_PRODUCT} checked="checked"{/if} />
         <label class="t" for="SYNCHRONISATION_PRODUCT_off"> <img src="../img/admin/disabled.gif" alt="{l s='Non' mod='nqgatewayneteven'}" title="{l s='Non' mod='nqgatewayneteven'}" /></label>
         <br class="clear"/>
-        <a target="_blank" href="{$cron_product_url}"><input style="margin-top:10px;" type="button" value="{l s='Synchonisation des produits' mod='nqgatewayneteven'}"/></a>
+        <a target="_blank" href="{$cron_product_url}"><input style="margin-top:10px;" type="button" value="{l s='Forcer la synchronisation des produits' mod='nqgatewayneteven'}"/></a>
     </div>
     <br /><br />
     <label>{l s='Nom de la marque par défaut' mod='nqgatewayneteven'}</label>
@@ -157,6 +159,45 @@
         </div>
     </div>
     <br class="clear" />
+
+    <div>
+        <h4>{l s='Vos transporteurs pour calculer les frais de ports' mod='nqgatewayneteven'}</h4>
+
+        <h5>{l s='France' mod='nqgatewayneteven'}</h5>
+
+        <label>{l s='Transporteur' mod='nqgatewayneteven'}</label>
+        <div class="margin-form">
+            <select name="SHIPPING_CARRIER_FRANCE" id="carrier_france">
+                <option value="" >---------</option>
+            {foreach from=$carriers item=carrier}
+                <option value="{$carrier.id_carrier}" {if $SHIPPING_CARRIER_FRANCE == $carrier.id_carrier}selected="selected"{/if}>{$carrier.name}</option>
+            {/foreach}
+            </select>
+        </div>
+        <label>{l s='Zone' mod='nqgatewayneteven'}</label>
+        <div class="margin-form" id="zone_france">{l s='Selecionner une transporteur pour voir les zones' mod='nqgatewayneteven'}</div>
+        <br class="clear" />
+
+
+
+        <h5>{l s='Internationnal' mod='nqgatewayneteven'}</h5>
+
+        <label>{l s='Transporteur' mod='nqgatewayneteven'}</label>
+        <div class="margin-form">
+            <select name="SHIPPING_CARRIER_INTERNATIONAL" id="carrier_international">
+                <option value="" >---------</option>
+            {foreach from=$carriers item=carrier}
+                <option value="{$carrier.id_carrier}" {if $SHIPPING_CARRIER_INTERNATIONAL == $carrier.id_carrier}selected="selected"{/if}>{$carrier.name}</option>
+            {/foreach}
+            </select>
+        </div>
+        <label>{l s='Zone' mod='nqgatewayneteven'}</label>
+        <div class="margin-form" id="zone_international">{l s='Selecionner une transporteur pour voir les zones' mod='nqgatewayneteven'}</div>
+        <br class="clear" />
+
+    </div>
+    <br class="clear" />
+
     <center><input type="submit" name="submitNetEvenShipping" value="{l s='Enregistrer' mod='nqgatewayneteven'}" class="button" /></center>
 </fieldset>
 
