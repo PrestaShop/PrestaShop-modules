@@ -37,11 +37,13 @@ class GatewayProduct extends Gateway
 	public static function getInstance($client = NULL)
 	{
 		$wsdl = 0;
+
 		if ($client != NULL)
 			$wsdl = 1;
 			
 		if (!isset(self::$instance[$wsdl]))
 			self::$instance[$wsdl] = new GatewayProduct($client);
+
 		return self::$instance[$wsdl];
 	}
 	
@@ -101,6 +103,7 @@ class GatewayProduct extends Gateway
 		
 		$security = 0;
 		$control_while = true;
+
 		while ($control_while)
 		{
 			$neteven_products = $this->getPropertiesForNetEven($products, $is_display);
@@ -139,8 +142,7 @@ class GatewayProduct extends Gateway
 		$separator = $this->getValue('separator');
 
 		$id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
-		$sql = '
-			SELECT'.(self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname) ? ' p.`'.pSQL(self::$shipping_by_product_fieldname).'`,' : '').'
+		$sql = 'SELECT'.(self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname) ? ' p.`'.pSQL(self::$shipping_by_product_fieldname).'`,' : '').'
 				pl.`link_rewrite`,
 				p.`id_category_default`,
 				p.`id_product`,
@@ -177,7 +179,7 @@ class GatewayProduct extends Gateway
 			'.((is_array($products_exlusion) && count($products_exlusion) > 0) ? ' AND (p.`reference` NOT IN ('.implode(',', pSQL($products_exlusion)).') AND pa.`reference` NOT IN ('.implode(',', pSQL($products_exlusion)).'))' : '');
 		$sql .= '
 			GROUP BY p.`id_product`, pa.`id_product_attribute`
-			';
+		';
 
 		return Db::getInstance()->ExecuteS($sql);
 	}
@@ -200,13 +202,12 @@ class GatewayProduct extends Gateway
 		$separator = $this->getValue('separator');
 
 		$id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
-		$sql = '
-		SELECT
+		$sql = 'SELECT
 			'.(self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname) ? 'p.`'.pSQL(self::$shipping_by_product_fieldname).'`,' : '').'
 			pl.`link_rewrite`,
 			p.`id_category_default`,
 			p.`id_product`,
-		 	pl.`name`,
+			pl.`name`,
 			pl.`description`,
 			p.`id_category_default` as id_category,
 			cl.`name` as category_name,
@@ -286,14 +287,15 @@ class GatewayProduct extends Gateway
 				
 			}
 
-            $ean_ps = !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13'];
+			$ean_ps = !empty($product['ean13_declinaison']) ? $product['ean13_declinaison'] : $product['ean13'];
 
-            $codeEan = "";
-            if(!empty($ean_ps)){
-                $codeEan = sprintf('%013s', $ean_ps);
-            }
+			$codeEan = "";
+
+			if (!empty($ean_ps))
+				$codeEan = sprintf('%013s', $ean_ps);
 
 			$id_product_attribute = NULL;
+
 			if (!empty($product['id_product_attribute']))
 				$id_product_attribute = (int)$product['id_product_attribute'];
 
@@ -301,18 +303,14 @@ class GatewayProduct extends Gateway
 			$product_price_without_reduction = Product::getPriceStatic((int)$product['id_product'], true, (int)$id_product_attribute, 2, NULL, false, false);
 			
 			$categories = $this->getProductCategories($product);
-
-            $categories = array_reverse($categories);
-
+			$categories = array_reverse($categories);
 			$classification = str_replace('//', '',implode('/', $categories));
 
-
-
 			$quantity = Product::getQuantity((int)$product['id_product'], !empty($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : NULL);
-			
 			$indice = count($products_temp);
 			
 			$shipping_price_local = $this->getValue('shipping_price_local');
+
 			if (self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname))
 				$shipping_price_local = $product[self::$shipping_by_product_fieldname];
 			
@@ -332,48 +330,39 @@ class GatewayProduct extends Gateway
 				'Brand' => !empty($product['name_manufacturer']) ? $product['name_manufacturer'] : $this->getValue('default_brand')
 			);
 
-
-            $id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
-            $sql = '
-				SELECT t.name
+			$id_lang = isset($cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
+			$sql = 'SELECT t.name
 				FROM
 				'._DB_PREFIX_.'product_tag pt
 				INNER JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.intval($id_lang).')
 				WHERE pt.id_product = '.intval($product['id_product']).'
 			';
 
-            $t_tags_bdd = Db::getInstance()->getRow($sql);
+			$t_tags_bdd = Db::getInstance()->getRow($sql);
 
-            if(!empty($t_tags_bdd['name'])){
-                $products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
-            }
+			if (!empty($t_tags_bdd['name']))
+				$products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
 
-
-
-            if ($shipping_price_local == '-')
+			if ($shipping_price_local == '-')
 				unset($products_temp[$indice]['shipping_price_local']);
 			
 			if (empty($products_temp[$indice]['shipping_price_international']))
 				unset($products_temp[$indice]['shipping_price_international']);
 
+			$carrier_france = $this->getConfig('SHIPPING_CARRIER_FRANCE');
+			$carrier_zone_france = $this->getConfig('SHIPPING_ZONE_FRANCE');
 
+			if (!empty($carrier_france) && !empty($carrier_zone_france))
+				$products_temp[$indice]['PriceShippingLocal1'] = $this->getShippingPrice($product['id_product'], $id_product_attribute, $carrier_france, $carrier_zone_france);
 
-            $carrier_france = $this->getConfig('SHIPPING_CARRIER_FRANCE');
-            $carrier_zone_france = $this->getConfig('SHIPPING_ZONE_FRANCE');
+			$carrier_inter = $this->getConfig('SHIPPING_CARRIER_INTERNATIONAL');
+			$carrier_zone_inter = $this->getConfig('SHIPPING_ZONE_INTERNATIONAL');
 
-            if(!empty($carrier_france) && !empty($carrier_zone_france)){
-                $products_temp[$indice]['PriceShippingLocal1'] = $this->getShippingPrice($product['id_product'], $id_product_attribute, $carrier_france, $carrier_zone_france);
-            }
-
-            $carrier_inter = $this->getConfig('SHIPPING_CARRIER_INTERNATIONAL');
-            $carrier_zone_inter = $this->getConfig('SHIPPING_ZONE_INTERNATIONAL');
-
-            if(!empty($carrier_france) && !empty($carrier_zone_france)){
-                $products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
-            }
-
+			if (!empty($carrier_france) && !empty($carrier_zone_france))
+				$products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
 
 			$images = $this->getProductImages($product);
+
 			foreach ($images as $key => $image)
 				if (is_object($link))
 				{
@@ -382,7 +371,7 @@ class GatewayProduct extends Gateway
 				}
 
 			// Attributes and fetures of product
-            $category_default = new Category((int)$product['id_category_default'], (int)$cookie->id_lang);
+			$category_default = new Category((int)$product['id_category_default'], (int)$cookie->id_lang);
 			$products_temp[$indice]['ArrayOfSpecificFields'] = array();
 			$products_temp[$indice]['ArrayOfSpecificFields'][] = array('Name' => 'categorie', 'Value' => $category_default->name);
 			
@@ -401,13 +390,15 @@ class GatewayProduct extends Gateway
 				continue;
 			
 			$features_attributes = array();
+
 			if (!empty($product['attribute_name']))
 				$features_attributes = explode($this->getValue('separator'), $product['attribute_name']);
 
-            if (!empty($product['feature_name']))
-                $features_attributes = array_merge($features_attributes, explode($this->getValue('separator'), $product['feature_name']));
+			if (!empty($product['feature_name']))
+				$features_attributes = array_merge($features_attributes, explode($this->getValue('separator'), $product['feature_name']));
 
 			$feature_links = $this->getValue('feature_links');
+
 			foreach ($features_attributes as $value)
 			{
 				$infos = explode(' {##} ', $value);
@@ -421,7 +412,6 @@ class GatewayProduct extends Gateway
 			if (count(self::$customizable_field) > 0)
 				foreach (self::$customizable_field as $key => $value)
 					$products_temp[$indice]['ArrayOfSpecificFields'][] = array('Name' => $key, 'Value' => $value);
-
 		}
 
 		return $products_temp;
@@ -429,7 +419,7 @@ class GatewayProduct extends Gateway
 
 	public function getProductCategories($product)
 	{
-        global $cookie;
+		global $cookie;
 		$category = $category_default = new Category((int)$product['id_category_default'], (int)$cookie->id_lang);
 		$categories = array();
 		$categories[] = $category->name;
@@ -543,53 +533,52 @@ class GatewayProduct extends Gateway
 	}
 
 
-    /**
-     * Récupération du prix de shipping pour un produit id
-     * @param $shipping
-     * @return float
-     */
-    public function getShippingPrice($product_id, $attribute_id, $id_carrier = 0, $id_zone = 0)
-    {
-        $product = new Product($product_id);
-        $shipping = 0;
-        $carrier = new Carrier((int)$id_carrier);
+	/**
+	 * Récupération du prix de shipping pour un produit id
+	 * @param $shipping
+	 * @return float
+	 */
+	public function getShippingPrice($product_id, $attribute_id, $id_carrier = 0, $id_zone = 0)
+	{
+		$product = new Product($product_id);
+		$shipping = 0;
+		$carrier = new Carrier((int)$id_carrier);
 
-        if($id_zone == 0){
-            $defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-            $id_zone = (int)$defaultCountry->id_zone;
-        }
+		if ($id_zone == 0)
+		{
+			$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+			$id_zone = (int)$defaultCountry->id_zone;
+		}
 
-        $carrierTax = Tax::getCarrierTaxRate((int)$carrier->id);
+		$carrierTax = Tax::getCarrierTaxRate((int)$carrier->id);
 
-        $free_weight = Configuration::get('PS_SHIPPING_FREE_WEIGHT');
-        $shipping_handling = Configuration::get('PS_SHIPPING_HANDLING');
+		$free_weight = Configuration::get('PS_SHIPPING_FREE_WEIGHT');
+		$shipping_handling = Configuration::get('PS_SHIPPING_HANDLING');
 
-        if ($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1) >= (float)($free_weight) AND (float)($free_weight) > 0)
-            $shipping = 0;
-        elseif (isset($free_weight) AND $product->weight >= (float)($free_weight) AND (float)($free_weight) > 0)
-            $shipping = 0;
-        else
-        {
+		if ($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1) >= (float)($free_weight) AND (float)($free_weight) > 0)
+			$shipping = 0;
+		elseif (isset($free_weight) AND $product->weight >= (float)($free_weight) AND (float)($free_weight) > 0)
+			$shipping = 0;
+		else
+		{
+			if (isset($shipping_handling) AND $carrier->shipping_handling)
+				$shipping = (float)($shipping_handling);
 
+			if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
+				$shipping += $carrier->getDeliveryPriceByWeight($product->weight, $id_zone);
+			else
+				$shipping += $carrier->getDeliveryPriceByPrice($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1), $id_zone);
 
-            if (isset($shipping_handling) AND $carrier->shipping_handling)
-                $shipping = (float)($shipping_handling);
+			$shipping *= 1 + ($carrierTax / 100);
+			$shipping = (float)(Tools::ps_round((float)($shipping), 2));
+		}
 
-            if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
-                $shipping += $carrier->getDeliveryPriceByWeight($product->weight, $id_zone);
-            else
-                $shipping += $carrier->getDeliveryPriceByPrice($product->getPrice(true, $attribute_id, 2, NULL, false, true, 1), $id_zone);
-
-            $shipping *= 1 + ($carrierTax / 100);
-            $shipping = (float)(Tools::ps_round((float)($shipping), 2));
-        }
-
-        unset($product);
-        return $shipping;
-    }
+		unset($product);
+		return $shipping;
+	}
 
 
-    /**
+	/**
 	 * On supprime tous les produits qui n'ont pas de code EAN13.
 	 * @param $t_product
 	 * @param $is_display
@@ -600,6 +589,7 @@ class GatewayProduct extends Gateway
 		return $products;
 		
 		$products_with_ean = array();
+		
 		foreach ($products as $key => $product)
 		{
 			if ((!empty($product['id_product_attribute']) && !empty($product['ean13_declinaison'])) || (empty($product['id_product_attribute']) && !empty($product['ean13'])))

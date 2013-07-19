@@ -173,6 +173,7 @@ class Gateway
 		$seed = '*';
 		$stamp = date('c', time());
 		$signature = base64_encode(md5(implode('/', array($login, $stamp, $seed, $password)), true));
+		
 		return array(
 			'Method' => '*',
 			'Login' => $login,
@@ -225,7 +226,6 @@ class Gateway
 		
 		if (!$config_exist)
 			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_configuration` (`name`, `value`) VALUES ("'.pSQL($name).'", "'.pSQL($value).'")');
-	
 		else
 			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'orders_gateway_configuration` SET `value` = "'.pSQL($value).'" WHERE `name` = "'.pSQL($name).'"');
 		
@@ -239,14 +239,18 @@ class Gateway
 		foreach ($emails as $email)
 			if (Validate::isEmail($email))
 			{
-                if(!$classic_mail)
-				    Mail::Send(($this->id_lang ? (int)$this->id_lang : Configuration::get('PS_LANG_DEFAULT')), 'debug',	$subject, array('{message}' => $message), $email, NULL, Configuration::get('PS_SHOP_EMAIL'),	Configuration::get('PS_SHOP_NAME'), NULL, NULL,	dirname(__FILE__).'/../mails/');
+				if(!$classic_mail)
+				{
+					$id_lang = $this->id_lang ? (int)$this->id_lang : Configuration::get('PS_LANG_DEFAULT');
+					$shop_email = Configuration::get('PS_SHOP_EMAIL');
+					$shop_name = Configuration::get('PS_SHOP_NAME');
+					Mail::Send($id_lang, 'debug', $subject, array('{message}' => $message), $email, NULL, $shop_email, $shop_name, NULL, NULL, dirname(__FILE__).'/../mails/');
+				}
 				else
-                    mail($email, $subject, $message);
+					mail($email, $subject, $message);
 
 				if ($this->getValue('debug'))
 					Toolbox::displayDebugMessage(self::getL('Send email to').' : '.$email);
-
 			}
 
 	}

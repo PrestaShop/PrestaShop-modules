@@ -51,7 +51,6 @@ class Toolbox
 		{
 			if (self::$handle_instance)
 				fwrite(self::$handle_instance, date('Y-m-d H:i:s').' - '.$message."\n");
-
 		}
 	}
 
@@ -119,20 +118,22 @@ class Toolbox
 				if (($handle = fopen($neteven_features_dirname.$file, 'r')) !== false)
 				{
 					$row = 0;
+
 					while (($data = fgetcsv($handle, 1000, ';')) !== false)
 					{
 						if ($row != 0)
 						{
-                            if(empty($data[0]) OR empty($data[1]) OR empty($data[2]))
-                                continue;
+							if(empty($data[0]) || empty($data[1]) || empty($data[2]))
+								continue;
 
 							if (Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders_gateway_feature` WHERE `value` = "'.pSQL($data[2]).'" AND `category` = "'.pSQL($data[0]).'" '))
 								continue;
 							
 							Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_feature` (`name`, `value`, `category`) VALUES ("'.pSQL($data[1]).'", "'.pSQL($data[2]).'", "'.pSQL($data[0]).'")');
-                            if($display)
-                                echo 'Add '.$data[1].' into '.$data[2].'<br/>';
-                        }
+							
+							if($display)
+								echo 'Add '.$data[1].' into '.$data[2].'<br/>';
+						}
 						$row++;
 					}
 					fclose($handle);
@@ -145,5 +146,4 @@ class Toolbox
 	{
 		echo ($error ? '<span style="color:red;">' : '').$message.($error ? '</span>' : '').'<br />';
 	}
-	
 }

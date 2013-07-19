@@ -40,9 +40,9 @@ class NqGatewayNeteven extends Module
 		$this->name = 'nqgatewayneteven';
 		
 		if (constant('_PS_VERSION_') < 1.4)
-            $this->tab = 'Tools';		  
+			$this->tab = 'Tools';
 		else
-        	$this->tab = 'market_place';
+			$this->tab = 'market_place';
 		
 		$this->version = '1.7.3';
 		$this->author = 'NetEven';
@@ -53,8 +53,8 @@ class NqGatewayNeteven extends Module
 		$this->description = $this->l('Vendez sur toutes les marketplaces depuis votre PrestaShop');
 
 		$this->feature_url = '/script/set-neteven-categories.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME'));
-        $this->order_url = '/script/import-order.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
-        $this->product_url = '/script/update-product.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
+		$this->order_url = '/script/import-order.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
+		$this->product_url = '/script/update-product.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
 		
 		if (!$this->getSOAP())
 			$this->warning = $this->l('SOAP should be installed for this module');
@@ -279,7 +279,7 @@ class NqGatewayNeteven extends Module
 			return;
 
 		GatewayProduct::getInstance()->updateOneProduct(isset($params['id_product']) ? (int)$params['id_product'] : (int)$params['product']->id);
-    }
+	}
 
 	public function hookUpdateProductAttribute($params)
 	{
@@ -369,13 +369,13 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('SHIPPING_BY_PRODUCT', (int)Tools::getValue('SHIPPING_BY_PRODUCT'));
 			Gateway::updateConfig('SHIPPING_BY_PRODUCT_FIELDNAME', Tools::getValue('SHIPPING_BY_PRODUCT_FIELDNAME'));
 
-            Gateway::updateConfig('SHIPPING_CARRIER_FRANCE', Tools::getValue('SHIPPING_CARRIER_FRANCE'));
-            Gateway::updateConfig('SHIPPING_ZONE_FRANCE', Tools::getValue('SHIPPING_ZONE_FRANCE'));
-            Gateway::updateConfig('SHIPPING_CARRIER_INTERNATIONAL', Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL'));
-            Gateway::updateConfig('SHIPPING_ZONE_INTERNATIONAL', Tools::getValue('SHIPPING_ZONE_INTERNATIONAL'));
+			Gateway::updateConfig('SHIPPING_CARRIER_FRANCE', Tools::getValue('SHIPPING_CARRIER_FRANCE'));
+			Gateway::updateConfig('SHIPPING_ZONE_FRANCE', Tools::getValue('SHIPPING_ZONE_FRANCE'));
+			Gateway::updateConfig('SHIPPING_CARRIER_INTERNATIONAL', Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL'));
+			Gateway::updateConfig('SHIPPING_ZONE_INTERNATIONAL', Tools::getValue('SHIPPING_ZONE_INTERNATIONAL'));
 
 
-            $this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
+			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitDev'))
 		{
@@ -441,46 +441,46 @@ class NqGatewayNeteven extends Module
 			foreach (explode('¤', Gateway::getConfig('CUSTOMIZABLE_FIELDS')) as $customizable_field)
 				$customizable_fields[] = explode('|', $customizable_field);
 
-        $carriers = Carrier::getCarriers((int)$this->context->cookie->id_lang);
+		$carriers = Carrier::getCarriers((int)$this->context->cookie->id_lang);
 
 		$this->context->smarty->assign(array(
-                    'SHIPPING_CARRIER_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_FRANCE', Gateway::getConfig('SHIPPING_CARRIER_FRANCE'))),
-                    'SHIPPING_ZONE_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_FRANCE', Gateway::getConfig('SHIPPING_ZONE_FRANCE'))),
-                    'SHIPPING_CARRIER_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL', Gateway::getConfig('SHIPPING_CARRIER_INTERNATIONAL'))),
-                    'SHIPPING_ZONE_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_INTERNATIONAL', Gateway::getConfig('SHIPPING_ZONE_INTERNATIONAL'))),
-                    'carriers' => $carriers,
-					'order_states' => $order_states,
-					'features' => $features,
-					'module_path' => $this->_path,
-					'module_display_name' => $this->displayName,
-					'attribute_groups' => $attribute_groups,
-					'neteven_feature_categories' => $neteven_feature_categories,
-					'default_currency' => new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT')),
-					'format_images' => ImageType::getImagesTypes('products'),
-					'cron_feature_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->feature_url,
-                    'cron_order_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->order_url,
-                    'cron_product_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->product_url,
-                    'customizable_fields' => $customizable_fields,
-					'neteven_token' => Tools::encrypt(Configuration::get('PS_SHOP_NAME')),
-					'NETEVEN_LOGIN' => Tools::safeOutput(Tools::getValue('NETEVEN_LOGIN', Gateway::getConfig('NETEVEN_LOGIN'))),
-					'NETEVEN_PASSWORD' => Tools::safeOutput(Tools::getValue('NETEVEN_PASSWORD', Gateway::getConfig('NETEVEN_PASSWORD'))),
-					'SYNCHRONISATION_ORDER' => (int)Gateway::getConfig('SYNCHRONISATION_ORDER'),
-					'SYNCHRONISATION_PRODUCT' => (int)Gateway::getConfig('SYNCHRONISATION_PRODUCT'),
-					'DEFAULT_BRAND' => Tools::safeOutput(Tools::getValue('DEFAULT_BRAND', Gateway::getConfig('DEFAULT_BRAND'))),
-					'SHIPPING_DELAY' => Tools::safeOutput(Tools::getValue('SHIPPING_DELAY', Gateway::getConfig('SHIPPING_DELAY'))),
-					'IMAGE_TYPE_NAME' => Gateway::getConfig('IMAGE_TYPE_NAME'),
-					'COMMENT' => Tools::safeOutput(Tools::getValue('COMMENT', Gateway::getConfig('COMMENT'))),
-					'SHIPPING_PRICE_LOCAL' => Tools::safeOutput(Tools::getValue('SHIPPING_PRICE_LOCAL', Gateway::getConfig('SHIPPING_PRICE_LOCAL'))),
-					'SHIPPING_PRICE_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_PRICE_INTERNATIONAL', Gateway::getConfig('SHIPPING_PRICE_INTERNATIONAL'))),
-					'SHIPPING_BY_PRODUCT' => (int)Gateway::getConfig('SHIPPING_BY_PRODUCT'),
-					'SHIPPING_BY_PRODUCT_FIELDNAME' => Tools::safeOutput(Tools::getValue('SHIPPING_BY_PRODUCT_FIELDNAME', Gateway::getConfig('SHIPPING_BY_PRODUCT_FIELDNAME'))),
-					'ID_ORDER_STATE_NETEVEN' => (int)Gateway::getConfig('ID_ORDER_STATE_NETEVEN'),
-					'NETEVEN_URL' => Tools::safeOutput(Tools::getValue('NETEVEN_URL', Gateway::getConfig('NETEVEN_URL'))),
-					'NETEVEN_NS' => Tools::safeOutput(Tools::getValue('NETEVEN_NS', Gateway::getConfig('NETEVEN_NS'))),
-					'MAIL_LIST_ALERT' => Tools::safeOutput(Tools::getValue('MAIL_LIST_ALERT', Gateway::getConfig('MAIL_LIST_ALERT'))),
-					'DEBUG' => (int)Gateway::getConfig('DEBUG'),
-					'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL')
-				));
+			'SHIPPING_CARRIER_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_FRANCE', Gateway::getConfig('SHIPPING_CARRIER_FRANCE'))),
+			'SHIPPING_ZONE_FRANCE' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_FRANCE', Gateway::getConfig('SHIPPING_ZONE_FRANCE'))),
+			'SHIPPING_CARRIER_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_CARRIER_INTERNATIONAL', Gateway::getConfig('SHIPPING_CARRIER_INTERNATIONAL'))),
+			'SHIPPING_ZONE_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_ZONE_INTERNATIONAL', Gateway::getConfig('SHIPPING_ZONE_INTERNATIONAL'))),
+			'carriers' => $carriers,
+			'order_states' => $order_states,
+			'features' => $features,
+			'module_path' => $this->_path,
+			'module_display_name' => $this->displayName,
+			'attribute_groups' => $attribute_groups,
+			'neteven_feature_categories' => $neteven_feature_categories,
+			'default_currency' => new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT')),
+			'format_images' => ImageType::getImagesTypes('products'),
+			'cron_feature_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->feature_url,
+			'cron_order_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->order_url,
+			'cron_product_url' => Tools::getProtocol(Tools::usingSecureMode()).$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'modules/'.$this->name.$this->product_url,
+			'customizable_fields' => $customizable_fields,
+			'neteven_token' => Tools::encrypt(Configuration::get('PS_SHOP_NAME')),
+			'NETEVEN_LOGIN' => Tools::safeOutput(Tools::getValue('NETEVEN_LOGIN', Gateway::getConfig('NETEVEN_LOGIN'))),
+			'NETEVEN_PASSWORD' => Tools::safeOutput(Tools::getValue('NETEVEN_PASSWORD', Gateway::getConfig('NETEVEN_PASSWORD'))),
+			'SYNCHRONISATION_ORDER' => (int)Gateway::getConfig('SYNCHRONISATION_ORDER'),
+			'SYNCHRONISATION_PRODUCT' => (int)Gateway::getConfig('SYNCHRONISATION_PRODUCT'),
+			'DEFAULT_BRAND' => Tools::safeOutput(Tools::getValue('DEFAULT_BRAND', Gateway::getConfig('DEFAULT_BRAND'))),
+			'SHIPPING_DELAY' => Tools::safeOutput(Tools::getValue('SHIPPING_DELAY', Gateway::getConfig('SHIPPING_DELAY'))),
+			'IMAGE_TYPE_NAME' => Gateway::getConfig('IMAGE_TYPE_NAME'),
+			'COMMENT' => Tools::safeOutput(Tools::getValue('COMMENT', Gateway::getConfig('COMMENT'))),
+			'SHIPPING_PRICE_LOCAL' => Tools::safeOutput(Tools::getValue('SHIPPING_PRICE_LOCAL', Gateway::getConfig('SHIPPING_PRICE_LOCAL'))),
+			'SHIPPING_PRICE_INTERNATIONAL' => Tools::safeOutput(Tools::getValue('SHIPPING_PRICE_INTERNATIONAL', Gateway::getConfig('SHIPPING_PRICE_INTERNATIONAL'))),
+			'SHIPPING_BY_PRODUCT' => (int)Gateway::getConfig('SHIPPING_BY_PRODUCT'),
+			'SHIPPING_BY_PRODUCT_FIELDNAME' => Tools::safeOutput(Tools::getValue('SHIPPING_BY_PRODUCT_FIELDNAME', Gateway::getConfig('SHIPPING_BY_PRODUCT_FIELDNAME'))),
+			'ID_ORDER_STATE_NETEVEN' => (int)Gateway::getConfig('ID_ORDER_STATE_NETEVEN'),
+			'NETEVEN_URL' => Tools::safeOutput(Tools::getValue('NETEVEN_URL', Gateway::getConfig('NETEVEN_URL'))),
+			'NETEVEN_NS' => Tools::safeOutput(Tools::getValue('NETEVEN_NS', Gateway::getConfig('NETEVEN_NS'))),
+			'MAIL_LIST_ALERT' => Tools::safeOutput(Tools::getValue('MAIL_LIST_ALERT', Gateway::getConfig('MAIL_LIST_ALERT'))),
+			'DEBUG' => (int)Gateway::getConfig('DEBUG'),
+			'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL')
+		));
 			
 		return $this->display(__FILE__, 'views/templates/admin/nqgatewayneteven.tpl');
 	}
