@@ -470,7 +470,7 @@ class Hipay extends PaymentModule
 		if (Tools::isSubmit('create_account_action'))
 			$account_created = $this->processAccountCreation($form_errors);
 
-		$link = $_SERVER['REQUEST_URI'];
+		$link = Tools::safeOutput($_SERVER['REQUEST_URI']);
 		$form = '
 		<style>
 			.hipay_label {float:none;font-weight:normal;padding:0;text-align:left;width:100%;line-height:30px}
