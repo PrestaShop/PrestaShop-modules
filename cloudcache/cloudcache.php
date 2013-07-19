@@ -58,7 +58,7 @@ class CloudCache extends Module
 	{
 		$this->name = 'cloudcache';
 		$this->tab = 'administration';
-		$this->version = '1.4.4';
+		$this->version = '1.4.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();

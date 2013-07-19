@@ -9,13 +9,13 @@
 					$(mediaServerForm).empty();
 					$('<legend>' + legend + '</legend>' +
 					'<div class="conf"><img alt="" src="../img/admin/ok2.png">' +
-						'{l s='You are currently saving even more performance by' mod='cloudcache'}' +
-						' <a href="?tab=AdminModules&configure=cloudcache&token={$adminToken}&tab_module=administration&module_name=cloudcache" style="color: blue; font-weight: bold">' +
-						'{l s='using CloudCache module' mod='cloudcache'}</a>, ' +
-						'{l s='the Best CDN service recommended by PrestaShop users!' mod='cloudcache'} ' +
+						'{l s='You are currently saving even more performance by' mod='cloudcache' js='1'}' +
+						' <a href="?tab=AdminModules&configure=cloudcache&token={$adminToken}&tab_module=administration&module_name=cloudcache" style="color:blue;font-weight:bold">' +
+						'{l s='using CloudCache module' mod='cloudcache' js='1'}</a>, ' +
+						'{l s='the Best CDN service recommended by PrestaShop users!' mod='cloudcache' js='1'} ' +
 					'</div>').prependTo(mediaServerForm);
 {else}
-	$('<div class="warn"><img src="../img/admin/warn2.png">' + '{l s='Save even more performance by' mod='cloudcache'}' + '<a href="?tab=AdminModules&configure=cloudcache&token={$adminToken}&tab_module=administration&module_name=cloudcache" style="color: blue; font-weight: bold">{l s='activating CloudCache module' mod='cloudcache'}</a>, {l s='the Best CDN service recommended by PrestaShop users!' mod='cloudcache'}</div>').prependTo(mediaServerForm);
+	$('<div class="warn"><img src="../img/admin/warn2.png">' + '{l s='Save even more performance by' mod='cloudcache' js='1'}' + '<a href="?tab=AdminModules&configure=cloudcache&token={$adminToken}&tab_module=administration&module_name=cloudcache" style="color: blue; font-weight: bold">{l s='activating CloudCache module' mod='cloudcache' js='1'}</a>, {l s='the Best CDN service recommended by PrestaShop users!' mod='cloudcache' js='1'}</div>').prependTo(mediaServerForm);
 {/if}
 
 {if $isModuleActive}
@@ -26,7 +26,7 @@
    	{/foreach}
 	'</div>').prependTo(ccc);
     {else}
-	$('<div class="conf"><img src="../img/admin/ok2.png">{l s='Everything looks good for CloudCache' mod='cloudcache'}</div>').prependTo(ccc);
+	$('<div class="conf"><img src="../img/admin/ok2.png">{l s='Everything looks good for CloudCache' mod='cloudcache' js='1'}</div>').prependTo(ccc);
     {/if}
 {/if}
 
