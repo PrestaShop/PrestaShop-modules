@@ -32,4 +32,4 @@ if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME'
 
 ToolBox::setNetEvenCategories(true);
 
-d('');
+die();
