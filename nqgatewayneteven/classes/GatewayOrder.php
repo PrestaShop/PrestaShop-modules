@@ -66,7 +66,7 @@ class GatewayOrder extends Gateway
 		}
 
 		if ($this->getValue('send_request_to_mail'))
-			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' getOrderNetEven', $this->_client->__getLastRequest());
+			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' getOrderNetEven', $this->_client->__getLastRequest(), true);
 		
 		// if one command, transform this to array.
 		if (isset($neteven_orders['OrderID']))
@@ -127,7 +127,7 @@ class GatewayOrder extends Gateway
 			$customer = new Customer((int)$order->id_customer);
 			$customer->firstname = (!empty($neteven_order->BillingAddress->FirstName)) ? substr(Toolbox::stringFilter($neteven_order->BillingAddress->FirstName), 0, 32) : ' ';
 			$customer->lastname	= (!empty($last_name)) ? substr(Toolbox::stringFilter($last_name), 0, 32) : ' ';
-			$customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email)) ? '_'.$neteven_order->BillingAddress->Email : '_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
+			$customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email) && !empty($neteven_order->BillingAddress->Email)) ? '_'.$neteven_order->BillingAddress->Email : '_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
 			$customer->save();
 			$date_now = date('Y-m-d H:i:s');
 			
@@ -204,16 +204,16 @@ class GatewayOrder extends Gateway
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
 			
-			$order->total_products = (float)number_format($total_product, 2);
-			$order->total_products_wt = (float)number_format($total_product_wt, 2);
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2);
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_paid_tax_excl = (float)number_format($total, 2);
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2);
-			$order->total_paid_real = (float)number_format($total_wt, 2);
-			$order->total_paid = (float)number_format($total_wt, 2);
-			$order->carrier_tax_rate = (float)number_format($carrier_tax_rate, 2);
+			$order->total_products = (float)number_format($total_product, 2, '.', '');
+			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
+			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
+			$order->carrier_tax_rate = (float)number_format($carrier_tax_rate, 2, '.', '');
 			$order->save();
 		}
 	}
@@ -436,15 +436,15 @@ class GatewayOrder extends Gateway
 			$order->total_wrapping_tax_excl = 0;
 			$order->total_wrapping_tax_incl = 0;
 			$order->total_wrapping = 0;
-			$order->total_products = (float)number_format($total_product, 2);
-			$order->total_products_wt = (float)number_format($total_product_wt, 2);
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2);
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2);
-			$order->total_paid_tax_excl = (float)number_format($total, 2);
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2);
-			$order->total_paid_real = (float)number_format($total_wt, 2);
-			$order->total_paid = (float)number_format($total_wt, 2);
+			$order->total_products = (float)number_format($total_product, 2, '.', '');
+			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
+			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
 			$order->carrier_tax_rate = 0;
 			$order->total_wrapping = 0;
 			$order->invoice_number = 0;
@@ -613,10 +613,10 @@ class GatewayOrder extends Gateway
 				$order_detail->product_quantity_refunded = 0;
 				$order_detail->product_quantity_return = 0;
 				$order_detail->product_quantity_reinjected = 0;
-				$order_detail->product_price = number_format((float)$price_product, 4);
-				$order_detail->total_price_tax_excl	= number_format((float)$price_product, 4);
-				$order_detail->unit_price_tax_incl = number_format((float)$price_product, 4);
-				$order_detail->unit_price_tax_excl = $tax->rate ? number_format((float)$price_product / ((float)$tax->rate/100), 4) : $price_product;
+				$order_detail->product_price = number_format((float)$price_product, 4, '.', '');
+				$order_detail->total_price_tax_excl	= number_format((float)$price_product, 4, '.', '');
+				$order_detail->unit_price_tax_incl = number_format((float)$price_product, 4, '.', '');
+				$order_detail->unit_price_tax_excl = $tax->rate ? number_format((float)$price_product / ((float)$tax->rate/100), 4, '.', '') : $price_product;
 				$order_detail->reduction_percent = 0;
 				$order_detail->reduction_amount = 0;
 				$order_detail->group_reduction = 0;
@@ -732,7 +732,7 @@ class GatewayOrder extends Gateway
 			$new_customer->firstname = (!empty($neteven_order->BillingAddress->FirstName))?substr(Toolbox::stringFilter($neteven_order->BillingAddress->FirstName), 0, 32):' ';
 			$new_customer->lastname	= (!empty($last_name))?substr(Toolbox::stringFilter($last_name), 0, 32):' ';
 			$new_customer->passwd = Tools::encrypt($this->getValue('default_passwd'));
-			$new_customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email))?'_'.$neteven_order->BillingAddress->Email:'_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
+			$new_customer->email = (Validate::isEmail($neteven_order->BillingAddress->Email) && !empty($neteven_order->BillingAddress->Email))?'_'.$neteven_order->BillingAddress->Email:'_client'.$neteven_order->OrderID.'@'.$neteven_order->MarketPlaceName.'.com';
 			$new_customer->optin = 0;
 			if (isset($this->repere_customer) && $this->repere_customer)
 				$new_customer->is_neteven = 1;
@@ -883,7 +883,7 @@ class GatewayOrder extends Gateway
 				}
 
 				if ($this->getValue('send_request_to_mail'))
-					$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' setOrderNetEven', $this->_client->__getLastRequest());
+					$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' setOrderNetEven', $this->_client->__getLastRequest(), true);
 
 				if (!isset($order_status->StatusResponse) || (isset($order_status->StatusResponse) && $order_status->StatusResponse != 'Updated') || is_null($order_status))
 				{
