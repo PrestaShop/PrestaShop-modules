@@ -27,21 +27,28 @@
 
 include(dirname(__FILE__).'/../../../config/config.inc.php');
 
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR : INVALID TOKEN');
+
 $sql = 'SELECT * FROM '._DB_PREFIX_.'ebay_shipping_zone_excluded WHERE region = \''.pSQL(Tools::getValue('region')).'\'';
 $countries = Db::getInstance()->ExecuteS($sql);
-if (count($countries)) 
+
+if (count($countries))
 {
 	$string = '';
-	foreach ($countries as $country) 
-	{	
+
+	foreach ($countries as $country)
+	{
 		$string .= '<div class="excludeCountry">
 			<input type="checkbox" name="excludeLocation['.$country['location'].']" ';
+
 		if ($country['excluded'] == 1)
 			$string .= ' checked="checked" ';
 
 		$string .= '/>'.$country['description'].'</div>';
-	}	
-	echo $string;	
+	}
+	
+	echo $string;
 }
 else
 	echo 'No countries were found for this region';

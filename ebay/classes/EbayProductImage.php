@@ -33,17 +33,18 @@ class EbayProductImage
 	public static function getEbayUrl($ps_url, $ebay_image_name)
 	{
 		$db = Db::getInstance();
-		
+
 		$ebay_url = $db->getValue('SELECT `ebay_image_url` from `'._DB_PREFIX_.'ebay_product_image`
 			WHERE `ps_image_url` = \''.pSQL($ps_url).'\'');
-		
+
 		if (!$ebay_url)
 		{
 			$ebay_request = new EbayRequest();
 			$ebay_url = $ebay_request->uploadSiteHostedPicture($ps_url, $ebay_image_name);
+			
 			if (!$ebay_url)
 				return false;
-			
+
 			$data = array(
 				'ps_image_url' => pSQL($ps_url),
 				'ebay_image_url' => pSQL($ebay_url),
@@ -55,7 +56,7 @@ class EbayProductImage
 				foreach ($conditions as $condition)
 					$db->autoExecute(_DB_PREFIX_.'ebay_product_image', $data, 'INSERT');
 		}
-		
+
 		return $ebay_url;
 	}
 }

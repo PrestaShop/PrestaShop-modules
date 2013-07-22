@@ -33,4 +33,6 @@ include(dirname(__FILE__).'/../ebay.php');
 $ebay = new Ebay();
 $ebay_request = new EbayRequest();
 $session_id = $ebay->login();
+
 header('Location: '.$ebay_request->getLoginUrl().'?SignIn&runame='.$ebay_request->runame.'&SessID='.$session_id);
+exit;

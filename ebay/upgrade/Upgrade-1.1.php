@@ -25,7 +25,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-function upgrade_module_1_1($module) {
+function upgrade_module_1_1($module)
+{
 	include(dirname(__FILE__).'/sql/sql-upgrade-1-1.php');
 
 	if (!empty($sql) && is_array($sql))
@@ -36,8 +37,9 @@ function upgrade_module_1_1($module) {
 				$this->_errors[] = DB::getInstance()->getMsgError();
 				return false;
 			}
+
 		$module->setConfiguration('EBAY_VERSION', $module->version);
 	}
-	
-  return true;
+
+	return true;
 }

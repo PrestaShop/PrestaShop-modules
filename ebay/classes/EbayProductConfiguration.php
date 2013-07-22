@@ -27,22 +27,25 @@
 
 class EbayProductConfiguration
 {
-	
+
 	public static function getByProductIds($product_ids)
 	{
 		$res = Db::getInstance()->executeS('SELECT `id_product`, `blacklisted`, `extra_images`
 			FROM `'._DB_PREFIX_.'ebay_product_configuration`
 			WHERE `id_product` IN ('.implode(',', $product_ids).')');
+
 		$ret = array();
+
 		foreach ($res as $row)
 			$ret[$row['id_product']] = $row;
-		
+
 		return $ret;
 	}
-	
+
 	public static function getBlacklistedProductIds()
 	{
 		$res = Db::getInstance()->executeS(EbayProductConfiguration::getBlacklistedProductIdsQuery());
+
 		return array_map(array('EbayProductConfiguration', 'getBlacklistedProductIdsMap'), $res);
 	}
 
@@ -53,7 +56,7 @@ class EbayProductConfiguration
 
 	public static function getBlacklistedProductIdsQuery()
 	{
-		return 'SELECT `id_product` 
+		return 'SELECT `id_product`
 			FROM `'._DB_PREFIX_.'ebay_product_configuration`
 			WHERE `blacklisted` = 1';
 	}
@@ -62,15 +65,19 @@ class EbayProductConfiguration
 	{
 		if (!count($data))
 			return;
+
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', array_keys($data)).'`)
 			VALUES ('.$product_id.', '.implode(',', $data).')
 			ON DUPLICATE KEY UPDATE ';
+
 		$fields_strs = array();
+
 		foreach ($data as $field => $value)
 			$fields_strs[] = '`'.$field.'` = '.$value;
-		$sql .= implode(',', $fields_strs);
 		
+		$sql .= implode(',', $fields_strs);
+
 		return Db::getInstance()->execute($sql);
 	}
-	
+
 }

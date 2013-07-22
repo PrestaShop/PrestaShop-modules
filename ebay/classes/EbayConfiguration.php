@@ -36,17 +36,20 @@ class EbayConfiguration
 	 * Returns true is sucessful, false otherwise
 	 *
 	 * @return boolean
-	 */ 
-	
+	 */
+
 	public static function updateAPIToken()
 	{
 		$request = new EbayRequest();
+
 		if ($token = $request->fetchToken(Configuration::get('EBAY_API_USERNAME'), Configuration::get('EBAY_API_SESSION')))
 		{
 			Configuration::updateValue('EBAY_API_TOKEN', $token, false, 0, 0);
 			Configuration::updateValue('EBAY_TOKEN_REGENERATE', false);
+
 			return true;
 		}
-		return false;		
+
+		return false;
 	}
 }

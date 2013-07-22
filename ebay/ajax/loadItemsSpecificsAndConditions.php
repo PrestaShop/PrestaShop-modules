@@ -28,8 +28,9 @@
 include(dirname(__FILE__).'/../../../config/config.inc.php');
 include(dirname(__FILE__).'/../classes/EbayCategorySpecific.php');
 include(dirname(__FILE__).'/../classes/EbayCategoryCondition.php');
-//	if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-//		die('ERROR : INVALID TOKEN');
+
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR : INVALID TOKEN');
 
 function loadItemsMap($row)
 {
@@ -43,8 +44,9 @@ $category = new EbayCategory((int)Tools::getValue('ebay_category'));
 
 if (!Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') || (Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
 {
-	$res =  EbayCategorySpecific::loadCategorySpecifics();
+	$res = EbayCategorySpecific::loadCategorySpecifics();
 	$res &= EbayCategoryCondition::loadCategoryConditions();
+
 	if ($res)
 		Configuration::updateValue('EBAY_SPECIFICS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'), false, 0, 0);
 }
@@ -56,18 +58,20 @@ if (count($item_specifics_ids))
 {
 	$sql = 'SELECT `id_ebay_category_specific_value` as id, `id_ebay_category_specific` as specific_id, `value`
 		FROM `'._DB_PREFIX_.'ebay_category_specific_value`
-		WHERE `id_ebay_category_specific` in ('.implode(',', $item_specifics_ids) .')';
-	$item_specifics_values = DB::getInstance()->executeS($sql);		
-} else
+		WHERE `id_ebay_category_specific` in ('.implode(',', $item_specifics_ids).')';
+	
+	$item_specifics_values = DB::getInstance()->executeS($sql);
+}
+else
 	$item_specifics_values = array();
 
-foreach($item_specifics as &$item_specific)
+foreach ($item_specifics as &$item_specific)
 	foreach ($item_specifics_values as $value)
 		if ($item_specific['id'] == $value['specific_id'])
 			$item_specific['values'][$value['id']] = $value['value'];
 
-echo json_encode(array(
-	'specifics' 		 => $item_specifics,
-	'conditions'		 => $category->getConditionsWithConfiguration(),
-	'is_multi_sku'	 => $category->isMultiSku()
+echo Tools::jsonEncode(array(
+	'specifics' => $item_specifics,
+	'conditions' => $category->getConditionsWithConfiguration(),
+	'is_multi_sku' => $category->isMultiSku()
 ));

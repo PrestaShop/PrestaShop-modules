@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2013 PrestaShop
  *
@@ -33,7 +32,7 @@ function update_product_template($module)
 {
 	if ($product_template = Configuration::get('EBAY_PRODUCT_TEMPLATE'))
 	{
-		// we cannot just replace "template/images/" by "views/img" since the use may have added its own images in "template/images"
+		// We cannot just replace "template/images/" by "views/img" since the use may have added its own images in "template/images"
 		$product_template = str_replace(
 			array(
 				'template/images/favorite.png',
@@ -55,7 +54,8 @@ function update_product_template($module)
 	}
 }
 
-function upgrade_module_1_5($module) {
+function upgrade_module_1_5($module)
+{
 	include(dirname(__FILE__).'/sql/sql-upgrade-1-5.php');
 
 	if (!empty($sql) && is_array($sql))
@@ -67,10 +67,10 @@ function upgrade_module_1_5($module) {
 				return false;
 			}
 	}
-	
+
 	update_product_template($module);
-	
+
 	$module->setConfiguration('EBAY_VERSION', $module->version);
-	
-  return true;
+
+	return true;
 }
