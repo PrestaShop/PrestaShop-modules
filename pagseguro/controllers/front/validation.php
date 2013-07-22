@@ -24,8 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(dirname(__FILE__).'/../../PagSeguroLibrary/PagSeguroLibrary.php');
-
 class PagSeguroValidationModuleFrontController extends ModuleFrontController
 {
 	private $_payment_request;
