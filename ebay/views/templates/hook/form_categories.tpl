@@ -77,7 +77,7 @@
 		</tbody>
 	</table>
 	<div style="text-align: right; margin-top: 5px">
-		{l s='Add extra pictures for products. Be aware that this feature can imply more listing fees' mod='ebay'}<br/>
+		{l s='Add more photos to your listing. Please note that this may incur extra costs.' mod='ebay'}<br/>
 		{l s='Change extra pictures numbers for all products' mod='ebay'} <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> <input id="update-all-extra-images" type="button" value='Apply'>
 		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" value="-1"/>
 	</div>
@@ -107,8 +107,8 @@
 		'No category found'		 : "{l s='No category found' mod='ebay'}",
 		'You are not logged in': "{l s='You are not logged in' mod='ebay'}",
 		'Settings updated'		 : "{l s='Settings updated' mod='ebay'}",
-		'Unselect products'		: "{l s='Uncheck for products that you do not want to list on eBay' mod='ebay'}",
-		'Unselect products clicked' : "{l s='Uncheck your products' mod='ebay'}"
+		'Unselect products'		: "{l s='Select products that you do NOT want to list on eBay' mod='ebay'}",
+		'Unselect products clicked' : "{l s='Select products that you do NOT want to list on eBay' mod='ebay'}"
 	{rdelim};
 	
 </script>
