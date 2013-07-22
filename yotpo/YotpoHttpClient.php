@@ -3,6 +3,7 @@
 class YotpoHttpClient 
 {
 	const YOTPO_API_URL = 'https://api.yotpo.com';
+	const YOTPO_API_URL_NO_SSL = 'http://api.yotpo.com';
 	const HTTP_REQUEST_TIMEOUT = 30;
   	const YOTPO_OAUTH_TOKEN_URL = 'https://api.yotpo.com/oauth/token';
 
@@ -51,16 +52,21 @@ class YotpoHttpClient
 		    $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/', $data);
 		}
 	}
-
-	public function makePostRequest($url, $data)
+	
+	public function makeRichSnippetRequest($app_key, $secret_token, $product_sku)
 	{
+	    return $this->makeGetRequest(self::YOTPO_API_URL_NO_SSL.'/products/'.$app_key.'/richsnippet/'.$product_sku, array(), 2);
+	}
+	
+	public function makePostRequest($url, $data, $timeout = self::HTTP_REQUEST_TIMEOUT, $use_https = true)
+	{		
 		$ch = curl_init($url);
 		list($is_json, $parsed_data) = YotpoHttpClient::jsonOrUrlEncode($data);    
 		$content_type = $is_json ? 'application/json' : 'application/x-www-form-urlencoded';                                                                                                                         
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $parsed_data);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,self::HTTP_REQUEST_TIMEOUT);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Content-length: '.strlen($parsed_data)));                                                                                                                   
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); /* Added by PrestaShop */
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */		
@@ -69,6 +75,21 @@ class YotpoHttpClient
 		return YotpoHttpClient::jsonDecode($result, true);
 	}
 
+	private function makeGetRequest($url, $data = array(), $timeout = self::HTTP_REQUEST_TIMEOUT)
+	{
+		if(count($data) > 0) {
+			$url .= '?' . http_build_query($data);	
+		}
+		$ch = curl_init($url);                                                                                                                     
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);                                                                                                                   
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); /* Added by PrestaShop */
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */		
+		$result = curl_exec($ch);
+		curl_close ($ch);	
+		return YotpoHttpClient::jsonDecode($result, true);
+	}
+	
 	private function grantOauthAccess($app_key, $secret_token)
 	{
 		include_once(_PS_MODULE_DIR_.'yotpo/lib/oauth-php/library/YotpoOAuthStore.php');
