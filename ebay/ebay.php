@@ -1057,6 +1057,7 @@ class Ebay extends Module
 			'tab_module' => Tools::getValue('tab_module'),
 			'module_name' => Tools::getValue('module_name'),
 			'token' => Tools::getValue('token'),
+			'ebay_token' => Configuration::get('EBAY_SECURITY_TOKEN'),			
 			'_module_dir_' => _MODULE_DIR_,
 			'ebay_categories' => EbayCategoryConfiguration::getEbayCategories(),
 			'id_lang' => $this->context->cookie->id_lang,
@@ -1321,6 +1322,7 @@ class Ebay extends Module
 			'formUrl' => $this->_getUrl($url_vars),
 			'ebayZoneNational' => Configuration::get('EBAY_ZONE_NATIONAL'),
 			'ebayZoneInternational' => Configuration::get('EBAY_ZONE_INTERNATIONAL'),
+			'ebay_token' => $configs['EBAY_SECURITY_TOKEN']			
 		));
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
