@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+include_once(dirname(__FILE__).'/PagSeguroLibrary/PagSeguroLibrary.php');
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -33,16 +35,16 @@ class PagSeguro extends PaymentModule
 	private $_html;
 	private $_charset_options = array('1' => 'ISO-8859-1', '2' =>'UTF-8');
 	private $_active_log = array('0' => 'NÃO', '1' => 'SIM');
-        private $order_status = array(
-            'INITIATED' => array('br' => 'Iniciado', 'en' => 'Initiated'),
-            'WAITING_PAYMENT' => array('br' => 'Aguardando pagamento', 'en' => 'Waiting payment'),
-            'IN_ANALYSIS' => array('br' => 'Em análise', 'en' => 'In analysis'),
-            'PAID' => array('br' => 'Paga', 'en' => 'Paid'),
-            'AVAILABLE' => array('br' => 'Disponível', 'en' => 'Available'),
-            'IN_DISPUTE' => array('br' => 'Em disputa', 'en' => 'In dispute'),
-            'REFUNDED' => array('br' => 'Devolvida', 'en' => 'Refunded'),
-            'CANCELLED' => array('br' => 'Cancelada', 'en' => 'Cancelled'));
-        private $list_states = array();
+	private $order_status = array(
+		'INITIATED' => array('br' => 'Iniciado', 'en' => 'Initiated'),
+		'WAITING_PAYMENT' => array('br' => 'Aguardando pagamento', 'en' => 'Waiting payment'),
+		'IN_ANALYSIS' => array('br' => 'Em análise', 'en' => 'In analysis'),
+		'PAID' => array('br' => 'Paga', 'en' => 'Paid'),
+		'AVAILABLE' => array('br' => 'Disponível', 'en' => 'Available'),
+		'IN_DISPUTE' => array('br' => 'Em disputa', 'en' => 'In dispute'),
+		'REFUNDED' => array('br' => 'Devolvida', 'en' => 'Refunded'),
+		'CANCELLED' => array('br' => 'Cancelada', 'en' => 'Cancelled'));
+	private $list_states = array();
 
 	function __construct()
 	{
@@ -51,7 +53,7 @@ class PagSeguro extends PaymentModule
 		$this->version = '1.4';
 		$this->author = 'PagSeguro Internet LTDA.';
 		$this->currencies = true;
-		$this->currencies_mode = 'checkbox';       
+		$this->currencies_mode = 'checkbox';
 		parent::__construct();
 		$this->displayName = $this->l('PagSeguro');
 		$this->description = $this->l('Receba pagamentos por cartão de crédito, transferência bancária e boleto.');
@@ -64,8 +66,7 @@ class PagSeguro extends PaymentModule
 	* @return boolean
 	*/
 	public function install()
-	{        
-        include_once(dirname(__FILE__).'/PagSeguroLibrary/PagSeguroLibrary.php');
+	{		
 
 		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn') || !Configuration::updateValue('PAGSEGURO_EMAIL', '') ||
 		!Configuration::updateValue('PAGSEGURO_TOKEN', '') || !Configuration::updateValue('PAGSEGURO_URL_REDIRECT', '') ||
@@ -73,7 +74,7 @@ class PagSeguro extends PaymentModule
 		!Configuration::updateValue('PAGSEGURO_LOG_ACTIVE', PagSeguroConfig::getData('log', 'active')) ||
 		!Configuration::updateValue('PAGSEGURO_LOG_FILELOCATION', PagSeguroConfig::getData('log', 'fileLocation')) ||
 		!Configuration::updateValue('PS_OS_PAGSEGURO', 0) || !$this->_generatePagSeguroOrderStatus())
-		    return false;
+			return false;
 		return true;
 	}
 
@@ -87,14 +88,14 @@ class PagSeguro extends PaymentModule
 		if (!Configuration::deleteByName('PAGSEGURO_EMAIL') || !Configuration::deleteByName('PAGSEGURO_TOKEN') || !Configuration::deleteByName('PAGSEGURO_URL_REDIRECT') ||
 		!Configuration::deleteByName('PAGSEGURO_NOTIFICATION_URL') || !Configuration::deleteByName('PAGSEGURO_CHARSET') || !Configuration::deleteByName('PAGSEGURO_LOG_ACTIVE') ||
 		!Configuration::deleteByName('PAGSEGURO_LOG_FILELOCATION') || !Configuration::deleteByName('PS_OS_PAGSEGURO') || !parent::uninstall())
-		    return false;
+			return false;
 		return true;
 	}
 
 	/**
-         * Gets order states saved in the bank
-         * @return boolean
-         */
+	* Gets order states saved in the bank
+	* @return boolean
+	*/
 	private function _findOrderStates()
 	{
 		return (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -113,13 +114,13 @@ class PagSeguro extends PaymentModule
 	{
 		if (Tools::isSubmit('btnSubmit'))
 		{
-		    $this->_postValidation();
+			$this->_postValidation();
 
-		    if (!count($this->errors))
+			if (!count($this->errors))
 			$this->_postProcess();
-		    else
+			else
 			foreach ($this->errors as $error)
-			    $this->_html .= '<div class="alert error">'.$error.'</div>';
+				$this->_html .= '<div class="alert error">'.$error.'</div>';
 		}
 
 		$this->_displayForm();
@@ -195,7 +196,7 @@ class PagSeguro extends PaymentModule
 		}
 		$this->_html .= '<div class="conf confirm">'.$this->l('Dados atualizados com sucesso').'</div>';
 	}
-    
+	
 	/**
 	* Create error messages
 	* 
@@ -217,7 +218,7 @@ class PagSeguro extends PaymentModule
 	{
 		return sprintf($this->l('O campo <strong>%s</strong> deve ser conter um email válido.'), $field);
 	}
-    
+	
 	/**
 	* Create invalid field size messages
 	* 
@@ -258,7 +259,7 @@ class PagSeguro extends PaymentModule
 	{
 		return sprintf($this->l('O campo <strong>%s</strong> deve conter uma url válida.'), $field);
 	}
-    
+	
 	/**
 	*  Display configuration form
 	*/
@@ -338,7 +339,7 @@ class PagSeguro extends PaymentModule
 							<br />
 							<span id="directory-log">
 								<label>'.$this->l('DIRETÓRIO').'</label><br />
-								<input type="text" id="pagseguro_log_dir" name="pagseguro_log_dir" value="'.Tools::safeOutput(Configuration::get('PAGSEGURO_LOG_FILELOCATION')).'" hint="'.$this->l('Nome do arquivo de log localizado no módulo diretor. Ex.: log_ps.log').'" />
+								<input type="text" id="pagseguro_log_dir" name="pagseguro_log_dir" value="'.Tools::safeOutput(Configuration::get('PAGSEGURO_LOG_FILELOCATION')).'" hint="'.$this->l('Diretório a partir da raíz de instalação do PrestaShop onde se deseja criar o arquivo de log. Ex.: /logs/log_ps.log').'" />
 							</span>
 
 							<div class="hintps _extras"></div>
@@ -472,7 +473,7 @@ class PagSeguro extends PaymentModule
 
 		return $this->display(__FILE__, 'payment_return.tpl');
 	}
-    
+	
 	/**
 	* Check the currency
 	* 
@@ -495,12 +496,12 @@ class PagSeguro extends PaymentModule
 	* @return string
 	*/
 	private function _generateSelectTag($id, Array $options, $selected = '', $extra = '')
-	{        
+	{		
 		$select = '<select id="'.Tools::safeOutput($id).'" name="'.Tools::safeOutput($id).'" '.$extra.' >';
 		foreach ($options as $key => $value)
 		{
-		    $selected_attr = ($selected == $key) ? 'selected="selected" ' : '';
-		    $select .= '<option value="'.Tools::safeOutput($key).'" '.$selected_attr.'>'.Tools::safeOutput($value).'</option>';
+			$selected_attr = ($selected == $key) ? 'selected="selected" ' : '';
+			$select .= '<option value="'.Tools::safeOutput($key).'" '.$selected_attr.'>'.Tools::safeOutput($value).'</option>';
 		}
 		return $select.'</select>';
 	}
@@ -514,9 +515,7 @@ class PagSeguro extends PaymentModule
 	{
 		try
 		{
-			if (!preg_match('/^[^\\/?*:;{}\\\\]+\\.[^\\/?*:;{}\\\\]{3}$/', $file))
-				die('Inválido nome do arquivo de log');
-			$f = @fopen(dirname(__FILE__).'/'.$file, 'a');
+			$f = @fopen(_PS_ROOT_DIR_.$file, 'a');
 			fclose($f);
 		}
 		catch (Exception $e)
@@ -524,7 +523,7 @@ class PagSeguro extends PaymentModule
 			die($e->getMessage());
 		}
 	}
-    
+	
 	/**
 	* Create PagSeguro order status into database
 	* 
@@ -533,9 +532,9 @@ class PagSeguro extends PaymentModule
 	private function _generatePagSeguroOrderStatus()
 	{
 		$orders_added = true;
-		$initial_state = 0;
-                $this->list_states = $this->_findOrderStates();
-                
+		$name_state = null;
+				$this->list_states = $this->_findOrderStates();
+				
 		foreach (array_keys($this->order_status) as $status)
 		{
 			$order_state = new OrderState();
@@ -547,61 +546,62 @@ class PagSeguro extends PaymentModule
 			$order_state->logable = true;
 			$order_state->invoice = true;
 			$order_state->name = array();
-                        $continue = false;
+						$continue = false;
 			foreach (Language::getLanguages() as $language){
-                            $continue = $this->_checkIfOrderStatusExists($language['id_lang'], $this->getStatusTranslation($status, strtolower($language['iso_code'])));
-                            
-                                if($continue)
-                                   $order_state->name[$language['id_lang']] = $this->getStatusTranslation($status, strtolower($language['iso_code']));
-                        }
+							$continue = $this->_checkIfOrderStatusExists($language['id_lang'], $this->getStatusTranslation($status, strtolower($language['iso_code'])));
+							
+								if($continue)
+								   $order_state->name[$language['id_lang']] = $this->getStatusTranslation($status, strtolower($language['iso_code']));
+						}
 				
-                       if($continue){
-                           $orders_added &= $order_state->add();
-                           copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/os/'.(int)$order_state->id.'.gif');
-			/* getting initial state id to update PS_OS_PAGSEGURO config */
+					   	if($continue){
+						   $orders_added &= $order_state->add();
+						   copy(dirname(__FILE__).'/logo.gif', dirname(__FILE__).'/../../img/os/'.(int)$order_state->id.'.gif');
+					  	}
+					  
+					  	/* getting initial state id to update PS_OS_PAGSEGURO config */
 			if ($status == 'WAITING_PAYMENT')
-				$initial_state = (int)$order_state->id;
-                      }
-              }
+				$name_state = $this->getStatusTranslation($status, strtolower($language['iso_code']));
+			  	}
 			
-		if ($orders_added)
-			Configuration::updateValue('PS_OS_PAGSEGURO', $initial_state);
+		if ($name_state != null)
+			Configuration::updateValue('PS_OS_PAGSEGURO', $this->_returnIdOrderByStatusPagSeguro($name_state));
 
 		return $orders_added;
 	}
-        
-     /**
-     * Check if PagSeguro order status already exists on database
-     * @param String $status
-     * @return boolean
-     */
-     private function _checkIfOrderStatusExists($id_lang, $status_name){
-         if(Tools::isEmpty($this->list_states)){
-             return true;
-         }
-            $save = true;
-            foreach ($this->list_states as $state) {
-               if($state['id_lang'] == $id_lang && $state['name'] == $status_name)
-                 $save = false;
-            }
-       return $save;
-    }
-    
-        /**
-         * Return current translation for infomed status and language iso code
-         * @param string $status
-         * @param string $lang_iso_code
-         * @return string
-         */
-        private function getStatusTranslation($status, $lang_iso_code = 'br')
-        {
-            if (isset($this->order_status[$status][$lang_iso_code]))
-                return $this->order_status[$status][$lang_iso_code];
+		
+	 /**
+	 * Check if PagSeguro order status already exists on database
+	 * @param String $status
+	 * @return boolean
+	 */
+	 private function _checkIfOrderStatusExists($id_lang, $status_name){
+		 if(Tools::isEmpty($this->list_states)){
+			 return true;
+		 }
+			$save = true;
+			foreach ($this->list_states as $state) {
+			   if($state['id_lang'] == $id_lang && $state['name'] == $status_name)
+				 $save = false;
+			}
+	   return $save;
+	}
+	
+		/**
+		 * Return current translation for infomed status and language iso code
+		 * @param string $status
+		 * @param string $lang_iso_code
+		 * @return string
+		 */
+		private function getStatusTranslation($status, $lang_iso_code = 'br')
+		{
+			if (isset($this->order_status[$status][$lang_iso_code]))
+				return $this->order_status[$status][$lang_iso_code];
 
-            /* Default return in English */
-            return $this->order_status[$status]['en'];
-        }
-        
+			/* Default return in English */
+			return $this->order_status[$status]['en'];
+		}
+		
 	/**
 	* Gets notification url
 	* @return string
@@ -610,7 +610,7 @@ class PagSeguro extends PaymentModule
 	{
 		return (!PagSeguroHelper::isEmpty(Configuration::get('PAGSEGURO_NOTIFICATION_URL'))) ? Configuration::get('PAGSEGURO_NOTIFICATION_URL')  : $this->_notificationURL();
 	}
-    
+	
 	/**
 	* 
 	* Notification Url
@@ -619,5 +619,21 @@ class PagSeguro extends PaymentModule
 	private function _notificationURL()
 	{
 		return _PS_BASE_URL_.__PS_BASE_URI__.'index.php?fc=module&module=pagseguro&controller=notification';
+	}
+		
+		   /**
+	* Return Id Oder by Status PagSeguro
+	* @param type $value
+	* @return type
+	*/
+	private function _returnIdOrderByStatusPagSeguro($value)
+	{
+		$id_order_state = (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT distinct os.`id_order_state`
+		FROM `' . _DB_PREFIX_ . 'order_state` os
+		INNER JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`name` = \'' .pSQL($value). '\' AND os.`module_name` = \'pagseguro\')
+		WHERE deleted = 0'));
+
+		return $id_order_state[0]['id_order_state'];
 	}
 }
