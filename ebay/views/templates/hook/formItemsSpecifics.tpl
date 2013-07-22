@@ -64,7 +64,7 @@
 <script type="text/javascript">
 	var module_dir = "{$_module_dir_}";
 	var id_lang = "{$id_lang}";
-	var ebay_token = "{$configs.EBAY_SECURITY_TOKEN}";
+	var ebay_token = "{$ebay_token}";
 	
 	var l = {ldelim}
 		'Attributes'				 : "{l s="Attributes" mod='ebay'}",
