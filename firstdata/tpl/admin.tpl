@@ -3,10 +3,10 @@
 <div class="firstdata-wrap">
 	{$firstdata_confirmation}
 	<div class="firstdata-header">
-		<a href="http://www.empsebiz.com/prestashop/" target="_blank"><img src="{$module_dir}img/logo.png" alt="First Data" class="firstdata-logo" /></a>
+		<a href="https://fdsnap.secure.force.com/gssb/prestashop" target="_blank"><img src="{$module_dir}img/logo.png" alt="First Data" class="firstdata-logo" /></a>
 		<span class="firstdata-intro">{l s='Online Payment Processing' mod='firstdata'}<br />
 		{l s='Fast - Secure - Reliable' mod='firstdata'}</span>
-		<a href="http://www.empsebiz.com/prestashop/" target="_blank" class="firstdata-create-btn">{l s='Create an Account Now!' mod='firstdata'}</a>
+		<a href="https://fdsnap.secure.force.com/gssb/prestashop" target="_blank" class="firstdata-create-btn">{l s='Create an Account Now!' mod='firstdata'}</a>
 	</div>
 	<div class="firstdata-content">
 		<div class="firstdata-half L">

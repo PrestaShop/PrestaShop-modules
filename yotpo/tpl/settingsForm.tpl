@@ -22,7 +22,13 @@
 		{/if}
 
 		<fieldset id="y-fieldset">
-      
+	        <div class="y-label">{l s='Enable Rich snippets' mod='yotpo'}
+               <input type="checkbox" name="yotpo_rich_snippets" value="1" {if $yotpo_rich_snippets}checked="checked"{/if} />
+            </div> 
+            {if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
+            	<p class="y-notification"> * In order to activate Rich Snippets you will also need to check the Rich Snippet tick box in your <a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}&redirect=/customize/seo&utm_source=customers_prestashop_admin&utm_medium=link&utm_campaign=prestashop_rich_snippets" target="_blank">{l s='Yotpo admin.' mod='yotpo'}</a> </p>				 
+			{/if}
+                   
 	        <div class="y-label">{l s='For multipule-language sites, mark this check box. This will choose the language according to the user\'s site language' mod='yotpo'}
                <input type="checkbox" name="yotpo_language_as_site" value="1" {if $yotpo_language_as_site}checked="checked"{/if} />
             </div> 
@@ -52,6 +58,7 @@
 					data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; </br>
 					data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;</br>
 					data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; </br>
+					{$richSnippetsCode|escape:'UTF-8'} <br>
 					&lt;/div&gt;
 					{/literal}
 					</div>
@@ -97,7 +104,7 @@
 		</fieldset>
 
 		<div class="y-footer">
-			{if $yotpo_showPastOrdersButton}<input type="submit" name="yotpo_past_orders" value="{l s='Submit past orders' mod='yotpo'}" class="y-submit-btn">{/if}
+			{if $yotpo_showPastOrdersButton}<input type="submit" name="yotpo_past_orders" value="{l s='Submit past orders' mod='yotpo'}" class="y-submit-btn" {if empty($yotpo_appKey) || empty($yotpo_oauthToken)} disabled {/if}>{/if}
 			<input type="submit" name="yotpo_settings" value="{l s='Update' mod='yotpo'}" class="y-submit-btn" />
 		</div>
 	</form>

@@ -44,4 +44,25 @@
 
 2012-05-02
 ----
-1) Cache bug, settings page wasn't updated after upgrading, This happens only in some versions. 
+1) Cache bug, settings page wasn't updated after upgrading, This happens only in some versions.
+
+2012-07-09
+----
+1) Add language support to custom testimonials tab.
+
+2012-07-15
+----
+1) Add support in rich snippets.
+
+2012-07-15
+----
+1) Add update cache method and update row in case it's invalid. 
+
+2012-07-17
+----
+1) Disable submit past orders button in case there are no app key or secret token.
+
+2012-07-21
+----
+1) Add variable to db to check whether the snippet cache was already created. this is useful when a user upgrade from an older version.      
+   
