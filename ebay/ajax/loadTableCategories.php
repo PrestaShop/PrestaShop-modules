@@ -27,6 +27,7 @@
 
 include_once dirname(__FILE__).'/../../../config/config.inc.php';
 include_once dirname(__FILE__).'/../ebay.php';
+
 $ebay = new Ebay();
 
 if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
@@ -34,8 +35,8 @@ if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
 
-$ebay_category_list = Db::getInstance()->executeS('SELECT * 
-	FROM `'._DB_PREFIX_.'ebay_category` 
+$ebay_category_list = Db::getInstance()->executeS('SELECT *
+	FROM `'._DB_PREFIX_.'ebay_category`
 	WHERE `id_category_ref` = `id_category_ref_parent`');
 
 if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -49,41 +50,42 @@ if (version_compare(_PS_VERSION_, '1.5', '>'))
 }
 else
 {
-	$rq_get_cat_in_stock = '
-		SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
-		FROM `'._DB_PREFIX_.'product`	
+	$rq_get_cat_in_stock = 'SELECT SUM(`quantity`) AS instockProduct, `id_category_default`
+		FROM `'._DB_PREFIX_.'product`
 		GROUP BY `id_category_default`';
 }
 
 $get_cats_stock = Db::getInstance()->ExecuteS($rq_get_cat_in_stock);
 $get_cat_in_stock = array();
+
 foreach ($get_cats_stock as $data)
 	$get_cat_in_stock[$data['id_category_default']] = $data['instockProduct'];
 
-// Loading categories
+/* Loading categories */
 $category_config_list = array();
-// init refcats
+/* init refcats */
 $ref_categories = array();
-// init levels
+/* init levels */
 $levels = array();
-// init selects
+/* init selects */
 $sql = '
 	SELECT *, ec.`id_ebay_category` AS id_ebay_category
 	FROM `'._DB_PREFIX_.'ebay_category` AS ec
 	LEFT OUTER JOIN `'._DB_PREFIX_.'ebay_category_configuration` AS ecc
 	ON ec.`id_ebay_category` = ecc.`id_ebay_category`
 	ORDER BY `level`';
+
 foreach (Db::getInstance()->executeS($sql) as $category)
 {
-	// Add datas
+	/* Add datas */
 	if (isset($category['id_category']))
 		$category_config_list[$category['id_category']] = $category;
-	
-	// add refcats
+
+	/* add refcats */
 	if (!isset($ref_categories[$category['id_category_ref']]))
 	{
 		$ref_categories[$category['id_category_ref']] = $category;
-		// Create children in refcats
+		/* Create children in refcats */
 		if ($category['id_category_ref'] != $category['id_category_ref_parent'])
 		{
 			if (!isset($ref_categories[$category['id_category_ref_parent']]['children']))
@@ -97,17 +99,17 @@ foreach (Db::getInstance()->executeS($sql) as $category)
 foreach ($category_config_list as &$category)
 	$category['var'] = getSelectors($ref_categories, $category['id_category_ref'], $category['id_category'], $category['level'], $ebay).'<input type="hidden" name="category['.(int)$category['id_category'].']" value="'.(int)$category['id_ebay_category'].'" />';
 
-// Smarty datas
+/* Smarty datas */
 $template_vars = array(
-	'tabHelp' 					 => '&id_tab=7',
-	'_path' 						 => $ebay->getPath(),
-	'categoryList' 			 => $category_list,
-	'eBayCategoryList' 	 => $ebay_category_list,
-	'getCatInStock' 		 => $get_cat_in_stock,
+	'tabHelp' => '&id_tab=7',
+	'_path' => $ebay->getPath(),
+	'categoryList' => $category_list,
+	'eBayCategoryList' => $ebay_category_list,
+	'getCatInStock' => $get_cat_in_stock,
 	'categoryConfigList' => $category_config_list,
-	'request_uri' 			 => $_SERVER['REQUEST_URI'],
-	'noCatSelected' 		 => Tools::getValue('ch_cat_str'),
-	'noCatFound'				 => Tools::getValue('ch_no_cat_str')
+	'request_uri' => $_SERVER['REQUEST_URI'],
+	'noCatSelected' => Tools::getValue('ch_cat_str'),
+	'noCatFound' => Tools::getValue('ch_no_cat_str')
 );
 
 if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -132,6 +134,7 @@ echo $ebay->display(realpath(dirname(__FILE__).'/../'), '/views/templates/hook/t
 function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $ebay)
 {
 	$var = null;
+	
 	if ($level > 1)
 	{
 		foreach ($ref_categories as $ref_id_category_ref => $category)
@@ -142,30 +145,29 @@ function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $
 				{
 					if ($category['id_category_ref'] != $category['id_category_ref_parent'])
 						$var .= getSelectors($ref_categories, $category['id_category_ref_parent'], $id_category, (int)($level - 1), $ebay);
-					$var .= '
-						<select name="category['.$id_category.']" id="categoryLevel'.(int)($category['level']).'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($category['level']).', '.(int)$id_category.');">';
+					
+					$var .= '<select name="category['.$id_category.']" id="categoryLevel'.(int)($category['level']).'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($category['level']).', '.(int)$id_category.');">';
+					
 					foreach ($ref_categories[$category['id_category_ref_parent']]['children'] as $child)
 						$var .= '<option value="'.$ref_categories[$child]['id_ebay_category'].'"'.($category['id_category_ref'] == $child ? ' selected' : '').'>'.$ref_categories[$child]['name'].'</option>';
-					$var .= '
-						</select>';
+					
+					$var .= '</select>';
 				}
 			}
 		}
 	}
 	else
 	{
-		$var .= '
-			<select name="category['.$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
-					<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
+		$var .= '<select name="category['.$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
+			<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
 
 		foreach ($ref_categories as $ref_id_category_ref => $category)
-		{
 			if (isset($category['id_category_ref']) && $category['id_category_ref'] == $category['id_category_ref_parent'] && !empty($category['id_ebay_category']))
 				$var .= '<option value="'.$category['id_ebay_category'].'"'.($category['id_category_ref'] == $id_category_ref ? ' selected' : '').'>'.$category['name'].'</option>';
-		}
-		$var .= '
-			</select>';
+
+		$var .= '</select>';
 	}
+
 	return $var;
 }
 

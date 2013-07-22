@@ -29,6 +29,9 @@ include_once (dirname(__FILE__).'/../../../config/config.inc.php');
 include_once dirname(__FILE__).'/../classes/EbayCountrySpec.php';
 include_once dirname(__FILE__).'/../classes/EbayProductConfiguration.php';
 
+if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+	die('ERROR : INVALID TOKEN');
+
 $ebay_country = new EbayCountrySpec();
 $id_lang = $ebay_country->getIdLang();
 
@@ -36,8 +39,9 @@ $is_one_five = version_compare(_PS_VERSION_, '1.5', '>');
 
 $sql = 'SELECT p.`id_product` as id, pl.`name`, epc.`blacklisted`, epc.`extra_images`
 		FROM `'._DB_PREFIX_.'product` p';
+
 $sql .= $is_one_five ? Shop::addSqlAssociation('product', 'p') : '';
-$sql .=  ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 			ON (p.`id_product` = pl.`id_product`
 			AND pl.`id_lang` = '.(int)$id_lang;
 $sql .= $is_one_five ? Shop::addSqlRestrictionOnLang('pl') : '';
@@ -45,6 +49,8 @@ $sql .= ')
 		LEFT JOIN `'._DB_PREFIX_.'ebay_product_configuration` epc
 			ON p.`id_product` = epc.`id_product`
 		WHERE ';
+		
 $sql .= $is_one_five ? ' product_shop.`id_shop` = 1 AND ' : '';
 $sql .= ' p.`id_category_default` = '.(int)Tools::getValue('category');
-echo json_encode(Db::getInstance()->ExecuteS($sql));
+
+echo Tools::jsonEncode(Db::getInstance()->ExecuteS($sql));

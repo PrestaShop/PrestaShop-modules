@@ -3,8 +3,7 @@
 	<name>ebay</name>
 	<displayName><![CDATA[eBay]]></displayName>
 	<version><![CDATA[1.5]]></version>
-	<description><![CDATA[Easily export your products from PrestaShop to eBay, 
-			the biggest market place, to acquire new customers and realize more sales.]]></description>
+	<description><![CDATA[Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[market_place]]></tab>
 	<confirmUninstall>Are you sure you want to uninistall this module? All configuration settings will be lost</confirmUninstall>

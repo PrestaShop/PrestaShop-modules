@@ -31,7 +31,7 @@
 		{l s='Match eBay Items\' Specifics with PrestasShop Characteristics' mod='ebay'}
 	</b>
 </p>
-<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
+<form action="index.php?{if (_PS_VERSION <= '1.5')}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
 	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
@@ -58,12 +58,13 @@
 			{/foreach}
 		</tbody>
 	</table>
-	<div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
+	<div class="margin-form" style="margin-top:10px"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
 </form>
 
 <script type="text/javascript">
 	var module_dir = "{$_module_dir_}";
 	var id_lang = "{$id_lang}";
+	var ebay_token = "{$configs.EBAY_SECURITY_TOKEN}";
 	
 	var l = {ldelim}
 		'Attributes'				 : "{l s="Attributes" mod='ebay'}",

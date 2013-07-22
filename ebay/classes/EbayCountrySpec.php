@@ -29,17 +29,17 @@ if (!in_array('Ebay', get_declared_classes()))
 		require_once(dirname(__FILE__).'/../ebay.php');
 
 class EbayCountrySpec
-	{
+{
 	public $country;
 	public $accepted_isos = array('it', 'fr', 'gb', 'es');
-	
+
 	private $country_data = array(
 		'it' => array(
-			'site_id' => 101, 
-			'language' => 'it_IT', 
-			'currency' => 'EUR', 
-			'site_name' => 'Italy', 
-			'site_extension' => 'it', 
+			'site_id' => 101,
+			'language' => 'it_IT',
+			'currency' => 'EUR',
+			'site_name' => 'Italy',
+			'site_extension' => 'it',
 			'img_stats' => null
 		),
 		'gb' => array(
@@ -95,7 +95,7 @@ class EbayCountrySpec
 	{
 		return $this->_getCountryData('site_name');
 	}
-	
+
 	public function getSiteExtension()
 	{
 		return $this->_getCountryData('site_extension');
@@ -105,19 +105,19 @@ class EbayCountrySpec
 	{
 		return $this->_getCountryData('img_stats');
 	}
-	
+
 	public function getIsoCode()
 	{
 		if (!$this->country)
 			return null;
 		return $this->country->iso_code;
 	}
-	
+
 	public function getIdLang()
 	{
 		$id_lang = Language::getIdByIso($this->getIsoCode());
-		if (!$id_lang) //Fix for UK 
-			$id_lang = Configuration::get('PS_LANG_DEFAULT');		
+		if (!$id_lang) //Fix for UK
+			$id_lang = Configuration::get('PS_LANG_DEFAULT');
 		return (int)$id_lang;
 	}
 
@@ -126,7 +126,7 @@ class EbayCountrySpec
 		$iso_code = strtolower($this->country->iso_code);
 		if (isset($this->country_data[$iso_code]))
 			return $this->country_data[$iso_code][$data];
-		return $this->country_data['fr'][$data];		
+		return $this->country_data['fr'][$data];
 	}
 
 	/**
@@ -134,7 +134,7 @@ class EbayCountrySpec
 	*
 	* Sends back true or false
 	**/
-	public function checkCountry() 
+	public function checkCountry()
 	{
 		if (in_array(strtolower($this->country->iso_code), $this->accepted_isos))
 			return true;
@@ -147,7 +147,7 @@ class EbayCountrySpec
 	* Set country
 	*
 	**/
-	private function _getCountry() 
+	private function _getCountry()
 	{
 		// If eBay module has already been called once, use the default country
 		if (!is_object($this->country))

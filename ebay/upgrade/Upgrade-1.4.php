@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2007-2013 PrestaShop
  *
@@ -25,7 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-function upgrade_module_1_4($module) {
+function upgrade_module_1_4($module)
+{
 	include(dirname(__FILE__).'/sql/sql-upgrade-1-4.php');
 
 	if (!empty($sql) && is_array($sql))
@@ -37,8 +37,9 @@ function upgrade_module_1_4($module) {
 				return false;
 			}
 	}
+
 	$module->installUpgradeOneFour();
 	$module->setConfiguration('EBAY_VERSION', $module->version);
-	
-  return true;
+
+	return true;
 }

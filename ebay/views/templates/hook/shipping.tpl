@@ -225,7 +225,7 @@
 		{
 			var showcountries = $(this);
 			$.ajax({
-				url: '{/literal}{$module_dir}{literal}ajax/getCountriesLocation.php',
+				url: '{/literal}{$module_dir}{literal}ajax/getCountriesLocation.php?token={/literal}{$configs.EBAY_SECURITY_TOKEN}{literal}',
 				type: 'POST',
 				data: {region: $(this).attr('data-region')},
 				complete: function(xhr, textStatus) {

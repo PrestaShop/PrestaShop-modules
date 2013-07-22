@@ -27,13 +27,14 @@
 
 class Cart extends CartCore
 {
-  public static function __set_state($attributes)
-  {
-      $cart = new Cart();
-			foreach ($attributes as $name => $attribute)
-				$cart->{$name} = $attribute;
+	public static function __set_state($attributes)
+	{
+		$cart = new Cart();
 
-      return $cart;
-  }
-	
+		foreach ($attributes as $name => $attribute)
+			$cart->{$name} = $attribute;
+
+		return $cart;
+	}
+
 }

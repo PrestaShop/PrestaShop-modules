@@ -26,8 +26,10 @@
  */
 
 include(dirname(__FILE__).'/../../../config/config.inc.php');
+
 if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	die('ERROR: Invalid Token');
 
 include(dirname(__FILE__).'/../classes/EbayConfiguration.php');
+
 echo EbayConfiguration::updateAPIToken() ? 'OK' : 'KO';
