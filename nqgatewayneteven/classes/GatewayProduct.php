@@ -159,6 +159,11 @@ class GatewayProduct extends Gateway
 				p.`reference` as product_reference,
 				pa.`reference` as product_attribute_reference,
 				p.`additional_shipping_cost`,
+				p.`height`,
+                p.`width`,
+                p.`depth`,
+                p.`weight`,
+                pa.`weight` as weight_product_attribute,
 				GROUP_CONCAT(distinct CONCAT(agl.`name`," {##} ",al.`name`) SEPARATOR "'.pSQL($separator).' ") as attribute_name
 				
 				'.((self::$type_sku != 'reference')?',(SELECT CONCAT(\'D\', pa2.`id_product_attribute`) FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default': '').'
@@ -221,6 +226,11 @@ class GatewayProduct extends Gateway
 			p.`reference` as product_reference,
 			pa.`reference` as product_attribute_reference,
 			p.`additional_shipping_cost`,
+			p.`height`,
+			p.`width`,
+			p.`depth`,
+			p.`weight`,
+			pa.`weight` as weight_product_attribute,
 			GROUP_CONCAT(distinct CONCAT(agl.`name`," {##} ",al.`name`) SEPARATOR "'.pSQL($separator).' ") as attribute_name
 			'.((self::$type_sku != 'reference')?',(SELECT CONCAT(\'D\', pa2.`id_product_attribute`) FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default': '').'
 				'.((self::$type_sku == 'reference')?',(SELECT pa2.`reference` FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default_ref': '').'
@@ -311,9 +321,14 @@ class GatewayProduct extends Gateway
 			$quantity = Product::getQuantity((int)$product['id_product'], !empty($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : NULL);
 			
 			$indice = count($products_temp);
-			
 
-			$products_temp[$indice] = array(
+
+            $weight = $product['weight'];
+            if(!empty($id_product_attribute))
+                $weight += $product['weight_product_attribute'];
+
+
+            $products_temp[$indice] = array(
 				'Title' => $product['name'],
 				'SKU' => $product_reference,
 				'Description' => strip_tags($product['description']),
@@ -326,6 +341,10 @@ class GatewayProduct extends Gateway
 				'Classification' => str_replace('Accueil/', '', $classification),
 				'shipping_delay' => $this->getValue('shipping_delay'),
 				'Comment' => $this->getValue('comment'),
+                'Height' => $product['height'],
+                'Width' => $product['width'],
+                'Depth' => $product['depth'],
+                'Weight' => $weight,
 				'Brand' => !empty($product['name_manufacturer']) ? $product['name_manufacturer'] : $this->getValue('default_brand')
 			);
 
