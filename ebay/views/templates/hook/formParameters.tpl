@@ -61,7 +61,7 @@
 	<fieldset style="margin-top:10px;">
 		<legend>{l s='Global Configuration' mod='ebay'}</legend>
 		<h4>{l s='To list your products on eBay, you first need to create a business seller account on eBay and configure your eBay-Prestashop module' mod='ebay'}</h4>
-		<label>{l s='eBay Identifier' mod='ebay'} : </label>
+		<label>{l s='eBay User ID' mod='ebay'} : </label>
 		<div class="margin-form">
 			<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}"/>
 		</div>
