@@ -87,7 +87,7 @@ $_MODULE['<{socolissimo}prestashop>back_office_2bb98ed92a6546e5adfee27046c2c0df'
 $_MODULE['<{socolissimo}prestashop>back_office_9fbff0971c06ee404f638e9abcbd9446'] = 'Ce module est gratuit et vous permet d\'activer cette offre sur votre magasin.';
 $_MODULE['<{socolissimo}prestashop>back_office_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuration';
 $_MODULE['<{socolissimo}prestashop>back_office_0ab984d91ab0a037bdf692bf0e73c349'] = 'Important';
-$_MODULE['<{socolissimo}prestashop>back_office_a6d75459e8fa461df659bf5207929a03'] = 'Veuillez nous contacter pour ouvrir votre compte SoColissimo';
+$_MODULE['<{socolissimo}prestashop>back_office_58f73ae759adc826a9e15e26280cdaa4'] = 'Pour ouvrir un compte SoColissimo, veuillez contacter La Poste à ce numéro : 3634.';
 $_MODULE['<{socolissimo}prestashop>back_office_9c85d4c2bae6ab548fe23e57bd89ddc4'] = 'Identifiant FO';
 $_MODULE['<{socolissimo}prestashop>back_office_7b95472e0575adc1e3d90a2d7b51e496'] = 'Utilisateur du back-office So Colissimo';
 $_MODULE['<{socolissimo}prestashop>back_office_897356954c2cd3d41b221e3f24f99bba'] = 'Clé de cryptage';
