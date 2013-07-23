@@ -282,6 +282,10 @@ class PaypalExpressCheckout extends Paypal
 			$fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = (int)$product['id_product'];
 
 			$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $product['name'];
+
+			if (isset($product['attributes']) && (empty($product['attributes']) === false))
+				$fields['L_PAYMENTREQUEST_0_NAME'.$index] .= ' - '.$product['attributes'];
+
 			$fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($product['description_short']), 0, 120).'...';
 
 			$fields['L_PAYMENTREQUEST_0_AMT'.$index] = Tools::ps_round($product['price_wt'], $this->decimals);
