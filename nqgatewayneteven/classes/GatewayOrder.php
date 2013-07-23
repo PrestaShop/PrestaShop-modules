@@ -895,8 +895,8 @@ class GatewayOrder extends Gateway
 					
 				}
 				
-				if (!is_null($order_status))
-					Toolbox::addLogLine(self::getL('Update order state').' '.$statut.' '.self::getL('NetEven Order Id').' '.$res['id_order_neteven'].' '.self::getL('Order Id').' '.$res['id_order'].' - '.$order_status->StatusResponse.'');
+				if (!empty($order_status) && !is_null($order_status))
+					Toolbox::addLogLine(self::getL('Update order state').' '.$status.' '.self::getL('NetEven Order Id').' '.$res['id_order_neteven'].' '.self::getL('Order Id').' '.$res['id_order'].' - '.$order_status->StatusResponse.'');
 
 				if (!Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_order_state` (`id_order`, `id_order_state`, `date_add`, `date_upd`) VALUES ('.(int)$res['id_order'].', '.(int)$params['newOrderStatus']->id.', "'.pSQL($date_now).'", "'.pSQL($date_now).'")'))
 					Toolbox::addLogLine(self::getL('Failed for save export NetEven order state Id').' '.(int)$res['id_order']);

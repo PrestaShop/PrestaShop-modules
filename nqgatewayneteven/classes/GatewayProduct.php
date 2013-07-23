@@ -312,10 +312,7 @@ class GatewayProduct extends Gateway
 			
 			$indice = count($products_temp);
 			
-			$shipping_price_local = $this->getValue('shipping_price_local');
-			if (self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname))
-				$shipping_price_local = $product[self::$shipping_by_product_fieldname];
-			
+
 			$products_temp[$indice] = array(
 				'Title' => $product['name'],
 				'SKU' => $product_reference,
@@ -349,27 +346,29 @@ class GatewayProduct extends Gateway
             }
 
 
-
-            if ($shipping_price_local == '-')
-				unset($products_temp[$indice]['shipping_price_local']);
-			
-			if (empty($products_temp[$indice]['shipping_price_international']))
-				unset($products_temp[$indice]['shipping_price_international']);
-
-
+            //shipping part
+            $shipping_price_local = $this->getValue('shipping_price_local');
+            if (self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname))
+                $shipping_price_local = $product[self::$shipping_by_product_fieldname];
 
             $carrier_france = $this->getConfig('SHIPPING_CARRIER_FRANCE');
             $carrier_zone_france = $this->getConfig('SHIPPING_ZONE_FRANCE');
 
             if(!empty($carrier_france) && !empty($carrier_zone_france)){
                 $products_temp[$indice]['PriceShippingLocal1'] = $this->getShippingPrice($product['id_product'], $id_product_attribute, $carrier_france, $carrier_zone_france);
+            }elseif(!empty($shipping_price_local)){
+                $products_temp[$indice]['PriceShippingLocal1'] = $shipping_price_local;
             }
 
+
+            $shipping_price_inter = $this->getValue('shipping_price_international');
             $carrier_inter = $this->getConfig('SHIPPING_CARRIER_INTERNATIONAL');
             $carrier_zone_inter = $this->getConfig('SHIPPING_ZONE_INTERNATIONAL');
 
             if(!empty($carrier_france) && !empty($carrier_zone_france)){
                 $products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
+            }elseif(!empty($shipping_price_inter)){
+                $products_temp[$indice]['PriceShippingInt1'] = $shipping_price_inter;
             }
 
 
