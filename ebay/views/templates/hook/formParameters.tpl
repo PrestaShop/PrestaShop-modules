@@ -96,7 +96,7 @@
 		<div class="hide regenerate_token_button" style="display:none;">
 			<label>{l s='Regenerate Token' mod='ebay'} :</label>
 			<a href="{$url}&action=regenerate_token">
-				<input type="button" id="token-btn" class="button" value="Regenerate Token" />
+				<input type="button" id="token-btn" class="button" value="{l s='Regenerate Token' mod='ebay'}" />
 			</a>
 		</div>
 	</fieldset>
