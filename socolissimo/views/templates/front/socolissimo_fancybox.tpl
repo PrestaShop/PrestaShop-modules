@@ -94,8 +94,9 @@
 									alert(jsonData.msg);
 							}
 						},
-						error: function(XMLHttpRequest, textStatus, errorThrown)
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
 							alert('TECHNICAL ERROR\nDetails:\nError thrown: ' + XMLHttpRequest + '\n' + 'Text status: ' + textStatus);
+						}
 					});
 				}
 			});
