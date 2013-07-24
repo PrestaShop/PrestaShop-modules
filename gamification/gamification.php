@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.4.5';
+		$this->version = '1.4.6';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -264,15 +264,20 @@ class Gamification extends Module
 				'description' => array($id_lang => $lang->description),
 				'group_name' => array($id_lang => $lang->group_name));
 
-		$cond_ids = $this->getFormatedConditionsIds();
+		$current_badges = array();
+		$result = Db::getInstance()->ExecuteS('SELECT id_badge FROM '._DB_PREFIX_.'badge');
+		foreach ($result as $row)
+			$current_badges[] = (int)$row['id_badge'];
 
+		$cond_ids = $this->getFormatedConditionsIds();
 		foreach ($badges as $badge)
 		{
 			try 
 			{
-				if ($id_badge = Badge::getIdByIdPs($badge->id_ps_badge))//if badge already exist we update language data
+				//if badge already exist we update language data
+				if (in_array($badge->id_ps_badge, $current_badges))
 				{
-					$bdg = new Badge($id_badge);
+					$bdg = new Badge($badge->id_ps_badge);
 					$bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
 					$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
 					$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
@@ -293,6 +298,13 @@ class Gamification extends Module
 					continue;
 			}
 		}
+		
+		// Delete badges that are not in the file anymore
+		foreach ($current_badges as $id_badge)
+		{
+			$bdg = new Badge($id_badge);
+			$bdg->delete();
+		}
 	}
 	
 	public function processImportAdvices($advices, $advices_lang, $id_lang)
@@ -300,17 +312,24 @@ class Gamification extends Module
 		$formated_advices_lang = array();
 		foreach ($advices_lang as $lang)
 			$formated_advices_lang[$lang->id_ps_advice] = array('html' => array($id_lang => $lang->html));
-			
+
+		$current_advices = array();
+		$result = Db::getInstance()->ExecuteS('SELECT id_advice FROM '._DB_PREFIX_.'advice');
+		foreach ($result as $row)
+			$current_advices[] = (int)$row['id_advice'];
+		
 		$cond_ids = $this->getFormatedConditionsIds();
 		foreach ($advices as $advice)
 		{
 			try
 			{
-				if ($id_advice = Advice::getIdByIdPs($advice->id_ps_advice))//if advice already exist we update language data
+				//if advice already exist we update language data
+				if (in_array($advice->id_ps_advice, $current_advices))
 				{
-					$adv = new Advice($id_advice);
+					$adv = new Advice($advice->id_ps_advice);
 					$bdg->html[$id_lang] = $formated_advices_lang[$advice->id_ps_advice]['html'][$id_lang];
 					$adv->update();
+					unset($current_advices[$advice->id_ps_advice]);
 				}
 				else
 				{
@@ -328,8 +347,19 @@ class Gamification extends Module
 				}
 				unset($adv);
 			} catch (Exception $e) {
-					continue;
+				continue;
 			}
+		}
+		
+		// Delete advices that are not in the file anymore
+		foreach ($current_advices as $id_advice)
+		{
+			// Check that the advice is used in this language
+			$html = Db::getInstance()->getValue('SELECT html FROM '._DB_PREFIX_.'advice_lang WHERE id_advice = '.(int)$id_advice.' AND id_lang = '.(int)$id_lang);
+			if (!$html)
+				continue;
+			$adv = new Advice($id_advice);
+			$adv->delete();
 		}
 	}
 	
