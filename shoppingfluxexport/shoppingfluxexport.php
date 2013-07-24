@@ -1372,7 +1372,7 @@ class ShoppingFluxExport extends Module
 			"eBay",
 			"Facebook",
 			"Fnac",
-			"LaRedoute",
+			"Laredoute",
 			"Pixmania",
 			"PriceMinister",
 			"RueDuCommerce"
