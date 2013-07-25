@@ -282,7 +282,7 @@ function listeCommunes(tabCommunes)
 			"<td class='tntRCblanc' colspan='2' width=''></td>"+
 			"<td class='tntRCblanc' width=''></td>"+
 			"<td class='tntRCblanc' align='center' width=''>"+
-				"<a href='javascript:tntRCgetRelaisColis();'><img class='tntRCButton' src='"+baseDir+"/modules/tntcarrier/img/bt-Continuer-2.jpg' onmouseover='this.src=\"/modules/tntcarrier/img/bt-Continuer-1.jpg\"' onmouseout='this.src=\"/modules/tntcarrier/img/bt-Continuer-2.jpg\"'></a>" +
+				"<a href='javascript:tntRCgetRelaisColis();'><img class='tntRCButton' src='"+baseDir+"/modules/tntcarrier/img/bt-Continuer-2.jpg' onmouseover='this.src=\""+baseDir+"/modules/tntcarrier/img/bt-Continuer-1.jpg\"' onmouseout='this.src=\""+baseDir+"/modules/tntcarrier/img/bt-Continuer-2.jpg\"'></a>" +
 			"</td>"+
 			"<td class='tntRCblanc' width=''></td>"+
 		"</tr>");
