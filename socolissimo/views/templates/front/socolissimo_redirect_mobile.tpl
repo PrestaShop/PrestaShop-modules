@@ -26,6 +26,7 @@
 
 	var soInputs = new Object();
 	var soBwdCompat = "{$SOBWD_C}";
+	var initialCost_label = "{$initialCost_label}"
 	var initialCost = "{$initialCost}";
 	var soCarrierId = "{$id_carrier}";
 	var baseDir = '{$content_dir}';
@@ -52,11 +53,11 @@
 	
 	$(document).ready(function() {
 		if (!soBwdCompat)
-			$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').text(initialCost);
+			$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').html(initialCost_label+'<br/>'+initialCost);
 		else {
 			$('input.delivery_option_radio').each(function() {
 				if($(this).val() == soCarrierId+',')
-					$(this).next().children().children().find('div.delivery_option_price').text(initialCost + " TTC");
+					$(this).next().children().children().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
 			});
 		}
 		$('input[name=id_carrier]').change(function() {
@@ -67,8 +68,9 @@
 	
 	function serialiseInput(inputs) {
 		var str = '?first_call=1&';
-		for ( var cle in inputs )
+		for ( var cle in inputs ) {
 			str += cle + '=' + inputs[cle] + '&';
+                }
 		return (str + 'gift=' + $('#gift').attr('checked') + '&gift_message='+ $('#gift_message').attr('value'));
 	}
 	{/literal}

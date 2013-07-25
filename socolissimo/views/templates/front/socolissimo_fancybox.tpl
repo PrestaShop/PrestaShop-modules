@@ -53,6 +53,7 @@
 	var soBwdCompat = "{$SOBWD_C}";
 	var soCarrierId = "{$id_carrier}";
 	var soToken = "{$token}";
+	var initialCost_label = "{$initialCost_label}";
 	var initialCost = "{$initialCost}";
 	var baseDir = '{$content_dir}';
 	
@@ -108,7 +109,7 @@
 				// 1.4 way
 				if (!soBwdCompat)
 				{
-					$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').text(initialCost);
+					$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').html(initialCost_label+'<br/>'+initialCost);
 					$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price').css('white-space','nowrap');
 					$('input[name=id_carrier]').change(function() {
 						so_click();
@@ -120,7 +121,7 @@
 					$('input.delivery_option_radio').each(function()
 					{
 						if($(this).val() == soCarrierId+','){
-							$(this).next().children().children().find('div.delivery_option_price').text(initialCost+' TTC');
+							$(this).next().children().children().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
 						}
 					});
 					if (soCarrierId)
