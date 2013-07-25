@@ -66,6 +66,7 @@
 			change_action_form();
 		});
 		change_action_form();
+	});
 
 	function serialiseInput(inputs) {
 		var str = '?first_call=1&';
