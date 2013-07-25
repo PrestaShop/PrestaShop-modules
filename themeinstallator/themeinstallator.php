@@ -662,10 +662,19 @@ class ThemeInstallator extends Module
 								$msg .= '<b>'.$this->l('The following modules have been disabled:').'</b><br />';
 
 							// Delete all native module which are in the front office feature category and in selected shops
-							$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
-							$sql1 = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
-							if (Db::getInstance()->execute($sql) && Db::getInstance()->execute($sql1))
-								$msg .= '<i>- '.pSQL($row).'</i><br />';
+							if (_PS_VERSION_ < '1.5')
+							{
+								$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
+								if (Db::getInstance()->execute($sql))
+									$msg .= '<i>- '.pSQL($row).'</i><br />';
+							}
+							else
+							{
+								$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
+								$sql1 = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($obj->id).' AND `id_shop` = '.(int)$id_shop;
+								if (Db::getInstance()->execute($sql) && Db::getInstance()->execute($sql1))
+									$msg .= '<i>- '.pSQL($row).'</i><br />';
+							}
 						}
 					}
 
@@ -676,15 +685,26 @@ class ThemeInstallator extends Module
 						$obj = Module::getInstanceByName($row);
 						if (Validate::isLoadedObject($obj))
 						{
-							Db::getInstance()->execute('
-								UPDATE `'._DB_PREFIX_.'module`
-								SET `active`= 1
-								WHERE `name` = \''.pSQL($row).'\''
-							);
-							Db::getInstance()->execute('
-								INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop)
-								VALUES('.(int)$obj->id.', '.(int)$id_shop.')
-							');
+							if (_PS_VERSION_ < '1.5') 
+							{
+								Db::getInstance()->execute('
+									UPDATE `'._DB_PREFIX_.'module`
+									SET `active`= 1
+									WHERE `name` = \''.pSQL($row).'\''
+								);
+							}
+							else 
+							{
+								Db::getInstance()->execute('
+									UPDATE `'._DB_PREFIX_.'module`
+									SET `active`= 1
+									WHERE `name` = \''.pSQL($row).'\''
+								);
+								Db::getInstance()->execute('
+									INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop)
+									VALUES('.(int)$obj->id.', '.(int)$id_shop.')
+								');
+							}
 						}
 						else if (!is_object($obj) || !$obj->install())
 							continue;
