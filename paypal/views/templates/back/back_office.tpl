@@ -51,7 +51,7 @@
 						{$PayPal_country}&nbsp;&nbsp;&nbsp;<a href="#" id="paypal_country_change" class="small">{$PayPal_content.change_country}</a>
 					</label>
 
-					<div class="hide" id="paypal-country-form-content">
+					<div class="paypal-hide" id="paypal-country-form-content">
 						<h3>{$PayPal_content.country_change_title} :</h3>
 
 						<select name="paypal_country_default" id="paypal_country_default">
@@ -171,7 +171,7 @@
 
 			{$PayPal_content.credentials_tagline}
 
-			<div class="hide" id="configuration">
+			<div class="paypal-hide" id="configuration">
 				{* Credentials *}
 
 				<div id="standard-credentials">
@@ -198,7 +198,7 @@
 				</div>
 
 
-				<div id="integral-credentials" class="hide">
+				<div id="integral-credentials" class="paypal-hide">
 					<h4>{$PayPal_content.credentials_integral_description}</h4>
 
 					<br />
@@ -216,7 +216,7 @@
 				<p><span class="bold">2.</span> {$PayPal_content.setup_reminder_2}</p>
 
 				<h4>{$PayPal_content.configuration_options_title}</h4>
-				<div id="express_checkout_shortcut" class="hide">
+				<div id="express_checkout_shortcut" class="paypal-hide">
 					<p>{$PayPal_content.express_checkout_shortcut_title}</p>
 					<p class="description">{$PayPal_content.express_checkout_shortcut_tagline}</p>
 					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_no_shortcut" value="1" {if $PayPal_express_checkout_shortcut == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_shortcut">{$PayPal_content.yes} {$PayPal_content.sandbox_recommended}</label><br />
@@ -241,7 +241,7 @@
 			<input type="hidden" name="submitPaypal" value="paypal_configuration" />
 			<input type="submit" name="submitButton" value="{$PayPal_content.save_button}" id="paypal_submit" />
 			
-			<div class="box hide" id="paypal-test-mode-confirmation">
+			<div class="box paypal-hide" id="paypal-test-mode-confirmation">
 				<h3>{$PayPal_content.sandbox_confirmation_title} :</h3>
 				<ul>
 					{$PayPal_content.sandbox_confirmation_content}
@@ -256,7 +256,7 @@
 			</div>
 
 			{if isset($PayPal_save_success)}
-			<div class="box hide" id="paypal-save-success">
+			<div class="box paypal-hide" id="paypal-save-success">
 				<h3>{$PayPal_content.congratulation_title}</h3>
 				{if $PayPal_sandbox_mode == 0}
 				<p>{$PayPal_content.congratulation_live_mode}</p>
@@ -266,13 +266,13 @@
 			</div>
 			{/if}
 			{if isset($PayPal_save_failure)}
-			<div class="box hide" id="paypal-save-failure">
+			<div class="box paypal-hide" id="paypal-save-failure">
 				<h3>{l s='Error !' mod='paypal'}</h3>
 				<p>{$PayPal_content.error_message}</p>
 			</div>
 			{/if}
 
-			<div class="box hide" id="js-paypal-save-failure">
+			<div class="box paypal-hide" id="js-paypal-save-failure">
 				<h3>{l s='Error !' mod='paypal'}</h3>
 				<p>{$PayPal_content.error_message}</p>
 			</div>
