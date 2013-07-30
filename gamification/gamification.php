@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.4.6';
+		$this->version = '1.4.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -282,6 +282,7 @@ class Gamification extends Module
 					$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
 					$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
 					$bdg->update();
+					unset($current_badges[$badge->id_ps_badge]);
 				}
 				else
 				{
