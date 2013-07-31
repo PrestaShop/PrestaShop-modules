@@ -79,28 +79,17 @@ class ShoppingFluxExport extends Module
 			KEY `idx_id_customer` (`id_customer`)
 			) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8;');
 		
-                if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand())) ||
-			!Configuration::updateValue('SHOPPING_FLUX_TRACKING','') ||
-			!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','') ||
-			!Configuration::updateValue('SHOPPING_FLUX_ORDERS','') ||
-			!Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','') ||
-                        !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','') ||
-			!Configuration::updateValue('SHOPPING_FLUX_LOGIN','') ||
-			!Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.Tools::getHttpHost().__PS_BASE_URI__) ||
-			!Configuration::updateValue('SHOPPING_FLUX_STOCKS',''))
-			return false;
-                
                 foreach (Shop::getShops() as $shop){
                     
-                    if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_ORDERS','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-                        !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_LOGIN','', false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, $shop['id_shop_group'], $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_STOCKS','', false, $shop['id_shop_group'], $shop['id_shop']))
+                    if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_ORDERS','', false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','', false, null, $shop['id_shop']) ||
+                        !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','', false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_LOGIN','', false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, null, $shop['id_shop']) ||
+			!Configuration::updateValue('SHOPPING_FLUX_STOCKS','', false, null, $shop['id_shop']))
 			return false;
                     
                 }
@@ -417,9 +406,9 @@ class ShoppingFluxExport extends Module
         
         public function initFeed()
         {
-            $f = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-            fwrite($f, '<?xml version="1.0" encoding="utf-8"?><produits>');
-            fclose($f);
+            $file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
+            fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits>');
+            fclose($file);
             
             $totalProducts = $this->countProducts();
             
@@ -432,7 +421,10 @@ class ShoppingFluxExport extends Module
             if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
                 die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
             
-            $f = fopen(dirname(__FILE__).'/feed.xml', 'a+');
+            if (!is_file(dirname(__FILE__).'/feed.xml'))
+                die("<?xml version='1.0' encoding='utf-8'?><error>File error</error>");
+            
+            $file = fopen(dirname(__FILE__).'/feed.xml', 'a+');
             
             $configuration = Configuration::getMultiple(array('PS_TAX_ADDRESS_TYPE','PS_CARRIER_DEFAULT','PS_COUNTRY_DEFAULT', 
 			'PS_LANG_DEFAULT', 'PS_SHIPPING_FREE_PRICE', 'PS_SHIPPING_HANDLING', 'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT'));
@@ -475,8 +467,8 @@ class ShoppingFluxExport extends Module
                 $str .= '</produit>';
             }
             
-            fwrite($f, $str);
-            fclose($f);
+            fwrite($file, $str);
+            fclose($file);
             
             if ($current+500 >= $total)
                 $this->closeFeed ();
@@ -489,8 +481,8 @@ class ShoppingFluxExport extends Module
         
         private function closeFeed()
         {
-            $f = fopen(dirname(__FILE__).'/feed.xml', 'a+');
-            fwrite($f, '</produits>');
+            $file = fopen(dirname(__FILE__).'/feed.xml', 'a+');
+            fwrite($file, '</produits>');
         }
 	
 	/* Default data, in Product Class */
@@ -709,7 +701,8 @@ class ShoppingFluxExport extends Module
 					$image_child = false;
 					break;
 				}
-				$ret .= '<image><![CDATA['.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, 'large_default').']]></image>';
+				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, 'large_default').']]></image>';
+                                $ret = str_replace('http://http://', 'http://', $ret);
 			}
 
 			if (!$image_child)
@@ -859,7 +852,7 @@ class ShoppingFluxExport extends Module
 
                                             Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => pSQL($email)), 'UPDATE', '`id_customer` = '.(int)$id_customer);
 
-                                            Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $id_order, 'message' => 'Numéro de commande '.$order->Marketplace.' :'.$order->IdOrder, 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
+                                            Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $id_order, 'message' => 'Numéro de commande '.pSQL($order->Marketplace).' :'.pSQL($order->IdOrder), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
                                             $this->_updatePrices($id_order, $order, $reference_order);
 
                                     }
@@ -944,17 +937,21 @@ class ShoppingFluxExport extends Module
 				$xml .= '<IdOrder>'.$id_order_marketplace[1].'</IdOrder>';
 				$xml .= '<Marketplace>'.$order->payment.'</Marketplace>';
 				$xml .= '<Status>Shipped</Status>';
-                                $xml .= '<TrackingNumber><![CDATA['.$shipping[0]['tracking_number'].']]></TrackingNumber>';
-				$xml .= '<CarrierName><![CDATA['.$shipping[0]['state_name'].']]></CarrierName>';
-				$xml .= '</Order>';
+                                
+                                if (isset($shipping[0])){
+                                    $xml .= '<TrackingNumber><![CDATA['.$shipping[0]['tracking_number'].']]></TrackingNumber>';
+                                    $xml .= '<CarrierName><![CDATA['.$shipping[0]['state_name'].']]></CarrierName>';
+                                }
+                                
+                                $xml .= '</Order>';
 				$xml .= '</UpdateOrders>';
 
 				$responseXML = $this->_callWebService('UpdateOrders', $xml);
 
 				if (!$responseXML->Response->Error)
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.(string)$responseXML->Response->Orders->Order->StatusUpdated, 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.pSQL((string)$responseXML->Response->Orders->Order->StatusUpdated), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
 				else
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.(string)$responseXML->Response->Error->Message, 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.pSQL((string)$responseXML->Response->Error->Message), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
 
 			}
 		}
@@ -1124,7 +1121,7 @@ class ShoppingFluxExport extends Module
 			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl
 			ON (os.`id_order_state` = osl.`id_order_state`
 			AND osl.`id_lang` = '.(int)$id_lang.')
-			WHERE `template` = "'.$type.'"');
+			WHERE `template` = "'.pSQL($type).'"');
 	}
 
 	private function _getAddress($addressNode, $id_customer, $type)
@@ -1286,7 +1283,7 @@ class ShoppingFluxExport extends Module
                 $cart->getDeliveryOptionList(null, true);
 		$cart->getDeliveryOption(null, false, false);
                 
-		$payment->validateOrder(intval($cart->id), 2, floatval($cart->getOrderTotal()), $marketplace, NULL, array(), $cart->id_currency, false, $cart->secure_key);
+		$payment->validateOrder((int)$cart->id, 2, floatval($cart->getOrderTotal()), $marketplace, NULL, array(), $cart->id_currency, false, $cart->secure_key);
 		return $payment;
 	}
 
