@@ -161,6 +161,11 @@ class GatewayProduct extends Gateway
 				p.`reference` as product_reference,
 				pa.`reference` as product_attribute_reference,
 				p.`additional_shipping_cost`,
+				p.`height`,
+				p.`width`,
+				p.`depth`,
+				p.`weight`,
+				pa.`weight` as weight_product_attribute,
 				GROUP_CONCAT(distinct CONCAT(agl.`name`," {##} ",al.`name`) SEPARATOR "'.pSQL($separator).' ") as attribute_name
 				
 				'.((self::$type_sku != 'reference')?',(SELECT CONCAT(\'D\', pa2.`id_product_attribute`) FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default': '').'
@@ -222,6 +227,11 @@ class GatewayProduct extends Gateway
 			p.`reference` as product_reference,
 			pa.`reference` as product_attribute_reference,
 			p.`additional_shipping_cost`,
+			p.`height`,
+			p.`width`,
+			p.`depth`,
+			p.`weight`,
+			pa.`weight` as weight_product_attribute,
 			GROUP_CONCAT(distinct CONCAT(agl.`name`," {##} ",al.`name`) SEPARATOR "'.pSQL($separator).' ") as attribute_name
 			'.((self::$type_sku != 'reference')?',(SELECT CONCAT(\'D\', pa2.`id_product_attribute`) FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default': '').'
 				'.((self::$type_sku == 'reference')?',(SELECT pa2.`reference` FROM `'._DB_PREFIX_.'product_attribute` pa2 WHERE pa2.`id_product` = p.`id_product` AND `default_on` = 1 LIMIT 1) as declinaison_default_ref': '').'
@@ -308,12 +318,13 @@ class GatewayProduct extends Gateway
 
 			$quantity = Product::getQuantity((int)$product['id_product'], !empty($product['id_product_attribute']) ? (int)$product['id_product_attribute'] : NULL);
 			$indice = count($products_temp);
-			
-			$shipping_price_local = $this->getValue('shipping_price_local');
 
-			if (self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname))
-				$shipping_price_local = $product[self::$shipping_by_product_fieldname];
-			
+			$weight = $product['weight'];
+
+			if(!empty($id_product_attribute))
+				$weight += $product['weight_product_attribute'];
+
+
 			$products_temp[$indice] = array(
 				'Title' => $product['name'],
 				'SKU' => $product_reference,
@@ -327,6 +338,10 @@ class GatewayProduct extends Gateway
 				'Classification' => str_replace('Accueil/', '', $classification),
 				'shipping_delay' => $this->getValue('shipping_delay'),
 				'Comment' => $this->getValue('comment'),
+				'Height' => $product['height'],
+				'Width' => $product['width'],
+				'Depth' => $product['depth'],
+				'Weight' => $weight,
 				'Brand' => !empty($product['name_manufacturer']) ? $product['name_manufacturer'] : $this->getValue('default_brand')
 			);
 
@@ -335,28 +350,34 @@ class GatewayProduct extends Gateway
 				FROM
 				'._DB_PREFIX_.'product_tag pt
 				INNER JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.intval($id_lang).')
-				WHERE pt.id_product = '.intval($product['id_product']).'
-			';
+				WHERE pt.id_product = '.intval($product['id_product']);
 
 			$t_tags_bdd = Db::getInstance()->getRow($sql);
 
 			if (!empty($t_tags_bdd['name']))
 				$products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
 
-			if ($shipping_price_local == '-')
-				unset($products_temp[$indice]['shipping_price_local']);
-			
-			if (empty($products_temp[$indice]['shipping_price_international']))
-				unset($products_temp[$indice]['shipping_price_international']);
+			//shipping part
+			$shipping_price_local = $this->getValue('shipping_price_local');
+			if (self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname))
+				$shipping_price_local = $product[self::$shipping_by_product_fieldname];
 
 			$carrier_france = $this->getConfig('SHIPPING_CARRIER_FRANCE');
 			$carrier_zone_france = $this->getConfig('SHIPPING_ZONE_FRANCE');
 
-			if (!empty($carrier_france) && !empty($carrier_zone_france))
+			if(!empty($carrier_france) && !empty($carrier_zone_france))
 				$products_temp[$indice]['PriceShippingLocal1'] = $this->getShippingPrice($product['id_product'], $id_product_attribute, $carrier_france, $carrier_zone_france);
+			elseif(!empty($shipping_price_local))
+				$products_temp[$indice]['PriceShippingLocal1'] = $shipping_price_local;
 
+			$shipping_price_inter = $this->getValue('shipping_price_international');
 			$carrier_inter = $this->getConfig('SHIPPING_CARRIER_INTERNATIONAL');
 			$carrier_zone_inter = $this->getConfig('SHIPPING_ZONE_INTERNATIONAL');
+
+			if(!empty($carrier_france) && !empty($carrier_zone_france))
+				$products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
+			elseif(!empty($shipping_price_inter))
+				$products_temp[$indice]['PriceShippingInt1'] = $shipping_price_inter;
 
 			if (!empty($carrier_france) && !empty($carrier_zone_france))
 				$products_temp[$indice]['PriceShippingInt1'] = $this->getShippingPrice($product['id_product'],  $id_product_attribute, $carrier_inter, $carrier_zone_inter);
@@ -442,25 +463,25 @@ class GatewayProduct extends Gateway
 	public function getProductImages($product)
 	{
 		$images = Db::getInstance()->ExecuteS('
-						SELECT `id_image`, `cover`
-						FROM `'._DB_PREFIX_.'image`
-						WHERE `id_product` = '.(int)$product['id_product'].'
-						ORDER BY `cover` DESC
-						LIMIT 6
-					');
+			SELECT `id_image`, `cover`
+			FROM `'._DB_PREFIX_.'image`
+			WHERE `id_product` = '.(int)$product['id_product'].'
+			ORDER BY `cover` DESC
+			LIMIT 6
+		');
 
 		if (!$product['id_product_attribute'])
 			return $images;
 			
 		$images_attribute = Db::getInstance()->ExecuteS('
-					SELECT i.`id_image`, i.`cover`
-					FROM `'._DB_PREFIX_.'product_attribute_image` pai
-					INNER JOIN `'._DB_PREFIX_.'image` i USING(id_image)
-					WHERE i.`id_product` = '.(int)$product['id_product'].'
-					AND pai.`id_product_attribute` = '.(int)$product['id_product_attribute'].'
-					ORDER BY i.`cover` DESC
-					LIMIT 6
-				');
+			SELECT i.`id_image`, i.`cover`
+			FROM `'._DB_PREFIX_.'product_attribute_image` pai
+			INNER JOIN `'._DB_PREFIX_.'image` i USING(id_image)
+			WHERE i.`id_product` = '.(int)$product['id_product'].'
+			AND pai.`id_product_attribute` = '.(int)$product['id_product_attribute'].'
+			ORDER BY i.`cover` DESC
+			LIMIT 6
+		');
 
 		if (!empty($images_attribute))
 			return $images_attribute;
