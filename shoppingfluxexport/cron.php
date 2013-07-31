@@ -34,7 +34,12 @@ ini_set('display_errors', 'off');
 
 $f = new ShoppingFluxExport();
 
-if (!isset($_GET['current']))
+if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
+    die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
+
+$current = Tools::getValue('current');
+
+if (empty($current))
     $f->initFeed ();
 else
-    $f->writeFeed ($_GET['total'], $_GET['current'], $_GET['lang']);
+    $f->writeFeed ( Tools::getValue('total'),  Tools::getValue('current'),  Tools::getValue('lang'));
