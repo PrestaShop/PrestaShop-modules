@@ -35,7 +35,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.2.6';
+		$this->version = '2.2.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -334,14 +334,7 @@ class Gsitemap extends Module
 		foreach ($categories_id as $category_id)
 		{
 			$category = new Category((int)$category_id['id_category'], (int)$lang['id_lang']);
-
-			if (_PS_VERSION_ >= 1.5)
-			{
-				$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).$this->context->shop->physical_uri.$this->context->shop->virtual_uri;
-				$url .= str_replace(_PS_BASE_URL_.__PS_BASE_URI__, '', $link->getCategoryLink($category, null, null, null, (int)$lang['id_lang']));
-			}
-			else
-				$url = $link->getCategoryLink($category, $category->link_rewrite, (int)$lang['id_lang']);
+			$url = $link->getCategoryLink($category, $category->link_rewrite, (int)$lang['id_lang']);
 
 			if ($category->id_image)
 				$image_link = $this->context->link->getCatImageLink($category->link_rewrite, (int)$category->id_image, 'category_default');
@@ -448,8 +441,8 @@ class Gsitemap extends Module
 		foreach ($cmss_id as $cms_id)
 		{
 			$cms = new CMS((int)$cms_id['id_cms'], $lang['id_lang']);
-			$url = (Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).$this->context->shop->physical_uri.$this->context->shop->virtual_uri;
-			$url .= str_replace(_PS_BASE_URL_.__PS_BASE_URI__, '', $link->getCmsLink($cms, null, null, null, $lang['id_lang']));
+			$url = $link->getCMSLink($cms, null, null, $lang['id_lang']);
+
 			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'cms', 'page' => 'cms', 'link' => $url, 'image' => false), $lang['iso_code'], $index, $i, $cms_id['id_cms']))
 				return false;
 		}
