@@ -63,7 +63,7 @@ class Socolissimo extends CarrierModule {
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
 		$this->version = '2.8.3';
-		$this->author = 'PrestaShop';
+		$this->author = 'Quadra Informatique';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
 
@@ -510,15 +510,21 @@ class Socolissimo extends CarrierModule {
 		else
 			$cecivility = 'MR';
 
-		$forwardingCharge = (float) $this->initialCost;
+        	$tax_rate = Tax::getCarrierTaxRate($id_carrier, isset($params['cart']->id_address_delivery) ? $params['cart']->id_address_deliver : null);
+                $stdCostWithTaxes = (float) $this->initialCost * (1 + ($tax_rate/ 100));
+                
+                if(Configuration::get('SOCOLISSIMO_COST_SELLER'))
+                    $sellerCostWithTaxes = (float) Configuration::get('SOCOLISSIMO_COST_SELLER') * (1 + ($tax_rate/ 100));
+                else 
+                    $sellerCostWithTaxes = null;
 
 		// Keep this fields order (see doc.)
 		$inputs = array(
 			'pudoFOId' => Configuration::get('SOCOLISSIMO_ID'),
 			'ceName' => $this->replaceAccentedChars(substr($params['address']->lastname, 0, 34)),
 			'dyPreparationTime' => (int) Configuration::Get('SOCOLISSIMO_PREPARATION_TIME'),
-			'dyForwardingCharges' => (float) $forwardingCharge,
-			'dyForwardingChargesCMT' => (float) Configuration::Get('SOCOLISSIMO_COST_SELLER'),
+			'dyForwardingCharges' => Tools::ps_round($stdCostWithTaxes,2) ,
+			'dyForwardingChargesCMT' => Tools::ps_round($stdCostWithTaxes,2) ,
 			'trClientNumber' => (int) $params['address']->id_customer,
 			'orderId' => $this->formatOrderId((int) $params['address']->id),
 			'numVersion' => $this->getNumVersion(),
@@ -557,7 +563,8 @@ class Socolissimo extends CarrierModule {
 				'id_carrier' => $id_carrier,
 				'SOBWD_C' => (_PS_VERSION_ < '1.5') ? false : true, // Backward compatibility for js process in tpl
 				'inputs' => $inputs,
-				'initialCost' => $this->l('From') . ' ' . $forwardingCharge . ' €', // to change label for price in tpl
+				'initialCost_label' => $this->l('From'),
+				'initialCost' => ( $sellerCostWithTaxes < $stdCostWithTaxes ? $sellerCostWithTaxes : $stdCostWithTaxes ) . ' €', // to change label for price in tpl
 				'finishProcess' => $this->l('To choose SoColissimo, click on a delivery method')
 			));
 
