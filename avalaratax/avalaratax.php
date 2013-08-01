@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.2.1';
+		$this->version = '3.2.2';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -1078,7 +1078,7 @@ else
 		$request->setDocCode('Order '.Tools::safeOutput($orderId)); // Order Id - has to be float due to the . and more numbers for returns
 		$request->setDocDate(date('Y-m-d'));					// date
 		$request->setCustomerCode('CustomerID: '.(int)$customerCode); // string Required
-		$request->setCustomerUsageType('');						// string Entity Usage
+		/* Uncomment this line if you would like to enable Tax Exemption - $request->setCustomerUsageType('');	// string Entity Usage */
 		$request->setDiscount(0.00);							// decimal
 		$request->setDetailLevel(DetailLevel::$Tax);			// Summary or Document or Line or Tax or Diagnostic
 
