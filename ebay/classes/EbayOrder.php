@@ -329,36 +329,113 @@ class EbayOrder
 
 	public function updatePrice()
 	{
+		############################################
+		$total_price_tax_excl = 0;
+		############################################
 		foreach ($this->product_list as $product)
 		{
-			$tax_rate = Db::getInstance()->getValue('SELECT `tax_rate`
-				FROM `'._DB_PREFIX_.'order_detail`
-				WHERE `id_order` = '.(int)$this->id_order.'
-				AND `product_id` = '.(int)$product['id_product'].'
-				AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
+			$tax_rate = (float) $this->_getTaxByProduct($product['id_product']);
+
+			$coef_rate = (1 + ($tax_rate / 100));
 
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', array(
-				'product_price' => (float)($product['price'] / (1 + ($tax_rate / 100))),
+				############################################
+				'product_price' => (float)($product['price'] / $coef_rate),
+				'unit_price_tax_incl' => (float)$product['price'],
+				'unit_price_tax_excl' => (float) ( $product['price'] / $coef_rate ),
+				'total_price_tax_incl' => (float)($product['price'] * $product['quantity']),
+				'total_price_tax_excl' => (float)(($product['price'] / $coef_rate) * $product['quantity']),
+				############################################
 				'reduction_percent' => 0,
 				'reduction_amount' => 0), 'UPDATE', '`id_order` = '.(int)$this->id_order.'
 					AND `product_id` = '.(int)$product['id_product'].'
 					AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
+
+			############################################
+			if(version_compare(_PS_VERSION_, '1.5', '>')) {
+				$detail_tax_data = array(
+					'unit_amount' => (float)($product['price'] - ($product['price'] / $coef_rate )),
+					'total_amount' => ((float) ($product['price'] - ($product['price'] / $coef_rate )) * $product['quantity'])
+				);
+
+				DB::getInstance()->autoExecute(_DB_PREFIX_ .'order_detail_tax', $detail_tax_data, 'UPDATE', '`id_order_detail` = (SELECT `id_order_detail` FROM `'. _DB_PREFIX_ .'order_detail` WHERE `id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute'] .') ');
+			} 
+			
+			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
+			############################################
 		}
 
-		$total_price = Db::getInstance()->getValue('SELECT SUM(`product_price`)
+		/*$total_price = Db::getInstance()->getValue('SELECT SUM(`product_price`)
 			FROM `'._DB_PREFIX_.'order_detail`
-			WHERE `id_order` = '.(int)$this->id_order);
+			WHERE `id_order` = '.(int)$this->id_order);*/
 
 		$data = array(
 			'total_paid' => (float)$this->amount,
 			'total_paid_real' => (float)$this->amount,
-			'total_products' => (float)$total_price,
+			'total_products' => (float)$total_price_tax_excl,
 			'total_products_wt' => (float)($this->amount - $this->shippingServiceCost),
-			'total_shipping' => (float)$this->shippingServiceCost,
+			'total_shipping' => (float)$this->shippingServiceCost
 		);
+
+		############################################
+		if((float) $this->shippingServiceCost == 0) {
+			$data = array_merge(
+				$data,
+				array(
+					'total_shipping_tax_excl' => 0,
+					'total_shipping_tax_incl' => 0
+				)
+			);
+		}
+
+
+		if(version_compare(_PS_VERSION_, '1.5', '>')) {
+			$order = new Order($this->id_order);
+			$data_old = $data;
+			$data = array_merge(
+				$data, 
+				array(
+					'total_paid_tax_incl' => (float) $this->amount,
+					'total_paid_tax_excl' => (float) $total_price_tax_excl + $order->total_shipping_tax_excl,
+				)
+			);
+
+			############################################
+			# Mettre à jour Invoice
+			############################################
+			$detail_data = $data;
+			unset($detail_data['total_paid']);
+			unset($detail_data['total_paid_real']);
+			unset($detail_data['total_shipping']);
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $detail_data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
+
+			############################################
+			# Mettre à jour Payment
+			############################################
+			$payment_data = array(
+				'amount' => (float) $this->amount
+			);
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'. $order->reference . '" ');
+			
+		}
+		############################################
 
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
 	}
+
+	############################################
+	public function _getTaxByProduct($id_product) {
+		$sql = "SELECT t.`rate` 
+				FROM `" . _DB_PREFIX_ ."product` AS p
+				INNER JOIN `"._DB_PREFIX_ ."tax_rule` AS tr
+					ON tr.`id_tax_rules_group` = p.`id_tax_rules_group` AND tr.`id_country` = '" . (int)Country::getByIso($this->country_iso_code) . "'
+				INNER JOIN `" . _DB_PREFIX_ . "tax` AS t
+					ON t.`id_tax` = tr.`id_tax` 
+				WHERE p.`id_product` = '" . (int) $id_product . "' ";
+
+		return DB::getInstance()->getValue($sql);
+	}
+	############################################
 
 	public function add()
 	{
