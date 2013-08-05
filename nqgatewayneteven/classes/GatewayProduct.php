@@ -352,10 +352,16 @@ class GatewayProduct extends Gateway
 				INNER JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.intval($id_lang).')
 				WHERE pt.id_product = '.intval($product['id_product']);
 
-			$t_tags_bdd = Db::getInstance()->getRow($sql);
+			$t_tags_bdd = Db::getInstance()->ExecuteS($sql);
 
-			if (!empty($t_tags_bdd['name']))
-				$products_temp[$indice]["Keywords"] = $t_tags_bdd['name'];
+			if ($t_tags_bdd && count($t_tags_bdd) > 0){
+                $t_tags_final = array();
+                foreach($t_tags_bdd as $t_tag_bdd){
+                    $t_tags_final[] = $t_tag_bdd['name'];
+                }
+                $products_temp[$indice]["Keywords"] = implode(',', $t_tags_final);
+            }
+
 
 			//shipping part
 			$shipping_price_local = $this->getValue('shipping_price_local');
