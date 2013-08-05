@@ -831,7 +831,7 @@ class ShoppingFluxExport extends Module
 
                             if ($products_available && $id_address_shipping && $id_address_billing && $id_customer && $add)
                             {
-                                    $cart = $this->_getCart($id_customer, $id_address_billing, $id_address_shipping, $order->Products);
+                                    $cart = $this->_getCart($id_customer, $id_address_billing, $id_address_shipping, $order->Products, $order->Currency);
 
                                     if ($cart)
                                     {
@@ -887,7 +887,7 @@ class ShoppingFluxExport extends Module
 			$ip = $_SERVER['REMOTE_ADDR'];
 
 		if ((Configuration::get('SHOPPING_FLUX_TRACKING')!=''||Configuration::get('SHOPPING_FLUX_BUYLINE')!='')&&!in_array($params['order']->payment, $this->_getMarketplaces()))
-			file_get_contents('http://tracking.shopping-flux.com/?ip='.$ip.'&cl='.Configuration::get('SHOPPING_FLUX_LOGIN').'&mt='.$params['order']->total_paid_real.'&cmd='.$params['order']->id.'&index='.Configuration::get('SHOPPING_FLUX_INDEX'));
+			file_get_contents('https://tracking.shopping-flux.com/?ip='.$ip.'&cl='.Configuration::get('SHOPPING_FLUX_LOGIN').'&mt='.$params['order']->total_paid_real.'&cmd='.$params['order']->id.'&index='.Configuration::get('SHOPPING_FLUX_INDEX'));
 
 		if (Configuration::get('SHOPPING_FLUX_STOCKS')!=''&&!in_array($params['order']->payment, $this->_getMarketplaces()))
 		{
@@ -912,7 +912,7 @@ class ShoppingFluxExport extends Module
 	public function hookFooter()
 	{
 		if (Configuration::get('SHOPPING_FLUX_BUYLINE') != '')
-			return '<script type="text/javascript" src="http://tracking.shopping-flux.com/gg.js"></script>';
+			return '<script type="text/javascript" src="https://tracking.shopping-flux.com/gg.js"></script>';
 		return '';
 	}
 
@@ -1291,13 +1291,13 @@ class ShoppingFluxExport extends Module
 	* Fake cart creation
 	*/
 
-	private function _getCart($id_customer, $id_address_billing, $id_address_shipping, $productsNode)
+	private function _getCart($id_customer, $id_address_billing, $id_address_shipping, $productsNode, $currency)
 	{
 		$cart = new Cart();
 		$cart->id_customer = $id_customer;
 		$cart->id_address_invoice = $id_address_billing;
 		$cart->id_address_delivery = $id_address_shipping;
-		$cart->id_currency = Currency::getIdByIsoCode('EUR');
+		$cart->id_currency = Currency::getIdByIsoCode((string)$currency == '' ? 'EUR' : (string)$currency);
 		$cart->id_lang = Configuration::get('PS_LANG_DEFAULT');
 		$cart->recyclable = 0;
 		$cart->secure_key = md5(uniqid(rand(), true));
