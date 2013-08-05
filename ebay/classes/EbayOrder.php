@@ -329,56 +329,74 @@ class EbayOrder
 
 	public function updatePrice()
 	{
-		############################################
+
 		$total_price_tax_excl = 0;
-		############################################
+		$total_shipping_tax_incl = 0;
+		$total_shipping_tax_excl = 0;
+		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
+		
+		if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
+			$carrier_tax_rate = (float)$this->_getTaxByCarrier((int)$id_carrier);
+		else
+			$carrier_tax_rate = (float)Tax::getCarrierTaxRate((int)$id_carrier);
+
 		foreach ($this->product_list as $product)
 		{
-			$tax_rate = (float) $this->_getTaxByProduct($product['id_product']);
+			if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
+				$tax_rate = (float)$this->_getTaxByProduct((int)$product['id_product']);
+			else 
+				$tax_rate = (float)Tax::getProductTaxRate((int)$product['id_product']);
 
 			$coef_rate = (1 + ($tax_rate / 100));
 
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', array(
-				############################################
-				'product_price' => (float)($product['price'] / $coef_rate),
-				'unit_price_tax_incl' => (float)$product['price'],
-				'unit_price_tax_excl' => (float) ( $product['price'] / $coef_rate ),
+			$detail_data = array(
+				'product_price'        => (float)($product['price'] / $coef_rate),
+				'unit_price_tax_incl'  => (float)$product['price'],
+				'unit_price_tax_excl'  => (float)($product['price'] / $coef_rate ),
 				'total_price_tax_incl' => (float)($product['price'] * $product['quantity']),
 				'total_price_tax_excl' => (float)(($product['price'] / $coef_rate) * $product['quantity']),
-				############################################
-				'reduction_percent' => 0,
-				'reduction_amount' => 0), 'UPDATE', '`id_order` = '.(int)$this->id_order.'
-					AND `product_id` = '.(int)$product['id_product'].'
-					AND `product_attribute_id` = '.(int)$product['id_product_attribute']);
+				'reduction_percent'    => 0,
+				'reduction_amount'     => 0
+			);
 
-			############################################
-			if(version_compare(_PS_VERSION_, '1.5', '>')) {
+			Db::getInstance()->autoExecute(
+				_DB_PREFIX_.'order_detail', 
+				$detail_data, 
+				'UPDATE', 
+				'`id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']
+			);
+
+
+			if(version_compare(_PS_VERSION_, '1.5', '>')) 
+			{
 				$detail_tax_data = array(
-					'unit_amount' => (float)($product['price'] - ($product['price'] / $coef_rate )),
-					'total_amount' => ((float) ($product['price'] - ($product['price'] / $coef_rate )) * $product['quantity'])
+					'unit_amount' => (float)($product['price']-($product['price'] / $coef_rate )),
+					'total_amount' => ((float)($product['price']-($product['price'] / $coef_rate )) * $product['quantity'])
 				);
 
 				DB::getInstance()->autoExecute(_DB_PREFIX_ .'order_detail_tax', $detail_tax_data, 'UPDATE', '`id_order_detail` = (SELECT `id_order_detail` FROM `'. _DB_PREFIX_ .'order_detail` WHERE `id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute'] .') ');
 			} 
 			
 			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
-			############################################
+			// ebay get one shipping cost by product
+			$total_shipping_tax_incl += $this->shippingServiceCost;
+			$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
+
 		}
 
-		/*$total_price = Db::getInstance()->getValue('SELECT SUM(`product_price`)
-			FROM `'._DB_PREFIX_.'order_detail`
-			WHERE `id_order` = '.(int)$this->id_order);*/
-
 		$data = array(
-			'total_paid' => (float)$this->amount,
-			'total_paid_real' => (float)$this->amount,
-			'total_products' => (float)$total_price_tax_excl,
-			'total_products_wt' => (float)($this->amount - $this->shippingServiceCost),
-			'total_shipping' => (float)$this->shippingServiceCost
+			'total_paid'              => (float)$this->amount,
+			'total_paid_real'         => (float)$this->amount,
+			'total_products'          => (float)$total_price_tax_excl,
+			'total_products_wt'       => (float)($this->amount - $this->shippingServiceCost),
+			'total_shipping'          => (float)$total_shipping_tax_incl
+			'total_shipping_tax_incl' => (float)$total_shipping_tax_incl
+			'total_shipping_tax_excl' => (float)$total_shipping_tax_excl
 		);
 
-		############################################
-		if((float) $this->shippingServiceCost == 0) {
+
+		if((float)$this->shippingServiceCost == 0) 
+		{
 			$data = array_merge(
 				$data,
 				array(
@@ -389,53 +407,60 @@ class EbayOrder
 		}
 
 
-		if(version_compare(_PS_VERSION_, '1.5', '>')) {
-			$order = new Order($this->id_order);
+		if(version_compare(_PS_VERSION_, '1.5', '>')) 
+		{
+			$order = new Order((int)$this->id_order);
 			$data_old = $data;
 			$data = array_merge(
 				$data, 
 				array(
-					'total_paid_tax_incl' => (float) $this->amount,
-					'total_paid_tax_excl' => (float) $total_price_tax_excl + $order->total_shipping_tax_excl,
+					'total_paid_tax_incl' => (float)$this->amount,
+					'total_paid_tax_excl' => (float)($total_price_tax_excl + $order->total_shipping_tax_excl),
 				)
 			);
 
-			############################################
-			# Mettre à jour Invoice
-			############################################
-			$detail_data = $data;
-			unset($detail_data['total_paid']);
-			unset($detail_data['total_paid_real']);
-			unset($detail_data['total_shipping']);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $detail_data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
+			// Update Incoice
+			$invoice_data = $data;
+			unset($invoice_data['total_paid'], $invoice_data['total_paid_real'], $invoice_data['total_shipping']);
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $invoice_data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
 
-			############################################
-			# Mettre à jour Payment
-			############################################
+
+			// Update payment
 			$payment_data = array(
 				'amount' => (float) $this->amount
 			);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'. $order->reference . '" ');
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'.$order->reference.'" ');
 			
 		}
-		############################################
 
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
 	}
 
-	############################################
-	public function _getTaxByProduct($id_product) {
+	public function _getTaxByProduct($id_product) 
+	{
 		$sql = "SELECT t.`rate` 
-				FROM `" . _DB_PREFIX_ ."product` AS p
+				FROM `"._DB_PREFIX_ ."product` AS p
 				INNER JOIN `"._DB_PREFIX_ ."tax_rule` AS tr
-					ON tr.`id_tax_rules_group` = p.`id_tax_rules_group` AND tr.`id_country` = '" . (int)Country::getByIso($this->country_iso_code) . "'
-				INNER JOIN `" . _DB_PREFIX_ . "tax` AS t
+					ON tr.`id_tax_rules_group` = p.`id_tax_rules_group` AND tr.`id_country` = '".(int)Country::getByIso($this->country_iso_code)."'
+				INNER JOIN `"._DB_PREFIX_."tax` AS t
 					ON t.`id_tax` = tr.`id_tax` 
-				WHERE p.`id_product` = '" . (int) $id_product . "' ";
+				WHERE p.`id_product` = '".(int)$id_product."' ";
 
 		return DB::getInstance()->getValue($sql);
 	}
-	############################################
+
+	public function _getTaxByCarrier($id_carrier) 
+	{
+		$sql = "SELECT t.`rate` 
+				FROM `"._DB_PREFIX_ ."carrier` AS c
+				INNER JOIN `"._DB_PREFIX_ ."tax_rule` AS tr
+					ON tr.`id_tax_rules_group` = c.`id_tax_rules_group` AND tr.`id_country` = '".(int)Country::getByIso($this->country_iso_code)."'
+				INNER JOIN `"._DB_PREFIX_."tax` AS t
+					ON t.`id_tax` = tr.`id_tax` 
+				WHERE c.`id_carrier` = '".(int)$id_carrier."' ";
+
+		return DB::getInstance()->getValue($sql);
+	}
 
 	public function add()
 	{
