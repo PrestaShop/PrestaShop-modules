@@ -60,6 +60,10 @@ class fianetfraud extends Module
 		4 => 'Transporteur (La Poste, Colissimo, UPS, DHL... ou tout transporteur priv&eacute;)',
 		5 => 'Emission d\'un billet &eacute;lectronique, t&eacute;l&eacute;chargements'
 	);
+	private $_carrier_speeds = array(
+		2 => 'Standard',
+		1 => 'Express (-24h)'
+	);
 	private $_payment_types = array(
 		1 => 'carte',
 		2 => 'cheque',
@@ -89,7 +93,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.4';
+		$this->version = '3.5';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -193,7 +197,7 @@ class fianetfraud extends Module
 	}
 
 	/**
-	 * returns the carrieirs list as an array indexed by carrier_id and containing the carrier name and the corresponding fia-net carrier type
+	 * returns the carriers list as an array indexed by carrier_id and containing the carrier name and the corresponding fia-net carrier type
 	 * 
 	 * @return array
 	 */
@@ -204,9 +208,11 @@ class fianetfraud extends Module
 		foreach ($carriers as $carrier)
 		{
 			$certissim_type = Tools::isSubmit('certissim_'.$carrier['id_carrier'].'_carrier_type') ? Tools::getValue('certissim_'.$carrier['id_carrier'].'_carrier_type') : Configuration::get('CERTISSIM_'.$carrier['id_carrier'].'_CARRIER_TYPE');
+			$certissim_speed = Tools::isSubmit('certissim_'.$carrier['id_carrier'].'_carrier_speed') ? Tools::getValue('certissim_'.$carrier['id_carrier'].'_carrier_speed') : Configuration::get('CERTISSIM_'.$carrier['id_carrier'].'_CARRIER_SPEED');
 			$shop_carriers[$carrier['id_carrier']] = array(
 				'name' => $carrier['name'],
-				'certissim_type' => $certissim_type
+				'certissim_type' => $certissim_type,
+				'certissim_speed' => $certissim_speed
 			);
 		}
 
@@ -262,6 +268,8 @@ class fianetfraud extends Module
 			$this->_errors[] = $this->l('You must configure a valid default product type');
 		if (!in_array(Tools::getValue('certissim_default_carrier_type'), array_keys($this->_carrier_types)))
 			$this->_errors[] = $this->l('You must configure a valid default carrier type');
+		if (!in_array(Tools::getValue('certissim_default_carrier_speed'), array_keys($this->_carrier_speeds)))
+			$this->_errors[] = $this->l('You must configure a valid default carrier speed');
 
 		//categories check
 		$shop_categories = $this->loadProductCategories();
@@ -272,8 +280,13 @@ class fianetfraud extends Module
 		//carriers check
 		$shop_carriers = $this->loadCarriers();
 		foreach ($shop_carriers as $id => $shop_carrier)
+		{
 			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_type'), array_merge(array_keys($this->_carrier_types), array('0'))))
 				$this->_errors[] = $this->l('Invalid carrier type for carrier:')." '".$shop_carrier['name']."'";
+			
+			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_speed'), array_merge(array_keys($this->_carrier_speeds), array('0'))))
+				$this->_errors[] = $this->l('Invalid carrier speed for carrier:')." '".$shop_carrier['name']."'";
+		}
 
 		//payment types check
 		$shop_payments = $this->loadPaymentMethods();
@@ -300,6 +313,7 @@ class fianetfraud extends Module
 			/** shop configuration * */
 			Configuration::updateValue('CERTISSIM_DEFAULT_PRODUCT_TYPE', Tools::getValue('certissim_default_product_type'));
 			Configuration::updateValue('CERTISSIM_DEFAULT_CARRIER_TYPE', Tools::getValue('certissim_default_carrier_type'));
+			Configuration::updateValue('CERTISSIM_DEFAULT_CARRIER_SPEED', Tools::getValue('certissim_default_carrier_speed'));
 
 			/** categories configuration * */
 			//lists all product categories
@@ -311,7 +325,10 @@ class fianetfraud extends Module
 			//lists all carriers
 			$shop_carriers = $this->loadCarriers();
 			foreach (array_keys($shop_carriers) as $id)
+			{
 				Configuration::updateValue('CERTISSIM_'.$id.'_CARRIER_TYPE', Tools::getValue('certissim_'.$id.'_carrier_type'));
+				Configuration::updateValue('CERTISSIM_'.$id.'_CARRIER_SPEED', Tools::getValue('certissim_'.$id.'_carrier_speed'));
+			}
 
 			/** payment types update * */
 			//lists all payment modules
@@ -367,6 +384,7 @@ class fianetfraud extends Module
 		$certissim_status = Tools::isSubmit('certissim_status') ? Tools::getValue('certissim_status') : Configuration::get('CERTISSIM_STATUS');
 		$certissim_default_product_type = Tools::isSubmit('certissim_default_product_type') ? Tools::getValue('certissim_default_product_type') : Configuration::get('CERTISSIM_DEFAULT_PRODUCT_TYPE');
 		$certissim_default_carrier_type = Tools::isSubmit('certissim_default_carrier_type') ? Tools::getValue('certissim_default_carrier_type') : Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE');
+		$certissim_default_carrier_speed = Tools::isSubmit('certissim_default_carrier_speed') ? Tools::getValue('certissim_default_carrier_speed') : Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
 
 		if (_PS_VERSION_ < '1.5')
 			$url_log = 'index.php?tab=AdminCertissim&action=viewLog&token='.Tools::getAdminTokenLite('AdminCertissim');
@@ -385,7 +403,9 @@ class fianetfraud extends Module
 			'certissim_default_product_type' => Tools::safeOutput($certissim_default_product_type),
 			'shop_categories' => $shop_categories,
 			'certissim_carrier_types' => $this->_carrier_types,
+			'certissim_carrier_speeds' => $this->_carrier_speeds,
 			'certissim_default_carrier_type' => Tools::safeOutput($certissim_default_carrier_type),
+			'certissim_default_carrier_speed' => Tools::safeOutput($certissim_default_carrier_speed),
 			'shop_carriers' => $shop_carriers,
 			'certissim_payment_types' => $this->_payment_types,
 			'payment_modules' => $payment_modules,
@@ -899,6 +919,7 @@ class fianetfraud extends Module
 			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
 		else
 			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
+			
 
 		//if the order is to be delivered at home: element <utilisateur type="livraison"...> has to be added
 		if ($carrier_type == 4)
@@ -1008,23 +1029,31 @@ class fianetfraud extends Module
 		//defines the real certissim carrier type (depends on PS version)
 		elseif (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types)))
+			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types))){
 				$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
+				$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED', null, null, $order->id_shop);
+			}
 			//if selected carrier fianet type not defined, uses the default one
-			else
+			else{
 				$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE', null, null, $order->id_shop);
+				$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED', null, null, $order->id_shop);
+			}
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types)))
+		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types))){
 			$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
+			$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED');
+		}
 		//if selected carrier fianet type not defined, uses the default one
-		else
+		else{
 			$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE');
+			$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
+		}
 
 		//initialization of the element <transport>
 		$xml_element_carrier = new CertissimTransport(
 				$real_carrier_type,
 				$alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
-				$alldownloadables ? '1' : '2',
+				$alldownloadables ? '1' : $real_carrier_speed,
 				null
 		);
 
@@ -1257,7 +1286,7 @@ class fianetfraud extends Module
 
 		return $updated;
 	}
-	
+
 	/**
 	 * List all installed and active payment modules
 	 * @see Module::getPaymentModules() if you need a list of module related to the user context
