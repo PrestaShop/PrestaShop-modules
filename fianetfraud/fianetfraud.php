@@ -1029,22 +1029,26 @@ class fianetfraud extends Module
 		//defines the real certissim carrier type (depends on PS version)
 		elseif (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types))){
+			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types)))
+			{
 				$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
 				$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED', null, null, $order->id_shop);
 			}
 			//if selected carrier fianet type not defined, uses the default one
-			else{
+			else
+			{
 				$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE', null, null, $order->id_shop);
 				$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED', null, null, $order->id_shop);
 			}
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types))){
+		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types)))
+		{
 			$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
 			$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED');
 		}
 		//if selected carrier fianet type not defined, uses the default one
-		else{
+		else
+		{
 			$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE');
 			$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
 		}
