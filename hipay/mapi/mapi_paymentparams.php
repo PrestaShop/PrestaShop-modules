@@ -381,7 +381,7 @@ class HIPAY_MAPI_PaymentParams extends HIPAY_MAPI_lockable {
 		if ($this->_locked)
 			return false;
 
-		if (!preg_match('#^[A-Z]{2}_[a-z]{2}$#', $locale))
+		if (!preg_match('#^[a-z]{2}_[A-Z]{2}$#', $locale))
 			return false;
 
 		$this->locale = $locale;
