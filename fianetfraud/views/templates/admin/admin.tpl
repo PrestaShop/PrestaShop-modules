@@ -94,11 +94,16 @@
 					<option value="{$id_carrier_type}" {if $certissim_default_carrier_type eq $id_carrier_type}Selected{/if}>{$certissim_carrier_type}</option>
 				{/foreach}
 			</select>
+			<select name="certissim_default_carrier_speed">
+				{foreach from=$certissim_carrier_speeds key=id_carrier_speed item=certissim_carrier_speed name=certissim_carrier_speeds}
+					<option value="{$id_carrier_speed}" {if $certissim_default_carrier_speed eq $id_carrier_speed}Selected{/if}>{$certissim_carrier_speed}</option>
+				{/foreach}
+			</select>
 		</div>
 
 		<div class="margin-form">
 			<table cellspacing="0" cellpadding="0" class="table">
-				<thead><tr><th>{l s='Carrier' mod='fianetfraud'}</th><th>{l s='Carrier Type' mod='fianetfraud'}</th></tr></thead>
+				<thead><tr><th>{l s='Carrier' mod='fianetfraud'}</th><th>{l s='Carrier Type' mod='fianetfraud'}</th><th>{l s='Carrier Speed' mod='fianetfraud'}</th></tr></thead>
 				<tbody>
 					{foreach from=$shop_carriers key=id_shop_carrier item=shop_carrier name=shop_carriers}
 						<tr>
@@ -108,6 +113,13 @@
 									<option value="0">-- {l s='Choose' mod='fianetfraud'} --</option>
 									{foreach from=$certissim_carrier_types key=id_carrier_type item=certissim_carrier_type name=certissim_carrier_types}
 										<option value="{$id_carrier_type}" {if $shop_carrier.certissim_type eq $id_carrier_type}Selected{/if}>{$certissim_carrier_type}</option>
+									{/foreach}
+								</select>
+							</td>
+							<td>
+								<select name="certissim_{$id_shop_carrier}_carrier_speed">
+									{foreach from=$certissim_carrier_speeds key=id_carrier_speed item=certissim_carrier_speed name=certissim_carrier_speeds}
+										<option value="{$id_carrier_speed}" {if $shop_carrier.certissim_speed eq $id_carrier_speed}Selected{/if}>{$certissim_carrier_speed}</option>
 									{/foreach}
 								</select>
 							</td>
