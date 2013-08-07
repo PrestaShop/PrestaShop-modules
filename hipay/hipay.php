@@ -214,7 +214,7 @@ class Hipay extends PaymentModule
 		if (isset($language->language_code))
 			$paymentParams->setLocale($this->formatLanguageCode($language->language_code));
 		else
-			$paymentParams->setLocale(strtoupper($language->iso_code).'_'.strtolower($language->iso_code));
+			$paymentParams->setLocale(strtolower($language->iso_code).'_'.strtoupper($language->iso_code));
 		$paymentParams->setMedia('WEB');
 		$paymentParams->setRating(Configuration::get('HIPAY_RATING'));
 		$paymentParams->setPaymentMethod(HIPAY_MAPI_METHOD_SIMPLE);
