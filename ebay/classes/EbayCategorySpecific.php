@@ -90,7 +90,7 @@ class EbayCategorySpecific
 
 				$db = Db::getInstance();
 				$db->execute('INSERT INTO `'._DB_PREFIX_.'ebay_category_specific` (`id_category_ref`, `name`, `required`, `can_variation`, `selection_mode`)
-					VALUES ('.$ebay_category_id.', \''.pSQL((string)$recommendation->Name).'\', '.($required ? 1 : 0).', '.($can_variation ? 1 : 0).', '.($selection_mode ? 1 : 0).')
+					VALUES ('. (int)$ebay_category_id.', \''.pSQL((string)$recommendation->Name).'\', '.($required ? 1 : 0).', '.($can_variation ? 1 : 0).', '.($selection_mode ? 1 : 0).')
 					ON DUPLICATE KEY UPDATE `required` = '.($required ? 1 : 0).', `can_variation` = '.($can_variation ? 1 : 0).', `selection_mode` = '.($selection_mode ? 1 : 0));
 
 				$ebay_category_specific_id = $db->Insert_ID();
@@ -98,14 +98,14 @@ class EbayCategorySpecific
 				if (!$ebay_category_specific_id)
 					$ebay_category_specific_id = $db->getValue('SELECT `id_ebay_category_specific`
 						FROM `'._DB_PREFIX_.'ebay_category_specific`
-						WHERE `id_category_ref` = '.$ebay_category_id.'
+						WHERE `id_category_ref` = '.(int)$ebay_category_id.'
 						AND `name` = \''.pSQL((string)$recommendation->Name).'\'');
 
 				$insert_data = array();
 
 				foreach ($values as $value)
 					$insert_data[] = array(
-						'id_ebay_category_specific' => $ebay_category_specific_id,
+						'id_ebay_category_specific' => (int)$ebay_category_specific_id,
 						'value' => pSQL($value),
 					);
 

@@ -39,8 +39,13 @@ class EbayDeliveryTimeOptions
 			FROM '._DB_PREFIX_.'ebay_delivery_time_options');
 	}
 
-	public static function insert($data)
+	public static function insert($all_data)
 	{
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_delivery_time_options', $data, 'INSERT');
+		$to_insert = array();
+		if(is_array($all_data) && count($all_data))
+			foreach($all_data as $key => $data)
+				$to_insert[pSQL($key)] = $data;
+
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_delivery_time_options', $to_insert, 'INSERT');
 	}
 }

@@ -316,7 +316,7 @@ class EbayOrder
 			(int)$this->cart->id_currency,
 			false,
 			$customer->secure_key,
-			version_compare(_PS_VERSION_, '1.5', '>') ? new Shop(Configuration::get('PS_SHOP_DEFAULT')) : null
+			version_compare(_PS_VERSION_, '1.5', '>') ? new Shop((int)Configuration::get('PS_SHOP_DEFAULT')) : null
 		);
 
 		$this->id_order = $paiement->currentOrder;
@@ -389,8 +389,8 @@ class EbayOrder
 			'total_paid_real'         => (float)$this->amount,
 			'total_products'          => (float)$total_price_tax_excl,
 			'total_products_wt'       => (float)($this->amount - $this->shippingServiceCost),
-			'total_shipping'          => (float)$total_shipping_tax_incl
-			'total_shipping_tax_incl' => (float)$total_shipping_tax_incl
+			'total_shipping'          => (float)$total_shipping_tax_incl,
+			'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
 			'total_shipping_tax_excl' => (float)$total_shipping_tax_excl
 		);
 
@@ -427,9 +427,9 @@ class EbayOrder
 
 			// Update payment
 			$payment_data = array(
-				'amount' => (float) $this->amount
+				'amount' => (float)$this->amount
 			);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'.$order->reference.'" ');
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'.pSQL($order->reference).'" ');
 			
 		}
 

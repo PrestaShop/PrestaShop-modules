@@ -114,7 +114,7 @@
 		<div style="clear:both;"></div>
 		<label>{l s='Description' mod='ebay'} : </label>
 		<div class="margin-form">
-			<textarea name="ebay_returns_description" cols="120" rows="10">{$ebayReturns}</textarea>
+			<textarea name="ebay_returns_description" cols="120" rows="10">{$ebayReturns|escape:'htmlall':'UTF-8'}</textarea>
 		</div>
 	</fieldset>
 
@@ -129,7 +129,7 @@
 
 			<select name="listingdurations">
 				{foreach from=$listingDurations item=listing key=key}
-					<option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing}</option>
+					<option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		</div>
@@ -142,7 +142,7 @@
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:10px;"><input class="button" name="submitSave" type="submit" id="save_ebay_parameters" value="{l s='Save' mod='ebay'}" /></div>
 	<div class="margin-form" id="categoriesProgression" style="font-weight: bold;"></div>
 
-	<div id="ebayreturnshide" style="display:none;">{$ebayReturns}</div>
+	<div id="ebayreturnshide" style="display:none;">{$ebayReturns|escape:'htmlall':'UTF-8'}</div>
 
 	{literal}
 		<script>
