@@ -54,7 +54,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.4';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'b7e680a4290c977bb35e3b28817b8348';
@@ -189,12 +189,13 @@ class UpsCarrier extends CarrierModule
 	public function uninstall()
 	{
 		// Uninstall Carriers
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('deleted' => 1), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
+		$exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'ups_rate_service_code"');
+		if (count($exists))
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('deleted' => 1), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
 
 		// Uninstall Config
 		foreach ($this->_fieldsList as $keyConfiguration => $name)
-			if (!Configuration::deleteByName($keyConfiguration))
-				return false;
+			Configuration::deleteByName($keyConfiguration);
 
 		// Uninstall SQL
 		include(dirname(__FILE__).'/sql-uninstall.php');
@@ -203,24 +204,25 @@ class UpsCarrier extends CarrierModule
 				return false;
 
 		// Uninstall Module
-		if (!parent::uninstall() OR !$this->unregisterHook('updateCarrier'))
-			return false;
-
-		return true;
+		return parent::uninstall();
 	}
 
 	public function disable($forceAll = false)
 	{
 		// Disable Carriers
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('active' => 0), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
-		parent::disable($forceAll);
+		$exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'ups_rate_service_code"');
+		if (count($exists))
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('active' => 0), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
+		return parent::disable($forceAll);
 	}
 
 	public function enable($forceAll = false)
 	{
 		// Disable Carriers
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('active' => 1), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
-		parent::enable($forceAll);
+		$exists = Db::getInstance()->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'ups_rate_service_code"');
+		if (count($exists))
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'carrier', array('active' => 1), 'UPDATE', '`external_module_name` = \'upscarrier\' OR `id_carrier` IN (SELECT DISTINCT(`id_carrier`) FROM `'._DB_PREFIX_.'ups_rate_service_code`)');
+		return parent::enable($forceAll);
 	}
 
 	public function installCarriers($id_ups_rate_service_group)
