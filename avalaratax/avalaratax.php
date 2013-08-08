@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.2.2';
+		$this->version = '3.2.3';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -96,6 +96,7 @@ class AvalaraTax extends Module
 		`id_cache` int(10) unsigned NOT NULL auto_increment,
 		`id_carrier` int(10) unsigned NOT NULL,
 		`tax_rate` float(8, 2) unsigned NOT NULL,
+		`region` varchar(2) NOT NULL,
 		`amount` float(8, 2) unsigned NOT NULL,
 		`update_date` datetime,
 		`id_cart` int(10) unsigned NOT NULL,
