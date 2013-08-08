@@ -92,6 +92,10 @@ class CacheTools
 			// Call Avalara
 			$getTaxResult = $avalaraModule->getTax(array($avalaraProducts), array('type' => 'SalesOrder', 'DocCode' => 1, 'cart' => $cart, 'taxable' => $taxable), $id_address);
 			
+			// If shipping is not taxable (for instance in California), we need to adjust the rate calculation
+			if (!$getTaxResult['TaxLines']['Shipping']['GetTax'])					
+				$getTaxResult['TotalAmount'] -= $cart->getOrderShippingCost();
+			
 			// Store the taxrate in cache
 			// If taxrate exists (but it's outdated), then update, else insert (REPLACE INTO)			
 			if (isset($getTaxResult['TotalTax']) && (float)$getTaxResult['TotalTax'] >= 0 && isset($getTaxResult['TotalAmount']) && $getTaxResult['TotalAmount'])
