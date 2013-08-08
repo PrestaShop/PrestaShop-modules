@@ -57,10 +57,14 @@ for ($level = 0; $level <= 5; $level++)
 			$levelExists[$level + 1] = true;
 			echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'"
 				style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
-				<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
+				<option value="0">'.Tools::safeOutput(Tools::getValue('ch_cat_str')).'</option>';
 
 			foreach ($ebay_category_list_level as $ebay_category)
-				echo '<option value="'.(int)$ebay_category['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ebay_category['id_ebay_category']) ? 'selected="selected"' : '').'>'.$ebay_category['name'].($ebay_category['is_multi_sku'] == 1 ? ' *' : '').'</option>';
+			{
+				$selected = (Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ebay_category['id_ebay_category']) ? 'selected="selected"' : '';
+				echo '<option value="'.(int)$ebay_category['id_ebay_category'].'" '.$selected.'>'.Tools::safeOutput($ebay_category['name']).((int)$ebay_category['is_multi_sku'] === 1 ? ' *' : '').'</option>';				
+			}
+
 
 			echo '</select> ';
 		}

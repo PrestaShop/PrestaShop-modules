@@ -30,9 +30,9 @@ include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
 
-if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 {
-	echo Tools::getValue('not_logged_str');
+	echo Tools::safeOutput(Tools::getValue('not_logged_str'));
 	return;
 }
 

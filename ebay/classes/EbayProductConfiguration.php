@@ -30,6 +30,9 @@ class EbayProductConfiguration
 
 	public static function getByProductIds($product_ids)
 	{
+		foreach ($product_ids as &$product_id)
+			$product_id = (int)$product_id;
+		
 		$res = Db::getInstance()->executeS('SELECT `id_product`, `blacklisted`, `extra_images`
 			FROM `'._DB_PREFIX_.'ebay_product_configuration`
 			WHERE `id_product` IN ('.implode(',', $product_ids).')');
@@ -65,16 +68,18 @@ class EbayProductConfiguration
 	{
 		if (!count($data))
 			return;
+		
+		$keys = array();
+		$fields_strs = array();
+		foreach($data as $key => $value) {
+			$keys[] = pSQL($key);
+			$fields_strs[] = '`'.pSQL($key).'` = '.$value;						
+		}
 
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', array_keys($data)).'`)
-			VALUES ('.$product_id.', '.implode(',', $data).')
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', $keys).'`)
+			VALUES ('.(int)$product_id.', '.implode(',', $data).')
 			ON DUPLICATE KEY UPDATE ';
 
-		$fields_strs = array();
-
-		foreach ($data as $field => $value)
-			$fields_strs[] = '`'.$field.'` = '.$value;
-		
 		$sql .= implode(',', $fields_strs);
 
 		return Db::getInstance()->execute($sql);

@@ -52,9 +52,9 @@ class EbayCategory
 			WHERE ';
 
 		if ($this->id_category_ref)
-			$sql .= 'ec.`id_category_ref` = '.$this->id_category_ref;
+			$sql .= 'ec.`id_category_ref` = '.(int)$this->id_category_ref;
 		else
-			$sql .= 'ecc.`id_category` = '.$this->id_category;
+			$sql .= 'ecc.`id_category` = '.(int)$this->id_category;
 
 		$res = Db::getInstance()->getRow($sql);
 
@@ -76,7 +76,7 @@ class EbayCategory
 			$this->_loadFromDb();
 
 		if ($this->is_multi_sku === null)
-			$this->is_multi_sku = EbayCategory::getInheritedIsMultiSku($this->id_category_ref);
+			$this->is_multi_sku = EbayCategory::getInheritedIsMultiSku((int)$this->id_category_ref);
 
 		return $this->is_multi_sku;
 	}
@@ -107,7 +107,7 @@ class EbayCategory
 	{
 		$sql = 'SELECT e.`name`, e.`id_ebay_category_specific` as id, e.`required`, e.`selection_mode`, e.`id_attribute_group`, e.`id_feature`, e.`id_ebay_category_specific_value` as id_specific_value, e.`is_brand`, e.`can_variation`
 			FROM `'._DB_PREFIX_.'ebay_category_specific` e
-			WHERE e.`id_category_ref` = '.$this->id_category_ref;
+			WHERE e.`id_category_ref` = '.(int)$this->id_category_ref;
 
 		return DB::getInstance()->executeS($sql);
 	}
@@ -128,7 +128,7 @@ class EbayCategory
 				FROM `'._DB_PREFIX_.'ebay_category_specific` e
 				LEFT JOIN `'._DB_PREFIX_.'ebay_category_specific_value` ec
 				ON e.`id_ebay_category_specific_value` = ec.`id_ebay_category_specific_value`
-				WHERE e.`id_category_ref` = '.$this->id_category_ref;
+				WHERE e.`id_category_ref` = '.(int)$this->id_category_ref;
 
 			$this->items_specific_values = Db::getInstance()->executeS($sql);
 		}
@@ -148,7 +148,7 @@ class EbayCategory
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category_condition_configuration` ec
 			ON e.`id_category_ref` = ec.`id_category_ref`
 			AND e.`id_condition_ref` = ec.`id_condition_ref`
-			WHERE e.`id_category_ref` = '.$this->id_category_ref;
+			WHERE e.`id_category_ref` = '.(int)$this->id_category_ref;
 
 		$res = Db::getInstance()->executeS($sql);
 
@@ -181,7 +181,7 @@ class EbayCategory
 		{
 			$sql = 'SELECT e.condition_type, e.id_condition_ref as condition_id
 				FROM '._DB_PREFIX_.'ebay_category_condition_configuration e
-				WHERE e.id_category_ref = '.$this->id_category_ref;
+				WHERE e.id_category_ref = '.(int)$this->id_category_ref;
 
 			$res = Db::getInstance()->executeS($sql);
 
@@ -233,7 +233,7 @@ class EbayCategory
 		{
 			$db->autoExecute(_DB_PREFIX_.'ebay_category', array(
 				'is_multi_sku' => isset($categories_multi_sku[$category['id_category_ref']]) ? $categories_multi_sku[$category['id_category_ref']] : null,
-			), 'UPDATE', '`id_category_ref` = '.$category['id_category_ref'], 0, true, true);
+			), 'UPDATE', '`id_category_ref` = '.(int)$category['id_category_ref'], 0, true, true);
 		}
 
 		Configuration::updateValue('EBAY_CATEGORY_MULTI_SKU_UPDATE', 1, false, 0, 0);
@@ -252,7 +252,7 @@ class EbayCategory
 		if ($row['is_multi_sku'] !== null)
 			return $row['is_multi_sku'];
 
-		if ($row['id_category_ref_parent'] != $id_category_ref)
+		if ((int)$row['id_category_ref_parent'] != (int)$id_category_ref)
 			return EbayCategory::getInheritedIsMultiSku($row['id_category_ref_parent']);
 
 		return $row['is_multi_sku']; // RArbuz: shall we not return the category default in this case?

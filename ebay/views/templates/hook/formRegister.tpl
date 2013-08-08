@@ -64,7 +64,7 @@
 
 			<dl class="ebay_dl">
 				<dt><label for="eBayUsername" id="ebay_label">{l s='eBay User ID' mod='ebay'}</label></dt>
-				<dd><input id="eBayUsername" type="text" name="eBayUsername" value="{$ebay_username}" /></dd>
+				<dd><input id="eBayUsername" type="text" name="eBayUsername" value="{$ebay_username|escape:'htmlall':'UTF-8'}" /></dd>
 				<dt>&nbsp;</dt>
 				<dd><input type="submit" id="button_ebay" class="button" value="{l s='Register the module on eBay' mod='ebay'}" /></dd>
 			</dl>

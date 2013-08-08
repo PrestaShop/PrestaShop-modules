@@ -30,7 +30,7 @@ include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
 
-if (Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
+if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	return Tools::getValue('not_logged_str');
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
@@ -143,13 +143,13 @@ function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $
 			{
 				if (isset($ref_categories[$category['id_category_ref_parent']]['children']))
 				{
-					if ($category['id_category_ref'] != $category['id_category_ref_parent'])
-						$var .= getSelectors($ref_categories, $category['id_category_ref_parent'], $id_category, (int)($level - 1), $ebay);
+					if ((int)$category['id_category_ref'] != (int)$category['id_category_ref_parent'])
+						$var .= getSelectors($ref_categories, (int)$category['id_category_ref_parent'], (int)$id_category, (int)($level - 1), $ebay);
 					
-					$var .= '<select name="category['.$id_category.']" id="categoryLevel'.(int)($category['level']).'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($category['level']).', '.(int)$id_category.');">';
+					$var .= '<select name="category['.(int)$id_category.']" id="categoryLevel'.(int)($category['level']).'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($category['level']).', '.(int)$id_category.');">';
 					
 					foreach ($ref_categories[$category['id_category_ref_parent']]['children'] as $child)
-						$var .= '<option value="'.$ref_categories[$child]['id_ebay_category'].'"'.($category['id_category_ref'] == $child ? ' selected' : '').'>'.$ref_categories[$child]['name'].'</option>';
+						$var .= '<option value="'.(int)$ref_categories[$child]['id_ebay_category'].'"'.((int)$category['id_category_ref'] == (int)$child ? ' selected' : '').'>'.Tools::safeOutput($ref_categories[$child]['name']).'</option>';
 					
 					$var .= '</select>';
 				}
@@ -158,12 +158,12 @@ function getSelectors($ref_categories, $id_category_ref, $id_category, $level, $
 	}
 	else
 	{
-		$var .= '<select name="category['.$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
-			<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
+		$var .= '<select name="category['.(int)$id_category.']" id="categoryLevel'.(int)$level.'-'.(int)$id_category.'" rel="'.(int)$id_category.'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)$level.', '.(int)$id_category.');">
+			<option value="0">'.Tools::safeOutput(Tools::getValue('ch_cat_str')).'</option>';
 
 		foreach ($ref_categories as $ref_id_category_ref => $category)
-			if (isset($category['id_category_ref']) && $category['id_category_ref'] == $category['id_category_ref_parent'] && !empty($category['id_ebay_category']))
-				$var .= '<option value="'.$category['id_ebay_category'].'"'.($category['id_category_ref'] == $id_category_ref ? ' selected' : '').'>'.$category['name'].'</option>';
+			if (isset($category['id_category_ref']) && (int)$category['id_category_ref'] == (int)$category['id_category_ref_parent'] && !empty($category['id_ebay_category']))
+				$var .= '<option value="'. (int)$category['id_ebay_category'].'"'.((int)$category['id_category_ref'] == (int)$id_category_ref ? ' selected' : '').'>'.Tools::safeOutput($category['name']).'</option>';
 
 		$var .= '</select>';
 	}
