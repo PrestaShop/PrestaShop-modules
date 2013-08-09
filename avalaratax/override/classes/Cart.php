@@ -102,4 +102,28 @@ class Cart extends CartCore
 		/* If we do already know it, then return it */
 		return $tax_excluded_cost + (float)CacheTools::getCarrierTaxAmount($this);
 	}
+	
+	public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
+	{
+		include_once(_PS_ROOT_DIR_.'/modules/avalaratax/avalaratax.php');
+
+		/* Instanciate the Avalara module and check if active */
+		$avalara = new AvalaraTax();
+		if (!$avalara->active)
+			return parent::getPackageShippingCost((int)$id_carrier, $use_tax, $default_country, $product_list);
+
+		/* Retrieve the original carrier fee tax excluded */
+		$tax_excluded_cost = parent::getPackageShippingCost((int)$id_carrier, false, $default_country, $product_list);
+
+		/* If we want price without tax or if this carrier is tax free, return this price */
+		if (!(int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} || !$use_tax)
+			return $tax_excluded_cost;
+
+		/* If there is no cache or cache expired, we regenerate it */
+		if (CacheTools::checkCarrierCache($this))
+			return parent::getPackageShippingCost((int)$id_carrier, $use_tax, $default_country, $product_list);
+
+		/* If we do already know it, then return it */
+		return $tax_excluded_cost + (float)CacheTools::getCarrierTaxAmount($this);
+	}
 }
