@@ -54,7 +54,7 @@ class Cart extends CartCore
 		$tax_excluded_cost = parent::getOrderShippingCost((int)$id_carrier, false, $default_country, $product_list);
 
 		/* If we want price without tax or if this carrier is tax free, return this price */
-		if (!(int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} || !$use_tax || Db::getInstance()->getValue('SELECT `tax_code` FROM `'._DB_PREFIX_.'avalara_carrier_cache` WHERE `id_carrier` = '.(int)$id_carrier) == 'NT')
+		if (!(int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')} || !$use_tax)
 			return $tax_excluded_cost;
 
 		/* If there is no cache or cache expired, we regenerate it */
