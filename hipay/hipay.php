@@ -476,12 +476,12 @@ class Hipay extends PaymentModule
 			.hipay_label {float:none;font-weight:normal;padding:0;text-align:left;width:100%;line-height:30px}
 			.hipay_help {vertical-align:middle}
 			#hipay_table {border:1px solid #383838}
-			#hipay_table td {border:1px solid #383838; width:250px; padding-left;8px; text-align:center}
+			#hipay_table td {border:1px solid #383838; width:250px; padding-left:8px; text-align:center}
 			#hipay_table td.hipay_end {border-top:none}
 			#hipay_table td.hipay_block {border-bottom:none}
 			#hipay_steps_infos {border:none; margin-bottom:20px}
-			/*#hipay_steps_infos td {border:none; width:70px; height:60px;padding-left;8px; text-align:left}*/
-			#hipay_steps_infos td.tab2 {border:none; width:700px;; height:60px;padding-left;8px; text-align:left}
+			/*#hipay_steps_infos td {border:none; width:70px; height:60px;padding-left:8px; text-align:left}*/
+			#hipay_steps_infos td.tab2 {border:none; width:700px;; height:60px;padding-left:8px; text-align:left}
 			#hipay_steps_infos td.hipay_end {border-top:none}
 			#hipay_steps_infos td.hipay_block {border-bottom:none}
 			#hipay_steps_infos td.hipay_block {border-bottom:none}
@@ -491,6 +491,7 @@ class Hipay extends PaymentModule
 	<fieldset>
 		<legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Hipay').'</legend>
 		'.$warnings.'
+		<p style="text-align:center;margin-bottom:30px;"><img src="../modules/'.$this->name.'/hipay.gif" /></p>
 		<span class="hipay_subtitle">'.$this->l('The fast, simple multimedia payment solution for everyone in France and Europe!').'</span><br />
 		'.$this->l('Thanks to its adaptability and performance, Hipay has already won over 12,000 merchants and a million users. Its array of 15 of the most effective payment solutions in Europe offers your customers instant recognition and a reassuring guarantee for their consumer habits.').'
 		<br />
@@ -505,7 +506,8 @@ class Hipay extends PaymentModule
 			<li>'.$this->l('Dedicated customer service;').'</li>
 			<li>'.$this->l('Anti-fraud system and permanent monitoring for high-risk behaviour.').'</li>
 		</ul>
-		'.$this->l('Hipay is part of the Hi-Media Group (Allopass).').'
+		'.$this->l('Hipay is part of the Hi-Media Group (Allopass).').'<br /><br />
+		&#8658; '.$this->l('You can get a PDF documentation to configure HiPay in Prestashop').' : <a href="https://www.hipay.com/dl/HiPay_Wallet_Prestashop_Configuration_Guide_EN.pdf" target="_blank">English</a> - <a href="https://www.hipay.com/dl/HiPay_Wallet_Configuration_Module_Prestashop_FR.pdf" target="_blank">Français</a>
 	</fieldset>
 	<div class="clear">&nbsp;</div>
 	<fieldset>
@@ -514,7 +516,7 @@ class Hipay extends PaymentModule
 		<table id="hipay_steps_infos" cellspacing="0" cellpadding="0">
 			'.($account_created ? '<tr><td></td><td><div class="conf">'.$this->l('Account created!').'</div></td></tr>' : '').'
 			<tr>
-				<td valign="top"><img src="../modules/'.$this->name.'/1.png" alt="step 1" /></td>
+				<td valign="top" style="padding-top:6px;"><img src="../modules/'.$this->name.'/1.png" alt="step 1" /></td>
 				<td class="tab2">'.(Configuration::get('HIPAY_SITEID')
 					? '<a href="https://www.hipay.com/auth" style="color:#D9263F;font-weight:700">'.$this->l('Log in to your merchant account').'</a><br />'
 					: '<a id="account_creation" href="https://www.hipay.com/registration/register" style="color:#D9263F;font-weight:700"><img src="../modules/'.$this->name.'/button_'.$iso_code.'.jpg" alt="'.$this->l('Create a Hipay account').'" title="'.$this->l('Create a Hipay account').'" border="0" /></a>
@@ -576,11 +578,11 @@ class Hipay extends PaymentModule
 			</tr>
 			<tr><td></td><td>
 		
-		<form action="'.$link.'" method="post">
+		<form action="'.$link.'" method="post" style="padding-left:6px;">
 		<table id="hipay_table" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="">&nbsp;</td>
-				<td style="height:40px;">Compte Hipay</td>
+				<td style="height:40px;">Compte HiPay</td>
 			</tr>';
 
 		foreach ($currencies as $currency)
@@ -612,7 +614,7 @@ class Hipay extends PaymentModule
 		
 		$form .= '</table>
 				<hr class="clear" />
-				<label for="HIPAY_RATING">'.$this->l('Authorized age group').'</label>
+				<label for="HIPAY_RATING">'.$this->l('Authorized age group').' :</label>
 				<div class="margin-form">
 					<select id="HIPAY_RATING" name="HIPAY_RATING">
 						<option value="ALL">'.$this->l('For all ages').'</option>
@@ -623,14 +625,14 @@ class Hipay extends PaymentModule
 				</div>
 				<hr class="clear" />
 				<p>'.$this->l('Notice: please verify that the currency mode you have chosen in the payment tab is compatible with your Hipay account(s).').'</p>
-				<input type="submit" name="submitHipay" value="'.$this->l('Update configuration').'" class="button" />
+				<input type="submit" name="submitHipay" value="'.$this->l('Update configuration').'" class="button" style="font-weight:bold;"/>
 			</form>
 
 				</td>
 			</tr>
 			<tr>
 				<td><img src="../modules/'.$this->name.'/3.png" alt="step 3" /></td> 
-				<td class="tab2">'.$this->l('Choose a set of buttons for your shop Hipay').'</td>
+				<td class="tab2">'.$this->l('Choose a set of buttons for your shop Hipay').' :</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -688,7 +690,7 @@ class Hipay extends PaymentModule
 								</td>
 							</tr>
 						</table>
-						<input type="submit" name="submitHipayPaymentButton" value="'.$this->l('Update configuration').'" class="button" />
+						<input type="submit" name="submitHipayPaymentButton" value="'.$this->l('Update configuration').'" class="button" style="font-weight:bold;" />
 					</form>
 				</td>
 			</tr>
@@ -724,7 +726,7 @@ class Hipay extends PaymentModule
 		$form .= '
 		<fieldset>
 			<legend><img src="../modules/'.$this->name.'/logo.gif" /> '.$this->l('Zones restrictions').'</legend>
-			'.$this->l('Select the authorized shipping zones').'<br /><br />
+			'.$this->l('Select the authorized shipping zones').' :<br /><br />
 			<form action="'.$currentIndex.'&configure=hipay&token='.Tools::safeOutput(Tools::getValue('token')).'" method="post">
 				<table cellspacing="0" cellpadding="0" class="table">
 					<tr>
@@ -756,7 +758,7 @@ class Hipay extends PaymentModule
 		
 		$form .= '
 				</table><br>
-				<input type="submit" name="submitHipayAZ" value="'.$this->l('Update zones').'" class="button" />
+				<input type="submit" name="submitHipayAZ" value="'.$this->l('Update zones').'" class="button" style="font-weight:bold;" />
 			</form>
 		</fieldset>
 		<script type="text/javascript">
