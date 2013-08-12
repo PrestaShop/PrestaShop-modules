@@ -165,6 +165,7 @@ ul#gamification_badges_list li.locked .gamification_badges_name{
 
 #gamification_progressbar .ui-widget-header{
 	background-image:url(../img/gamification-bar-bg.png);
+	margin-top: -18px;
 }
 
 #gamification_progressbar_tab {
