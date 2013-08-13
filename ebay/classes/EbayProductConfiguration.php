@@ -69,15 +69,15 @@ class EbayProductConfiguration
 		if (!count($data))
 			return;
 		
-		$keys = array();
+		$to_insert = array();
 		$fields_strs = array();
 		foreach($data as $key => $value) {
-			$keys[] = pSQL($key);
-			$fields_strs[] = '`'.pSQL($key).'` = '.$value;						
+			$to_insert[bqSQL($key)] = pSQL($value);
+			$fields_strs[] = '`'.bqSQL($key).'` = '.pSQL($value);
 		}
 
-		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', $keys).'`)
-			VALUES ('.(int)$product_id.', '.implode(',', $data).')
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', array_keys($to_insert)).'`)
+			VALUES ('.(int)$product_id.', '.implode(',', $to_insert).')
 			ON DUPLICATE KEY UPDATE ';
 
 		$sql .= implode(',', $fields_strs);

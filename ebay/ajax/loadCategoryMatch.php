@@ -39,9 +39,6 @@ $current_path = Db::getInstance()->getRow('
 	LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec ON (ec.`id_ebay_category` = ecc.`id_ebay_category`)
 	WHERE ecc.`id_category` = '.(int)Tools::getValue('id_category'));
 
-Tools::getValue('level') = $current_path['level'];
-Tools::getValue('level'.($current_path['level'])) = $current_path['id_ebay_category'];
-
 for ($levelStart = $current_path['level']; $levelStart > 1; $levelStart--)
 {
 	$current_path = Db::getInstance()->getRow('
@@ -49,7 +46,6 @@ for ($levelStart = $current_path['level']; $levelStart > 1; $levelStart--)
 		FROM `'._DB_PREFIX_.'ebay_category` ec
 		LEFT JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc ON (ecc.`id_ebay_category` = ec.`id_ebay_category`)
 		WHERE ec.`id_category_ref` = '.(int)$current_path['id_category_ref_parent']);
-	Tools::getValue('level'.($levelStart - 1)) = $current_path['id_ebay_category'];
 }
 
 $level_exists = array();
@@ -76,10 +72,10 @@ for ($level = 0; $level <= 5; $level++)
 			$level_exists[$level + 1] = true;
 
 			echo '<select name="category['.(int)Tools::getValue('id_category').']" id="categoryLevel'.(int)($level + 1).'-'.(int)Tools::getValue('id_category').'" rel="'.(int)Tools::getValue('id_category').'" style="font-size: 12px; width: 160px;" OnChange="changeCategoryMatch('.(int)($level + 1).', '.(int)Tools::getValue('id_category').');">
-				<option value="0">'.Tools::getValue('ch_cat_str').'</option>';
+				<option value="0">'.Tools::safeOutput(Tools::getValue('ch_cat_str')).'</option>';
 
 			foreach ($ebay_category_list_level as $ec)
-				echo '<option value="'.(int)$ec['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ec['id_ebay_category']) ? 'selected="selected"' : '').'>'.$ec['name'].($ec['is_multi_sku'] == 1 ? ' *' : '').'</option>';
+				echo '<option value="'.(int)$ec['id_ebay_category'].'" '.((Tools::getValue('level'.($level + 1)) && Tools::getValue('level'.($level + 1)) == $ec['id_ebay_category']) ? 'selected="selected"' : '').'>'.Tools::safeOutput($ec['name']).($ec['is_multi_sku'] == 1 ? ' *' : '').'</option>';
 			echo '</select> ';
 		}
 	}

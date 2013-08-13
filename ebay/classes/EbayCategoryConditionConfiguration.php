@@ -47,15 +47,13 @@ class EbayCategoryConditionConfiguration
 
 	public static function replace($data)
 	{
-		$keys = array();
-		foreach ($data as $key => &$value) {
-			$keys[] = pSQL($key);
-			$value = pSQL($value);
-		}
+		$to_insert = array();
+		foreach ($data as $key => $value)
+			$to_insert[bqSQL($key)] = pSQL($value);
 
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
-			Db::getInstance()->insert('ebay_category_condition_configuration', $data, false, false, Db::REPLACE);
+			Db::getInstance()->insert('ebay_category_condition_configuration', $to_insert, false, false, Db::REPLACE);
 		else
-			Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'ebay_category_condition_configuration` (`'.implode('` , `', $keys).'`) VALUES (\''.implode('\', \'', $data).'\')');
+			Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'ebay_category_condition_configuration` (`'.implode('` , `', array_keys($to_insert)).'`) VALUES (\''.implode('\', \'', $to_insert).'\')');
 	}
 }

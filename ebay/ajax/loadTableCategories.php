@@ -31,7 +31,7 @@ include_once dirname(__FILE__).'/../ebay.php';
 $ebay = new Ebay();
 
 if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
-	return Tools::getValue('not_logged_str');
+	return Tools::safeOutput(Tools::getValue('not_logged_str'));
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
 
