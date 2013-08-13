@@ -49,3 +49,4 @@ label span.description{display:block;padding-left:16px}
 #paypal_configuration > .box{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
 .left,#paypal-wrapper dl > *{float:left}
 .right,.box ul.tick{float:right}
+.paypal-hide{display:none}
