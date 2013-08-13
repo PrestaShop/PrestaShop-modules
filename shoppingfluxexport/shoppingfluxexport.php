@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2013 PrestaShop SA
+* @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 */
 
 if (!defined('_PS_VERSION_'))
@@ -49,16 +48,16 @@ class ShoppingFluxExport extends Module
 	{
 		return (parent::install() && $this->_initHooks() && $this->_initConfig());
 	}
-	
+
 	/* REGISTER HOOKS */
 	private function _initHooks()
 	{
 		if (!$this->registerHook('newOrder') ||
-			!$this->registerHook('footer') ||
-			!$this->registerHook('postUpdateOrderStatus') ||
-			!$this->registerHook('adminOrder') ||
-			!$this->registerHook('updateProduct') ||
-			!$this->registerHook('backOfficeTop') ||
+			!$this->registerHook('footer') || 
+			!$this->registerHook('postUpdateOrderStatus') || 
+			!$this->registerHook('adminOrder') || 
+			!$this->registerHook('updateProduct') || 
+			!$this->registerHook('backOfficeTop') || 
 			!$this->registerHook('updateProductAttribute') ||
 			!$this->registerHook('top')) 
 			return false;
@@ -72,15 +71,15 @@ class ShoppingFluxExport extends Module
 		//Avoid servers IPs
 		Db::getInstance()->Execute('
 			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'customer_ip` (
-			`id_customer_ip` int(10) unsigned NOT NULL AUTO_INCREMENT,
-			`id_customer` int(10) unsigned NOT NULL,
-			`ip` varchar(32) DEFAULT NULL,
+			`id_customer_ip` int(10) unsigned NOT null AUTO_INCREMENT,
+			`id_customer` int(10) unsigned NOT null,
+			`ip` varchar(32) DEFAULT null,
 			PRIMARY KEY (`id_customer_ip`),
 			KEY `idx_id_customer` (`id_customer`)
 			) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8;');
 		
-                foreach (Shop::getShops() as $shop){
-                    
+                foreach (Shop::getShops() as $shop)
+                {
                     if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
 			!Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, null, $shop['id_shop']) ||
 			!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, null, $shop['id_shop']) ||
@@ -91,10 +90,7 @@ class ShoppingFluxExport extends Module
 			!Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, null, $shop['id_shop']) ||
 			!Configuration::updateValue('SHOPPING_FLUX_STOCKS','', false, null, $shop['id_shop']))
 			return false;
-                    
-                }
-                
-		
+                }                
 
 		return true;
 
@@ -120,9 +116,9 @@ class ShoppingFluxExport extends Module
 
 	public function getContent()
 	{
-		$statusXML = $this->_checkToken();
-		$status = $statusXML->Response->Status;
-		$price = (float)$statusXML->Response->Price;
+		$status_xml = $this->_checkToken();
+		$status = is_object($status_xml) ? $status_xml->Response->Status : '';
+		$price = is_object($status_xml) ? (float)$status_xml->Response->Price : 0;
 		
 		switch ($status)
 		{
@@ -135,15 +131,16 @@ class ShoppingFluxExport extends Module
 			case 'New':
 			default:
 				$this->_html .= $this->_defaultView($price);
-				Configuration::updateValue('SHOPPING_FLUX_TRACKING','');
-				Configuration::updateValue('SHOPPING_FLUX_BUYLINE','');
-				Configuration::updateValue('SHOPPING_FLUX_ORDERS','');
-				Configuration::updateValue('SHOPPING_FLUX_STOCKS','');
+				Configuration::updateValue('SHOPPING_FLUX_TRACKING', '');
+				Configuration::updateValue('SHOPPING_FLUX_BUYLINE', '');
+				Configuration::updateValue('SHOPPING_FLUX_ORDERS', '');
+				Configuration::updateValue('SHOPPING_FLUX_STOCKS', '');
 				break;
 		}
 		
 		if (!in_array('curl', get_loaded_extensions()))
-			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
+			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL 
+                            pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
 
 		return $this->_html;
 	}
@@ -168,7 +165,7 @@ class ShoppingFluxExport extends Module
 		$owner = new Employee($cookie->id_employee);
 		//post process
 		$send_mail = Tools::getValue('send_mail');
-		if (isset($send_mail) && $send_mail != NULL)
+		if (isset($send_mail) && $send_mail != null)
 			$this->sendMail();
 		
 		//first fieldset
@@ -186,7 +183,7 @@ class ShoppingFluxExport extends Module
 					</ol>
 			</p>';
 			
-		if ($price!=0)
+		if ($price != 0)
 			$html .= '<p><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois. ').'</b>';
 		else
 			$html .= '<p><b>'.$this->l('A partir de 79€ H.T/mois. ').'</b>';
@@ -226,7 +223,7 @@ class ShoppingFluxExport extends Module
 	private function _clientView()
 	{
 		$rec_config = Tools::getValue('rec_config');
-		if (isset($rec_config) && $rec_config != NULL)
+		if (isset($rec_config) && $rec_config != null)
 			$this->_treatForm();
 	
 		$configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TOKEN','SHOPPING_FLUX_TRACKING','SHOPPING_FLUX_BUYLINE', 
@@ -303,7 +300,7 @@ class ShoppingFluxExport extends Module
 		$xml .= '<Feed><![CDATA['.Tools::safeOutput(Tools::getValue('flux')).']]></Feed>';
 		$xml .= '</AddProspect>';
 
-		if (in_array('curl',get_loaded_extensions()))
+		if (in_array('curl', get_loaded_extensions()))
 			$this->_callWebService('AddProspectPrestashop', $xml);
 	}
 	
@@ -315,7 +312,7 @@ class ShoppingFluxExport extends Module
         
 	/* Feed content */
         private function getSimpleProducts($id_lang, $limit_from = false, $limit_to = 500)
-	{
+        {
 		$context = Context::getContext();
 
 		$front = true;
@@ -336,8 +333,8 @@ class ShoppingFluxExport extends Module
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
         
-        private function countProducts(){
-            
+        private function countProducts()
+        {
             $context = Context::getContext();
 
             $front = true;
@@ -354,8 +351,7 @@ class ShoppingFluxExport extends Module
         }
         
 	public function generateFeed()
-	{
-               
+        {
 		if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
 			die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
 
@@ -395,8 +391,8 @@ class ShoppingFluxExport extends Module
                             echo '<from/>';
                             echo '<to/>';
                     }
-                    echo '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, NULL, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
-                    echo '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, NULL, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
+                    echo '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
+                    echo '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
                     echo '<solde>'.(int)$product->on_sale.'</solde>';
                     echo '</produit>';
 		}
@@ -416,8 +412,8 @@ class ShoppingFluxExport extends Module
             
         }
         
-        public function writeFeed($total, $current = 0){
-            
+        public function writeFeed($total, $current = 0)
+        {
             if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
                 die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
             
@@ -461,8 +457,8 @@ class ShoppingFluxExport extends Module
                         $str .= '<from/>';
                         $str .= '<to/>';
                 }
-                $str .= '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, NULL, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
-                $str .= '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, NULL, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
+                $str .= '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
+                $str .= '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
                 $str .= '<solde>'.(int)$product->on_sale.'</solde>';
                 $str .= '</produit>';
             }
@@ -470,10 +466,10 @@ class ShoppingFluxExport extends Module
             fwrite($file, $str);
             fclose($file);
             
-            if ($current+500 >= $total)
+            if ($current + 500 >= $total)
                 $this->closeFeed ();
             else{
-                $next_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/cron.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN').'&current='.($current+500).'&total='.$total;
+                $next_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/cron.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN').'&current='.($current + 500).'&total='.$total;
                 header('Location:'.$next_uri);
             }
                 
@@ -516,8 +512,8 @@ class ShoppingFluxExport extends Module
 		$data[2]  = $link->getProductLink($product);
 		$data[4]  = $product->description;
 		$data[5]  = $product->description_short;
-		$data[6]  = $product->getPrice(true, NULL, 2, NULL, false, true, 1);
-		$data[7]  = $product->getPrice(true, NULL, 2, NULL, false, false, 1);
+		$data[6]  = $product->getPrice(true, null, 2, null, false, true, 1);
+		$data[7]  = $product->getPrice(true, null, 2, null, false, false, 1);
 		$data[8]  = $this->_getShipping($product, $configuration, $carrier);
 		$data[9]  = $carrier->delay[$configuration['PS_LANG_DEFAULT']];
 		$data[10] = $product->manufacturer_name;
@@ -546,7 +542,7 @@ class ShoppingFluxExport extends Module
 
 		$shipping = 0;
 
-		$product_price = $product->getPrice(true, $attribute_id, 2, NULL, false, true, 1);
+		$product_price = $product->getPrice(true, $attribute_id, 2, null, false, true, 1);
 		$shipping_free_price = $configuration['PS_SHIPPING_FREE_PRICE'];
 		$shipping_free_weight = isset($configuration['PS_SHIPPING_FREE_WEIGHT']) ? $configuration['PS_SHIPPING_FREE_WEIGHT'] : 0;
 
@@ -580,7 +576,7 @@ class ShoppingFluxExport extends Module
 	}
 	
 	/* Images URIs */
-        private function  getImages($id_product, $id_lang)
+        private function getImages($id_product, $id_lang)
         {
                 return Db::getInstance()->ExecuteS('
                 SELECT i.`cover`, i.`id_image`, il.`legend`, i.`position`
@@ -613,9 +609,7 @@ class ShoppingFluxExport extends Module
 	{
 		$ret = '<uri-categories>';
 		foreach ($this->_getProductCategoriesFull($product->id, $configuration['PS_LANG_DEFAULT']) as $key => $categories)
-		{
 			$ret .= '<uri><![CDATA['.$link->getCategoryLink($key, null, $configuration['PS_LANG_DEFAULT']).']]></uri>';
-		}
 		$ret .= '</uri-categories>';
 		return $ret;
 	}
@@ -663,7 +657,7 @@ class ShoppingFluxExport extends Module
                     ORDER BY i.cover DESC, i.position ASC
                 ');
 
-                foreach ($data AS $row)
+                foreach ($data as $row)
                     $combinationImages[] = (int)($row['id_image']);
                 return $combinationImages;
         }
@@ -687,8 +681,8 @@ class ShoppingFluxExport extends Module
 			$ret .= '<id><![CDATA['.$id.']]></id>';
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
 			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
-			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, NULL, false, true, 1).']]></prix>';
-			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, NULL, false, false, 1).']]></prix-barre>';
+			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
+			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
 			$ret .= '<frais-de-port><![CDATA['.$this->_getShipping($product, $configuration, $carrier, $id, $combination['weight']).']]></frais-de-port>';
 			$ret .= '<images>';
 
@@ -795,7 +789,7 @@ class ShoppingFluxExport extends Module
 
                     $ordersXML = $this->_callWebService('GetOrders');
 
-                    if (sizeof($ordersXML->Response->Orders) == 0)
+                    if (count($ordersXML->Response->Orders) == 0)
                         return;
 
                     
@@ -807,11 +801,11 @@ class ShoppingFluxExport extends Module
 
 
                             
-                            $mail = strval($order->BillingAddress->Email);
+                            $mail = (string)$order->BillingAddress->Email;
 
                             $email = (empty($mail)) ? pSQL($order->IdOrder.'@'.$order->Marketplace.'.sf') : pSQL($mail);
 
-                            $id_customer = $this->_getCustomer($email, strval($order->BillingAddress->LastName), strval($order->BillingAddress->FirstName));
+                            $id_customer = $this->_getCustomer($email, (string)$order->BillingAddress->LastName, (string)$order->BillingAddress->FirstName);
                             $id_address_billing = $this->_getAddress($order->BillingAddress, $id_customer, 'Billing');
                             $id_address_shipping = $this->_getAddress($order->ShippingAddress, $id_customer, 'Shipping');
                             $products_available = $this->_checkProducts($order->Products);
@@ -825,7 +819,7 @@ class ShoppingFluxExport extends Module
                                     $date_cart = date_create($last_cart->date_add);
                                     $date = new Datetime();
                                     $date->modify('-5 min');
-                                    if ($date<$date_cart)
+                                    if ($date < $date_cart)
                                             $add = false;
                             }
 
@@ -886,10 +880,10 @@ class ShoppingFluxExport extends Module
 		if (empty($ip))
 			$ip = $_SERVER['REMOTE_ADDR'];
 
-		if ((Configuration::get('SHOPPING_FLUX_TRACKING')!=''||Configuration::get('SHOPPING_FLUX_BUYLINE')!='')&&!in_array($params['order']->payment, $this->_getMarketplaces()))
-			file_get_contents('https://tracking.shopping-flux.com/?ip='.$ip.'&cl='.Configuration::get('SHOPPING_FLUX_LOGIN').'&mt='.$params['order']->total_paid_real.'&cmd='.$params['order']->id.'&index='.Configuration::get('SHOPPING_FLUX_INDEX'));
+		if ((Configuration::get('SHOPPING_FLUX_TRACKING') != '' || Configuration::get('SHOPPING_FLUX_BUYLINE') != '') && !in_array($params['order']->payment, $this->_getMarketplaces()))
+			Tools::file_get_contents('https://tracking.shopping-flux.com/?ip='.$ip.'&cl='.Configuration::get('SHOPPING_FLUX_LOGIN').'&mt='.$params['order']->total_paid_real.'&cmd='.$params['order']->id.'&index='.Configuration::get('SHOPPING_FLUX_INDEX'));
 
-		if (Configuration::get('SHOPPING_FLUX_STOCKS')!=''&&!in_array($params['order']->payment, $this->_getMarketplaces()))
+		if (Configuration::get('SHOPPING_FLUX_STOCKS') != '' && !in_array($params['order']->payment, $this->_getMarketplaces()))
 		{
 			foreach ($params['cart']->getProducts() as $product)
 			{
@@ -919,7 +913,7 @@ class ShoppingFluxExport extends Module
 	public function hookPostUpdateOrderStatus($params)
 	{
 		if (
-                    Configuration::get('SHOPPING_FLUX_STATUS_SHIPPED') != ''  && 
+                    Configuration::get('SHOPPING_FLUX_STATUS_SHIPPED') != '' && 
                     $this->_getOrderStates(Configuration::get('PS_LANG_DEFAULT'), 'shipped') == $params['newOrderStatus']->name
                 )
 		{
@@ -938,7 +932,8 @@ class ShoppingFluxExport extends Module
 				$xml .= '<Marketplace>'.$order->payment.'</Marketplace>';
 				$xml .= '<Status>Shipped</Status>';
                                 
-                                if (isset($shipping[0])){
+                                if (isset($shipping[0]))
+                                {
                                     $xml .= '<TrackingNumber><![CDATA['.$shipping[0]['tracking_number'].']]></TrackingNumber>';
                                     $xml .= '<CarrierName><![CDATA['.$shipping[0]['state_name'].']]></CarrierName>';
                                 }
@@ -949,9 +944,9 @@ class ShoppingFluxExport extends Module
 				$responseXML = $this->_callWebService('UpdateOrders', $xml);
 
 				if (!$responseXML->Response->Error)
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.pSQL((string)$responseXML->Response->Orders->Order->StatusUpdated), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => pSQL((int)$order->id), 'message' => 'Statut mis à jour sur '.pSQL((string)$order->payment).' : '.pSQL((string)$responseXML->Response->Orders->Order->StatusUpdated), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
 				else
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.$order->payment.' : '.pSQL((string)$responseXML->Response->Error->Message), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => pSQL((int)$order->id), 'message' => 'Statut mis à jour sur '.pSQL((string)$order->payment).' : '.pSQL((string)$responseXML->Response->Error->Message), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
 
 			}
 		}
@@ -959,7 +954,8 @@ class ShoppingFluxExport extends Module
                 elseif (
                     Configuration::get('SHOPPING_FLUX_STATUS_CANCELED') != ''  && 
                     $this->_getOrderStates(Configuration::get('PS_LANG_DEFAULT'), 'order_canceled') == $params['newOrderStatus']->name
-                ){
+                )
+                {
                     
                         $order = new Order((int)$params['id_order']);
                         $shipping = $order->getShipping();
@@ -1030,8 +1026,8 @@ class ShoppingFluxExport extends Module
 			$xml .= '<Product>';
 			$xml .= '<SKU>'.(int)$data['id_product'].'_'.(int)$params['id_product_attribute'].'</SKU>';
 			$xml .= '<Quantity>'.(int)$data['quantity'].'</Quantity>';
-			$xml .= '<Price>'.Product::getPriceStatic((int)$data['id_product'], true, (int)$params['id_product_attribute'], 2, NULL, false, true, 1).'</Price>';
-			$xml .= '<OldPrice>'.Product::getPriceStatic((int)$data['id_product'], true, (int)$params['id_product_attribute'], 2, NULL, false, false, 1).'</OldPrice>';
+			$xml .= '<Price>'.Product::getPriceStatic((int)$data['id_product'], true, (int)$params['id_product_attribute'], 2, null, false, true, 1).'</Price>';
+			$xml .= '<OldPrice>'.Product::getPriceStatic((int)$data['id_product'], true, (int)$params['id_product_attribute'], 2, null, false, false, 1).'</OldPrice>';
 			$xml .= '</Product>';
 			$xml .= '</UpdateProduct>';
 
@@ -1048,8 +1044,8 @@ class ShoppingFluxExport extends Module
 			$xml .= '<Product>';
 			$xml .= '<SKU>'.(int)$params['product']->id.'</SKU>';
 			$xml .= '<Quantity>'.(int)$params['product']->quantity.'</Quantity>';
-			$xml .= '<Price>'.$params['product']->getPrice(true, NULL, 2, NULL, false, true, 1).'</Price>';
-			$xml .= '<OldPrice>'.$params['product']->getPrice(true, NULL, 2, NULL, false, false, 1).'</OldPrice>';
+			$xml .= '<Price>'.$params['product']->getPrice(true, null, 2, null, false, true, 1).'</Price>';
+			$xml .= '<OldPrice>'.$params['product']->getPrice(true, null, 2, null, false, false, 1).'</OldPrice>';
 			$xml .= '</Product>';
 			$xml .= '</UpdateProduct>';
 
@@ -1076,11 +1072,11 @@ class ShoppingFluxExport extends Module
 	/* Clean XML strings */
 	private function _clean($string)
 	{
-		return preg_replace('/[^A-Za-z]/','',$string); 
+		return preg_replace('/[^A-Za-z]/', '', $string); 
 	}
 	
 	/* Call Shopping Flux Webservices */
-	private function _callWebService($call,$xml = false)
+	private function _callWebService($call, $xml = false)
 	{
 		$token = Configuration::get('SHOPPING_FLUX_TOKEN');
 		if (empty($token))
@@ -1109,7 +1105,7 @@ class ShoppingFluxExport extends Module
 		
 		curl_close($curl);
 
-		return simplexml_load_string($curl_response);
+		return @simplexml_load_string($curl_response);
 
 	}
 	
@@ -1127,7 +1123,7 @@ class ShoppingFluxExport extends Module
 	private function _getAddress($addressNode, $id_customer, $type)
 	{
 		$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` 
-			FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \''.  pSQL($type) .'\'');
+			FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \''.pSQL($type).'\'');
 
 		if ($id_address)
 			$address = new Address((int)$id_address);
@@ -1136,10 +1132,10 @@ class ShoppingFluxExport extends Module
 
 		$customer = new Customer((int)$id_customer);
 
-		$street1 = '' ;
-		$street2 = '' ;
+		$street1 = '';
+		$street2 = '';
 		$line2 = false;
-		$streets = Explode (' ', (string)$addressNode->Street) ;
+		$streets = Explode (' ', (string)$addressNode->Street);
 
 		foreach ($streets as $street)
 		{
@@ -1152,8 +1148,8 @@ class ShoppingFluxExport extends Module
 			}
 		}
                 
-                $lastname = strval($addressNode->LastName);
-                $firstname = strval($addressNode->FirstName);
+                $lastname = (string)$addressNode->LastName;
+                $firstname = (string)$addressNode->FirstName;
                 
 		$address->id_customer = (int)$id_customer;
 		$address->id_country = (int)Country::getByIso(trim($addressNode->Country));
@@ -1211,20 +1207,20 @@ class ShoppingFluxExport extends Module
 			$id_order_detail = $row['id_order_detail'];
 
 			$updateOrderDetail = array(
-				'product_price' => floatval((float)$product->Price / (1 + ($tax_rate / 100))),
+				'product_price' => (float)((float)$product->Price / (1 + ($tax_rate / 100))),
 				'reduction_percent' => 0,
 				'reduction_amount' => 0,
-				'total_price_tax_incl' => floatval((float)$product->Price*$product->Quantity),
-				'total_price_tax_excl' => floatval(((float)$product->Price / (1 + ($tax_rate / 100)))*$product->Quantity),
-				'unit_price_tax_incl' => floatval($product->Price),
-				'unit_price_tax_excl' => floatval((float)$product->Price / (1 + ($tax_rate / 100))),
+				'total_price_tax_incl' => (float)((float)$product->Price * $product->Quantity),
+				'total_price_tax_excl' => (float)(((float)$product->Price / (1 + ($tax_rate / 100))) * $product->Quantity),
+				'unit_price_tax_incl' => (float)$product->Price,
+				'unit_price_tax_excl' => (float)((float)$product->Price / (1 + ($tax_rate / 100))),
 			);
 
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail', $updateOrderDetail, 'UPDATE', '`id_order` = '.(int)$id_order.' AND `product_id` = '.(int)$skus[0].' AND `product_attribute_id` = '.(int)$skus[1]);
 
 			$updateOrderDetailTax = array(
-				'unit_amount' => floatval((float)$product->Price - ((float)$product->Price/(1 + ($tax_rate / 100)))),
-				'total_amount' => floatval(((float)$product->Price - ((float)$product->Price/(1 + ($tax_rate / 100))))* $product->Quantity),
+				'unit_amount' => (float)((float)$product->Price - ((float)$product->Price / (1 + ($tax_rate / 100)))),
+				'total_amount' => (float)(((float)$product->Price - ((float)$product->Price / (1 + ($tax_rate / 100)))) * $product->Quantity),
 			);
 
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail_tax', $updateOrderDetailTax, 'UPDATE', '`id_order_detail` = '.(int)$id_order_detail);
@@ -1232,40 +1228,40 @@ class ShoppingFluxExport extends Module
 		}
                 
 		$updateOrder = array(
-			'total_paid' => floatval($order->TotalAmount),
-			'total_paid_tax_incl' => floatval($order->TotalAmount),
-			'total_paid_tax_excl' => floatval((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
-			'total_paid_real' => floatval($order->TotalAmount),
-			'total_products' => floatval(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
-			'total_products_wt' => floatval($order->TotalProducts),
-			'total_shipping' => floatval($order->TotalShipping),
-			'total_shipping_tax_incl' => floatval($order->TotalShipping),
-			'total_shipping_tax_excl' => floatval((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
+			'total_paid' => (float)($order->TotalAmount),
+			'total_paid_tax_incl' => (float)($order->TotalAmount),
+			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
+			'total_paid_real' => (float)($order->TotalAmount),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products_wt' => (float)($order->TotalProducts),
+			'total_shipping' => (float)($order->TotalShipping),
+			'total_shipping_tax_incl' => (float)($order->TotalShipping),
+			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
 		);
 		
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $updateOrder, 'UPDATE', '`id_order` = '.(int)$id_order);
                 
 		$updateOrderInvoice = array(
-			'total_paid_tax_incl' => floatval($order->TotalAmount),
-			'total_paid_tax_excl' => floatval((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
-			'total_products' => floatval(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
-			'total_products_wt' => floatval($order->TotalProducts),
-			'total_shipping_tax_incl' => floatval($order->TotalShipping),
-			'total_shipping_tax_excl' => floatval((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
+			'total_paid_tax_incl' => (float)($order->TotalAmount),
+			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products_wt' => (float)($order->TotalProducts),
+			'total_shipping_tax_incl' => (float)($order->TotalShipping),
+			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
 		);
                 
                 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $updateOrderInvoice, 'UPDATE', '`id_order` = '.(int)$id_order);
                 
                 $updateOrderTracking = array(
-			'shipping_cost_tax_incl' => floatval($order->TotalShipping),
-			'shipping_cost_tax_excl' => floatval((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
+			'shipping_cost_tax_incl' => (float)($order->TotalShipping),
+			'shipping_cost_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
 		);
                 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_carrier', $updateOrderTracking, 'UPDATE', '`id_order` = '.(int)$id_order);
                 
 		$updatePayment = array(
-			'amount' => floatval($order->TotalAmount),
+			'amount' => (float)($order->TotalAmount),
 		);
 		
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $updatePayment, 'UPDATE', '`order_reference` = "'.$reference_order.'"');
@@ -1283,7 +1279,7 @@ class ShoppingFluxExport extends Module
                 $cart->getDeliveryOptionList(null, true);
 		$cart->getDeliveryOption(null, false, false);
                 
-		$payment->validateOrder((int)$cart->id, 2, floatval($cart->getOrderTotal()), $marketplace, NULL, array(), $cart->id_currency, false, $cart->secure_key);
+		$payment->validateOrder((int)$cart->id, 2, (float)($cart->getOrderTotal()), $marketplace, null, array(), $cart->id_currency, false, $cart->secure_key);
 		return $payment;
 	}
 
@@ -1307,7 +1303,7 @@ class ShoppingFluxExport extends Module
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
-			if (!$cart->updateQty((int)($product->Quantity), (int)($skus[0]),((isset($skus[1])) ? $skus[1] : NULL)))
+			if (!$cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null)))
 				return false;
 		}
 		
@@ -1322,19 +1318,19 @@ class ShoppingFluxExport extends Module
 
 		foreach ($productsNode->Product as $product)
 		{
-			if (strpos($product->SKU, '_')!==false)
+			if (strpos($product->SKU, '_') !== false)
 			{
 				$skus = explode ('_', $product->SKU);
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$skus[0], (int)$skus[1]);
 
-				if($quantity - $product->Quantity < 0)
+				if ($quantity - $product->Quantity < 0)
 					$available = false;
 			}
 			else
 			{
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 				
-				if($quantity - $product->Quantity < 0)
+				if ($quantity - $product->Quantity < 0)
 					$available = false;
 			}
 		}
@@ -1363,18 +1359,20 @@ class ShoppingFluxExport extends Module
 	private function _getMarketplaces()
 	{
 		return array(
-			"Amazon", 
-			"Brandalley",
-			"CDiscount",
-			"eBay",
-			"Facebook",
-			"Fnac",
-			"Laredoute",
-			"Pixmania",
-			"PriceMinister",
-			"RueDuCommerce"
+			'Amazon',
+			'Brandalley',
+			'CDiscount',
+			'eBay',
+			'Facebook',
+			'Fnac',
+			'Laredoute',
+			'Pixmania',
+			'PriceMinister',
+			'RueDuCommerce'
 		);
 	}
 }
 
-class SFPayment extends PaymentModule {}
+class SFPayment extends PaymentModule {
+
+}
