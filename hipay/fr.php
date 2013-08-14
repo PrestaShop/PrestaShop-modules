@@ -57,6 +57,7 @@ $_MODULE['<{hipay}prestashop>hipay_004779b951f00aa5f78bdbe74ec1a047'] = 'Nom du 
 $_MODULE['<{hipay}prestashop>hipay_2a84bf35647baabac3934127aed63dbe'] = 'Url du site';
 $_MODULE['<{hipay}prestashop>hipay_ad408dab2f6f89775e2db1bfd2d01311'] = 'Mot de passe marchand';
 $_MODULE['<{hipay}prestashop>hipay_854348e0cffd068204ce979351b2eb10'] = 'Activer la solution HiPay dans votre PrestaShop, c\'est gratuit !';
+$_MODULE['<{hipay}prestashop>hipay_264681abf6074b3e9ee18da64bb44d1f'] = 'Compte HiPay';
 $_MODULE['<{hipay}prestashop>hipay_d08cf8ae06cc7e3151aad4618c6efe3a'] = 'Configuration en';
 $_MODULE['<{hipay}prestashop>hipay_0f26e4f64d58beb4d924627c707e43ad'] = 'Numéro de compte';
 $_MODULE['<{hipay}prestashop>hipay_315f3c78ea54c8dadb082acc328dd5bd'] = 'Mot de passe marchand';
