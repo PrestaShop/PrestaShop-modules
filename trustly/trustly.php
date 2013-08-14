@@ -44,7 +44,7 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->limited_countries = array('es');
 		$this->currencies = false;
 
@@ -95,8 +95,13 @@ class Trustly extends PaymentModule
 				'.($online ? '' : '<h3>'.$this->l('Your shop is not online').'</h3>').'
 			</div>';
 		}
+		
+		if (Tools::isSubmit('submitPersonalSave'))
+			$this->savePreactivationRequest();
+		elseif (Tools::isSubmit('submitPersonalCancel'))
+			Configuration::updateValue('TRUSTLY_PHONE', '');
 	
-		// Handle the form submission and display a confirmation message		
+		// Handle the form submission and display a confirmation message
 		if (Tools::isSubmit('submitTrustly') || Tools::isSubmit('submitTrustlyGenerateKeyPair'))
 		{
 			$change = false;
@@ -118,6 +123,8 @@ class Trustly extends PaymentModule
 			if ($change)
 				$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
+		
+		$this->context->smarty->assign('shop_phone', Configuration::get('PS_SHOP_PHONE'));
 	
 		// A small javascript snippet that enables the user to display/hide his password
 		$html .= '
@@ -215,7 +222,44 @@ class Trustly extends PaymentModule
 		</form>
 		<div class="clear">&nbsp;</div>';
 		
-		return $html;
+		if (Configuration::get('TRUSTLY_PHONE') === false)
+			return $html.$this->context->smarty->fetch(_PS_MODULE_DIR_.$this->name.'/views/templates/admin/fancybox.tpl');
+		else
+			return $html;
+	}
+	
+	protected function savePreactivationRequest()
+	{
+		$phone = Tools::getValue('TRUSTLY_PHONE');
+
+		if (empty($phone))
+		{
+			$this->context->smarty->assign('phone_error', true);
+			return null;
+		}
+		
+		Configuration::updateValue('TRUSTLY_PHONE', $phone);
+		
+		$employee = new Employee((int) Context::getContext()->cookie->id_employee);
+
+		$data = array(
+			'iso_lang' => strtolower($this->context->language->iso_code),
+			'iso_country' => strtoupper($this->context->country->iso_code),
+			'host' => $_SERVER['HTTP_HOST'],
+			'ps_version' => _PS_VERSION_,
+			'ps_creation' => _PS_CREATION_DATE_,
+			'partner' => $this->name,
+			'firstname' => $employee->firstname,
+			'lastname' => $employee->lastname,
+			'email' => $employee->email,
+			'shop' => Configuration::get('PS_SHOP_NAME'),
+			'type' => 'home',
+			'phone' => $phone,
+		);
+
+		$query = http_build_query($data);
+
+		return @Tools::file_get_contents('http://api.prestashop.com/partner/premium/set_request.php?' . $query);
 	}
 	
 	public function hookPaymentReturn($params)
