@@ -35,7 +35,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category` (
 		  `id_category_ref_parent` int(16) NOT NULL,
 		  `id_country` int(16) NOT NULL,
 		  `level` tinyint(1) NOT NULL,
-		  `is_multi_sku` tinyint(1) NOT NULL,
+		  `is_multi_sku` tinyint(1),
 		  `name` varchar(255) NOT NULL,
 		  UNIQUE(`id_category_ref`),
 		  PRIMARY KEY  (`id_ebay_category`)
@@ -102,18 +102,17 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_sync_history_product` 
 	) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 
-/****************** SHIPPING CARRIER ******************/
-
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping` (
+// SHIPPING CARRIER
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping` (
 		  `id_ebay_shipping` int(11) NOT NULL AUTO_INCREMENT,
 		  `ebay_carrier` varchar(256) NOT NULL,
 		  `ps_carrier` int(11) NOT NULL,
-		  `extra_fee` int(11) NOT NULL,
+		  `extra_fee` float(8,2) NOT NULL,
 		  `international` int(4) NOT NULL, 
 		  PRIMARY KEY (`id_ebay_shipping`)
 	) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_zone_excluded` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_zone_excluded` (
 			  `id_ebay_zone_excluded` int(11) NOT NULL AUTO_INCREMENT,
 			  `region` varchar(255) NOT NULL,
 			  `location` varchar(255) NOT NULL,
@@ -122,26 +121,26 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_zone_excl
 			  PRIMARY KEY (`id_ebay_zone_excluded`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_international_zone` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_international_zone` (
 		  `id_ebay_shipping` int(11) NOT NULL,
 		  `id_ebay_zone` varchar(256) NOT NULL
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_location` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_location` (
 		  `id_ebay_location` int(11) NOT NULL AUTO_INCREMENT,
 		  `location` varchar(256) NOT NULL,
 		  `description` varchar(256) NOT NULL,
 		  PRIMARY KEY (`id_ebay_location`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_delivery_time_options` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_delivery_time_options` (
 		  `id_delivery_time_option` int(11) NOT NULL AUTO_INCREMENT,
 		  `DispatchTimeMax` varchar(256) NOT NULL,
 		  `description` varchar(256) NOT NULL,
 		  PRIMARY KEY (`id_delivery_time_option`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_service` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_service` (
 		  `id_shipping_service` int(11) NOT NULL AUTO_INCREMENT,
 		  `description` varchar(256) NOT NULL,
 		  `shippingService` varchar(256) NOT NULL,
@@ -151,9 +150,66 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_shipping_service` 
 		  PRIMARY KEY (`id_shipping_service`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ebay_returns_policy` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_returns_policy` (
 		  `id_return_policy` int(11) NOT NULL AUTO_INCREMENT,
 		  `value` varchar(256) NOT NULL,
 		  `description` varchar(256) NOT NULL,
 		  PRIMARY KEY (`id_return_policy`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category_specific` (
+		  `id_ebay_category_specific` int(11) NOT NULL AUTO_INCREMENT,
+		  `id_category_ref` int(16) NOT NULL,			
+		  `name` varchar(40) NOT NULL,
+			`required` tinyint(1) NOT NULL,
+			`can_variation` tinyint(1) NOT NULL,
+			`selection_mode` tinyint(1) NOT NULL,
+		  `id_attribute_group` int(16) NULL,
+		  `id_feature` int(16) NULL,
+		  `id_ebay_category_specific_value` int(16) NULL,
+			`is_brand` tinyint(1) NULL,			
+		  UNIQUE(`id_category_ref`, `name`),	
+		  PRIMARY KEY (`id_ebay_category_specific`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category_specific_value` (
+			`id_ebay_category_specific_value` int(11) NOT NULL AUTO_INCREMENT,
+		  `id_ebay_category_specific` int(11) NOT NULL,
+		  `value` varchar(50) NOT NULL,
+		  UNIQUE(`id_ebay_category_specific`, `value`),			
+		  PRIMARY KEY (`id_ebay_category_specific_value`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+		
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category_condition` (
+			`id_ebay_category_condition` int(11) NOT NULL AUTO_INCREMENT,
+			`id_category_ref` int(11) NOT NULL,
+			`id_condition_ref` int(11) NOT NULL,
+		  `name` varchar(256) NOT NULL,
+		  PRIMARY KEY (`id_ebay_category_condition`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_category_condition_configuration` (
+			`id_ebay_category_condition_configuration` int(11) NOT NULL AUTO_INCREMENT,
+			`id_category_ref` int(11) NOT NULL,
+			`condition_type` int(11) NOT NULL,
+			`id_condition_ref` int(11) NOT NULL,
+		  UNIQUE(`id_category_ref`, `condition_type`),
+		  PRIMARY KEY (`id_ebay_category_condition_configuration`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+		
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_configuration` (
+			  `id_ebay_product_configuration` int(11) NOT NULL AUTO_INCREMENT,
+				`id_product` int(16),
+				`blacklisted` tinyint(1) NOT NULL,
+				`extra_images` int(4) NOT NULL,
+				UNIQUE(`id_product`),				
+			  PRIMARY KEY (`id_ebay_product_configuration`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
+				
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_image` (
+			  `id_ebay_product_image` int(11) NOT NULL AUTO_INCREMENT,
+				`ps_image_url` varchar(255),
+				`ebay_image_url` varchar(255),
+				UNIQUE(`ps_image_url`),				
+			  PRIMARY KEY (`id_ebay_product_image`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=utf8';
