@@ -125,7 +125,7 @@
 	function getShippingLocation(lastId, zone)
 	{literal}{{/literal}
 		var string = '';
-		{foreach from=$internationalShippingLocation item=shippingLocation}
+		{foreach from=$internationalShippingLocations item=shippingLocation}
 			if(zone != undefined && zone.indexOf('{$shippingLocation.location}') != -1)
 			{literal}{{/literal}
 			string += '<div class="shippinglocationOption"><input type="checkbox" checked="checked" name="internationalShippingLocation['+lastId+'][{$shippingLocation.location}] value="{$shippingLocation.location}">{$shippingLocation.description}</option></div>';
@@ -225,7 +225,7 @@
 		{
 			var showcountries = $(this);
 			$.ajax({
-				url: '{/literal}{$module_dir}{literal}ajax/getCountriesLocation.php',
+				url: '{/literal}{$module_dir}{literal}ajax/getCountriesLocation.php?token={/literal}{$ebay_token}{literal}',
 				type: 'POST',
 				data: {region: $(this).attr('data-region')},
 				complete: function(xhr, textStatus) {
@@ -368,7 +368,7 @@
 <script>
 	{literal}
 	$(document).ready(function() {
-		if(!$.fancybox){
+		if(!typeof $.fancybox == 'function') {
 			$(".fancyboxeBay").fancybox({
 				maxWidth	: '500px',
 				maxHeight	: '300px',
@@ -404,7 +404,7 @@
 		</select>
 		{if $psCarrierModule|count > 0}
 			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
 			</a>
 			
 		{/if}
@@ -429,7 +429,7 @@
 		</select>
 		{if $psCarrierModule|count > 0}
 			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You can\'t see all your carriers ?' mod='ebay'}">
+				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
 			</a>
 			
 		{/if}
