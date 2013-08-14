@@ -37,7 +37,7 @@ class Socolissimo extends CarrierModule {
 	public $_errors = array();
 	private $api_num_version = '4.0';
 	public $initialCost = 0;
-	
+
 	private $_config = array(
 		'name' => 'La Poste - So Colissimo',
 		'id_tax_rules_group' => 0,
@@ -54,7 +54,7 @@ class Socolissimo extends CarrierModule {
 		'external_module_name' => 'socolissimo',
 		'need_range' => true
 	);
-	
+
 	public $personal_data_phone_error = false;
 	public $personal_data_zip_code_error = false;
 
@@ -62,7 +62,7 @@ class Socolissimo extends CarrierModule {
 	{
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
-		$this->version = '2.8.3';
+		$this->version = '2.8.4';
 		$this->author = 'Quadra Informatique';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -110,8 +110,8 @@ class Socolissimo extends CarrierModule {
 
 	public function install()
 	{
-		if (!parent::install() || !Configuration::updateValue('SOCOLISSIMO_ID', NULL) || !Configuration::updateValue('SOCOLISSIMO_KEY', NULL) || !Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.0') ||
-			!Configuration::updateValue('SOCOLISSIMO_URL', 'http://ws.colissimo.fr/pudo-fo-frame/storeCall.do') || !Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws.colissimo.fr/') ||
+		if (!parent::install() || !Configuration::updateValue('SOCOLISSIMO_ID', NULL) || !Configuration::updateValue('SOCOLISSIMO_KEY', NULL) || !Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.4') ||
+			!Configuration::updateValue('SOCOLISSIMO_URL', 'http://ws.colissimo.fr/pudo-fo-frame/storeCall.do') || !Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws-mobile.colissimo.fr/') ||
 			!Configuration::updateValue('SOCOLISSIMO_PREPARATION_TIME', 1) || !Configuration::updateValue('SOCOLISSIMO_EXP_BEL', true) || !Configuration::updateValue('SOCOLISSIMO_COST_SELLER', 0) ||
 			!Configuration::updateValue('SOCOLISSIMO_OVERCOST', 3.6) || !$this->registerHook('extraCarrier') || !$this->registerHook('AdminOrder') || !$this->registerHook('updateCarrier') ||
 			!$this->registerHook('newOrder') || !$this->registerHook('paymentTop') || !$this->registerHook('backOfficeHeader') || !Configuration::updateValue('SOCOLISSIMO_SUP_URL', 'http://ws.colissimo.fr/supervision-pudo-frame/supervision.jsp') ||
@@ -502,20 +502,20 @@ class Socolissimo extends CarrierModule {
 			if ($params['cart']->carrierIsSelected((int) $carrierSo->id, $params['address']->id))
 				$id_carrier = (int) $carrierSo->id;
 			$customer = new Customer($params['address']->id_customer);
-		
+
 		$gender = array('1' => 'MR', '2' => 'MME', '3' => 'MLE');
-		
+
 		if (in_array(intval($customer->id_gender), array(1, 2)))
 			$cecivility = $gender[intval($customer->id_gender)];
 		else
 			$cecivility = 'MR';
 
-        	$tax_rate = Tax::getCarrierTaxRate($id_carrier, isset($params['cart']->id_address_delivery) ? $params['cart']->id_address_deliver : null);
-                $stdCostWithTaxes = (float) $this->initialCost * (1 + ($tax_rate/ 100));
-                
+        	$tax_rate = Tax::getCarrierTaxRate($id_carrier, isset($params['cart']->id_address_delivery) ? $params['cart']->id_address_delivery : null);
+                $stdCostWithTaxes = number_format((float) $this->initialCost * (1 + ($tax_rate/ 100)), 2, ',', ' ');
+
                 if(Configuration::get('SOCOLISSIMO_COST_SELLER'))
-                    $sellerCostWithTaxes = (float) Configuration::get('SOCOLISSIMO_COST_SELLER') * (1 + ($tax_rate/ 100));
-                else 
+                    $sellerCostWithTaxes = number_format((float) Configuration::get('SOCOLISSIMO_COST_SELLER') * (1 + ($tax_rate/ 100)), 2, ',', ' ');
+                else
                     $sellerCostWithTaxes = null;
 
 		// Keep this fields order (see doc.)
@@ -698,7 +698,7 @@ class Socolissimo extends CarrierModule {
 						. (!empty($nameCountry) ? Tools::htmlentitiesUTF8($nameCountry) . '<br/>' : '' )
 						. (!empty($deliveryInfos['ceemail']) ? '<b>' . $this->l('Email') . ' : </b>' . Tools::htmlentitiesUTF8($deliveryInfos['ceemail']) . '<br/>' : '' )
 						. (!empty($deliveryInfos['cephonenumber']) ? '<b>' . $this->l('Phone') . ' : </b>' . Tools::htmlentitiesUTF8($deliveryInfos['cephonenumber']) . '<br/><br/>' : '' );
-	
+
 					break;
 			}
 			$html .= '</fieldset>';
@@ -827,14 +827,14 @@ class Socolissimo extends CarrierModule {
 		$nameCountry = $sql['name'];
 		$isoCode = $sql['id_country'];
 
-		if ($this->upper($psAddress->lastname) != $this->upper($return['prname']) || $psAddress->id_country != $isoCode || 
-			$this->upper($psAddress->firstname) != $this->upper($return['prfirstname']) || $this->upper($psAddress->address1) != $this->upper($return['pradress3']) || 
-			$this->upper($psAddress->address2) != $this->upper($return['pradress2']) || $this->upper($psAddress->postcode) != $this->upper($return['przipcode']) || 
+		if ($this->upper($psAddress->lastname) != $this->upper($return['prname']) || $psAddress->id_country != $isoCode ||
+			$this->upper($psAddress->firstname) != $this->upper($return['prfirstname']) || $this->upper($psAddress->address1) != $this->upper($return['pradress3']) ||
+			$this->upper($psAddress->address2) != $this->upper($return['pradress2']) || $this->upper($psAddress->postcode) != $this->upper($return['przipcode']) ||
 			$this->upper($psAddress->city) != $this->upper($return['prtown']) || str_replace(array(' ', '.', '-', ',', ';', '+', '/', '\\', '+', '(', ')'), '', $psAddress->phone_mobile) != $return['cephonenumber'])
 		{
 			$newAddress->id_customer = (int) ($idCustomer);
-			$newAddress->lastname = substr($return['prname'], 0, 32);
-			$newAddress->firstname = substr($return['prfirstname'], 0, 32);
+			$newAddress->lastname = preg_replace('/\d/', '', substr($return['prname'], 0, 32));
+			$newAddress->firstname = preg_replace('/\d/', '', substr($return['prfirstname'], 0, 32));
 			$newAddress->postcode = $return['przipcode'];
 			$newAddress->city = $return['prtown'];
 			$newAddress->id_country = $isoCode;
@@ -1148,7 +1148,7 @@ class Socolissimo extends CarrierModule {
 	public function runUpgrades($install = false)
 	{
 		if (Configuration::get('SOCOLISSIMO_VERSION') != $this->version)
-			foreach (array('2.8.0') as $version)
+			foreach (array('2.8.0','2.8.4') as $version)
 			{
 				$file = dirname(__FILE__) . '/upgrade/install-' . $version . '.php';
 				if (Configuration::get('SOCOLISSIMO_VERSION') < $version && file_exists($file))
