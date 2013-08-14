@@ -44,7 +44,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5.2';
+		$this->version = '1.6';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -214,12 +214,12 @@ class Hipay extends PaymentModule
 		if (isset($language->language_code))
 			$paymentParams->setLocale($this->formatLanguageCode($language->language_code));
 		else
-			$paymentParams->setLocale(strtolower($language->iso_code).'_'.strtoupper($language->iso_code));
+			$paymentParams->setLocale(Tools::strtolower($language->iso_code).'_'.Tools::strtoupper($language->iso_code));
 		$paymentParams->setMedia('WEB');
 		$paymentParams->setRating(Configuration::get('HIPAY_RATING'));
 		$paymentParams->setPaymentMethod(HIPAY_MAPI_METHOD_SIMPLE);
 		$paymentParams->setCaptureDay(HIPAY_MAPI_CAPTURE_IMMEDIATE);
-		$paymentParams->setCurrency(strtoupper($currency->iso_code));
+		$paymentParams->setCurrency(Tools::strtoupper($currency->iso_code));
 		$paymentParams->setIdForMerchant($cart->id);
 		$paymentParams->setMerchantSiteId($hipaySiteId);
 		$paymentParams->setIssuerAccountLogin($this->context->customer->email);
@@ -582,7 +582,7 @@ class Hipay extends PaymentModule
 		<table id="hipay_table" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="">&nbsp;</td>
-				<td style="height:40px;">Compte HiPay</td>
+				<td style="height:40px;">'.$this->l('HiPay account').'</td>
 			</tr>';
 
 		foreach ($currencies as $currency)
