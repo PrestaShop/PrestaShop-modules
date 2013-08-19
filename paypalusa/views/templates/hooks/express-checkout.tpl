@@ -27,7 +27,7 @@
 	<div id="paypal-express-checkout">
 		<form id="paypal-express-checkout-form" action="{$paypal_usa_action}" method="post">
 			{if $paypal_usa_merchant_country_is_mx}
-				<input id="paypal-express-checkout-btn" type="image" name="submit" src="{$module_dir}img/accpmark_tarjdeb_mx.png" alt="" style="vertical-align: middle; margin-right: 10px;float: left;" /><p style="line-height: 50px; float: left;">{l s='Da clic para confirmar tu compra con' mod='paypalusa'}</p>
+				<input id="paypal-express-checkout-btn" type="image" name="submit" src="{$module_dir}img/boton_terminar_compra.png" alt="" style="vertical-align: middle; margin-right: 10px;float: left;" /><p style="line-height: 50px; float: left;">{l s='Da clic para confirmar tu compra con PayPal' mod='paypalusa'}</p>
 				<div style="clear: both;"></div>
 			{else}	
 				<input id="paypal-express-checkout-btn" type="image" name="submit" src="https://www.paypalobjects.com/{if $lang_iso == 'en'}en_US{else}{if $lang_iso == 'fr'}fr_CA{else}{if $lang_iso == 'es'}es_ES{else}en_US{/if}{/if}{/if}/i/bnr/horizontal_solution_PPeCheck.gif" alt="" style="vertical-align: middle; margin-right: 10px;" /> {l s='Complete your order with PayPal Express Checkout' mod='paypalusa'}

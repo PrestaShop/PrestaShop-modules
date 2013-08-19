@@ -3,7 +3,7 @@
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
  *  @copyright  2007-2013 PrestaShop SA
- *  @version  Release: $Revision: 1.2.0 $
+ *  @version  Release: $Revision: 1.2.5 $
  *
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -21,7 +21,7 @@ class PayPalUSA extends PaymentModule
 	{
 		$this->name = 'paypalusa';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.1';
+		$this->version = '1.2.5';
 
 		parent::__construct();
 
@@ -45,8 +45,8 @@ class PayPalUSA extends PaymentModule
 		/* This Addon is only intended to work in the USA, Canada and Mexico */
 		if (Validate::isLoadedObject($this->_shop_country) && !in_array($this->_shop_country->iso_code, array('US', 'MX', 'CA')))
 		{
-				$this->_errors[] = $this->l('Sorry, this module has been designed for stores based in USA, Canada and Mexico only. Please use the classic PayPal Addon instead.');
-				return false;
+			$this->_errors[] = $this->l('Sorry, this module has been designed for stores based in USA, Canada and Mexico only. Please use the classic PayPal Addon instead.');
+			return false;
 		}
 
 		/* The cURL PHP extension must be enabled to use this module */
@@ -137,6 +137,7 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return HTML page (template) to configure the Addon
 	 */
+
 	public function getContent()
 	{
 		/* Loading CSS and JS files */
@@ -148,7 +149,7 @@ class PayPalUSA extends PaymentModule
 		{
 			$this->_saveSettingsProducts();
 			$this->_saveSettingsBasic();
-			unset($this->_validation[count($this->_validation)-1]);
+			unset($this->_validation[count($this->_validation) - 1]);
 		}
 		elseif (Tools::isSubmit('SubmitPayPalProducts'))
 			$this->_saveSettingsProducts();
@@ -188,6 +189,7 @@ class PayPalUSA extends PaymentModule
 	/*
 	 * PayPal USA configuration section - PayPal's product selection
 	 */
+
 	private function _saveSettingsProducts()
 	{
 		if (!isset($_POST['paypal_usa_products']) && !isset($_POST['paypal_usa_express_checkout']))
@@ -209,6 +211,7 @@ class PayPalUSA extends PaymentModule
 	/*
 	 * PayPal USA configuration section - Basic settings (PayPal Business Account, API credentials, Express Checkout options)
 	 */
+
 	private function _saveSettingsBasic()
 	{
 		if (!isset($_POST['paypal_usa_account']) || !$_POST['paypal_usa_account'])
@@ -248,7 +251,7 @@ class PayPalUSA extends PaymentModule
 			$this->_validation[] = $this->l('Congratulations, your configuration was updated successfully');
 	}
 
-	/* 
+	/*
 	 * PayPal USA configuration section - Advanced settings (PayPal Manager and Payment Gateway)
 	 */
 
@@ -276,7 +279,7 @@ class PayPalUSA extends PaymentModule
 					'&USER='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_USER')).
 					'&PWD='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_PASSWORD')).
 					'&TRXTYPE=S&AMT=0&CREATESECURETOKEN=Y&SECURETOKENID='.urlencode(Tools::passwdGen(36));
-			$result = $this->postToPayFlow($params);
+			$result = $this->postToPayFlow($params, Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
 			if ($result['RESULT'] != 0 && $result['RESPMSG'] != 'Approved')
 				$this->_error[] = $this->l('Your PayPal Manager Configuration crendentials are not valid, please double-check their values or contact PayPal.');
 		}
@@ -291,6 +294,7 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return HTML content (Template) displaying the enable PayPal payment methods (PayPal Payments Standard, PayPal Payments Advanced or PayPal Express Checkout)
 	 */
+
 	public function hookPayment($params)
 	{
 		$html = '';
@@ -335,23 +339,25 @@ class PayPalUSA extends PaymentModule
 			$amount = $this->context->cart->getOrderTotal(true);
 			$taxes = $amount - $this->context->cart->getOrderTotal(false);
 			$i = 0;
-			foreach ($this->context->cart->getProducts() as $product)
+			if ($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS) == 0)
 			{
-				$nvp_request .= '&L_NAME'.$i.'['.strlen(urlencode($product['name'])).']='.urlencode($product['name']).
-						'&L_SKU'.$i.'['.strlen(urlencode((int)$product['id_product'])).']='.urlencode((int)$product['id_product']).
-						'&L_DESC'.$i.'['.strlen(urlencode(strip_tags($product['description_short']))).']='.urlencode(strip_tags($product['description_short'])).
-						'&L_COST'.$i.'['.strlen(urlencode((float)$product['price'])).']='.urlencode((float)$product['price']).
-						'&L_QTY'.$i.'['.strlen(urlencode((int)$product['cart_quantity'])).']='.urlencode((int)$product['cart_quantity']);
-				$i++;
+				foreach ($this->context->cart->getProducts() as $product)
+				{
+					$nvp_request .= '&L_NAME'.$i.'['.strlen(urlencode($product['name'])).']='.urlencode($product['name']).
+							'&L_SKU'.$i.'['.strlen(urlencode((int)$product['id_product'])).']='.urlencode((int)$product['id_product']).
+							'&L_DESC'.$i.'['.strlen(urlencode(strip_tags(Tools::truncate($product['description_short'], 80)))).']='.urlencode(strip_tags(Tools::truncate($product['description_short'], 80))).
+							'&L_COST'.$i.'['.strlen(urlencode((float)$product['price'])).']='.urlencode((float)$product['price']).
+							'&L_QTY'.$i.'['.strlen(urlencode((int)$product['cart_quantity'])).']='.urlencode((int)$product['cart_quantity']);
+					$i++;
+				}
+				$nvp_request .= '&FREIGHTAMT['.strlen(urlencode((float)$this->context->cart->getTotalShippingCost())).']='.urlencode((float)$this->context->cart->getTotalShippingCost()).
+						'&TAXAMT['.strlen(urlencode((float)$taxes)).']='.urlencode((float)$taxes);
 			}
-			$nvp_request .= '&L_NAME'.$i.'['.strlen(urlencode($this->l('Shipping fees'))).']='.urlencode($this->l('Shipping fees')).
-					'&L_COST'.$i.'['.strlen(urlencode((float)$this->context->cart->getTotalShippingCost())).']='.urlencode((float)$this->context->cart->getTotalShippingCost()).
-					'&L_QTY'.$i.'[1]=1&TAXAMT['.strlen(urlencode((float)$taxes)).']='.urlencode((float)$taxes);
-
+			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
-					'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation').
+					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation').
 					'&CANCELURL='.$this->context->link->getPageLink('order.php').
-					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation'), 'pro');
+					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation'), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
 			if ($result['RESULT'] == 0 && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && strtoupper($result['RESPMSG']) == 'APPROVED')
 			{
 				/* Store the PayPal response token in the customer cookie for later use (payment confirmation) */
@@ -475,6 +481,7 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return HTML content (Template) displaying the Transaction details and Refund form
 	 */
+
 	public function hookAdminOrder($params)
 	{
 		/* Check if the order was paid with this Addon and display the Transaction details */
@@ -514,14 +521,15 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return HTML content (Template) displaying a confirmation or error message upon order creation
 	 */
+
 	public function hookOrderConfirmation($params)
 	{
 		if (isset($params['objOrder']) && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid) &&
-			version_compare(_PS_VERSION_, '1.5', '>=') && isset($params['objOrder']->reference))
+				version_compare(_PS_VERSION_, '1.5', '>=') && isset($params['objOrder']->reference))
 		{
-				$this->smarty->assign('paypal_usa_order', array('id' => $params['objOrder']->id, 'reference' => $params['objOrder']->reference, 'valid' => $params['objOrder']->valid));
-				
-				return $this->display(__FILE__, 'views/templates/hooks/order-confirmation.tpl');
+			$this->smarty->assign('paypal_usa_order', array('id' => $params['objOrder']->id, 'reference' => $params['objOrder']->reference, 'valid' => $params['objOrder']->valid));
+
+			return $this->display(__FILE__, 'views/templates/hooks/order-confirmation.tpl');
 		}
 	}
 
@@ -531,13 +539,14 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return HTML content (Template) displaying a PayPal Express Checkout button (if the option has been enabled by the merchant)
 	 */
+
 	public function hookShoppingCartExtra($params)
 	{
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1 && Configuration::get('PAYPAL_USA_EXP_CHK_SHOPPING_CART'))
 		{
 			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1)));
 			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
-			
+
 			return $this->display(__FILE__, 'views/templates/hooks/express-checkout.tpl');
 		}
 	}
@@ -558,7 +567,7 @@ class PayPalUSA extends PaymentModule
 		{
 			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1)));
 			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
-			
+
 			return $this->display(__FILE__, 'views/templates/hooks/express-checkout.tpl');
 		}
 	}
@@ -569,6 +578,7 @@ class PayPalUSA extends PaymentModule
 	 * @param $id_order integer Order ID
 	 * @param $id_transaction string PayPal Transaction ID
 	 */
+
 	public function addTransactionId($id_order, $id_transaction)
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '>='))
@@ -594,6 +604,7 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return boolean Operation result
 	 */
+
 	public function addTransaction($type = 'payment', $details)
 	{
 		$sandbox_value = $details['source'] == 'advanced' ? Configuration::get('PAYPAL_USA_SANDBOX_ADVANCED') : Configuration::get('PAYPAL_USA_SANDBOX');
@@ -625,10 +636,9 @@ class PayPalUSA extends PaymentModule
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'PARTNER='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_PARTNER')).'&VENDOR='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_LOGIN')).
-		'&USER='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_USER')).'&PWD='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_PASSWORD')).$params.'&BUTTONSOURCE=PrestashopUS_Cart');
+				'&USER='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_USER')).'&PWD='.urlencode(Configuration::get('PAYPAL_USA_MANAGER_PASSWORD')).$params.'&BUTTONSOURCE=PrestashopUS_Cart');
 		$response = curl_exec($ch);
 		curl_close($ch);
-
 		return $this->_readNvp($response);
 	}
 
@@ -662,6 +672,7 @@ class PayPalUSA extends PaymentModule
 	 *
 	 * @return Array PayPal reponse formatted as an array (Key/value)
 	 */
+
 	private function _readNvp($string)
 	{
 		while (strlen($string))
