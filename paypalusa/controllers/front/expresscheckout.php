@@ -3,7 +3,7 @@
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
  *  @copyright  2007-2013 PrestaShop SA
- *  @version  Release: $Revision: 1.1 $
+ *  @version  Release: $Revision: 1.2.5 $
  *
  *  International Registered Trademark & Property of PrestaShop SA
  *
@@ -36,8 +36,8 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$this->paypal_usa = new PayPalUSA();
 		if ($this->paypal_usa->active && Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1)
 		{
-			$pp_exp = 1*(int)Tools::getValue('pp_exp_initial')+2*(int)Tools::getValue('pp_exp_checkout')+3*(int)Tools::getValue('pp_exp_payment');
-			
+			$pp_exp = 1 * (int)Tools::getValue('pp_exp_initial') + 2 * (int)Tools::getValue('pp_exp_checkout') + 3 * (int)Tools::getValue('pp_exp_payment');
+
 			switch ($pp_exp)
 			{
 				/* Step 1 - Called the 1st time customer is clicking on the PayPal Express Checkout button */
@@ -85,14 +85,27 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$i = 0;
 		$totalToPay = (float)$this->context->cart->getOrderTotal(true);
 		$totalToPayWithoutTaxes = (float)$this->context->cart->getOrderTotal(false);
+		$total_price = 0;
 
 		foreach ($this->context->cart->getProducts() as $product)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($product['name']).
 					'&L_PAYMENTREQUEST_0_NUMBER'.$i.'='.urlencode((int)$product['id_product']).
-					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags($product['description_short'])).
+					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($product['description_short'], 80))).
 					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price']).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'='.urlencode((int)$product['cart_quantity']);
+			$total_product += (float)$product['price'] * (int)$product['cart_quantity'];
+			$i++;
+		}
+
+		$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
+
+		if (($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
+		{
+			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
+					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($cart_discount['description'], 80))).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes)),2)).
+					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
 		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
@@ -103,6 +116,7 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
 		$currency = new Currency((int)$this->context->cart->id_currency);
+
 		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,))).'&CANCELURL='.urlencode($this->context->link->getPageLink('order.php')).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
 		if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 		{

@@ -2,7 +2,7 @@
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-*  @version  Release: $Revision: 1.1 $
+*  @version  Release: $Revision: 1.2.5 $
 *
 *  International Registered Trademark & Property of PrestaShop SA
 *
