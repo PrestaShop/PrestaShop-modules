@@ -12,7 +12,7 @@
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 	// Insert Service Group in Database
-	$sql[] = "INSERT INTO `"._DB_PREFIX_."ups_rate_service_group` (`name`) VALUES
+	$sql[] = "INSERT IGNORE  INTO `"._DB_PREFIX_."ups_rate_service_group` (`name`) VALUES
 			('United States Domestic Shipments'),
 			('Shipments Originating in United States'),
 			('Shipments Originating in Puerto Rico'),
@@ -36,7 +36,7 @@
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 	// Insert Service in database
-	$sql[] = "INSERT INTO `"._DB_PREFIX_."ups_rate_service_code` (`id_carrier`, `id_carrier_history`, `id_ups_rate_service_group`, `code`, `service`, `active`) VALUES
+	$sql[] = "INSERT IGNORE INTO `"._DB_PREFIX_."ups_rate_service_code` (`id_carrier`, `id_carrier_history`, `id_ups_rate_service_group`, `code`, `service`, `active`) VALUES
 			('0', '', '1', '01', 'UPS Next Day Air', '0'),
 			('0', '', '1', '02', 'UPS Second Day Air', '0'),
 			('0', '', '1', '03', 'UPS Ground', '0'),
@@ -110,8 +110,9 @@
 			  `is_available` tinyint(1) NOT NULL,
 			  `date_add` datetime NOT NULL,
 			  `date_upd` datetime NOT NULL,
-			  PRIMARY KEY  (`id_ups_cache`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+			  PRIMARY KEY  (`id_ups_cache`),
+			  KEY `id_cart` (`id_cart`,`id_carrier`,`hash`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;	';
 
 	// Create Test Cache Table in Database
 	$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ups_cache_test` (
