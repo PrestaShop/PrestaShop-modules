@@ -55,7 +55,7 @@ class FedexCarrier extends CarrierModule
 	{
 		$this->name = 'fedexcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2.7';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'e690479f7f292afefbef7e55f884527d';
