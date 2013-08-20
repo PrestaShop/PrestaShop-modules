@@ -16,7 +16,7 @@
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 	// Insert Service in database
-	$sql[] = "INSERT INTO `"._DB_PREFIX_."usps_rate_service_code` (`id_carrier`, `id_carrier_history`, `code`, `service`, `active`) VALUES
+	$sql[] = "INSERT IGNORE INTO `"._DB_PREFIX_."usps_rate_service_code` (`id_carrier`, `id_carrier_history`, `code`, `service`, `active`) VALUES
 			('0', '', 'FIRST CLASS', 'First-Class Mail (2-3 days)', '0'),
 			('0', '', 'FIRST CLASS COMMERCIAL', 'First-Class Mail (2-3 days)', '0'),
 			('0', '', 'PRIORITY', 'Priority Mail (1-3 days)', '0'),
@@ -28,7 +28,7 @@
 			('0', '', 'LIBRARY', 'Library Mail (2-9 days)', '0');";
 
 	// Create Cache Table in Database
-	$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'usps_cache` (
+	$sql[] = ' CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'usps_cache` (
 			  `id_usps_cache` int(10) NOT NULL AUTO_INCREMENT,
 			  `id_cart` int(10) NOT NULL,
 			  `id_carrier` int(10) NOT NULL,
@@ -38,8 +38,10 @@
 			  `is_available` tinyint(1) NOT NULL,
 			  `date_add` datetime NOT NULL,
 			  `date_upd` datetime NOT NULL,
-			  PRIMARY KEY  (`id_usps_cache`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+			  PRIMARY KEY  (`id_usps_cache`),
+			  KEY `id_cart` (`id_cart`,`id_carrier`,`hash`)
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;
+		';
 
 	// Create Test Cache Table in Database
 	$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'usps_cache_test` (
