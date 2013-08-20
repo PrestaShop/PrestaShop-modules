@@ -52,7 +52,7 @@ class UspsCarrier extends CarrierModule
 	{
 		$this->name = 'uspscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3';
+		$this->version = '1.3.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = '9ac173da9614868dbd15c56cf8ad008a';
