@@ -16,7 +16,7 @@
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
 	// Insert Service in database
-	$sql[] = "INSERT INTO `"._DB_PREFIX_."fedex_rate_service_code` (`id_carrier`, `id_carrier_history`, `code`, `service`, `active`) VALUES
+	$sql[] = "INSERT IGNORE INTO `"._DB_PREFIX_."fedex_rate_service_code` (`id_carrier`, `id_carrier_history`, `code`, `service`, `active`) VALUES
 			('0', '', 'EUROPE_FIRST_INTERNATIONAL_PRIORITY', 'Europe first international priority', '0'),
 			('0', '', 'FEDEX_1_DAY_FREIGHT', 'Fedex 1 day freight', '0'),
 			('0', '', 'FEDEX_2_DAY', 'Fedex 2 day', '0'),
@@ -49,8 +49,9 @@
 			  `is_available` tinyint(1) NOT NULL,
 			  `date_add` datetime NOT NULL,
 			  `date_upd` datetime NOT NULL,
-			  PRIMARY KEY  (`id_fedex_cache`)
-		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+			  PRIMARY KEY  (`id_fedex_cache`),
+			  KEY `id_cart` (`id_cart`,`id_carrier`,`hash`),
+		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8; ';
 
 	// Create Test Cache Table in Database
 	$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'fedex_cache_test` (
