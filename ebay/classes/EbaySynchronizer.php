@@ -692,7 +692,7 @@ class EbaySynchronizer
 		else
 		{
 			// return 0 if is an other shipping method
-			return false;
+			return 0;
 		}
 
 		$price += $price * Tax::getCarrierTaxRate($carrier_id) / 100;
