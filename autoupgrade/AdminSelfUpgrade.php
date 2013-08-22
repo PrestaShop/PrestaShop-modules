@@ -4196,8 +4196,10 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		<fieldset id="upgradeButtonBlock">
 			<legend>'.$this->l('Start your Upgrade').'</legend>
 			<div class="blocOneClickUpgrade">';
-		if (version_compare(_PS_VERSION_, $this->upgrader->version_num, '>='))
-			$this->_html .= '<p>'.$this->l('Congratulations you are already using the latest version available !').'</p>';
+		if (version_compare(_PS_VERSION_, $this->upgrader->version_num, '=='))
+			$this->_html .= '<p>'.$this->l('Congratulations you are already using the latest version available!').'</p>';
+		elseif (version_compare(_PS_VERSION_, $this->upgrader->version_num, '>'))
+			$this->_html .= '<p>'.$this->l('You come from the future! You are using a newer version than the latest available!').'</p>';
 		$this->_html .= '<table class="table" cellpadding="0" cellspacing="0"><tr><th>'.$this->l('Your current prestashop version').'</th><td>'._PS_VERSION_.'</td></tr>';
 
 		$channel = $this->getConfig('channel');
@@ -4382,11 +4384,12 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		<h1>'.$this->l('1-click Upgrade').'</h1>
 		<fieldset id="informationBlock" class="information" style="float: left; width: 30%;">
 			<legend>'.$this->l('Welcome!').'</legend>
-			<p>'.$this->l('With the PrestaShop 1-click upgrade module, upgrading your store to the latest version available has never been easier!').'<br /><br />
-			<img src="../img/admin/warning.gif" alt=""/><strong>'.$this->l('This module is still in a "beta" version.').'</strong><br /><br /><span style="color: #CC0000; font-weight: bold;">'.
-			$this->l('Please always perform a full manual backup of your files and database before starting any upgrade.').'</span><br />'.
-			$this->l('Double-check the integrity of your backup and that you can easily manually roll-back if necessary.').'<br />'.
-			$this->l('If you do not know how to proceed, ask your hosting provider.').'</p>			
+			<p>
+				'.$this->l('With the PrestaShop 1-click upgrade module, upgrading your store to the latest version available has never been easier!').'<br /><br />
+				<span style="color:#CC0000;font-weight:bold">'.$this->l('Please always perform a full manual backup of your files and database before starting any upgrade.').'</span><br />
+				'.$this->l('Double-check the integrity of your backup and that you can easily manually roll-back if necessary.').'<br />
+				'.$this->l('If you do not know how to proceed, ask your hosting provider.').'
+			</p>			
 		</fieldset>';
 		
 		/* Make sure the user has configured the upgrade options, or set default values */
