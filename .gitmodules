@@ -91,3 +91,6 @@
 [submodule "firstdata/backward_compatibility"]
 	path = firstdata/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "browsi/backward_compatibility"]
+	path = browsi/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
