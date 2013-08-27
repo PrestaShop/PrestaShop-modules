@@ -669,7 +669,7 @@ class EbaySynchronizer
 	{
 		$carrier = new Carrier($carrier_id);
 
-		if ($carrier->shipping_method === 0) 
+		if ($carrier->shipping_method == 0) 
 		{ // Default
 
 			if (Configuration::get('PS_SHIPPING_METHOD') == 1) // Shipping by weight
@@ -681,11 +681,11 @@ class EbaySynchronizer
 				$price += Configuration::get('PS_SHIPPING_HANDLING');
 
 		}
-		else if ($carrier->shipping_method === 1)
+		else if ($carrier->shipping_method == 1)
 		{ // Shipping by weight
 			$price = $carrier->getDeliveryPriceByWeight($product->weight, $zone);
 		}
-		else if ($carrier->shipping_method === 2)
+		else if ($carrier->shipping_method == 2)
 		{ // Shipping by price
 			$price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
 		}
