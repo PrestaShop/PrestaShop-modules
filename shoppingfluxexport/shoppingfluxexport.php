@@ -156,10 +156,16 @@ class ShoppingFluxExport extends Module
 	{
 		global $cookie;
                 
-                $shop = Context::getContext()->shop;
-		//uri feed
-		$uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
-		//uri images
+                //uri feed
+                if (version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+                    $shop = Context::getContext()->shop;
+                    $uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+                }
+                else
+                    $uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+                
+                //uri images
 		$uri_img = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/screens/';
 		//owner object
 		$owner = new Employee($cookie->id_employee);
@@ -313,6 +319,8 @@ class ShoppingFluxExport extends Module
 	/* Feed content */
         private function getSimpleProducts($id_lang, $limit_from = false, $limit_to = 500)
         {
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+            {
 		$context = Context::getContext();
 
 		$front = true;
@@ -330,24 +338,46 @@ class ShoppingFluxExport extends Module
                 if ($limit_from !== false)
                     $sql .= ' LIMIT '.$limit_from.', '.$limit_to;
                 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            }
+            else
+            {
+                $sql = '
+		SELECT p.`id_product`, pl.`name`
+		FROM `'._DB_PREFIX_.'product` p
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`)
+		WHERE pl.`id_lang` = '.(int)($id_lang).' AND p.`active`= 1 AND p.`available_for_order`= 1
+		ORDER BY pl.`name`';
+            }
+            
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
         
         private function countProducts()
         {
-            $context = Context::getContext();
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+            {
+		$context = Context::getContext();
 
-            $front = true;
-            if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
-                    $front = false;
-            
-            return Db::getInstance()->getValue('
-                SELECT count(p.`id_product`)
-                FROM `'._DB_PREFIX_.'product` p
-                '.Shop::addSqlAssociation('product', 'p').'
-                WHERE p.`active`= 1
-                '.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : ''));
-            
+		$front = true;
+		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
+			$front = false;
+
+		$sql = 'SELECT COUNT(p.`id_product`)
+                        FROM `'._DB_PREFIX_.'product` p
+                        '.Shop::addSqlAssociation('product', 'p').'
+                        WHERE p.`active`= 1 AND p.`available_for_order`= 1
+                        '.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
+                        ORDER BY pl.`name`';
+            }
+            else
+            {
+                $sql = '
+		SELECT COUNT(p.`id_product`)
+		FROM `'._DB_PREFIX_.'product` p
+		WHERE p.`active`= 1 AND p.`available_for_order`= 1
+		ORDER BY pl.`name`';
+            }
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
         
 	public function generateFeed()
@@ -561,7 +591,7 @@ class ShoppingFluxExport extends Module
 			$shipping = (float)(Tools::ps_round((float)($shipping), 2));
 		}
 
-		return $shipping;
+		return (float)$shipping + (float)$product->additional_shipping_cost;
 	}
 	
 	/* Product category */
@@ -757,9 +787,10 @@ class ShoppingFluxExport extends Module
 		{
 			$ret[$val['id_category']] = $val['name'];
 			$id_parent = $val['id_parent'];
+                        $id_category = $val['id_category'];
 		}
 
-		while ($id_parent != 0)
+		while ($id_parent != 0 && $id_category != $id_parent)
 		{
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 				SELECT cl.`name`, c.`id_category`, c.`id_parent` FROM `'._DB_PREFIX_.'category_lang` cl
@@ -770,6 +801,7 @@ class ShoppingFluxExport extends Module
 			{
 				$ret[$val['id_category']] = $val['name'];
 				$id_parent = $val['id_parent'];
+                                $id_category = $val['id_category'];
 			}
 		}
 
@@ -1210,6 +1242,7 @@ class ShoppingFluxExport extends Module
 				'product_price' => (float)((float)$product->Price / (1 + ($tax_rate / 100))),
 				'reduction_percent' => 0,
 				'reduction_amount' => 0,
+                                'ecotax' => 0,
 				'total_price_tax_incl' => (float)((float)$product->Price * $product->Quantity),
 				'total_price_tax_excl' => (float)(((float)$product->Price / (1 + ($tax_rate / 100))) * $product->Quantity),
 				'unit_price_tax_incl' => (float)$product->Price,
