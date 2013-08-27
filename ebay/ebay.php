@@ -125,13 +125,16 @@ class Ebay extends Module
 		// Check if installed
 		if (self::isInstalled($this->name))
 		{
-			// Check the country
-			$this->ebay_country = new EbayCountrySpec();
-
-			if (!$this->ebay_country->checkCountry())
+			if(class_exists('EbayCountrySpec'))
 			{
-				$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
-				return false;
+				// Check the country
+				$this->ebay_country = new EbayCountrySpec();
+
+				if (!$this->ebay_country->checkCountry())
+				{
+					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
+					return false;
+				}
 			}
 
 			// Upgrade eBay module
