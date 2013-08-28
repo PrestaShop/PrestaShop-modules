@@ -41,7 +41,7 @@ class MerchantWare extends PaymentModule
 	{
 		$this->name = 'merchantware';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.2';
+		$this->version = '1.2.3';
 		$this->author = 'PrestaShop';
 		$this->className = 'Merchantware';
 
@@ -476,7 +476,7 @@ class MerchantWare extends PaymentModule
 			{
 				if ($result->TransactionsByReferenceResult->TransactionReference4->ApprovalStatus == 'APPROVED')
 				{
-					$amount = (float)$result->TransactionsByReferenceResult->TransactionReference4->Amount;
+					$amount = str_replace(',', '', $result->TransactionsByReferenceResult->TransactionReference4->Amount);
 					$tokenTransaction = new TokenTransaction((int)$this->context->cart->id);
 					$tokenTransaction->setToken($token);
 					$this->validateOrder((int)$this->context->cart->id, Configuration::get('PS_OS_PAYMENT'), $amount, 'merchantware', NULL, array(), NULL, false,	$this->context->cart->secure_key);

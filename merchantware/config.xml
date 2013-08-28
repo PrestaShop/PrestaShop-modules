@@ -2,7 +2,7 @@
 <module>
 	<name>merchantware</name>
 	<displayName><![CDATA[Merchant Warehouse]]></displayName>
-	<version><![CDATA[1.2.2]]></version>
+	<version><![CDATA[1.2.3]]></version>
 	<description><![CDATA[Eliminate expensive and unnecessary gateway fees by partnering with Merchant Warehouse for your payment processing needs!]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
