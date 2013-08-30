@@ -136,7 +136,7 @@ class Gamification extends Module
 	
 	public function hookDisplayBackOfficeHeader()
 	{
-		if (method_exists($this->context->controller, 'addJquery'))
+		if (method_exists($this->context->controller, 'addJquery') && !Tools::getIsset('configure'))
 		{
 			$this->context->controller->addJquery();
 			$this->context->controller->addJqueryUI('ui.progressbar');
