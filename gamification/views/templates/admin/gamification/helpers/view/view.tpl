@@ -38,7 +38,8 @@
 		$('#gamification_progressbar_tab').progressbar("value", {$current_level_percent|intval} );
 		initBubbleDescription();
 	});
-	
+	var admintab_gamification = true;
+
 </script>
 
 {include file="toolbar.tpl" toolbar_btn=$toolbar_btn toolbar_scroll=$toolbar_scroll title=$title}
