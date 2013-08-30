@@ -78,19 +78,36 @@ class ShoppingFluxExport extends Module
 			KEY `idx_id_customer` (`id_customer`)
 			) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8;');
 		
-                foreach (Shop::getShops() as $shop)
-                {
-                    if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_ORDERS','', false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','', false, null, $shop['id_shop']) ||
-                        !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','', false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_LOGIN','', false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, null, $shop['id_shop']) ||
-			!Configuration::updateValue('SHOPPING_FLUX_STOCKS','', false, null, $shop['id_shop']))
-			return false;
-                }                
+                if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()){
+                
+                    foreach (Shop::getShops() as $shop)
+                    {
+                        if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_LOGIN','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STOCKS','', false, null, $shop['id_shop']))
+                            return false;
+                    }
+                }
+                else {
+                    
+                    if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand())) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_LOGIN','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STOCKS'))
+                            return false;
+                    
+                }
 
 		return true;
 
@@ -157,7 +174,7 @@ class ShoppingFluxExport extends Module
 		global $cookie;
                 
                 //uri feed
-                if (version_compare(_PS_VERSION_, '1.5', '>'))
+                if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())
 		{
                     $shop = Context::getContext()->shop;
                     $uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
