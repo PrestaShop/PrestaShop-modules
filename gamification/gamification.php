@@ -139,7 +139,6 @@ class Gamification extends Module
 		if (method_exists($this->context->controller, 'addJquery'))
 		{
 			$this->context->controller->addJquery();
-			$this->context->controller->addJqueryUI('ui.progressbar');
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
 			$this->context->controller->addJs($this->_path.'views/js/gamification.js');
 			$this->context->controller->addJqueryPlugin('fancybox');

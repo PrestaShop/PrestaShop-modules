@@ -4,6 +4,9 @@
 	var current_level = {$current_level|intval};
 	var gamification_level = '{l s='Level' js=1}';
 </script>
+<style>
+	{literal}.gamification_progress-label {top:-1px!important;-moz-border-radius: 15px;-o-border-radius: 15px;-webkit-border-radius: 15px;border-radius: 15px;height:19px;background-image: url(../modules/gamification/views/img/gamification-bar-bg.png) ;width: {/literal}{$current_level_percent}{literal}%}{/literal}
+</style>
 <div id="gamification_notif" class="notifs">
 		{if $notification}
 		<span id="gamification_notif_number_wrapper" class="number_wrapper" style="display: inline;">
@@ -14,7 +17,10 @@
 		<div id="gamification_top">
 			<h3>{l s='Your Merchant Expertise'}</h3>
 		</div>
-		<div id="gamification_progressbar"><span class="gamification_progress-label">{l s='Level'} {$current_level|intval} : {$current_level_percent|intval} %</span></div>
+		<span style="font-size: 15px;color: #585A69;text-shadow: 0 1px 0 #fff;">{l s='Level'} {$current_level|intval} : {$current_level_percent|intval} %</span>
+		<div id="gamification_progressbar">
+			<span class="gamification_progress-label"></span>
+		</div>
 		<div id="gamification_badges_container">
 			<ul id="gamification_badges_list" style="{if $badges_to_display|count <= 2} height:140px;{/if}">
 				{foreach from=$badges_to_display name=badge_list item=badge}
