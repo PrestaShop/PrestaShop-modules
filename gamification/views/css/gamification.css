@@ -135,7 +135,7 @@ ul#gamification_badges_list li.locked .gamification_badges_name{
 
 #gamification_progressbar {
 	height: 20px;
-    margin-top: 15px;
+    margin-top: 5px;
     position: relative;
     width: 100%;
 }
