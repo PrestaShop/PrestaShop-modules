@@ -50,7 +50,7 @@
 			  `date_add` datetime NOT NULL,
 			  `date_upd` datetime NOT NULL,
 			  PRIMARY KEY  (`id_fedex_cache`),
-			  KEY `id_cart` (`id_cart`,`id_carrier`,`hash`),
+			  KEY `id_cart` (`id_cart`,`id_carrier`,`hash`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8; ';
 
 	// Create Test Cache Table in Database
