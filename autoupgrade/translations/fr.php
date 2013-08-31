@@ -92,7 +92,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ecb902a8f7110e7f93d750cfa6aa
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_9523b86c2578ee7962644a45b758d36e'] = 'Fichiers restaurés. Restauration de la base de données ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_cb7dce5f6a1934d54c0d3335c7ffe841'] = 'Fichiers restaurés.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_2ad6405b321e313639d11507e047b066'] = 'La sauvegarde de la base de données est vide';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_daad044945b853a8483df2682d0c00c3'] = 'restoration de la base de données : fichier %1$s terminé. %2$s fichier(s) restant ...';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_daad044945b853a8483df2682d0c00c3'] = 'Restauration de la base de données : fichier %1$s terminé. %2$s fichier(s) restant ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_30da45f850d1f1a2b42f215836382f19'] = 'Restauration de la base de donnée terminée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b8496a6ac08d176ab264e1a33533e986'] = 'La base de données à été restaurée.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_405abfe6281eedc84b9c927de1c64c6e'] = 'Erreur lors de la restauration de la base de données';
@@ -101,7 +101,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_dad7d4186b7ebfac78ac2a4d4964
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ef95303f4ee1c42559c382f03fd36e00'] = 'Impossible de créer le fichier %s de sauvegarde de la base.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_dcb7d833c69d6e0c3f009381c51f898e'] = 'Erreur pendant la sauvegarde de la base de données';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_52033453d4d673bae012b9c8ccb1e79c'] = 'Une erreur est apparue lors de la sauvegarde. Impossible d\'obtenir le schema de %s';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ca3f0a9c2464acb36a341a9bf8df0e3f'] = 'la table %1$s a été sauvegardée.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_ca3f0a9c2464acb36a341a9bf8df0e3f'] = 'La table %1$s a été sauvegardée.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b4c6a83d292337a86b7a701142787309'] = '%1$s tables ont été sauvegardées.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_57589aee8b3e5a98bd9482b12b63847f'] = 'Backup de la base de données : %s table(s) restantes ...';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_10907e082ba71b1ca94811c639024641'] = 'Aucune table n\'a été trouvée à sauvegarder. Backup annulé.';
@@ -110,7 +110,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_47be00f6998760420c05002e38a9
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_48f95ff09327408a578e91655ed872a1'] = '%s fichiers à sauvegarder.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_70960f2aa87d307170d3a1bc3e06d904'] = 'sauvegarde des fichiers initilialisée dans %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_15b353ca964fe816547e67e1508ff85d'] = 'Fichiers sauvegardés. Sauvegarde de la base de données ...';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a25c4f085558c5f6e519e56257af531f'] = 'tous les fichiers ont été ajoutés à l\'archive.';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a25c4f085558c5f6e519e56257af531f'] = 'Tous les fichiers ont été ajoutés à l\'archive.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_91f805cf850500bda66426aea042602f'] = '%1$s ajouté à l\'archive. Encore %2$s.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_f79479c0de75d568def0afdc1e5de04e'] = 'Erreur lorsque vous essayez d\'ajouter %1$s à l\'archive %2$s.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b9a2db69065827812dd4b7a7f9ffc0b1'] = 'impossible d\'ouvrir l\'archive';
@@ -126,7 +126,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_0c0db54fe8212c1a7215005fef75
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7775b77bfe927301d302c1c4e8c38d32'] = 'La directive allow_url_fopen doit être activée pour autoriser le téléchargement automatique.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_93120c07d8c5cee44042627cd493e0e0'] = 'vous avez besoin allow_url_fopen pour le téléchargement automatique. Vous pouvez également placer le fichier manuellement dans %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3bb38e7d0bfd5a02f7c06cae446fee86'] = 'l\'action %s ignorée';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b4302e98d94591ee9afa09e769b2ee63'] = 'action \"%1$s\" non trouvée';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_b4302e98d94591ee9afa09e769b2ee63'] = 'Action \"%1$s\" non trouvée';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_760c4026bc5a0bd5378e6efc3f1370b4'] = 'Trop long !';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_4f2e28904946a09d8c7f36dd3ee72457'] = 'Les champs sont différents !';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_43b01d1a6c5065545c65f42003b0ab5c'] = 'Adresse incorrecte !';
@@ -367,7 +367,7 @@ $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_36d7873e43efa6fd48450342872e
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_549e11f82d3c02b92e5db1b38b858eb6'] = 'Sauvegarde du fichier dans %s';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_3c2681ea85407c2c0d252e05a8eaf6aa'] = 'Téléchargement terminé.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_38f9eb3936b09141e52e2893dced07db'] = 'Téléchargement terminé, mais md5sum ne correspond pas (%s)';
-$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e3d2f07a805f02286c6ad420a70478c4'] = 'Voulez vous restorer';
+$_MODULE['<{autoupgrade}prestashop>adminselfupgrade_e3d2f07a805f02286c6ad420a70478c4'] = 'Voulez vous restaurer';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a3b93dba6d593428e5ef61c7714d6bc7'] = 'Mise à jour terminée, mais des erreurs sql sont apparues pendant la mise à jour de la base de données.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_a5efc865559941c6af8b68c6cbaacf4a'] = 'Le module Dibs n\'est pas compatible avec la version 1.5.X, veuillez le supprimer de votre installation.';
 $_MODULE['<{autoupgrade}prestashop>adminselfupgrade_7bd7b9ae8e07a44483035d6fb1e7e33e'] = 'Mise à jour terminée, mais il y a des avertissements.';
