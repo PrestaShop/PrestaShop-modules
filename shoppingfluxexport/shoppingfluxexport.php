@@ -617,7 +617,8 @@ class ShoppingFluxExport extends Module
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT cl.`name`
 			FROM `'._DB_PREFIX_.'product` p
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (p.`id_category_default` = cl.`id_category`)
+                        '.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (product_shop.`id_category_default` = cl.`id_category`)
 			WHERE p.`id_product` = '.(int)$product->id.'
 			AND cl.`id_lang` = '.(int)$configuration['PS_LANG_DEFAULT']);
 	}
@@ -917,7 +918,7 @@ class ShoppingFluxExport extends Module
                                             $customerClear->clearCache(true);
                         }
                         catch (PrestaShopException $pe){
-                            $this->_validOrders((string)$order->IdOrder, (string)$order->Marketplace);
+                            $this->_validOrders((string)$order->IdOrder, (string)$order->Marketplace, false, $pe->getMessage());
                         }
                     }
             }
@@ -1388,7 +1389,7 @@ class ShoppingFluxExport extends Module
 		return $available;
 	}
 
-	private function _validOrders($id_order, $marketplace, $id_order_merchant = false)
+	private function _validOrders($id_order, $marketplace, $id_order_merchant = false, $error = false)
 	{
 		$xml  = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= '<ValidOrders>';
@@ -1396,8 +1397,11 @@ class ShoppingFluxExport extends Module
 		$xml .= '<IdOrder>'.$id_order.'</IdOrder>';
 		$xml .= '<Marketplace>'.$marketplace.'</Marketplace>';
                 
-                if ($id_order_merchant)
-                    $xml .= '<MerchantIdOrder>'.$id_order_merchant.'</MerchantIdOrder>';
+			if ($id_order_merchant)
+					$xml .= '<MerchantIdOrder>'.$id_order_merchant.'</MerchantIdOrder>';
+			
+			if($error)
+					$xml .= '<ErrorOrder><![CDATA['.$error.']]></ErrorOrder>';
                 
 		$xml .= '</Order>';
 		$xml .= '</ValidOrders>';
