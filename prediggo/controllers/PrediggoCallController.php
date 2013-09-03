@@ -65,6 +65,9 @@ class PrediggoCallController
 	  */
 	public function notifyPrediggo($sType, $params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
+		
 		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 
 		switch($sType)
@@ -93,7 +96,8 @@ class PrediggoCallController
 	  */
 	public function getListOfRecommendations($sHookName, $params)
 	{
-		if(!$this->isPageAccessible())
+		if(!$this->oPrediggoConfig->web_site_id_checked
+		|| !$this->isPageAccessible())
 			return false;
 
 		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
@@ -271,6 +275,18 @@ class PrediggoCallController
 	public function getPageName()
 	{
 		return $this->sPageName;
+	}
+	
+	/**
+	 * Check the client web site id
+	 */
+	public function checkWebSiteId()
+	{
+		// Check if default web_site_id
+		if($this->oPrediggoConfig->web_site_id == 'WineDemo_Fake_Shop_ID_123456789')
+			return false;
+		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
+		return $this->oPrediggoCall->checkWebSiteId();
 	}
 }
 
