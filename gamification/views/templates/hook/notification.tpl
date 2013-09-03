@@ -34,6 +34,6 @@
 				{/foreach}
 			</ul>
 		</div>
-		<a id="gamification_see_more" href="{$link->getAdminLink('AdminGamification')}">{l s='View my complete profile'}</a>
+		<a id="gamification_see_more" href="{$link->getAdminLink('AdminGamification')}">{l s='View my complete profile' mod='gamification'}</a>
 	</div>
 </div>
