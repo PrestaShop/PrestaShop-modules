@@ -124,7 +124,9 @@ class Prediggo extends Module
 	{
 		if (!isset($params['cookie']->id_guest))
 			Guest::setNewGuest($params['cookie']);
-	
+		
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
 	
 		// Check if prediggo module can be executed in this page
 		if($this->oPrediggoCallController->isPageAccessible()
@@ -189,6 +191,8 @@ class Prediggo extends Module
 	 */
 	public function hookActionAuthentication($params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
 		$params['customer'] = $this->context->customer;
 		$this->oPrediggoCallController->notifyPrediggo('user', $params);
 	}
@@ -200,6 +204,9 @@ class Prediggo extends Module
 	 */
 	public function hookDisplayPaymentTop($params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
+		
 		$params['customer'] = $this->context->customer;
 		$this->oPrediggoCallController->notifyPrediggo('user', $params);
 	}
@@ -211,6 +218,8 @@ class Prediggo extends Module
 	 */
 	public function hookActionCustomerAccountAdd($params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
 		$params['customer'] = $this->context->customer;
 		$this->oPrediggoCallController->notifyPrediggo('user', $params);
 	}
@@ -224,6 +233,9 @@ class Prediggo extends Module
 	 */
 	private function displayRecommendations($sHookName, $params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
+		
 		$params['customer'] = $this->context->customer;
 		if(!$this->aRecommendations[$sHookName] = $this->oPrediggoCallController->getListOfRecommendations($sHookName, $params))
 			return false;
@@ -249,6 +261,8 @@ class Prediggo extends Module
 	 */
 	public function setProductNotification($params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
 		$params['customer'] = $this->context->customer;
 		$this->oPrediggoCallController->notifyPrediggo('product', $params);
 	}
@@ -261,10 +275,9 @@ class Prediggo extends Module
 	 */
 	private function displaySearchFilterBlock($params)
 	{
-		if(!$this->oPrediggoConfig->layered_navigation_active)
-			return;
-	
-		return $this->display(__FILE__, 'views/templates/front/search_filters_block.tpl');
+		if($this->oPrediggoConfig->web_site_id_checked
+		&& $this->oPrediggoConfig->layered_navigation_active)
+			return $this->display(__FILE__, 'views/templates/front/search_filters_block.tpl');
 	}
 	
 	/**
@@ -275,7 +288,8 @@ class Prediggo extends Module
 	 */
 	private function displaySearchBlock($params)
 	{
-		if($this->oPrediggoConfig->search_active)
+		if($this->oPrediggoConfig->web_site_id_checked
+		&& $this->oPrediggoConfig->search_active)
 			return $this->display(__FILE__, 'search_block.tpl');
 	}
 	
@@ -286,7 +300,8 @@ class Prediggo extends Module
 	 */
 	public function displayAutocompleteDidYouMean()
 	{
-		if($this->oPrediggoConfig->search_active
+		if($this->oPrediggoConfig->web_site_id_checked
+		&& $this->oPrediggoConfig->search_active
 		&& $this->oPrediggoConfig->autocompletion_active)
 		{
 			$this->smarty->assign(array(
@@ -303,7 +318,8 @@ class Prediggo extends Module
 	 */
 	public function displayAutocompleteProduct()
 	{
-		if($this->oPrediggoConfig->search_active
+		if($this->oPrediggoConfig->web_site_id_checked
+		&& $this->oPrediggoConfig->search_active
 		&& $this->oPrediggoConfig->autocompletion_active)
 			return $this->display(__FILE__, 'views/templates/hook/autocomplete_product.tpl');
 	}
@@ -315,7 +331,8 @@ class Prediggo extends Module
 	 */
 	public function displayAutocompleteSuggest()
 	{
-		if($this->oPrediggoConfig->search_active
+		if($this->oPrediggoConfig->web_site_id_checked
+		&& $this->oPrediggoConfig->search_active
 		&& $this->oPrediggoConfig->autocompletion_active)
 			return $this->display(__FILE__, 'views/templates/hook/autocomplete_suggest.tpl');
 	}
@@ -328,6 +345,9 @@ class Prediggo extends Module
 	 */
 	public function getBlockLayeredRecommendations($params)
 	{
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			return false;
+		
 		$sHookName = 'blocklayered';
 		$this->oPrediggoCallController->_setPageName($sHookName);
 		$params['filters'] = $this->getSelectedFilters();
@@ -450,6 +470,11 @@ class Prediggo extends Module
 	 */
 	public function getContent()
 	{
+		// Web site id verification for older version
+		if(!$this->oPrediggoConfig->web_site_id_checked
+		&& !Configuration::hasKey('PREDIGGO_WEB_SITE_ID_CHECKED'))
+			$this->checkWebSiteId();
+		
 		if (count($_POST))
 			$this->_postProcess();
 
@@ -460,6 +485,16 @@ class Prediggo extends Module
 		$this->_displayForm();
 
 		return $this->_html;
+	}
+	
+	/**
+	 * Check the client web site id
+	 */
+	private function checkWebSiteId()
+	{
+		$this->oPrediggoConfig->web_site_id_checked = (int)$this->oPrediggoCallController->checkWebSiteId();
+		if(!$this->oPrediggoConfig->save())
+			$this->_errors[] = $this->l('An error occurred while updating the main configuration settings');
 	}
 
 	/**
@@ -472,6 +507,9 @@ class Prediggo extends Module
 
 		if(!extension_loaded('curl'))
 			$this->_errors[] = $this->l('Please activate the PHP extension "curl" to allow the use of the module.');
+		
+		if(!$this->oPrediggoConfig->web_site_id_checked)
+			$this->_warnings[] = $this->l('Please update the field "Web Site ID", in the "Main Configuration" tab.');
 			
 		// API can't be call if curl extension is not installed on PHP config.
 		if((int)ini_get('max_execution_time') < 3000)
@@ -497,9 +535,13 @@ class Prediggo extends Module
 		{
 			$this->oPrediggoConfig->web_site_id = Tools::safeOutput(Tools::getValue('web_site_id'));
 			if($this->oPrediggoConfig->save())
+			{
+				$this->checkWebSiteId();
 				$this->_confirmations[] = $this->l('Main settings updated');
+			}
 			else
 				$this->_errors[] = $this->l('An error occurred while updating the main configuration settings');
+			
 		}
 		
 		// Set the export configuration

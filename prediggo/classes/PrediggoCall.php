@@ -578,4 +578,25 @@ class PrediggoCall
 		return $aItems;
 
 	}
+	
+	/**
+	 * Check the client web site id with a light call
+	 */
+	public function checkWebSiteId()
+	{
+		try
+		{
+			$oRecoParam = new GetCategoryRecommendationParam();
+			$oRecoParam->setServerUrl($this->sServerUrl);
+			$oRecoParam->setShopId($this->sShopId);
+			$oRecoParam->setSessionId(md5(session_id()));
+			$oRecoParam->addCondition('genre', 'Home');
+			if(call_user_func(array('PrediggoService', 'getCategoryRecommendation'), $oRecoParam))
+				return true;
+		}
+		catch(PrediggoException $ex)
+		{
+			return false;
+		}
+	}
 }
