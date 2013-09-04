@@ -367,7 +367,7 @@ class EbaySynchronizer
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 			$combinations = $product->getAttributeCombinations($context->cookie->id_lang);
 		else
-			$product->getAttributeCombinaisons($context->cookie->id_lang);
+			$combinations = $product->getAttributeCombinaisons($context->cookie->id_lang);
 
 		foreach ($combinations as $combinaison)
 		{
