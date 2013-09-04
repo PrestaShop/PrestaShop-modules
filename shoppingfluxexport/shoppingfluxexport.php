@@ -83,10 +83,10 @@ class ShoppingFluxExport extends Module
                     foreach (Shop::getShops() as $shop)
                     {
                         if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
-                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','', false, null, $shop['id_shop']) ||
-                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','', false, null, $shop['id_shop']) ||
-                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','', false, null, $shop['id_shop']) ||
-                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','checked', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','checked', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','checked', false, null, $shop['id_shop']) ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','checked', false, null, $shop['id_shop']) ||
                             !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','', false, null, $shop['id_shop']) ||
                             !Configuration::updateValue('SHOPPING_FLUX_LOGIN','', false, null, $shop['id_shop']) ||
                             !Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri'], false, null, $shop['id_shop']) ||
@@ -97,10 +97,10 @@ class ShoppingFluxExport extends Module
                 else {
                     
                     if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand())) ||
-                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','') ||
-                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','') ||
-                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','') ||
-                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_TRACKING','checked') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_BUYLINE','checked') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_ORDERS','checked') ||
+                            !Configuration::updateValue('SHOPPING_FLUX_STATUS_SHIPPED','checked') ||
                             !Configuration::updateValue('SHOPPING_FLUX_STATUS_CANCELED','') ||
                             !Configuration::updateValue('SHOPPING_FLUX_LOGIN','') ||
                             !Configuration::updateValue('SHOPPING_FLUX_INDEX','http://'.$shop['domain'].$shop['uri']) ||
@@ -148,10 +148,6 @@ class ShoppingFluxExport extends Module
 			case 'New':
 			default:
 				$this->_html .= $this->_defaultView($price);
-				Configuration::updateValue('SHOPPING_FLUX_TRACKING', '');
-				Configuration::updateValue('SHOPPING_FLUX_BUYLINE', '');
-				Configuration::updateValue('SHOPPING_FLUX_ORDERS', '');
-				Configuration::updateValue('SHOPPING_FLUX_STOCKS', '');
 				break;
 		}
 		
