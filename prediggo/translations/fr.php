@@ -12,6 +12,7 @@ $_MODULE['<{prediggo}prestashop>prediggo_07f10b195d7ae6cc68a746620f475473'] = 'V
 $_MODULE['<{prediggo}prestashop>prediggo_5e8d013675200be8c912c1a4e1d8d98f'] = 'Veuillez mettre à jour l\'option PHP \"memory_limit\" à un minimum de \"384M\". (Valeur actuelle:';
 $_MODULE['<{prediggo}prestashop>prediggo_78900ccea38955fa2d1559e3ac164ecc'] = 'Veuillez sélectionner une boutique dans le bloc en haut de page afin de configurer les paramètres spécifiques.';
 $_MODULE['<{prediggo}prestashop>prediggo_5873f86ea0272f14d33eaa5f98d6b271'] = 'Configuration principale mise à jour';
+$_MODULE['<{prediggo}prestashop>prediggo_741937235fd87b667d37a070644fca6b'] = 'Veuillez mettre à jour le champs \"Identifiant du site Web\", de l\'onglet \"Configuration principale\".';
 $_MODULE['<{prediggo}prestashop>prediggo_0ad6614d09e41f95812c90857954202e'] = 'Une erreur est survenue pendant la mise à jour des paramètres de la configuration principale';
 $_MODULE['<{prediggo}prestashop>prediggo_6263ad70488391d1c99c1a6142182c9b'] = 'Configuration des exports mise à jour';
 $_MODULE['<{prediggo}prestashop>prediggo_570d646e9e6927a2cdaeff4f58433e91'] = 'Une erreur est survenue pendant la mise à jour des paramètres de la configuration des exports';

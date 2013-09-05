@@ -43,6 +43,14 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> false,
 		),
+		'web_site_id_checked' => array(
+			'name' 				=> 'PREDIGGO_WEB_SITE_ID_CHECKED',
+			'type'				=> 'int',
+			'val' 				=> '0',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> false,
+		),
 			
 		/* EXPORT CONFIGURATION */
 		// The FG Corresponds to FILE_GENERATION
