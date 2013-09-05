@@ -5357,14 +5357,14 @@ $(document).ready(function()
 						echo ' ';
 						flush();
 						$file = str_replace($this->prodRootDir, '', $extractedFile['filename']);
-						if ($extractedFile['status'] != 'ok')
+						if ($extractedFile['status'] != 'ok' && $extractedFile['status'] != 'already_a_directory')
 						{
-							$this->nextQuickInfo[] = sprintf('[ERROR] %s has not been unzipped', $file);
-							$this->nextErrors[] = sprintf('[ERROR] %s has not been unzipped', $file);
+							$this->nextQuickInfo[] = sprintf('[ERROR] %s has not been unzipped '.$extractedFile['status'], $file);
+							$this->nextErrors[] = sprintf('[ERROR] %s has not been unzipped '.$extractedFile['status'], $file);
 							$this->next = 'error';
 						}
 						else
-							$this->nextQuickInfo[] = sprintf('%1$s unzipped into %2$s', $file, str_replace(_PS_ROOT_DIR_, '', $to_dir.'/'));
+							$this->nextQuickInfo[] = sprintf('%1$s unzipped into %2$s', $file, str_replace(_PS_ROOT_DIR_, '', $to_dir));
 					}
 					if ($this->next === 'error')
 						return false;
