@@ -1831,6 +1831,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 						$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
 				}
 			}
+			if (version_compare($this->install_version, '1.5.5.0', '='))
+			{
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\' AND `value` = 1');
+				if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
+			}
 
 			$res = $this->writeConfig(array('PS_AUTOUP_MANUAL_MODE' => '0'));
 			$this->next = 'upgradeModules';
@@ -1842,8 +1849,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->stepDone = true;
 			$this->status = 'ok';
 			$this->next = 'cleanDatabase';
-			$this->next_desc = $this->l('Addons modules files has been upgraded.');
-			$this->nextQuickInfo[] = $this->l('Addons modules files has been upgraded.');
+			$this->next_desc = $this->l('Addons modules files have been upgraded.');
+			$this->nextQuickInfo[] = $this->l('Addons modules files have been upgraded.');
 			return true;
 		}
 		return true;
