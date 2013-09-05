@@ -524,6 +524,8 @@ class PayPalUSA extends PaymentModule
 
 	public function hookOrderConfirmation($params)
 	{
+		if (!isset($params['objOrder']) || ($params['objOrder']->module != $this->name))
+			return false;
 		if (isset($params['objOrder']) && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid) &&
 				version_compare(_PS_VERSION_, '1.5', '>=') && isset($params['objOrder']->reference))
 		{
