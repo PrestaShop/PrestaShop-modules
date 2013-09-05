@@ -2,7 +2,7 @@
 <module>
 	<name>nqgatewayneteven</name>
 	<displayName><![CDATA[NetEven]]></displayName>
-	<version><![CDATA[1.7.6]]></version>
+	<version><![CDATA[1.7.7]]></version>
 	<description><![CDATA[Vendez sur toutes les marketplaces depuis votre PrestaShop]]></description>
 	<author><![CDATA[NetEven]]></author>
 	<tab><![CDATA[market_place]]></tab>
