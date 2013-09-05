@@ -46,7 +46,7 @@ function initHeaderNotification(html)
 			$('.notifs_wrapper').hide();
 			$('#gamification_notif_number_wrapper').hide();
 			$('#gamification_notif_wrapper').show();
-			if (admintab_gamification)
+			if (typeof(admintab_gamification) != "undefined")
 			{
 				$('#gamification_progressbar').progressbar({
 					change: function() {
@@ -60,6 +60,7 @@ function initHeaderNotification(html)
 			}
 		}
 	});
+	$('.dropdown-toggle').dropdown();
 }
 
 function disabledGamificationNotification()
