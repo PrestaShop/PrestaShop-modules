@@ -40,7 +40,7 @@
 	{* Classic Credit card form *}
 	<div id="stripe-ajax-loader"><img src="{$module_dir}img/ajax-loader.gif" alt="" /> {l s='Transaction in progress, please wait.' mod='stripejs'}</div>
 	<form action="{$module_dir}validation.php" method="POST" id="stripe-payment-form"{if isset($stripe_save_tokens_ask) && $stripe_save_tokens_ask && isset($stripe_credit_card)} style="display: none;"{/if}>
-		<div class="stripe-payment-errors">{if isset($smarty.get.stripe_error)}{$smarty.get.stripe_error|base64_decode|escape:html:'UTF-8'}{/if}</div><a name="stripe_error"></a>
+		<div class="stripe-payment-errors">{if isset($smarty.get.stripe_error)}{$smarty.get.stripe_error|base64_decode|escape:html:'UTF-8'}{/if}</div><a name="stripe_error" style="display:none"></a>
 		<div class="stripe-card-deleted"></div>
 		<label>{l s='Card Number' mod='stripejs'}</label><br />
 		<input type="text" size="20" autocomplete="off" class="stripe-card-number" />
