@@ -110,7 +110,7 @@ class Socolissimo extends CarrierModule {
 
 	public function install()
 	{
-		if (!parent::install() || !Configuration::updateValue('SOCOLISSIMO_ID', NULL) || !Configuration::updateValue('SOCOLISSIMO_KEY', NULL) || !Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.4') ||
+		if (!parent::install() || !Configuration::updateValue('SOCOLISSIMO_ID', NULL) || !Configuration::updateValue('SOCOLISSIMO_KEY', NULL) || !Configuration::updateValue('SOCOLISSIMO_VERSION', $this->version) ||
 			!Configuration::updateValue('SOCOLISSIMO_URL', 'http://ws.colissimo.fr/pudo-fo-frame/storeCall.do') || !Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws-mobile.colissimo.fr/') ||
 			!Configuration::updateValue('SOCOLISSIMO_PREPARATION_TIME', 1) || !Configuration::updateValue('SOCOLISSIMO_EXP_BEL', true) || !Configuration::updateValue('SOCOLISSIMO_COST_SELLER', 0) ||
 			!Configuration::updateValue('SOCOLISSIMO_OVERCOST', 3.6) || !$this->registerHook('extraCarrier') || !$this->registerHook('AdminOrder') || !$this->registerHook('updateCarrier') ||
@@ -501,8 +501,8 @@ class Socolissimo extends CarrierModule {
 		if (method_exists($params['cart'], 'carrierIsSelected'))
 			if ($params['cart']->carrierIsSelected((int) $carrierSo->id, $params['address']->id))
 				$id_carrier = (int) $carrierSo->id;
-			$customer = new Customer($params['address']->id_customer);
-
+		
+		$customer = new Customer($params['address']->id_customer);
 		$gender = array('1' => 'MR', '2' => 'MME', '3' => 'MLE');
 
 		if (in_array(intval($customer->id_gender), array(1, 2)))
@@ -510,13 +510,13 @@ class Socolissimo extends CarrierModule {
 		else
 			$cecivility = 'MR';
 
-        	$tax_rate = Tax::getCarrierTaxRate($id_carrier, isset($params['cart']->id_address_delivery) ? $params['cart']->id_address_delivery : null);
-                $stdCostWithTaxes = number_format((float) $this->initialCost * (1 + ($tax_rate/ 100)), 2, ',', ' ');
-
-                if(Configuration::get('SOCOLISSIMO_COST_SELLER'))
-                    $sellerCostWithTaxes = number_format((float) Configuration::get('SOCOLISSIMO_COST_SELLER') * (1 + ($tax_rate/ 100)), 2, ',', ' ');
-                else
-                    $sellerCostWithTaxes = null;
+		$tax_rate = Tax::getCarrierTaxRate($id_carrier, isset($params['cart']->id_address_delivery) ? $params['cart']->id_address_delivery : null);
+		$stdCostWithTaxes = number_format((float) $this->initialCost * (1 + ($tax_rate/ 100)), 2, ',', ' ');
+		
+		if(Configuration::get('SOCOLISSIMO_COST_SELLER'))
+			$sellerCostWithTaxes = number_format((float) Configuration::get('SOCOLISSIMO_COST_SELLER') * (1 + ($tax_rate/ 100)), 2, ',', ' ');
+		else
+			$sellerCostWithTaxes = null;
 
 		// Keep this fields order (see doc.)
 		$inputs = array(
