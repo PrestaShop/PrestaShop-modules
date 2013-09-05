@@ -667,7 +667,7 @@ class GatewayOrder extends Gateway
 						$t_info_product = array();
 
 						$t_info_product['id_product'] = $res_product["id_product"];
-						$t_info_product['cart_quantity'] = $t_info_order->Quantity;
+						$t_info_product['cart_quantity'] = $neteven_order->Quantity;
 						$t_info_product['id_product_attribute'] = NULL;
 						if($control_attribute_product){
 							$t_info_product['id_product_attribute'] = $id_product_attribute;
