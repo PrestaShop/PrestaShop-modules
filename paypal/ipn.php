@@ -44,14 +44,28 @@ function getIPNTransactionDetails()
 }
 
 if (Tools::getValue('payment_status') !== false)
-{	
+{
+	if ((int)Configuration::get('PAYPAL_SANDBOX') == 1)
+		$action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
+	else
+		$action_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
+		
+	$verified = Tools::file_get_contents($action_url.'&'.http_build_query($_POST, '&'));
+
 	$details = getIPNTransactionDetails();
 	$id_order = PayPalOrder::getIdOrderByTransactionId($details['id_transaction']);
-	PayPalOrder::updateOrder($id_order, $details);
 
 	$history = new OrderHistory();
 	$history->id_order = (int)$id_order;
-	$history->changeIdOrderState((int)Configuration::get('PS_OS_PAYMENT'), $history->id_order);
+		
+	if (strcmp($verified, 'VERIFIED') === 0)
+	{
+		PayPalOrder::updateOrder($id_order, $details);
+		$history->changeIdOrderState((int)Configuration::get('PS_OS_PAYMENT'), $history->id_order);
+	}
+	else
+		$history->changeIdOrderState((int)Configuration::get('PS_OS_ERROR'), $history->id_order);
+	
 	$history->addWithemail();
 	$history->save();
 }
