@@ -379,16 +379,14 @@ class ShoppingFluxExport extends Module
                         FROM `'._DB_PREFIX_.'product` p
                         '.Shop::addSqlAssociation('product', 'p').'
                         WHERE p.`active`= 1 AND p.`available_for_order`= 1
-                        '.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-                        ORDER BY pl.`name`';
+                        '.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
             }
             else
             {
                 $sql = '
 		SELECT COUNT(p.`id_product`)
 		FROM `'._DB_PREFIX_.'product` p
-		WHERE p.`active`= 1 AND p.`available_for_order`= 1
-		ORDER BY pl.`name`';
+		WHERE p.`active`= 1 AND p.`available_for_order`= 1';
             }
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
