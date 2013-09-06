@@ -38,13 +38,7 @@ if ($quantity && $quantity > 0)
 	$id_product_attribute = (int)Tools::getValue('id_product_attribute');
 	$product_quantity = Product::getQuantity($id_product, $id_product_attribute);
 	
-	if ($product_quantity <= 0)
-	{
-		$paypal = new PayPal();
-		echo $paypal->l('This product is no longer in stock with those attributes but is available with others');
-	}
-	else
-		echo $product_quantity;
+	if ($product_quantity > 0)
+		die('1');
 }
-
-die();
+die('0');

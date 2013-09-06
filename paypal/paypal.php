@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.8';
+		$this->version = '3.5.9';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -600,7 +600,8 @@ class PayPal extends PaymentModule
 
 	public function hookBackOfficeHeader()
 	{
-		if ((int)strcmp((_PS_VERSION_ < '1.5' ? Tools::getValue('configure') : Tools::getValue('module_name')), $this->name) == 0)
+		if ((strcmp(Tools::getValue('configure'), $this->name) === 0) ||
+			(strcmp(Tools::getValue('module_name'), $this->name) === 0))
 		{
 			if (_PS_VERSION_ < '1.5')
 			{
