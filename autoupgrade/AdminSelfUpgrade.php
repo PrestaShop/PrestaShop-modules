@@ -3945,7 +3945,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		//check safe_mod
 		if (!$safe_mode = @ini_get('safe_mode'))
 			$safe_mode = '';
-		$safe_mode = in_array(Tools::strtolower($safe_mode), array(1, 'on'));
+		$safe_mode = in_array(Tools14::strtolower($safe_mode), array(1, 'on'));
 
 		$this->_html .= '<th>'.$this->l('The PHP "Safe mode" option must be turned off').'</th>
 			<td>'.(!$safe_mode ? $pic_ok : $pic_warn).'</td></tr>';
