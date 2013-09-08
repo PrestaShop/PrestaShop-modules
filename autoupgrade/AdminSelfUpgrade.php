@@ -2220,91 +2220,94 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		foreach ($sqlContentVersion as $upgrade_file => $sqlContent)
 			foreach ($sqlContent as $query)
-		{
-			$query = trim($query);
-			if(!empty($query))
 			{
-				/* If php code have to be executed */
-				if (strpos($query, '/* PHP:') !== false)
+				$query = trim($query);
+				if(!empty($query))
 				{
-					/* Parsing php code */
-					$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
-					$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
-					$php = explode('::', $phpString);
-					preg_match('/\((.*)\)/', $phpString, $pattern);
-					$paramsString = trim($pattern[0], '()');
-					preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
-					if (isset($parameters[1]))
-						$parameters = $parameters[1];
-					else
-						$parameters = array();
-					if (is_array($parameters))
-						foreach ($parameters AS &$parameter)
-							$parameter = str_replace('\'', '', $parameter);
-
-					// reset phpRes to a null value
-					$phpRes = null;
-					/* Call a simple function */
-					if (strpos($phpString, '::') === false)
+					/* If php code have to be executed */
+					if (strpos($query, '/* PHP:') !== false)
 					{
-						$func_name = str_replace($pattern[0], '', $php[0]);
-						if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
+						/* Parsing php code */
+						$pos = strpos($query, '/* PHP:') + strlen('/* PHP:');
+						$phpString = substr($query, $pos, strlen($query) - $pos - strlen(' */;'));
+						$php = explode('::', $phpString);
+						preg_match('/\((.*)\)/', $phpString, $pattern);
+						$paramsString = trim($pattern[0], '()');
+						preg_match_all('/([^,]+),? ?/', $paramsString, $parameters);
+						if (isset($parameters[1]))
+							$parameters = $parameters[1];
+						else
+							$parameters = array();
+						if (is_array($parameters))
+							foreach ($parameters AS &$parameter)
+								$parameter = str_replace('\'', '', $parameter);
+	
+						// reset phpRes to a null value
+						$phpRes = null;
+						/* Call a simple function */
+						if (strpos($phpString, '::') === false)
 						{
-							$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - missing file '.$query.'</div>';
-							$this->nextErrors[] = '[ERROR] '.$upgrade_file.' PHP - missing file '.$query;
+							$func_name = str_replace($pattern[0], '', $php[0]);
+							if (version_compare(INSTALL_VERSION, '1.5.5.0', '=') && $func_name == 'fix_download_product_feature_active')
+								continue;
+
+							if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
+							{
+								$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - missing file '.$query.'</div>';
+								$this->nextErrors[] = '[ERROR] '.$upgrade_file.' PHP - missing file '.$query;
+								$warningExist = true;
+							}
+							else
+							{
+								require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php');
+								$phpRes = call_user_func_array($func_name, $parameters);
+							}
+						}
+						/* Or an object method */
+						else
+						{
+							$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
+							$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - Object Method call is forbidden ( '.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')</div>';
+							$this->nextErrors[] = '[ERROR] '.$upgrade_file.' PHP - Object Method call is forbidden ('.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')';
+							$warningExist = true;
+						}
+	
+						if (isset($phpRes) && (is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false)
+						{
+							// $this->next = 'error';
+							$this->nextQuickInfo[] = '
+								<div class="upgradeDbError">
+									[ERROR] PHP '.$upgrade_file.' '.$query.'
+									'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
+									'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']).'
+								</div>';
+							$this->nextErrors[] = '
+								[ERROR] PHP '.$upgrade_file.' '.$query.'
+								'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
+								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']);
 							$warningExist = true;
 						}
 						else
-						{
-							require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php');
-							$phpRes = call_user_func_array($func_name, $parameters);
-						}
+							$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] PHP '.$upgrade_file.' : '.$query.'</div>';
 					}
-					/* Or an object method */
-					else
+					elseif (!$this->db->execute($query, false))
 					{
-						$func_name = array($php[0], str_replace($pattern[0], '', $php[1]));
-						$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - Object Method call is forbidden ( '.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')</div>';
-						$this->nextErrors[] = '[ERROR] '.$upgrade_file.' PHP - Object Method call is forbidden ('.$php[0].'::'.str_replace($pattern[0], '', $php[1]).')';
-						$warningExist = true;
-					}
-
-					if (isset($phpRes) && (is_array($phpRes) && !empty($phpRes['error'])) || $phpRes === false)
-					{
-						// $this->next = 'error';
 						$this->nextQuickInfo[] = '
 							<div class="upgradeDbError">
-								[ERROR] PHP '.$upgrade_file.' '.$query.'
-								'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']).'
-							</div>';
-						$this->nextErrors[] = '
-							[ERROR] PHP '.$upgrade_file.' '.$query.'
-							'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-							'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']);
+							[ERROR] SQL '.$upgrade_file.'
+							'.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError().'</div>';
+						$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' ' . $this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError();
 						$warningExist = true;
 					}
 					else
-						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] PHP '.$upgrade_file.' : '.$query.'</div>';
+						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 				}
-				elseif (!$this->db->execute($query, false))
-				{
-					$this->nextQuickInfo[] = '
-						<div class="upgradeDbError">
-						[ERROR] SQL '.$upgrade_file.'
-						'.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError().'</div>';
-					$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' ' . $this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError();
-					$warningExist = true;
-				}
-				else
-					$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 			}
-		}
-		if ($this->next == 'error')
-		{
-			$this->next_desc = $this->l('An error happen during database upgrade');
-			return false;
-		}
+			if ($this->next == 'error')
+			{
+				$this->next_desc = $this->l('An error happen during database upgrade');
+				return false;
+			}
 
 		$this->nextQuickInfo[] = $this->l('Upgrade Db Ok'); // no error !
 
