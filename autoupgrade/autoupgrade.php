@@ -48,7 +48,8 @@ class Autoupgrade extends Module
 		$this->displayName = $this->l('1-click Upgrade');
 		$this->description = $this->l('Provides an automated method to upgrade your shop to the latest PrestaShop version');
 		$autoupgrade_dir = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'autoupgrade';	
-		@copy(dirname(__FILE__).DIRECTORY_SEPARATOR.'ajax-upgradetab.php', $autoupgrade_dir.DIRECTORY_SEPARATOR.'ajax-upgradetab.php');			
+		@copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'autoupgrade'.DIRECTORY_SEPARATOR.'ajax-upgradetab.php', 
+			$autoupgrade_dir.DIRECTORY_SEPARATOR.'ajax-upgradetab.php');			
 	}
 
 	public function install()
