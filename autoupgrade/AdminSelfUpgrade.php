@@ -378,6 +378,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		@set_time_limit(0);
 		@ini_set('max_execution_time', '0');
+		@ini_set('magic_quotes_runtime', '0');
 
 		global $ajax, $currentIndex;
 
