@@ -81,7 +81,7 @@
 						<a href="?q={$sPrediggoQuery}&refineOption={$oFilteringOption->getSearchRefiningOption()}{if !$bRewriteEnabled}&fc=module&module=prediggo&controller=search{/if}" class="delete_filter"></a>
 						{assign var='trans' value=$oCancellableOptionGroup->getFilteredAttributeName()}
 
-						{if isset($varTranslated.$trans)}{$varTranslated.$trans}{else}{$trans}{/if} :
+						{if isset($varTranslated.$trans)}{$varTranslated.$trans}{else}{l s=$trans mod='prediggo'}{/if} :
 
 						{if $oCancellableOptionGroup->getFilteredAttributeName() == 'sellingprice'}
 							{displayPrice price=$oFilteringOption->getRangeValueMin()} {l s='-' mod='prediggo'}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,26 +19,27 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include_once(dirname(__FILE__).'/../../../config/config.inc.php');
-include_once(dirname(__FILE__).'/../../../init.php');
-include_once(dirname(__FILE__).'/../paypal.php');
+include(dirname(__FILE__).'/../../config/config.inc.php');
+include(dirname(__FILE__).'/../../init.php');
 
-// Ajax query
-$quantity = Tools::getValue('get_qty');
+include(dirname(__FILE__).'/shoppingfluxexport.php');
 
-if ($quantity && $quantity > 0)
-{
-	/* Ajax response */
-	$id_product = (int)Tools::getValue('id_product');
-	$id_product_attribute = (int)Tools::getValue('id_product_attribute');
-	$product_quantity = Product::getQuantity($id_product, $id_product_attribute);
-	
-	if ($product_quantity > 0)
-		die('1');
-}
-die('0');
+ini_set('display_errors', 'off');
+
+$f = new ShoppingFluxExport();
+
+if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
+    die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
+
+$current = Tools::getValue('current');
+
+if (empty($current))
+    $f->initFeed ();
+else
+    $f->writeFeed ( Tools::getValue('total'),  Tools::getValue('current'),  Tools::getValue('lang'));

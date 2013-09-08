@@ -25,10 +25,11 @@ $(document).ready( function() {
 			data: { get_qty: "1", id_product: id_product, id_product_attribute: id_product_attribute },
 			cache: false,
 			success: function(result) {
-				if (result >= '1')
+				if (result == '1') {
 					$('#container_express_checkout').slideDown();
-				else
+				} else {
 					$('#container_express_checkout').slideUp();
+				}
 				return true;
 			}
 		});
