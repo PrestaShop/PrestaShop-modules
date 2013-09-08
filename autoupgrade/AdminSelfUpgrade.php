@@ -3944,7 +3944,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 		//check safe_mod
 		$this->_html .= '<th>'.$this->l('The PHP "Safe mode" option must be turned off').'</th>
-			<td>'.((!ini_get('safe_mode') || ini_get('safe_mode') == 'off')  ? $pic_ok : $pic_warn).'</td></tr>';
+			<td>'.((!ini_get('safe_mode') || ini_get('safe_mode') == 'off') ? $pic_ok : $pic_warn).'</td></tr>';
 
 		$this->_html .= '<th>'.$this->l('The PHP "allow_url_fopen" option must be turned on or CURL must be installed').'</th>
 			<td>'.((ConfigurationTest::test_fopen() || ConfigurationTest::test_curl()) ? $pic_ok : $pic_nok).'</td></tr>';
