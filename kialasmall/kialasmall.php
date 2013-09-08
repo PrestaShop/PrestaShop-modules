@@ -164,7 +164,7 @@ class Kialasmall extends Module
 			return $this->_html;
 		}
 
-		$this->_html .= '<a href="'.$this->register_link.'"><img src="'.$this->_path.'big_kiala.png"></a><br /><br />';
+		$this->_html .= '<a href="'.$this->register_link.'"><img src="'.$this->_path.'logo.png"></a><br /><br />';
 
 		$this->_displayStatus();
 		$this->_displayDescription();
