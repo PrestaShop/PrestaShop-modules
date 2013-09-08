@@ -2,7 +2,7 @@
 <module>
 	<name>kialasmall</name>
 	<displayName><![CDATA[Kiala Light webservice integration]]></displayName>
-	<version><![CDATA[1.4]]></version>
+	<version><![CDATA[1.4.1]]></version>
 	<description><![CDATA[Offer delivery choice and savings to your customers. Activate the Kiala collection Point delivery option.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

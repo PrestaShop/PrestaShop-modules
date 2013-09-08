@@ -63,7 +63,7 @@ class Kialasmall extends Module
 	{
 		$this->name		= 'kialasmall';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.4';
+		$this->version	= '1.4.1';
 		$this->compatibility_mode = version_compare(_PS_VERSION_, '1.5.0.0', '<');
 		$this->author = 'PrestaShop';
 		$this->need_instance = false;
@@ -164,7 +164,7 @@ class Kialasmall extends Module
 			return $this->_html;
 		}
 
-		$this->_html .= '<a href="'.$this->register_link.'"><img src="'.$this->_path.'big_kiala.png"></a><br /><br />';
+		$this->_html .= '<a href="'.$this->register_link.'"><img src="'.$this->_path.'logo.png"></a><br /><br />';
 
 		$this->_displayStatus();
 		$this->_displayDescription();
@@ -195,15 +195,15 @@ class Kialasmall extends Module
 		$this->_html .= '<fieldset>	<legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Kiala Module Status').'</legend>';
 		$this->_html .= '<div style="float: left; width: 80%">';
 		if (!count($alert))
-			$this->_html .= '<img src="../modules/kiala/valid.png" /><strong>'.$this->l('Kiala Module is configured and online!').'</strong>';
+			$this->_html .= '<img src="'.$this->_path.'valid.png" /><strong>'.$this->l('Kiala Module is configured and online!').'</strong>';
 		else
 		{
-			$this->_html .= '<img src="../modules/kiala/warn.png" /><strong>'.$this->l('Kiala Module is not configured yet, you must:').'</strong>';
-			$this->_html .= '<br />'.(isset($alert['registration']) ? '<img src="../modules/kiala/warn.png" />'
-				: '<img src="../modules/kiala/valid.png" />').' 1) <a href="http://www.kiala.com" style="text-decoration:underline">'
+			$this->_html .= '<img src="'.$this->_path.'warn.png" /><strong>'.$this->l('Kiala Module is not configured yet, you must:').'</strong>';
+			$this->_html .= '<br />'.(isset($alert['registration']) ? '<img src="'.$this->_path.'warn.png" />'
+				: '<img src="'.$this->_path.'valid.png" />').' 1) <a href="http://www.kiala.com" style="text-decoration:underline">'
 				.$this->l('Register an account with Kiala').'</a> '.$this->l(' then configure and activate Kiala delivery for your country (see ').' <a href="#country_settings" style="text-decoration:underline">country settings</a>'.$this->l(')');
-			$this->_html .= '<br />'.(isset($alert['allowurlfopen']) ? '<img src="../modules/kiala/warn.png" />' : '<img src="../modules/kiala/valid.png" />').' 2) '.$this->l('Allow url fopen');
-			$this->_html .= '<br />'.(isset($alert['curl']) ? '<img src="../modules/kiala/warn.png" />' : '<img src="../modules/kiala/valid.png" />').' 3) '.$this->l('Enable cURL');
+			$this->_html .= '<br />'.(isset($alert['allowurlfopen']) ? '<img src="'.$this->_path.'warn.png" />' : '<img src="'.$this->_path.'valid.png" />').' 2) '.$this->l('Allow url fopen');
+			$this->_html .= '<br />'.(isset($alert['curl']) ? '<img src="'.$this->_path.'warn.png" />' : '<img src="'.$this->_path.'valid.png" />').' 3) '.$this->l('Enable cURL');
 		}
 		$this->_html .= '</div>';
 		$this->_html .= '</fieldset><div class="clear">&nbsp;</div>';
