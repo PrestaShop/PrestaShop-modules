@@ -1081,7 +1081,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename))
 			{
 				$config_content = Tools14::file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename);
-				$config = unserialize($config_content);
+				$config = unserialize(base64_decode($config_content));
 			}
 			else
 				$config = array();
@@ -1101,7 +1101,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 */
 	public function resetConfig($new_config)
 	{
-		return (bool)@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename, serialize($new_config));
+		return (bool)@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename, base64_encode(serialize($new_config)));
 	}
 
 	/**
@@ -1116,11 +1116,15 @@ class AdminSelfUpgrade extends AdminSelfTab
 			return $this->resetConfig($new_config);
 
 		$config = file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename);
-		$config = unserialize($config);
+		$config_unserialized = @unserialize(base64_decode($config));
+		if (!is_array($config_unserialized))
+			$config_unserialized = @unserialize($config); // retrocompat, before base64_decode implemented
+		$config = $config_unserialized;
+
 		foreach($new_config as $key => $val)
 			$config[$key] = $val;
 		$this->next_desc = $this->l('Configuration successfully updated,').' <strong>'.$this->l('this page will now be reloaded and the module will check if a new version is available').'</strong>';
-		return (bool)@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename, serialize($config));
+		return (bool)@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename, base64_encode(serialize($config)));
 	}
 
 	/**
@@ -1303,7 +1307,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 		else
 		{
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->diffFileList, serialize($diffFileList));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->diffFileList, base64_encode(serialize($diffFileList)));
 			if (count($diffFileList) > 0)
 				$this->nextParams['msg'] = sprintf($this->l('%1$s files will be modified, %2$s files will be deleted (if they are found).'),
 																	 count($diffFileList['modified']), count($diffFileList['deleted']));
@@ -1350,11 +1354,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 			if (!isset($changedFileList['translation']))
 				$changedFileList['translation'] = array();
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->tradCustomList,serialize($changedFileList['translation']));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->tradCustomList, base64_encode(serialize($changedFileList['translation'])));
 
 			if (!isset($changedFileList['mail']))
 				$changedFileList['mail'] = array();
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->mailCustomList,serialize($changedFileList['mail']));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->mailCustomList, base64_encode(serialize($changedFileList['mail'])));
 
 
 			if ($changedFileList === false)
@@ -1613,7 +1617,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$filepath_list_diff = $this->autoupgradePath.DIRECTORY_SEPARATOR.$this->diffFileList;
 			if (file_exists($filepath_list_diff))
 			{
-				$list_files_diff = unserialize(file_get_contents($filepath_list_diff));
+				$list_files_diff = unserialize(base64_decode(file_get_contents($filepath_list_diff)));
 				// only keep list of files to delete. The modified files will be listed with _listFilesToUpgrade
 				$list_files_diff = $list_files_diff['deleted'];
 				foreach ($list_files_diff as $k => $path)
@@ -1631,7 +1635,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			// also add files to remove
 			$list_files_to_upgrade = array_merge($list_files_diff, $list_files_to_upgrade);
 			// save in a serialized array in $this->toUpgradeFileList
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeFileList,serialize($list_files_to_upgrade));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeFileList, base64_encode(serialize($list_files_to_upgrade)));
 			$this->nextParams['filesToUpgrade'] = $this->toUpgradeFileList;
 			$total_files_to_upgrade = count($list_files_to_upgrade);
 
@@ -1656,7 +1660,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		// upgrade files one by one like for the backup
 		// with a 1000 loop because it's funny
 		$this->next = 'upgradeFiles';
-		$filesToUpgrade = @unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['filesToUpgrade']));
+		$filesToUpgrade = @unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['filesToUpgrade'])));
 		if (!is_array($filesToUpgrade))
 		{
 			$this->next = 'error';
@@ -1689,7 +1693,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				break;
 			}
 		}
-		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['filesToUpgrade'], serialize($filesToUpgrade));
+		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['filesToUpgrade'], base64_encode(serialize($filesToUpgrade)));
 		if (count($filesToUpgrade) > 0)
 		{
 			$this->next_desc = sprintf($this->l('%1$s files left to upgrade.'), count($filesToUpgrade));
@@ -1753,7 +1757,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						$list[] = array('id' => $id_addons, 'name' => $module_name);
 			}
 		}
-		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList,serialize($list));
+		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList, base64_encode(serialize($list)));
 		$this->nextParams['modulesToUpgrade'] = $this->toUpgradeModuleList;
 		return count($list);
 	}
@@ -1781,7 +1785,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		$this->next = 'upgradeModules';
 		if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['modulesToUpgrade']))
-			$listModules = @unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['modulesToUpgrade']));
+			$listModules = @unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->nextParams['modulesToUpgrade'])));
 		else
 			$listModules = array();
 
@@ -1809,7 +1813,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			while (($time_elapsed < self::$loopUpgradeModulesTime) && count($listModules) > 0);
 
 			$modules_left = count($listModules);
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList, serialize($listModules));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList, base64_encode(serialize($listModules)));
 			unset($listModules);
 			
 			//deactivate backward_compatibility, not used in 1.5.X
@@ -2801,7 +2805,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$fromArchive = $this->_listArchivedFiles($this->backupPath.DIRECTORY_SEPARATOR.$this->restoreFilesFilename);
 			foreach($fromArchive as $k => $v)
 				$fromArchive[$k] = '/'.$v;
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList, serialize($fromArchive));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList, base64_encode(serialize($fromArchive)));
 			// get list of files to remove
 			$toRemove = $this->_listFilesToRemove();
 			// let's reverse the array in order to make possible to rmdir
@@ -2811,7 +2815,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$toRemove[$k] = str_replace($this->prodRootDir, '', $v);
 
 			$this->nextQuickInfo[] = sprintf($this->l('%s file(s) will be removed before restoring backup files'), count($toRemove));
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, serialize($toRemove));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, base64_encode(serialize($toRemove)));
 
 			if ($fromArchive === false || $toRemove === false)
 			{
@@ -2833,7 +2837,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		// first restoreFiles step
 		if (!isset($toRemove))
-			$toRemove = unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList));
+			$toRemove = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList)));
 
 		if (count($toRemove) > 0)
 		{
@@ -2846,7 +2850,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$this->next = 'restoreFiles';
 					$this->next_desc = $this->l('Files from upgrade has been removed.');
 					$this->nextQuickInfo[] = $this->l('files from upgrade has been removed.');
-					@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, serialize($toRemove));
+					@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, base64_encode(serialize($toRemove)));
 					return true;
 				}
 				else
@@ -2880,7 +2884,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						$this->nextQuickInfo[] = sprintf('[NOTICE] %s does not exists', $filename);
 				}
 			}
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, serialize($toRemove));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRemoveFileList, base64_encode(serialize($toRemove)));
 			$this->next_desc = sprintf($this->l('%s left to remove'), count($toRemove));
 			$this->next = 'restoreFiles';
 			return true;
@@ -2889,7 +2893,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		// very second restoreFiles step : extract backup
 		// if (!isset($fromArchive))
-		//	$fromArchive = unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList));
+		//	$fromArchive = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->fromArchiveFileList)));
 		$filepath = $this->backupPath.DIRECTORY_SEPARATOR.$this->restoreFilesFilename;
 		$destExtract = $this->prodRootDir;
 		if ($this->ZipExtract($filepath, $destExtract))
@@ -3039,13 +3043,13 @@ class AdminSelfUpgrade extends AdminSelfTab
 				unset($all_tables);
 				$listQuery = array_merge($drops, $listQuery);
 			}
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, serialize($listQuery));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, base64_encode(serialize($listQuery)));
 		}
 
 		// handle current backup file
 		if (!isset($listQuery))
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList))
-				$listQuery = unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList));
+				$listQuery = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList)));
 			else
 				$listQuery = array();
 
@@ -3106,7 +3110,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			unset($query);
 			$queries_left = count($listQuery);
 
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, serialize($listQuery));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, base64_encode(serialize($listQuery)));
 			unset($listQuery);
 			$this->next = 'restoreDb';
 			$this->next_desc = sprintf($this->l('%1$s queries left for file %2$s...'), $queries_left, $this->nextParams['dbStep']);
@@ -3177,11 +3181,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 			}
 			$this->nextParams['dbStep'] = 0;
 			$tablesToBackup = $this->db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%"', true, false);
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList, serialize($tablesToBackup));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList, base64_encode(serialize($tablesToBackup)));
 		}
 
 		if (!isset($tablesToBackup))
-			$tablesToBackup = unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList));
+			$tablesToBackup = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList)));
 		$found = 0;
 		$views = '';
 
@@ -3373,7 +3377,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			fclose($fp);
 			unset($fp);
 		}
-		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList, serialize($tablesToBackup));
+		@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupDbList, base64_encode(serialize($tablesToBackup)));
 		if (count($tablesToBackup) > 0){
 			$this->nextQuickInfo[] = sprintf($this->l('%1$s tables has been saved.'), $found);
 			$this->next = 'backupDb';
@@ -3437,7 +3441,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			// @todo : only add files and dir listed in "originalPrestashopVersion" list
 			$filesToBackup = $this->_listFilesInDir($this->prodRootDir, 'backup', false);
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList, serialize($filesToBackup));
+			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList, base64_encode(serialize($filesToBackup)));
 
 			$this->nextQuickInfo[] = sprintf($this->l('%s Files to backup.'), count($this->toBackupFileList));
 			$this->nextParams['filesForBackup'] = $this->toBackupFileList;
@@ -3448,7 +3452,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 			$this->nextQuickInfo[]	= sprintf($this->l('backup files initialized in %s'), $this->backupFilesFilename);
 		}
-		$filesToBackup = unserialize(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList));
+		$filesToBackup = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList)));
 
 		$this->next = 'backupFiles';
 		$this->next_desc = sprintf($this->l('Backup files in progress. %d files left'), count($filesToBackup));
@@ -3527,7 +3531,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					}
 				}
 
-				@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList,serialize($filesToBackup));
+				@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toBackupFileList, base64_encode(serialize($filesToBackup)));
 				return true;
 			}
 			else{
