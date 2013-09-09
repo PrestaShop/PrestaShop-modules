@@ -192,8 +192,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public $toRestoreQueryList = 'queryToRestore.list';
 	/**
 	 * during restoreFiles process,
-	 * this file contains difference between files present in a backupFiles archive
-	 * and files currently in directories, in a serialized array.
+	 * this file contains difference between queryToRestore and queries present in a backupFiles archive
 	 * (this file is deleted in init() method if you reload the page)
 	 * @var string
 	 */
@@ -2951,71 +2950,75 @@ class AdminSelfUpgrade extends AdminSelfTab
 	}
 	/**
 	 * try to restore db backup file
-	 * @return type : hey , what you expect ? well mysql errors array .....
 	 */
 	public function ajaxProcessRestoreDb()
 	{
 		$skip_ignore_tables = false;
+		$ignore_stats_table = array(
+			_DB_PREFIX_.'connections',
+			_DB_PREFIX_.'connections_page',
+			_DB_PREFIX_.'connections_source',
+			_DB_PREFIX_.'guest',
+			_DB_PREFIX_.'statssearch'
+		);
 		$this->nextParams['dbStep'] = $this->currentParams['dbStep'];
 		$start_time = time();
 		$db = $this->db;
+		$listQuery = array();
+		$errors = array();
+
+		// deal with running backup rest if exist
+		if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList))
+			$listQuery = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList)));
+
 		// deal with the next files stored in restoreDbFilenames
-		if (is_array($this->restoreDbFilenames) && count($this->restoreDbFilenames) > 0)
+		if (empty($listQuery) && is_array($this->restoreDbFilenames) && count($this->restoreDbFilenames) > 0)
 		{
 			$currentDbFilename = array_shift($this->restoreDbFilenames);
 			if (!preg_match('#auto-backupdb_([0-9]{6})_#', $currentDbFilename, $match))
 			{
 				$this->next = 'error';
-				$this->next_desc = $this->l(sprintf('%s : File format does not match', $currentDbFilename));
+				$this->error = 1;
+				$this->nextQuickInfo[] = $this->next_desc = $this->l(sprintf('%s : File format does not match', $currentDbFilename));
 				return false;
 			}
-
 			$this->nextParams['dbStep'] = $match[1];
 			$backupdb_path = $this->backupPath.DIRECTORY_SEPARATOR.$this->restoreName;
 
 			$dot_pos = strrpos($currentDbFilename, '.');
 			$fileext = substr($currentDbFilename, $dot_pos+1);
 			$requests = array();
-			$errors = array();
 			$content = '';
+
+			$this->nextQuickInfo[] = $this->l(sprintf('Opening backup db %1s in %2s mode', $currentDbFilename, $fileext));
+
 			switch ($fileext)
 			{
 				case 'bz':
 				case 'bz2':
-					$this->nextQuickInfo[] = 'opening backup db in bz mode';
 					if ($fp = bzopen($backupdb_path.DIRECTORY_SEPARATOR.$currentDbFilename, 'r'))
-					{
 						while(!feof($fp))
 							$content .= bzread($fp, 4096);
-					}
 					else
-						die("error when trying to open in bzmode");
+						die("error when trying to open in %s mode"); // @todo : handle error
 					break;
 				case 'gz':
-					$this->nextQuickInfo[] = 'opening backup db in gz mode';
 					if ($fp = gzopen($backupdb_path.DIRECTORY_SEPARATOR.$currentDbFilename, 'r'))
-					{
 						while(!feof($fp))
 							$content .= gzread($fp, 4096);
-						gzclose($fp);
-					}
+					gzclose($fp);
 					break;
-					// default means sql ?
 				default :
-					$this->nextQuickInfo[] = 'opening backup db in txt mode';
 					if ($fp = fopen($backupdb_path.DIRECTORY_SEPARATOR.$currentDbFilename, 'r'))
-					{
 						while(!feof($fp))
 							$content .= fread($fp, 4096);
-						fclose($fp);
-					}
+					fclose($fp);
 			}
 			$currentDbFilename = '';
 
-			if ($content == '')
+			if (empty($content))
 			{
-				$this->nextQuickInfo[] = $this->l('database backup is empty');
-				$this->nextErrors[] = $this->l('database backup is empty');
+				$this->nextQuickInfo[] = $this->nextErrors[] = $this->l('database backup is empty');
 				$this->next = 'rollback';
 				return false;
 			}
@@ -3025,18 +3028,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 			// option s (PCRE_DOTALL) added
 			$listQuery = preg_split('/;[\n\r]+/Usm', $content);
 			unset($content);
+
 			// @TODO : drop all old tables (created in upgrade)
 			// This part has to be executed only onces (if dbStep=0)
 			if ($this->nextParams['dbStep'] == '1')
 			{
 				$all_tables = $this->db->executeS('SHOW TABLES LIKE "'._DB_PREFIX_.'%"', true, false);
-				$ignore_stats_table = array(
-					_DB_PREFIX_.'connections',
-					_DB_PREFIX_.'connections_page',
-					_DB_PREFIX_.'connections_source',
-					_DB_PREFIX_.'guest',
-					_DB_PREFIX_.'statssearch'
-				);
 				$drops = array();
 				foreach ($all_tables as $k => $v)
 				{
@@ -3049,42 +3046,32 @@ class AdminSelfUpgrade extends AdminSelfTab
 			}
 			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, base64_encode(serialize($listQuery)));
 		}
-
-		// handle current backup file
-		if (!isset($listQuery))
-			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList))
-				$listQuery = unserialize(base64_decode(file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList)));
-			else
-				$listQuery = array();
-
 		// @todo : error if listQuery is not an array (that can happen if toRestoreQueryList is empty for example)
 		$time_elapsed = time() - $start_time;
 		if (is_array($listQuery) && (count($listQuery) > 0))
 		{
 			do
 			{
-				if (count($listQuery)<=0)
+				if (count($listQuery) == 0)
 				{
-					@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList);
-					$currentDbFilename = '';
-					if (count($this->restoreDbFilenames) > 0)
-					{
-						$this->stepDone = true;
-						$this->status = 'ok';
-						$this->next = 'restoreDb';
+					if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList))
+						@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList);
+
+					if (count($this->restoreDbFilenames))
 						$this->next_desc = sprintf($this->l('Database restoration file %1$s done. %2$s left ...'), $this->nextParams['dbStep'], count($this->restoreDbFilenames));
-						$this->nextQuickInfo[] = sprintf('Database restoration file %1$s done. %2$s left ...', $this->nextParams['dbStep'], count($this->restoreDbFilenames));
-						return true;
-					}
-					else
+					elseif (count($this->restoreDbFilenames) == 0)
+						$this->next_desc = sprintf($this->l('Database restoration file %1$s done.'), $this->nextParams['dbStep']);
+
+					$this->nextQuickInfo[] = $this->next_desc;
+					$this->stepDone = true;
+					$this->status = 'ok';
+					$this->next = 'restoreDb';
+					if (count($this->restoreDbFilenames) == 0)
 					{
-						$this->stepDone = true;
-						$this->status = 'ok';
 						$this->next = 'rollbackComplete';
-						$this->next_desc = $this->l('Database restoration done.');
-						$this->nextQuickInfo[] = $this->l('database has been restored.');
-						return true;
+						$this->nextQuickInfo[] = $this->next_desc = $this->l('Database has been restored.');
 					}
+					return true;
 				}
 				// filesForBackup already contains all the correct files
 				if (count($listQuery) == 0)
@@ -3092,43 +3079,45 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 				$query = array_shift($listQuery);
 				if (!empty($query))
-				{
 					if (!$this->db->execute($query, false))
 					{
 						if (is_array($listQuery))
 							$listQuery = array_unshift($listQuery, $query);
-						$this->nextQuickInfo[] = '[SQL ERROR] '.$query.' - '.$this->db->getMsgError();
 						$this->nextErrors[] = '[SQL ERROR] '.$query.' - '.$this->db->getMsgError();
+						$this->nextQuickInfo[] = '[SQL ERROR] '.$query.' - '.$this->db->getMsgError();
 						$this->next = 'error';
-						$this->next_desc = $this->l('error during database restoration');
+						$this->error = 1;
+						$this->next_desc = $this->l('Error during database restoration');
 						return false;
 					}
 					// note : theses queries can be too big and can cause issues for display
 					// else
 					// $this->nextQuickInfo[] = '[OK] '.$query;
-				}
 
 				$time_elapsed = time() - $start_time;
 			}
 			while ($time_elapsed < self::$loopRestoreQueryTime);
-			unset($query);
+
 			$queries_left = count($listQuery);
 
-			@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, base64_encode(serialize($listQuery)));
+			if ($queries_left > 0)
+				@file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList, base64_encode(serialize($listQuery)));
+			elseif (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList))
+				@unlink($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toRestoreQueryList);
+				
+			$this->stepDone = false;
+			$this->next = 'restoreDb';	
+			$this->nextQuickInfo[] = $this->next_desc = sprintf($this->l('%1$s queries left for file %2$s...'), $queries_left, $this->nextParams['dbStep']);
+			unset($query);
 			unset($listQuery);
-			$this->next = 'restoreDb';
-			$this->next_desc = sprintf($this->l('%1$s queries left for file %2$s...'), $queries_left, $this->nextParams['dbStep']);
 		}
 		else
 		{
 			$this->stepDone = true;
 			$this->status = 'ok';
 			$this->next = 'rollbackComplete';
-			$this->next_desc = $this->l('Database restoration done.');
-			$this->nextQuickInfo[] = $this->l('database has been restored.');
-			return true;
+			$this->nextQuickInfo[] = $this->next_desc = $this->l('Database restoration done.');
 		}
-
 		return true;
 	}
 
@@ -3155,6 +3144,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->nextQuickInfo[] = 'Backup directory is not writeable ';
 			$this->nextErrors[] = 'Backup directory is not writeable "'.$this->backupPath.'"';
 			$this->next = 'error';
+			$this->error = 1;
 			return false;
 		}
 
@@ -3227,8 +3217,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (file_exists($backupfile))
 				{
 					$this->next = 'error';
-					$this->nextQuickInfo[] = sprintf($this->l('backupfile %s already exists. Operation aborted.'), $backupfile);
+					$this->error = 1;
 					$this->nextErrors[] = sprintf($this->l('backupfile %s already exists. Operation aborted.'), $backupfile);
+					$this->nextQuickInfo[] = sprintf($this->l('backupfile %s already exists. Operation aborted.'), $backupfile);
 				}
 
 				if (function_exists('bzopen'))
@@ -3246,9 +3237,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 				if ($fp === false)
 				{
-					$this->nextQuickInfo[] = sprintf($this->l('Unable to create backup db file %s'), addslashes($backupfile));
 					$this->nextErrors[] = sprintf($this->l('Unable to create backup db file %s'), addslashes($backupfile));
+					$this->nextQuickInfo[] = sprintf($this->l('Unable to create backup db file %s'), addslashes($backupfile));	
 					$this->next = 'error';
+					$this->error = 1;
 					$this->next_desc = $this->l('Error during database backup.');
 					return false;
 				}
@@ -3275,9 +3267,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 				{
 					fclose($fp);
 					@unlink($backupfile);
-					$this->nextQuickInfo[] = sprintf($this->l('An error occurred while backing up. Unable to obtain the schema of %s'), $table);
 					$this->nextErrors[] = sprintf($this->l('An error occurred while backing up. Unable to obtain the schema of %s'), $table);
+					$this->nextQuickInfo[] = sprintf($this->l('An error occurred while backing up. Unable to obtain the schema of %s'), $table);
 					$this->next = 'error';
+					$this->error = 1;
 					$this->next_desc = $this->l('Error during database backup.');
 					return false;
 				}
@@ -3394,9 +3387,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (isset($backupfile))
 				@unlink($backupfile);
-			$this->nextQuickInfo[] = $this->l('No valid tables were found to backup. Backup cancelled.');
-			$this->nextErrors[] = $this->l('No valid tables were found to backup. Backup cancelled.');
+			$this->nextQuickInfo[] = $this->nextErrors[] = $this->l('No valid tables were found to backup. Backup cancelled.');
 			$this->next = 'error';
+			$this->error = 1;
 			$this->next_desc = $this->l('Error during database backup.');
 			return false;
 		}
@@ -3435,9 +3428,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (empty($this->backupFilesFilename))
 		{
 			$this->next = 'error';
+			$this->error = 1;
 			$this->next_desc = $this->l('error during backupFiles');
-			$this->nextQuickInfo[] = '[ERROR] backupFiles filename has not been set';
-			$this->nextErrors[] = '[ERROR] backupFiles filename has not been set';
+			$this->nextQuickInfo[] = $this->nextErrors[] = '[ERROR] backupFiles filename has not been set';
 			return false;
 		}
 
@@ -3510,6 +3503,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 							if (file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
 								@unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
 							$this->next = 'error';
+							$this->error = 1;
 							$this->next_desc = sprintf($this->l('error when trying to add %1$s to archive %2$s.', 'AdminSelfUpgrade', true),$file, $archiveFilename);
 							break;
 						}
@@ -3770,8 +3764,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (isset(self::$skipAction[$action]))
 			{
 				$this->next = self::$skipAction[$action];
-				$this->next_desc = sprintf($this->l('action %s skipped'),$action);
-				$this->nextQuickInfo[] = sprintf($this->l('action %s skipped'),$action);
+				$this->nextQuickInfo[] = $this->next_desc = sprintf($this->l('action %s skipped'),$action);
 				unset($_POST['action']);
 			}
 			else if (!method_exists(get_class($this), 'ajaxProcess'.$action))
