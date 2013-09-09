@@ -3000,7 +3000,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						while(!feof($fp))
 							$content .= bzread($fp, 4096);
 					else
-						die("error when trying to open in %s mode"); // @todo : handle error
+						die("error when trying to open in bzmode"); // @todo : handle error
 					break;
 				case 'gz':
 					if ($fp = gzopen($backupdb_path.DIRECTORY_SEPARATOR.$currentDbFilename, 'r'))
