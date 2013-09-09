@@ -3018,7 +3018,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 			if (empty($content))
 			{
-				$this->nextQuickInfo[] = $this->nextErrors[] = $this->l('database backup is empty');
+				$this->nextErrors[] = $this->l('database backup is empty');				
+				$this->nextQuickInfo[] = $this->l('database backup is empty');
 				$this->next = 'rollback';
 				return false;
 			}
@@ -3387,7 +3388,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (isset($backupfile))
 				@unlink($backupfile);
-			$this->nextQuickInfo[] = $this->nextErrors[] = $this->l('No valid tables were found to backup. Backup cancelled.');
+			$this->nextErrors[] = $this->l('No valid tables were found to backup. Backup cancelled.');
+			$this->nextQuickInfo[] = $this->l('No valid tables were found to backup. Backup cancelled.');
 			$this->next = 'error';
 			$this->error = 1;
 			$this->next_desc = $this->l('Error during database backup.');
@@ -3430,7 +3432,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next = 'error';
 			$this->error = 1;
 			$this->next_desc = $this->l('error during backupFiles');
-			$this->nextQuickInfo[] = $this->nextErrors[] = '[ERROR] backupFiles filename has not been set';
+			$this->nextErrors[] = '[ERROR] backupFiles filename has not been set';
+			$this->nextQuickInfo[] = '[ERROR] backupFiles filename has not been set';
 			return false;
 		}
 
