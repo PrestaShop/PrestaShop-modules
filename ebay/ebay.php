@@ -1882,7 +1882,7 @@ class Ebay extends Module
 				$context_id = Shop::getContextShopID();
 				break;
 			case Shop::CONTEXT_GROUP:
-				$context_id = Shop::getContextShopID();
+				$context_id = Shop::getContextShopGroupID();
 				break;
 		}
 
