@@ -72,7 +72,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.5.1';
+		$this->version = '1.5.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -125,13 +125,16 @@ class Ebay extends Module
 		// Check if installed
 		if (self::isInstalled($this->name))
 		{
-			// Check the country
-			$this->ebay_country = new EbayCountrySpec();
-
-			if (!$this->ebay_country->checkCountry())
+			if(class_exists('EbayCountrySpec'))
 			{
-				$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
-				return false;
+				// Check the country
+				$this->ebay_country = new EbayCountrySpec();
+
+				if (!$this->ebay_country->checkCountry())
+				{
+					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
+					return false;
+				}
 			}
 
 			// Upgrade eBay module
@@ -1879,7 +1882,7 @@ class Ebay extends Module
 				$context_id = Shop::getContextShopID();
 				break;
 			case Shop::CONTEXT_GROUP:
-				$context_id = Shop::getContextShopID();
+				$context_id = Shop::getContextShopGroupID();
 				break;
 		}
 
