@@ -113,10 +113,24 @@ class Kialasmall extends Module
 				$kiala_country->preparation_delay = $this->default_preparation_delay;
 				$kiala_country->active = 0;
 				// Is this the merchant home country?
-				if ($id_country == Country::getByIso('ES'))
+				switch($id_country)
 				{
-					$kiala_country->pickup_country = 1;
-					$kiala_country->dspid = '34600160';
+					case Country::getByIso('BE'): 
+						$kiala_country->pickup_country = 1;
+						$kiala_country->dspid = '32600160';
+						break;
+					case Country::getByIso('FR'): 
+						$kiala_country->pickup_country = 1;
+						$kiala_country->dspid = '33600500';
+						break;
+					case Country::getByIso('NL'): 
+						$kiala_country->pickup_country = 1;
+						$kiala_country->dspid = '31600160';
+						break;
+                    default:
+                        $kiala_country->pickup_country = 1;
+						$kiala_country->dspid = '34600160';
+						break;
 				}
 				$kiala_country->save();
 			}
