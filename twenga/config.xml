@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<module>
-	<name>twenga</name>
-	<displayName><![CDATA[Twenga API]]></displayName>
-	<version><![CDATA[1.8.7]]></version>
-	<description><![CDATA[Export your products to Twenga Shopping Search Engine and get new online buyers immediately.]]></description>
-	<author><![CDATA[PrestaShop]]></author>
-	<tab><![CDATA[smart_shopping]]></tab>
-	<is_configurable>1</is_configurable>
-	<need_instance>1</need_instance>
+        <module>
+            <name>twenga</name>
+            <displayName><![CDATA[l&#039;API de Twenga]]></displayName>
+            <version><![CDATA[1.6]]></version>
+            <description><![CDATA[Exportez tr&egrave;s facilement vos produits sur Twenga et captez imm&eacute;diatement de nouveaux acheteurs !]]></description>
+            <author><![CDATA[PrestaShop]]></author>
+            <tab><![CDATA[smart_shopping]]></tab>
+            <is_configurable>1</is_configurable>
+            <need_instance>1</need_instance>
 	<limited_countries></limited_countries>
-</module>
+        </module>
