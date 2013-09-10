@@ -49,9 +49,11 @@ class Kialasmall extends Module
 		'shipping_handling' => false,
 		'range_behavior' => 0,
 		'is_module' => false,
-		'delay' => array('fr' => 'Livraison en point relais Kiala',
-						 'en' => 'Delivery at Kiala points',
-						 'es' => 'Entrega en el punto Kiala'),
+		'delay' => array(
+			'fr' => 'Livraison en point relais Kiala',
+			'en' => 'Delivery at Kiala points',
+			'es' => 'Entrega en el punto Kiala'
+		),
 		'is_module' => true,
 		'shipping_external'=> true,
 		'external_module_name'=> 'kialasmall',
@@ -61,9 +63,9 @@ class Kialasmall extends Module
 
 	public function __construct()
 	{
-		$this->name		= 'kialasmall';
-		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.4.1';
+		$this->name = 'kialasmall';
+		$this->tab = 'shipping_logistics';
+		$this->version = '1.4.1';
 		$this->compatibility_mode = version_compare(_PS_VERSION_, '1.5.0.0', '<');
 		$this->author = 'PrestaShop';
 		$this->need_instance = false;
@@ -127,8 +129,8 @@ class Kialasmall extends Module
 						$kiala_country->pickup_country = 1;
 						$kiala_country->dspid = '31600160';
 						break;
-                    default:
-                        $kiala_country->pickup_country = 1;
+					default:
+						$kiala_country->pickup_country = 1;
 						$kiala_country->dspid = '34600160';
 						break;
 				}
@@ -206,7 +208,7 @@ class Kialasmall extends Module
 			$alert['curl'] = 1;
 
 		// Displaying page
-		$this->_html .= '<fieldset>	<legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Kiala Module Status').'</legend>';
+		$this->_html .= '<fieldset><legend><img src="'.$this->_path.'logo.gif" alt="" /> '.$this->l('Kiala Module Status').'</legend>';
 		$this->_html .= '<div style="float: left; width: 80%">';
 		if (!count($alert))
 			$this->_html .= '<img src="'.$this->_path.'valid.png" /><strong>'.$this->l('Kiala Module is configured and online!').'</strong>';
