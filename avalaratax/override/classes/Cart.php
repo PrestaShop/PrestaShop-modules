@@ -59,7 +59,14 @@ class Cart extends CartCore
 
 		/* If there is no cache or cache expired, we regenerate it */
 		if (CacheTools::checkCarrierCache($this))
-			CacheTools::updateCarrierTax($avalara, $this, $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $use_tax);
+		{
+			$region = Db::getInstance()->getValue('
+			SELECT s.`iso_code`
+			FROM '._DB_PREFIX_.'address a
+			LEFT JOIN '._DB_PREFIX_.'state s ON (s.`id_state` = a.`id_state`)
+			WHERE a.`id_address` = '.(int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			CacheTools::updateCarrierTax($avalara, $this, $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $region, $use_tax);
+		}
 
 		/* If we do already know it, then return it */
 		return $tax_excluded_cost + (float)CacheTools::getCarrierTaxAmount($this);
@@ -97,7 +104,14 @@ class Cart extends CartCore
 
 		/* If there is no cache or cache expired, we regenerate it */
 		if (CacheTools::checkCarrierCache($this))
-			CacheTools::updateCarrierTax($avalara, $this, $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		{
+			$region = Db::getInstance()->getValue('
+			SELECT s.`iso_code`
+			FROM '._DB_PREFIX_.'address a
+			LEFT JOIN '._DB_PREFIX_.'state s ON (s.`id_state` = a.`id_state`)
+			WHERE a.`id_address` = '.(int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			CacheTools::updateCarrierTax($avalara, $this, $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $region);
+		}
 
 		/* If we do already know it, then return it */
 		return $tax_excluded_cost + (float)CacheTools::getCarrierTaxAmount($this);

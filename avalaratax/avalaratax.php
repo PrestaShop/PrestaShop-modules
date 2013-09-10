@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.3.0';
+		$this->version = '3.4.2';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -89,7 +89,8 @@ class AvalaraTax extends Module
 		`id_address` int(10) unsigned NOT NULL,
 		`update_date` datetime,
 		PRIMARY KEY (`id_cache`),
-		UNIQUE (`id_product`, `region`))
+		UNIQUE (`id_product`, `region`),
+		KEY `id_product2` (`id_product`,`region`,`id_address`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') ||
 			!Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'avalara_carrier_cache` (
@@ -102,7 +103,7 @@ class AvalaraTax extends Module
 		`id_cart` int(10) unsigned NOT NULL,
 		`cart_hash` varchar(32) DEFAULT NULL,
 		PRIMARY KEY (`id_cache`),
-		UNIQUE (`id_cart`))
+		KEY `cart_hash` (`cart_hash`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8')||
 			!Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'avalara_returned_products` (
@@ -985,9 +986,9 @@ else
 		$client = new TaxServiceSoap(Configuration::get('AVALARATAX_MODE'));
 		$request = new GetTaxRequest();
 
-		if (isset($params['cart']) && (int)$params['cart']->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
-			$address = new Address((int)$params['cart']->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-		elseif (isset($this->context->cookie) && isset($this->contract->cookie->id_customer) && $this->context->cookie->id_customer)
+		if (isset($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}))
+			$address = new Address((int)$this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		elseif (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer)
 			$address = new Address((int)Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address`	WHERE `id_customer` = '.(int)$this->context->cookie->id_customer.' AND active = 1 AND deleted = 0'));
 
 		if (isset($address))
@@ -1375,6 +1376,7 @@ else
 		$address->region = isset($_POST['region']) ? $_POST['region'] : null;
 		$address->postcode = isset($_POST['postcode']) ? $_POST['postcode'] : null;
 		$address->id_country = isset($_POST['id_country']) ? $_POST['id_country'] : null;
+		$address->id_state = isset($_POST['id_state']) ? (int)$_POST['id_state'] : null;
 
 		/* Validate address */
 		if ($address->id_country == Country::getByIso('US'))

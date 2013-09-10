@@ -109,6 +109,6 @@ $cc = 1;
 if ($pc)
 	CacheTools::updateProductsTax($avalaraModule, $cart, (int)$_POST['id_address'], $region, $taxable);
 if ($cc)
-	CacheTools::updateCarrierTax($avalaraModule, $cart, (int)$_POST['id_address'], $taxable);
+	CacheTools::updateCarrierTax($avalaraModule, $cart, (int)$_POST['id_address'], $region, $taxable);
 
 die('{"hasError":false, "cached_tax":false, "total_tax":"'.Tools::displayPrice($cart->getOrderTotal() - $cart->getOrderTotal(false)).'"}');
