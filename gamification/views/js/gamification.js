@@ -60,7 +60,8 @@ function initHeaderNotification(html)
 			}
 		}
 	});
-	$('.dropdown-toggle').dropdown();
+	if ($('.dropdown-toggle').length)
+		$('.dropdown-toggle').dropdown();
 }
 
 function disabledGamificationNotification()
