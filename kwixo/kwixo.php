@@ -143,7 +143,7 @@ class Kwixo extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'kwixo';
-		$this->version = '6.1';
+		$this->version = '6.2';
 		$this->tab = 'payments_gateways';
 
 		parent::__construct();
