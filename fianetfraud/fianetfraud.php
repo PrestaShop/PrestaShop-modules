@@ -153,7 +153,7 @@ class fianetfraud extends Module
 		$tab_controller_main->id_parent = $tab_admin_order_id;
 		$tab_controller_main->module = $this->name;
 		$tab_controller_main->add();
-		$tab_controller_main->move(Tab::getNewLastPosition(0));
+		$tab_controller_main->move($this->getNewLastPosition(0));
 
 		return (parent::install()
 			&& $this->registerHook('newOrder')
@@ -283,7 +283,7 @@ class fianetfraud extends Module
 		{
 			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_type'), array_merge(array_keys($this->_carrier_types), array('0'))))
 				$this->_errors[] = $this->l('Invalid carrier type for carrier:')." '".$shop_carrier['name']."'";
-			
+
 			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_speed'), array_merge(array_keys($this->_carrier_speeds), array('0'))))
 				$this->_errors[] = $this->l('Invalid carrier speed for carrier:')." '".$shop_carrier['name']."'";
 		}
@@ -919,7 +919,7 @@ class fianetfraud extends Module
 			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
 		else
 			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
-			
+
 
 		//if the order is to be delivered at home: element <utilisateur type="livraison"...> has to be added
 		if ($carrier_type == 4)
@@ -1029,22 +1029,26 @@ class fianetfraud extends Module
 		//defines the real certissim carrier type (depends on PS version)
 		elseif (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types))){
+			if (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop), array_keys($this->_carrier_types)))
+			{
 				$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
 				$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED', null, null, $order->id_shop);
 			}
 			//if selected carrier fianet type not defined, uses the default one
-			else{
+			else
+			{
 				$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE', null, null, $order->id_shop);
 				$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED', null, null, $order->id_shop);
 			}
 		//if selected carrier fianet type is defined, the type used will be the one got in the Configuration
-		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types))){
+		elseif (in_array(Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE'), array_keys($this->_carrier_types)))
+		{
 			$real_carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
 			$real_carrier_speed = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_SPEED');
 		}
 		//if selected carrier fianet type not defined, uses the default one
-		else{
+		else
+		{
 			$real_carrier_type = Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE');
 			$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
 		}
@@ -1304,6 +1308,18 @@ class fianetfraud extends Module
 			WHERE h.`name` = \'payment\'
 			AND m.`active` = 1
 		');
+	}
+
+	/**
+	 * For Prestashop < 1.4.5
+	 * Return an available position in subtab for parent $id_parent
+	 * 
+	 * @param int $id_parent
+	 * @return int 
+	 */
+	public function getNewLastPosition($id_parent)
+	{
+		return (Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int) ($id_parent)));
 	}
 
 }
