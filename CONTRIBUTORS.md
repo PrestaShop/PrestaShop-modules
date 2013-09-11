@@ -1,0 +1,51 @@
+- Agustin 
+- Albin Kerouanton 
+- Alexandre Segura 
+- antoniofr 
+- Axome 
+- Baptiste GAUTHIER 
+- Bruno Leveque 
+- Ceboweb 
+- cedricfontaine 
+- clément hollander 
+- Claude Traglia 
+- cmouleyre 
+- Damien Metzger 
+- Dh42 
+- djfm 
+- doekia 
+- e.lito 
+- ESPIAU Nicolas 
+- fram 
+- François Gaillard 
+- François-Marie de Jouvencel 
+- Francois Gaillard 
+- Gregory Roussac 
+- gRoussac 
+- GuigZ 
+- hadjedjvincent 
+- J. Danse 
+- Julien Bijoux 
+- Ken Mendes 
+- lsparer 
+- Mathieu 
+- MatthieuB 
+- Obvious1809 
+- PrestaEdit 
+- quadrateam 
+- Quadra Team 
+- Rémi Gaillard 
+- RaphArbuz 
+- Robert 
+- samy-r 
+- Sparer lilian 
+- Thoma 
+- thoma202 
+- Tredez Guillaume 
+- vAugagneur 
+- Vincent Augagneur 
+- Vincent Terenti 
+- Wanted85 
+- Xavier 
+- Yann CYRILLE 
+- Youness ZIOUANE 
