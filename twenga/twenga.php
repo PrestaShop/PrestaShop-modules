@@ -121,12 +121,12 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.8.7';
+	 	$this->version = '1.9';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
 	
-		$this->displayName = $this->l('Twenga API');
+		$this->displayName = $this->l('Twenga Module');
 		$this->description = $this->l('Export your products to Twenga Shopping Search Engine and get new online buyers immediately.');
 
 		// For Twenga subscription
@@ -271,28 +271,6 @@ class Twenga extends PaymentModule
 		return false;';
 	}
 
-	public function onclickOption($type, $href = false)
-	{
-		$content = '';
-
-		switch($type)
-		{
-		case 'desactive':
-			$content = $this->_getAjaxScript('infos_update.php', $type, $href);
-			break;
-		case 'reset':
-			$content = $this->_getAjaxScript('infos_update.php', $type, $href);
-			break;
-		case 'delete':
-			$content = $this->_getAjaxScript('infos_update.php', $type, $href);
-			break;
-		case 'uninstall':
-			$content = $this->_getAjaxScript('infos_update.php', $type, $href);
-		default:
-		}
-		return $content;
-	}
-	
 	/**
 	 * Method for beeing redirected to Twenga subscription
 	 */
@@ -393,14 +371,10 @@ class Twenga extends PaymentModule
 			$customer = new Customer($params['order']->id_customer);
 			$params_to_twenga = array();
 			$params_to_twenga['basket_id'] = (string)$params['order']->id_cart;
-			try {
-				if (self::$obj_twenga->orderExist($params_to_twenga))
-				{
-					$bool = self::$obj_twenga->orderCancel($params_to_twenga);
-					self::$obj_ps_stats->cancelOrder();
-				}
-			} catch (Exception $e) {
-				return;
+			if (self::$obj_twenga->orderExist($params_to_twenga))
+			{
+				$bool = self::$obj_twenga->orderCancel($params_to_twenga);
+				self::$obj_ps_stats->cancelOrder();
 			}
 		}
 	}
@@ -419,15 +393,11 @@ class Twenga extends PaymentModule
 			$params_to_twenga = array();
 			$params_to_twenga['basket_id'] = (int)$obj_order->id_cart;
 			$bool = false;
-			try {
-				if (($params_to_twenga))
-				{
-					$cart = new Cart($params_to_twenga['basket_id']);
-					$bool = self::$obj_twenga->orderValidate($params_to_twenga);
-					self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
-				}
-			} catch (Exception $e) {
-				return;
+			if (($params_to_twenga))
+			{
+				$cart = new Cart($params_to_twenga['basket_id']);
+				$bool = self::$obj_twenga->orderValidate($params_to_twenga);
+				self::$obj_ps_stats->validateOrder($obj_order->total_products_wt, $obj_order->total_paid);
 			}
 		}
 	}
@@ -646,12 +616,16 @@ class Twenga extends PaymentModule
 		}
 		
 		if ($isoUser == 'en')
-			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
+			$tarifs_link = 'https://rts.twenga.co.uk/ratecard';
+		elseif ($isoUser == 'es')
+			$tarifs_link = 'https://rts.twenga.es/ratecard';
+		elseif ($isoUser == 'it')
+			$tarifs_link = 'https://rts.twenga.it/ratecard';
+		elseif ($isoUser == 'de')
+			$tarifs_link = 'https://rts.twenga.de/ratecard';
 		else
-			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$isoUser.'.jpg';
+			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 		
-	
-
 		$tarif_arr = array(950, 565);
 		if (file_exists($tarifs_link))
 			$tarif_arr = @getimagesize($tarifs_link);
@@ -714,9 +688,15 @@ class Twenga extends PaymentModule
 			$lost_link = 'https://rts.twenga.'.$isoUser.'/lostpassword';
 
 		if ($isoUser == 'en')
-			$tarifs_link = 'https://rts.twenga.com/media/prices_uk.jpg';
+			$tarifs_link = 'https://rts.twenga.co.uk/ratecard';
+		elseif ($isoUser == 'es')
+			$tarifs_link = 'https://rts.twenga.es/ratecard';
+		elseif ($isoUser == 'it')
+			$tarifs_link = 'https://rts.twenga.it/ratecard';
+		elseif ($isoUser == 'de')
+			$tarifs_link = 'https://rts.twenga.de/ratecard';
 		else
-			$tarifs_link = 'https://rts.twenga.com/media/prices_'.$isoUser.'.jpg';
+			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 
 		$output =
 		'<form name="form_set_hashkey" action="" method="post">
@@ -753,7 +733,7 @@ class Twenga extends PaymentModule
 			
 				<p><a href="'.$tarifs_link.'" class="link" id="twenga_tarif">'.$this->l('Twenga Prices').'</a></p>
 			<p>'.$this->l('You will benefit from detailed traffic & sales supports tools, allowing you total control on your activity on Twenga.').'</p>	
-			<div align=center><img src="../modules/'.$this->name.'/recompense.png" alt="" /></div>
+			<div align=center><img src="../modules/'.$this->name.'/awards.jpg" alt="" /></div>
 			</fieldset>
 			</form><br />';
 
@@ -865,23 +845,23 @@ class Twenga extends PaymentModule
 					// required Fields
 					echo '<product_url><![CDATA['.$product_values['product_url'].']]></product_url>';
 					echo '<designation><![CDATA['.$product_values['designation'].']]></designation>';
-					echo '<price>'.$product_values['price'].'</price>';
+					echo '<price><![CDATA['.$product_values['price'].']]></price>';
 					echo '<category><![CDATA['.$product_values['category'].']]></category>';
-					echo '<image_url>'.$product_values['image_url'].'</image_url>';
+					echo '<image_url><![CDATA['.$product_values['image_url'].']]></image_url>';
 					echo '<description><![CDATA['.$product_values['description'].']]></description>';
 					echo '<brand><![CDATA['.$product_values['brand'].']]></brand>';
 
 					// optionnals fields
-					echo '<merchant_id>'.$product_values['merchant_id'].'</merchant_id>';
-					echo '<manufacturer_id>'.$product_values['manufacturer_id'].'</manufacturer_id>';
-					echo '<shipping_cost>'.$product_values['shipping_cost'].'</shipping_cost>';
-					echo '<in_stock>'.$product_values['in_stock'].'</in_stock>';
-					echo '<stock_detail>'.$product_values['stock_detail'].'</stock_detail>';
-					echo '<condition>'.$product_values['condition'].'</condition>';
-					echo '<upc_ean>'.$product_values['upc_ean'].'</upc_ean>';
-					echo '<product_type>'.$product_values['product_type'].'</product_type>';
-					echo '<isbn>'.$product_values['isbn'].'</isbn>';
-					echo '<eco_tax>'.$product_values['eco_tax'].'</eco_tax>';
+					echo '<merchant_id><![CDATA['.$product_values['merchant_id'].']]></merchant_id>';
+					echo '<manufacturer_id><![CDATA['.$product_values['manufacturer_id'].']]></manufacturer_id>';
+					echo '<shipping_cost><![CDATA['.$product_values['shipping_cost'].']]></shipping_cost>';
+					echo '<in_stock><![CDATA['.$product_values['in_stock'].']]></in_stock>';
+					echo '<stock_detail><![CDATA['.$product_values['stock_detail'].']]></stock_detail>';
+					echo '<condition><![CDATA['.$product_values['condition'].']]></condition>';
+					echo '<upc_ean><![CDATA['.$product_values['upc_ean'].']]></upc_ean>';
+					echo '<product_type><![CDATA['.$product_values['product_type'].']]></product_type>';
+					echo '<isbn><![CDATA['.$product_values['isbn'].']]></isbn>';
+					echo '<eco_tax><![CDATA['.$product_values['eco_tax'].']]></eco_tax>';
 
 					echo '</product>';
 				}
