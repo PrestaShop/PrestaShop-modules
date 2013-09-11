@@ -368,6 +368,15 @@ class StripeJs extends PaymentModule
 
 			$this->smarty->assign('stripe_order', array('reference' => isset($params['objOrder']->reference) ? $params['objOrder']->reference : '#'.sprintf('%06d', $params['objOrder']->id), 'valid' => $params['objOrder']->valid));
 
+			// added this so we could present a better/meaningful message to the customer when the charge suceeds, but verifications have failed.
+			$pendingOrderStatus = (int)Configuration::get('STRIPE_PENDING_ORDER_STATUS');
+			$currentOrderStatus = (int)$params['objOrder']->getCurrentState();
+			if ($pendingOrderStatus==$currentOrderStatus) {
+				$this->smarty->assign('order_pending', true);
+			} else {
+				$this->smarty->assign('order_pending', false);
+			}
+
 		return $this->display(__FILE__, 'order-confirmation.tpl');
 
 	}
@@ -457,9 +466,26 @@ class StripeJs extends PaymentModule
 				Db::getInstance()->Execute('
 				INSERT INTO '._DB_PREFIX_.'stripe_customer (id_stripe_customer, stripe_customer_id, token, id_customer, cc_last_digits, date_add)
 				VALUES (NULL, \''.pSQL($stripe_customer['stripe_customer_id']).'\', \''.pSQL($token).'\', '.(int)$this->context->cookie->id_customer.', '.(int)substr(Tools::getValue('StripLastDigits'), 0, 4).', NOW())');
-		}
-		catch (Exception $e)
-		{
+
+		// catch the stripe error the correct way.
+		} catch(Stripe_CardError $e) {
+			$body = $e->getJsonBody(); 
+			$err = $body['error']; 
+
+			$type = $err['type']; 
+			$message = $err['message']; 
+			$code = $err['code']; 
+			$charge = $err['charge']; 
+
+			if (class_exists('Logger'))
+				Logger::addLog($this->l('Stripe - Payment transaction failed').' '.$message, 1, null, 'Cart', (int)$this->context->cart->id, true);
+
+			$controller = Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc.php' : 'order.php';
+			$location=$this->context->link->getPageLink($controller).(strpos($controller, '?') !== false ? '&' : '?').'step=3&stripe_error='.base64_encode("There was a problem with your payment").'#stripe_error';
+			header('Location: '.$location);
+			exit;
+
+		} catch (Exception $e) {
 			$message = $e->getMessage();
 			if (class_exists('Logger'))
 				Logger::addLog($this->l('Stripe - Payment transaction failed').' '.$message, 1, null, 'Cart', (int)$this->context->cart->id, true);
@@ -467,8 +493,8 @@ class StripeJs extends PaymentModule
 			/* If it's not a critical error, display the payment form again */
 			if ($e->getCode() != 'card_declined')
 			{
-				$controller = Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc' : 'order';
-				header('Location: '.$this->context->link->getPageLink($controller).(strpos($controller, '?') !== false ? '&' : '&').'step=3&stripe_error='.base64_encode($e->getMessage()).'#stripe_error');
+				$controller = Configuration::get('PS_ORDER_PROCESS_TYPE') ? 'order-opc.php' : 'order.php';
+				header('Location: '.$this->context->link->getPageLink($controller).(strpos($controller, '?') !== false ? '&' : '?').'step=3&stripe_error='.base64_encode($e->getMessage()).'#stripe_error');
 				exit;
 			}
 		}
@@ -497,6 +523,12 @@ class StripeJs extends PaymentModule
 			if (isset($result_json->card->address_zip_check) && $result_json->card->address_zip_check == 'fail')
 			{
 				$message .= "\n".$this->l('Warning: Address zip-code check failed');
+				$order_status = (int)Configuration::get('STRIPE_PENDING_ORDER_STATUS');
+			}
+			// warn if cvc check fails
+			if (isset($result_json->card->cvc_check) && $result_json->card->cvc_check == 'fail')
+			{
+				$message .= "\n".$this->l('Warning: CVC verification check failed');
 				$order_status = (int)Configuration::get('STRIPE_PENDING_ORDER_STATUS');
 			}
 		}
