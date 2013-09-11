@@ -44,9 +44,11 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3';
+		$this->version = '1.3.1';
 		$this->limited_countries = array('es');
-		$this->currencies = false;
+
+		$this->currencies = true;
+		$this->currencies_mode = 'radio';
 
 		$this->json_rpc_target_host = (self::$_mode == TRUSTLY_TEST_MODE ? 'test.' : null).$this->json_rpc_target_host;
 		$this->signup_target_host = (self::$_mode == TRUSTLY_TEST_MODE ? 'test.' : null).$this->signup_target_host;
