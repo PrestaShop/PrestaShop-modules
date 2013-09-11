@@ -44,7 +44,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6';
+		$this->version = '1.6.1';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -158,7 +158,7 @@ class Hipay extends PaymentModule
 		{
 			$smarty->assign('hipay_prod', $this->env);
 			$smarty->assign('logo_suffix', $logo_suffix);
-			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => Tools::getShopDomainSsl(true).__PS_BASE_URI__.((int)Configuration::get('PS_REWRITING_SETTINGS') && isset($smarty->ps_language) && !empty($smarty->ps_language) ? $smarty->ps_language->iso_code.'/' : '').'modules/'.$this->name.'/'));
+			$smarty->assign(array('this_path' => $this->_path, 'this_path_ssl' => Tools::getShopDomainSsl(true).__PS_BASE_URI__.'modules/'.$this->name.'/'));
 			return $this->display(__FILE__, 'payment.tpl');
 		}
 	}
