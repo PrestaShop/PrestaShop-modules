@@ -4,6 +4,6 @@
 	<p><b>{l s='Information:' mod='paypal'}</b> {l s='Funds ready to be captured before shipping' mod='paypal'}</p>
 	<form method="post" action="{$smarty.server.REQUEST_URI|escape:htmlall}">
 		<input type="hidden" name="id_order" value="{$params.id_order}" />
-		<p class="center"><input type="submit" class="button" name="submitPayPalCapture" value="{l s='Get the money' mod='paypal'}" /></p>
+		<p class="center"><input type="submit" class="button" name="submitPayPalCapture" value="{l s='Get the money' mod='paypal'}" onclick="return confirm('{l s='Are you sure you want to capture?' mod='paypal'}');" /></p>
 	</form>
 </fieldset>
