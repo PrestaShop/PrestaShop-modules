@@ -368,7 +368,7 @@ class StripeJs extends PaymentModule
 
 			$this->smarty->assign('stripe_order', array('reference' => isset($params['objOrder']->reference) ? $params['objOrder']->reference : '#'.sprintf('%06d', $params['objOrder']->id), 'valid' => $params['objOrder']->valid));
 
-			//bellini: added this so we could present a better/meaningful message to the customer when the charge suceeds, but verifications have failed.
+			// added this so we could present a better/meaningful message to the customer when the charge suceeds, but verifications have failed.
 			$pendingOrderStatus = (int)Configuration::get('STRIPE_PENDING_ORDER_STATUS');
 			$currentOrderStatus = (int)$params['objOrder']->getCurrentState();
 			if ($pendingOrderStatus==$currentOrderStatus) {
@@ -467,7 +467,7 @@ class StripeJs extends PaymentModule
 				INSERT INTO '._DB_PREFIX_.'stripe_customer (id_stripe_customer, stripe_customer_id, token, id_customer, cc_last_digits, date_add)
 				VALUES (NULL, \''.pSQL($stripe_customer['stripe_customer_id']).'\', \''.pSQL($token).'\', '.(int)$this->context->cookie->id_customer.', '.(int)substr(Tools::getValue('StripLastDigits'), 0, 4).', NOW())');
 
-		//bellini: catch the stripe error the correct way.
+		// catch the stripe error the correct way.
 		} catch(Stripe_CardError $e) {
 			$body = $e->getJsonBody(); 
 			$err = $body['error']; 
@@ -525,7 +525,7 @@ class StripeJs extends PaymentModule
 				$message .= "\n".$this->l('Warning: Address zip-code check failed');
 				$order_status = (int)Configuration::get('STRIPE_PENDING_ORDER_STATUS');
 			}
-			//bellini: warn if cvc check fails
+			// warn if cvc check fails
 			if (isset($result_json->card->cvc_check) && $result_json->card->cvc_check == 'fail')
 			{
 				$message .= "\n".$this->l('Warning: CVC verification check failed');
