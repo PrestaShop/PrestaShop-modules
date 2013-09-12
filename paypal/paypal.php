@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.5.9';
+		$this->version = '3.6';
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -1273,9 +1273,25 @@ class PayPal extends PaymentModule
 		}
 	}
 
+	/**
+	 * Check if the current page use SSL connection on not
+	 *
+	 * @return bool uses SSL
+	 */
+	public function usingSecureMode()
+	{
+		if (isset($_SERVER['HTTPS']))
+			return ($_SERVER['HTTPS'] == 1 || strtolower($_SERVER['HTTPS']) == 'on');
+		// $_SERVER['SSL'] exists only in some specific configuration
+		if (isset($_SERVER['SSL']))
+			return ($_SERVER['SSL'] == 1 || strtolower($_SERVER['SSL']) == 'on');
+
+		return false;
+	}
+
 	protected function getCurrentUrl()
 	{
-		$protocol_link = Tools::usingSecureMode() ? 'https://' : 'http://';
+		$protocol_link = $this->usingSecureMode() ? 'https://' : 'http://';
 		$request = $_SERVER['REQUEST_URI'];
 		$pos = strpos($request, '?');
 		
