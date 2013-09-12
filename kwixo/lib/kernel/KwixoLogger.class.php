@@ -32,6 +32,10 @@ class KwixoLogger
 	 */
 	private static function openHandle()
 	{
+		if (!file_exists(KWIXO_ROOT_DIR.'/logs/'))
+			if (!mkdir(KWIXO_ROOT_DIR.'/logs/'))
+				die('Error creating logs folder');
+
 		$log_filename = KWIXO_ROOT_DIR.'/logs/fianet_log.txt';
 
 		//renames the log file and creates a new one if max allowed size reached

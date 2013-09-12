@@ -92,7 +92,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 		//Address and customer invoice
 		$control->createInvoiceCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $invoice_address->lastname, $invoice_address->firstname, $customer->email, $invoice_company, $invoice_address->phone_mobile, $invoice_address->phone);
-		$control->createInvoiceAddress($invoice_address->address1, $invoice_address->postcode, $invoice_address->city, $invoice_country->name[(int) $cookie->id_lang], $invoice_address->address2);
+		$control->createInvoiceAddress($invoice_address->address1, $invoice_address->postcode, $invoice_address->city, $invoice_country->iso_code, $invoice_address->address2);
 
 		//filter on carrier which have not address and customer delivery
 		$types = array("1", "2", "3", "5");
@@ -123,7 +123,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		if ($carrier_type == 4)
 		{
 			$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $delivery_address->lastname, $delivery_address->firstname, $customer->email, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
-			$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $delivery_country->name[(int) $cookie->id_lang], $delivery_address->address2);
+			$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $delivery_country->iso_code, $delivery_address->address2);
 
 			//xml <infocommande>
 			$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
@@ -148,14 +148,14 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 				{
 					//xml <pointrelais>
 					$drop_off_point = $kwixo_carrier->createDropOffPoint($carrier_name, $carrier_name);
-					$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->name[(int) $cookie->id_lang], $delivery_address->address2);
+					$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->iso_code, $delivery_address->address2);
 				}
 			}
 			else
 			{
 				//xml <pointrelais>
 				$drop_off_point = $kwixo_carrier->createDropOffPoint($carrier_name, $carrier_name);
-				$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->name[(int) $cookie->id_lang], $delivery_address->address2);
+				$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->iso_code, $delivery_address->address2);
 			}
 		}
 
@@ -171,7 +171,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 		//xml <wallet>
 		$date_order = date('Y-m-d H:i:s');
-		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, 3));
+		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, Configuration::get('KWIXO_DELIVERY')));
 		$wallet->addCrypt($kwixo->generateCrypt($control), $kwixo->getCryptversion());
 
 		//kwixo payment options   

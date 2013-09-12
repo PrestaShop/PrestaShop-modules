@@ -12,7 +12,7 @@ class KwixoControl extends KwixoDOMDocument {
 		//parent::__construct("<control></control>");
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('kwixomodule', '6.1');
+		$this->root->setAttribute('kwixomodule', '6.2');
 	}
 
 	/**
