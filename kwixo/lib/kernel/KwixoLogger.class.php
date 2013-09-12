@@ -41,7 +41,7 @@ class KwixoLogger
 		//renames the log file and creates a new one if max allowed size reached
 		if (file_exists($log_filename) && filesize($log_filename) > 100000)
 		{
-			$prefix = SAC_ROOT_DIR.'/logs/fianetlog-';
+			$prefix = KWIXO_ROOT_DIR.'/logs/fianetlog-';
 			$base = date('YmdHis');
 			$sufix = '.txt';
 			$filename = $prefix.$base.$sufix;
