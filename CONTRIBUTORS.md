@@ -4,6 +4,7 @@
 - antoniofr 
 - Axome 
 - Baptiste GAUTHIER 
+- bellini13 
 - Bruno Leveque 
 - Ceboweb 
 - cedricfontaine 
@@ -17,7 +18,6 @@
 - e.lito 
 - ESPIAU Nicolas 
 - fram 
-- François Gaillard 
 - François-Marie de Jouvencel 
 - Francois Gaillard 
 - Gregory Roussac 
