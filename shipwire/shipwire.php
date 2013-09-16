@@ -86,7 +86,7 @@ class Shipwire extends Module
 	{
 		$this->name = 'shipwire';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1.9';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 
 		$this->_initContext();
@@ -381,7 +381,10 @@ class Shipwire extends Module
 		$r = $this->_shipWireOrder->sendData();
 
 		if ($r['Status'])
-			$this->_displayConfirmation($this->l('An error occured on the remote server: ').$r['ErrorMessage'], 'error');
+		{
+			$error_message = is_array($r['ErrorMessage']) ? '' : $r['ErrorMessage'];
+			$this->_displayConfirmation($this->l('An error occured on the remote server: ').$error_message, 'error');
+		}
 
 		if (isset($r['OrderInformation']))
 			foreach ($r['OrderInformation'] as $o)
