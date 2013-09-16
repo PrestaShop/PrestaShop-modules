@@ -1,46 +1,22 @@
 <?php
-/*
-* 2007-2013 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
-*  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
 
 class YotpoHttpClient 
 {
 	const YOTPO_API_URL = 'https://api.yotpo.com';
 	const YOTPO_API_URL_NO_SSL = 'http://api.yotpo.com';
 	const HTTP_REQUEST_TIMEOUT = 30;
-	const YOTPO_OAUTH_TOKEN_URL = 'https://api.yotpo.com/oauth/token';
+  	const YOTPO_OAUTH_TOKEN_URL = 'https://api.yotpo.com/oauth/token';
 
 	public function __construct($name = null)
-	{
+  	{
 		$this->name = $name;
-	}
+  	}
 
-	public function checkeMailAvailability($email)
-	{
-		return $this->makePostRequest(self::YOTPO_API_URL . '/apps/check_availability', 
+  	public function checkeMailAvailability($email)
+  	{
+  		return $this->makePostRequest(self::YOTPO_API_URL . '/apps/check_availability', 
 		array('model' => 'user', 'field' => 'email', 'value' => $email));
-	}
+  	}
 
 	public function register($email, $name, $password, $url)
 	{
@@ -63,7 +39,7 @@ class YotpoHttpClient
 		if (!empty($token))
 		{
 			$data['utoken'] = $token;
-			return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data);
+		    return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data);
 		}
 	}
 
@@ -73,30 +49,36 @@ class YotpoHttpClient
 		if (!empty($token))
 		{
 			$data['utoken'] = $token;
-			$this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/', $data);
+		    $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/', $data);
 		}
 	}
 	
 	public function makeRichSnippetRequest($app_key, $secret_token, $product_sku)
 	{
-		return $this->makeGetRequest(self::YOTPO_API_URL_NO_SSL.'/products/'.$app_key.'/richsnippet/'.$product_sku, array(), 2);
+	    return $this->makeGetRequest(self::YOTPO_API_URL_NO_SSL.'/products/'.$app_key.'/richsnippet/'.$product_sku, array(), 2);
 	}
 	
-	public function makePostRequest($url, $data, $timeout = self::HTTP_REQUEST_TIMEOUT, $use_https = true)
+	public function makePostRequest($url, $data, $timeout = self::HTTP_REQUEST_TIMEOUT, $parse_result = true)
 	{		
 		$ch = curl_init($url);
-		list($is_json, $parsed_data) = YotpoHttpClient::jsonOrUrlEncode($data);	
-		$content_type = $is_json ? 'application/json' : 'application/x-www-form-urlencoded';
+		list($is_json, $parsed_data) = YotpoHttpClient::jsonOrUrlEncode($data);    
+		$content_type = $is_json ? 'application/json' : 'application/x-www-form-urlencoded';                                                                                                                         
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $parsed_data);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Content-length: '.strlen($parsed_data)));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Content-length: '.strlen($parsed_data)));                                                                                                                   
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); /* Added by PrestaShop */
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */		
 		$result = curl_exec($ch);
 		curl_close ($ch);	
-		return YotpoHttpClient::jsonDecode($result, true);
+		if($parse_result) {
+			return YotpoHttpClient::jsonDecode($result, true);	
+		}
+		else {
+			return $result;
+		}
+		
 	}
 
 	private function makeGetRequest($url, $data = array(), $timeout = self::HTTP_REQUEST_TIMEOUT)
@@ -104,11 +86,11 @@ class YotpoHttpClient
 		if(count($data) > 0) {
 			$url .= '?' . http_build_query($data);	
 		}
-		$ch = curl_init($url);
+		$ch = curl_init($url);                                                                                                                     
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);                                                                                                                   
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); /* Added by PrestaShop */
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */		
 		$result = curl_exec($ch);
 		curl_close ($ch);	
 		return YotpoHttpClient::jsonDecode($result, true);
@@ -116,25 +98,20 @@ class YotpoHttpClient
 	
 	private function grantOauthAccess($app_key, $secret_token)
 	{
-		include_once(_PS_MODULE_DIR_.'yotpo/lib/oauth-php/library/YotpoOAuthStore.php');
-		include_once(_PS_MODULE_DIR_.'yotpo/lib/oauth-php/library/YotpoOAuthRequester.php');
-
-		$yotpo_options = array('consumer_key' => $app_key, 'consumer_secret' => $secret_token,
-		'client_id' => $app_key, 'client_secret' => $secret_token, 'grant_type' => 'client_credentials');
-	
-		YotpoOAuthStore::instance('2Leg', $yotpo_options);
-		try
-		{
-			$request = new YotpoOAuthRequester(self::YOTPO_OAUTH_TOKEN_URL, 'POST', $yotpo_options);
-			$result = $request->doRequest(0);
-			$pregResult = preg_match("/access_token[\W]*[\"'](.*?)[\"']/", $result['body'], $matches);
-			$token = $pregResult == 1 ? $matches[1] : '';
-
-			return $token != '' ? $token : null;
+		$yotpo_options = array('client_id' => $app_key, 'client_secret' => $secret_token, 'grant_type' => 'client_credentials');
+		$result = $this->makePostRequest(self::YOTPO_OAUTH_TOKEN_URL, $yotpo_options, self::HTTP_REQUEST_TIMEOUT, false);				
+		if (function_exists('json_decode')) {
+			$result = json_decode($result, false);
+			return $result->access_token;						
 		}
-		catch(YotpoOAuthException2 $e)
-		{
-			return null;
+		elseif (method_exists('Tools', 'jsonEncode')) {
+			$result = Tools::jsonDecode($result, false);
+			return $result->access_token;
+		}
+		else {
+			$pregResult = preg_match("/access_token[\W]*[\"'](.*?)[\"']/", $result, $matches);
+			$token = $pregResult == 1 ? $matches[1] : '';
+			return $token != '' ? $token : null;	
 		}
 	}
 	
@@ -163,7 +140,7 @@ class YotpoHttpClient
 			$code = isset($result[1]['status']) ? $result[1]['status']['code'] : $result[1]['code'];
 			$message = isset($result[1]['status']) ? $result[1]['status']['message'] : $result[1]['message'];
 			$response = isset($result[1]['response']) ? $result[1]['response'] : '';
-			return array('json' => true, 'status_code' => $code, 'status_message' => $message, 'response' => $response);
+		    return array('json' => true, 'status_code' => $code, 'status_message' => $message, 'response' => $response);
 		}
 		else
 		{
