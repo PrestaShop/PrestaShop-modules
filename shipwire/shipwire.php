@@ -130,7 +130,7 @@ class Shipwire extends Module
 			$this->context->cookie = $cookie;
 			$this->context->shop = new StdClass();
 			$this->context->shop->id = 1;
-			$this->context->shop->id_group_shop = 1;
+			$this->context->shop->id_shop_group = 1;
 		}
 
 		$this->_loadConfiguration();
@@ -319,7 +319,7 @@ class Shipwire extends Module
 		if (!(isset($r[0]['transaction_ref']) && !empty($r[0]['transaction_ref'])))
 		{
 			$this->updateOrderStatus($params['id_order']);
-			ShipwireTracking::updateTracking(true, (int)$this->context->shop->id, (int)$this->context->shop->id_group_shop);
+			ShipwireTracking::updateTracking(true, (int)$this->context->shop->id, (int)$this->context->shop->id_shop_group);
 		}
 
 		return true;
@@ -410,7 +410,7 @@ class Shipwire extends Module
 					\''.pSQL($order->id).'\''
 					.(isset($o['id']) ? ',\''.pSQL($o['id']).'\'' : ',\'\'')
 					.(isset($o['status']) ? ',\''.pSQL($o['status']).'\'' : ',\'\'')
-					.(isset($this->context->shop->id_group_shop) ? ',\''.(int)$this->context->shop->id_group_shop.'\'' : ',\'\'')
+					.(isset($this->context->shop->id_shop_group) ? ',\''.(int)$this->context->shop->id_shop_group.'\'' : ',\'\'')
 					.(isset($this->context->shop->id) ? ',\''.(int)$this->context->shop->id.'\'' : ',\'\'').'
 					)');
 				}
@@ -428,7 +428,7 @@ class Shipwire extends Module
 	public function getContent()
 	{
 		$idShop = isset($this->context->shop->id) ? $this->context->shop->id : 1;
-		$idGroupShop = isset($this->context->shop->id_group_shop) ? $this->context->shop->id_group_shop : 1;
+		$idGroupShop = isset($this->context->shop->id_shop_group) ? $this->context->shop->id_shop_group : 1;
 
 		if (Tools::isSubmit('SubmitShipwireSettings'))
 		{
@@ -442,13 +442,13 @@ class Shipwire extends Module
 
 				$this->dParams['confirmMessage'] = $this->_displayConfirmation();
 				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'shipwire_order` '.
-					(isset($this->context->shop->id) && isset($this->context->shop->id_group_shop) ?
+					(isset($this->context->shop->id) && isset($this->context->shop->id_shop_group) ?
 						'WHERE `id_shop` = '.(int)$this->context->shop->id.'
-						AND `id_group_shop` = '.(int)$this->context->shop->id_group_shop : ''));
+						AND `id_group_shop` = '.(int)$this->context->shop->id_shop_group : ''));
 				Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'shipwire_stock` '.
-					(isset($this->context->shop->id) && isset($this->context->shop->id_group_shop) ?
+					(isset($this->context->shop->id) && isset($this->context->shop->id_shop_group) ?
 						'WHERE `id_shop` = '.(int)$this->context->shop->id.'
-						AND `id_group_shop` = '.(int)$this->context->shop->id_group_shop : ''));
+						AND `id_group_shop` = '.(int)$this->context->shop->id_shop_group : ''));
 			}
 			else
 				$this->dParams['confirmMessage'] = $this->_displayConfirmation($this->l('Please enter a valid email address.'), 'error');
@@ -650,7 +650,7 @@ class Shipwire extends Module
 					'.(int)$orderId.'
 					,\''.date('Y-m-d H:i:s').'\'
 					,'.(isset($this->context->shop->id) ? '\''.(int)$this->context->shop->id.'\'' : '\'\'').'
-					,'.(isset($this->context->shop->id_group_shop) ? ',\''.(int)$this->context->shop->id_group_shop.'\'' : '\'\'').'
+					,'.(isset($this->context->shop->id_shop_group) ? ',\''.(int)$this->context->shop->id_shop_group.'\'' : '\'\'').'
 					)');
 	}
 
