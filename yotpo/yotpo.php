@@ -1,13 +1,13 @@
 <?php
 /*
-* 2007-2013 PrestaShop 
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Open Software License (OSL 3.0)
+* This source file is subject to the Academic Free License (AFL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
+* http://opensource.org/licenses/afl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -20,8 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
-*  @version  Release: $Revision: 7776 $
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -49,9 +48,11 @@ class Yotpo extends Module
 
 	public function __construct()
 	{
+		$version_mask = explode('.', _PS_VERSION_, 3);
+		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
-		$this->tab = 'advertising_marketing';
-		$this->version = '1.2.9';
+		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
+		$this->version = '1.3';
 		$this->author = 'Yotpo';
 		$this->need_instance = 1;
 
@@ -66,8 +67,8 @@ class Yotpo extends Module
 
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', 'http://'.(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
-		if (file_exists($this->_path.'YotpoSnippetCache.php'))
-			include_once $this->_path.'YotpoSnippetCache.php';
+		if (file_exists($this->_yotpo_module_path . '/YotpoSnippetCache.php'))
+			include_once $this->_yotpo_module_path.'/YotpoSnippetCache.php';
 	}
 
 
@@ -99,18 +100,20 @@ class Yotpo extends Module
 			$this->setError($this->l('Minimum version required for Yotpo module is Prestashop 1.3'));
 
 		foreach ($this->_required_files as $file)
-			if (!file_exists($this->_path.$file))
+			if (!file_exists($this->_yotpo_module_path .$file))
 				$this->setError($this->l('Can\'t include file '.$this->_yotpo_module_path .$file));
 
-			if ((is_array($this->_errors) && count($this->_errors) > 0) || parent::install() == false  ||
-				!$this->registerHook('productfooter') || !$this->registerHook('postUpdateOrderStatus')||
-				!$this->registerHook('extraLeft') || !$this->registerHook('extraRight') ||
-				!$this->registerHook('productTab') || !$this->registerHook('productTabContent') ||
-				!$this->registerHook('header') || !$this->registerHook('orderConfirmation') || !YotpoSnippetCache::createDB())
-				return false;
+		if ((is_array($this->_errors) && count($this->_errors) > 0) || parent::install() == false  ||
+			!$this->registerHook('productfooter')  || !$this->registerHook('postUpdateOrderStatus')||
+			!$this->registerHook('extraLeft')   || !$this->registerHook('extraRight')    ||
+			!$this->registerHook('productTab')   || !$this->registerHook('productTabContent')  ||
+			!$this->registerHook('header')   || !$this->registerHook('orderConfirmation') || !YotpoSnippetCache::createDB())
+			return false;
 
-			/* Default language: English; Default widget location: Product page Footer; Default widget tab name: "Reviews"
-		 * Default bottom line location: product page left column Default bottom line enabled : true*/
+		/*
+		 * Default language: English; Default widget location: Product page Footer; Default widget tab name: "Reviews"
+		 * Default bottom line location: product page left column Default bottom line enabled : true
+		 */
 
 		Configuration::updateValue('yotpo_language', 'en', false);
 		Configuration::updateValue('yotpo_widget_location', 'footer', false);
@@ -129,9 +132,11 @@ class Yotpo extends Module
 	public function hookheader($params)
 	{
 		global $smarty;
-		$smarty->assign(array('yotpoAppkey' => Configuration::get('yotpo_app_key'),
-				'yotpoDomain' => $this->getShopDomain(),
-				'yotpoLanguage' => $this->getLanguage()));
+		$smarty->assign(array(
+			'yotpoAppkey' => Configuration::get('yotpo_app_key'),
+			'yotpoDomain' => $this->getShopDomain(),
+			'yotpoLanguage' => $this->getLanguage()
+		));
 		return '<script src="https://www.yotpo.com/js/yQuery.js"></script>';
 	}
 
@@ -294,7 +299,7 @@ class Yotpo extends Module
 	{
 		if (is_null($this->_httpClient))
 		{
-			include_once $this->_path.'YotpoHttpClient.php';
+			include_once $this->_yotpo_module_path.'/YotpoHttpClient.php';
 			$this->_httpClient = new YotpoHttpClient($this->name);
 		}
 		return $this->_httpClient;
@@ -343,17 +348,14 @@ class Yotpo extends Module
 			$this->_is_smarty_product_vars_assigned = true;
 
 			global $smarty;
-			$smarty->assign(
-				array(
-					'yotpoProductId' => (int)$product->id,
-					'yotpoProductName' => strip_tags($product->name),
-					'yotpoProductDescription' => strip_tags($product->description),
-					'yotpoProductModel' => $this->getProductModel($product),
-					'yotpoProductImageUrl' => $this->getProductImageUrl($product->id),
-					'yotpoProductBreadCrumbs' => $this->getBreadCrumbs($product),
-					'yotpoLanguage' => $this->getLanguage()
-				)
-			);
+			$smarty->assign(array('yotpoProductId' => (int)$product->id,
+				'yotpoProductName' => strip_tags($product->name),
+				'yotpoProductDescription' => strip_tags($product->description),
+				'yotpoProductModel' => $this->getProductModel($product),
+				'yotpoProductImageUrl' => $this->getProductImageUrl($product->id),
+				'yotpoProductBreadCrumbs' => $this->getBreadCrumbs($product),
+				'yotpoLanguage' => $this->getLanguage()
+			));
 		}
 	}
 
@@ -518,10 +520,15 @@ class Yotpo extends Module
 	{
 		global $smarty;
 
-		$smarty->assign(array('yotpo_action' => $_SERVER['REQUEST_URI'], 'yotpo_email' => Tools::getValue('yotpo_user_email'),
-			'yotpo_userName' => Tools::getValue('yotpo_user_name')));
+		$smarty->assign(array(
+			'yotpo_action' => $_SERVER['REQUEST_URI'],
+			'yotpo_email' => Tools::getValue('yotpo_user_email'),
+			'yotpo_userName' => Tools::getValue('yotpo_user_name')
+		));
 
-		return $this->_html.$this->display(__FILE__, 'tpl/registrationForm.tpl');
+		$this->_html .= $this->display(__FILE__, 'tpl/registrationForm.tpl');
+
+		return $this->_html;
 	}
 
 
@@ -545,7 +552,8 @@ class Yotpo extends Module
 				'yotpo_bottomLineLocation' => Configuration::get('yotpo_bottom_line_location'),
 				'yotpo_widget_language_code' => Configuration::get('yotpo_language'),
 				'yotpo_language_as_site' => Configuration::get('yotpo_language_as_site'),
-				'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets')));
+				'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets')
+		));
 
 		$settings_template = $this->display(__FILE__, 'tpl/settingsForm.tpl');
 		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false)
@@ -599,8 +607,7 @@ class Yotpo extends Module
 		}
 		$all_product_subs = Product::getProductCategoriesFull((int)$product->id, (int)$lang_id);
 		if (isset($all_product_subs) && count($all_product_subs) > 0)
-			foreach
-			($all_product_subs as $subcat)
+			foreach ($all_product_subs as $subcat)
 			{
 				$sub_category = new Category((int)$subcat['id_category'], (int)$lang_id);
 				$sub_category_path = $sub_category->getParentsCategories();
@@ -688,14 +695,14 @@ class Yotpo extends Module
 	private function getPastOrders()
 	{
 		$result = Db::getInstance()->ExecuteS('SELECT  o.`id_order`,o.`id_lang`, o.`date_add`, c.`firstname`, c.`lastname`, c.`email`
-		FROM `'._DB_PREFIX_.'order_history` oh
-		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oh.`id_order`)
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
-		WHERE oh.`id_order_history` IN (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` GROUP BY `id_order`) AND
-		o.`date_add` <  NOW() AND
-		DATE_SUB(NOW(), INTERVAL '.self::PAST_ORDERS_DAYS_BACK.' day) < o.`date_add` AND
-		oh.`id_order_state` IN ('.join(',', self::getAcceptedMapStatuses()).')
-		LIMIT 0,'.self::PAST_ORDERS_LIMIT.'');
+			FROM `'._DB_PREFIX_.'order_history` oh
+			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oh.`id_order`)
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
+			WHERE oh.`id_order_history` IN (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` GROUP BY `id_order`) AND
+			o.`date_add` <  NOW() AND
+			DATE_SUB(NOW(), INTERVAL '.self::PAST_ORDERS_DAYS_BACK.' day) < o.`date_add` AND
+			oh.`id_order_state` IN ('.join(',', self::getAcceptedMapStatuses()).')
+			LIMIT 0,'.self::PAST_ORDERS_LIMIT.'');
 
 		if (is_array($result))
 		{
@@ -757,6 +764,7 @@ class Yotpo extends Module
 			try {
 				$result = YotpoSnippetCache::getRichSnippet($product_id);
 				$should_update_row = is_array($result) && !YotpoSnippetCache::isValidCache($result);
+
 				if ($result == false || $should_update_row)
 				{
 					$result = '';
