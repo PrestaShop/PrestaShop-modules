@@ -71,9 +71,21 @@ class Advice extends ObjectModel
 
 	public static function getValidatedByIdTab($id_tab)
 	{
-		$advices = new Collection('advice', Context::getContext()->language->id);
-		$advices->where('validated', '=' , 1);
-		$advices->where('id_tab', '=' , (int)$id_tab);
+		$query = new DbQuery();
+		$query->select('a.`selector`, a.`location`, al.`html`');
+		$query->from('advice', 'a');
+		$query->join('
+			LEFT JOIN `'._DB_PREFIX_.'advice_lang` al ON al.`id_advice` = a.`id_advice`
+			LEFT JOIN `'._DB_PREFIX_.'tab_advice` at ON at.`id_advice` = a.`id_advice` ');
+		
+		$query->where('a.validated = 1 AND al.id_lang = '.(int)Context::getContext()->language->id.' AND at.`id_tab` = '.(int)$id_tab);
+		
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+		
+		$advices = array();
+		foreach ($result as $res)
+			$advices[] = array('selector' => $res['selector'], 'location' => $res['location'], 'html' => $res['html']);
+		
 		return $advices;
 	}
 	

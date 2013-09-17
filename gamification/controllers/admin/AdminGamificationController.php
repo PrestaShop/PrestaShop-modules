@@ -122,7 +122,7 @@ class AdminGamificationController extends ModuleAdminController
 		$advices = Advice::getValidatedByIdTab($id_tab);
 
 		foreach ($advices as $advice)
-			$return['advices'][] = array('selector' => $advice->selector, 'html' => GamificationTools::parseMetaData($advice->html), 'location' => $advice->selector);
+			$return['advices'][] = array('selector' => $advice['selector'], 'html' => GamificationTools::parseMetaData($advice['html']), 'location' => $advice['location']);
 
 		return $return;
 	}
