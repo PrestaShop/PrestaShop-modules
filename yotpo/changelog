@@ -64,5 +64,13 @@
 
 2012-07-21
 ----
-1) Add variable to db to check whether the snippet cache was already created. this is useful when a user upgrade from an older version.      
+1) Add variable to db to check whether the snippet cache was already created. this is useful when a user upgrade from an older version.  
+
+2012-08-08
+----
+1) Increase language code to 5 letters code.
+    
+2012-09-03
+----
+1) Fixed bug: when trying to get the product url. 
    

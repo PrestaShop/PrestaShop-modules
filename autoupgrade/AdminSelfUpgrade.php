@@ -803,9 +803,16 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->downloadPath);			
 
 		$this->backupPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'backup';
+		$tmp = "order deny,allow\ndeny from all";
 		if (!file_exists($this->backupPath))
 			if (!@mkdir($this->backupPath))
-				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->backupPath);				
+				$this->_errors[] = sprintf($this->l('unable to create directory %s'),$this->backupPath);
+		if (!file_exists($this->backupPath.DIRECTORY_SEPARATOR.'index.php'))
+			if (!@copy(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'index.php', $this->backupPath.DIRECTORY_SEPARATOR.'index.php'))
+				$this->_errors[] = sprintf($this->l('unable to create file %s'), $this->backupPath.DIRECTORY_SEPARATOR.'index.php');
+		if (!file_exists($this->backupPath.DIRECTORY_SEPARATOR.'.htaccess'))
+			if (!@file_put_contents($this->backupPath.DIRECTORY_SEPARATOR.'.htaccess', $tmp))
+				$this->_errors[] = sprintf($this->l('unable to create file %s'), $this->backupPath.DIRECTORY_SEPARATOR.'.htaccess');
 
 		// directory missing
 		$this->latestPath = $this->autoupgradePath.DIRECTORY_SEPARATOR.'latest';

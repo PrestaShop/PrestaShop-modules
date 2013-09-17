@@ -1,28 +1,3 @@
-{*
-* 2007-2013 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
-*  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*}
-
 <div class="y-settings-white-box">
 	<form action="{$yotpo_action|escape:'htmlall':'UTF-8'}" method="post">
 		<div class="y-page-header">
@@ -47,17 +22,18 @@
 		{/if}
 
 		<fieldset id="y-fieldset">
-			<div class="y-label">{l s='Enable Rich snippets' mod='yotpo'}
-				<input type="checkbox" name="yotpo_rich_snippets" value="1" {if $yotpo_rich_snippets}checked="checked"{/if} />
-			</div> 
-			{if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
-				<p class="y-notification"> * In order to activate Rich Snippets you will also need to check the Rich Snippet tick box in your <a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}&redirect=/customize/seo&utm_source=customers_prestashop_admin&utm_medium=link&utm_campaign=prestashop_rich_snippets" target="_blank">{l s='Yotpo admin.' mod='yotpo'}</a> </p>				 
+	        <div class="y-label">{l s='Enable Rich snippets' mod='yotpo'}
+               <input type="checkbox" name="yotpo_rich_snippets" value="1" {if $yotpo_rich_snippets}checked="checked"{/if} />
+            </div> 
+            {if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
+            	<p class="y-notification"> * In order to activate Rich Snippets you will also need to check the Rich Snippet tick box in your <a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}&redirect=/customize/seo&utm_source=customers_prestashop_admin&utm_medium=link&utm_campaign=prestashop_rich_snippets" target="_blank">{l s='Yotpo admin.' mod='yotpo'}</a> </p>				 
 			{/if}
-			<div class="y-label">{l s='For multipule-language sites, mark this check box. This will choose the language according to the user\'s site language' mod='yotpo'}
-			   <input type="checkbox" name="yotpo_language_as_site" value="1" {if $yotpo_language_as_site}checked="checked"{/if} />
-			</div> 
-			<div class="y-label">{l s='If you would like to choose a set language, please type the 2-letter language code here. You can find the supported langauge codes ' mod='yotpo'}<a class="y-href" href="http://support.yotpo.com/entries/21861473-Languages-Customization-" target="_blank">{l s='here.' mod='yotpo'}</a></div>
-			<div class="y-input"><input type="text" class="yotpo_language_code_text" name="yotpo_widget_language_code" maxlength="2" value="{$yotpo_widget_language_code|escape:'htmlall':'UTF-8'}" /></div>			
+                   
+	        <div class="y-label">{l s='For multipule-language sites, mark this check box. This will choose the language according to the user\'s site language' mod='yotpo'}
+               <input type="checkbox" name="yotpo_language_as_site" value="1" {if $yotpo_language_as_site}checked="checked"{/if} />
+            </div> 
+            <div class="y-label">{l s='If you would like to choose a set language, please type the language code here. You can find the supported langauge codes ' mod='yotpo'}<a class="y-href" href="http://support.yotpo.com/entries/21861473-Languages-Customization-" target="_blank">{l s='here.' mod='yotpo'}</a></div>
+    	    <div class="y-input"><input type="text" class="yotpo_language_code_text" name="yotpo_widget_language_code" maxlength="5" value="{$yotpo_widget_language_code|escape:'htmlall':'UTF-8'}" /></div>			
 			<div class="y-label">{l s='Select widget location' mod='yotpo'}
 				<select name="yotpo_widget_location">
 					<option value="footer" {if $yotpo_widgetLocation == 'footer'}selected{/if}>{l s='Page footer' mod='yotpo'}</option>
@@ -96,35 +72,35 @@
 			<div class="y-label">{l s='Secret token' mod='yotpo'}</div>
 			<div class="y-input"><input type="text" name="yotpo_oauth_token" value="{$yotpo_oauthToken|escape:'htmlall':'UTF-8'}"/></div>
 			<div class="y-label">{l s='Enable bottom line' mod='yotpo'}
-				<input type="checkbox" name="yotpo_bottom_line_enabled" value="1" {if $yotpo_bottomLineEnabled}checked="checked"{/if} />
-			</div> 
-			<div class="y-label">{l s='Select bottom Line location' mod='yotpo'}
-			  <select name="yotpo_bottom_line_location">
-				<option value="right_column" {if $yotpo_bottomLineLocation == "right_column"}selected{/if}>{l s='Right column' mod='yotpo'}</option>
-				<option value="left_column" {if $yotpo_bottomLineLocation == "left_column"}selected{/if}>{l s='Left column' mod='yotpo'}</option>
-				<option value="other" {if $yotpo_bottomLineLocation == "other"}selected{/if}>{l s='Other (click update to see instructions)' mod='yotpo'}</option>
-			  </select>
-			</div> 
-			{if $yotpo_bottomLineLocation == 'other'}
-			<div class="y-label">{l s='In order to locate the bottom line in a custom position, please open the "root" folder, then enter the "themes" library. Locate the specific theme you would like the widget to show up on, and in this specific themes folder, locate the file "product.tpl". Add the code here, wherever you would like it placed.' mod='yotpo'}<br /><br /> 
-			  <div class="y-code">
-				{literal}
-				&lt;div class=&quot;yotpo bottomLine&quot; <br>
-				data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;<br>
-				data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;<br>
-				data-product-id=&quot;{$yotpoProductId|intval}&quot;<br>
-				data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; <br>
-				data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; <br>
-				data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
-				data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; <br>
-				data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; <br>
-				data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;&gt;<br>
-				data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; <br>
-				&lt;/div&gt;
-				{/literal}
-			 </div>
-			</div>
-			{/if}
+            	<input type="checkbox" name="yotpo_bottom_line_enabled" value="1" {if $yotpo_bottomLineEnabled}checked="checked"{/if} />
+        	</div> 
+	        <div class="y-label">{l s='Select bottom Line location' mod='yotpo'}
+	          <select name="yotpo_bottom_line_location">
+	            <option value="right_column" {if $yotpo_bottomLineLocation == "right_column"}selected{/if}>{l s='Right column' mod='yotpo'}</option>
+	            <option value="left_column" {if $yotpo_bottomLineLocation == "left_column"}selected{/if}>{l s='Left column' mod='yotpo'}</option>
+	            <option value="other" {if $yotpo_bottomLineLocation == "other"}selected{/if}>{l s='Other (click update to see instructions)' mod='yotpo'}</option>
+	          </select>
+	        </div> 
+	        {if $yotpo_bottomLineLocation == 'other'}
+	        <div class="y-label">{l s='In order to locate the bottom line in a custom position, please open the "root" folder, then enter the "themes" library. Locate the specific theme you would like the widget to show up on, and in this specific themes folder, locate the file "product.tpl". Add the code here, wherever you would like it placed.' mod='yotpo'}<br /><br /> 
+	          <div class="y-code">
+	            {literal}
+	            &lt;div class=&quot;yotpo bottomLine&quot; <br>
+	               data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;<br>
+	               data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;<br>
+	               data-product-id=&quot;{$yotpoProductId|intval}&quot;<br>
+	               data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; <br>
+	               data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; <br>
+	               data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
+	               data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; <br>
+	               data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; <br>
+	               data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;&gt;<br>
+	               data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; <br>
+	              &lt;/div&gt;
+	           {/literal}
+	         </div>
+	        </div>
+	        {/if} 	               	
 		</fieldset>
 
 		<div class="y-footer">

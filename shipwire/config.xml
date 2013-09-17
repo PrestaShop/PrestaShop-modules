@@ -2,7 +2,7 @@
 <module>
 	<name>shipwire</name>
 	<displayName><![CDATA[Shipwire]]></displayName>
-	<version><![CDATA[1.1.9]]></version>
+	<version><![CDATA[1.2]]></version>
 	<description><![CDATA[Enterprise logistics for everyone.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>
