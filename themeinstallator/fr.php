@@ -25,7 +25,7 @@ $_MODULE['<{themeinstallator}prestashop>themeinstallator_9bdbe38cc4695eeb974613a
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_04e4e6909614be09727ebe4fb79c9e27'] = 'Les modules suivants ont été activées :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_0dfbf4744524c8573235d60589d8b66e'] = 'Les images ont bien été mises à jour dans la base de données';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_4e246bd71dd5fb033e402b373e6ee434'] = 'Attention: Copier/Coller vos erreurs si vous souhaitez définir manuellement le type d\'image (dans la page «Images» du menu \"Préférences\") :';
-$_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Certaines ne peuvent pas être ajouté car elles existent. Voici la liste :';
+$_MODULE['<{themeinstallator}prestashop>themeinstallator_203c5dff06c7565ffd6713a914c62d16'] = 'Certaines ne peuvent pas être ajoutées car elles existent. Voici la liste :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_3b90370ac32dead2af37eabe3bdbb97f'] = 'Nom du type d\'image :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_48ccf48dcf2218a413ce473262f21a0c'] = 'Largeur :';
 $_MODULE['<{themeinstallator}prestashop>themeinstallator_e933dc24fb245d863a43b4fefe9b45f5'] = 'Hauteur :';
