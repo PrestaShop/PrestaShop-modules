@@ -21,7 +21,7 @@ class PayPalUSA extends PaymentModule
 	{
 		$this->name = 'paypalusa';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.6';
+		$this->version = '1.2.5';
 
 		parent::__construct();
 
@@ -524,8 +524,14 @@ class PayPalUSA extends PaymentModule
 
 	public function hookOrderConfirmation($params)
 	{
-		if (!isset($params['objOrder']) || ($params['objOrder']->module != $this->name))
-			return false;
+		//unlikely event that the module is no longer active
+		if (!$this->active)
+			return;
+			
+		//since Prestashop executes all hooks for all payment modules, we have to check and return if this was not the payment module for this order
+		if ($params['objOrder']->module != $this->name) 
+			return;
+		
 		if (isset($params['objOrder']) && Validate::isLoadedObject($params['objOrder']) && isset($params['objOrder']->valid) &&
 				version_compare(_PS_VERSION_, '1.5', '>=') && isset($params['objOrder']->reference))
 		{
