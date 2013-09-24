@@ -1088,7 +1088,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (file_exists($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename))
 			{
 				$config_content = Tools14::file_get_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->configFilename);
-				$config = unserialize(base64_decode($config_content));
+				$config = @unserialize(base64_decode($config_content));
 			}
 			else
 				$config = array();
