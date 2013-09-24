@@ -31,6 +31,7 @@ require_once(dirname(__FILE__) . '/../socolissimo.php');
 class SCError extends Socolissimo
 {
 	// Const for better understanding
+
 	const WARNING = 0;
 	const REQUIRED = 1;
 
@@ -99,7 +100,7 @@ class SCError extends Socolissimo
 	{
 		$number = (string) trim($number);
 
-		if ($type === false || !isset($this->errors_list[$type]))
+		if ( $type === false || !isset($this->errors_list[$type]) )
 			$tab = $this->errors_list[SCError::REQUIRED] + $this->errors_list[SCError::WARNING];
 		else
 			$tab = $this->errors_list[$type];
@@ -116,8 +117,8 @@ class SCError extends Socolissimo
 	 */
 	public function checkErrors($errors, $type = false)
 	{
-		foreach ($errors as $num)
-			if (($str = $this->getError($num, $type)))
+		foreach ( $errors as $num )
+			if ( ($str = $this->getError($num, $type) ) )
 				return $str;
 
 		return false;

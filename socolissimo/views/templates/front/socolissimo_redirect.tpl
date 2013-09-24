@@ -18,6 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
+*  @author Quadra Informatique <modules@quadra-informatique.fr>
 *  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -29,11 +30,11 @@
 	var initialCost = "{$initialCost}";
 	var soCarrierId = "{$id_carrier}";
 	var baseDir = '{$content_dir}';
-	
+
 	{foreach from=$inputs item=input key=name name=myLoop}
 		soInputs.{$name} = "{$input|strip_tags|addslashes}";
 	{/foreach}
-	
+
 	{literal}
 	function change_action_form()
 	{
@@ -50,8 +51,14 @@
 			}
 		}
 	}
-	
+
 	$(document).ready(function() {
+         $('.delivery_option').each(function( ) {
+                if ($(this).children('.delivery_option_radio').val() == '{/literal}{$id_carrier_seller}{literal},') {
+                    $(this).remove();
+                            }
+           });
+        $('#id_carrier{/literal}{$id_carrier_seller}{literal}').parent().parent().remove();
 		if(!soBwdCompat){
 			$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price .price').html(initialCost_label+'<br/>'+initialCost);
 			$($('#carrierTable input#id_carrier'+soCarrierId).parent().parent()).find('.carrier_price').css('white-space','nowrap');
@@ -67,7 +74,7 @@
 			change_action_form();
 		});
 		change_action_form();
-	});
+       });
 
 	function serialiseInput(inputs) {
 		var str = '?first_call=1&';
