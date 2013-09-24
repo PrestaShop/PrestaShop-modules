@@ -26,12 +26,12 @@
  *  International Registred Trademark & Property of PrestaShop SA
  */
 if (!defined('_PS_VERSION_'))
-	exit;
+    exit;
 
 function upgrade_module_2_8_4($object, $install = false)
-{
-	// update value so url mobile
-	Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws-mobile.colissimo.fr/');
-	Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.4');
-	return true;
-}
+    {
+    // update value so url mobile
+    Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws-mobile.colissimo.fr/');
+    Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.4');
+    return true;
+    }

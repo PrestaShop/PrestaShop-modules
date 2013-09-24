@@ -87,7 +87,7 @@ $_MODULE['<{socolissimo}prestashop>back_office_2bb98ed92a6546e5adfee27046c2c0df'
 $_MODULE['<{socolissimo}prestashop>back_office_9fbff0971c06ee404f638e9abcbd9446'] = 'Ce module est gratuit et vous permet d\'activer cette offre sur votre magasin.';
 $_MODULE['<{socolissimo}prestashop>back_office_f4f70727dc34561dfde1a3c529b6205c'] = 'Configuration';
 $_MODULE['<{socolissimo}prestashop>back_office_0ab984d91ab0a037bdf692bf0e73c349'] = 'Important';
-$_MODULE['<{socolissimo}prestashop>back_office_58f73ae759adc826a9e15e26280cdaa4'] = 'Pour ouvrir un compte SoColissimo, veuillez contacter La Poste à ce numéro : 3634.';
+$_MODULE['<{socolissimo}prestashop>back_office_58f73ae759adc826a9e15e26280cdaa4'] = 'Pour ouvrir un compte So Colissimo, veuillez contacter votre interlocuteur commercial habituel ou La Poste au 3634.';
 $_MODULE['<{socolissimo}prestashop>back_office_9c85d4c2bae6ab548fe23e57bd89ddc4'] = 'Identifiant FO';
 $_MODULE['<{socolissimo}prestashop>back_office_7b95472e0575adc1e3d90a2d7b51e496'] = 'Utilisateur du back-office So Colissimo';
 $_MODULE['<{socolissimo}prestashop>back_office_897356954c2cd3d41b221e3f24f99bba'] = 'Clé de cryptage';
@@ -96,11 +96,11 @@ $_MODULE['<{socolissimo}prestashop>back_office_64979b52d796defbdf05356df9e37d57'
 $_MODULE['<{socolissimo}prestashop>back_office_c76660d589be9a49e8846e51b71744ae'] = 'Jour(s)';
 $_MODULE['<{socolissimo}prestashop>back_office_b503bab0c9a43c25045cb102487724af'] = 'Délai moyen de préparation de vos commandes.';
 $_MODULE['<{socolissimo}prestashop>back_office_b1076b08727c4e252184a390e16668d7'] = 'Le délai de préparation de commande doit être identique à celui saisi dans le back-office ColiPoste.';
-$_MODULE['<{socolissimo}prestashop>back_office_2c26692c1e229616d8f5697ff5131161'] = 'Coût livraison point commerçant en France';
-$_MODULE['<{socolissimo}prestashop>back_office_7001bdc2a0dca0abf8cb633029c68ef6'] = 'Ce coût s\'applique en lieu et place du coût \"normal\" pour la livraison en commerce de proximité. Si vous ne souhaitez mettre un tarif différent pour ce mode de livraison et garder votre tarif paramétré par poids, indiquez \"0\".';
-$_MODULE['<{socolissimo}prestashop>back_office_27146b3d202b8145c2202837f68d7dc8'] = 'Autoriser la livraison en Belgique';
+$_MODULE['<{socolissimo}prestashop>back_office_2c26692c1e229616d8f5697ff5131161'] = 'Activer Coût commerce de proximité en France';
 $_MODULE['<{socolissimo}prestashop>back_office_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_MODULE['<{socolissimo}prestashop>back_office_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
+$_MODULE['<{socolissimo}prestashop>back_office_7001bdc2a0dca0abf8cb633029c68ef6'] = 'Ce coût s\'applique en lieu et place du coût \"normal\" pour la livraison en commerce de proximité.  Un transporteur \"commerce de proximité\" a été crée afin de vous permettre de parametrer son coût par tranche de prix/poids. Ses tarifs seront utilisés à la place de ceux du transporteur classique lors d\'une livraison en point commerce. Une fois configuré, nous vous conseillez de désactiver le transporteur \"commerce de proximité\".';
+$_MODULE['<{socolissimo}prestashop>back_office_27146b3d202b8145c2202837f68d7dc8'] = 'Autoriser la livraison en Belgique';
 $_MODULE['<{socolissimo}prestashop>back_office_e71b5cf532cb70a086decaadd682c80d'] = 'Active ou désactive la livraison en Belgique';
 $_MODULE['<{socolissimo}prestashop>back_office_bd80ee27fdda9376df68d171b69776cb'] = 'Surcoût pour la livraison en Belgique';
 $_MODULE['<{socolissimo}prestashop>back_office_26d95c96501cd120f8d7608f9001b6ce'] = 'Le \"surcoût\" Belgique doit être identique à celui saisi dans le back-office ColiPoste.';
@@ -111,7 +111,7 @@ $_MODULE['<{socolissimo}prestashop>back_office_3d9f139daab1faaf99dd7bd5b5c966de'
 $_MODULE['<{socolissimo}prestashop>back_office_b0b2896e75025245cbb05e96bd1466d6'] = 'Adresse FO';
 $_MODULE['<{socolissimo}prestashop>back_office_ce88aabea3b363c753b02ddcb2fbafff'] = 'URL de la page So Colissimo.';
 $_MODULE['<{socolissimo}prestashop>back_office_9abdbf15f57390e082b3dedc95a2d55f'] = 'Adresse FO Mobile';
-$_MODULE['<{socolissimo}prestashop>back_office_28ce6cc9476f00b31c72b6e4c375e211'] = 'URL de la page So Colissimo Mobile. Les clients naviguant avec des smartphones ou Ipad seront redirigés sur cette url. Attention cette url n\'autorise pas la livraison en Belgique pour le moment.';
+$_MODULE['<{socolissimo}prestashop>back_office_28ce6cc9476f00b31c72b6e4c375e211'] = 'URL de la page So Colissimo Mobile. Les clients naivguant avec des smartphones ou Ipad seront redirigés sur cette url. Attention cette url n\'autorise pas la livraison en Belgique pour le moment.';
 $_MODULE['<{socolissimo}prestashop>back_office_dd82197366d33b9dea0d2d8f3603d00b'] = 'Mode d\'affichage';
 $_MODULE['<{socolissimo}prestashop>back_office_8439074dfc56469b44f22b7414ac3002'] = 'Choisissez votre mode d\'affichage pour la fenêtre Socolissimo. A noter qu\'en OPC seul le mode fancybox est actif.';
 $_MODULE['<{socolissimo}prestashop>back_office_85068ddf0b9bcbb6913008356fe328a0'] = 'Supervision';

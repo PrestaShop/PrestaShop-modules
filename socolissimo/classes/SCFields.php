@@ -54,7 +54,7 @@ class SCFields extends SCError
 	// List of the available delivery type
 	public $delivery_list = array(
 		SCFields::HOME_DELIVERY => array('DOM', 'RDV'),
-		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT'),
+		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT','BDP'),
 		SCFields::API_REQUEST => array('API')
 	);
 	// By default, use the home delivery
@@ -87,7 +87,7 @@ class SCFields extends SCError
 			'CEDOORCODE2' => SCFields::UNKNOWN,
 			'CEENTRYPHONE' => SCFields::UNKNOWN,
 			'TRPARAMPLUS' => SCFields::UNKNOWN,
-			'TRADERCOMPANYNAME' => SCFields::REQUIRED,
+			'TRADERCOMPANYNAME' => SCFields::UNKNOWN,
 			'ERRORCODE' => SCFields::UNKNOWN,
 			// Error required if specific error exist (handle it has not required for now)
 			'ERR_CENAME' => SCFields::NOT_REQUIRED,
@@ -298,7 +298,7 @@ class SCFields extends SCError
 	public function isCorrectSignKey($sign, $params)
 	{
 		$tab = array();
-		
+
 		foreach ($this->fields[$this->delivery_mode] as $key => $value)
 		{
 			if ($value == SCFields::IGNORED)
@@ -308,7 +308,7 @@ class SCFields extends SCError
 			if (isset($params[$key]))
 				$tab[$key] = $params[$key];
 		}
-		
+
 		return $sign == $this->generateKey($tab);
 	}
 
