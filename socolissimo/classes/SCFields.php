@@ -31,6 +31,7 @@ require_once(dirname(__FILE__) . '/SCError.php');
 class SCFields extends SCError
 {
 	// Restriction
+
 	const REQUIRED = 1;
 	const NOT_REQUIRED = 2;
 	const UNKNOWN = 3; // Not specified on the documentation
@@ -54,7 +55,7 @@ class SCFields extends SCError
 	// List of the available delivery type
 	public $delivery_list = array(
 		SCFields::HOME_DELIVERY => array('DOM', 'RDV'),
-		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT','BDP'),
+		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT', 'BDP'),
 		SCFields::API_REQUEST => array('API')
 	);
 	// By default, use the home delivery
@@ -220,7 +221,6 @@ class SCFields extends SCError
 		$this->setDeliveryMode($delivery);
 	}
 
-
 	/**
 	 * Check if the field exist for Socolissimp
 	 *
@@ -232,7 +232,6 @@ class SCFields extends SCError
 		return array_key_exists(strtoupper(trim($name)), $this->fields[$this->delivery_mode]);
 	}
 
-
 	/**
 	 * Get field for a given restriction
 	 *
@@ -243,14 +242,13 @@ class SCFields extends SCError
 	{
 		$tab = array();
 
-		if (in_array($restriction, $this->restriction_list))
-			foreach ($this->fields[$this->delivery_mode] as $key => $value)
-				if ($value == $restriction || $restriction == SCFields::ALL)
+		if ( in_array($restriction, $this->restriction_list) )
+			foreach ( $this->fields[$this->delivery_mode] as $key => $value )
+				if ( $value == $restriction || $restriction == SCFields::ALL )
 					$tab[] = $key;
 
 		return $tab;
 	}
-
 
 	/**
 	 * Check if the fields is required
@@ -261,9 +259,8 @@ class SCFields extends SCError
 	public function isRequireField($name)
 	{
 		return (in_array(strtoupper($name), $this->fields[$this->delivery_mode]) &&
-			$this->fields[$this->delivery_mode] == SCFields::REQUIRED);
+				$this->fields[$this->delivery_mode] == SCFields::REQUIRED);
 	}
-
 
 	/**
 	 * Set delivery mode
@@ -273,11 +270,11 @@ class SCFields extends SCError
 	 */
 	public function setDeliveryMode($delivery)
 	{
-		if ($delivery)
+		if ( $delivery )
 		{
-			foreach ($this->delivery_list as $delivery_mode => $list)
+			foreach ( $this->delivery_list as $delivery_mode => $list )
 			{
-				if (in_array($delivery, $list))
+				if ( in_array($delivery, $list) )
 				{
 					$this->delivery_mode = $delivery_mode;
 					return true;
@@ -286,7 +283,6 @@ class SCFields extends SCError
 		}
 		return false;
 	}
-
 
 	/**
 	 * Check if the returned key is proper to the generated one.
@@ -299,18 +295,17 @@ class SCFields extends SCError
 	{
 		$tab = array();
 
-		foreach ($this->fields[$this->delivery_mode] as $key => $value)
+		foreach ( $this->fields[$this->delivery_mode] as $key => $value )
 		{
-			if ($value == SCFields::IGNORED)
+			if ( $value == SCFields::IGNORED )
 				continue;
 
 			$key = trim($key);
-			if (isset($params[$key]))
+			if ( isset($params[$key]) )
 				$tab[$key] = $params[$key];
 		}
 
 		return $sign == $this->generateKey($tab);
 	}
-
 
 }

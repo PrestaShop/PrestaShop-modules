@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2010 PrestaShop
+ * 2007-2013 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,19 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author Prestashop SA <contact@prestashop.com>
+ *  @author PrestaShop SA <contact@prestashop.com>
  *  @author Quadra Informatique <modules@quadra-informatique.fr>
  *  @copyright  2007-2013 PrestaShop SA / 1997-2013 Quadra Informatique
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registred Trademark & Property of PrestaShop SA
+ *  International Registered Trademark & Property of PrestaShop SA
  */
-if ( !defined('_PS_VERSION_') )
-	exit;
 
-function upgrade_module_2_8_4($object, $install = false)
-{
-	// update value so url mobile
-	Configuration::updateValue('SOCOLISSIMO_URL_MOBILE', 'http://ws-mobile.colissimo.fr/');
-	Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.4');
-	return true;
-}
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+header("Location: ../");
+exit;

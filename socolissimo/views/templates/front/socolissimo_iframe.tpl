@@ -1,5 +1,5 @@
 {*
-* 2007-2012 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,9 +18,9 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2012 PrestaShop SA
-*  @version  Release: $Revision: 6735 $
-*  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
@@ -83,7 +83,7 @@
             $('[name=processCarrier]').click( function() {
                   if (($('#id_carrier' + soCarrierId).is(':checked')) || ($('.delivery_option_radio:checked').val() == soCarrierId+','))
                     {
-                if (acceptCGV('{/literal}{l s='Please accept the terms of service before the next step.'}{literal}')) {
+                if (acceptCGV('{/literal}{l s='Please accept the terms of service before the next step.' mod='socolissimo'}{literal}')) {
 
                     if(soBwdCompat) { // 1.5 zone
                         $('div.delivery_options_address h3').css('display', 'none');

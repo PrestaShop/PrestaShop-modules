@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 2007-2013 PrestaShop
  *
@@ -38,14 +39,14 @@ $result = array(
 );
 
 // Check Token
-if (Tools::getValue('token') != sha1('socolissimo' . _COOKIE_KEY_ . Context::getContext()->cart->id))
+if ( Tools::getValue('token') != sha1('socolissimo' . _COOKIE_KEY_ . Context::getContext()->cart->id) )
 {
 	$result['answer'] = false;
 	$result['msg'] = $socolissimo->l('Invalid token');
 }
 
 // If no problem with token but no delivery available
-if ($result['answer'] && !($result = $socolissimo->getDeliveryInfos(Context::getContext()->cart->id, Context::getContext()->customer->id)))
+if ( $result['answer'] && !($result = $socolissimo->getDeliveryInfos(Context::getContext()->cart->id, Context::getContext()->customer->id)) )
 {
 	$result['answer'] = false;
 	$result['msg'] = $socolissimo->l('No delivery information selected');
