@@ -343,11 +343,13 @@ class Gamification extends Module
 					$adv->id_tab = (int)Tab::getIdFromClassName($advice->tab);
 					
 					$adv->add();
-					foreach ($advice->display_conditions as $cond)
-						Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 1));
+					if (is_array($advice->display_conditions))
+						foreach ($advice->display_conditions as $cond)
+							Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 1));
 						
-					foreach ($advice->hide_conditions as $cond)
-						Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 0));
+					if (is_array($advice->hide_conditions))
+						foreach ($advice->hide_conditions as $cond)
+							Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 0));
 						
 					if (isset($advice->tabs) && is_array($advice->tabs) && count($advice->tabs))
 						foreach ($advice->tabs as $tab)
