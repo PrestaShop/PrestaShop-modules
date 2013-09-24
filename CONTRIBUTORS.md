@@ -12,12 +12,14 @@
 - Claude Traglia 
 - cmouleyre 
 - Damien Metzger 
+- DevNet 
 - Dh42 
 - djfm 
 - doekia 
 - e.lito 
 - ESPIAU Nicolas 
 - fram 
+- François Gaillard 
 - François-Marie de Jouvencel 
 - Francois Gaillard 
 - Gregory Roussac 
@@ -30,6 +32,7 @@
 - lsparer 
 - Mathieu 
 - MatthieuB 
+- modem 
 - Obvious1809 
 - PrestaEdit 
 - quadrateam 
