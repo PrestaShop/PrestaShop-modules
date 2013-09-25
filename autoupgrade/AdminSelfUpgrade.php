@@ -1487,22 +1487,23 @@ class AdminSelfUpgrade extends AdminSelfTab
 	private function _listSampleFiles($dir, $fileext = '.jpg'){
 		$res = true;
 		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
-		$toDel = scandir($dir);
+		$toDel = @scandir($dir);
 		// copied (and kind of) adapted from AdminImages.php
-		foreach ($toDel AS $file)
-		{
-			if ($file[0] != '.')
+		if (is_array($toDel))
+			foreach ($toDel AS $file)
 			{
-				if (preg_match('#'.preg_quote($fileext,'#').'$#i',$file))
+				if ($file[0] != '.')
 				{
-					$this->sampleFileList[] = $dir.$file;
-				}
-				else if (is_dir($dir.$file))
-				{
-					$res &= $this->_listSampleFiles($dir.$file, $fileext);
+					if (preg_match('#'.preg_quote($fileext,'#').'$#i',$file))
+					{
+						$this->sampleFileList[] = $dir.$file;
+					}
+					else if (is_dir($dir.$file))
+					{
+						$res &= $this->_listSampleFiles($dir.$file, $fileext);
+					}
 				}
 			}
-		}
 		return $res;
 	}
 
