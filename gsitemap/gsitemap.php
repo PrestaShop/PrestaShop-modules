@@ -36,7 +36,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.2.10';
+		$this->version = '2.2.11';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -319,7 +319,7 @@ class Gsitemap extends Module
 			$id_image = Product::getCover((int)$product_id['id_product']);
 			if (isset($id_image['id_image']))
 			{
-				$image_link = $this->context->link->getImageLink(urlencode($product->link_rewrite), $product->id.'-'.(int)$id_image['id_image']);
+				$image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.(int)$id_image['id_image']);
 				$image_link = (!in_array(Context::getContext()->shop->virtual_uri, explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
 			}
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
@@ -391,11 +391,17 @@ class Gsitemap extends Module
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
-		$manufacturers_id = Db::getInstance()->ExecuteS('SELECT m.`id_manufacturer` FROM `'._DB_PREFIX_.'manufacturer` m INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml on m.`id_manufacturer` = ml.`id_manufacturer`'.($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON m.`id_manufacturer` = ms.`id_manufacturer` ' : '').' WHERE m.`active` = 1  AND m.`id_manufacturer` > '.(int)$id_manufacturer.($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' AND ms.`id_shop` = '.(int)$this->context->shop->id : '').' AND ml.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY m.`id_manufacturer` ASC');
+		$manufacturers_id = Db::getInstance()->ExecuteS('SELECT m.`id_manufacturer` FROM `'._DB_PREFIX_.'manufacturer` m 
+			INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml on m.`id_manufacturer` = ml.`id_manufacturer`'.
+			($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON m.`id_manufacturer` = ms.`id_manufacturer` ' : '').
+			' WHERE m.`active` = 1  AND m.`id_manufacturer` > '.(int)$id_manufacturer.
+			($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' AND ms.`id_shop` = '.(int)$this->context->shop->id : '').
+			' AND ml.`id_lang` = '.(int)$lang['id_lang'].
+			' ORDER BY m.`id_manufacturer` ASC');
 		foreach ($manufacturers_id as $manufacturer_id)
 		{
 			$manufacturer = new Manufacturer((int)$manufacturer_id['id_manufacturer'], $lang['id_lang']);
-			$url = $link->getManufacturerLink($manufacturer, urlencode($manufacturer->link_rewrite), $lang['id_lang']);
+			$url = $link->getManufacturerLink($manufacturer, $manufacturer->link_rewrite, $lang['id_lang']);
 
 			$image_link = 'http://'.Tools::getMediaServer(_THEME_MANU_DIR_)._THEME_MANU_DIR_.((!file_exists(_PS_MANU_IMG_DIR_.'/'.(int)$manufacturer->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$manufacturer->id).'-medium_default.jpg';
 			$image_link = (!in_array(Context::getContext()->shop->virtual_uri, explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
@@ -427,14 +433,14 @@ class Gsitemap extends Module
 		$suppliers_id = Db::getInstance()->ExecuteS('SELECT s.`id_supplier` FROM `'._DB_PREFIX_.'supplier` s 
 			INNER JOIN `'._DB_PREFIX_.'supplier_lang` sl ON s.`id_supplier` = sl.`id_supplier` '.
 			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? 'INNER JOIN `'._DB_PREFIX_.'supplier_shop` ss ON s.`id_supplier` = ss.`id_supplier`' : '').' 
-			WHERE s.`active` = 1 AND s.`id_supplier` > '.(int)$id_supplier .
-			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? ' AND ss.`id_shop` = '.(int)$this->context->shop->id: '').' 
+			WHERE s.`active` = 1 AND s.`id_supplier` > '.(int)$id_supplier.
+			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? ' AND ss.`id_shop` = '.(int)$this->context->shop->id : '').' 
 			AND sl.`id_lang` = '.(int)$lang['id_lang'].' 
 			ORDER BY s.`id_supplier` ASC');
 		foreach ($suppliers_id as $supplier_id)
 		{
 			$supplier = new Supplier((int)$supplier_id['id_supplier'], $lang['id_lang']);
-			$url = $link->getSupplierLink($supplier, urlencode($supplier->link_rewrite), $lang['id_lang']);
+			$url = $link->getSupplierLink($supplier, $supplier->link_rewrite, $lang['id_lang']);
 
 			$image_link = 'http://'.Tools::getMediaServer(_THEME_SUP_DIR_)._THEME_SUP_DIR_.((!file_exists(_THEME_SUP_DIR_.'/'.(int)$supplier->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$supplier->id).'-medium_default.jpg';
 			$image_link = (!in_array(Context::getContext()->shop->virtual_uri, explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
@@ -577,10 +583,10 @@ class Gsitemap extends Module
 		foreach ($link_sitemap as $key => $file)
 		{
 			fwrite($writeFd, '<url>'."\r\n");
-			$this->_addSitemapNode($writeFd, Tools::safeOutput($file['link']), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), date('c'));
+			$this->_addSitemapNode($writeFd, htmlspecialchars(strip_tags($file['link'])), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), date('c'));
 			if ($file['image'])
 			{
-				$this->_addSitemapNodeImage($writeFd, Tools::safeOutput($file['image']['link']), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['title_img']))) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['caption']))) : '');
+				$this->_addSitemapNodeImage($writeFd, htmlspecialchars(strip_tags($file['image']['link'])), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['title_img']))) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['caption']))) : '');
 			}
 			fwrite($writeFd, '</url>'."\r\n");
 		}
@@ -649,13 +655,18 @@ class Gsitemap extends Module
 				return $this->sql_checks[$table_name];
 
 		$table = Db::getInstance()->ExecuteS('SHOW TABLES LIKE \''.$table_name.'\'');
-		if (count($table) < 1)
+		if (empty($column))
+			if (count($table) < 1)
+				return $this->sql_checks[$table_name] = false;
+			else
+				$this->sql_checks[$table_name] = true;
+
+		else
 		{
-			$this->sql_checks[$table_name] = false;
-			return $this->sql_checks[$table_name];
+			$table = Db::getInstance()->ExecuteS('SELECT * FROM `'.$table_name.'` LIMIT 1');
+			return $this->sql_checks[$table_name][$column] = array_key_exists($column, current($table));
 		}
-		$table = Db::getInstance()->ExecuteS('SELECT * FROM `'.$table_name.'` LIMIT 1');
-		return $this->sql_checks[$table_name][$column] = array_key_exists($column, current($table));
+		return true;
 	}
 
 }
