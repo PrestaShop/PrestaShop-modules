@@ -1962,7 +1962,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		global $warningExists;
 
-		$queries = array('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE `value` IS NULL AND `date_upd` IS NULL');
+		$queries = array('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE (`value` IS NULL AND `date_upd` IS NULL) OR `value` LIKE ""');
 
 		$warningExist = false;
 		foreach ($queries as $query)
