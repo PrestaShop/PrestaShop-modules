@@ -115,7 +115,7 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -273,14 +273,14 @@ class FianetSceau extends Module
 		$set_string = "";
 		foreach ($fields as $fieldname => $fieldvalue)
 		{
-			$set_string .= "`".bqSQL ($fieldname)."` = '".bqSQL ($fieldvalue)."', ";
+			$set_string .= "`".bqSQL($fieldname)."` = '".bqSQL($fieldvalue)."', ";
 		}
 		$set_string = substr($set_string, 0, '-2');
 
 		$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` SET ".$set_string." WHERE `id_order` = '".(int) $id_order."'";
-		
+
 		SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, $sql);
-		
+
 		$updated = Db::getInstance()->execute($sql);
 		if (!$updated)
 		{
@@ -584,10 +584,18 @@ class FianetSceau extends Module
 	{
 
 		//retrieve widget number on database and load the corresponding widget
+
+		$host = $_SERVER['HTTP_HOST'];
+		$url_site = 'http://www.'.$host;
+		$string_site = explode('.', $host);
+		$nom_site = $string_site[0];
+
 		$this->smarty->assign(array(
 			'siteid' => Configuration::get('FIANETSCEAU_SITEID'),
 			'shape' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'],
 			'background' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['background'],
+			'url_site' => $url_site,
+			'nom_site' => $nom_site,
 		));
 
 		if ($this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'] == 'comment')
