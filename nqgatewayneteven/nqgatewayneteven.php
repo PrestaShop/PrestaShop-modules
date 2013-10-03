@@ -39,10 +39,10 @@ class NqGatewayNeteven extends Module
 	{
 		$this->name = 'nqgatewayneteven';
 		
-		if (constant('_PS_VERSION_') < 1.4)
-			$this->tab = 'Tools';
-		else
+		if (constant('_PS_VERSION_') >= 1.4)
 			$this->tab = 'market_place';
+		else
+			$this->tab = 'Tools';
 		
 		$this->version = '1.7.7';
 		$this->author = 'NetEven';
