@@ -28,75 +28,76 @@
 
 include('../../config/config.inc.php');
 include('../../init.php');
-require_once(_PS_MODULE_DIR_ . 'socolissimo/classes/SCFields.php');
+require_once(_PS_MODULE_DIR_.'socolissimo/classes/SCFields.php');
 
-// Init the Context (inherit Socolissimo and handle error)
-if ( !Tools::getValue('DELIVERYMODE') )
-	$so = new SCFields(Tools::getValue('deliveryMode')); // api 3.0 mobile
+/* Init the Context (inherit Socolissimo and handle error) */
+if (!Tools::getValue('DELIVERYMODE'))
+	$so = new SCFields(Tools::getValue('deliveryMode')); /* api 3.0 mobile */
 else
-	$so = new SCFields(Tools::getValue('DELIVERYMODE')); //api 4.0
+	$so = new SCFields(Tools::getValue('DELIVERYMODE')); /* api 4.0 */
 
-// Init the Display
+
+/* Init the Display */
 $display = new BWDisplay();
-$display->setTemplate(dirname(__FILE__) . '/views/templates/front/error.tpl');
+$display->setTemplate(dirname(__FILE__).'/views/templates/front/error.tpl');
 
 $errors_list = array();
-$redirect = __PS_BASE_URI__ . (version_compare(_PS_VERSION_,'1.5','<') ? 'order.php?' : 'index.php?controller=order&');
+$redirect = __PS_BASE_URI__.(version_compare(_PS_VERSION_, '1.5', '<') ? 'order.php?' : 'index.php?controller=order&');
 $so->context->smarty->assign('so_url_back', $redirect);
 
 $return = array();
 
-// If error code not defined or empty / null
+/* If error code not defined or empty / null */
 $errors_codes = ($tab = Tools::getValue('ERRORCODE')) ? explode(' ', trim($tab)) : array();
 
-// If no required error code, start to get the POST data
-if ( !$so->checkErrors($errors_codes, SCError::REQUIRED) )
+/* If no required error code, start to get the POST data */
+if (!$so->checkErrors($errors_codes, SCError::REQUIRED))
 {
-	foreach ( $_POST as $key => $val )
-		if ( $so->isAvailableFields($key) )
-			if ( !isset($_POST['CHARSET']) ) // only way to know if api is 3.0 to get encode for accentued chars in key calculation
+	foreach ($_POST as $key => $val)
+		if ($so->isAvailableFields($key))
+			if (!isset($_POST['CHARSET'])) /* only way to know if api is 3.0 to get encode for accentued chars in key calculation */
 				$return[strtoupper($key)] = utf8_encode(stripslashes($val));
 			else
 				$return[strtoupper($key)] = stripslashes($val);
 
-	// GET parameter, the only one
-	$return['TRRETURNURLKO'] = Tools::getValue('trReturnUrlKo'); // api 3.0 mobile
-	if ( !$return['TRRETURNURLKO'] )
-		$return['TRRETURNURLKO'] = Tools::getValue('TRRETURNURLKO'); //api 4.0
+	/* GET parameter, the only one */
+	$return['TRRETURNURLKO'] = Tools::getValue('trReturnUrlKo'); /* api 3.0 mobile */
+	if (!$return['TRRETURNURLKO'])
+		$return['TRRETURNURLKO'] = Tools::getValue('TRRETURNURLKO'); /* api 4.0 */
 
-	foreach ( $so->getFields(SCFields::REQUIRED) as $field )
-		if ( !isset($return[$field]) )
-			$errors_list[] = $so->l('This key is required for Socolissimo:') . $field;
+	foreach ($so->getFields(SCFields::REQUIRED) as $field)
+		if (!isset($return[$field]))
+			$errors_list[] = $so->l('This key is required for Socolissimo:').$field;
 }
 else
-	foreach ( $errors_codes as $code )
-		$errors_list[] = $so->l('Error code:') . ' ' . $so->getError($code);
+	foreach ($errors_codes as $code)
+		$errors_list[] = $so->l('Error code:').' '.$so->getError($code);
 
-if ( empty($errors_list) )
+if (empty($errors_list))
 {
-	if ( $so->isCorrectSignKey($return['SIGNATURE'], $return) &&
-			$so->context->cart->id && saveOrderShippingDetails($so->context->cart->id, (int) ($return['TRCLIENTNUMBER']), $return, $so) )
+	if ($so->isCorrectSignKey($return['SIGNATURE'], $return) &&
+			$so->context->cart->id && saveOrderShippingDetails($so->context->cart->id, (int)$return['TRCLIENTNUMBER'], $return, $so))
 	{
-		$TRPARAMPLUS = explode('|', $return['TRPARAMPLUS']);
+		$trparamplus = explode('|', $return['TRPARAMPLUS']);
 
-		if ( count($TRPARAMPLUS) > 1 )
+		if (count($trparamplus) > 1)
 		{
-			$so->context->cart->id_carrier = (int) $TRPARAMPLUS[0];
-			if ( $TRPARAMPLUS[1] == "checked" || $TRPARAMPLUS[1] == 1 ) // value can be "undefined" or "not checked"
+			$so->context->cart->id_carrier = (int)$trparamplus[0];
+			if ($trparamplus[1] == 'checked' || $trparamplus[1] == 1) /* value can be "undefined" or "not checked" */
 				$so->context->cart->gift = 1;
 			else
 				$so->context->cart->gift = 0;
 		}
-		elseif ( count($TRPARAMPLUS) == 1 )
-			$so->context->cart->id_carrier = (int) $TRPARAMPLUS[0];
+		elseif (count($trparamplus) == 1)
+			$so->context->cart->id_carrier = (int)$trparamplus[0];
 
-		if ( (int) $so->context->cart->gift && Validate::isMessage($TRPARAMPLUS[2]) )
-			$so->context->cart->gift_message = strip_tags($TRPARAMPLUS[2]);
+		if ((int)$so->context->cart->gift && Validate::isMessage($trparamplus[2]))
+			$so->context->cart->gift_message = strip_tags($trparamplus[2]);
 
-		if ( !$so->context->cart->update() )
+		if (!$so->context->cart->update())
 			$errors_list[] = $so->l('Cart cannot be updated. Please try again your selection');
 		else
-			Tools::redirect($redirect . 'step=3&cgv=1&id_carrier=' . $so->context->cart->id_carrier);
+			Tools::redirect($redirect.'step=3&cgv=1&id_carrier='.$so->context->cart->id_carrier);
 	}
 	else
 		$errors_list[] = $so->getError('999');
@@ -105,138 +106,139 @@ if ( empty($errors_list) )
 $so->context->smarty->assign('error_list', $errors_list);
 $display->run();
 
-function saveOrderShippingDetails($idCart, $idCustomer, $soParams, $so_object)
+function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object)
 {
 	// if api use is 3.0 we need to decode for accentued chars
-	if ( !isset($soParams['CHARSET']) )
-		foreach ( $soParams as $key => $value )
-			$soParams[$key] = utf8_decode($value);
+	if (!isset($so_params['CHARSET']))
+		foreach ($so_params as $key => $value)
+			$so_params[$key] = utf8_decode($value);
 
-	$deliveryMode = array(
+	$delivery_mode = array(
 		'DOM' => 'Livraison à domicile', 'BPR' => 'Livraison en Bureau de Poste',
 		'A2P' => 'Livraison Commerce de proximité', 'MRL' => 'Livraison Commerce de proximité', 'CMT' => 'Livraison commerçants Belgique',
 		'CIT' => 'Livraison en Cityssimo', 'ACP' => 'Agence ColiPoste', 'CDI' => 'Centre de distribution', 'BDP' => 'Bureau de poste Belge',
 		'RDV' => 'Livraison sur Rendez-vous');
 
 	// default country france
-	if ( isset($soParams['PRPAYS']) )
-		$countryCode = $soParams['PRPAYS'];
-	elseif ( isset($soParams['CEPAYS']) )
-		$countryCode = $soParams['CEPAYS'];
+	if (isset($so_params['PRPAYS']))
+		$country_code = $so_params['PRPAYS'];
+	elseif (isset($so_params['CEPAYS']))
+		$country_code = $so_params['CEPAYS'];
 	else
-		$countryCode = 'FR';
+		$country_code = 'FR';
 
 	$db = Db::getInstance();
-	$db->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'socolissimo_delivery_info WHERE id_cart = ' . (int) ($idCart) . ' AND id_customer =' . (int) ($idCustomer));
-	$numRows = (int) ($db->NumRows());
-	if ( $numRows == 0 )
+	$db->executeS('SELECT * FROM '._DB_PREFIX_.'socolissimo_delivery_info WHERE id_cart = '.(int)$id_cart.' AND id_customer ='.(int)$id_customer);
+	$num_rows = (int)$db->NumRows();
+	if ($num_rows == 0)
 	{
-		$sql = 'INSERT INTO ' . _DB_PREFIX_ . 'socolissimo_delivery_info
+		$sql = 'INSERT INTO '._DB_PREFIX_.'socolissimo_delivery_info
 			( `id_cart`, `id_customer`, `delivery_mode`, `prid`, `prname`, `prfirstname`, `prcompladress`,
 			`pradress1`, `pradress2`, `pradress3`, `pradress4`, `przipcode`, `prtown`,`cecountry`, `cephonenumber`, `ceemail` ,
 			`cecompanyname`, `cedeliveryinformation`, `cedoorcode1`, `cedoorcode2`,`codereseau`, `cename`, `cefirstname`)
-			VALUES (' . (int) ($idCart) . ',' . (int) ($idCustomer) . ',';
-		if ( $so_object->delivery_mode == SCFields::RELAY_POINT )
-			$sql .= '\'' . pSQL($soParams['DELIVERYMODE']) . '\'' . ',
-					' . (isset($soParams['PRID']) ? '\'' . pSQL($soParams['PRID']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CENAME']) ? '\'' . pSQL($soParams['CENAME']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEFIRSTNAME']) ? '\'' . ucfirst(pSQL($soParams['CEFIRSTNAME'])) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRCOMPLADRESS']) ? '\'' . pSQL($soParams['PRCOMPLADRESS']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRNAME']) ? '\'' . pSQL($soParams['PRNAME']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRADRESS1']) ? '\'' . pSQL($soParams['PRADRESS1']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRADRESS3']) ? '\'' . pSQL($soParams['PRADRESS3']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRADRESS4']) ? '\'' . pSQL($soParams['PRADRESS4']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRZIPCODE']) ? '\'' . pSQL($soParams['PRZIPCODE']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['PRTOWN']) ? '\'' . pSQL($soParams['PRTOWN']) . '\'' : '\'\'') . ',
-					' . (isset($countryCode) ? '\'' . pSQL($countryCode) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEPHONENUMBER']) ? '\'' . pSQL($soParams['CEPHONENUMBER']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEEMAIL']) ? '\'' . pSQL($soParams['CEEMAIL']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CECOMPANYNAME']) ? '\'' . pSQL($soParams['CECOMPANYNAME']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDELIVERYINFORMATION']) ? '\'' . pSQL($soParams['CEDELIVERYINFORMATION']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDOORCODE1']) ? '\'' . pSQL($soParams['CEDOORCODE1']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDOORCODE2']) ? '\'' . pSQL($soParams['CEDOORCODE2']) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CODERESEAU']) ? '\'' . pSQL($soParams['CODERESEAU']) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CENAME']) ? '\'' . ucfirst(pSQL($soParams['CENAME'])) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CEFIRSTNAME']) ? '\'' . ucfirst(pSQL($soParams['CEFIRSTNAME'])) . '\'' : '\'\'') . ')';
+			VALUES ('.(int)$id_cart.','.(int)$id_customer.',';
+		if ($so_object->delivery_mode == SCFields::RELAY_POINT)
+			$sql .= '\''.pSQL($so_params['DELIVERYMODE']).'\',
+					'.(isset($so_params['PRID']) ? '\''.pSQL($so_params['PRID']).'\'' : '\'\'').',
+					'.(isset($so_params['CENAME']) ? '\''.pSQL($so_params['CENAME']).'\'' : '\'\'').',
+					'.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['PRCOMPLADRESS']) ? '\''.pSQL($so_params['PRCOMPLADRESS']).'\'' : '\'\'').',
+					'.(isset($so_params['PRNAME']) ? '\''.pSQL($so_params['PRNAME']).'\'' : '\'\'').',
+					'.(isset($so_params['PRADRESS1']) ? '\''.pSQL($so_params['PRADRESS1']).'\'' : '\'\'').',
+					'.(isset($so_params['PRADRESS3']) ? '\''.pSQL($so_params['PRADRESS3']).'\'' : '\'\'').',
+					'.(isset($so_params['PRADRESS4']) ? '\''.pSQL($so_params['PRADRESS4']).'\'' : '\'\'').',
+					'.(isset($so_params['PRZIPCODE']) ? '\''.pSQL($so_params['PRZIPCODE']).'\'' : '\'\'').',
+					'.(isset($so_params['PRTOWN']) ? '\''.pSQL($so_params['PRTOWN']).'\'' : '\'\'').',
+					'.(isset($country_code) ? '\''.pSQL($country_code).'\'' : '\'\'').',
+					'.(isset($so_params['CEPHONENUMBER']) ? '\''.pSQL($so_params['CEPHONENUMBER']).'\'' : '\'\'').',
+					'.(isset($so_params['CEEMAIL']) ? '\''.pSQL($so_params['CEEMAIL']).'\'' : '\'\'').',
+					'.(isset($so_params['CECOMPANYNAME']) ? '\''.pSQL($so_params['CECOMPANYNAME']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDELIVERYINFORMATION']) ? '\''.pSQL($so_params['CEDELIVERYINFORMATION']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDOORCODE1']) ? '\''.pSQL($so_params['CEDOORCODE1']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDOORCODE2']) ? '\''.pSQL($so_params['CEDOORCODE2']).'\'' : '\'\'').',
+                                    '.(isset($so_params['CODERESEAU']) ? '\''.pSQL($so_params['CODERESEAU']).'\'' : '\'\'').',
+                                    '.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
 		else
-			$sql .= '\'' . pSQL($soParams['DELIVERYMODE']) . '\',\'\',
-					' . (isset($soParams['CENAME']) ? '\'' . ucfirst(pSQL($soParams['CENAME'])) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEFIRSTNAME']) ? '\'' . ucfirst(pSQL($soParams['CEFIRSTNAME'])) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CECOMPLADRESS']) ? '\'' . pSQL($soParams['CECOMPLADRESS']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEADRESS1']) ? '\'' . pSQL($soParams['CEADRESS1']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEADRESS2']) ? '\'' . pSQL($soParams['CEADRESS2']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEADRESS3']) ? '\'' . pSQL($soParams['CEADRESS3']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEADRESS4']) ? '\'' . pSQL($soParams['CEADRESS4']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEZIPCODE']) ? '\'' . pSQL($soParams['CEZIPCODE']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CETOWN']) ? '\'' . pSQL($soParams['CETOWN']) . '\'' : '\'\'') . ',
-					' . (isset($countryCode) ? '\'' . pSQL($countryCode) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEPHONENUMBER']) ? '\'' . pSQL($soParams['CEPHONENUMBER']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEEMAIL']) ? '\'' . pSQL($soParams['CEEMAIL']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CECOMPANYNAME']) ? '\'' . pSQL($soParams['CECOMPANYNAME']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDELIVERYINFORMATION']) ? '\'' . pSQL($soParams['CEDELIVERYINFORMATION']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDOORCODE1']) ? '\'' . pSQL($soParams['CEDOORCODE1']) . '\'' : '\'\'') . ',
-					' . (isset($soParams['CEDOORCODE2']) ? '\'' . pSQL($soParams['CEDOORCODE2']) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CODERESEAU']) ? '\'' . pSQL($soParams['CODERESEAU']) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CENAME']) ? '\'' . ucfirst(pSQL($soParams['CENAME'])) . '\'' : '\'\'') . ',
-                                    ' . (isset($soParams['CEFIRSTNAME']) ? '\'' . ucfirst(pSQL($soParams['CEFIRSTNAME'])) . '\'' : '\'\'') . ')';
-		if ( Db::getInstance()->execute($sql) )
+			$sql .= '\''.pSQL($so_params['DELIVERYMODE']).'\',\'\',
+					'.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['CECOMPLADRESS']) ? '\''.pSQL($so_params['CECOMPLADRESS']).'\'' : '\'\'').',
+					'.(isset($so_params['CEADRESS1']) ? '\''.pSQL($so_params['CEADRESS1']).'\'' : '\'\'').',
+					'.(isset($so_params['CEADRESS2']) ? '\''.pSQL($so_params['CEADRESS2']).'\'' : '\'\'').',
+					'.(isset($so_params['CEADRESS3']) ? '\''.pSQL($so_params['CEADRESS3']).'\'' : '\'\'').',
+					'.(isset($so_params['CEADRESS4']) ? '\''.pSQL($so_params['CEADRESS4']).'\'' : '\'\'').',
+					'.(isset($so_params['CEZIPCODE']) ? '\''.pSQL($so_params['CEZIPCODE']).'\'' : '\'\'').',
+					'.(isset($so_params['CETOWN']) ? '\''.pSQL($so_params['CETOWN']).'\'' : '\'\'').',
+					'.(isset($country_code) ? '\''.pSQL($country_code).'\'' : '\'\'').',
+					'.(isset($so_params['CEPHONENUMBER']) ? '\''.pSQL($so_params['CEPHONENUMBER']).'\'' : '\'\'').',
+					'.(isset($so_params['CEEMAIL']) ? '\''.pSQL($so_params['CEEMAIL']).'\'' : '\'\'').',
+					'.(isset($so_params['CECOMPANYNAME']) ? '\''.pSQL($so_params['CECOMPANYNAME']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDELIVERYINFORMATION']) ? '\''.pSQL($so_params['CEDELIVERYINFORMATION']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDOORCODE1']) ? '\''.pSQL($so_params['CEDOORCODE1']).'\'' : '\'\'').',
+					'.(isset($so_params['CEDOORCODE2']) ? '\''.pSQL($so_params['CEDOORCODE2']).'\'' : '\'\'').',
+                                    '.(isset($so_params['CODERESEAU']) ? '\''.pSQL($so_params['CODERESEAU']).'\'' : '\'\'').',
+                                    '.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
+		if (Db::getInstance()->execute($sql))
 			return true;
 	}
 	else
 	{
-		$table = _DB_PREFIX_ . 'socolissimo_delivery_info';
+		$table = _DB_PREFIX_.'socolissimo_delivery_info';
 		$values = array();
-		$values['delivery_mode'] = pSQL($soParams['DELIVERYMODE']);
+		$values['delivery_mode'] = pSQL($so_params['DELIVERYMODE']);
 
-		if ( $so_object->delivery_mode == SCFields::RELAY_POINT )
+		if ($so_object->delivery_mode == SCFields::RELAY_POINT)
 		{
-			isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : '';
-			isset($soParams['PRNAME']) ? $values['prname'] = ucfirst(pSQL($soParams['PRNAME'])) : '';
-			isset($deliveryMode[$soParams['DELIVERYMODE']]) ? $values['prfirstname'] = pSQL($deliveryMode[$soParams['DELIVERYMODE']]) : $values['prfirstname'] = 'So Colissimo';
-			isset($soParams['PRCOMPLADRESS']) ? $values['prcompladress'] = pSQL($soParams['PRCOMPLADRESS']) : '';
-			isset($soParams['PRADRESS1']) ? $values['pradress1'] = pSQL($soParams['PRADRESS1']) : '';
-			isset($soParams['PRADRESS2']) ? $values['pradress2'] = pSQL($soParams['PRADRESS2']) : '';
-			isset($soParams['PRADRESS3']) ? $values['pradress3'] = pSQL($soParams['PRADRESS3']) : '';
-			isset($soParams['PRADRESS4']) ? $values['pradress4'] = pSQL($soParams['PRADRESS4']) : '';
-			isset($soParams['PRZIPCODE']) ? $values['przipcode'] = pSQL($soParams['PRZIPCODE']) : '';
-			isset($soParams['PRTOWN']) ? $values['prtown'] = pSQL($soParams['PRTOWN']) : '';
-			isset($countryCode) ? $values['cecountry'] = pSQL($countryCode) : '';
-			isset($soParams['CEPHONENUMBER']) ? $values['cephonenumber'] = pSQL($soParams['CEPHONENUMBER']) : '';
-			isset($soParams['CEEMAIL']) ? $values['ceemail'] = pSQL($soParams['CEEMAIL']) : '';
-			isset($soParams['CEDELIVERYINFORMATION']) ? $values['cedeliveryinformation'] = pSQL($soParams['CEDELIVERYINFORMATION']) : '';
-			isset($soParams['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($soParams['CEDOORCODE1']) : '';
-			isset($soParams['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($soParams['CEDOORCODE2']) : '';
-			isset($soParams['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($soParams['CECOMPANYNAME']) : '';
-			isset($soParams['CODERESEAU']) ? $values['codereseau'] = pSQL($soParams['CODERESEAU']) : '';
-			isset($soParams['CENAME']) ? $values['cename'] = pSQL($soParams['CENAME']) : '';
-			isset($soParams['CEFIRSTNAME']) ? $values['cefirstname'] = pSQL($soParams['CEFIRSTNAME']) : '';
+			isset($so_params['PRID']) ? $values['prid'] = pSQL($so_params['PRID']) : '';
+			isset($so_params['PRNAME']) ? $values['prname'] = ucfirst(pSQL($so_params['PRNAME'])) : '';
+			isset($delivery_mode[$so_params['DELIVERYMODE']]) ? $values['prfirstname'] =
+							pSQL($delivery_mode[$so_params['DELIVERYMODE']]) : $values['prfirstname'] = 'So Colissimo';
+			isset($so_params['PRCOMPLADRESS']) ? $values['prcompladress'] = pSQL($so_params['PRCOMPLADRESS']) : '';
+			isset($so_params['PRADRESS1']) ? $values['pradress1'] = pSQL($so_params['PRADRESS1']) : '';
+			isset($so_params['PRADRESS2']) ? $values['pradress2'] = pSQL($so_params['PRADRESS2']) : '';
+			isset($so_params['PRADRESS3']) ? $values['pradress3'] = pSQL($so_params['PRADRESS3']) : '';
+			isset($so_params['PRADRESS4']) ? $values['pradress4'] = pSQL($so_params['PRADRESS4']) : '';
+			isset($so_params['PRZIPCODE']) ? $values['przipcode'] = pSQL($so_params['PRZIPCODE']) : '';
+			isset($so_params['PRTOWN']) ? $values['prtown'] = pSQL($so_params['PRTOWN']) : '';
+			isset($country_code) ? $values['cecountry'] = pSQL($country_code) : '';
+			isset($so_params['CEPHONENUMBER']) ? $values['cephonenumber'] = pSQL($so_params['CEPHONENUMBER']) : '';
+			isset($so_params['CEEMAIL']) ? $values['ceemail'] = pSQL($so_params['CEEMAIL']) : '';
+			isset($so_params['CEDELIVERYINFORMATION']) ? $values['cedeliveryinformation'] = pSQL($so_params['CEDELIVERYINFORMATION']) : '';
+			isset($so_params['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($so_params['CEDOORCODE1']) : '';
+			isset($so_params['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($so_params['CEDOORCODE2']) : '';
+			isset($so_params['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($so_params['CECOMPANYNAME']) : '';
+			isset($so_params['CODERESEAU']) ? $values['codereseau'] = pSQL($so_params['CODERESEAU']) : '';
+			isset($so_params['CENAME']) ? $values['cename'] = pSQL($so_params['CENAME']) : '';
+			isset($so_params['CEFIRSTNAME']) ? $values['cefirstname'] = pSQL($so_params['CEFIRSTNAME']) : '';
 		}
 		else
 		{
-			isset($soParams['PRID']) ? $values['prid'] = pSQL($soParams['PRID']) : $values['prid'] = '';
-			isset($soParams['CENAME']) ? $values['prname'] = ucfirst(pSQL($soParams['CENAME'])) : '';
-			isset($soParams['CEFIRSTNAME']) ? $values['prfirstname'] = ucfirst(pSQL($soParams['CEFIRSTNAME'])) : '';
-			isset($soParams['CECOMPLADRESS']) ? $values['prcompladress'] = pSQL($soParams['CECOMPLADRESS']) : '';
-			isset($soParams['CEADRESS1']) ? $values['pradress1'] = pSQL($soParams['CEADRESS1']) : '';
-			isset($soParams['CEADRESS2']) ? $values['pradress2'] = pSQL($soParams['CEADRESS2']) : '';
-			isset($soParams['CEADRESS3']) ? $values['pradress3'] = pSQL($soParams['CEADRESS3']) : '';
-			isset($soParams['CEADRESS4']) ? $values['pradress4'] = pSQL($soParams['CEADRESS4']) : '';
-			isset($soParams['CEZIPCODE']) ? $values['przipcode'] = pSQL($soParams['CEZIPCODE']) : '';
-			isset($soParams['CETOWN']) ? $values['prtown'] = pSQL($soParams['CETOWN']) : '';
-			isset($countryCode) ? $values['cecountry'] = pSQL($countryCode) : '';
-			isset($soParams['CEEMAIL']) ? $values['ceemail'] = pSQL($soParams['CEEMAIL']) : '';
-			isset($soParams['CEPHONENUMBER']) ? $values['cephonenumber'] = pSQL($soParams['CEPHONENUMBER']) : '';
-			isset($soParams['CEDELIVERYINFORMATION']) ? $values['cedeliveryinformation'] = pSQL($soParams['CEDELIVERYINFORMATION']) : '';
-			isset($soParams['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($soParams['CEDOORCODE1']) : '';
-			isset($soParams['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($soParams['CEDOORCODE2']) : '';
-			isset($soParams['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($soParams['CECOMPANYNAME']) : '';
-			isset($soParams['CODERESEAU']) ? $values['codereseau'] = pSQL($soParams['CODERESEAU']) : '';
-			isset($soParams['CENAME']) ? $values['cename'] = pSQL($soParams['CENAME']) : '';
-			isset($soParams['CEFIRSTNAME']) ? $values['cefirstname'] = pSQL($soParams['CEFIRSTNAME']) : '';
+			isset($so_params['PRID']) ? $values['prid'] = pSQL($so_params['PRID']) : $values['prid'] = '';
+			isset($so_params['CENAME']) ? $values['prname'] = ucfirst(pSQL($so_params['CENAME'])) : '';
+			isset($so_params['CEFIRSTNAME']) ? $values['prfirstname'] = ucfirst(pSQL($so_params['CEFIRSTNAME'])) : '';
+			isset($so_params['CECOMPLADRESS']) ? $values['prcompladress'] = pSQL($so_params['CECOMPLADRESS']) : '';
+			isset($so_params['CEADRESS1']) ? $values['pradress1'] = pSQL($so_params['CEADRESS1']) : '';
+			isset($so_params['CEADRESS2']) ? $values['pradress2'] = pSQL($so_params['CEADRESS2']) : '';
+			isset($so_params['CEADRESS3']) ? $values['pradress3'] = pSQL($so_params['CEADRESS3']) : '';
+			isset($so_params['CEADRESS4']) ? $values['pradress4'] = pSQL($so_params['CEADRESS4']) : '';
+			isset($so_params['CEZIPCODE']) ? $values['przipcode'] = pSQL($so_params['CEZIPCODE']) : '';
+			isset($so_params['CETOWN']) ? $values['prtown'] = pSQL($so_params['CETOWN']) : '';
+			isset($country_code) ? $values['cecountry'] = pSQL($country_code) : '';
+			isset($so_params['CEEMAIL']) ? $values['ceemail'] = pSQL($so_params['CEEMAIL']) : '';
+			isset($so_params['CEPHONENUMBER']) ? $values['cephonenumber'] = pSQL($so_params['CEPHONENUMBER']) : '';
+			isset($so_params['CEDELIVERYINFORMATION']) ? $values['cedeliveryinformation'] = pSQL($so_params['CEDELIVERYINFORMATION']) : '';
+			isset($so_params['CEDOORCODE1']) ? $values['cedoorcode1'] = pSQL($so_params['CEDOORCODE1']) : '';
+			isset($so_params['CEDOORCODE2']) ? $values['cedoorcode2'] = pSQL($so_params['CEDOORCODE2']) : '';
+			isset($so_params['CECOMPANYNAME']) ? $values['cecompanyname'] = pSQL($so_params['CECOMPANYNAME']) : '';
+			isset($so_params['CODERESEAU']) ? $values['codereseau'] = pSQL($so_params['CODERESEAU']) : '';
+			isset($so_params['CENAME']) ? $values['cename'] = pSQL($so_params['CENAME']) : '';
+			isset($so_params['CEFIRSTNAME']) ? $values['cefirstname'] = pSQL($so_params['CEFIRSTNAME']) : '';
 		}
-		$where = ' `id_cart` =\'' . (int) ($idCart) . '\' AND `id_customer` =\'' . (int) ($idCustomer) . '\'';
+		$where = ' `id_cart` =\''.(int)$id_cart.'\' AND `id_customer` =\''.(int)$id_customer.'\'';
 
-		if ( Db::getInstance()->autoExecute($table, $values, 'UPDATE', $where) )
+		if (Db::getInstance()->autoExecute($table, $values, 'UPDATE', $where))
 			return true;
 	}
 }

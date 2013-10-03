@@ -25,7 +25,7 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registred Trademark & Property of PrestaShop SA
  */
-if ( !defined('_PS_VERSION_') )
+if (!defined('_PS_VERSION_'))
 	exit;
 
 function upgrade_module_2_8_0($object, $install = false)
@@ -35,18 +35,18 @@ function upgrade_module_2_8_0($object, $install = false)
 	// add column cecountry in table socolissimo_delivery_info, checking exitence first (2.8 update)
 	$query = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 			  WHERE COLUMN_NAME= "cecountry"
-			  AND TABLE_NAME=  "' . _DB_PREFIX_ . 'socolissimo_delivery_info"
-			  AND TABLE_SCHEMA = "' . _DB_NAME_ . '"';
+			  AND TABLE_NAME=  "'._DB_PREFIX_.'socolissimo_delivery_info"
+			  AND TABLE_SCHEMA = "'._DB_NAME_.'"';
 
 	$result = Db::getInstance()->ExecuteS($query);
 
 	// adding column
-	if ( !$result )
+	if (!$result)
 	{
-		$query = 'ALTER TABLE ' . _DB_PREFIX_ . 'socolissimo_delivery_info add  `cecountry` varchar(10) NOT NULL AFTER `prtown`';
-		if ( Db::getInstance()->Execute($query) )
-			$query = 'UPDATE ' . _DB_PREFIX_ . 'socolissimo_delivery_info SET `cecountry` = "FR" where `cecountry` =""'; // updating value
-		if ( Db::getInstance()->Execute($query) )
+		$query = 'ALTER TABLE '._DB_PREFIX_.'socolissimo_delivery_info add  `cecountry` varchar(10) NOT NULL AFTER `prtown`';
+		if (Db::getInstance()->Execute($query))
+			$query = 'UPDATE '._DB_PREFIX_.'socolissimo_delivery_info SET `cecountry` = "FR" where `cecountry` =""'; // updating value
+		if (Db::getInstance()->Execute($query))
 			Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.0');
 	}
 	else

@@ -25,7 +25,7 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registred Trademark & Property of PrestaShop SA
  */
-if ( !defined('_PS_VERSION_') )
+if (!defined('_PS_VERSION_'))
 	exit;
 
 function upgrade_module_2_8_5($object, $install = false)
@@ -35,41 +35,41 @@ function upgrade_module_2_8_5($object, $install = false)
 	// add column codereseau, cename, cefirstname in table socolissimo_delivery_info, checking exitence first (2.8.5 update)
 	$query = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 			  WHERE COLUMN_NAME= "codereseau"
-			  AND TABLE_NAME=  "' . _DB_PREFIX_ . 'socolissimo_delivery_info"
-			  AND TABLE_SCHEMA = "' . _DB_NAME_ . '"';
+			  AND TABLE_NAME=  "'._DB_PREFIX_.'socolissimo_delivery_info"
+			  AND TABLE_SCHEMA = "'._DB_NAME_.'"';
 
 	$result = Db::getInstance()->ExecuteS($query);
 
 	// adding column codereseau
-	if ( !$result )
+	if (!$result)
 	{
-		$query = 'ALTER TABLE ' . _DB_PREFIX_ . 'socolissimo_delivery_info add  `codereseau` varchar(3)';
+		$query = 'ALTER TABLE '._DB_PREFIX_.'socolissimo_delivery_info add  `codereseau` varchar(3)';
 		Db::getInstance()->Execute($query);
 	}
 	$query = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 			  WHERE COLUMN_NAME= "cename"
-			  AND TABLE_NAME=  "' . _DB_PREFIX_ . 'socolissimo_delivery_info"
-			  AND TABLE_SCHEMA = "' . _DB_NAME_ . '"';
+			  AND TABLE_NAME=  "'._DB_PREFIX_.'socolissimo_delivery_info"
+			  AND TABLE_SCHEMA = "'._DB_NAME_.'"';
 
 	$result = Db::getInstance()->ExecuteS($query);
 
 	// adding column cename
-	if ( !$result )
+	if (!$result)
 	{
-		$query = 'ALTER TABLE ' . _DB_PREFIX_ . 'socolissimo_delivery_info add  `cename` varchar(64)';
+		$query = 'ALTER TABLE '._DB_PREFIX_.'socolissimo_delivery_info add  `cename` varchar(64)';
 		Db::getInstance()->Execute($query);
 	}
 	$query = 'SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 			  WHERE COLUMN_NAME= "cefirstname"
-			  AND TABLE_NAME=  "' . _DB_PREFIX_ . 'socolissimo_delivery_info"
-			  AND TABLE_SCHEMA = "' . _DB_NAME_ . '"';
+			  AND TABLE_NAME=  "'._DB_PREFIX_.'socolissimo_delivery_info"
+			  AND TABLE_SCHEMA = "'._DB_NAME_.'"';
 
 	$result = Db::getInstance()->ExecuteS($query);
 
 	// adding column cefirstname
-	if ( !$result )
+	if (!$result)
 	{
-		$query = 'ALTER TABLE ' . _DB_PREFIX_ . 'socolissimo_delivery_info add  `cefirstname` varchar(64)';
+		$query = 'ALTER TABLE '._DB_PREFIX_.'socolissimo_delivery_info add  `cefirstname` varchar(64)';
 		Db::getInstance()->Execute($query);
 	}
 	Configuration::updateValue('SOCOLISSIMO_VERSION', '2.8.5');

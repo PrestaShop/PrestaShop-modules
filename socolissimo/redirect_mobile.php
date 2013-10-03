@@ -27,29 +27,29 @@
  */
 
 require_once('../../config/config.inc.php');
-require_once(_PS_ROOT_DIR_ . '/init.php');
-require_once(dirname(__FILE__) . '/classes/SCFields.php');
+require_once(_PS_ROOT_DIR_.'/init.php');
+require_once(dirname(__FILE__).'/classes/SCFields.php');
 require_once(dirname(__FILE__).'/backward_compatibility/backward.php');
 
 $so = new SCfields('API');
 
 $fields = $so->getFields();
 
-// Build back the fields list for SoColissimo, gift infos are send using the JS
+/* Build back the fields list for SoColissimo, gift infos are send using the JS */
 $inputs = array();
-foreach ( $_GET as $key => $value )
-	if ( in_array($key, $fields) )
+foreach ($_GET as $key => $value)
+	if (in_array($key, $fields))
 		$inputs[$key] = Tools::getValue($key);
 
 $param_plus = array(
-	// Get the data set before
+	/* Get the data set before */
 	Tools::getValue('trParamPlus'),
 	Tools::getValue('gift'),
 	$so->replaceAccentedChars(Tools::getValue('gift_message'))
 );
 
 $inputs['trParamPlus'] = implode('|', $param_plus);
-// Add signature to get the gift and gift message in the trParamPlus
+/* Add signature to get the gift and gift message in the trParamPlus */
 $inputs['signature'] = $so->generateKey($inputs);
 
 $socolissimo_url = Configuration::get('SOCOLISSIMO_URL_MOBILE');
@@ -59,4 +59,4 @@ Context::getContext()->smarty->assign(array(
 	'socolissimo_url' => $socolissimo_url
 ));
 
-Context::getContext()->smarty->display(_PS_MODULE_DIR_ . 'socolissimo/views/templates/front/redirect.tpl');
+Context::getContext()->smarty->display(_PS_MODULE_DIR_.'socolissimo/views/templates/front/redirect.tpl');

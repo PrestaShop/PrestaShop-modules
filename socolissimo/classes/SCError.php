@@ -25,17 +25,19 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-require_once(dirname(__FILE__) . '/../socolissimo.php');
+require_once(dirname(__FILE__).'/../socolissimo.php');
 
-// Inherit of Socolissimo to have acces to the module method and objet model method
+/* Inherit of Socolissimo to have acces to the module method and objet model method */
+
 class SCError extends Socolissimo
 {
-	// Const for better understanding
+	/* Const for better understanding */
 
 	const WARNING = 0;
 	const REQUIRED = 1;
 
-	// Available error list
+	/* Available error list */
+
 	private $errors_list = array();
 
 	public function __construct()
@@ -98,9 +100,9 @@ class SCError extends Socolissimo
 	 */
 	public function getError($number, $type = false)
 	{
-		$number = (string) trim($number);
+		$number = (string)trim($number);
 
-		if ( $type === false || !isset($this->errors_list[$type]) )
+		if ($type === false || !isset($this->errors_list[$type]))
 			$tab = $this->errors_list[SCError::REQUIRED] + $this->errors_list[SCError::WARNING];
 		else
 			$tab = $this->errors_list[$type];
@@ -117,8 +119,8 @@ class SCError extends Socolissimo
 	 */
 	public function checkErrors($errors, $type = false)
 	{
-		foreach ( $errors as $num )
-			if ( ($str = $this->getError($num, $type) ) )
+		foreach ($errors as $num)
+			if (($str = $this->getError($num, $type)))
 				return $str;
 
 		return false;
