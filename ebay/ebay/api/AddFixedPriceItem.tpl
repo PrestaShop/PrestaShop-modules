@@ -46,7 +46,7 @@
 		<PrimaryCategory>
 			<CategoryID>{$category_id}</CategoryID>
 		</PrimaryCategory>
-		<ConditionID>{$condition_id}</ConditionID>
+		<ConditionID>{if $condition_id > 0}{$condition_id}{else}1000{/if}</ConditionID>
 		{if $price_update && isset($start_price)}
 			<StartPrice>{$start_price}</StartPrice>
 		{/if}

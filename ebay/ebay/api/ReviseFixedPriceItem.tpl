@@ -34,7 +34,7 @@
 		{if isset($country_currency)}
 			<Currency>{$country_currency}</Currency>
 		{/if}
-		<ConditionID>{$condition_id}</ConditionID>
+		<ConditionID>{if $condition_id > 0}{$condition_id}{else}1000{/if}</ConditionID>
 		{if isset($listing_type)}
 			<ListingType>{$listing_type}</ListingType>
 		{/if}
