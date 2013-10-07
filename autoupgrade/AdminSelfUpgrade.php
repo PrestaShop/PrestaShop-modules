@@ -659,16 +659,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 			case 'archive':
 				$this->install_version = $this->getConfig('archive.version_num');
 				$this->destDownloadFilename = $this->getConfig('archive.filename');
+				$upgrader->checkPSVersion(true, array('archive'));
 				break;
 			case 'directory';
-			$this->install_version = $this->getConfig('directory.version_num');
+				$this->install_version = $this->getConfig('directory.version_num');
+				$upgrader->checkPSVersion(true, array('directory'));
 			break;
 			default:
 				$upgrader->channel = $channel;
 				if ($this->getConfig('channel') == 'private' && !$this->getConfig('private_allow_major'))
-					$upgrader->checkPSVersion(false, array('private', 'minor'));
+					$upgrader->checkPSVersion(true, array('private', 'minor'));
 				else
-					$upgrader->checkPSVersion(false, array('minor'));
+					$upgrader->checkPSVersion(true, array('minor'));
 				$this->install_version = $upgrader->version_num;
 		}
 		// If you have defined this somewhere, you know what you do
