@@ -2382,8 +2382,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (file_exists($dir))
 					foreach (scandir($dir) as $file)
 						if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
-							if ($dir.basename(str_replace('.php', '', $file).'.php')))
-								@unlink($dir.basename($file));
+							if (file_exists($dir.basename(str_replace('.php', '', $file).'.php')))
+								@unlink(_PS_ADMIN_DIR_.'/controllers/'.basename($file));
 
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
 				if ($this->updateDefaultTheme)
