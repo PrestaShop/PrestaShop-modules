@@ -116,6 +116,17 @@
 		<div class="margin-form">
 			<textarea name="ebay_returns_description" cols="120" rows="10">{$ebayReturns|escape:'htmlall':'UTF-8'}</textarea>
 		</div>
+		<div style="clear:both;"></div>
+		<label>{l s='Returns within' mod='ebay'} :</label>
+		<div class="margin-form">
+			<select name="returnswithin">
+					{if isset($within_values) && $within_values && sizeof($within_values)}
+						{foreach from=$within_values item='within_value'}
+							<option value="{$within_value.value}"{if isset($within) && $within == $within_value.value} selected{/if}>{$within_value.description}</option>
+						{/foreach}
+					{/if}
+			</select>
+		</div>
 	</fieldset>
 
 	<!-- Listing Durations -->
@@ -136,6 +147,53 @@
 
 		<label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
 		<div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
+	</fieldset>
+
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Image to use' mod='ebay'} :</legend>
+
+		<label>
+			{l s='Image size used for the principal picture' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<select name="sizedefault">
+				{if isset($sizes) && $sizes && sizeof($sizes)}
+					{foreach from=$sizes item='size'}
+						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizedefault} selected{/if}>{$size.name}</option>
+					{/foreach}
+				{/if}
+			</select>
+		</div>
+		<div class="clear both"></div>
+
+		<label>
+			{l s='Image size used for the big pictures in description' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<select name="sizebig">
+				{if isset($sizes) && $sizes && sizeof($sizes)}
+					{foreach from=$sizes item='size'}
+						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizebig} selected{/if}>{$size.name}</option>
+					{/foreach}
+				{/if}
+			</select>
+		</div>
+		<div class="clear both"></div>
+
+		<label>
+			{l s='Image size used for the small pictures in description' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<select name="sizesmall">
+				{if isset($sizes) && $sizes && sizeof($sizes)}
+					{foreach from=$sizes item='size'}
+						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizesmall} selected{/if}>{$size.name}</option>
+					{/foreach}
+				{/if}
+			</select>
+		</div>
+		<div style="clear:both;"></div>
+
 	</fieldset>
 		
 

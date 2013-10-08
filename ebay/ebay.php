@@ -202,6 +202,8 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
 		$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
+		// Picture size
+		self::installPicturesSettings($this);
 
 		$this->installUpgradeOneFour();
 
@@ -209,6 +211,44 @@ class Ebay extends Module
 		$this->setConfiguration('EBAY_VERSION', $this->version);
 
 		return true;
+	}
+
+	public static function installPicturesSettings($module) {
+
+		// Default
+		if ($default = ImageType::getByNameNType('medium')) {
+			$sizeMedium = (int) $medium['id_image_type'];
+		} 
+		else if ($medium = ImageType::getByNameNType('medium_default')) {
+			$sizeMedium = (int) $medium['id_image_type'];
+		}
+		else {
+			$sizeMedium = 0;
+		}
+		// Small
+		if ($small = ImageType::getByNameNType('small')) {
+			$sizeSmall = (int) $small['id_image_type'];
+		} 
+		else if ($small = ImageType::getByNameNType('small_default')) {
+			$sizeSmall = (int) $small['id_image_type'];
+		}
+		else {
+			$sizeSmall = 0;
+		}
+		// Large
+		if ($large = ImageType::getByNameNType('large')) {
+			$sizeBig = (int) $large['id_image_type'];
+		} 
+		else if ($large = ImageType::getByNameNType('large_default')) {
+			$sizeBig = (int) $large['id_image_type'];
+		}
+		else {
+			$sizeBig = 0;
+		}
+
+		$module->setConfiguration('EBAY_PICTURE_SIZE_DEFAULT', $sizeMedium);
+		$module->setConfiguration('EBAY_PICTURE_SIZE_SMALL', $sizeSmall);
+		$module->setConfiguration('EBAY_PICTURE_SIZE_BIG', $sizeBig);
 	}
 
 	/**
@@ -307,6 +347,10 @@ class Ebay extends Module
 				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.php');
 				upgrade_module_1_5($this);
 			}
+
+		if (version_compare($version, '1.5.4', '<'))
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.4.php');
+				upgrade_module_1_5_4($this);
 	}
 
 	/**
@@ -896,7 +940,13 @@ class Ebay extends Module
 			'ebay_paypal_email' => Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL'))),
 			'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION')),
 			'ebayListingDuration' => Configuration::get('EBAY_LISTING_DURATION'),
-			'automaticallyRelist' => Configuration::get('EBAY_AUTOMATICALLY_RELIST')
+			'automaticallyRelist' => Configuration::get('EBAY_AUTOMATICALLY_RELIST'),
+			'sizes' => ImageType::getImagesTypes('products'),
+			'sizedefault' => (int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT'),
+			'sizebig' => (int)Configuration::get('EBAY_PICTURE_SIZE_BIG'),
+			'sizesmall' => (int)Configuration::get('EBAY_PICTURE_SIZE_SMALL'),
+			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
+			'within' => Configuration::get('EBAY_RETURNS_WITHIN')
 		);
 
 		if (Tools::getValue('relogin'))
@@ -955,7 +1005,11 @@ class Ebay extends Module
 			&& $this->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop')))
 			&& $this->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode')))
 			&& $this->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations'))
-			&& $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist')))
+			&& $this->setConfiguration('EBAY_PICTURE_SIZE_DEFAULT', (int)Tools::getValue('sizedefault'))
+			&& $this->setConfiguration('EBAY_PICTURE_SIZE_SMALL', (int)Tools::getValue('sizesmall'))
+			&& $this->setConfiguration('EBAY_PICTURE_SIZE_BIG', (int)Tools::getValue('sizebig'))
+			&& $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist'))
+			&& $this->setConfiguration('EBAY_RETURNS_WITHIN', pSQL(Tools::getValue('returnswithin'))))
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
@@ -1732,12 +1786,19 @@ class Ebay extends Module
 			return EbayReturnsPolicy::getAll();
 
 		$ebay = new EbayRequest();
-		$returns_policies = $ebay->getReturnsPolicies();
+		$policiesDetails = $ebay->getReturnsPolicies();
 
-		foreach ($returns_policies as $returns_policy)
+		foreach ($policiesDetails['ReturnsAccepted'] as $returns_policy)
 			EbayReturnsPolicy::insert(array_map('pSQL', $returns_policy));
 
-		return $returns_policies;
+		$ReturnsWithin = array();
+
+		foreach($policiesDetails['ReturnsWithin'] as $returns_within)
+			$ReturnsWithin[] = array_map('pSQL', $returns_within);
+
+		$this->setConfiguration('EBAY_RETURNS_WITHIN_VALUES', serialize($ReturnsWithin));
+
+		return $policiesDetails['ReturnsAccepted'];
 	}
 
 	private function _relistItems()

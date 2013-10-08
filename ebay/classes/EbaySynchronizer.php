@@ -315,17 +315,20 @@ class EbaySynchronizer
 		$pictures_large = array();
 		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_images'] : 0);
 
+		$large = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_BIG'));
+		$small = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_SMALL'));
+		$default = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT'));
+
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image)
 		{
-			$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-
+			$pictures_default = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $default->name);
 			if ((count($pictures) == 0) && ($nb_pictures == 1)) // no extra picture, we don't upload the image
-				$pictures[] = $large_pict;
+				$pictures[] = $pictures_default;
 			elseif (count($pictures) < $nb_pictures) // we upload every image if there are extra pictures
-				$pictures[] = EbayProductImage::getEbayUrl($large_pict, $product->name.'_'.(count($pictures) + 1));
+				$pictures[] = EbayProductImage::getEbayUrl($pictures_default, $product->name.'_'.(count($pictures) + 1));
 
-			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
-			$pictures_large[] = $large_pict;
+			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $small->name);
+			$pictures_large[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $large->name);
 		}
 
 		return array(
@@ -408,12 +411,14 @@ class EbaySynchronizer
 		// Load Variations Pictures
 		$combination_images = $product->getCombinationImages($context->cookie->id_lang);
 
+		$large = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_BIG'));
+
 		if (!empty($combination_images))
 			foreach ($combination_images as $combination_image)
 				foreach ($combination_image as $image)
 				{
 					// If issue, it's because of https/http in the url
-					$link = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
+					$link = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $large->name);
 					$variations[$product->id.'-'.$image['id_product_attribute']]['pictures'][] = $link;
 				}
 
@@ -662,7 +667,7 @@ class EbaySynchronizer
 		$link = is_object($context_link) ? $context_link : new Link();
 		$prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? Tools::getShopDomain(true).'/' : '');
 
-		return str_replace('https://', 'http://', $prefix.$link->getImageLink('ebay', $id_product.'-'.$id_image, $size.(version_compare(_PS_VERSION_, '1.5.1', '>=') ? '_default' : '')));
+		return str_replace('https://', 'http://', $prefix.$link->getImageLink('ebay', $id_product.'-'.$id_image, $size));
 	}
 
 	private static function _getShippingPriceForProduct($product, $zone, $carrier_id)
