@@ -28,6 +28,10 @@ class SceauLogger
 	private static function openHandle()
 	{
 
+		if (!file_exists(SCEAU_ROOT_DIR.'/logs/'))
+			if (!mkdir(SCEAU_ROOT_DIR.'/logs/'))
+				die('Error creating logs folder');
+			
 		$log_filename = SCEAU_ROOT_DIR.'/logs/fianet_log.txt';
 
 		//renames the log file and creates a new one if max allowed size reached
