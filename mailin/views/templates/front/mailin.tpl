@@ -23,7 +23,7 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- mailin Newsletter module-->
+<!-- mailinBlue Newsletter module-->
 
 <div id="newsletter_block_left" class="block" >
 
@@ -55,4 +55,4 @@
 	</div>
 </div>
 
-<!-- /mailin Newsletter module-->
+<!-- /mailinBlue Newsletter module-->

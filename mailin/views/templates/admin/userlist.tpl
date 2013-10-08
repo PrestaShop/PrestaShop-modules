@@ -41,7 +41,7 @@
 						<tr>
 							<th>Emails</th>
 							<th width="20%">{l s='Client' mod='mailin'}</th>
-							<th width="20%">{l s='Newsletter Mailin Status' mod='mailin'}<span class="toolTip" title="{l s='Click on the icon to subscribe / unsubscribe the contact from Mailin and PrestaShop.' mod='mailin'}">&nbsp;</span></th>
+							<th width="20%">{l s='Newsletter MailinBlue Status' mod='mailin'}<span class="toolTip" title="{l s='Click on the icon to subscribe / unsubscribe the contact from MailinBlue and PrestaShop.' mod='mailin'}">&nbsp;</span></th>
 							<th width="20%">{l s='Newsletter PrestaShop Status' mod='mailin'}</th>
 						</tr>
 					</thead>
