@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div>
-    <a href="http://www.fia-net.com/annuaire/{$siteid}/fiche.html" target="_blank"><img src="{$fianetsceau_img}" title="Voir la Fiche Marchand sur FIA-NET.com" /></a>
+    <a href="http://www.fia-net.com/annuaire/{$siteid}/fiche.html" target="_blank"><img src="{$fianetsceau_img}" title="{l s='See Dealer Sheet FIA-NET.com' mod='fianetsceau'}" /></a>
 </div>
 
 

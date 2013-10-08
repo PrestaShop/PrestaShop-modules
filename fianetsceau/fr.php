@@ -46,3 +46,6 @@ $_MODULE['<{fianetsceau}prestashop>sent_d41eb7913bba0226ccff5e720d52222d'] = 'La
 $_MODULE['<{fianetsceau}prestashop>waiting_payment_3e6838f3bd7e17bd880239af52265e15'] = 'Etat FIA-NET Sceau';
 $_MODULE['<{fianetsceau}prestashop>waiting_payment_cf74958a5b709446156546623344d0e7'] = 'La commande n\'a pas été envoyée à FIA-NET.';
 $_MODULE['<{fianetsceau}prestashop>waiting_payment_7db21b85601e1bc4831732a36917a833'] = 'Vous devez confirmer le paiement avant de l\'envoyer.';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_53b1061b0e5094903777fe487b3f5b45'] = 'Voir la Fiche Marchand sur FIA-NET.com';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_widget_77c57f6bf23fce6c10eb3ef5934d273c'] = 'Voir les avis et commentaires sur le site FIA-NET.com';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_widget_963a32b0490cc9bfa563e36d8e766429'] = 'Evaluation FIA-NET';

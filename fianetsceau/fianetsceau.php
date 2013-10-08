@@ -25,7 +25,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once 'lib/includes/includes.inc.php';
+require_once(_PS_MODULE_DIR_.'fianetsceau/lib/includes/includes.inc.php');
 
 class FianetSceau extends Module
 {
@@ -115,7 +115,7 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -181,7 +181,7 @@ class FianetSceau extends Module
 		$tab_controller_main->id_parent = $tab_admin_id_order;
 		$tab_controller_main->module = $this->name;
 		$tab_controller_main->add();
-		$tab_controller_main->move(Tab::getNewLastPosition(0));
+		$tab_controller_main->move($this->getNewLastPosition(0));
 
 		//Hook register
 		return (parent::install()
@@ -241,8 +241,8 @@ class FianetSceau extends Module
 		$fieldvalues = "";
 		foreach ($fields as $key_field => $elem)
 		{
-			$fieldnames .= "`".bqSQL($key_field)."`,";
-			$fieldvalues .= "'".bqSQL($elem)."',";
+			$fieldnames .= "`".$this->bqSQL($key_field)."`,";
+			$fieldvalues .= "'".$this->bqSQL($elem)."',";
 		}
 
 		$fieldvalues = substr($fieldvalues, 0, -1);
@@ -273,14 +273,14 @@ class FianetSceau extends Module
 		$set_string = "";
 		foreach ($fields as $fieldname => $fieldvalue)
 		{
-			$set_string .= "`".bqSQL ($fieldname)."` = '".bqSQL ($fieldvalue)."', ";
+			$set_string .= "`".$this->bqSQL($fieldname)."` = '".$this->bqSQL($fieldvalue)."', ";
 		}
 		$set_string = substr($set_string, 0, '-2');
 
 		$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` SET ".$set_string." WHERE `id_order` = '".(int) $id_order."'";
-		
+
 		SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, $sql);
-		
+
 		$updated = Db::getInstance()->execute($sql);
 		if (!$updated)
 		{
@@ -584,10 +584,18 @@ class FianetSceau extends Module
 	{
 
 		//retrieve widget number on database and load the corresponding widget
+
+		$host = $_SERVER['HTTP_HOST'];
+		$url_site = 'http://www.'.$host;
+		$string_site = explode('.', $host);
+		$nom_site = $string_site[0];
+
 		$this->smarty->assign(array(
 			'siteid' => Configuration::get('FIANETSCEAU_SITEID'),
 			'shape' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'],
 			'background' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['background'],
+			'url_site' => $url_site,
+			'nom_site' => $nom_site,
 		));
 
 		if ($this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'] == 'comment')
@@ -801,7 +809,7 @@ class FianetSceau extends Module
 		if (_PS_VERSION_ >= '1.5')
 			$payments = Module::getPaymentModules();
 		else
-			$payments = PaymentModuleCore::getInstalledPaymentModules();
+			$payments = $this->getInstalledPaymentModules();
 
 		$payment_modules = array();
 
@@ -814,6 +822,46 @@ class FianetSceau extends Module
 			);
 		}
 		return $payment_modules;
+	}
+	
+	/**
+	 * List all installed and active payment modules
+	 * @see Module::getPaymentModules() if you need a list of module related to the user context
+	 *
+	 * @since 1.4.5
+	 * @return array module informations
+	 */
+	public static function getInstalledPaymentModules()
+	{
+		return Db::getInstance()->executeS('
+			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+			FROM `'._DB_PREFIX_.'module` m
+			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			WHERE h.`name` = \'payment\'
+			AND m.`active` = 1
+		');
+	}
+	
+		/**
+	 * For Prestashop < 1.4.5
+	 * Return an available position in subtab for parent $id_parent
+	 * 
+	 * @param int $id_parent
+	 * @return int 
+	 */
+	public function getNewLastPosition($id_parent)
+	{
+		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)$id_parent);
+	}
+	
+	/**
+	 * For Prestashop < 1.4.5
+	 * Protect SQL queries
+	 */
+	public function bqSQL($string)
+	{
+		return str_replace('`', '\`', pSQL($string));
 	}
 
 }
