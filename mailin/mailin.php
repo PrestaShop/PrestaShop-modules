@@ -48,15 +48,15 @@ class Mailin extends Module {
 	{
 		$this->name = 'mailin';
 		$this->tab = 'advertising_marketing';
-		$this->author = 'Mailin';
-		$this->version = 1.1;
+		$this->author = 'MailinBlue';
+		$this->version = 1.2;
 
 		parent::__construct();
 
 		$this->page = basename(__FILE__, '.php');
-		$this->displayName = $this->l('Mailin');
-		$this->description = $this->l('Synchronize your PrestaShop contacts with Mailin platform, track customer\'s orders and send transactional emails easily to your customers.');
-		$this->confirmUninstall = $this->l('Are you sure you want to remove the Mailinblue module? N.B: we will enable php mail() send function (If you were using SMTP info before using Mailinblue SMTP, please update your configuration for the emails)');
+		$this->displayName = $this->l('MailinBlue');
+		$this->description = $this->l('Synchronize your PrestaShop contacts with MailinBlue platform, track customer\'s orders and send transactional emails easily to your customers.');
+		$this->confirmUninstall = $this->l('Are you sure you want to remove the MailinBlue module? N.B: we will enable php mail() send function (If you were using SMTP info before using MailinBlue SMTP, please update your configuration for the emails)');
 
 		// Checking Extension
 		if (!extension_loaded('curl') || !ini_get('allow_url_fopen'))
@@ -69,21 +69,21 @@ class Mailin extends Module {
 			return $this->_html.$this->l('You must enable allow_url_fopen option on your server if you want to use this module.');
 		}
 
-		//Call the callhookRegister method to send an email to the Mailin user
+		//Call the callhookRegister method to send an email to the MailinBlue user
 		//when someone registers.
 		$this->callhookRegister();
 
 	}
 
 	/**
-	*  Function to set the Mailin SMTP and tracking code status to 0
+	*  Function to set the MailinBlue SMTP and tracking code status to 0
 	*/
 	public function checkSmtpStatus()
 	{
-		//If the Mailin tracking code status is empty we set the status to 0
+		//If the MailinBlue tracking code status is empty we set the status to 0
 		if (Configuration::get('Mailin_Tracking_Status') == '')
 			Configuration::updateValue('Mailin_Tracking_Status', 0);
-		//If the Mailin SMTP status is empty we set the status to 0
+		//If the MailinBlue SMTP status is empty we set the status to 0
 		if (Configuration::get('Mailin_Api_Smtp_Status') == '')
 			Configuration::updateValue('Mailin_Api_Smtp_Status', 0);
 		//If module is disabled, we set the default value for PrestaShop SMTP
@@ -92,7 +92,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* When a subscriber registers we send an email to the Mailin user informing
+	* When a subscriber registers we send an email to the MailinBlue user informing
 	* that a new registration has happened.
 	*/
 	public function callhookRegister()
@@ -108,7 +108,7 @@ class Mailin extends Module {
 
 	/**
 	* Remove the default newsletter block so that we can accomodate the
-	* newsletter block of Mailin
+	* newsletter block of MailinBlue
 	*/
 	public function removeBlocknewsletterBlock()
 	{
@@ -130,7 +130,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* This method is called when installing the Mailin plugin.
+	* This method is called when installing the MailinBlue plugin.
 	*/
 	public function install()
 	{
@@ -161,7 +161,7 @@ class Mailin extends Module {
 	/**
 	*  We create our own table and import the unregisterd emails from the default
 	*  newsletter table to the ps_mailin_newsletter table. This is used when you install
-	* the Mailin PS plugin.
+	* the MailinBlue PS plugin.
 	*/
 	public function getOldNewsletterEmails()
 	{
@@ -179,7 +179,7 @@ class Mailin extends Module {
 
 	/**
 	*  This method restores the subscribers from the ps_mailin_newsletter table to the default table.
-	* This is used when you uninstall the Mailin PS Plugin.
+	* This is used when you uninstall the MailinBlue PS Plugin.
 	*/
 	public function getRestoreOldNewsletteremails()
 	{
@@ -197,7 +197,7 @@ class Mailin extends Module {
 
 	/**
 	*  This method is used to fetch all users from the default customer table to list
-	* them in the Mailin PS plugin.
+	* them in the MailinBlue PS plugin.
 	*/
 	public function getNewsletterEmails($start, $page)
 	{
@@ -241,7 +241,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	*  Update a subscriber's status both on Mailin and PrestaShop.
+	*  Update a subscriber's status both on MailinBlue and PrestaShop.
 	*/
 	public function updateNewsletterStatus()
 	{
@@ -274,7 +274,7 @@ class Mailin extends Module {
 
 	/**
 	*   Display user's newsletter subscription
-	*   This function displays both Mailin's and PrestaShop's newsletter subscription status.
+	*   This function displays both MailinBlue's and PrestaShop's newsletter subscription status.
 	*   It also allows you to change the newsletter subscription status.
 	*/
 	public function displayNewsletterEmail()
@@ -357,7 +357,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* This method is used to check the subscriber's newsletter subscription status in Mailin
+	* This method is used to check the subscriber's newsletter subscription status in MailinBlue
 	*/
 	public function checkUserMailinStatus($result)
 	{
@@ -378,7 +378,7 @@ class Mailin extends Module {
 
 	/**
 	*  Returns the list of active registered and unregistered user details
-	* from both the default customer table and Mailin newsletter table.
+	* from both the default customer table and MailinBlue newsletter table.
 	*/
 	public function getBothNewsletteremails()
 	{
@@ -404,8 +404,8 @@ class Mailin extends Module {
 	}
 
 	/**
-	* We send an array of subscriber's email address along with the local timestamp to the Mailin API server
-	* and based on the same the Mailin API server sends us a response with the current
+	* We send an array of subscriber's email address along with the local timestamp to the MailinBlue API server
+	* and based on the same the MailinBlue API server sends us a response with the current
 	* status of each of the email address.
 	*/
 	public function usersStatusTimeStamp()
@@ -441,7 +441,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Checks whether the Mailin API key and the Mailin subscription form is enabled
+	* Checks whether the MailinBlue API key and the MailinBlue subscription form is enabled
 	* and returns the true|false accordingly.
 	*/
 	public function syncSetting()
@@ -481,7 +481,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Fetches all the subscribers of PrestaShop and adds them to the Mailin database.
+	* Fetches all the subscribers of PrestaShop and adds them to the MailinBlue database.
 	*/
 	private function autoSubscribeAfterInstallation()
 	{
@@ -518,14 +518,14 @@ class Mailin extends Module {
 
 	/**
 	* This method is called when the user sets the API key and hits the submit button.
-	* It adds the necessary configurations for Mailin in PrestaShop which allows
-	* PrestaShop to use the Mailin settings.
+	* It adds the necessary configurations for MailinBlue in PrestaShop which allows
+	* PrestaShop to use the MailinBlue settings.
 	*/
 	public function postProcessConfiguration()
 	{
 		$result_smtp = $this->trackingResult();
 
-		// If mailinsmtp activation, let's configure
+		// If mailinBlue smtp activation, let's configure
 		if ($result_smtp->result->relay_data->status == 'enabled')
 		{
 			Configuration::updateValue('PS_MAIL_USER', $result_smtp->result->relay_data->data->username);
@@ -564,7 +564,7 @@ class Mailin extends Module {
 
 		$this->_html .= $this->addCss();
 
-		//We set the default status of Mailin SMTP and tracking code to 0
+		//We set the default status of MailinBlue SMTP and tracking code to 0
 		$this->checkSmtpStatus();
 
 		// send test mail to check if SMTP is working or not.
@@ -598,8 +598,8 @@ class Mailin extends Module {
 
 	/**
 	* This method is called when the user sets the subscribe setting and hits the submit button.
-	* It adds the necessary configurations for Mailin in PrestaShop which allows
-	* PrestaShop to use the Mailin settings.
+	* It adds the necessary configurations for MailinBlue in PrestaShop which allows
+	* PrestaShop to use the MailinBlue settings.
 	*/
 	public function subscribeSettingPostProcess()
 	{
@@ -657,8 +657,8 @@ class Mailin extends Module {
 
 	/**
 	* This method is called when the user sets the API key and hits the submit button.
-	* It adds the necessary configurations for Mailin in PrestaShop which allows
-	* PrestaShop to use the Mailin settings.
+	* It adds the necessary configurations for MailinBlue in PrestaShop which allows
+	* PrestaShop to use the MailinBlue settings.
 	*/
 	public function apiKeyPostProcessConfiguration()
 	{
@@ -732,7 +732,7 @@ class Mailin extends Module {
 						Configuration::updateValue('Mailin_dropdown', 0);
 
 						//We remove the default newsletter block since we
-						//have to add the Mailin newsletter block.
+						//have to add the MailinBlue newsletter block.
 						$this->removeBlocknewsletterBlock();
 					}
 					$this->redirectPage($this->l('Successfully updated'), 'SUCCESS');
@@ -804,7 +804,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Once we get all the list of the user from Mailin, we add them in
+	* Once we get all the list of the user from MailinBlue, we add them in
 	* multi select dropdown box.
 	*/
 	public function parselist()
@@ -855,7 +855,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* CURL function to send request to the Mailin API server
+	* CURL function to send request to the MailinBlue API server
 	*/
 	public function curlRequest($data)
 	{
@@ -892,7 +892,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Checks if a folder 'PrestaShop' and a list "PrestaShop" exits in the Mailin account.
+	* Checks if a folder 'PrestaShop' and a list "PrestaShop" exits in the MailinBlue account.
 	* If they do not exits, this method creates them.
 	*/
 	public function createFolderCaseTwo()
@@ -933,7 +933,7 @@ class Mailin extends Module {
 			$list_response = $this->curlRequest($param);
 			$res = Tools::jsonDecode($list_response);
 			$list_id = $res->result;
-			// import old user to mailin
+			// import old user to mailinBlue
 
 			global $cookie;
 
@@ -959,7 +959,7 @@ class Mailin extends Module {
 			$list_response = $this->curlRequest($param);
 			$res = Tools::jsonDecode($list_response);
 			$list_id = $res->result;
-			// import old user to mailin
+			// import old user to mailinBlue
 
 			global $cookie;
 
@@ -976,14 +976,14 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Creates a folder with the name 'prestashop' after checking it on Mailin platform
+	* Creates a folder with the name 'prestashop' after checking it on MailinBlue platform
 	* and making sure the folder name does not exists.
 	*/
 	public function createFolderName()
 	{
-		//Create the necessary attributes on the Mailin platform for PrestaShop
+		//Create the necessary attributes on the MailinBlue platform for PrestaShop
 		$this->createAttributesName();
-		//Check if the folder exists or not on Mailin platform.
+		//Check if the folder exists or not on MailinBlue platform.
 		$result = $this->checkFolderList();
 
 		if (empty($result[1]))
@@ -1004,13 +1004,13 @@ class Mailin extends Module {
 		}
 
 		$this->createNewList($folder_id, $exist_list);
-		// create list in mailin
-		//Create the partner's name i.e. PrestaShop on Mailin platform
+		// create list in mailinBlue
+		//Create the partner's name i.e. PrestaShop on MailinBlue platform
 		$this->partnerPrestashop();
 	}
 
 	/**
-	* Creates a list by the name "prestashop" on user's Mailin account.
+	* Creates a list by the name "prestashop" on user's MailinBlue account.
 	*/
 	public function createNewList($response, $exist_list)
 	{
@@ -1031,7 +1031,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Fetches all folders and all list within each folder of the user's Mailin
+	* Fetches all folders and all list within each folder of the user's MailinBlue
 	* account and displays them to the user.
 	*/
 	public function checkFolderList()
@@ -1077,7 +1077,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Method is used to add the partner's name in Mailin.
+	* Method is used to add the partner's name in MailinBlue.
 	* In this case its "PRESTASHOP".
 	*/
 	public function partnerPrestashop()
@@ -1090,7 +1090,7 @@ class Mailin extends Module {
 
 	/**
 	* Method is used to send all the subscribers from PrestaShop to
-	* Mailin for adding / updating purpose.
+	* MailinBlue for adding / updating purpose.
 	*/
 	public function sendAllMailIDToMailin($list)
 	{
@@ -1110,7 +1110,7 @@ class Mailin extends Module {
 
 	/**
 	* Create Normal, Transactional, Calculated and Global attributes and their values
-	* on Mailin platform. This is necessary for the PrestaShop to add subscriber's details.
+	* on MailinBlue platform. This is necessary for the PrestaShop to add subscriber's details.
 	*/
 	public function createAttributesName()
 	{
@@ -1133,7 +1133,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Unsubscribe a subscriber from Mailin.
+	* Unsubscribe a subscriber from MailinBlue.
 	*/
 	public function unsubscribeByruntime($email)
 	{
@@ -1150,7 +1150,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Subscribe a subscriber from Mailin.
+	* Subscribe a subscriber from MailinBlue.
 	*/
 	public function subscribeByruntime($email)
 	{
@@ -1198,7 +1198,7 @@ class Mailin extends Module {
 
 	/**
 	* Checks whether a subscriber is registered in the mailin_newsletter table.
-	* If they are registered, we subscriber them on Mailin.
+	* If they are registered, we subscriber them on MailinBlue.
 	*/
 	private function isEmailRegistered($customer_email)
 	{
@@ -1354,7 +1354,7 @@ class Mailin extends Module {
 	}
 
 	/**
-	* Fetches all the list of the user from the Mailin platform.
+	* Fetches all the list of the user from the MailinBlue platform.
 	*/
 	public function getResultListValue()
 	{
@@ -1415,7 +1415,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	{
 		global $cookie;
 
-		// checkFolderStatus after removing from mailin
+		// checkFolderStatus after removing from mailinBlue
 		$this->createFolderCaseTwo();
 		$lang = new Language((int)$cookie->id_lang);
 
@@ -1657,7 +1657,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	}
 
 	/**
-	* Method is being called at the time of uninstalling the Mailin module.
+	* Method is being called at the time of uninstalling the MailinBlue module.
 	*/
 	public function uninstall()
 	{
@@ -1752,7 +1752,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	}
 
 	/*
-	* Displays the CSS for the Mailin module.
+	* Displays the CSS for the MailinBlue module.
 	*/
 	public function addCss()
 	{
