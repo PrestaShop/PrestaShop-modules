@@ -72,7 +72,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.5.2';
+		$this->version = '1.5.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -1942,3 +1942,4 @@ class Ebay extends Module
 		return $this->context;
 	}
 }
+
