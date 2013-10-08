@@ -31,9 +31,9 @@ if (!in_array('Ebay', get_declared_classes()))
 class EbayCountrySpec
 {
 	public $country;
-	public $accepted_isos = array('it', 'fr', 'gb', 'es');
+	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl');
 
-	private $country_data = array(
+	private static $country_data = array(
 		'it' => array(
 			'site_id' => 101,
 			'language' => 'it_IT',
@@ -65,6 +65,22 @@ class EbayCountrySpec
 			'site_name' => 'France',
 			'site_extension' => 'fr',
 			'img_stats' => 'views/img/ebay_stats.png'
+		),
+		'nl' => array(
+			'site_id' => 146,
+			'language' => 'nl_NL',
+			'currency' => 'EUR',
+			'site_name' => 'Netherlands',
+			'site_extension' => 'nl',
+			'img_stats' => null
+		),
+		'pl' => array(
+			'site_id' => 212,
+			'language' => 'pl_PL',
+			'currency' => 'PLN',
+			'site_name' => 'Poland',
+			'site_extension' => 'pl',
+			'img_stats' => null
 		)
 	);
 
@@ -124,9 +140,9 @@ class EbayCountrySpec
 	private function _getCountryData($data)
 	{
 		$iso_code = strtolower($this->country->iso_code);
-		if (isset($this->country_data[$iso_code]))
-			return $this->country_data[$iso_code][$data];
-		return $this->country_data['fr'][$data];
+		if (isset(self::$country_data[$iso_code]))
+			return self::$country_data[$iso_code][$data];
+		return self::$country_data['fr'][$data];
 	}
 
 	/**
@@ -161,6 +177,23 @@ class EbayCountrySpec
 
 		if (in_array(strtolower($this->country->iso_code), $this->accepted_isos))
 			Configuration::updateValue('EBAY_COUNTRY_DEFAULT', $this->country->id, false, 0, 0);
+
 		return $this->country;
+	}
+
+	/**
+	 * Get countries
+	 * @return array Countries list
+	 */
+	public static function getCountries() {
+		$countries = array();
+		foreach (self::$country_data as $iso => $ctry) 
+		{
+			$countries[Country::getByIso(strtoupper($iso))] = $ctry['site_extension'];
+		}
+
+		asort($countries);
+
+		return $countries;
 	}
 }

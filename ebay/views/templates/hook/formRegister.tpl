@@ -65,6 +65,16 @@
 			<dl class="ebay_dl">
 				<dt><label for="eBayUsername" id="ebay_label">{l s='eBay User ID' mod='ebay'}</label></dt>
 				<dd><input id="eBayUsername" type="text" name="eBayUsername" value="{$ebay_username|escape:'htmlall':'UTF-8'}" /></dd>
+				<dt><label for="ebay_countries" id="ebay_label">{l s='Choose ebay site you want to listen' mod='ebay'}</label></dt>
+				<dd>
+					<select name="ebay_country" id="ebay_countries">
+							{if isset($ebay_countries) && $ebay_countries && sizeof($ebay_countries)}
+								{foreach from=$ebay_countries item='extension' key='key'}
+									<option value="{$key}"{if $key == $default_country} selected{/if}>ebay.{$extension}</option>
+								{/foreach}
+							{/if}
+					</select>
+				</dd>
 				<dt>&nbsp;</dt>
 				<dd><input type="submit" id="button_ebay" class="button" value="{l s='Register the module on eBay' mod='ebay'}" /></dd>
 			</dl>

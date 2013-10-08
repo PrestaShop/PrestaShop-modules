@@ -132,7 +132,7 @@ class Ebay extends Module
 
 				if (!$this->ebay_country->checkCountry())
 				{
-					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es');
+					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk, eBay.pl, eBay.nl and eBay.es');
 					return false;
 				}
 			}
@@ -812,6 +812,7 @@ class Ebay extends Module
 				$this->context->cookie->eBayUsername = $ebay_username;
 				$this->setConfiguration('EBAY_API_USERNAME', $ebay_username);
 				$this->setConfiguration('EBAY_IDENTIFIER', $ebay_username);
+				$this->setConfiguration('EBAY_COUNTRY_DEFAULT', Tools::getValue('ebay_country'));
 			}
 
 			$smarty_vars['check_token_tpl'] = $this->_displayCheckToken();
@@ -830,6 +831,8 @@ class Ebay extends Module
 				'action_url' => Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged',
 				'ebay_username' => $this->context->cookie->eBayUsername,
 				'window_open_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
+				'ebay_countries' => EbayCountrySpec::getCountries(),
+				'default_country' => (int)Configuration::get('PS_COUNTRY_DEFAULT')
 			));
 
 		}
