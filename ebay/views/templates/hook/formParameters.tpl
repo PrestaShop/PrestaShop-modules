@@ -67,7 +67,7 @@
 		</div>
 		<label>{l s='eBay shop' mod='ebay'} : </label>
 		<div class="margin-form">
-			<input type="text" size="20" name="ebay_shop" value="{$ebayShopValue}" /> 
+			<input type="text" size="20" name="ebay_shop" value="{$ebayShopValue}" data-inlinehelp="{l s='Shop name' mod='ebay'}"/> 
 			<p>
 				{if $ebayShop!== false}
 					<a href="http://stores.ebay.fr/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>
@@ -81,12 +81,12 @@
 		<label>{l s='Paypal Identifier (e-mail)' mod='ebay'} : </label>
 		<div class="margin-form">
 
-			<input type="text" size="20" name="ebay_paypal_email" value="{$ebay_paypal_email}" />
+			<input type="text" size="20" name="ebay_paypal_email" value="{$ebay_paypal_email}"/>
 			<p>{l s='You have to set your PayPal e-mail account, it\'s the only payment available with this module' mod='ebay'}</p>
 		</div>
 		<label>{l s='Shop postal code' mod='ebay'} : </label>
 		<div class="margin-form">
-			<input type="text" size="20" name="ebay_shop_postalcode" value="{$shopPostalCode}" />
+			<input type="text" size="20" name="ebay_shop_postalcode" value="{$shopPostalCode}"/>
 			<p>{l s='Your shop\'s postal code' mod='ebay'}</p>
 		</div>
 

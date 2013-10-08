@@ -35,7 +35,11 @@
 	{/if}
 	<u><a href="{l s="http://pages.ebay.fr/professionnels/index.html" mod='ebay'}" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></u>
 </fieldset>
-<br />  
+<br />
+
+<link rel="stylesheet" href="{$css_file}" />
+<script src="{$tooltip}" type="text/javascript"></script>
+<script src="{$tips202}" type="text/javascript"></script>
 	
 <fieldset>
 	<legend><img src="{$path}logo.gif" alt="" />{l s='eBay Module Status' mod='ebay'}</legend>
