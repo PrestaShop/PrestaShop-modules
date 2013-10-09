@@ -62,14 +62,14 @@
 	});
 
 	$(document).ready(function() {
-		$("#ebay_sync_mode1").click(function() {
+		$("#ebay_sync_products_mode1").click(function() {
 			nbProducts = nbProductsModeA;
 			$("#catSync").hide("slow");
 			$("#button_ebay_sync1").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}{literal}\n(" + nbProducts + " {/literal}{l s='products' mod='ebay'}{literal})");
 			$("#button_ebay_sync2").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}\n{l s='and update' mod='ebay'}\n(" + nbProducts + " {$prod_str})");
 		});
 		{literal}
-		$("#ebay_sync_mode2").click(function() {
+		$("#ebay_sync_products_mode2").click(function() {
 			nbProducts = nbProductsModeB;
 			$("#catSync").show("slow");
 			$("#button_ebay_sync1").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}\n(" + nbProducts + " {$prod_str})");
@@ -81,9 +81,11 @@
 	function eBaySync(option)
 	{
 		$(".categorySync").attr("disabled", "true");
-		$("#ebay_sync_mode1").attr("disabled", "true");
-		$("#ebay_sync_mode2").attr("disabled", "true");
+		$("#ebay_sync_products_mode1").attr("disabled", "true");
+		$("#ebay_sync_products_mode2").attr("disabled", "true");
 		$("#ebay_sync_option_resync").attr("disabled", "true");
+		$("#ebay_sync_mode_1").attr("disabled", "true");
+		$("#ebay_sync_mode_2").attr("disabled", "true");
 		$("#button_ebay_sync1").attr("disabled", "true");
 		$("#button_ebay_sync1").css("background-color", "#D5D5D5");
 		$("#button_ebay_sync2").attr("disabled", "true");
@@ -95,9 +97,11 @@
 	function reableSyncProduct()
 	{
 		$(".categorySync").removeAttr("disabled", "disabled");
-		$("#ebay_sync_mode1").removeAttr("disabled", "disabled");
-		$("#ebay_sync_mode2").removeAttr("disabled", "disabled");
+		$("#ebay_sync_products_mode1").removeAttr("disabled", "disabled");
+		$("#ebay_sync_products_mode2").removeAttr("disabled", "disabled");
 		$("#ebay_sync_option_resync").removeAttr("disabled", "disabled");
+		$("#ebay_sync_mode_1").removeAttr("disabled", "disabled");
+		$("#ebay_sync_mode_2").removeAttr("disabled", "disabled");
 		$("#button_ebay_sync1").removeAttr("disabled", "disabled");
 		$("#button_ebay_sync1").css("background-color", "#FFFAC6");
 		$("#button_ebay_sync2").removeAttr("disabled", "disabled");
@@ -123,22 +127,29 @@
 	}
 	{/literal}
 </script>
-
 <div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
-
 <form action="{$action_url}" method="post" class="form" id="configForm4">
 	<fieldset style="border: 0">
-		<h4>{l s='You will now list your products on eBay' mod='ebay'} <b></h4>
-		<label style="width: 250px;">{l s='Sync Mode' mod='ebay'} : </label><br clear="left" /><br /><br />
+		<h4>{l s='You will now list your products on eBay' mod='ebay'}</h4>
+		<label style="width: 250px;">{l s='Products to sync' mod='ebay'} : </label><br /><br />
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode1" value="A" checked="checked" /> {l s='Option A' mod='ebay'} : {l s='List all products on eBay' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_products_mode" id="ebay_sync_products_mode1" value="A" {if $is_sync_mode_b == false}checked="checked"{/if}/> {l s='List all products on eBay' mod='ebay'}
 		</div>
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode2" value="B" /> {l s='Option B' mod='ebay'} : {l s='Sync the products only in selected categories' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_products_mode" id="ebay_sync_products_mode2" value="B" {if $is_sync_mode_b == true}checked="checked"{/if}/> {l s='Sync the products only in selected categories' mod='ebay'}
 		</div>
-		<label style="width: 250px;">{l s='Option' mod='ebay'} : </label><br clear="left" /><br /><br />
+		<div class="clear both"></div>
+		<label style="width: 250px;">{l s='Option' mod='ebay'} : </label><br /><br />
 		<div class="margin-form">
-			<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" {if $ebay_sync_option_resync == 1}checked="checked"{/if} />{l s='When revising products on eBay, only revise price and quantity' mod='ebay'}
+			<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" {if $ebay_sync_option_resync == 1}checked="checked"{/if} /> {l s='When revising products on eBay, only revise price and quantity' mod='ebay'}
+		</div>
+		<div class="clear both"></div>
+		<label>{l s='Sync mod' mod='module'} :	</label><br /><br />
+		<div class="margin-form">
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> {l s='Only new products that are not already lister on eBay' mod='ebay'}
+		</div>
+		<div class="margin-form">
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> {l s='Sync new products and update existing listings' mod='ebay'}
 		</div>
 		<div style="display: none;" id="catSync">
 			<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
@@ -176,27 +187,18 @@
 				<script>
 					$(document).ready(function() {ldelim}
 						$("#catSync").show("slow");
-						$("#ebay_sync_mode2").attr("checked", true);
+						$("#ebay_sync_products_mode2").attr("checked", true);
 					{rdelim});
 				</script>
 			{/if}
+		</div><br />
+		<div>
+			<b><img src="../modules/ebay/views/img/warn.png" />{l s='Warning! If some of your categories are not multi sku compliant, some of your products may create more than one product on eBay.' mod='ebay'}</b>
+		</div>
+		<div class="margin-form">
+			<input type="submit" name="btnSubmitSyncAndPublish" class="button" value="{l s='Save and publish' mod='ebay'}" />
+			<input type="submit" name="btnSubmitSync" class="button" value="{l s='Save' mod='ebay'}" />
 		</div>
 	</fieldset>
-	<h4>{l s='Warning! If some of your categories are not multi sku compliant, some of your products may create more than one product on eBay.' mod='ebay'}</h4>
-
-	<table>
-		<tr>
-			<td style="color: #268CCD"><h4>{l s='"Sync with eBay" option will only sync products that are not already listed on eBay ' mod='ebay'}</h4></td>
-			<td style="width: 50px">&nbsp;</td>
-			<td style="color: #268CCD"><h4>{l s='"Sync and update with eBay" will sync both the products not already in sync and update the products already in sync with eBay ' mod='ebay'}</h4></td>
-		</tr>
-		<tr>
-			<td><input id="button_ebay_sync1" class="button" name="submitSave1" value="{l s='Sync with eBay' mod='ebay'} ({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit"></td>
-			<td style="width: 50px">&nbsp;</td>
-			<td><input id="button_ebay_sync2" class="button" name="submitSave2" value="{l s='Sync with eBay' mod='ebay'} {l s='and update' mod='ebay'} ({$nb_products} {$prod_str})" OnClick="return confirm('{l s='You will push' mod='ebay'} ' + nbProducts + ' {l s='products on eBay. Do you want to confirm ?' mod='ebay'}');" type="submit">
-			</td>
-		</tr>
-	</table>
-	<br />
 </form>
 				

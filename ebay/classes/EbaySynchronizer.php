@@ -722,7 +722,7 @@ class EbaySynchronizer
 							FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 							WHERE  `id_ebay_category` > 0
 							AND `id_ebay_category` > 0'.
-							(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+							(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 						')
 						AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')'.
 							EbaySynchronizer::_addSqlRestrictionOnLang('s').'
@@ -741,7 +741,7 @@ class EbaySynchronizer
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 		}
@@ -764,7 +764,7 @@ class EbaySynchronizer
 						FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 						WHERE  `id_category` > 0
 						AND  `id_ebay_category` > 0'.
-						(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+						(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 					')
 				'.($option == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 					AND p.`id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT').'
@@ -783,7 +783,7 @@ class EbaySynchronizer
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.($option == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 				AND `id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT').'
@@ -811,7 +811,7 @@ class EbaySynchronizer
 							FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 							WHERE  `id_category` >0
 							AND  `id_ebay_category` >0'.
-							(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+							(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 						')
 						'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 						AND p.`id_product` >'.$ebay_sync_last_product.'
@@ -832,7 +832,7 @@ class EbaySynchronizer
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 				AND p.`id_product` > '.$ebay_sync_last_product.'

@@ -54,7 +54,7 @@
 				<th>
 					{l s='eBay Category' mod='ebay'}
 				</th>
-				<th style="width:128px;">
+				<th style="width:185px;">
 					{l s='Price adjustment' mod='ebay'}
 					<a title="{l s='Help' mod='ebay'}" href="{$request_uri}{$tabHelp}" >
 						<img src="{$_path}views/img/help.png" width="25" alt="help_picture"/>
@@ -76,13 +76,17 @@
 			</tr>
 		</tbody>
 	</table>
-	<div style="text-align: right; margin-top: 5px">
+	<div style="text-align: right; margin-top: 5px; float: right;">
 		{l s='Add more photos to your listing. Please note that this may incur extra costs.' mod='ebay'}<br/>
-		{l s='Change extra pictures numbers for all products' mod='ebay'} <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> <input id="update-all-extra-images" type="button" value='Apply'>
+		{l s='Change extra pictures numbers for all products' mod='ebay'} <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> 
+		<input id="update-all-extra-images" type="button" value="{l s='Set maximum pictures for all
+products' mod='ebay'}" class="button">
 		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" value="-1"/>
 	</div>
 	
-	<div class="margin-form"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
+	<div style="margin-top: 5px;">
+		<input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" />
+	</div>
 </form>
 
 <p><b>{l s='Warning: Only default product categories are used for the configuration' mod='ebay'}</b></p><br />

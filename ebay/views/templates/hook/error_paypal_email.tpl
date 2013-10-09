@@ -24,7 +24,7 @@
 *}
 
 <!-- ebay -->
-<div class="error">
-	<b>{l s='You have to configure "General Settings" tab before using this tab.' mod='ebay'}</b>
+<div class="error" onClick="$('#menuTab1').click();" style="cursor:pointer;">
+	<b>{l s='You have to configure "Parameters" tab before using this tab.' mod='ebay'}</b>
 </div>
 <!-- /ebay -->
