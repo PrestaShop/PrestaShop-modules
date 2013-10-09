@@ -33,7 +33,7 @@
 			<form id="socoForm" name="form" action="{$socolissimo_url|escape:'htmlall':'UTF-8'}" method="POST">
 
 				{foreach from=$inputs key=key item=val}
-					<input type="hidden" name="{$key}" value="{$val|escape:'htmlall':'UTF-8'}"/>
+					<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$val|escape:'htmlall':'UTF-8'}"/>
 				{/foreach}
 				<img src="logo.gif" />
 				<p>{l s='You will be redirect to socolissimo in few moment. If it is not the case, please click button.' mod='socolissimo'}</p>
