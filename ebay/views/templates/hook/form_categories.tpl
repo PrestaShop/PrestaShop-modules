@@ -77,7 +77,6 @@
 		</tbody>
 	</table>
 	<div style="text-align: right; margin-top: 5px; float: right;">
-		{l s='Add more photos to your listing. Please note that this may incur extra costs.' mod='ebay'}<br/>
 		{l s='Change extra pictures numbers for all products' mod='ebay'} <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> 
 		<input id="update-all-extra-images" type="button" value="{l s='Set maximum pictures for all
 products' mod='ebay'}" class="button">
