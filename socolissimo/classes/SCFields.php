@@ -25,25 +25,26 @@
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-require_once(dirname(__FILE__) . '/SCError.php');
+require_once(dirname(__FILE__).'/SCError.php');
 
-// Inherit of Socolissimo to have acces to the module method and objet model method
+/* Inherit of Socolissimo to have acces to the module method and objet model method */
 class SCFields extends SCError
 {
-	// Restriction
+	/* Restriction*/
+
 	const REQUIRED = 1;
 	const NOT_REQUIRED = 2;
-	const UNKNOWN = 3; // Not specified on the documentation
+	const UNKNOWN = 3; /* Not specified on the documentation */
 	const IGNORED = 4;
 	const ALL = 5;
 
-	// Delivery type
+	/* Delivery type */
 	const HOME_DELIVERY = 0;
 	const RELAY_POINT = 1;
 	const API_REQUEST = 2;
 
 	public $context;
-	// List of the available restriction type
+	/* List of the available restriction type */
 	public $restriction_list = array(
 		SCFields::REQUIRED,
 		SCFields::NOT_REQUIRED,
@@ -51,15 +52,15 @@ class SCFields extends SCError
 		SCFields::IGNORED,
 		SCFields::ALL
 	);
-	// List of the available delivery type
+	/* List of the available delivery type */
 	public $delivery_list = array(
 		SCFields::HOME_DELIVERY => array('DOM', 'RDV'),
-		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT'),
+		SCFields::RELAY_POINT => array('BPR', 'A2P', 'MRL', 'CIT', 'ACP', 'CDI', 'CMT', 'BDP'),
 		SCFields::API_REQUEST => array('API')
 	);
-	// By default, use the home delivery
+	/* By default, use the home delivery */
 	public $delivery_mode = SCFields::HOME_DELIVERY;
-	// Available returned fields for HOME_DELIVERY and RELAY POINT, fields ordered.
+	/* Available returned fields for HOME_DELIVERY and RELAY POINT, fields ordered. */
 	private $fields = array(
 		SCFields::HOME_DELIVERY => array(
 			'PUDOFOID' => SCFields::REQUIRED,
@@ -87,9 +88,9 @@ class SCFields extends SCError
 			'CEDOORCODE2' => SCFields::UNKNOWN,
 			'CEENTRYPHONE' => SCFields::UNKNOWN,
 			'TRPARAMPLUS' => SCFields::UNKNOWN,
-			'TRADERCOMPANYNAME' => SCFields::REQUIRED,
+			'TRADERCOMPANYNAME' => SCFields::UNKNOWN,
 			'ERRORCODE' => SCFields::UNKNOWN,
-			// Error required if specific error exist (handle it has not required for now)
+			/* Error required if specific error exist (handle it has not required for now) */
 			'ERR_CENAME' => SCFields::NOT_REQUIRED,
 			'ERR_CEFIRSTNAME' => SCFields::NOT_REQUIRED,
 			'ERR_CECOMPANYNAME' => SCFields::NOT_REQUIRED,
@@ -144,7 +145,7 @@ class SCFields extends SCError
 			'TRPARAMPLUS' => SCFields::UNKNOWN,
 			'TRADERCOMPANYNAME' => SCFields::UNKNOWN,
 			'ERRORCODE' => SCFields::UNKNOWN,
-			// Error required if specific error exist (handle it has not required for now)
+			/* Error required if specific error exist (handle it has not required for now) */
 			'ERR_CENAME' => SCFields::NOT_REQUIRED,
 			'ERR_CEFIRSTNAME' => SCFields::NOT_REQUIRED,
 			'ERR_CECOMPANYNAME' => SCFields::NOT_REQUIRED,
@@ -215,11 +216,10 @@ class SCFields extends SCError
 	{
 		parent::__construct();
 
-		include dirname(__FILE__) . '/../backward_compatibility/backward.php';
+		include dirname(__FILE__).'/../backward_compatibility/backward.php';
 
 		$this->setDeliveryMode($delivery);
 	}
-
 
 	/**
 	 * Check if the field exist for Socolissimp
@@ -231,7 +231,6 @@ class SCFields extends SCError
 	{
 		return array_key_exists(strtoupper(trim($name)), $this->fields[$this->delivery_mode]);
 	}
-
 
 	/**
 	 * Get field for a given restriction
@@ -251,7 +250,6 @@ class SCFields extends SCError
 		return $tab;
 	}
 
-
 	/**
 	 * Check if the fields is required
 	 *
@@ -261,9 +259,8 @@ class SCFields extends SCError
 	public function isRequireField($name)
 	{
 		return (in_array(strtoupper($name), $this->fields[$this->delivery_mode]) &&
-			$this->fields[$this->delivery_mode] == SCFields::REQUIRED);
+				$this->fields[$this->delivery_mode] == SCFields::REQUIRED);
 	}
-
 
 	/**
 	 * Set delivery mode
@@ -287,7 +284,6 @@ class SCFields extends SCError
 		return false;
 	}
 
-
 	/**
 	 * Check if the returned key is proper to the generated one.
 	 *
@@ -298,7 +294,7 @@ class SCFields extends SCError
 	public function isCorrectSignKey($sign, $params)
 	{
 		$tab = array();
-		
+
 		foreach ($this->fields[$this->delivery_mode] as $key => $value)
 		{
 			if ($value == SCFields::IGNORED)
@@ -308,9 +304,8 @@ class SCFields extends SCError
 			if (isset($params[$key]))
 				$tab[$key] = $params[$key];
 		}
-		
+
 		return $sign == $this->generateKey($tab);
 	}
-
 
 }
