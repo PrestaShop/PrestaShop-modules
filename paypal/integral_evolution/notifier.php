@@ -25,8 +25,6 @@
 */
 
 include_once(dirname(__FILE__).'/../../../config/config.inc.php');
-include_once(dirname(__FILE__).'/../../../init.php');
-
 include_once(_PS_MODULE_DIR_.'paypal/paypal.php');
 
 /*
@@ -103,12 +101,17 @@ class PayPalNotifier extends PayPal
 
 	public function getResult()
 	{
-		$request = '?cmd=_notify-validate&'.http_build_query($_POST, '&');
-		return Tools::file_get_contents($url.$request);
+		if ((int)Configuration::get('PAYPAL_SANDBOX') == 1)
+			$action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
+		else
+			$action_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
+		
+		$request = '&'.http_build_query($_POST, '&');
+		return Tools::file_get_contents($action_url.$request);
 	}
 
 }
-		
+
 if ($custom = Tools::getValue('custom'))
 {
 	$notifier = new PayPalNotifier();
