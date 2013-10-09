@@ -31,6 +31,9 @@ require_once(_PS_ROOT_DIR_.'/init.php');
 require_once(dirname(__FILE__).'/classes/SCFields.php');
 require_once(dirname(__FILE__).'/backward_compatibility/backward.php');
 
+/* Safe Post/get vars */
+Tools::safePostVars();
+$_GET = array_map(array('Tools', 'htmlentitiesUTF8'), $_GET);
 
 $so = new SCfields('API');
 
