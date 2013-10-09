@@ -24,6 +24,20 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 Socolissimo
+2.8.5 :
+
+- Add new Carrier for Seller Cost
+- This carrier is configurable like normal Carrier to allow price/weight bracket
+- It will be use in place of socolissimo if seller relay point is selected
+- It wont appeare in front office, and we recommanded to desactived it once configurated
+
+- seller cost in back office deleted, replaced by activation/desactivation seller cost carrier
+- Overcost for belgium now setting in HT , the amount in TTC visible for information.
+- bug fix rounded amount in front Office
+- bug fix delivery in belgium in post office
+- Improvement relay point shipping address: the customer name, fisrtname now appears in address before name of relay point.
+
+
 2.8 :
 
 - API socolissimo 4.0

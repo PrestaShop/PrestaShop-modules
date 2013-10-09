@@ -27,7 +27,7 @@
 		{l s='Socolissimo errors list:' mod='socolissimo'}
 		<ul style="margin-top: 10px;">
 			{foreach from=$error_list item=current_error}
-				<li>{$current_error}</li>
+				<li>{$current_error|escape:'htmlall':'UTF-8'}</li>
 			{/foreach}
 		</ul>
 	</div>
