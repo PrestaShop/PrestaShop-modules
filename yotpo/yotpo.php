@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.1';
+		$this->version = '1.3.2';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -216,23 +216,13 @@ class Yotpo extends Module
 
 	private function getProductLink($product_id, $link_rewrite = null)
 	{
-		if($link_rewrite == null && method_exists('Product','getUrlRewriteInformations')) {
-			$rewrite_info = Product::getUrlRewriteInformations($product_id);
-			$link_rewrite = $rewrite_info['link_rewrite'];	
-			$rewrite_info['category_rewrite'];
-		}
-		
-		if (isset($this->context) && isset($this->context->link) && method_exists($this->context->link, 'getProductLink'))
-			return $this->context->link->getProductLink((int)$product_id, $link_rewrite);
-
 		global $link;
 		if (isset($link) && method_exists($link, 'getProductLink'))
-			return $link->getProductLink((int)$product_id, $link_rewrite);
+			return $link->getProductLink((int)$product_id);
 		else
 		{
-			$full_product = new Product((int)$product_id, false);
 			$link = new Link();
-			return $link->getProductLink($full_product);			
+			return $link->getProductLink((int)$product_id);	
 		}
 	}
 
@@ -688,10 +678,10 @@ class Yotpo extends Module
 		return $language;
 	}
 	
-	private function getRichSnippet($product_id) {		
+	private function getRichSnippet($product_id) {
+		$result = '';		
 		if (Configuration::get('yotpo_app_key') != '' && Configuration::get('yotpo_oauth_token') != '' && is_int($product_id)) {
 			try {
-
 				$result = YotpoSnippetCache::getRichSnippet($product_id);
 				$should_update_row = is_array($result) && !YotpoSnippetCache::isValidCache($result); 			
 				if($result == false || $should_update_row) {			
