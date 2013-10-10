@@ -2,6 +2,7 @@
 - Albin Kerouanton 
 - Alexandre Segura 
 - antoniofr 
+- arossetti 
 - Axome 
 - Baptiste GAUTHIER 
 - bellini13 
@@ -27,8 +28,10 @@
 - GuigZ 
 - hadjedjvincent 
 - J. Danse 
+- Jerome Nadaud 
 - Julien Bijoux 
 - Ken Mendes 
+- khokha elmahdi 
 - lsparer 
 - Mathieu 
 - MatthieuB 
