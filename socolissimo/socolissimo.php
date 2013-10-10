@@ -64,7 +64,7 @@ class Socolissimo extends CarrierModule
 	{
 		$this->name = 'socolissimo';
 		$this->tab = 'shipping_logistics';
-		$this->version = '2.8.5';
+		$this->version = '2.8.6';
 		$this->author = 'Quadra Informatique';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -80,7 +80,7 @@ class Socolissimo extends CarrierModule
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
-		if (Configuration::get('SOCOLISSIMO_VERSION') != $this->version)
+		if ((Configuration::get('SOCOLISSIMO_VERSION') != $this->version) && Configuration::get('SOCOLISSIMO_VERSION'))
 			$this->runUpgrades(true);
 		if (self::isInstalled($this->name))
 		{
@@ -905,7 +905,7 @@ class Socolissimo extends CarrierModule
 		$carrier->id_tax_rules_group = $config['id_tax_rules_group'];
 		$carrier->id_zone = $config['id_zone'];
 		$carrier->url = $config['url'];
-		$carrier->active = false;
+		$carrier->active = 0;
 		$carrier->deleted = $config['deleted'];
 		$carrier->delay = $config['delay'];
 		$carrier->shipping_handling = $config['shipping_handling'];
