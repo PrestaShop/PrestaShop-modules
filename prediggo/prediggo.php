@@ -62,7 +62,7 @@ class Prediggo extends Module
 	{
 		$this->name = 'prediggo';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->_html = '';
