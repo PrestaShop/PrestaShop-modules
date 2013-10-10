@@ -24,8 +24,13 @@
 */
 
 $(document).ready(function(){
-	$('div#prediggo_configuration')
-	.appendTo('form#_form');
+	
+	if($('form#_form').length)
+		$('div#prediggo_configuration')
+		.appendTo('form#_form');
+	else if($('form#configuration_form').length)
+		$('div#prediggo_configuration')
+		.appendTo('form#configuration_form');
 	
 	// Prepare the tabs display
 	$('fieldset#fieldset_prediggo_presentation')
