@@ -16,7 +16,14 @@ class AdminGamificationController extends ModuleAdminController
 	public function setMedia()
 	{
 		$this->addJqueryUI('ui.progressbar');
-		$this->addJS(array('/modules/gamification/views/js/bubble-popup.js', '/modules/gamification/views/js/gamification.js', '/modules/gamification/views/js/jquery.isotope.js'));
+		$this->addJS('/modules/gamification/views/js/bubble-popup.js');
+
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+			$this->addJs('/modules/gamification/views/js/gamification_bt.js');
+		else
+			$this->addJs('/modules/gamification/views/js/gamification.js');
+
+		$this->addJs('/modules/gamification/views/js/jquery.isotope.js');
 		$this->addCSS(array('/modules/gamification/views/css/bubble-popup.css', '/modules/gamification/views/css/isotope.css'));
 		
 		return parent::setMedia();

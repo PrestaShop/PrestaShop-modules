@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.5.4';
+		$this->version = '1.5.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -140,7 +140,12 @@ class Gamification extends Module
 		{
 			$this->context->controller->addJquery();
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
-			$this->context->controller->addJs($this->_path.'views/js/gamification.js');
+
+			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
+				$this->context->controller->addJs($this->_path.'views/js/gamification_bt.js');
+			else
+				$this->context->controller->addJs($this->_path.'views/js/gamification.js');
+
 			$this->context->controller->addJqueryPlugin('fancybox');
 		
 			return '<script>
