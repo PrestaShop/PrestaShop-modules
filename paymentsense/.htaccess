@@ -1,0 +1,15 @@
+# PaymentSense security
+<files serverresult.php>
+order deny,allow
+allow from all
+</files>
+
+<files processpayment.php>
+order deny,allow
+allow from all
+</files>
+
+<files callback.php>
+order deny,allow
+allow from all
+</files>
