@@ -53,15 +53,20 @@
 					alert("{/literal}{l s='Please enter your eBay user ID' mod='ebay'}{literal}");
 					return false;
 				}
-				else
-					window.open('{/literal}{$window_open_url}{literal}');
+				else{
+
+					var country = $("#ebay_countries").val();
+					var link = $("option[value=" + country + "]").data("signin");
+
+					window.open(link + "{/literal}{$window_open_url}{literal}");
+				}
 			});
 		});
 		{/literal}
 	</script>
 	<form action="{$action_url}" method="post">
 		<strong>{l s='Do you have an eBay business account?' mod='ebay'}</strong>
-
+		<br />
 		<label for="eBayUsername">{l s='eBay User ID' mod='ebay'}</label>
 		<div class="margin-form">
 			<input id="eBayUsername" type="text" name="eBayUsername" value="{$ebay_username|escape:'htmlall':'UTF-8'}" />
@@ -72,8 +77,8 @@
 		<div class="margin-form">
 			<select name="ebay_country" id="ebay_countries">
 				{if isset($ebay_countries) && $ebay_countries && sizeof($ebay_countries)}
-					{foreach from=$ebay_countries item='extension' key='key'}
-						<option value="{$key}"{if $key == $default_country} selected{/if}>ebay.{$extension}</option>
+					{foreach from=$ebay_countries item='country' key='key'}
+						<option value="{$key}" data-signin="{$country.signin}" {if $key == $default_country} selected{/if}>{if $country.subdomain}{$country.subdomain}.{/if}ebay.{$country.site_extension}</option>
 					{/foreach}
 				{/if}
 			</select>

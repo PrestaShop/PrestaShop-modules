@@ -46,7 +46,6 @@ class EbayRequest
 	private $compatibility_level;
 	private $debug = false;
 	private $dev = true;
-	private $country;
 	private $ebay_country;
 
 	private $smarty_data;
@@ -56,8 +55,7 @@ class EbayRequest
 		/** Backward compatibility */
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 
-		$this->country = new Country((int)Configuration::get('EBAY_COUNTRY_DEFAULT'));
-		$this->ebay_country = new EbayCountrySpec($this->country);
+		$this->ebay_country = EbayCountrySpec::getInstanceByKey((int)Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
 		$this->itemConditionError = false;
 
 		/**
@@ -73,7 +71,7 @@ class EbayRequest
 			$this->apiUrl = 'https://api.sandbox.ebay.com/ws/api.dll';
 			$this->compatibility_level = 719;
 			$this->runame = 'Prestashop-Prestash-2629-4-hpehxegu';
-			$this->loginURL = 'https://signin.sandbox.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
+			$this->loginURL = $this->ebay_country->getSiteSignin();
 		}
 		else
 		{
@@ -82,7 +80,7 @@ class EbayRequest
 			$this->apiUrl = 'https://api.ebay.com/ws/api.dll';
 			$this->compatibility_level = 741;
 			$this->runame = 'Prestashop-Prestash-70a5-4-pepwa';
-			$this->loginURL = 'https://signin.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
+			$this->loginURL = $this->ebay_country->getSiteSignin();
 		}
 
 	}
@@ -368,7 +366,7 @@ class EbayRequest
 			'condition_id' => $data['condition'],
 			'price_update' => !isset($data['noPriceUpdate']),
 			'start_price' => $data['price'],
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
 			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
@@ -449,7 +447,7 @@ class EbayRequest
 
 		// Build the request Xml string
 		$vars = array(
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'description' => $data['description'],
 			'condition_id' => $data['condition'],
@@ -505,7 +503,7 @@ class EbayRequest
 
 		$vars = array(
 			'item_id' => $data['itemID'],
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'condition_id' => $data['condition'],
 			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
@@ -806,6 +804,10 @@ class EbayRequest
 			$this->error = 'Sorry, technical problem, try again later.';
 
 		return empty($this->error);
+	}
+
+	public function getDev() {
+		return $this->dev;
 	}
 
 }

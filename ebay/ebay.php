@@ -834,8 +834,8 @@ class Ebay extends Module
 			$smarty_vars = array_merge($smarty_vars, array(
 				'action_url' => Tools::safeOutput($_SERVER['REQUEST_URI']).'&action=logged',
 				'ebay_username' => $this->context->cookie->eBayUsername,
-				'window_open_url' => $ebay->getLoginUrl().'?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
-				'ebay_countries' => EbayCountrySpec::getCountries(),
+				'window_open_url' => '?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
+				'ebay_countries' => EbayCountrySpec::getCountries($ebay->getDev()),
 				'default_country' => (int)Configuration::get('PS_COUNTRY_DEFAULT')
 			));
 
@@ -939,6 +939,7 @@ class Ebay extends Module
 			'policies' => $this->_getReturnsPolicies(),
 			'catLoaded' => !Configuration::get('EBAY_CATEGORY_LOADED'),
 			'createShopUrl' => $createShopUrl,
+			'ebayCountry' => EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT')),
 			'ebayReturns' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
 			'ebayShopValue' => $ebayShopValue,
 			'shopPostalCode' => Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE'))),
