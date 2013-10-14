@@ -26,8 +26,8 @@
 
 class UpgraderCore
 {
-	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
-	const DEFAULT_CHANNEL = 'minor';
+	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 12;
+	const DEFAULT_CHANNEL = 'major';
 	// @todo channel handling :)
 	public $addons_api = 'api.addons.prestashop.com';
 	public $rss_channel_link = 'https://api.prestashop.com/xml/channel.xml';
@@ -264,7 +264,7 @@ class UpgraderCore
 				'method'=> 'POST',
 				'content' => $postData,
 				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'timeout' => 5,
+				'timeout' => 10,
 			));
 			$context = stream_context_create($opts);
 			$xml = false;
@@ -296,8 +296,7 @@ class UpgraderCore
 		}
 		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
-			// @ to hide errors if md5 file is not reachable
-			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('http' => array('timeout' => 3))));
+			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('http' => array('timeout' => 10))));
 			$xml = @simplexml_load_string($xml_string);
 			if ($xml !== false)
 				file_put_contents($xml_localfile, $xml_string);
