@@ -2,7 +2,7 @@
         <module>
             <name>ebay</name>
             <displayName><![CDATA[eBay]]></displayName>
-            <version><![CDATA[1.5.3.1]]></version>
+            <version><![CDATA[1.5.3]]></version>
             <description><![CDATA[Exportez facilement vos produits de PrestaShop vers eBay.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[market_place]]></tab>

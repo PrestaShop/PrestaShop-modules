@@ -70,7 +70,7 @@
 			<input type="text" size="20" name="ebay_shop" value="{$ebayShopValue}" data-inlinehelp="{l s='Shop name' mod='ebay'}"/> 
 			<p>
 				{if $ebayShop!== false}
-					<a href="http://stores.ebay.fr/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>
+					<a href="http://stores.{if $ebayCountry->getSiteSubdomain()}{$ebayCountry->getSiteSubdomain()}.{/if}ebay.{$ebayCountry->getSiteExtension()}/{$ebayShop}" target="_blank">{l s='Your shop on eBay' mod='ebay'}</a>
 				{else} 
 					<a href="{$createShopUrl}" style="color:#7F7F7F;">
 						{l s='Open your shop' mod='ebay'}

@@ -27,7 +27,7 @@ function loadCategoryMatch(id_category) {
 	$.ajax({
 		async: false,
 		url: module_dir + 'ebay/ajax/loadCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&ch_cat_str=' + ebay_l['no category selected'],
-		success: function(data) { $("#categoryPath" + id_category).html(data); }
+		success: function(data) { $("#categoryPath" + id_category).html(); }
 	});
 }
 

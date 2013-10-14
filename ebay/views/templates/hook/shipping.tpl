@@ -414,13 +414,15 @@
 		</tr>
 	</table>
 	
-	<div class="margin-form" id="addNationalCarrier" style="cursor:pointer;">
-	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new carrier option' mod='ebay'}
+	<div class="margin-form" id="addNationalCarrier" style="margin-top: 10px; cursor: pointer;">
+		<a class="button bold">
+			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new carrier option' mod='ebay'}
+		</a>
 	</div>
 </fieldset>
 
 <fieldset style="margin-top:10px">
-	<legend>{l s='Shipping Method for Interational Shipping' mod='ebay'}</legend>	
+	<legend>{l s='Shipping Method for International Shipping' mod='ebay'}</legend>	
 	<p>{l s='Prestashop zone used to calculate shipping fees  :' mod='ebay'}
 		<select name="internationalZone" id="">
 			{foreach from=$prestashopZone item=zone}
@@ -438,7 +440,10 @@
 		<div class="internationalShipping"></div>
 	</div>
 	<div class="margin-form" id="addInternationalCarrier" style="cursor:pointer;">
-	<span style="font-size:18px;font-weight:bold;padding-right:5px;">+</span>{l s='Add a new international carrier option' mod='ebay'}
+		<a class="button bold">
+			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new international carrier option' mod='ebay'}
+		</a>
+	</div>
 </fieldset>
 
 <fieldset style="margin-top:10px">

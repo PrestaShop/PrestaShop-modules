@@ -35,13 +35,13 @@
 	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
-				<th style="width:110px;">
+				<th style="width:30%">
 					{l s='eBay Configured Category' mod='ebay'}
 				</th>
-				<th>
+				<th style="width:20%">
 					{l s='eBay Items\' Specifics' mod='ebay'}
 				</th>
-				<th style="width:128px;">
+				<th style="width:50%">
 					{l s='PrestaShop Matching' mod='ebay'}
 				</th>
 			</tr>
@@ -51,7 +51,7 @@
 				<tr id="specifics-{$category.id}">
 					<td style="vertical-align: top">{$category.name}</td>
 					<td>
-						<img id="specifics-{$category.id}-loader" src="{$_path}views/img/loading-small.gif" alt="" />
+						<img id="specifics-{$category.id}-loader" src="{$_path}views/img/loading-small.gif" alt="" style="height:20px;" />
 					</td>
 					<td></td>
 				</tr>
