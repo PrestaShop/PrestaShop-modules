@@ -30,15 +30,15 @@ if (!defined('_PS_VERSION_'))
 
 class StripeJs extends PaymentModule
 {
-	public $limited_countries = array('us', 'ca');
-	public $limited_currencies = array('USD', 'CAD');
+	public $limited_countries = array('us', 'ca', 'gb');
+	public $limited_currencies = array('USD', 'CAD', 'GBP', 'EUR');
 	protected $backward = false;
 
 	public function __construct()
 	{
 		$this->name = 'stripejs';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.9.5';
+		$this->version = '0.9.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -610,7 +610,7 @@ class StripeJs extends PaymentModule
 		$tests['curl'] = array('name' => $this->l('PHP cURL extension must be enabled on your server'), 'result' => is_callable('curl_exec'));
 		if (Configuration::get('STRIPE_MODE'))
 			$tests['ssl'] = array('name' => $this->l('SSL must be enabled on your store (before entering Live mode)'), 'result' => Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'));
-		$tests['currencies'] = array('name' => $this->l('The currency USD or CAD must be enabled on your store'), 'result' => Currency::exists('USD', 0) || Currency::exists('CAD', 0));
+		$tests['currencies'] = array('name' => $this->l('The currency USD, EUR, GBP or CAD must be enabled on your store'), 'result' => Currency::exists('GBP', 0) || Currency::exists('EUR', 0) || Currency::exists('USD', 0) || Currency::exists('CAD', 0));
 		$tests['php52'] = array('name' => $this->l('Your server must run PHP 5.2 or greater'), 'result' => version_compare(PHP_VERSION, '5.2.0', '>='));
 		$tests['configuration'] = array('name' => $this->l('Your must sign-up for Stripe and configure your account settings in the module (publishable key, secret key...etc.)'), 'result' => $this->checkSettings());
 
