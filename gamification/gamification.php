@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.5.4';
+		$this->version = '1.5.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -318,9 +318,9 @@ class Gamification extends Module
 			$formated_advices_lang[$lang->id_ps_advice] = array('html' => array($id_lang => $lang->html));
 
 		$current_advices = array();
-		$result = Db::getInstance()->ExecuteS('SELECT id_advice FROM '._DB_PREFIX_.'advice');
+		$result = Db::getInstance()->ExecuteS('SELECT id_advice, id_ps_advice FROM '._DB_PREFIX_.'advice');
 		foreach ($result as $row)
-			$current_advices[] = (int)$row['id_advice'];
+			$current_advices[(int)$row['id_ps_advice']] = (int)$row['id_advice'];
 		
 		$cond_ids = $this->getFormatedConditionsIds();
 		foreach ($advices as $advice)
@@ -328,11 +328,12 @@ class Gamification extends Module
 			try
 			{
 				//if advice already exist we update language data
-				if (in_array($advice->id_ps_advice, $current_advices))
+				if (isset($current_advices[$advice->id_ps_advice]))
 				{
-					$adv = new Advice($advice->id_ps_advice);
+					$adv = new Advice($current_advices[$advice->id_ps_advice]);
 					$bdg->html[$id_lang] = $formated_advices_lang[$advice->id_ps_advice]['html'][$id_lang];
 					$adv->update();
+					$this->processAdviceAsso($adv->id, $advice->display_conditions, $advice->hide_conditions, $advice->tabs, $cond_ids);
 					unset($current_advices[$advice->id_ps_advice]);
 				}
 				else
@@ -343,17 +344,8 @@ class Gamification extends Module
 					$adv->id_tab = (int)Tab::getIdFromClassName($advice->tab);
 					
 					$adv->add();
-					if (is_array($advice->display_conditions))
-						foreach ($advice->display_conditions as $cond)
-							Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 1));
-						
-					if (is_array($advice->hide_conditions))
-						foreach ($advice->hide_conditions as $cond)
-							Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $adv->id, 'display' => 0));
-						
-					if (isset($advice->tabs) && is_array($advice->tabs) && count($advice->tabs))
-						foreach ($advice->tabs as $tab)
-							Db::getInstance()->insert('tab_advice', array('id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => $adv->id));
+					
+					$this->processAdviceAsso($adv->id, $advice->display_conditions, $advice->hide_conditions, $advice->tabs, $cond_ids);
 				}
 				unset($adv);
 			} catch (Exception $e) {
@@ -371,6 +363,23 @@ class Gamification extends Module
 			$adv = new Advice($id_advice);
 			$adv->delete();
 		}
+	}
+	
+	public function processAdviceAsso($id_advice, $display_conditions, $hide_conditions, $tabs, $cond_ids)
+	{
+		Db::getInstance()->delete('condition_advice', 'id_advice='.(int)$id_advice);
+		if (is_array($display_conditions))
+			foreach ($display_conditions as $cond)
+				Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $id_advice, 'display' => 1));
+		
+		if (is_array($hide_conditions))
+			foreach ($hide_conditions as $cond)
+				Db::getInstance()->insert('condition_advice', array('id_condition' => $cond_ids[$cond], 'id_advice' => $id_advice, 'display' => 0));
+		
+		Db::getInstance()->delete('tab_advice', 'id_advice='.(int)$adv->id);
+		if (isset($tabs) && is_array($tabs) && count($tabs))
+			foreach ($advice->tabs as $tab)
+				Db::getInstance()->insert('tab_advice', array('id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => $id_advice));
 	}
 	
 	public function getFormatedConditionsIds()

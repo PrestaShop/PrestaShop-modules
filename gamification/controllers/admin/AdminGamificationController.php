@@ -6,6 +6,7 @@ class AdminGamificationController extends ModuleAdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->display = 'view';
 		$this->meta_title = $this->l('Your Merchant Expertise');
 		parent::__construct();
@@ -83,6 +84,10 @@ class AdminGamificationController extends ModuleAdminController
 			'groups' => $groups,
 			'levels' => $levels,
 		);
+
+		if (version_compare(_PS_VERSION_, '1.5.6.0', '>'))
+			$this->base_tpl_view = 'view_bt.tpl';
+		
 		return parent::renderView();
 	}
 	
