@@ -217,30 +217,30 @@ class Ebay extends Module
 	public static function installPicturesSettings($module) {
 
 		// Default
-		if ($default = ImageType::getByNameNType('medium')) {
-			$sizeMedium = (int) $medium['id_image_type'];
+		if ($default = ImageType::getByNameNType('medium', 'products')) {
+			$sizeMedium = (int) $default['id_image_type'];
 		} 
-		else if ($medium = ImageType::getByNameNType('medium_default')) {
-			$sizeMedium = (int) $medium['id_image_type'];
+		else if ($medium = ImageType::getByNameNType('medium_default', 'products')) {
+			$sizeMedium = (int) $default['id_image_type'];
 		}
 		else {
 			$sizeMedium = 0;
 		}
 		// Small
-		if ($small = ImageType::getByNameNType('small')) {
+		if ($small = ImageType::getByNameNType('small', 'products')) {
 			$sizeSmall = (int) $small['id_image_type'];
 		} 
-		else if ($small = ImageType::getByNameNType('small_default')) {
+		else if ($small = ImageType::getByNameNType('small_default', 'products')) {
 			$sizeSmall = (int) $small['id_image_type'];
 		}
 		else {
 			$sizeSmall = 0;
 		}
 		// Large
-		if ($large = ImageType::getByNameNType('large')) {
+		if ($large = ImageType::getByNameNType('large', 'products')) {
 			$sizeBig = (int) $large['id_image_type'];
 		} 
-		else if ($large = ImageType::getByNameNType('large_default')) {
+		else if ($large = ImageType::getByNameNType('large_default', 'products')) {
 			$sizeBig = (int) $large['id_image_type'];
 		}
 		else {
@@ -1403,8 +1403,8 @@ class Ebay extends Module
 			'internationalShippingLocations' => $this->_getInternationalShippingLocations(),
 			'deliveryTimeOptions' => $this->_getDeliveryTimeOptions(),
 			'formUrl' => $this->_getUrl($url_vars),
-			'ebayZoneNational' => $configs['EBAY_ZONE_NATIONAL'],
-			'ebayZoneInternational' => $configs['EBAY_ZONE_INTERNATIONAL'],
+			'ebayZoneNational' => (isset($configs['EBAY_ZONE_NATIONAL']) ? $configs['EBAY_ZONE_NATIONAL'] : false),
+			'ebayZoneInternational' => (isset($configs['EBAY_ZONE_INTERNATIONAL']) ? $configs['EBAY_ZONE_INTERNATIONAL'] : false),
 			'ebay_token' => $configs['EBAY_SECURITY_TOKEN']			
 		));
 

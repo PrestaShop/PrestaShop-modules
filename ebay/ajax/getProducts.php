@@ -32,7 +32,7 @@ include_once dirname(__FILE__).'/../classes/EbayProductConfiguration.php';
 if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	die('ERROR : INVALID TOKEN');
 
-$ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
+$ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'));
 $id_lang = $ebay_country->getIdLang();
 
 $is_one_five = version_compare(_PS_VERSION_, '1.5', '>');
