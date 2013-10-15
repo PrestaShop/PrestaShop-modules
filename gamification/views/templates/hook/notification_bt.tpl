@@ -5,13 +5,11 @@
 	var gamification_level = '{l s='Level' js=1}';
 </script>
 <li id="gamification_notif" style="background:none" class="dropdown">
-	<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+	<a href="javascript:void(0);" class="dropdown-toggle gamification_notif" data-toggle="dropdown">
 		<i class="icon-bookmark"></i>
-		{if $notification}
 		<span id="gamification_notif_number_wrapper" class="notifs_badge">
 			<span id="gamification_notif_value">{$notification|intval}</span>
 		</span>
-		{/if}
 	</a>
 	<div class="dropdown-menu notifs_dropdown">
 		<section id="gamification_notif_wrapper" class="notifs_panel">

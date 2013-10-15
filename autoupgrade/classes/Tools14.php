@@ -528,7 +528,7 @@ class Tools14
 	{
 		$dirname = rtrim($dirname, '/').'/';
 		if (file_exists($dirname))
-			if ($files = @scandir($dirname))
+			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
     				if ($file != '.' && $file != '..' && $file != '.svn')
@@ -536,14 +536,14 @@ class Tools14
     					if (is_dir($dirname.$file))
     						Tools::deleteDirectory($dirname.$file, true);
     					elseif (file_exists($dirname.$file))
-    						@unlink($dirname.$file);
+    						unlink($dirname.$file);
     				}
-				if ($delete_self)
-					if (!@rmdir($dirname))
-                        return false;
-                return true;                    
+				if ($delete_self && file_exists($dirname))
+					if (!rmdir($dirname))
+						return false;
+				return true;                    
 			}
-        return false;
+		return false;
     }
 
 	/**

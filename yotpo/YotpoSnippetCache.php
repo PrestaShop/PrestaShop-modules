@@ -11,7 +11,7 @@ class YotpoSnippetCache {
 		$db = Db::getInstance();
 		$result = $db->getRow('SELECT * 
 											 FROM `'._DB_PREFIX_.'yotposnippetcache` 
-											 WHERE id_product='.$product_id, true);
+											 WHERE id_product='.(int)$product_id, true);
 		if (is_array($result)) {			
 			return $result;				
 		}
@@ -31,8 +31,8 @@ class YotpoSnippetCache {
 		$expiration_at = time() + $expiration_time;	
 		$res = Db::getInstance()->execute(
 		'UPDATE `'._DB_PREFIX_.'yotposnippetcache` 
-		 SET `id_product`='.$product_id.' , `rich_snippet_code`= \''.pSQL($rich_snippet_code,true).'\', `ttl`=\''.date("Y-m-d H:i:s",$expiration_at).'\'
-		 WHERE `id_product`='.$product_id.''
+		 SET `id_product`='.(int)$product_id.' , `rich_snippet_code`= \''.pSQL($rich_snippet_code,true).'\', `ttl`=\''.date("Y-m-d H:i:s",$expiration_at).'\'
+		 WHERE `id_product`='.(int)$product_id.''
 		);		
 		return $res;
 	}

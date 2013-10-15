@@ -18,6 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
+*  @author Quadra Informatique <modules@quadra-informatique.fr>
 *  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -28,7 +29,7 @@
 	.soBackward_compat_tab a {literal}{ margin: 10px; }{/literal}
 </style>
 
-<a href="#" style="display:none" id="soLink"></a>
+<a href="#" style="display:none" class="fancybox fancybox.iframe" id="soLink"></a>
 {if isset($opc) && $opc}
 	<script type="text/javascript">
 		var opc = true;
@@ -52,15 +53,16 @@
 	var soInputs = new Object();
 	var soBwdCompat = "{$SOBWD_C}";
 	var soCarrierId = "{$id_carrier}";
+        var soSellerId = "{$id_carrier_seller}";
 	var soToken = "{$token}";
 	var initialCost_label = "{$initialCost_label}";
 	var initialCost = "{$initialCost}";
 	var baseDir = '{$content_dir}';
-	
+
 		{foreach from=$inputs item=input key=name name=myLoop}
 			soInputs.{$name} = "{$input|strip_tags|addslashes}";
 		{/foreach}
-	
+
 		{literal}
 		$('#soLink').fancybox({
 				'width'				: 590,
@@ -101,11 +103,11 @@
 					});
 				}
 			});
-	
+
 			$(document).ready(function()
 			{
 				var interval;
-	
+                        $('#soLink').attr('href', baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
 				// 1.4 way
 				if (!soBwdCompat)
 				{
@@ -127,9 +129,16 @@
 					if (soCarrierId)
 						so_click();
 				}
+			$('.delivery_option').each(function( ) {
+				if ($(this).children('.delivery_option_radio').val() == '{/literal}{$id_carrier_seller}{literal},') {
+					$(this).remove();
+				}
 			});
-	
-	
+			$('#id_carrier{/literal}{$id_carrier_seller}{literal}').parent().parent().remove();
+
+			});
+
+
 		function so_click()
 		{
 			if (opc) {
@@ -153,17 +162,17 @@
 				});
 			}
 		}
-	
+
 	function modifyCarrierLine()
 	{
 		if(soBwdCompat)
 			var carrier = $('input.delivery_option_radio:checked');
-	
+
 		else {
 			var carrier = $('input[name=id_carrier]:checked');
 				var container = '#id_carrier' + soCarrierId;
 		}
-	
+
 		if ((carrier.val() == soCarrierId) || (carrier.val() == soCarrierId+',')) {
 			if(soBwdCompat)
 				carrier.next().children().children().find('div.delivery_option_delay').append('<div><a class="exclusive_large" id="button_socolissimo" href="#" onclick="redirect();return;" >{/literal}{$select_label}{literal}</a></div>');
@@ -181,14 +190,14 @@
 			if(soBwdCompat)
 				$(container).css('display', 'none');
 	}
-	
+
 	function redirect()
 	{
 		$('#soLink').attr('href',  baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
 		$("#soLink").trigger("click");
 		return false;
 	}
-	
+
 	function serialiseInput(inputs)
 	{
 		var str = '?first_call=1&';
@@ -196,6 +205,6 @@
 			str += cle + '=' + inputs[cle] + '&';
 		return (str + 'gift=' + $('#gift').attr('checked') + '&gift_message='+ $('#gift_message').attr('value'));
 	}
-	
+
 	{/literal}
 </script>

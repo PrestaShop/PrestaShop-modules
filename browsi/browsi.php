@@ -33,7 +33,7 @@ class Browsi extends Module
 	{
 		$this->name = 'browsi';
 		$this->tab = 'mobile';
-		$this->version = 1.0;
+		$this->version = '1.0.1';
 		$this->author = 'MySiteApp Ltd.';
 		$this->need_instance = 1;
 

@@ -18,12 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
+*  @author Quadra Informatique <modules@quadra-informatique.fr>
 *  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+<!DOCTYPE html>
+<html>
 	<head>
 		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
 	</head>
@@ -32,7 +33,7 @@
 			<form id="socoForm" name="form" action="{$socolissimo_url|escape:'htmlall':'UTF-8'}" method="POST">
 
 				{foreach from=$inputs key=key item=val}
-					<input type="hidden" name="{$key}" value="{$val}"/>
+					<input type="hidden" name="{$key|escape:'htmlall':'UTF-8'}" value="{$val|escape:'htmlall':'UTF-8'}"/>
 				{/foreach}
 				<img src="logo.gif" />
 				<p>{l s='You will be redirect to socolissimo in few moment. If it is not the case, please click button.' mod='socolissimo'}</p>

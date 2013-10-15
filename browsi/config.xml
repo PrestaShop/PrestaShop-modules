@@ -2,7 +2,7 @@
 <module>
     <name>browsi</name>
     <displayName><![CDATA[Brow.si]]></displayName>
-    <version><![CDATA[1.0]]></version>
+    <version><![CDATA[1.0.1]]></version>
     <description><![CDATA[Generate more traffic, increase customer engagement and sell more on mobile with Brow.si.]]></description>
     <author><![CDATA[MySiteApp Ltd.]]></author>
     <tab><![CDATA[mobile]]></tab>

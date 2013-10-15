@@ -63,6 +63,9 @@ class EbayCategoryCondition
 					'id_condition_ref' => (int)$xml_condition->ID,
 					'name' => pSQL((string)$xml_condition->DisplayName)
 				);
+
+			//
+			Db::getInstance()->ExecuteS("SELECT 1");
 		}
 
 		if ($conditions) // security to make sure there are values to enter befor truncating the table
