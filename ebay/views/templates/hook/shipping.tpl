@@ -72,7 +72,7 @@
 		{foreach from=$eBayCarrier item=carrier}
 		currentShippingService = '{$carrier.shippingService}';
 		//check for international
-		if((internationalOnly == 1 && '{$carrier.InternationalService}'=== 'true') || internationalOnly == 0)
+		if((internationalOnly == 1 && '{$carrier.InternationalService}' === 'true') || (internationalOnly == 0 && '{$carrier.InternationalService}' !== 'true') )
 		{literal}{{/literal}
 			if(currentShippingService == idEbayCarrier)
 			{literal}{{/literal}

@@ -48,7 +48,6 @@
 	})
 </script>
 
-
 	{if isset($check_token_tpl)}
 	<fieldset id="regenerate_token">
 		<legend>{l s='Token' mod='ebay'}</legend>

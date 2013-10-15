@@ -32,8 +32,10 @@ class EbayCountrySpec
 {
 	public $country;
 	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl', 'be');
+	protected $ebay_iso;
 
 	private $dev;
+	private static $multilang = array('be');
 
 	private static $country_data = array(
 		'it' => array(
@@ -106,7 +108,7 @@ class EbayCountrySpec
 			'site_id'        => 23,
 			'language'       => 'fr_BE',
 			'currency'       => 'EUR',
-			'site_name'      => 'Belgium (France)',
+			'site_name'      => 'Belgium_French',
 			'site_extension' => 'be',
 			'subdomain'      => 'befr',
 			'img_stats'      => null,
@@ -118,7 +120,7 @@ class EbayCountrySpec
 			'site_id'        => 123,
 			'language'       => 'nl_BE',
 			'currency'       => 'EUR',
-			'site_name'      => 'Belgium (Dutch)',
+			'site_name'      => 'Belgium_Dutch',
 			'site_extension' => 'be',
 			'subdomain'      => 'benl',
 			'img_stats'      => null,
@@ -196,7 +198,7 @@ class EbayCountrySpec
 
 	private function _getCountryData($data)
 	{
-		$iso_code = strtolower($this->country->iso_code);
+		$iso_code = $this->ebay_iso;
 		if (isset(self::$country_data[$iso_code]) && isset(self::$country_data[$iso_code][$data]))
 			return self::$country_data[$iso_code][$data];
 		else if (isset(self::$country_data['fr'][$data]))
@@ -228,9 +230,6 @@ class EbayCountrySpec
 		$ebayCountry = self::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'));
 
 		$this->country = $ebayCountry->country;
-		
-		if (!in_array(strtolower($this->country->iso_code), $this->accepted_isos))
-			Configuration::updateValue('EBAY_COUNTRY_DEFAULT', strtolower($this->country->iso_code), false, 0, 0);
 
 		return $this->country;
 	}
@@ -277,6 +276,7 @@ class EbayCountrySpec
 
 		$ebay_country = new EbayCountrySpec(new Country($id_country));
 		$ebay_country->setDev($dev);
+		$ebay_country->ebay_iso = $key;
 
 		return $ebay_country;
 	}
@@ -286,9 +286,26 @@ class EbayCountrySpec
 	 * @param boolean $dev set dev or not
 	 */
 	public function setDev($dev) {
-
 		if( is_bool($dev) )
 			$this->dev = $dev;
+	}
 
+	/**
+	 * Get key for iso_code tab
+	 * @return string Key for iso_code tab
+	 */
+	public static function getKeyForEbayCountry() {
+
+		$country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+
+		$default_country = strtolower($country->iso_code);
+
+		if (in_array( $default_country, EbayCountrySpec::$multilang )) {
+			$lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+
+			$default_country .= '-' . strtolower($lang->iso_code);
+		}
+
+		return $default_country;
 	}
 }

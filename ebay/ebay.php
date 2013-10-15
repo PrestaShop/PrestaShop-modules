@@ -72,7 +72,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.5.3';
+		$this->version = '1.5.3.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -128,7 +128,7 @@ class Ebay extends Module
 			if(class_exists('EbayCountrySpec'))
 			{
 				// Check the country
-				$this->ebay_country = new EbayCountrySpec();
+				$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'));
 
 				if (!$this->ebay_country->checkCountry())
 				{
@@ -349,9 +349,13 @@ class Ebay extends Module
 				upgrade_module_1_5($this);
 			}
 
-		if (version_compare($version, '1.5.4', '<'))
-				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.4.php');
-				upgrade_module_1_5_4($this);
+		if (version_compare($version, '1.6', '<')) {
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
+			{
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.6.php');
+				upgrade_module_1_6($this);
+			}
+		}
 	}
 
 	/**
@@ -836,7 +840,7 @@ class Ebay extends Module
 				'ebay_username' => $this->context->cookie->eBayUsername,
 				'window_open_url' => '?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
 				'ebay_countries' => EbayCountrySpec::getCountries($ebay->getDev()),
-				'default_country' => (int)Configuration::get('PS_COUNTRY_DEFAULT')
+				'default_country' => EbayCountrySpec::getKeyForEbayCountry()
 			));
 
 		}
@@ -1613,7 +1617,7 @@ class Ebay extends Module
 			'sync_1' => (Tools::getValue('section') == 'sync' && Tools::getValue('ebay_sync_mode') == "1" && Tools::getValue('btnSubmitSyncAndPublish')),
 			'sync_2' => (Tools::getValue('section') == 'sync' && Tools::getValue('ebay_sync_mode') == "2" && Tools::getValue('btnSubmitSyncAndPublish')),
 			'is_sync_mode_b' => (Configuration::get('EBAY_SYNC_PRODUCTS_MODE') == 'B'),
-			'ebay_sync_mode' => (int)(Configuration::get('EBAY_SYNC_MODE') ? Configuration::get('EBAY_SYNC_MODE') : 1),
+			'ebay_sync_mode' => (int)(Configuration::get('EBAY_SYNC_MODE') ? Configuration::get('EBAY_SYNC_MODE') : 2),
 			'prod_str' => $nb_products >= 2 ? $this->l('products') : $this->l('product')
 		);
 

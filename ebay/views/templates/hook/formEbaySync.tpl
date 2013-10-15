@@ -146,10 +146,10 @@
 		<div class="clear both"></div>
 		<label>{l s='Sync mod' mod='module'} :	</label><br /><br />
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> {l s='Only new products that are not already lister on eBay' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> {l s='Sync new products and update existing listings' mod='ebay'}
 		</div>
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> {l s='Sync new products and update existing listings' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> {l s='Only new products that are not already lister on eBay' mod='ebay'}
 		</div>
 		<div style="display: none;" id="catSync">
 			<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
