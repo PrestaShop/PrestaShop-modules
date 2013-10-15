@@ -348,8 +348,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		// so, we'll create a cookie in admin dir, based on cookie key
 		global $cookie;
 		$id_employee = $cookie->id_employee;
-		$iso_code = $_COOKIE['iso_code'] = Language::getIsoById($cookie->id_lang);
-
+		if ($cookie->id_lang)
+			$iso_code = $_COOKIE['iso_code'] = Language::getIsoById((int)$cookie->id_lang);
+		else
+			$iso_code = 'en';
 		$admin_dir = trim(str_replace($this->prodRootDir, '', $this->adminDir), DIRECTORY_SEPARATOR);
 		$cookiePath = __PS_BASE_URI__.$admin_dir;
 		setcookie('id_employee', $id_employee, time() + 7200, $cookiePath);
@@ -2443,8 +2445,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if ($this->updateDefaultTheme)
 				{
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
-						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\') 
-						WHERE id_shop = 1 AND id_theme = 1');
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\' WHERE id_shop = 1 AND id_theme = 1)');
 					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'prestashop\' LIMIT 1');
 				}
 			}
