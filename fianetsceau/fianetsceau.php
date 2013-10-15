@@ -115,7 +115,7 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.1';
+		$this->version = '2.2';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -315,7 +315,7 @@ class FianetSceau extends Module
 		$order = new Order($id_order);
 		$payments = $this->loadPaymentMethods();
 		foreach ($payments as $element)
-			if ($order->module == $element['name'])
+			if ($order->payment == $element['name'])
 				return ($element['fianetsceau_type']);
 	}
 
@@ -348,7 +348,7 @@ class FianetSceau extends Module
 		else
 		{
 			$gender = new Gender($customer->id_gender);
-			$id_lang = Language::getIdByIso('en');
+			$id_lang = Language::getIdByIso($this->context->language->iso_code);
 			$civility = $gender->name[$id_lang] == 'Mr.' ? 1 : 2;
 		}
 
@@ -383,7 +383,9 @@ class FianetSceau extends Module
 		$xml_order->childUtilisateur($utilisateur);
 		$xml_order->childInfocommande($infocommande);
 		$xml_order->childPaiement($paiement);
-
+		
+		$fianetsceau->addCrypt($xml_order);
+		
 		$result = $fianetsceau->sendSendrating($xml_order);
 		if (!($result === false))
 		{
