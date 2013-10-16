@@ -1171,6 +1171,11 @@ class Socolissimo extends CarrierModule
 
 	public function getOrderShippingCost($params, $shipping_cost)
 	{
+
+		// bug in 1.4 cartAdmin
+		if (!$this->context->cart instanceof Cart)
+			$this->context->cart = new Cart($params->id);
+
 		// for label in tpl
 		if (!$this->initial_cost)
 			$this->initial_cost = $this->getStandardCost();
@@ -1358,16 +1363,15 @@ class Socolissimo extends CarrierModule
 	 */
 	public function setInputParams($inputs)
 	{
-		// set api params for 3.0 and mobile
-		if (version_compare(_PS_VERSION_, '1.5', '<') && ((_THEME_NAME_ == 'prestashop_mobile' || $this->isIpad()) && $inputs['cePays'] == 'FR'))
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
-			unset($inputs['CHARSET']);
-			unset($inputs['cePays']);
-			unset($inputs['trInter']);
-			unset($inputs['ceLang']);
-			$inputs['numVersion'] = '3.0';
+			$get_mobile_device = (_THEME_NAME_ == 'prestashop_mobile') ? true : false;
 		}
-		else if ((Context::getContext()->getMobileDevice() || $this->isIpad()) && $inputs['cePays'] == 'FR')
+		else
+			$get_mobile_device = Context::getContext()->getMobileDevice();
+
+		// set api params for 3.0 and mobile
+		if (($get_mobile_device || $this->isIpad()) && $inputs['cePays'] == 'FR')
 		{
 			unset($inputs['CHARSET']);
 			unset($inputs['cePays']);
