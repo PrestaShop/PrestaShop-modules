@@ -26,23 +26,29 @@
 {if isset($alerts) && !empty($alerts)}
 	{$alerts}
 {/if}
-<p>
-	<b>
-		{l s='Match eBay Items\' Specifics with PrestasShop Characteristics' mod='ebay'}
-	</b>
-</p>
+<div>
+	<p>
+		{l s='Item specifics are the details that buyers use to search for products, such as brand, size, colour and are category specific. The more item specifics you add, the easier it is for buyers to find your products. Please also specify the item condition from the options.' mod='ebay'}
+	</p>
+	<!---------------------------->
+	<p>
+		<b data-inlinehelp="{l s='Make it easier for buyers to find your products by adding eBay item specifics. Please wait until the page is loaded - this may take a few minutes.' mod='ebay'}">
+			{l s='Match your PrestaShop characteristics to eBay item specifics.' mod='ebay'}
+		</b>
+	</p>
+</div>
 <form action="index.php?{if (_PS_VERSION <= '1.5')}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
 	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
 				<th style="width:30%">
-					{l s='eBay Configured Category' mod='ebay'}
+					{l s='eBay category' mod='ebay'}
 				</th>
 				<th style="width:20%">
-					{l s='eBay Items\' Specifics' mod='ebay'}
+					<span data-inlinehelp="{l s='The first item specifics are required by eBay and you won’t be able to list your item without adding them. You can also add optional item specifics that will help buyers find your item. Specify the condition of your item in the second box.' mod='ebay'}">{l s='Item specifics' mod='ebay'}</span>
 				</th>
 				<th style="width:50%">
-					{l s='PrestaShop Matching' mod='ebay'}
+					{l s='PrestaShop characteristics' mod='ebay'}
 				</th>
 			</tr>
 		</thead>
@@ -58,7 +64,9 @@
 			{/foreach}
 		</tbody>
 	</table>
-	<div class="margin-form" style="margin-top:10px"><input class="button" name="submitSave" type="submit" value="{l s='Save' mod='ebay'}" /></div>
+	<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+		<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
+	</div>
 </form>
 
 <script type="text/javascript">

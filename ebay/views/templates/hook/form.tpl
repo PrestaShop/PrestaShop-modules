@@ -38,8 +38,39 @@
 <br />
 
 <link rel="stylesheet" href="{$css_file}" />
+
+{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4"}
+	<link rel="stylesheet" href="{$fancyboxCss}" />
+	<script src="{$ebayjquery}"></script>
+	<script src="{$noConflicts}"></script>
+	<script src="{$fancybox}"></script>
+{/if}
 <script src="{$tooltip}" type="text/javascript"></script>
 <script src="{$tips202}" type="text/javascript"></script>
+
+<style type="text/css">
+	#fancybox-loading {
+		display: none;
+	}
+
+	input.primary {
+		text-shadow: none;
+		background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+		background: -moz-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+		color: white;
+	}
+
+	.tooltip {
+		vertical-align: middle;
+		display: inline-block;
+		margin-left: 3px;
+	}
+
+	textarea + .tooltip {
+		vertical-align: top;
+	}
+
+</style>
 	
 <fieldset>
 	<legend><img src="{$path}logo.gif" alt="" />{l s='eBay Module Status' mod='ebay'}</legend>

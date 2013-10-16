@@ -25,11 +25,15 @@
 
 <form action="{$action_url}" method="post" class="form" id="configForm3">
 	<fieldset style="border: 0">
-		<h4>{l s='You can customise the template for your products page on eBay' mod='ebay'} :</h4>
-		<p>{l s='On eBay, your products are presented in templates which you can design. A good template should:' mod='ebay'}</p>
+		<h4><span data-dialoghelp="#tagsTemplate" data-inlinehelp="{l s='View the list of tags.' mod='ebay'}">{l s='Design an eye-catching template to attract buyers.' mod='ebay'} :</span></h4>
+		<div id="tagsTemplate" style="display: none;">
+			{ldelim}MAIN_IMAGE{rdelim}, {ldelim}MEDIUM_IMAGE_1{rdelim}, {ldelim}MEDIUM_IMAGE_2{rdelim}, {ldelim}MEDIUM_IMAGE_3{rdelim}, {ldelim}PRODUCT_PRICE{rdelim}, {ldelim}PRODUCT_PRICE_DISCOUNT{rdelim}, {ldelim}DESCRIPTION_SHORT{rdelim}, {ldelim}DESCRIPTION{rdelim}, {ldelim}FEATURES{rdelim}, {ldelim}EBAY_IDENTIFIER{rdelim}, {ldelim}EBAY_SHOP{rdelim}, {ldelim}SLOGAN{rdelim}, {ldelim}PRODUCT_NAME{rdelim}
+		</div>
+		<p>{l s='Use this template to choose how you’d like your products to appear on eBay.' mod='ebay'}</p>
 		<ul style="padding-left:15px;">
-			<li>{l s='Look more professional to consumers helping to differentiate from other merchants' mod='ebay'}</li>
-			<li>{l s='Give customers all needed information' mod='ebay'}</li>
+			<li>{l s='Stand out from the crowd' mod='ebay'}</li>
+			<li>{l s='Make sure your description includes all the information the buyer needs to know.' mod='ebay'}</li>
+			<li>{l s='Use the same words that the buyer would use to search' mod='ebay'}</li>
 		</ul>
 		<br/>		
 		<textarea class="rte" cols="100" rows="50" name="ebay_product_template">{$ebay_product_template}</textarea><br />
@@ -101,5 +105,7 @@
 			</script>			
 		{/if}
 	</fieldset>
-	<div class="margin-form"><input class="button" name="submitSave" value="{l s='Save' mod='ebay'}" type="submit"></div>
+	<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+		<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
+	</div>
 </form>		

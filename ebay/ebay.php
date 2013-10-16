@@ -745,7 +745,11 @@ class Ebay extends Module
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 			'css_file' => $this->_path . 'views/css/ebay_back.css',
 			'tooltip' => $this->_path . 'views/js/jquery.tooltipster.min.js',
-			'tips202' => $this->_path . 'views/js/202tips.js'
+			'tips202' => $this->_path . 'views/js/202tips.js',
+			'noConflicts' => $this->_path . 'views/js/jquery.noConflict.php',
+			'ebayjquery' => $this->_path . 'views/js/jquery-1.7.2.min.js',
+			'fancybox' => $this->_path . 'views/js/jquery.fancybox.min.js',
+			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css'
 		));
 
 		return $this->display(__FILE__, 'views/templates/hook/form.tpl').
