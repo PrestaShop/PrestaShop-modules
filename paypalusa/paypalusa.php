@@ -3,7 +3,6 @@
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
  *  @copyright  2007-2013 PrestaShop SA
- *  @version  Release: $Revision: 1.2.5 $
  *
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -21,7 +20,7 @@ class PayPalUSA extends PaymentModule
 	{
 		$this->name = 'paypalusa';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.6';
+		$this->version = '1.2.7';
 
 		parent::__construct();
 
@@ -299,7 +298,7 @@ class PayPalUSA extends PaymentModule
 	{
 		$html = '';
 		$paypal_usa_express_checkout_no_token = (!isset($this->context->cookie->paypal_express_checkout_token) || empty($this->context->cookie->paypal_express_checkout_token));
-
+		
 		/* PayPal Express Checkout */
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT'))
 		{
@@ -312,18 +311,19 @@ class PayPalUSA extends PaymentModule
 		}
 
 		/* PayPal Payments Standard */
-		if (Configuration::get('PAYPAL_USA_PAYMENT_STANDARD') && (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code != 'MX') && $paypal_usa_express_checkout_no_token)
+
+		if (Configuration::get('PAYPAL_USA_PAYMENT_STANDARD') && ($this->_shop_country instanceof Country && $this->_shop_country->iso_code != 'MX') && $paypal_usa_express_checkout_no_token)
 		{
 			/* Display a form/button that will be sent to PayPal with the customer details */
 			$billing_address = new Address((int)$this->context->cart->id_address_invoice);
 			$billing_address->country = new Country((int)$billing_address->id_country);
 			$billing_address->state = new State((int)$billing_address->id_state);
-
 			$this->context->smarty->assign(array(
 				'paypal_usa_action' => 'https://www'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '.sandbox' : '').'.paypal.com/cgi-bin/webscr',
 				'paypal_usa_customer' => $this->context->customer,
 				'paypal_usa_business_account' => Configuration::get('PAYPAL_USA_ACCOUNT'),
 				'paypal_usa_billing_address' => $billing_address,
+				'paypal_usa_total_tax' => (float)$this->context->cart->getOrderTotal(true) - (float)$this->context->cart->getOrderTotal(false),
 				'paypal_usa_cancel_url' => $this->context->link->getPageLink('order.php'),
 				'paypal_usa_notify_url' => $this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1)), /* IPN URL */
 				'paypal_usa_return_url' => $this->context->link->getPageLink('order-confirmation.php')));
