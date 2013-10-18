@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.5.6';
+		$this->version = '1.5.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -383,7 +383,7 @@ class Gamification extends Module
 		
 		Db::getInstance()->delete('tab_advice', 'id_advice='.(int)$id_advice);
 		if (isset($tabs) && is_array($tabs) && count($tabs))
-			foreach ($advice->tabs as $tab)
+			foreach ($tabs as $tab)
 				Db::getInstance()->insert('tab_advice', array('id_tab' => (int)Tab::getIdFromClassName($tab), 'id_advice' => $id_advice));
 	}
 	
