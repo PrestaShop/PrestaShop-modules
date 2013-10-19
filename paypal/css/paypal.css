@@ -1,17 +1,17 @@
 #paypal-column-block p{text-align:center}
 .bold{font-weight:700}
 .clear{clear:both}
-.half{width:44%}
+#paypal-wrapper .half{width:44%}
 #paypal-wrapper{font-size:1.1em;position:relative}
 #paypal-wrapper ul li{text-align:left}
 #paypal-wrapper hr{border-top:1px solid #ccc!important;margin-bottom:0;margin-top:20px}
-.toolbox{background:#fff2cf;border:1px solid #aaa;color:#000;display:none;font-size:10px;font-weight:400;left:730px;line-height:12px;padding:6px!important;position:absolute;text-transform:none;top:-10px!important;width:180px;z-index:100}
+#paypal-wrapper .toolbox{background:#fff2cf;border:1px solid #aaa;color:#000;display:none;font-size:10px;font-weight:400;left:730px;line-height:12px;padding:6px!important;position:absolute;text-transform:none;top:-10px!important;width:180px;z-index:100}
 .disabled,.disabled *,.disabled * *,.disabled * * *{color:#888!important}
 .disabled .paypal-button,.disabled input[type=submit]{background:#DDD!important;border:1px solid #999!important}
-.inline{display:inline;margin-right:5px}
-.box{margin:6px 1%;padding:12px;text-align:left}
-.box ul{list-style:none;margin:0;padding:0}
-.box ul.tick li{background:url(../img/blue_tick.png) no-repeat left 3px;padding:4px 26px}
+#paypal-wrapper .inline{display:inline;margin-right:5px}
+#paypal-wrapper .box{margin:6px 1%;padding:12px;text-align:left}
+#paypal-wrapper .box ul{list-style:none;margin:0;padding:0}
+#paypal-wrapper .box ul.tick li{background:url(../img/blue_tick.png) no-repeat left 3px;padding:4px 26px}
 span.paypal-section{background:url(../img/sprites.png) no-repeat 0 0;color:#FFF!important;float:left;height:24px;line-height:24px;margin-right:8px;text-align:center;width:24px}
 .disabled span.paypal-section{background:url(../img/sprites.png) 0 24px}
 #paypal-slogan{font-size:1.8em;margin:0 0 5px;text-transform:uppercase}
@@ -47,6 +47,6 @@ label span.description{display:block;padding-left:16px}
 .paypal_error span{color:red;font-weight:bolder}
 .paypal_payment_acccepted span{color:green;font-weight:bolder}
 #paypal_configuration > .box{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
-.left,#paypal-wrapper dl > *{float:left}
-.right,.box ul.tick{float:right}
+#paypal-wrapper .left,#paypal-wrapper dl > *{float:left}
+#paypal-wrapper .right,.box ul.tick{float:right}
 .paypal-hide{display:none}
