@@ -2353,7 +2353,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-						if (!in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+						if (_PS_MODE_DEV_ || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
 						{
 							$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
 							$warningExist = true;
