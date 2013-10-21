@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings>
+	<hpptypes>
+		<ideal>
+		    <code>ideal</code>
+		    <name>iDeal</name>
+		    <order>0</order>
+		</ideal>
+		<visa>
+		    <code>visa</code>
+		    <name>Visa</name>
+		    <order>10</order>
+		</visa>
+		<amex>
+		    <code>amex</code>
+		    <name>Amex</name>
+		    <order>15</order>
+		</amex>                         
+		<mc>
+		    <code>mc</code>
+		    <name>Master Card</name>
+		    <order>20</order>
+		</mc>
+		<bankTransfer_NL>
+		    <code>bankTransfer_NL</code>
+		    <name>Dutch Banktransfer</name>
+		    <order>30</order>
+		</bankTransfer_NL>
+		<bankTransfer_DE>
+		    <code>bankTransfer_DE</code>
+		    <name>German Banktransfer</name>
+		    <order>40</order>
+		</bankTransfer_DE>
+		<elv>
+		    <code>elv</code>
+		    <name>ELV</name>
+		    <order>50</order>
+		</elv>
+		<directdebit_NL>
+		    <code>directdebit_NL</code>
+		    <name>Direct Debit (Netherlands)</name>
+		    <order>60</order>
+		</directdebit_NL>
+		<directEbanking>
+		    <code>directEbanking</code>
+		    <name>SofortUberweisung</name>
+		    <order>70</order>
+		</directEbanking>
+		<paypal>
+		    <code>paypal</code>
+		    <name>PayPal</name>
+		    <order>80</order>
+		</paypal>
+		<dineromail>
+		    <code>dineromail</code>
+		    <name>DineroMail</name>
+		    <order>90</order>
+		</dineromail>
+		<moneybookers>
+		    <code>moneybookers</code>
+		    <name>Moneybookers</name>
+		    <order>100</order>
+		</moneybookers> 
+		<bcmc>
+		    <code>bcmc</code>
+		    <name>Mister Cash</name>
+		    <order>110</order>
+		</bcmc> 
+		<dotpay>
+		    <code>dotpay</code>
+		    <name>Dotpay</name>
+		    <order>120</order>
+		</dotpay>
+		<ebanking_FI>
+		    <code>ebanking_FI</code>
+		    <name>Suomen Verkkomaksut / eBanking (Finland)</name>
+		    <order>130</order>
+		</ebanking_FI>
+		<giropay>
+		    <code>giropay</code>
+		    <name>GiroPay</name>
+		    <order>140</order>
+		</giropay>
+		<paysafecard>
+		    <code>paysafecard</code>
+		    <name>Paysafecard</name>
+		    <order>150</order>
+		</paysafecard>
+		<openinvoice>
+		    <code>openinvoice</code>
+		    <name>Open Invoice</name>
+		    <order>160</order>
+		</openinvoice>                    
+		<asiapay>
+			<code>asiapay</code>
+			<name>AsiaPay</name>
+			<order>165</order>
+		</asiapay>
+		<trustly>
+			<code>trustly</code>
+			<name>Trustly</name>
+			<order>170</order>
+		</trustly>
+	</hpptypes>
+</settings>
