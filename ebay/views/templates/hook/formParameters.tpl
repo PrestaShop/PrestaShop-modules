@@ -207,7 +207,7 @@
 		
 
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
-		<a href="#categoriesProgression" id="displayFancybox">
+		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
 			<input class="primary button" name="submitSave" type="hidden" value="{l s='Save and continue' mod='ebay'}" />
 			<input class="primary button" type="submit" id="save_ebay_parameters" value="{l s='Save and continue' mod='ebay'}" />
 		</a>
@@ -247,7 +247,6 @@
 		}
 
 		$(function(){
-
 			$("#displayFancybox").fancybox({
 				beforeShow : function(){
 					checkCategories();
