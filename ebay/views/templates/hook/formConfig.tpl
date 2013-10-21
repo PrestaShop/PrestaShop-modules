@@ -72,3 +72,11 @@
 		$("#menuTab{$id_tab}Sheet").addClass("selected");
 	</script>
 {/if}
+
+
+<div id="helpertexts" style="display:none;">
+	<div id="returnsAccepted">
+		{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
+	</div>
+</div>
+

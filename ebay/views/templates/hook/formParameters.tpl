@@ -90,7 +90,7 @@
 		</div>
 
 		<div class="show regenerate_token_click" style="display:block;text-align:center;cursor:pointer">
-			<span data-inlinehelp="{l s='Use only if you get a message saying that your authentication is expired.' mod='ebay'}">{l s='Your access code has expired, click to generate a new access code.' mod='ebay'}</span>
+			<span data-inlinehelp="{l s='Use only if you get a message saying that your authentication is expired.' mod='ebay'}">{l s='Click here to generate a new authentication token.' mod='ebay'}</span>
 		</div>
 		<div class="hide regenerate_token_button" style="display:none;">
 			<label>{l s='Regenerate Token' mod='ebay'} :</label>
@@ -102,7 +102,7 @@
 	
    <fieldset style="margin-top:10px;">
 		<legend>{l s='Returns policy' mod='ebay'}</legend>
-		<label>{l s='Please define your returns Policy' mod='ebay'} : </label>
+		<label>{l s='Please define your returns policy' mod='ebay'} : </label>
 		<div class="margin-form">
 			<div id="returnsAccepted" style="display:none;">
 				{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
@@ -112,11 +112,6 @@
 				<option value="{$policy.value}" {if $returnsConditionAccepted == $policy.value} selected="selected"{/if}>{$policy.description}</option>
 			{/foreach}							   
 			</select>
-		</div>
-		<div style="clear:both;"></div>
-		<label>{l s='Any other information' mod='ebay'} : </label>
-		<div class="margin-form">
-			<textarea name="ebay_returns_description" cols="120" rows="10" data-inlinehelp="{l s='This description will be displayed in the returns policy section of the listing page.' mod='ebay'}">{$ebayReturns|escape:'htmlall':'UTF-8'}</textarea>
 		</div>
 		<div style="clear:both;"></div>
 		<label>{l s='Returns within' mod='ebay'} :</label>
@@ -129,6 +124,11 @@
 					{/if}
 			</select>
 		</div>
+		<div style="clear:both;"></div>
+		<label>{l s='Any other information' mod='ebay'} : </label>
+		<div class="margin-form">
+			<textarea name="ebay_returns_description" cols="120" rows="10" data-inlinehelp="{l s='This description will be displayed in the returns policy section of the listing page.' mod='ebay'}">{$ebayReturns|escape:'htmlall':'UTF-8'}</textarea>
+		</div>
 	</fieldset>
 
 	<!-- Listing Durations -->
@@ -140,7 +140,7 @@
 		</label>
 		<div class="margin-form">
 
-			<select name="listingdurations" data-dialoghelp="http://pages.ebay.com/help/sell/duration.html" data-inlinehelp="{l s='This is the length of time that your listing is live on eBay. Find out more about listing duration.' mod='ebay'}">
+			<select name="listingdurations" data-dialoghelp="http://pages.ebay.com/help/sell/duration.html" data-inlinehelp="{l s='The listing duration is the length of time that your listing is active on eBay.co.uk. You can have it last 1, 3, 5, 7, 10, 30 days or Good \'Til Cancelled. Good \'Til Cancelled listings renew automatically every 30 days unless all of the items sell, you end the listing, or the listing breaches an eBay policy. Good \'Til Cancelled is the default setting here to save you time relisting your items.' mod='ebay'}">
 				{foreach from=$listingDurations item=listing key=key}
 					<option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
@@ -148,17 +148,17 @@
 		</div>
 
 		<label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
-		<div class="margin-form"><input type="checkbox" name="automaticallyrelist" data-inlinehelp="{l s='The listing duration is the length of time that your listing is active on eBay.co.uk. You can have it last 1, 3, 5, 7, 10, 30 days or Good \'Til Cancelled. Good \'Til Cancelled listings renew automatically every 30 days unless all of the items sell, you end the listing, or the listing breaches an eBay policy. Good \'Til Cancelled is the default setting here to save you time relisting your items.' mod='ebay'}" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
+		<div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
 	</fieldset>
 
 	<fieldset style="margin-top:10px;">
-		<legend>{l s='Photo sizes' mod='ebay'} :</legend>
+		<legend><span data-dialoghelp="http://sellerupdate.ebay.co.uk/autumn2013/picture-standards" data-inlinehelp="{l s='Select the size of your main photo and any photos you want to include in your description. Go to Preferences> images. Your images must comply with eBay’s photo standards.' mod='ebay'}">{l s='Photo sizes' mod='ebay'}</span></legend>
 
 		<label>
 			{l s='Default photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizedefault" data-dialoghelp="http://sellerupdate.ebay.co.uk/autumn2013/picture-standards" data-inlinehelp="{l s='Select the size of your main photo and any photos you want to include in your description. Go to Preferences> images. Your images must comply with eBay’s photo standards.' mod='ebay'}">
+			<select name="sizedefault" data-inlinehelp="{l s='This will be the main photo and will appear on the search result and item pages.' mod='ebay'}">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizedefault} selected{/if}>{$size.name}</option>
@@ -172,7 +172,7 @@
 			{l s='Main photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizebig" data-inlinehelp="{l s='This will be the main photo and will appear on the search result and item pages.' mod='ebay'}">
+			<select name="sizebig" data-inlinehelp="{l s='This photo will appear as default photo in your listing\'s description.' mod='ebay'}">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizebig} selected{/if}>{$size.name}</option>
@@ -186,7 +186,7 @@
 			{l s='Small photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizesmall" data-inlinehelp="{l s='This photo will be appear as thumbnail in your listing\'s description.' mod='ebay'}">
+			<select name="sizesmall" data-inlinehelp="{l s='This photo will appear as thumbnail in your listing\'s description.' mod='ebay'}">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizesmall} selected{/if}>{$size.name}</option>

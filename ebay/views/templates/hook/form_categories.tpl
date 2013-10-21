@@ -116,8 +116,8 @@ products' mod='ebay'}" class="button">
 		'No category found'		 : "{l s='No category found' mod='ebay'}",
 		'You are not logged in': "{l s='You are not logged in' mod='ebay'}",
 		'Settings updated'		 : "{l s='Settings updated' mod='ebay'}",
-		'Unselect products'		: "{l s='Select products that you do NOT want to list on eBay' mod='ebay'}",
-		'Unselect products clicked' : "{l s='Select products that you do NOT want to list on eBay' mod='ebay'}"
+		'Unselect products'		: "{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}",
+		'Unselect products clicked' : "{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}"
 	{rdelim};
 	
 </script>
