@@ -5,11 +5,16 @@ $(function() {
 		
 		if (attr != undefined || tooltip != undefined){
 			// Fancybox
-			var fancybox = (attr != undefined && attr.length > 0 && attr[0] != "#");
+			var fancybox = (attr != undefined && attr.length > 0 && attr[0] == "#");
+
+			if (attr != undefined)
+				attr = 'href="' + attr +'"';
+			else
+				attr = '';
 
 			var content = "";
 			// Img
-			content += '<a href="' + attr +'" class="' + (fancybox ? '' : 'fancybox') + ' ' + (tooltip ? 'tooltip' : '')  + '" title="' + (tooltip ? tooltip : '') + '" target="_blank">';
+			content += '<a ' + attr + ' class="' + (fancybox === true ? 'fancybox' : '') + ' ' + (tooltip ? 'tooltip' : '')  + '" title="' + (tooltip ? tooltip : '') + '" target="_blank">';
 			content += ' <img src="../img/admin/help.png" alt="" />';
 			content += '</a>';
 			// Insert

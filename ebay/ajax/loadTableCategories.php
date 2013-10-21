@@ -26,6 +26,9 @@
  */
 
 include_once dirname(__FILE__).'/../../../config/config.inc.php';
+if (version_compare(_PS_VERSION_, '1.5', '<')) {
+	include_once dirname(__FILE__).'/../../../init.php';
+}
 include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
@@ -109,11 +112,12 @@ foreach ($category_config_list as &$category) {
 if (version_compare(_PS_VERSION_, '1.5', '>')) {
 	$smarty = $ebay->getContext()->smarty;
 	$id_currency = Context::getContext()->cookie->id_currency;
-	$currency = new Currency((int) $id_currency);
 }
 else {
-	global $smarty, $currency;
+	global $smarty, $cookie;
+	$id_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 }
+	$currency = new Currency((int) $id_currency);
 
 /* Smarty datas */
 $template_vars = array(

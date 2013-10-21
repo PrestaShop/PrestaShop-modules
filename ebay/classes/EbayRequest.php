@@ -55,7 +55,7 @@ class EbayRequest
 		/** Backward compatibility */
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 
-		$this->ebay_country = EbayCountrySpec::getInstanceByKey((int)Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
+		$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
 		$this->itemConditionError = false;
 
 		/**

@@ -24,13 +24,13 @@
 *}
 
 <ul id="menuTab">
-	<li id="menuTab1" class="menuTabButton selected">1. {l s='Parameters' mod='ebay'}</li>
-	<li id="menuTab2" class="menuTabButton">2. {l s='Categories settings' mod='ebay'}</li>
-	<li id="menuTab8" class="menuTabButton">3. {l s='Items Specifics' mod='ebay'}</li>
-	<li id="menuTab3" class="menuTabButton">4. {l s='Shipping' mod='ebay'}</li>
+	<li id="menuTab1" class="menuTabButton selected">1. {l s='Account settings' mod='ebay'}</li>
+	<li id="menuTab2" class="menuTabButton">2. {l s='Categories and pricing' mod='ebay'}</li>
+	<li id="menuTab8" class="menuTabButton">3. {l s='Item specifics' mod='ebay'}</li>
+	<li id="menuTab3" class="menuTabButton">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
 	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
-	<li id="menuTab5" class="menuTabButton">6. {l s='eBay Sync' mod='ebay'}</li>
-	<li id="menuTab6" class="menuTabButton">7. {l s='Orders history' mod='ebay'}</li>
+	<li id="menuTab5" class="menuTabButton">6. {l s='List products' mod='ebay'}</li>
+	<li id="menuTab6" class="menuTabButton">7. {l s='Order history' mod='ebay'}</li>
 	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
@@ -72,3 +72,11 @@
 		$("#menuTab{$id_tab}Sheet").addClass("selected");
 	</script>
 {/if}
+
+
+<div id="helpertexts" style="display:none;">
+	<div id="returnsAccepted">
+		{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
+	</div>
+</div>
+

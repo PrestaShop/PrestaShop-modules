@@ -130,10 +130,10 @@
 <div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 <form action="{$action_url}" method="post" class="form" id="configForm4">
 	<fieldset style="border: 0">
-		<h4>{l s='You will now list your products on eBay' mod='ebay'}</h4>
-		<label style="width: 250px;">{l s='Products to sync' mod='ebay'} : </label><br /><br />
+		<h4>{l s='You\'re now ready to list your products on eBay.' mod='ebay'}</h4>
+		<label style="width: 250px;">{l s='List all products on eBay' mod='ebay'} : </label><br /><br />
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_products_mode" id="ebay_sync_products_mode1" value="A" {if $is_sync_mode_b == false}checked="checked"{/if}/> {l s='List all products on eBay' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_products_mode" id="ebay_sync_products_mode1" value="A" {if $is_sync_mode_b == false}checked="checked"{/if}/> <span data-inlinehelp="{l s='All items that have specified an eBay category will be listed.' mod='ebay'}">{l s='List all products on eBay' mod='ebay'}</span>
 		</div>
 		<div class="margin-form">
 			<input type="radio" size="20" name="ebay_sync_products_mode" id="ebay_sync_products_mode2" value="B" {if $is_sync_mode_b == true}checked="checked"{/if}/> {l s='Sync the products only in selected categories' mod='ebay'}
@@ -141,15 +141,15 @@
 		<div class="clear both"></div>
 		<label style="width: 250px;">{l s='Option' mod='ebay'} : </label><br /><br />
 		<div class="margin-form">
-			<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" {if $ebay_sync_option_resync == 1}checked="checked"{/if} /> {l s='When revising products on eBay, only revise price and quantity' mod='ebay'}
+			<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" {if $ebay_sync_option_resync == 1}checked="checked"{/if} /> <span data-inlinehelp="{l s='All other product properties will be stay the same.' mod='ebay'}">{l s='Only synchronise price and quantity' mod='ebay'}</span>
 		</div>
 		<div class="clear both"></div>
 		<label>{l s='Sync mod' mod='module'} :	</label><br /><br />
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> {l s='Only new products that are not already lister on eBay' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> <span data-inlinehelp="{l s='Any changes that you make to listings in PrestaShop will also be applied on eBay.' mod='ebat'}">{l s='Sync new products and update existing listings' mod='ebay'}</span>
 		</div>
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> {l s='Sync new products and update existing listings' mod='ebay'}
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> <span data-inlinehelp="{l s='This will only synchronisze products that are not yet listed on eBay.' mod='ebay'}">{l s='Only sync new products' mod='ebay'}</span>
 		</div>
 		<div style="display: none;" id="catSync">
 			<table class="table tableDnD" cellpadding="0" cellspacing="0" width="90%">
@@ -193,10 +193,10 @@
 			{/if}
 		</div><br />
 		<div>
-			<b><img src="../modules/ebay/views/img/warn.png" />{l s='Warning! If some of your categories are not multi sku compliant, some of your products may create more than one product on eBay.' mod='ebay'}</b>
+			<b data-dialoghelp="http://pages.ebay.com/help/sell/listing-variations.html" data-inlinehelp="{l s='Find out more about multi-variation listings.' mod='ebay'}"><img src="../modules/ebay/views/img/warn.png" />{l s='Note: If some of your categories don’t support multi-variation listings, all variations will appear as separate listings.' mod='ebay'}</b>
 		</div>
 		<div class="margin-form">
-			<input type="submit" name="btnSubmitSyncAndPublish" class="button" value="{l s='Save and publish' mod='ebay'}" />
+			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and publish' mod='ebay'}" />
 			<input type="submit" name="btnSubmitSync" class="button" value="{l s='Save' mod='ebay'}" />
 		</div>
 	</fieldset>

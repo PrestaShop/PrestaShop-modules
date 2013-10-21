@@ -57,7 +57,7 @@
 					<option value="percent"{if isset($categoryConfigList[$c.id_category].percent.type) && $categoryConfigList[$c.id_category].percent.type == '%'} selected{/if}>%</option>
 				</select>
 			</td>
-			<td colspan="2" class="show-products" style="text-align:center"><a  id="show-products-switch-string{$c.id_category}" href="javascript:showProducts({$c.id_category})">{l s='Select products that you do NOT want to list on eBay' mod='ebay'}</a></td>			
+			<td colspan="2" class="show-products" style="text-align:center"><a  id="show-products-switch-string{$c.id_category}" href="javascript:showProducts({$c.id_category})">{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}</a></td>			
 		</tr>
 	{/foreach}
 {/if}

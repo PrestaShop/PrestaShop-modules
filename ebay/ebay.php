@@ -72,7 +72,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.5.3';
+		$this->version = '1.5.3.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -128,7 +128,7 @@ class Ebay extends Module
 			if(class_exists('EbayCountrySpec'))
 			{
 				// Check the country
-				$this->ebay_country = new EbayCountrySpec();
+				$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'));
 
 				if (!$this->ebay_country->checkCountry())
 				{
@@ -217,30 +217,30 @@ class Ebay extends Module
 	public static function installPicturesSettings($module) {
 
 		// Default
-		if ($default = ImageType::getByNameNType('medium')) {
-			$sizeMedium = (int) $medium['id_image_type'];
+		if ($default = ImageType::getByNameNType('medium', 'products')) {
+			$sizeMedium = (int) $default['id_image_type'];
 		} 
-		else if ($medium = ImageType::getByNameNType('medium_default')) {
-			$sizeMedium = (int) $medium['id_image_type'];
+		else if ($medium = ImageType::getByNameNType('medium_default', 'products')) {
+			$sizeMedium = (int) $default['id_image_type'];
 		}
 		else {
 			$sizeMedium = 0;
 		}
 		// Small
-		if ($small = ImageType::getByNameNType('small')) {
+		if ($small = ImageType::getByNameNType('small', 'products')) {
 			$sizeSmall = (int) $small['id_image_type'];
 		} 
-		else if ($small = ImageType::getByNameNType('small_default')) {
+		else if ($small = ImageType::getByNameNType('small_default', 'products')) {
 			$sizeSmall = (int) $small['id_image_type'];
 		}
 		else {
 			$sizeSmall = 0;
 		}
 		// Large
-		if ($large = ImageType::getByNameNType('large')) {
+		if ($large = ImageType::getByNameNType('large', 'products')) {
 			$sizeBig = (int) $large['id_image_type'];
 		} 
-		else if ($large = ImageType::getByNameNType('large_default')) {
+		else if ($large = ImageType::getByNameNType('large_default', 'products')) {
 			$sizeBig = (int) $large['id_image_type'];
 		}
 		else {
@@ -349,9 +349,13 @@ class Ebay extends Module
 				upgrade_module_1_5($this);
 			}
 
-		if (version_compare($version, '1.5.4', '<'))
-				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.5.4.php');
-				upgrade_module_1_5_4($this);
+		if (version_compare($version, '1.6', '<')) {
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
+			{
+				include_once(dirname(__FILE__).'/upgrade/Upgrade-1.6.php');
+				upgrade_module_1_6($this);
+			}
+		}
 	}
 
 	/**
@@ -741,7 +745,11 @@ class Ebay extends Module
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 			'css_file' => $this->_path . 'views/css/ebay_back.css',
 			'tooltip' => $this->_path . 'views/js/jquery.tooltipster.min.js',
-			'tips202' => $this->_path . 'views/js/202tips.js'
+			'tips202' => $this->_path . 'views/js/202tips.js',
+			'noConflicts' => $this->_path . 'views/js/jquery.noConflict.php',
+			'ebayjquery' => $this->_path . 'views/js/jquery-1.7.2.min.js',
+			'fancybox' => $this->_path . 'views/js/jquery.fancybox.min.js',
+			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css'
 		));
 
 		return $this->display(__FILE__, 'views/templates/hook/form.tpl').
@@ -836,7 +844,7 @@ class Ebay extends Module
 				'ebay_username' => $this->context->cookie->eBayUsername,
 				'window_open_url' => '?SignIn&runame='.$ebay->runame.'&SessID='.$this->context->cookie->eBaySession,
 				'ebay_countries' => EbayCountrySpec::getCountries($ebay->getDev()),
-				'default_country' => (int)Configuration::get('PS_COUNTRY_DEFAULT')
+				'default_country' => EbayCountrySpec::getKeyForEbayCountry()
 			));
 
 		}
@@ -1399,8 +1407,8 @@ class Ebay extends Module
 			'internationalShippingLocations' => $this->_getInternationalShippingLocations(),
 			'deliveryTimeOptions' => $this->_getDeliveryTimeOptions(),
 			'formUrl' => $this->_getUrl($url_vars),
-			'ebayZoneNational' => $configs['EBAY_ZONE_NATIONAL'],
-			'ebayZoneInternational' => $configs['EBAY_ZONE_INTERNATIONAL'],
+			'ebayZoneNational' => (isset($configs['EBAY_ZONE_NATIONAL']) ? $configs['EBAY_ZONE_NATIONAL'] : false),
+			'ebayZoneInternational' => (isset($configs['EBAY_ZONE_INTERNATIONAL']) ? $configs['EBAY_ZONE_INTERNATIONAL'] : false),
 			'ebay_token' => $configs['EBAY_SECURITY_TOKEN']			
 		));
 
@@ -1613,7 +1621,7 @@ class Ebay extends Module
 			'sync_1' => (Tools::getValue('section') == 'sync' && Tools::getValue('ebay_sync_mode') == "1" && Tools::getValue('btnSubmitSyncAndPublish')),
 			'sync_2' => (Tools::getValue('section') == 'sync' && Tools::getValue('ebay_sync_mode') == "2" && Tools::getValue('btnSubmitSyncAndPublish')),
 			'is_sync_mode_b' => (Configuration::get('EBAY_SYNC_PRODUCTS_MODE') == 'B'),
-			'ebay_sync_mode' => (int)(Configuration::get('EBAY_SYNC_MODE') ? Configuration::get('EBAY_SYNC_MODE') : 1),
+			'ebay_sync_mode' => (int)(Configuration::get('EBAY_SYNC_MODE') ? Configuration::get('EBAY_SYNC_MODE') : 2),
 			'prod_str' => $nb_products >= 2 ? $this->l('products') : $this->l('product')
 		);
 

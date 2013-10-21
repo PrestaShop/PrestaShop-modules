@@ -26,18 +26,18 @@
 <form action="{$formUrl}" method="post">
 
 <fieldset>
-	<legend>{l s='Global Configuration' mod='ebay'}</legend>
-		<label>{l s='Delivery Time' mod='ebay'}</label>
-		<div class="margin-form">
-			<select name="deliveryTime" id="deliveryTime">
-				{foreach from=$deliveryTimeOptions item=deliveryTimeOption}
-					<option value="{$deliveryTimeOption.DispatchTimeMax}" {if $deliveryTimeOption.DispatchTimeMax == $deliveryTime} selected="selected"{/if}>{$deliveryTimeOption.description}</option>
-				{/foreach}
-			</select>
-		</div>
-
-
-		
+	<legend>{l s='Dispatch time' mod='ebay'}</legend>
+	<label>{l s='Dispatch Time' mod='ebay'}</label>
+	<div class="margin-form">
+		<select name="deliveryTime" id="deliveryTime" data-dialoghelp="#dispatchTime" data-inlinehelp="{l s='Specify a dispatch time of between 1-3 days.' mod='ebay'}">
+			{foreach from=$deliveryTimeOptions item=deliveryTimeOption}
+				<option value="{$deliveryTimeOption.DispatchTimeMax}" {if $deliveryTimeOption.DispatchTimeMax == $deliveryTime} selected="selected"{/if}>{$deliveryTimeOption.description}</option>
+			{/foreach}
+		</select>
+	</div>
+	<div id="dispatchTime" style="display:none;">
+		{l s='The dispatch time is the time between the buyer’s payment clearing and you sending the item. Buyers are increasingly expecting short dispatch times, ideally next day, but preferably within 3 working days. ' mod='ebay'}
+	</div>
 </fieldset>
 <script type="text/javascript">
 	
@@ -72,7 +72,7 @@
 		{foreach from=$eBayCarrier item=carrier}
 		currentShippingService = '{$carrier.shippingService}';
 		//check for international
-		if((internationalOnly == 1 && '{$carrier.InternationalService}'=== 'true') || internationalOnly == 0)
+		if((internationalOnly == 1 && '{$carrier.InternationalService}' === 'true') || (internationalOnly == 0 && '{$carrier.InternationalService}' !== 'true') )
 		{literal}{{/literal}
 			if(currentShippingService == idEbayCarrier)
 			{literal}{{/literal}
@@ -391,13 +391,15 @@
 	});
 	{/literal}
 </script>
-
+<div id="DomShipp" style="display: none;">
+	{l s='To add a shipping method, map your PrestaShop options with one offered by eBay.' mod='ebay'}
+</div>
 <fieldset style="margin-top:10px;">
-	<legend>{l s='Shipping method for domestic shipping' mod='ebay'}</legend>
+	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='You must specify at least one domestic shipping method. ' mod='ebay'}">{l s='Domestic shipping' mod='ebay'}</span></legend>
 	
 	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
 		
-		<select name="nationalZone" id="">
+		<select name="nationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate domestic shipping costs.' mod='ebay'}">
 			{foreach from=$prestashopZone item=zone}
 				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneNational} selected="selected"{/if}>{$zone.name}</option>
 			{/foreach}
@@ -422,9 +424,9 @@
 </fieldset>
 
 <fieldset style="margin-top:10px">
-	<legend>{l s='Shipping Method for International Shipping' mod='ebay'}</legend>	
+	<legend><span data-inlinehelp="{l s='Check the boxes next to the countries that you will ship to. ' mod='ebay'}">{l s='International Shipping' mod='ebay'}</span></legend>
 	<p>{l s='Prestashop zone used to calculate shipping fees  :' mod='ebay'}
-		<select name="internationalZone" id="">
+		<select name="internationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate international shipping costs.' mod='ebay'}">
 			{foreach from=$prestashopZone item=zone}
 				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneInternational} selected="selected"{/if}>{$zone.name}</option>
 			{/foreach}
@@ -447,16 +449,21 @@
 </fieldset>
 
 <fieldset style="margin-top:10px">
-	<legend>{l s='Exclude shipping locations' mod='ebay'}</legend>
-	<div id="nolist">
-	</div>
-	<div id="list">
-		
+	<legend><span data-inlinehelp="{l s='Check the boxes next to the countries you do not want to ship to.' mod='ebay'}">{l s='Exclude shipping locations' mod='ebay'}</span></legend>
+	<label>
+		{l s='Select any countries that you do not want to ship to' mod='ebay'} :
+	</label>
+	<div class="margin-form">
+		<div id="nolist">
+		</div>
+		<div id="list">
+			
+		</div>
 	</div>
 </fieldset>
 
-<div class="margin-form" id="buttonEbayShipping" style="margin-top:20px;">
-	<input class="button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save' mod='ebay'}"/>
+<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+	<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
 </div>
 
 
