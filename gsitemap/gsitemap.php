@@ -326,7 +326,7 @@ class Gsitemap extends Module
 			$image_product = array();
 			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
 				$image_product = array('title_img' => htmlspecialchars(strip_tags($product->name)), 'caption' => htmlspecialchars(strip_tags($product->description_short)), 'link' => $image_link);
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'lastmod' => $product->date_upd, 'link' => $url, 'image' => $image_product), $lang['iso_code'], $index, $i, $product_id['id_product']))
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'lastmod' => date_format($product->date_upd, 'c'), 'link' => $url, 'image' => $image_product), $lang['iso_code'], $index, $i, $product_id['id_product']))
 				return false;
 
 			unset($image_link);
@@ -368,7 +368,7 @@ class Gsitemap extends Module
 			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
 				$image_category = array('title_img' => htmlspecialchars(strip_tags($category->name)), 'link' => $image_link);
 
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'category', 'page' => 'category', 'lastmod' => $category->date_upd, 'link' => $url, 'image' => $image_category), $lang['iso_code'], $index, $i, (int)$category_id['id_category']))
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'category', 'page' => 'category', 'lastmod' => date_format($category->date_upd, 'c'), 'link' => $url, 'image' => $image_category), $lang['iso_code'], $index, $i, (int)$category_id['id_category']))
 				return false;
 
 			unset($image_link);
@@ -410,7 +410,7 @@ class Gsitemap extends Module
 			$manifacturer_image = array();
 			if ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true)
 				$manifacturer_image = array('title_img' => htmlspecialchars(strip_tags($manufacturer->name)), 'caption' => htmlspecialchars(strip_tags($manufacturer->short_description)), 'link' => $image_link);
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'manufacturer', 'page' => 'manufacturer', 'lastmod' => $manufacturer->date_upd, 'link' => $url, 'image' => $manifacturer_image), $lang['iso_code'], $index, $i, $manufacturer_id['id_manufacturer']))
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'manufacturer', 'page' => 'manufacturer', 'lastmod' => date_format($manufacturer->date_upd, 'c'), 'link' => $url, 'image' => $manifacturer_image), $lang['iso_code'], $index, $i, $manufacturer_id['id_manufacturer']))
 				return false;;
 		}
 		return true;
@@ -449,7 +449,7 @@ class Gsitemap extends Module
 			$supplier_image = array();
 			if ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true)
 				$supplier_image = array('title_img' => htmlspecialchars(strip_tags($supplier->name)), 'link' => 'http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getMediaServer(_THEME_SUP_DIR_)._THEME_SUP_DIR_.((!file_exists(_THEME_SUP_DIR_.'/'.(int)$supplier->id.'-medium_default.jpg')) ? $lang['iso_code'].'-default' : (int)$supplier->id).'-medium_default.jpg');
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'supplier', 'page' => 'supplier', 'lastmod' => $supplier->date_upd, 'link' => $url, 'image' => $supplier_image), $lang['iso_code'], $index, $i, $supplier_id['id_supplier']))
+			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'supplier', 'page' => 'supplier', 'lastmod' => date_format($supplier->date_upd, 'c'), 'link' => $url, 'image' => $supplier_image), $lang['iso_code'], $index, $i, $supplier_id['id_supplier']))
 				return false;
 		}
 		return true;
@@ -583,7 +583,7 @@ class Gsitemap extends Module
 		foreach ($link_sitemap as $key => $file)
 		{
 			fwrite($writeFd, '<url>'."\r\n");
-			$this->_addSitemapNode($writeFd, htmlspecialchars(strip_tags($file['link'])), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), $file['lastmod']);
+			$this->_addSitemapNode($writeFd, htmlspecialchars(strip_tags($file['link'])), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), date_format($file['lastmod'], 'c'));
 			if ($file['image'])
 			{
 				$this->_addSitemapNodeImage($writeFd, htmlspecialchars(strip_tags($file['image']['link'])), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['title_img']))) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['caption']))) : '');
