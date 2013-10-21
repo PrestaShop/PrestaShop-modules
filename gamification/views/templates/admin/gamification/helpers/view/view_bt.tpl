@@ -27,6 +27,7 @@
 	var current_level_tab = '{$current_level|intval}';
 	var gamification_level_tab = '{l s='Level' mod='gamification' js=1}';
 	$(document).ready( function () {	
+		$('.gamification_badges_img').tooltip();
 		$('#gamification_progressbar_tab').progressbar({
 			change: function() {
 		        if ({$current_level_percent})
@@ -86,9 +87,8 @@
 			<ul class="badge_list" id="list_{$key}" style="">
 				{foreach from=$type.badges item=badge}
 				<li class="badge_square badge_all {if $badge->validated}validated {else} not_validated{/if} group_{$badge->id_group} level_{$badge->group_position} " id="{$badge->id|intval}">
-					<div class="gamification_badges_img"><img src="{$badge->getBadgeImgUrl()}"></div>
+					<div class="gamification_badges_img" data-placement="top" data-toggle="tooltip" data-original-title="{$badge->description|escape:html:'UTF-8'}"><img src="{$badge->getBadgeImgUrl()}"></div>
 					<div class="gamification_badges_name">{$badge->name|escape:html:'UTF-8'}</div>
-					<div class="gamification_badges_description" style="display:none">{$badge->description|escape:html:'UTF-8'}</div>
 				</li>
 				{foreachelse}
 					<div class="gamification_badges_name">{l s="No badge in this section" mod='gamification'}</div>
