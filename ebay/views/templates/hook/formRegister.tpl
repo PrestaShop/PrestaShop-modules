@@ -71,8 +71,7 @@
 		{/literal}
 	</script>
 	<form action="{$action_url}" method="post">
-		<strong>{l s='Do you have an eBay business account?' mod='ebay'}</strong>
-		<br />
+		<strong style="margin-bottom:10px;width:100%;display:inline-block">{l s='Do you have an eBay business account?' mod='ebay'}</strong>
 		<label for="eBayUsername">{l s='eBay User ID' mod='ebay'}</label>
 		<div class="margin-form">
 			<input id="eBayUsername" type="text" name="eBayUsername" value="{$ebay_username|escape:'htmlall':'UTF-8'}" />

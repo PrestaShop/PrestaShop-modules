@@ -104,9 +104,6 @@
 		<legend>{l s='Returns policy' mod='ebay'}</legend>
 		<label>{l s='Please define your returns policy' mod='ebay'} : </label>
 		<div class="margin-form">
-			<div id="returnsAccepted" style="display:none;">
-				{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
-			</div>
 			<select name="ebay_returns_accepted_option" data-dialoghelp="#returnsAccepted" data-inlinehelp="{l s='eBay business sellers must accept returns under the Distance Selling Regulations.' mod='ebay'}">
 			{foreach from=$policies item=policy}
 				<option value="{$policy.value}" {if $returnsConditionAccepted == $policy.value} selected="selected"{/if}>{$policy.description}</option>
@@ -212,9 +209,7 @@
 	{literal}
 		<script>
 			$(document).ready(function() {
-				setTimeout(function(){
-					if (tinyMCE.editors.length)
-						tinyMCE.execCommand('mceRemoveControl', true, 'ebay_returns_description');
+				setTimeout(function(){					
 					$('#ebay_returns_description').val($('#ebayreturnshide').html());
 				}, 1000);
 			});
@@ -245,6 +240,10 @@
 
 			$("#displayFancybox").fancybox({
 				beforeShow : function(){
+					checkCategories();
+					$("#save_ebay_parameters").parents('form').submit();
+				},
+				onStart : function(){
 					checkCategories();
 					$("#save_ebay_parameters").parents('form').submit();
 				}

@@ -35,9 +35,6 @@
 			{/foreach}
 		</select>
 	</div>
-	<div id="dispatchTime" style="display:none;">
-		{l s='The dispatch time is the time between the buyer’s payment clearing and you sending the item. Buyers are increasingly expecting short dispatch times, ideally next day, but preferably within 3 working days. ' mod='ebay'}
-	</div>
 </fieldset>
 <script type="text/javascript">
 	
@@ -391,9 +388,7 @@
 	});
 	{/literal}
 </script>
-<div id="DomShipp" style="display: none;">
-	{l s='To add a shipping method, map your PrestaShop options with one offered by eBay.' mod='ebay'}
-</div>
+
 <fieldset style="margin-top:10px;">
 	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='You must specify at least one domestic shipping method. ' mod='ebay'}">{l s='Domestic shipping' mod='ebay'}</span></legend>
 	

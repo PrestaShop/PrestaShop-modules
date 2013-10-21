@@ -26,9 +26,6 @@
 <form action="{$action_url}" method="post" class="form" id="configForm3">
 	<fieldset style="border: 0">
 		<h4><span data-dialoghelp="#tagsTemplate" data-inlinehelp="{l s='View the list of tags.' mod='ebay'}">{l s='Design an eye-catching template to attract buyers.' mod='ebay'} :</span></h4>
-		<div id="tagsTemplate" style="display: none;">
-			{ldelim}MAIN_IMAGE{rdelim}, {ldelim}MEDIUM_IMAGE_1{rdelim}, {ldelim}MEDIUM_IMAGE_2{rdelim}, {ldelim}MEDIUM_IMAGE_3{rdelim}, {ldelim}PRODUCT_PRICE{rdelim}, {ldelim}PRODUCT_PRICE_DISCOUNT{rdelim}, {ldelim}DESCRIPTION_SHORT{rdelim}, {ldelim}DESCRIPTION{rdelim}, {ldelim}FEATURES{rdelim}, {ldelim}EBAY_IDENTIFIER{rdelim}, {ldelim}EBAY_SHOP{rdelim}, {ldelim}SLOGAN{rdelim}, {ldelim}PRODUCT_NAME{rdelim}
-		</div>
 		<p>{l s='Use this template to choose how you’d like your products to appear on eBay.' mod='ebay'}</p>
 		<ul style="padding-left:15px;">
 			<li>{l s='Stand out from the crowd' mod='ebay'}</li>
