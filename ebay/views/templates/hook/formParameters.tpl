@@ -122,6 +122,16 @@
 			</select>
 		</div>
 		<div style="clear:both;"></div>
+		<label>{l s='Who pays' mod='ebay'} :</label>
+		<div class="margin-form">
+			<select name="returnswhopays">
+				{if isset($whopays_values) && $whopays_values && sizeof($whopays_values)}
+					{foreach from=$whopays_values item='whopays_value'}
+						<option value="{$whopays_value.value}"{if isset($whopays) && $whopays == $whopays_value.value} selected{/if}>{$whopays_value.description}</option>
+					{/foreach}
+				{/if}
+			</select>
+		</div>
 		<label>{l s='Any other information' mod='ebay'} : </label>
 		<div class="margin-form">
 			<textarea name="ebay_returns_description" cols="120" rows="10" data-inlinehelp="{l s='This description will be displayed in the returns policy section of the listing page.' mod='ebay'}">{$ebayReturns|escape:'htmlall':'UTF-8'}</textarea>

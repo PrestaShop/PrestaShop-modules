@@ -252,9 +252,15 @@ class EbayRequest
 					$returns_policies[] = array('value' => (string)$returns->ReturnsAcceptedOption, 'description' => (string)$returns->Description);
 				else if ($key == 'ReturnsWithin') 
 					$returns_within[] = array('value' => (string)$returns->ReturnsWithinOption, 'description' => (string)$returns->Description);
+				else if ($key == 'ShippingCostPaidBy')
+					$returns_whopays[] = array('value' => (string)$returns->ShippingCostPaidByOption, 'description' => (string)$returns->Description);
 			}
 
-		return array('ReturnsAccepted' => $returns_policies, 'ReturnsWithin' => $returns_within);
+		return array(
+			'ReturnsAccepted' => $returns_policies,
+			'ReturnsWithin' => $returns_within, 
+			'ReturnsWhoPays' => $returns_whopays
+		);
 	}
 
 	public function getInternationalShippingLocations()
@@ -620,7 +626,8 @@ class EbayRequest
 		$vars = array(
 			'returns_accepted_option' => Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'),
 			'description' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
-			'within' => Configuration::get('EBAY_RETURNS_WITHIN')
+			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
+			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
 		);
 
 		$this->smarty->assign($vars);

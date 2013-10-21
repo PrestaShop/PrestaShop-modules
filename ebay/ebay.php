@@ -962,7 +962,9 @@ class Ebay extends Module
 			'sizebig' => (int)Configuration::get('EBAY_PICTURE_SIZE_BIG'),
 			'sizesmall' => (int)Configuration::get('EBAY_PICTURE_SIZE_SMALL'),
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
-			'within' => Configuration::get('EBAY_RETURNS_WITHIN')
+			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
+			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
+			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
 		);
 
 		if (Tools::getValue('relogin'))
@@ -1025,7 +1027,9 @@ class Ebay extends Module
 			&& $this->setConfiguration('EBAY_PICTURE_SIZE_SMALL', (int)Tools::getValue('sizesmall'))
 			&& $this->setConfiguration('EBAY_PICTURE_SIZE_BIG', (int)Tools::getValue('sizebig'))
 			&& $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist'))
-			&& $this->setConfiguration('EBAY_RETURNS_WITHIN', pSQL(Tools::getValue('returnswithin'))))
+			&& $this->setConfiguration('EBAY_RETURNS_WITHIN', pSQL(Tools::getValue('returnswithin')))
+			&& $this->setConfiguration('EBAY_RETURNS_WHO_PAYS', pSQL(Tools::getValue('returnswhopays')))
+		)
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
@@ -1825,11 +1829,19 @@ class Ebay extends Module
 			EbayReturnsPolicy::insert(array_map('pSQL', $returns_policy));
 
 		$ReturnsWithin = array();
-
 		foreach($policiesDetails['ReturnsWithin'] as $returns_within)
 			$ReturnsWithin[] = array_map('pSQL', $returns_within);
-
 		$this->setConfiguration('EBAY_RETURNS_WITHIN_VALUES', serialize($ReturnsWithin));
+		if(!Configuration::getValue('EBAY_RETURNS_WITHIN'))
+			$this->setConfiguration('EBAY_RETURNS_WITHIN', 'Days_14');
+
+		$returnsWhoPays = array();
+		foreach($policiesDetails['ReturnsWhoPays'] as $returns_within)
+			$returnsWhoPays[] = array_map('pSQL', $returns_within);
+		$this->setConfiguration('EBAY_RETURNS_WHO_PAYS_VALUES', serialize($returnsWhoPays));
+		if(!Configuration::getValue('EBAY_RETURNS_WHO_PAYS'))
+			$this->setConfiguration('EBAY_RETURNS_WHO_PAYS', 'Buyer');
+
 
 		return $policiesDetails['ReturnsAccepted'];
 	}
