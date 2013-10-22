@@ -95,6 +95,7 @@
 			<script type="text/javascript" src="{$ps_js_dir}/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="{$ps_js_dir}/tinymce.inc.js"></script>
 			<script>
+				tinyMCE.settings.selector = 'rte';
 				tinyMCE.settings.width = 850;
 				tinyMCE.settings.height = 800;
 				tinyMCE.settings.extended_valid_elements = "iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";

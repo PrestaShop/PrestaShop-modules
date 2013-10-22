@@ -361,7 +361,7 @@
 	</p>
 	<div class="fancyboxeBayClose"  style="text-align:center; margin-top:10px;font-weight:bold;cursor:pointer;">{l s='Close' mod='eBay'}</div>
 </div>
-<script type="text/javascript" src="../js/jquery/jquery.fancybox-1.3.4.js"></script>
+<!--script type="text/javascript" src="../js/jquery/jquery.fancybox-1.3.4.js"></script-->
 <script>
 	{literal}
 	$(document).ready(function() {

@@ -20,7 +20,10 @@ $(function() {
 			// Insert
 			$(this).after(content);
 			// Init
-			$(".fancybox").fancybox();
+			$(".fancybox").fancybox({
+				'width': 600,
+    			'autoDimensions': false
+    		});
 			$('.tooltip').tooltipster({
 	    		position : 'right'
 	    	});

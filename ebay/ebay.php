@@ -746,7 +746,7 @@ class Ebay extends Module
 			'css_file' => $this->_path . 'views/css/ebay_back.css',
 			'tooltip' => $this->_path . 'views/js/jquery.tooltipster.min.js',
 			'tips202' => $this->_path . 'views/js/202tips.js',
-			'noConflicts' => $this->_path . 'views/js/jquery.noConflict.php',
+			'noConflicts' => $this->_path . 'views/js/jquery.noConflict.php?version=1.7.2',
 			'ebayjquery' => $this->_path . 'views/js/jquery-1.7.2.min.js',
 			'fancybox' => $this->_path . 'views/js/jquery.fancybox.min.js',
 			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css'
@@ -1832,14 +1832,14 @@ class Ebay extends Module
 		foreach($policiesDetails['ReturnsWithin'] as $returns_within)
 			$ReturnsWithin[] = array_map('pSQL', $returns_within);
 		$this->setConfiguration('EBAY_RETURNS_WITHIN_VALUES', serialize($ReturnsWithin));
-		if(!Configuration::getValue('EBAY_RETURNS_WITHIN'))
+		if(!Configuration::get('EBAY_RETURNS_WITHIN'))
 			$this->setConfiguration('EBAY_RETURNS_WITHIN', 'Days_14');
 
 		$returnsWhoPays = array();
 		foreach($policiesDetails['ReturnsWhoPays'] as $returns_within)
 			$returnsWhoPays[] = array_map('pSQL', $returns_within);
 		$this->setConfiguration('EBAY_RETURNS_WHO_PAYS_VALUES', serialize($returnsWhoPays));
-		if(!Configuration::getValue('EBAY_RETURNS_WHO_PAYS'))
+		if(!Configuration::get('EBAY_RETURNS_WHO_PAYS'))
 			$this->setConfiguration('EBAY_RETURNS_WHO_PAYS', 'Buyer');
 
 
