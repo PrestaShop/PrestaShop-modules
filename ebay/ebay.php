@@ -237,26 +237,6 @@ class Ebay extends Module
 			`'._DB_PREFIX_.'ebay_shipping_zone_excluded` ,
 			`'._DB_PREFIX_.'ebay_sync_history` ,
 			`'._DB_PREFIX_.'ebay_sync_history_product`');
-		echo 'DROP TABLE IF EXISTS
-			`'._DB_PREFIX_.'ebay_category` ,
-			`'._DB_PREFIX_.'ebay_category_condition` ,
-			`'._DB_PREFIX_.'ebay_category_condition_configuration` ,
-			`'._DB_PREFIX_.'ebay_category_configuration` ,
-			`'._DB_PREFIX_.'ebay_category_specific` ,
-			`'._DB_PREFIX_.'ebay_category_specific_value` ,
-			`'._DB_PREFIX_.'ebay_delivery_time_options` ,
-			`'._DB_PREFIX_.'ebay_order` ,
-			`'._DB_PREFIX_.'ebay_product` ,
-			`'._DB_PREFIX_.'ebay_product_configuration` ,
-			`'._DB_PREFIX_.'ebay_product_image` ,
-			`'._DB_PREFIX_.'ebay_returns_policy` ,
-			`'._DB_PREFIX_.'ebay_shipping` ,
-			`'._DB_PREFIX_.'ebay_shipping_international_zone` ,
-			`'._DB_PREFIX_.'ebay_shipping_location` ,
-			`'._DB_PREFIX_.'ebay_shipping_service` ,
-			`'._DB_PREFIX_.'ebay_shipping_zone_excluded` ,
-			`'._DB_PREFIX_.'ebay_sync_history` ,
-			`'._DB_PREFIX_.'ebay_sync_history_product`';
 	}
 
 	public static function installPicturesSettings($module) {
