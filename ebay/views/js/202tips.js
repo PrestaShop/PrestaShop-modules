@@ -1,7 +1,8 @@
+
 $(function() {
-	$("[data-dialoghelp], [data-inlinehelp]").each(function(){
-		var attr = $(this).attr('data-dialoghelp');
-		var tooltip = $(this).attr('data-inlinehelp');
+	$j("[data-dialoghelp], [data-inlinehelp]").each(function(){
+		var attr = $j(this).attr('data-dialoghelp');
+		var tooltip = $j(this).attr('data-inlinehelp');
 		
 		if (attr != undefined || tooltip != undefined){
 			// Fancybox
@@ -18,11 +19,11 @@ $(function() {
 			content += ' <img src="../img/admin/help.png" alt="" />';
 			content += '</a>';
 			// Insert
-			$(this).after(content);
+			$j(this).after(content);
 			// Init
-			$(".fancybox").fancybox({
+			$j(".fancybox").fancybox({
     		});
-			$('.tooltip').tooltipster({
+			$j('.tooltip').tooltipster({
 	    		position : 'right'
 	    	});
 		}

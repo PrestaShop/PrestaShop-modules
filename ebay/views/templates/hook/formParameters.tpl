@@ -246,7 +246,7 @@
 		}
 
 		$(function(){
-			$("#displayFancybox").fancybox({
+			$j("#displayFancybox").fancybox({
 				beforeShow : function(){
 					checkCategories();
 					$("#save_ebay_parameters").parents('form').submit();

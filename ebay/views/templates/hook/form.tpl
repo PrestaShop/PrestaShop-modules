@@ -38,11 +38,19 @@
 <br />
 
 <link rel="stylesheet" href="{$css_file}" />
-
+<script>
+	var $j = $;
+</script>
 {if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4"}
 	<link rel="stylesheet" href="{$fancyboxCss}" />
 	<script src="{$ebayjquery}"></script>
 	<script src="{$noConflicts}"></script>
+	<script>
+		if(typeof($j172) != 'undefined')
+			$j = $j172;
+		else 
+			$j = $;
+	</script>
 	<script src="{$fancybox}"></script>
 {/if}
 <script src="{$tooltip}" type="text/javascript"></script>
