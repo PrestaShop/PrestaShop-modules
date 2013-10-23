@@ -351,7 +351,7 @@ class Gsitemap extends Module
 		$categories_id = Db::getInstance()->ExecuteS('SELECT c.`id_category` FROM `'._DB_PREFIX_.'category` c 
 			INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category` 
 			WHERE c.`active` = 1 AND c.`id_category` != 1 AND c.id_parent > 0 AND c.`id_category` > '.(int)$id_category.
-			($this->tableColumnExists(_DB_PREFIX_.'category', 'id_shop') ? ' AND cl.`id_shop` = '.(int)$this->context->shop->id : '').
+			($this->tableColumnExists(_DB_PREFIX_.'category_lang', 'id_shop') ? ' AND cl.`id_shop` = '.(int)$this->context->shop->id : '').
 					' AND cl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY c.`id_category` ASC');
 		foreach ($categories_id as $category_id)
 		{
