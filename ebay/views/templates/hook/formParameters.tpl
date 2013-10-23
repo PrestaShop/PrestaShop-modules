@@ -212,7 +212,6 @@
 			<input class="primary button" type="submit" id="save_ebay_parameters" value="{l s='Save and continue' mod='ebay'}" />
 		</a>
 	</div>
-	<div class="margin-form" id="categoriesProgression" style="font-weight: bold;"></div>
 
 	<div id="ebayreturnshide" style="display:none;">{$ebayReturns|escape:'htmlall':'UTF-8'}</div>
 
@@ -241,7 +240,7 @@
 			if (percent > 100)
 				percent = 100;
 			
-			$("#categoriesProgression").html("{/literal}{l s='Categories loading' mod='ebay'}{literal} : " + percent + " %");
+			$("#categoriesProgression").html("{/literal}{l s='Categories loading' mod='ebay'}{literal}  <div>" + percent + " %</div>");
 			if (percent < 100)
 				setTimeout ("checkCategories()", 1000);
 		}

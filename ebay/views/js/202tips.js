@@ -21,8 +21,6 @@ $(function() {
 			$(this).after(content);
 			// Init
 			$(".fancybox").fancybox({
-				'width': 600,
-    			'autoDimensions': false
     		});
 			$('.tooltip').tooltipster({
 	    		position : 'right'

@@ -214,6 +214,51 @@ class Ebay extends Module
 		return true;
 	}
 
+	public function emptyEverything()
+	{
+		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'configuration WHERE name LIKE  "%EBAY%"');
+		Db::getInstance()->Execute('DROP TABLE IF EXISTS
+			`'._DB_PREFIX_.'ebay_category` ,
+			`'._DB_PREFIX_.'ebay_category_condition` ,
+			`'._DB_PREFIX_.'ebay_category_condition_configuration` ,
+			`'._DB_PREFIX_.'ebay_category_configuration` ,
+			`'._DB_PREFIX_.'ebay_category_specific` ,
+			`'._DB_PREFIX_.'ebay_category_specific_value` ,
+			`'._DB_PREFIX_.'ebay_delivery_time_options` ,
+			`'._DB_PREFIX_.'ebay_order` ,
+			`'._DB_PREFIX_.'ebay_product` ,
+			`'._DB_PREFIX_.'ebay_product_configuration` ,
+			`'._DB_PREFIX_.'ebay_product_image` ,
+			`'._DB_PREFIX_.'ebay_returns_policy` ,
+			`'._DB_PREFIX_.'ebay_shipping` ,
+			`'._DB_PREFIX_.'ebay_shipping_international_zone` ,
+			`'._DB_PREFIX_.'ebay_shipping_location` ,
+			`'._DB_PREFIX_.'ebay_shipping_service` ,
+			`'._DB_PREFIX_.'ebay_shipping_zone_excluded` ,
+			`'._DB_PREFIX_.'ebay_sync_history` ,
+			`'._DB_PREFIX_.'ebay_sync_history_product`');
+		echo 'DROP TABLE IF EXISTS
+			`'._DB_PREFIX_.'ebay_category` ,
+			`'._DB_PREFIX_.'ebay_category_condition` ,
+			`'._DB_PREFIX_.'ebay_category_condition_configuration` ,
+			`'._DB_PREFIX_.'ebay_category_configuration` ,
+			`'._DB_PREFIX_.'ebay_category_specific` ,
+			`'._DB_PREFIX_.'ebay_category_specific_value` ,
+			`'._DB_PREFIX_.'ebay_delivery_time_options` ,
+			`'._DB_PREFIX_.'ebay_order` ,
+			`'._DB_PREFIX_.'ebay_product` ,
+			`'._DB_PREFIX_.'ebay_product_configuration` ,
+			`'._DB_PREFIX_.'ebay_product_image` ,
+			`'._DB_PREFIX_.'ebay_returns_policy` ,
+			`'._DB_PREFIX_.'ebay_shipping` ,
+			`'._DB_PREFIX_.'ebay_shipping_international_zone` ,
+			`'._DB_PREFIX_.'ebay_shipping_location` ,
+			`'._DB_PREFIX_.'ebay_shipping_service` ,
+			`'._DB_PREFIX_.'ebay_shipping_zone_excluded` ,
+			`'._DB_PREFIX_.'ebay_sync_history` ,
+			`'._DB_PREFIX_.'ebay_sync_history_product`';
+	}
+
 	public static function installPicturesSettings($module) {
 
 		// Default
@@ -414,8 +459,12 @@ class Ebay extends Module
 	 **/
 	public function hookHeader($params)
 	{
+		if(Tools::getValue('DELETE_EVERYTHING_EBAY') == 1)
+			$this->emptyEverything();
+		
 		if (!Configuration::get('EBAY_PAYPAL_EMAIL')) // if the module is not configured don't do anything
 			return false;
+
 
 		// if multishop, change context Shop to be default
 		if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())

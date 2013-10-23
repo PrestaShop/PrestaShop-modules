@@ -75,16 +75,16 @@
 
 
 <div id="helpertexts" style="display:none;">
-	<div id="returnsAccepted">
+	<div id="returnsAccepted" style="width:300px">
 		{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
 	</div>
-	<div id="dispatchTime">
+	<div id="dispatchTime" style="width:300px">
 		{l s='The dispatch time is the time between the buyer’s payment clearing and you sending the item. Buyers are increasingly expecting short dispatch times, ideally next day, but preferably within 3 working days. ' mod='ebay'}
 	</div>
-	<div id="DomShipp">
+	<div id="DomShipp" style="width:300px">
 		{l s='To add a shipping method, map your PrestaShop options with one offered by eBay.' mod='ebay'}
 	</div>
-	<div id="tagsTemplate">
+	<div id="tagsTemplate" style="width:300px">
 		{ldelim}MAIN_IMAGE{rdelim}<br/>
 		{ldelim}MEDIUM_IMAGE_1{rdelim}<br/>
 		{ldelim}MEDIUM_IMAGE_2{rdelim}<br/>
@@ -98,6 +98,7 @@
 		{ldelim}EBAY_SHOP{rdelim}<br/>
 		{ldelim}SLOGAN{rdelim}<br/>
 		{ldelim}PRODUCT_NAME{rdelim}
-		</div>
+	</div>
+	<div id="categoriesProgression" style="overflow: auto;width: 200px;height: 100px;text-align: center;font-size: 16px;padding-top: 30px;"></div>
 </div>
 

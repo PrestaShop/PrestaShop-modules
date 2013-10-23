@@ -44,7 +44,7 @@ class EbayRequest
 	private $apiCall;
 	private $loginUrl;
 	private $compatibility_level;
-	private $debug = false;
+	private $debug = true;
 	private $dev = true;
 	private $ebay_country;
 
