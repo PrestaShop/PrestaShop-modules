@@ -1,0 +1,12 @@
+<!-- BEGIN SHOPGATE -->
+<link rel="alternate" media="only screen and (max-width: 640px)" href="{$mobile_url}"/>
+<script type="text/javascript">
+    var _shopgate = new Object();
+    _shopgate.shop_number = "{$shop_number}";
+    _shopgate.redirect = "{$redirect_code}";
+    {$additional_parameters}
+    _shopgate.host = (("https:" == document.location.protocol) ? "{$ssl_url}" : "{$non_ssl_url}");
+
+    document.write(unescape("%3Cscript src='" + _shopgate.host + "/mobile_header/" + _shopgate.shop_number + ".js' type='text/javascript' %3E%3C/script%3E"));
+</script>
+<!-- END SHOPGATE -->
