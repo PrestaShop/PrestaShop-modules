@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if isset($supcostbelg)}{$supcostbelgttc=$supcostbelg*(1+($taxrate/100))}{/if}
+{if isset($supcostbelg)}{assign var=supcostbelgttc value=$supcostbelg*(1+($taxrate/100))}{/if}
 <div class="warn">  <p>{l s='Warning, usage of this module in opc mobile theme is not recommended in production mode for your website.' mod='socolissimo'}</p></div>
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall'}" method="post" class="form">
     <input type="hidden" value={if isset($taxrate)}{$taxrate}{else}0{/if} class="taxrate" name="taxrate" />
@@ -146,6 +146,7 @@
         <p>{if isset($return_url)}{$return_url}{/if}</p>
     </div>
 </fieldset>
+{literal}	
 <script type="text/javascript">
 $( document ).ready(function(){
 $( ".supcostbelg" ).change(function(){
@@ -155,3 +156,4 @@ $( ".costbelgttc" ).val(ttc);
     });
 });
 </script>
+{/literal}	
