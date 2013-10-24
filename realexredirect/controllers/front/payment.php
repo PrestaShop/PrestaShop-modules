@@ -132,7 +132,7 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 						$type_card = Tools::ucfirst(Tools::strtolower($pmt_ref['type_card_realex']));
 					$inputs_pmt_registered	.= "<div class='fleft'>$pmt_ref[paymentname_realex] / $type_card<br/>";
 					if ($realex->cvn)
-						$inputs_pmt_registered	.= "CVN : <input type='text' style='width:40px' name='cvn'  />";
+						$inputs_pmt_registered	.= $realex->l('Security Code','payment')." : <input type='text' style='width:40px' name='cvn'  />";
 					$secure_link = $link->getModuleLink('realexredirect', "payment?reg=$pmt_ref[refpayment_realex]&token=".$this->context->cart->secure_key);
 					$inputs_pmt_registered	.= "<br/><a href='".$secure_link."' class='delete' onclick='return(confirm(\"".$realex->bout_suppr."\"))'>";
 					$inputs_pmt_registered	.= 'x '.$realex->l('Delete').'</a></div>';

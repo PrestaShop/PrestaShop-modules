@@ -31,7 +31,8 @@ $_MODULE['<{realexredirect}prestashop>realexredirect_229a7ec501323b94db7ff3157a7
 $_MODULE['<{realexredirect}prestashop>realexredirect_a66aefb8e8161df9dbe11c2879d647ad'] = 'Shared Secret';
 $_MODULE['<{realexredirect}prestashop>realexredirect_1610f44571feba48aa8a30a8112a06fe'] = 'Mode de paiement';
 $_MODULE['<{realexredirect}prestashop>realexredirect_16fe7de96277cd735d04f79e20d029d6'] = 'Si vous utilisez le DCC, le mode de règlement sera par défaut automatique.';
-$_MODULE['<{realexredirect}prestashop>realexredirect_27acc035cb745894d7debd2b2c2559a2'] = 'Demander le CVN lors des paiements récurrents';
+$_MODULE['<{realexredirect}prestashop>realexredirect_7e9d36e9888a6cce98c7ecd66af22c75'] = 'Demander le code de sécurité lors des paiements récurrents';
+$_MODULE['<{realexredirect}prestashop>realexredirect_b590e2a7555a88aa303d38650a8728a1'] = 'Voulez-vous un changement de responsabilité pour les transactions 3DSecure ?';
 $_MODULE['<{realexredirect}prestashop>realexredirect_b17f3f4dcf653a5776792498a9b44d6a'] = 'Mettre à jour';
 $_MODULE['<{realexredirect}prestashop>realexredirect_7a2162a5f3bf71d19ca51783c189e60a'] = 'Avant de pouvoir utiliser ce module, vous devez transmettre à Realex les informations suivantes:';
 $_MODULE['<{realexredirect}prestashop>realexredirect_56fb04b38535819375b6b29573f8eb83'] = 'Sous-comptes Realex Payments';
@@ -73,6 +74,7 @@ $_MODULE['<{realexredirect}prestashop>realexredirect_267b9a76de190a2a6e6ab1a0068
 $_MODULE['<{realexredirect}prestashop>realexredirect_316853cc3718335f11c048e33b9be98a'] = 'Cliquez';
 $_MODULE['<{realexredirect}prestashop>realexredirect_6c92285fa6d3e827b198d120ea3ac674'] = 'ici';
 $_MODULE['<{realexredirect}prestashop>realexredirect_0d16d70a4e428e7ce8a8048c752436d5'] = 'pour revenir au site';
+$_MODULE['<{realexredirect}prestashop>payment_1316379096c85e48ae3c8426e1536ed4'] = 'Code de sécurité';
 $_MODULE['<{realexredirect}prestashop>payment_f2a6c498fb90ee345d997f888fce3b18'] = 'Supprimer';
 $_MODULE['<{realexredirect}prestashop>payment_5d08aeab35d61ac994471ab9d6ca321a'] = 'Veuillez vérifier votre code de sécurité';
 $_MODULE['<{realexredirect}prestashop>payment_execution_f1d3b424cd68795ecaa552883759aceb'] = 'Récapitulatif de votre commande';

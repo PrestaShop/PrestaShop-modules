@@ -392,7 +392,7 @@ class RealexRedirect extends PaymentModule
 		$this->html .=	'</td></tr>';
 		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Shared secret').'</td>';
 		$this->html .=	'<td style="vertical-align: top;">';
-		$this->html .=	'<input type="text" name="sharedSecret" value="'.htmlentities(Tools::getValue('sharedSecret', $this->shared_secret), ENT_COMPAT, 'UTF-8').'" style="width: 300px;" />';
+		$this->html .=	'<input type="password" name="sharedSecret" value="'.htmlentities(Tools::getValue('sharedSecret', $this->shared_secret), ENT_COMPAT, 'UTF-8').'" style="width: 300px;" />';
 		$this->html .=	'<br/><br/></td></tr>';
 		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Settlement').'</td>';
 		$this->html .=	'<td><input type="radio" name="settlement" '.$checked_auto.' value="auto" /> Auto';
@@ -401,10 +401,10 @@ class RealexRedirect extends PaymentModule
 		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('RealVault').'</td>';
 		$this->html .=	'<td><input type="radio" name="realvault" '.$checked_realvault_yes.' value="1" /> Yes <br/>';
 		$this->html .=	'<input type="radio" name="realvault" '.$checked_realvault_no.' value="0" /> No</td></tr>';
-		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Request CVN on tokenised transactions: ').'</td>';
+		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Request Security Code on tokenised transactions: ').'</td>';
 		$this->html .=	'<td><input type="radio" name="cvn" '.$checked_cvn_yes.' value="1" /> Yes ';
 		$this->html .=	'<br/><input type="radio" name="cvn" '.$checked_cvn_no.' value="0" /> No</td></tr>';
-		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Require liability shift ').'</td>';
+		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Require Liability Shift on 3DSecure transactions').'</td>';
 		$this->html .=	'<td><input type="radio" name="liability" '.$checked_liability_yes.' value="1" /> Yes <br/>';
 		$this->html .=	'<input type="radio" name="liability" '.$checked_liability_no.' value="0" /> No</td></tr>';
 		$this->html .=	'<tr><td colspan="2" align="center">';
