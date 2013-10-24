@@ -100,3 +100,6 @@
 [submodule "shopgate/backward_compatibility"]
 	path = shopgate/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "realexredirect/backward_compatibility"]
+	path = realexredirect/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
