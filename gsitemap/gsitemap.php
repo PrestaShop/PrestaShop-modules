@@ -616,6 +616,7 @@ class Gsitemap extends Module
 	 */
 	private function _addSitemapNode($fd, $loc, $priority, $change_freq, $last_mod = NULL)
 	{
+		$last_mod = date('c', strtotime($last_mod)); // Should be in W3C format date http://www.sitemaps.org/protocol.html#lastmoddef
 		fwrite($fd, '<loc>'.(Configuration::get('PS_REWRITING_SETTINGS') ? '<![CDATA['.$loc.']]>' : $loc).'</loc>'."\r\n".'<priority>'."\r\n".number_format($priority, 1, '.', '').'</priority>'."\r\n".($last_mod ? '<lastmod>'.$last_mod.'</lastmod>' : '')."\r\n".'<changefreq>'.$change_freq.'</changefreq>'."\r\n");
 	}
 
