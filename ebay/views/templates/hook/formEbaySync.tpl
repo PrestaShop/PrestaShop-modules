@@ -29,6 +29,14 @@
 	{literal}
 	#button_ebay_sync1{background-image:url({/literal}{$path}{literal}views/img/ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:25px;}
 			#button_ebay_sync2{background-image:url({/literal}{$path}{literal}views/img/ebay.png);background-repeat:no-repeat;background-position:center 90px;width:500px;height:191px;cursor:pointer;padding-bottom:100px;font-weight:bold;font-size:15px;}
+	.informations{
+		padding-bottom: 3px;margin-top: 8px;
+	}
+	#nbproducttosync
+	{
+		font-weight: bold;
+	}
+
 	{/literal}
 </style>
 <script>
@@ -52,10 +60,7 @@
 					
 					nbProducts = data;
 					nbProductsModeB = data;
-					
-					$("#button_ebay_sync1").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}{literal}\n(" + data + " {/literal}{$prod_str}{literal})");
-					
-					$("#button_ebay_sync2").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}\n{l s='and update' mod='ebay'}\n(" + data + " {$prod_str})");{literal}
+					$('#nbproducttosync').html(data);
 				}
 			});
 		});
@@ -65,16 +70,13 @@
 		$("#ebay_sync_products_mode1").click(function() {
 			nbProducts = nbProductsModeA;
 			$("#catSync").hide("slow");
-			$("#button_ebay_sync1").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}{literal}\n(" + nbProducts + " {/literal}{l s='products' mod='ebay'}{literal})");
-			$("#button_ebay_sync2").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}\n{l s='and update' mod='ebay'}\n(" + nbProducts + " {$prod_str})");
+			$('#nbproducttosync').html(nbProducts);
 		});
-		{literal}
 		$("#ebay_sync_products_mode2").click(function() {
 			nbProducts = nbProductsModeB;
 			$("#catSync").show("slow");
-			$("#button_ebay_sync1").attr("value", "{/literal}{l s='Sync with eBay' mod='ebay'}\n(" + nbProducts + " {$prod_str})");
-			$("#button_ebay_sync2").attr("value", "{l s='Sync with eBay' mod='ebay'}\n{l s='and update' mod='ebay'}\n(" + nbProducts + " {$prod_str})");
-			{literal}
+			$('#nbproducttosync').html(nbProducts);
+			
 		});
 	});
 
@@ -194,6 +196,9 @@
 		</div><br />
 		<div>
 			<b data-dialoghelp="http://pages.ebay.com/help/sell/listing-variations.html" data-inlinehelp="{l s='Find out more about multi-variation listings.' mod='ebay'}"><img src="../modules/ebay/views/img/warn.png" />{l s='Note: If some of your categories don’t support multi-variation listings, all variations will appear as separate listings.' mod='ebay'}</b>
+		</div>
+		<div class="informations margin-form">
+			{l s='You are going to list ' mod='module'} <span id="nbproducttosync">{$nb_products}</span> {l s='products to ebay' mod='module'}
 		</div>
 		<div class="margin-form">
 			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and publish' mod='ebay'}" />
