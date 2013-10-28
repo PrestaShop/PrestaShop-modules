@@ -56,6 +56,7 @@
 <script src="{$tooltip}" type="text/javascript"></script>
 <script src="{$tips202}" type="text/javascript"></script>
 
+{literal}
 <style type="text/css">
 	#fancybox-loading {
 		display: none;
@@ -79,7 +80,7 @@
 	}
 
 </style>
-	
+{/literal}
 <fieldset>
 	<legend><img src="{$path}logo.gif" alt="" />{l s='eBay Module Status' mod='ebay'}</legend>
 	<div style="float: left; width: 45%">

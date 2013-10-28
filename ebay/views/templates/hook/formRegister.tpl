@@ -24,10 +24,11 @@
 *}
 
 {if $relogin}
+
 	<script>
-		$(document).ready(function() {
-				win = window.redirect('{$redirect_url}');
-		});
+		$(document).ready(function() {ldelim}
+				win = window.location.href = '{$redirect_url}';
+		{rdelim});
 	</script>
 {/if}
 
