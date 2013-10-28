@@ -35,6 +35,8 @@ function upgrade_module_1_6($module)
 	// Default value within
 	Configuration::updateValue('EBAY_RETURNS_WITHIN', 'Days_14');
 	Configuration::updateValue('EBAY_DELIVERY_TIME', 2);
+	Configuration::updateValue('EBAY_SYNC_PRODUCTS_MODE', Configuration::get('EBAY_SYNC_MODE'));
+	Configuration::updateValue('EBAY_SYNC_MODE', 2);
 	ebay::installPicturesSettings($module);
 
 	return true;
