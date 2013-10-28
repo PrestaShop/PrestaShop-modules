@@ -690,7 +690,7 @@ class BluePay extends PaymentModule
 	public function hookDisplayPayment($params)
 	{
 		include_once(_PS_MODULE_DIR_.'/bluepay/bluepay_customers.php');
-		$cart = new Cart($this->context->cart->id_cart);
+		$cart = new Cart($this->context->cart->id);
 		$cart_contents = '';
 
 		foreach ($cart->getProducts() as $product)
