@@ -55,6 +55,14 @@ foreach ($classes_to_load as $classname)
 	if (file_exists(dirname(__FILE__).'/classes/'.$classname.'.php'))
 		require_once(dirname(__FILE__).'/classes/'.$classname.'.php');
 
+if(!function_exists('bSQL'))
+{
+	function bqSQL($string)
+	{
+		return str_replace('`', '\`', pSQL($string));
+	}
+}
+
 /* Checking compatibility with older PrestaShop and fixing it*/
 if (!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
