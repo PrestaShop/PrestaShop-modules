@@ -776,7 +776,7 @@ class EbaySynchronizer
 		{
 			$sql = '
 				SELECT `id_product`
-				FROM `'._DB_PREFIX_.'product`
+				FROM `'._DB_PREFIX_.'product` AS p
 				WHERE `quantity` > 0
 				AND `id_category_default` IN (
 					SELECT `id_category`
