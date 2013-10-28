@@ -454,6 +454,9 @@ abstract class DbCore
 	{
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
+			
+		if (trim($sql) == false)
+			return ($this->result = true);
 
 		$this->result = $this->query($sql);
 		if ($use_cache && $this->is_cache_enabled)
