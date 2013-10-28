@@ -331,14 +331,16 @@ class EbayOrder
 	{
 
 		$total_price_tax_excl = 0;
-		$total_shipping_tax_incl = 0;
-		$total_shipping_tax_excl = 0;
+		
 		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
 		
 		if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
 			$carrier_tax_rate = (float)$this->_getTaxByCarrier((int)$id_carrier);
 		else
 			$carrier_tax_rate = (float)Tax::getCarrierTaxRate((int)$id_carrier);
+
+		$total_shipping_tax_incl = $this->shippingServiceCost;
+		$total_shipping_tax_excl = $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
 
 		foreach ($this->product_list as $product)
 		{
@@ -379,8 +381,6 @@ class EbayOrder
 			
 			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
 			// ebay get one shipping cost by product
-			$total_shipping_tax_incl += $this->shippingServiceCost;
-			$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
 
 		}
 
@@ -415,7 +415,7 @@ class EbayOrder
 				$data, 
 				array(
 					'total_paid_tax_incl' => (float)$this->amount,
-					'total_paid_tax_excl' => (float)($total_price_tax_excl + $order->total_shipping_tax_excl),
+					'total_paid_tax_excl' => (float)($total_price_tax_excl + $total_shipping_tax_excl),
 				)
 			);
 
