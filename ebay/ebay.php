@@ -55,7 +55,7 @@ foreach ($classes_to_load as $classname)
 	if (file_exists(dirname(__FILE__).'/classes/'.$classname.'.php'))
 		require_once(dirname(__FILE__).'/classes/'.$classname.'.php');
 
-if(!function_exists('bSQL'))
+if(!function_exists('bqSQL'))
 {
 	function bqSQL($string)
 	{
