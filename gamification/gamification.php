@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.6';
+		$this->version = '1.6.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -205,13 +205,14 @@ class Gamification extends Module
 				$data = Tools::jsonDecode(Tools::file_get_contents($cache_file));
 				if (!isset($data->signature))
 					return false;
-
+				
+				$this->processCleanAdvices(array_merge($data->advices, $data->advices_16));
+				
 				if (function_exists('openssl_verify'))
 				{
 					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
-				
 				if (isset($data->conditions))
 					$this->processImportConditions($data->conditions, $id_lang);
 
@@ -243,6 +244,25 @@ class Gamification extends Module
 		$data = Tools::file_get_contents($this->url_data.$file_name);
 		
 		return (bool)file_put_contents($this->cache_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json', $data);
+	}
+	
+	public function processCleanAdvices($advices)
+	{
+		$current_advices = array();
+		$result = Db::getInstance()->ExecuteS('SELECT id_advice, id_ps_advice FROM '._DB_PREFIX_.'advice');
+		foreach ($result as $row)
+			$current_advices[(int)$row['id_ps_advice']] = (int)$row['id_advice'];
+			
+		// Delete advices that are not in the file anymore
+		foreach ($current_advices as $id_advice)
+		{
+			// Check that the advice is used in this language
+			$html = Db::getInstance()->getValue('SELECT html FROM '._DB_PREFIX_.'advice_lang WHERE id_advice = '.(int)$id_advice.' AND id_lang = '.(int)$id_lang);
+			if (!$html)
+				continue;
+			$adv = new Advice($id_advice);
+			$adv->delete();
+		}
 	}
 	
 	public function processImportConditions($conditions, $id_lang)
@@ -331,7 +351,7 @@ class Gamification extends Module
 		$formated_advices_lang = array();
 		foreach ($advices_lang as $lang)
 			$formated_advices_lang[$lang->id_ps_advice] = array('html' => array($id_lang => $lang->html));
-
+		
 		$current_advices = array();
 		$result = Db::getInstance()->ExecuteS('SELECT id_advice, id_ps_advice FROM '._DB_PREFIX_.'advice');
 		foreach ($result as $row)
@@ -366,17 +386,6 @@ class Gamification extends Module
 			} catch (Exception $e) {
 				continue;
 			}
-		}
-		
-		// Delete advices that are not in the file anymore
-		foreach ($current_advices as $id_advice)
-		{
-			// Check that the advice is used in this language
-			$html = Db::getInstance()->getValue('SELECT html FROM '._DB_PREFIX_.'advice_lang WHERE id_advice = '.(int)$id_advice.' AND id_lang = '.(int)$id_lang);
-			if (!$html)
-				continue;
-			$adv = new Advice($id_advice);
-			$adv->delete();
 		}
 	}
 	
