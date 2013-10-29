@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.5.9';
+		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -227,7 +227,7 @@ class Gamification extends Module
 						return false;
 				}
 				
-				if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isse($data->advices_lang_16))
+				if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isset($data->advices_lang_16))
 					$this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
 			}
 	}
