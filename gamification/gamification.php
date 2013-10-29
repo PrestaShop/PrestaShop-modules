@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.5.8';
+		$this->version = '1.5.9';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -208,19 +208,21 @@ class Gamification extends Module
 
 				if (function_exists('openssl_verify'))
 				{
-					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
+					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang, $data->advices_lang_16)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
 				
 				if (isset($data->conditions))
 					$this->processImportConditions($data->conditions, $id_lang);
 
-				if (isset($data->badges))
+				if (isset($data->badges) && isset($data->badges_lang))
 					$this->processImportBadges($data->badges, $data->badges_lang, $id_lang);
 					
-				if (isset($data->advices))
+				if (isset($data->advices) && isset($data->advices_lang))
 					$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
 				
+				if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isse($data->advices_lang_16))
+					$this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
 			}
 	}
 	
@@ -230,8 +232,10 @@ class Gamification extends Module
 			$iso_lang = $this->context->language->iso_code;
 		$iso_country = $this->context->country->iso_code;
 		$iso_currency = $this->context->currency->iso_code;
-
-		$data = Tools::file_get_contents($this->url_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json');
+		
+		$file_name = 'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json';
+		$data = Tools::file_get_contents($this->url_data.$file_name);
+		
 		return (bool)file_put_contents($this->cache_data.'data_'.strtoupper($iso_lang).'_'.strtoupper($iso_currency).'_'.strtoupper($iso_country).'.json', $data);
 	}
 	
