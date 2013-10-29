@@ -1,0 +1,241 @@
+'''Deutsch'''
+
+'''Version 2.3.5'''
+* Problem beim Bestellungsimport behoben (Exception Swift_Message_MimeException)
+
+'''Version 2.3.4'''
+* Anpassungen an Prestashop Code Conventions
+
+'''Version 2.3.3'''
+* Shopgate Library in Ordner "/vendors" verschoben 
+* Shopgate Prestashop Modul Code unter AFL Lizenz veröffentlicht
+* nutzt die Shopgate Library 2.3.6
+
+'''Version 2.3.2'''
+* nutzt die Shopgate Library 2.3.5
+* Anpassungen an Prestashop Code Conventions
+
+'''Version 2.3.1'''
+* nutzt die Shopgate Library 2.3.4
+* Anpassungen an Prestashop Code Conventions
+* Problem im Bestellimport, wenn der Lagerbestand auf 0 war behoben.
+
+'''Version 2.3.0'''
+* Problem im Export mit dem Lagerbestand behoben
+* Anpassungen an Prestashop Code Conventions
+* Nur noch Start-, Produkt- und Kategorieseiten werden zur mobilen Website weitergeleitet. Ob die übrigen Seiten auch weitergeleitet werden sollen, lässt sich jetzt einstellen
+* nutzt die Shopgate Library 2.3.3
+* zusammengeführt mit der US Plugin Version
+
+'''Version 1.1.13'''
+* Problem beim Deinstallieren des Moduls behoben
+* Fehler behoben, durch den der Bestellimport ggf. fehlgeschlagen ist, wenn keine Telefonnummer eingetragen wurde
+* für Shops, die das Geburtsdatum als Pflichtfeld definiert haben, wird jetzt '0000-00-00' eingetragen, wenn kein Datum übergeben wurde
+
+'''Version 1.1.12'''
+* Bestellstatus für Händlervorkasse geändert
+* Grundpreise werden nun exportiert
+
+'''Version 1.1.11'''
+* Firmennamen, die länger als 32 Zeichen sind, werden jetzt gekürzt; der korrekte Firmenname wird als Kommentar vermerkt
+* Zu Bestellungen wird jetzt (als Vorbereitung zur Mehrsprachigkeit) auch die entsprechende Shopnummer gespeichert angezeigt
+* nutzt die Shopgate Library 2.1.26
+
+'''Version 1.1.10'''
+* Problem mit dem Gewicht von Varianten behoben
+
+'''Version 1.1.9'''
+* Unterstützung von Prestashop Version 1.3.x.x
+* nutzt Shopgate Library 2.1.25
+* Problem mit Adressen behoben
+* Fehler beim "url_deeplink" im Produktexport behoben
+
+'''Version 1.1.8'''
+* Kompatibilitätsproblem mit Prestashop Versionen kleiner 1.4.4.0 behoben
+* Problem "Fatal error (OrderHistory -> id_order_state is empty)" behoben
+
+'''Version 1.1.7'''
+* Problem bei der Mobilen Weiterleitung behoben.
+
+'''Version 1.1.6'''
+* Einstellungsfelder "mobile Weiterleitung" / "Shop ist freigeschaltet" entfernt
+* JS-Header wird im <head> HTML-Tag eingebunden
+* <link rel="alternate" ...> HTML-Tag wird nun eingebunden
+* nutzt Shopgate Library 2.1.24
+
+'''Version 1.1.5'''
+* Problem mit unterschiedlichen Währungen behoben
+* Problem mit dem Bestellstatus behoben
+* nutzt Shopgate Library 2.1.18
+
+'''Version 1.1.4'''
+* bugfix Lieferzeit im Export der Produkte
+
+'''Version 1.1.3'''
+* SEO-Url Probleme bei Produkten und Kategorien behoben
+
+'''Version 1.1.2'''
+* Problem bei den Produktvarianten behoben (Lieferzeit, Sonderangebote)
+* Probleme mit Urls für Prestashop 1.5.x.x behoben
+* nutzt Shopgate Library 2.1.17
+
+'''Version 1.1.1'''
+* Recyclingverpackung wird nicht mehr als Standard ausgewählt
+* Die Währung ist nun in den Einstellungen auswählbar
+* Kategoriebilder mit SEO-Links werden nun übertragen
+* Problem beim Export des Gewichtes behoben
+* Problem in der Reihenfolge der Produkte/Kategorien behoben
+* Problem mit nicht aktivierten Produkten behoben
+* Lieferzeiten werden nun korrekt übertragen
+* nutzt Shopgate Library 2.1.15
+
+'''Version 1.1.0'''
+* Problem mit Übersetzungen im Adminbereich behoben
+* Problem mit PHP < 5.3 Kompatibilität behoben
+* nutzt Shopgate Library 2.1.12
+
+'''Version 1.0.10'''
+* nutzt Shopgate Library 2.1.11
+
+'''Version 1.0.4'''
+* Mindestbestellmenge in der Konfiguration aktivierbar/deaktivierbar
+* Beachtung des Lagerbestandes in der Konfiguartion aktivierbar/deaktivierbar
+* nutzt Shopgate library 2.0.25
+
+'''Version 1.03'''
+* Kompatibilität für Prestashop 1.4.4.1 hergestellt
+* nutzt Shopgate Library 2.0.23
+
+'''Version 1.02'''
+* Fix Konfiguration(server_custom_url)
+* Fix für ältere Prestashop(< 1.4.4v) Versionen
+* Fix für hookHeader Methode (Ausgabe des Mobile Header)
+
+'''Version 1.01'''
+* Shopgate Mobile Redirect implementiert (alias and cname in der Konfiguration hinzugefügt)
+* nutzt Shopgate Library 2.0.18
+* Module Konfigurationserrors werden gefangen
+* Deaktivieren des Shopgateshop beim Deinstallieren des Modules
+
+
+
+
+'''English'''
+
+'''Version 2.3.5'''
+* fixed issue in order import (exception Swift_Message_MimeException)
+
+'''Version 2.3.4'''
+* adapted code for Prestashop code conventions
+
+'''Version 2.3.3'''
+* Shopgate Library moved to directory "/vendors"
+* Shopgate Prestashop module code published under AFL license 
+* uses Shopgate Library 2.3.6
+
+'''Version 2.3.2'''
+* uses Shopgate Library 2.3.5
+* adapted code for Prestashop code conventions
+
+'''Version 2.3.1'''
+* fixed issue in order import if stock quantity was 0
+* uses Shopgate Library 2.3.4
+* adapted code for Prestashop code conventions
+
+'''Version 2.3.0'''
+* fixed issue with stock management in product export
+* adapted code for Prestashop code conventions
+* only home page, product detail pages and category pages are redirected to the mobile web site from now on. There's a new setting for specifying whether or not other pages should also be redirected.
+* uses Shopgate Library 2.3.3
+* merged with US plugin version
+
+'''Version 1.1.13'''
+* fixed issue on deinstallation of the module
+* fixed error when importing orders without telephone numbers
+* shops that declare the birthday field as mandatory will now get '0000-00-00' when no birthday was passed
+
+'''Version 1.1.12'''
+* order status for merchant payment method prepayment changed
+* basic prices are now exported
+
+'''Version 1.1.11'''
+* company names longer than 32 characters get shortened now; the full name is mentioned in the new comments field
+* as a preparation for multi-language support the shop number is now saved and displayed along with an order
+* uses Shopgate Library 2.1.26
+
+'''Version 1.1.10'''
+* fixed issue with product weight for variations
+
+'''Version 1.1.9'''
+* support of Prestashop version 1.3.x.x
+* uses Shopgate Library 2.1.25
+* fixed issue with addresses
+* fixed bug in the "url_deeplink" on product's export
+
+'''Version 1.1.8'''
+* fixed compatibility issue for Prestashop version lower 1.4.4.0
+* fixed issue "Fatal error (OrderHistory -> id_order_state is empty)"
+
+'''Version 1.1.7'''
+* fixed issue with mobile redirect
+
+'''Version 1.1.6'''
+* configuration fields "mobile Website" / "shop is active" removed
+* js header output in <head> HTML tag
+* <link rel="alternate" ...> HTML tag output in <head>
+* uses Shopgate Library 2.1.24
+
+'''Version 1.1.5'''
+* fixed issue with different currencies
+* fixed issue with wrong order status
+* uses Shopgate Library 2.1.18
+
+'''Version 1.1.4'''
+* fixed issue with delivery time in products export
+
+'''Version 1.1.3'''
+* fixed issue SEO-urls for products and categories
+
+'''Version 1.1.2'''
+* fixed issue product variants (deliverytime, discounts)
+* fixed url issues for Prestashop 1.5.x.x
+* uses Shopgate Library 2.1.17
+
+'''Version 1.1.1'''
+* recycling package is not selected by default
+* currency in configuration is now selectable
+* fixes issue category images with use of SEO links
+* fixed issue export weight
+* fixed issue order of products/categories
+* fixed issue with inactive products
+* Delivery time is now transfered correct
+* uses Shopgate Library 2.1.15
+
+'''Version 1.1.0'''
+* fixed translation issues in backend
+* fixed PHP < 5.3 compatibility issues
+* uses Shopgate Library 2.1.12
+
+'''Version 1.0.10'''
+* uses Shopgate Library 2.1.11
+
+'''Version 1.0.4'''
+* Min quantity check enable/disable configurations added
+* Out of stock check enable/disable configurations added
+* 2.0.25 Shopgate library version
+
+'''Version 1.03'''
+* Compatibility fix for 1.4.4.1 PS version
+* uses Shopgate Library 2.0.23
+
+'''Version 1.02'''
+* Fix configurations(server_custom_url)
+* Fix Older Prestashop(< 1.4.4v) include eval
+* Fix hookHeader method (echo mobile header)
+
+'''Version 1.01'''
+* Shopgate Mobile Redirect implementation (alias and cname configuratios added)
+* 2.0.18 - Shopgate library version
+* Module configuration error catch
+* Deactivates shopgate shop on uninstall
+

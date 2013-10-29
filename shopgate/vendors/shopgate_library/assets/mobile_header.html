@@ -1,0 +1,125 @@
+<script type="text/javascript">
+var ShopgateMobileHeader = function () {
+	this.create = function () {
+		// add DOM event for IE
+		addDomReadyEvent();
+		
+		// on DOM ready create the mobile header
+		window.onDomReady(function () {
+			// create the wrapper
+			var wrapper = ShopgateButtonWrapper();
+			
+			// append text and button image
+			wrapper.appendChild(document.createTextNode('{$buttonDescription}'));
+			wrapper.appendChild(ShopgateButtonImage());
+			
+			// find the desired parent element and add the wrapper to it
+			if ({$buttonPrepend}) {
+				var firstChild = document.querySelector('{$buttonParent}').firstChild;
+				document.querySelector('{$buttonParent}').insertBefore(wrapper, firstChild);
+			} else {
+				document.querySelector('{$buttonParent}').appendChild(wrapper);
+			}
+		});
+	}
+	
+	function addDomReadyEvent() {
+		window.onDomReady = initReady;
+		
+		// initialize event depending on browser
+		function initReady(fn) {
+			// W3C-compliant browser
+			if (document.addEventListener) {
+				document.addEventListener("DOMContentLoaded", fn, false);
+			} else { // IE
+				document.onreadystatechange = function() { readyState(fn) }
+			}
+		}
+	
+		// IE execute function
+		function readyState(func) {
+			// DOM is ready
+			if (document.readyState == "interactive" || document.readyState == "complete") {
+				func();
+			}
+		}
+	}
+	
+	function ShopgateButtonWrapper() {
+		var wrapper = document.createElement('div');
+		
+		// set attributes
+		wrapper.id = 'shopgate_mobile_header';
+		
+		// set styles
+		wrapper.style.lineHeight = '30px';
+		wrapper.style.fontSize = '30px';
+		wrapper.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+		wrapper.style.fontWeight = 'bold';
+		wrapper.style.textAlign = 'left';
+		wrapper.style.backgroundColor = '#FFF';
+		wrapper.style.border = '1px solid #ADADAD';
+		wrapper.style.clear = 'both';
+		wrapper.style.color = '#222';
+		wrapper.style.margin = '20px auto';
+		wrapper.style.marginBottom = '40px';
+		wrapper.style.padding = '15px';
+		wrapper.style.position = 'relative';
+		wrapper.style.width = '560px';
+		wrapper.style.borderRadius = '8px';
+		wrapper.style.WebkitBorderRadius = '8px';
+		wrapper.style.MozBorderRadius = '8px';
+		
+		return wrapper;
+	}
+	
+	function ShopgateButtonImage() {
+		var btnImage = document.createElement('img');
+		
+		// set attributes
+		btnImage.id = 'shopgate_mobile_button';
+		btnImage.src = '{$buttonOffImageSource}';
+		btnImage.className = 'sg_mobile_button_off';
+		
+		// set on click handler 
+		btnImage.onclick = ShopgateRedirectClickHandler;
+		
+		// set styles
+		btnImage.style.background = 'none';
+		btnImage.style.margin = '0px';
+		btnImage.style.padding = '0px';
+		btnImage.style.border = 'medium none';
+		btnImage.style.verticalAlign = 'baseline';
+		btnImage.style.height = '45px';
+		btnImage.style.position = 'absolute';
+		btnImage.style.right = '15px';
+		btnImage.style.top = '7px';
+		
+		return btnImage;
+	}
+	
+	function ShopgateRedirectClickHandler() {
+		var button = document.getElementById("shopgate_mobile_button");
+		
+		if (button.className == "sg_mobile_button_on") {
+			button.className = "sg_mobile_button_off";
+			button.src = "{$buttonOffImageSource}";
+		} else if (button.className == "sg_mobile_button_off") {
+			button.className = "sg_mobile_button_on";
+			button.src = "{$buttonOnImageSource}";
+			document.cookie = "{$cookieName}=; expires=Thu, 01-01-1970 00:00:01 GMT; path=/";
+			window.setTimeout(function() { ShopgateRedirect(); }, 500);
+		}
+	}
+	
+	function ShopgateRedirect() {
+		var backLinkRegex = new RegExp("(\\?*||\\&*)(shopgate_redirect=)(1|0)");
+		var documentUrl = document.location.href.replace(backLinkRegex, "");
+		
+		window.location.replace(documentUrl);
+	}
+}
+
+var _shopgate_mobile_header = new ShopgateMobileHeader();
+_shopgate_mobile_header.create();
+</script>

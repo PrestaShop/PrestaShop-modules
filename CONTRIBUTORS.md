@@ -29,6 +29,7 @@
 - hadjedjvincent 
 - J. Danse 
 - Jerome Nadaud 
+- Julien 
 - Julien Bijoux 
 - Ken Mendes 
 - khokha elmahdi 
@@ -48,6 +49,7 @@
 - Thoma 
 - thoma202 
 - Tredez Guillaume 
+- tucoinfo 
 - vAugagneur 
 - Vincent Augagneur 
 - Vincent Terenti 
