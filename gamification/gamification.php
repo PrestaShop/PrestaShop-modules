@@ -208,7 +208,7 @@ class Gamification extends Module
 
 				if (function_exists('openssl_verify'))
 				{
-					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang, $data->advices_lang_16)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
+					if (!openssl_verify(Tools::jsonencode(array($data->conditions, $data->advices_lang)), base64_decode($data->signature), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
 						return false;
 				}
 				
@@ -220,6 +220,12 @@ class Gamification extends Module
 					
 				if (isset($data->advices) && isset($data->advices_lang))
 					$this->processImportAdvices($data->advices, $data->advices_lang, $id_lang);
+				
+				if (function_exists('openssl_verify'))
+				{
+					if (!openssl_verify(Tools::jsonencode(array($data->advices_lang_16)), base64_decode($data->signature_16), file_get_contents(dirname(__FILE__).'/prestashop.pub')))
+						return false;
+				}
 				
 				if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true && isset($data->advices_16) && isse($data->advices_lang_16))
 					$this->processImportAdvices($data->advices_16, $data->advices_lang_16, $id_lang);
