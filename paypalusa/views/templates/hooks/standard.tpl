@@ -1,7 +1,6 @@
 {*
 ** @author PrestaShop SA <contact@prestashop.com>
 ** @copyright  2007-2013 PrestaShop SA
-** @version  Release: $Revision: 1.1 $
 **
 ** International Registered Trademark & Property of PrestaShop SA
 **
@@ -53,6 +52,9 @@
 		{if $paypal_usa_total_discounts}
 			<input type="hidden" name="discount_amount_cart" value="{$paypal_usa_total_discounts|floatval}" />
 		{/if}
+		{if $paypal_usa_total_tax}
+			<input type="hidden" name="tax_cart" value="{$paypal_usa_total_tax|floatval}" />
+		{/if} 
 		<input type="hidden" name="notify_url" value="{$paypal_usa_notify_url|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="return" value="{$paypal_usa_return_url|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="cancel_return" value="{$paypal_usa_cancel_url|escape:'htmlall':'UTF-8'}" />
