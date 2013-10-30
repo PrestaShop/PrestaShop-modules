@@ -97,7 +97,7 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 			{
 				foreach ($pmt_refs as $pmt_ref)
 				{
-					$inputs_pmt_registered .= "<form method='post' action='".$link->getModuleLink('realexredirect', 'validation')."'>";
+					$inputs_pmt_registered .= "<form method='post' action='".$link->getModuleLink('realexredirect', 'validation', array(), true)."'>";
 					$inputs_pmt_registered .= "<input type='hidden' name='PMT_REF' value='$pmt_ref[refpayment_realex]' />";
 					//SHA1
 					$tmp = $timestamp.'.'.$realex->merchant_id.'.'.$order_id;
@@ -133,7 +133,7 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 					$inputs_pmt_registered	.= "<div class='fleft'>$pmt_ref[paymentname_realex] / $type_card<br/>";
 					if ($realex->cvn)
 						$inputs_pmt_registered	.= $realex->l('Security Code','payment')." : <input type='text' style='width:40px' name='cvn'  />";
-					$secure_link = $link->getModuleLink('realexredirect', "payment?reg=$pmt_ref[refpayment_realex]&token=".$this->context->cart->secure_key);
+					$secure_link = $link->getModuleLink('realexredirect', "payment?reg=$pmt_ref[refpayment_realex]&token=".$this->context->cart->secure_key, array(), true);
 					$inputs_pmt_registered	.= "<br/><a href='".$secure_link."' class='delete' onclick='return(confirm(\"".$realex->bout_suppr."\"))'>";
 					$inputs_pmt_registered	.= 'x '.$realex->l('Delete').'</a></div>';
 					$inputs_pmt_registered	.= "<p class='cart_navigation'>";
@@ -160,7 +160,7 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 			'realvault'		=> $realex->realvault,
 			'input_registered' => $inputs_pmt_registered,
 			'input_new' => $inputs_pmt_new,
-			'submit_new' => $this->context->link->getModuleLink('realexredirect', 'payment', array('token'=>$this->context->cart->secure_key ) )
+			'submit_new' => $this->context->link->getModuleLink('realexredirect', 'payment', array('token'=>$this->context->cart->secure_key ), true )
 		));
 		$this->setTemplate('payment_execution.tpl');
 	}
@@ -229,7 +229,7 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 				if (($result_rep == '00' || $result_rep == '501') && $sha1_rep == $sha1_new)
 					Db::getInstance()->delete('realex_paymentref', 'refpayment_realex = "'.$reg.'"', 1);
 			}
-			Tools::redirect($link->getModuleLink('realexredirect', 'payment'));
+			Tools::redirect($link->getModuleLink('realexredirect', 'payment', array(), true));
 		}
 		elseif ((Tools::isSubmit('ACCOUNT')) && $token == $this->context->cart->secure_key)
 		{
