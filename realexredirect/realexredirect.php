@@ -733,8 +733,8 @@ class RealexRedirect extends PaymentModule
 						$edit .= '<tr><td width="130" style="height: 35px;vertical-align: top;"><strong>'.$this->l('Dynamic Currency Conversion (DCC)').':</strong></td><td><input type="radio" name="dcc" value="0" '.$check_dcc_no.' /> '.$this->l('No').'<br/><input type="radio" name="dcc" value="1" '.$check_dcc_yes.'/> '.$this->l('Yes').' <br/><br/>';
 						$check_fexco = ($results['dcc_choice_realex_subaccount'] == 'fexco')?$check:'';
 						$check_euroconex = ($results['dcc_choice_realex_subaccount'] == 'euroconex')?$check:'';
-						$this->html .= '<input type="radio" name="dcc_choice" value="fexco" '.$check_fexco.' /> '.$this->l('fexco').'<br/>';
-						$this->html .= '<input type="radio" name="dcc_choice" value="euroconex" '.$check_euroconex.'/> '.$this->l('euroconex').'</td></tr>';
+						$edit .= '<input type="radio" name="dcc_choice" value="fexco" '.$check_fexco.' /> '.$this->l('fexco').'<br/>';
+						$edit .= '<input type="radio" name="dcc_choice" value="euroconex" '.$check_euroconex.'/> '.$this->l('euroconex').'</td></tr>';
 			$edit .= '<tr><td colspan="2" align="center"><br/>';
 			$edit .= '<input class="button" name="CancelEditAccount" value="'.$this->l('Cancel').'" type="submit" />';
 			$edit .= '<input type="hidden" name="id_realex_subaccount" value="'.$results['id_realex_subaccount'].'" />';
