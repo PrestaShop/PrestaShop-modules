@@ -113,7 +113,7 @@ class RealexRedirectValidationModuleFrontController extends ModuleFrontControlle
 					|| (Tools::strlen(Tools::getValue('cvn')) != 4 && $type_card == 'AMEX')))
 				)
 			{
-				Tools::redirect($link->getModuleLink('realexredirect', 'payment?error=cvn'));
+				Tools::redirect($link->getModuleLink('realexredirect', 'payment?error=cvn', array(), true));
 				exit;
 			}
 			if (Tools::getValue('THREEDS') == 1)
