@@ -335,6 +335,7 @@ class GatewayOrder extends Gateway
 		$total_wt = 0;
 		$total_product = 0;
 		$total_product_wt = 0;
+        $total_taxe = 0;
 
 		foreach ($neteven_orders as $neteven_order_temp)
 		{
@@ -345,6 +346,7 @@ class GatewayOrder extends Gateway
 				
 				$total_product += ((floatval($neteven_order_temp->Price->_) - floatval($neteven_order_temp->VAT->_)));
 				$total_product_wt += (floatval($neteven_order_temp->Price->_));
+                $total_taxe += $neteven_order_temp->VAT->_;
 			}
 		}
 
@@ -429,31 +431,31 @@ class GatewayOrder extends Gateway
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
-			
-			$order->total_discounts_tax_excl = 0;
-			$order->total_discounts_tax_incl = 0;
-			$order->total_discounts = 0;
-			$order->total_wrapping_tax_excl = 0;
-			$order->total_wrapping_tax_incl = 0;
-			$order->total_wrapping = 0;
-			$order->total_products = (float)number_format($total_product, 2, '.', '');
-			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
-			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
-			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
-			$order->carrier_tax_rate = 0;
-			$order->total_wrapping = 0;
-			$order->invoice_number = 0;
-			$order->delivery_number = 0;
-			$order->invoice_date = $date_now;
-			$order->delivery_date = $date_now;
-			$order->valid = 1;
-			$order->date_add = $date_now;
-			$order->date_upd = $date_now;
+
+            $order->total_discounts_tax_excl = 0;
+            $order->total_discounts_tax_incl = 0;
+            $order->total_discounts = 0;
+            $order->total_wrapping_tax_excl = 0;
+            $order->total_wrapping_tax_incl = 0;
+            $order->total_wrapping = 0;
+            $order->total_products = (float)number_format($total_product, 2, '.', '');
+            $order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+            $order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+            $order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+            $order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+            $order->total_paid_tax_excl = (float)number_format($total_wt - $total_taxe, 2, '.', '');
+            $order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+            $order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+            $order->total_paid = (float)number_format($total_wt, 2, '.', '');
+            $order->carrier_tax_rate = 0;
+            $order->total_wrapping = 0;
+            $order->invoice_number = 0;
+            $order->delivery_number = 0;
+            $order->invoice_date = $date_now;
+            $order->delivery_date = $date_now;
+            $order->valid = 1;
+            $order->date_add = $date_now;
+            $order->date_upd = $date_now;
 
 
 			if(Configuration::get('PS_SHOP_ENABLE'))
