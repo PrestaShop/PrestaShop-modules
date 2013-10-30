@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.6.1';
+		$this->version = '1.6.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -178,7 +178,7 @@ class Gamification extends Module
 			
 			));
 
-		if (version_compare(_PS_VERSION_, '1.5.6.0', '>'))
+		if (version_compare(_PS_VERSION_, '1.6.0', '>='))
 			return $this->display(__FILE__, 'notification_bt.tpl');
 		else
 			return $this->display(__FILE__, 'notification.tpl');
