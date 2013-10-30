@@ -1197,6 +1197,7 @@ class RealexRedirect extends PaymentModule
 			$retour_msg 		= 'Status: '.$this->getMsg('fail_liability')." \r\n";
 		else
 			$retour_msg 		= 'Status: '.$this->getMsg($result)." \r\n";
+		$retour_msg 			.= $message;
 		if ($viarealvault)
 			$retour_msg 		.= "Via RealVault \r\n";
 		if (isset($pasref) && $pasref)
