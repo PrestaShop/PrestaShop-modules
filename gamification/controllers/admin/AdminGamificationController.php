@@ -63,7 +63,7 @@ class AdminGamificationController extends ModuleAdminController
 		$query->from('badge', 'b');
 		$query->join('
 			LEFT JOIN `'._DB_PREFIX_.'badge_lang` bl ON bl.`id_badge` = b.`id_badge`');
-
+		$query->where('bl.id_lang = '.(int)$this->context->language->id);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
 		foreach ($result as $res)
