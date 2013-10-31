@@ -74,7 +74,12 @@ class MySQLCore extends Db
 	 */
 	public function nextRow($result = false)
 	{
-		return mysql_fetch_assoc($result ? $result : $this->result);
+		$return = false;
+		if(is_resource($result) && $result)
+			$return = mysql_fetch_assoc($result);
+		elseif(is_resource($this->result) && $this->result)
+			$return = mysql_fetch_assoc($this->result);
+		return $return;
 	}
 
 	/**
