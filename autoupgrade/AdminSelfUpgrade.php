@@ -2353,7 +2353,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-						if (_PS_MODE_DEV_ || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+						if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
 						{
 							$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
 							$warningExist = true;
@@ -2439,7 +2439,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					foreach (scandir($dir) as $file)
 						if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 							if (file_exists($dir.basename(str_replace('.php', '', $file).'.php')))
-								unlink(_PS_ADMIN_DIR_.'/controllers/'.basename($file));
+								unlink($dir.basename($file));
 
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
 				if ($this->updateDefaultTheme)
