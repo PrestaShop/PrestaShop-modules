@@ -4233,7 +4233,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$content .= '<a id="upgradeModules" class="upgradestep">upgradeModules</a>';
 		$content .= '<a id="cleanDatabase" class="upgradestep">cleanDb</a>';		
 		$content .= '<a id="upgradeComplete" class="upgradestep">upgradeComplete</a>';
-		$content .= '</div>';
+		$content .= '</div></fieldset>';
 
 		return $content;
 	}
