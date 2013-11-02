@@ -7,7 +7,7 @@ fieldset{margin-top:10px}
 .processing {border:2px outset gray;margin-top:1px;overflow: auto;}
 #infoStep {height:100px;width:300px}
 #infoError {height:100px;width:550px}
-#quickInfo {height:200px}
+#quickInfo {height:200px;width:900px;}
 #upgradeResultCheck{ padding-left:20px;}
 #checkPrestaShopFilesVersion, #checkPrestaShopModifiedFiles{margin-bottom:20px;}
 #changedList ul{list-style-type:circle}
