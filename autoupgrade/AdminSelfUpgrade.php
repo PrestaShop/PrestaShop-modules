@@ -936,37 +936,38 @@ class AdminSelfUpgrade extends AdminSelfTab
 				define('_PS_MODULES_DIR_', _PS_ROOT_DIR_.'/modules/');
 			if (!defined('_PS_MAILS_DIR_'))
 				define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
-			$langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang WHERE active=1');
+			$langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-			foreach ($langs as $lang)
-			{
-				$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
-
-				if (!$lang_pack)
-					continue;
-				elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
+			if(is_array($langs))
+				foreach ($langs as $lang)
 				{
-					$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
-					if ((bool)file_put_contents($file, $content))
+					$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
+	
+					if (!$lang_pack)
+						continue;
+					elseif ($content = Tools14::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://translations.prestashop.com/download/lang_packs/gzip/'.$lang_pack->version.'/'.$lang['iso_code'].'.gzip'))
 					{
-						$gz = new Archive_Tar($file, true);
-						$files_list = $gz->listContent();					
-						if (!$this->keepMails)
+						$file = _PS_TRANSLATIONS_DIR_.$lang['iso_code'].'.gzip';
+						if ((bool)file_put_contents($file, $content))
 						{
-							foreach($files_list as $i => $file)
-								if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
-									unset($files_list[$i]);
-							foreach($files_list as $file)
-							if (isset($file['filename']) && is_string($file['filename']))
-								$files_listing[] = $file['filename'];
-							if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
-								continue;
+							$gz = new Archive_Tar($file, true);
+							$files_list = $gz->listContent();					
+							if (!$this->keepMails)
+							{
+								foreach($files_list as $i => $file)
+									if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
+										unset($files_list[$i]);
+								foreach($files_list as $file)
+								if (isset($file['filename']) && is_string($file['filename']))
+									$files_listing[] = $file['filename'];
+								if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
+									continue;
+							}
+							elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
+									continue;
 						}
-						elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-								continue;
 					}
 				}
-			}
 			// Remove class_index Autoload cache
 			if (file_exists(_PS_ROOT_DIR_.'/cache/class_index.php'))
 				unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
@@ -2343,6 +2344,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 						}
 						else
 							$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] PHP '.$upgrade_file.' : '.$query.'</div>';
+						if (isset($phpRes))
+							unset($phpRes);
 					}
 					elseif (!$this->db->execute($query, false))
 					{
@@ -2362,6 +2365,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 					else
 						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 				}
+				if (isset($query))
+					unset($query);
 			}
 			if ($this->next == 'error')
 			{
