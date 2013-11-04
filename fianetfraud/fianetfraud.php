@@ -58,7 +58,8 @@ class fianetfraud extends Module
 		2 => 'Utilisation d\'un r&eacute;seau de points-retrait tiers (type kiala, alveol, etc.)',
 		3 => 'Retrait dans un a&eacute;roport, une gare ou une agence de voyage',
 		4 => 'Transporteur (La Poste, Colissimo, UPS, DHL... ou tout transporteur priv&eacute;)',
-		5 => 'Emission d\'un billet &eacute;lectronique, t&eacute;l&eacute;chargements'
+		5 => 'Emission d\'un billet &eacute;lectronique, t&eacute;l&eacute;chargements',
+		6 => 'Module SoColissimo'
 	);
 	private $_carrier_speeds = array(
 		2 => 'Standard',
@@ -93,7 +94,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.6.1';
+		$this->version = '3.7';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -279,6 +280,8 @@ class fianetfraud extends Module
 
 		//carriers check
 		$shop_carriers = $this->loadCarriers();
+		$delivery_shop = false;
+
 		foreach ($shop_carriers as $id => $shop_carrier)
 		{
 			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_type'), array_merge(array_keys($this->_carrier_types), array('0'))))
@@ -286,6 +289,25 @@ class fianetfraud extends Module
 
 			if (!in_array(Tools::getValue('certissim_'.$id.'_carrier_speed'), array_merge(array_keys($this->_carrier_speeds), array('0'))))
 				$this->_errors[] = $this->l('Invalid carrier speed for carrier:')." '".$shop_carrier['name']."'";
+
+
+			if (Tools::getValue('certissim_'.$id.'_carrier_type') == 6)
+			{
+				if (_PS_VERSION_ >= '1.5')
+				//check if socolissimo is enabled on PS 1.5
+					$socolissimo_is_enabled = Module::isEnabled('socolissimo');
+				else
+				//check if socolissimo is enabled on PS 1.4
+					$socolissimo_is_enabled = $this->checkModuleisEnabled('socolissimo');
+
+				if (!Module::isInstalled('socolissimo') || !$socolissimo_is_enabled)
+				{
+					$this->_errors[] = $this->l('Invalid carrier type for carrier:')." '".$shop_carrier['name']."'. ".$this->l('SoColissimo module is not installed or not enabled');
+				}
+			}
+
+			if (Tools::getValue('certissim_'.$id.'_carrier_type') == 1)
+				$delivery_shop = true;
 		}
 
 		//payment types check
@@ -293,6 +315,11 @@ class fianetfraud extends Module
 		foreach ($shop_payments as $id => $shop_payment)
 			if (!in_array(Tools::getValue('certissim_'.$id.'_payment_type'), array_keys($this->_payment_types)))
 				$this->_errors[] = $this->l('Invalid payment type for method:')." '".$shop_payment['name']."'";
+
+
+		//check if shop address entered if selected carrier or default carrier selected is 1
+		if (Tools::getValue('certissim_default_carrier_type') == 1 || $delivery_shop)
+			$this->checkShopAddress();
 
 		return empty($this->_errors);
 	}
@@ -386,10 +413,16 @@ class fianetfraud extends Module
 		$certissim_default_carrier_type = Tools::isSubmit('certissim_default_carrier_type') ? Tools::getValue('certissim_default_carrier_type') : Configuration::get('CERTISSIM_DEFAULT_CARRIER_TYPE');
 		$certissim_default_carrier_speed = Tools::isSubmit('certissim_default_carrier_speed') ? Tools::getValue('certissim_default_carrier_speed') : Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
 
+		//admin shop address link and log file url
 		if (_PS_VERSION_ < '1.5')
+		{
 			$url_log = 'index.php?tab=AdminCertissim&action=viewLog&token='.Tools::getAdminTokenLite('AdminCertissim');
-		else
+			$link_shop_setting = 'index.php?tab=AdminContact&token='.Tools::getAdminTokenLite('AdminContact');
+		} else
+		{
 			$url_log = $this->context->link->getAdminLink('AdminCertissim')."&action=viewLog";
+			$link_shop_setting = $this->context->link->getAdminLink('AdminStores').'&token='.Tools::getAdminTokenLite('AdminStores');
+		}
 
 		$this->smarty->assign(array(
 			'head_msg' => $head_msg,
@@ -414,7 +447,9 @@ class fianetfraud extends Module
 			'logo_account_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/account.gif',
 			'logo_categories_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/categories.gif',
 			'logo_carriers_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/carriers.gif',
-			'logo_payments_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/payments.gif'
+			'logo_payments_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/payments.gif',
+			'logo_warning' => __PS_BASE_URI__.'modules/'.$this->name.'/img/no.gif',
+			'link_shop_setting' => $link_shop_setting
 		));
 
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
@@ -843,6 +878,7 @@ class fianetfraud extends Module
 
 	private function buildXMLOrder($id_order)
 	{
+
 		CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'construction du flux pour order '.$id_order);
 		$order = new Order($id_order);
 		//gets back the delivery address
@@ -870,6 +906,9 @@ class fianetfraud extends Module
 			$gender = $this->l($customer_gender->name[$lang_id]);
 		}
 
+		//gets back the carrier used for this order
+		$cart = new Cart($order->id_cart);
+		$carrier = new Carrier((int) ($cart->id_carrier));
 
 		//initialization of the element <utilisateur type='facturation'...>
 		$xml_element_invoice_customer = new CertissimUtilisateur(
@@ -911,45 +950,6 @@ class fianetfraud extends Module
 				$country->name[$id_lang]
 		);
 
-		//gets back the carrier used for this order
-		$carrier = new Carrier((int) ($order->id_carrier));
-
-		//gets the carrier certissim type
-		if (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
-			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE', null, null, $order->id_shop);
-		else
-			$carrier_type = Configuration::get('CERTISSIM_'.(string) ($carrier->id).'_CARRIER_TYPE');
-
-
-		//if the order is to be delivered at home: element <utilisateur type="livraison"...> has to be added
-		if ($carrier_type == 4)
-		{
-			//initialization of the element <utilisateur type="livraison" ...>
-			$xml_element_delivery_customer = new CertissimUtilisateur(
-					'livraison',
-					$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
-					$address_delivery->lastname,
-					$address_delivery->firstname,
-					$address_delivery->company,
-					$address_delivery->phone,
-					$address_delivery->phone_mobile,
-					null,
-					$customer->email);
-
-			//gets back the delivery country
-			$country = new Country((int) ($address_delivery->id_country));
-
-			//initialization of the element <adresse type="livraison" ...>
-			$xml_element_delivery_address = new CertissimAdresse(
-					'livraison',
-					$address_delivery->address1,
-					$address_delivery->address2,
-					$address_delivery->postcode,
-					$address_delivery->city,
-					$country->name[$id_lang],
-					null
-			);
-		}
 
 		//gets the used currency
 		$currency = new Currency((int) ($order->id_currency));
@@ -1053,13 +1053,168 @@ class fianetfraud extends Module
 			$real_carrier_speed = Configuration::get('CERTISSIM_DEFAULT_CARRIER_SPEED');
 		}
 
+
+		switch ($real_carrier_type)
+		{
+			//if the order is to be delivered at home: element <utilisateur type="livraison"...> has to be added
+			case '4':
+				//initialization of the element <utilisateur type="livraison" ...>			
+				$xml_element_delivery_customer = new CertissimUtilisateur(
+						'livraison',
+						$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
+						$address_delivery->lastname,
+						$address_delivery->firstname,
+						$address_delivery->company,
+						$address_delivery->phone,
+						$address_delivery->phone_mobile,
+						null,
+						$customer->email);
+
+				//gets back the delivery country
+				$country = new Country((int) ($address_delivery->id_country));
+
+				//initialization of the element <adresse type="livraison" ...>
+				$xml_element_delivery_address = new CertissimAdresse(
+						'livraison',
+						$address_delivery->address1,
+						$address_delivery->address2,
+						$address_delivery->postcode,
+						$address_delivery->city,
+						$country->name[$id_lang],
+						null
+				);
+
+				$xml_pointrelais = null;
+				break;
+
+			//if delivery mode is downloadable 
+			case '5':
+
+				$xml_pointrelais = null;
+				break;
+
+			//if delivery mode is socolissimo
+			case '6':
+
+				$socolissimoinfo = $this->getSoColissimoInfo($id_order);
+
+				$socolissimo_installed_module = Module::getInstanceByName('socolissimo');
+
+				if ($socolissimoinfo != false)
+				{
+					foreach ($socolissimoinfo as $info)
+					{
+						//get socolissimo informations
+						$delivery_mode = $info['delivery_mode'];
+						$firstname = $info['prfirstname'];
+						$name = $info['prname'];
+						$mobile_phone = $info['cephonenumber'];
+						$company_name = $info['cecompanyname'];
+						$email = $info['ceemail'];
+						$address1 = $info['pradress1'];
+						$address2 = $info['pradress2'];
+						$address3 = $info['pradress3'];
+						$address4 = $info['pradress4'];
+						$zipcode = $info['przipcode'];
+						$city = $info['prtown'];
+
+						//data is retrieved differently and depending on the version of the module
+						if ($socolissimo_installed_module->version < '2.8')
+						{
+							$address2 = $address1;
+							$address1 = $name;
+							$country = 'FR';
+						} else
+							$country = $info['cecountry'];
+					}
+
+					//if delivery mode is DOM or RDV, <adresse type="livraison" ...> and <utilisateur type="livraison" ...> added
+					if ($delivery_mode == 'DOM' || $delivery_mode == 'RDV')
+					{
+						$xml_element_delivery_customer = new CertissimUtilisateur(
+								'livraison',
+								$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
+								$name,
+								$firstname,
+								$company_name,
+								null,
+								$mobile_phone,
+								null,
+								$email);
+
+						$xml_element_delivery_address = new CertissimAdresse(
+								'livraison',
+								$address3,
+								$address4,
+								$zipcode,
+								$city,
+								$country,
+								null
+						);
+
+						$real_carrier_type = 4;
+						$xml_pointrelais = null;
+					} else
+					{
+						//<pointrelais> added if delivery mode is not BPR, A2P or CIT
+						$adressepointrelais = new CertissimXMLElement('<adresse></adresse>');
+						$adressepointrelais->childRue1($address2);
+						$adressepointrelais->childCpostal($zipcode);
+						$adressepointrelais->childVille($city);
+						$adressepointrelais->childPays($country);
+						$xml_pointrelais = new CertissimPointrelais(null, $address1, $adressepointrelais);
+						$real_carrier_type = 2;
+					}
+				} else
+				{
+					CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Flux incorrect : Module SoColissimo non installé ou non activé");
+				}
+
+				break;
+
+			default:
+
+				//if delivery mode is store pick up
+				if ($real_carrier_type == 1)
+				{
+					//get shop information
+					$address1 = Configuration::get('PS_SHOP_ADDR1');
+					$address2 = Configuration::get('PS_SHOP_ADDR2');
+					$zipcode = Configuration::get('PS_SHOP_CODE');
+					$city = Configuration::get('PS_SHOP_CITY');
+					$country = Configuration::get('PS_SHOP_COUNTRY');
+					$shop_name = Configuration::get('PS_SHOP_NAME');
+				} else
+				{
+					//gt delivery information
+					$address1 = $address_delivery->address1;
+					$address2 = $address_delivery->address2;
+					$zipcode = $address_delivery->postcode;
+					$city = $address_delivery->city;
+					$country = $country->name[$id_lang];
+					$shop_name = null;
+				}
+
+				$adressepointrelais = new CertissimXMLElement('<adresse></adresse>');
+				$adressepointrelais->childRue1($address1);
+				$adressepointrelais->childRue2($address2);
+				$adressepointrelais->childCpostal($zipcode);
+				$adressepointrelais->childVille($city);
+				$adressepointrelais->childPays($country);
+				$xml_pointrelais = new CertissimPointrelais(null, $shop_name, $adressepointrelais);
+
+				break;
+		}
+
+
 		//initialization of the element <transport>
 		$xml_element_carrier = new CertissimTransport(
 				$real_carrier_type,
 				$alldownloadables ? 'Téléchargement' : Tools::htmlentitiesUTF8($carrier->name),
 				$alldownloadables ? '1' : $real_carrier_speed,
-				null
+				$xml_pointrelais
 		);
+
 
 		//find the id of the payment module used (depends on the PS version)
 		if (_PS_VERSION_ >= '1.5')
@@ -1319,7 +1474,84 @@ class fianetfraud extends Module
 	 */
 	public function getNewLastPosition($id_parent)
 	{
-		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)$id_parent);
+		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int) $id_parent);
+	}
+
+	/**
+	 * Get all SoColissimo delivery information
+	 * 
+	 * @param type $id_order
+	 * @return array 
+	 */
+	public function getSoColissimoInfo($id_order)
+	{
+		if (_PS_VERSION_ >= '1.5')
+		//check if socolissimo is enabled on PS 1.5
+			$socolissimo_is_enabled = Module::isEnabled('socolissimo');
+		else
+		//check if socolissimo is enabled on PS 1.4
+			$socolissimo_is_enabled = $this->checkModuleisEnabled('socolissimo');
+
+		if (Module::isInstalled('socolissimo') || $socolissimo_is_enabled)
+		{
+			$sql = "SELECT * FROM `"._DB_PREFIX_."socolissimo_delivery_info` WHERE `id_cart`= ".(int) $id_order;
+			$query_result = Db::getInstance()->executeS($sql);
+			return $query_result;
+		} else
+		{
+			CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Module SoColissimo non installé ou non activé");
+			return false;
+		}
+	}
+
+	/**
+	 * Check if address shop is not empty
+	 * 
+	 * @return boolean
+	 */
+	public function checkShopAddress()
+	{
+		$check = true;
+		if (Configuration::get('PS_SHOP_ADDR1') == false || Configuration::get('PS_SHOP_ADDR1') == NULL || Configuration::get('PS_SHOP_ADDR1') == '')
+		{
+			$this->_errors[] = $this->l('Shop address cannot be empty');
+			$check = false;
+		}
+
+		if (Configuration::get('PS_SHOP_CITY') == false || Configuration::get('PS_SHOP_CITY') == NULL || Configuration::get('PS_SHOP_CITY') == '')
+		{
+			$this->_errors[] = $this->l('Shop city cannot be empty');
+			$check = false;
+		}
+
+		if (Configuration::get('PS_SHOP_CODE') == false || Configuration::get('PS_SHOP_CODE') == NULL || Configuration::get('PS_SHOP_CODE') == '')
+		{
+			$this->_errors[] = $this->l('Shop zipcode cannot be empty');
+			$check = false;
+		}
+
+		if (Configuration::get('PS_SHOP_COUNTRY') == false || Configuration::get('PS_SHOP_COUNTRY') == NULL || Configuration::get('PS_SHOP_COUNTRY') == '')
+		{
+			$this->_errors[] = $this->l('Shop country cannot be empty');
+			$check = false;
+		}
+
+		if ($check == false)
+			$this->_errors[] = $this->l('You must check the address of your store');
+
+		return $check;
+	}
+
+	/**
+	 * For Prestashop 1.4, check if module is enabled, from Module::isEnabled($module_name)
+	 * 
+	 * @param string $module_name
+	 * 
+	 */
+	public function checkModuleisEnabled($module_name)
+	{
+		return (bool) Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
 	}
 
 }
+
