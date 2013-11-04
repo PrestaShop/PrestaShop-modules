@@ -1,7 +1,7 @@
 {$head_msg}
 <fieldset>
 	<legend><img src="{$image_path}"/>{l s='FIA-NET - Certissim' mod='fianetfraud'}</legend>
-	{l s='FIA-NET, le leader français de la lutte contre la fraude à la carte bancaire sur internet !' mod='fianetfraud'}
+		{l s='FIA-NET, le leader français de la lutte contre la fraude à la carte bancaire sur internet !' mod='fianetfraud'}
 	<br />
 	<br />
 	{l s='Avec son réseau mutualisé de plus de 1 700 sites marchands, et sa base de données de 14 millions de cyber-acheteurs, Certissim vous offre une protection complète et unique contre le risque d\'impayé.' mod='fianetfraud'}
@@ -13,8 +13,8 @@
 	<br />
 	{l s='Ne restez pas isolé face à l\'explosion des réseaux de fraudeurs !' mod='fianetfraud'}
 	<p>
-		{l s='To sign in, check out: ' mod='fianetfraud'} <u><a href="https://www.fia-net.com/marchands/devispartenaire.php?p=185" target="_blank">{l s='Fia-net Website' mod='fianetfraud'}</a></u>
-	</p>
+	{l s='To sign in, check out: ' mod='fianetfraud'} <u><a href="https://www.fia-net.com/marchands/devispartenaire.php?p=185" target="_blank">{l s='Fia-net Website' mod='fianetfraud'}</a></u>
+</p>
 </fieldset>
 
 <br />
@@ -128,6 +128,7 @@
 				</tbody>
 			</table>
 		</div>
+		<br /><img src="{$logo_warning}"/>{l s='To use the withdrawal store, you must enter the address of your store.' mod='fianetfraud'} <a href="{$link_shop_setting}" target="_blank">{l s='Check the details of the shop here' mod='fianetfraud'}</a>.
 	</fieldset>
 
 	<br />
@@ -166,15 +167,15 @@
 
 	<br />
 
-  <fieldset>
-    <legend>{l s='Log file' mod='fianetfraud'}</legend>
-    <p>{l s='The log file is a file that contains an history of what happened technically inside the module.' mod='fianetfraud'}</p>
-    <p>{l s='We advise you to join the content of the log file each time you contact the Fia-Net support team.' mod='fianetfraud'}</p>
-    <p><a href="{$url_log}">{l s='Display log.' mod='fianetfraud'}</a></p>
-  </fieldset>
-  
-  <br />
-  
+	<fieldset>
+		<legend>{l s='Log file' mod='fianetfraud'}</legend>
+		<p>{l s='The log file is a file that contains an history of what happened technically inside the module.' mod='fianetfraud'}</p>
+		<p>{l s='We advise you to join the content of the log file each time you contact the Fia-Net support team.' mod='fianetfraud'}</p>
+		<p><a href="{$url_log}">{l s='Display log.' mod='fianetfraud'}</a></p>
+	</fieldset>
+
+	<br />
+
 	<center><input type="submit" name="submitSettings" value="{l s='Save' mod='fianetfraud'}" class="button" /></center>
 
 </form>
