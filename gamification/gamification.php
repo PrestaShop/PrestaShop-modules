@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.6.3';
+		$this->version = '1.6.4';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -257,7 +257,7 @@ class Gamification extends Module
 		foreach ($current_advices as $id_advice)
 		{
 			// Check that the advice is used in this language
-			$html = Db::getInstance()->getValue('SELECT html FROM '._DB_PREFIX_.'advice_lang WHERE id_advice = '.(int)$id_advice.' AND id_lang = '.(int)$id_lang);
+			$html = Db::getInstance()->getValue('SELECT html FROM '._DB_PREFIX_.'advice_lang WHERE id_advice = '.(int)$id_advice.' AND id_lang = '.(int)$this->context->language->id);
 			if (!$html)
 				continue;
 			$adv = new Advice($id_advice);
