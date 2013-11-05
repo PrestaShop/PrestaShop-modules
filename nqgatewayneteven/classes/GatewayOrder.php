@@ -198,8 +198,16 @@ class GatewayOrder extends Gateway
 				$order->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 			
 			$carrier = new Carrier((int)$order->id_carrier);
-			$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
+
+            $carrier_tax_rate = 100;
+            if(method_exists($carrier, 'getTaxesRate'))
+                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+            if(method_exists(Tax, 'getCarrierTaxRate'))
+                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+
+            $total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
@@ -423,9 +431,12 @@ class GatewayOrder extends Gateway
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
-			$carrier_tax_rate = false;
-			if (method_exists($carrier, 'getTaxesRate'))
-				$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+            $carrier_tax_rate = 100;
+            if(method_exists($carrier, 'getTaxesRate'))
+                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+            if(method_exists(Tax, 'getCarrierTaxRate'))
+                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
