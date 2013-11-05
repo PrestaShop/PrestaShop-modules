@@ -203,7 +203,7 @@ class GatewayOrder extends Gateway
             if(method_exists($carrier, 'getTaxesRate'))
                 $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-            if(method_exists(Tax, 'getCarrierTaxRate'))
+            if(method_exists('Tax', 'getCarrierTaxRate'))
                 $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 
@@ -435,7 +435,7 @@ class GatewayOrder extends Gateway
             if(method_exists($carrier, 'getTaxesRate'))
                 $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-            if(method_exists(Tax, 'getCarrierTaxRate'))
+            if(method_exists('Tax', 'getCarrierTaxRate'))
                 $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
