@@ -117,7 +117,7 @@ class AdminGamificationController extends ModuleAdminController
 			'daily_calculation' => $this->processMakeDailyCalculation(),
 			'advice_validation' => $this->processAdviceValidation(),
 			'advices_to_display' => $this->processGetAdvicesToDisplay(),
-			'level_badge_validation' => $this->processLevelAndBadgeValidation(),
+			'level_badge_validation' => $this->processLevelAndBadgeValidation(Badge::getIdsBadgesToValidate()),
 			'header_notification' => $this->module->renderHeaderNotification(),
 		)));
 	}
@@ -173,7 +173,7 @@ class AdminGamificationController extends ModuleAdminController
 		return $return;
 	}
 	
-	public function processLevelAndBadgeValidation()
+	public function processLevelAndBadgeValidation($ids_badge)
 	{
 		$return = true;
 		$current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
@@ -181,8 +181,7 @@ class AdminGamificationController extends ModuleAdminController
 		
 		$not_viewed_badge = explode('|', ltrim(Configuration::get('GF_NOT_VIEWED_BADGE', ''), ''));
 		$nbr_notif = Configuration::get('GF_NOTIFICATION', 0);
-		
-		$ids_badge = Badge::getIdsBadgesToValidate();
+
 		if (count($ids_badge))
 			$not_viewed_badge = array(); //reset the last badge only if there is new badge to validate
 				
@@ -197,8 +196,20 @@ class AdminGamificationController extends ModuleAdminController
 			else
 				$current_level_percent += $badge->scoring;
 			
-			$badge->validated = 1;
-			$return &= $badge->save();
+			$return &= $badge->validate();
+			$condition_ids = Condition::getIdsByBadgeGroup($badge->id_group);
+			if (is_array($condition_ids) && count($condition_ids))
+			{
+				foreach ($condition_ids as $id)
+				{
+					$cond = new Condition((int)$id);
+					$cond->processCalculation();
+					unset($cond);
+				}
+				$new_ids_badge = Badge::getIdsBadgesToValidate();
+				$this->processLevelAndBadgeValidation($new_ids_badge);
+			}
+			
 			$nbr_notif ++;
 			$not_viewed_badge[] = $badge->id;
 		}

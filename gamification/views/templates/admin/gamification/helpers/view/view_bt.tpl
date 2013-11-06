@@ -43,7 +43,7 @@
 
 </script>
 
-<fieldset>
+<div class="panel">
 	<div id="intro_gamification">
 		<div id="left_intro">
 			<h4>{l s="Become an e-commerce expert in leaps and bounds!" mod='gamification'}</h4><br/>
@@ -73,11 +73,12 @@
 		<div id="gamification_progressbar_tab"></div>
 		<span class="gamification_progress-label" id="gamification_progress-label_tab">{l s="Level" mod='gamification' mod='gamification'} {$current_level|intval} : {$current_level_percent|intval} %</span>
 	</div>
-</fieldset>
+	&nbsp;
+</div>
 <div class="clear"></br></div>
 
 {foreach from=$badges_type key=key item=type}
-<fieldset>
+<div class="panel">
 	<h3><i class="icon-bookmark"></i> {$type.name|escape:html:'UTF-8'}</h3>
 	<div class="row">
 		<div class="col-lg-2">
@@ -97,7 +98,6 @@
 		</div>
 		<p id="no_badge_{$key}" class="gamification_badges_name" style="display:none;text-align:center">{l s="No badge in this section" mod='gamification'}</p>
 	</div>
-	
-</fieldset>
+</div>
 <div class="clear"></br></div>
 {/foreach}

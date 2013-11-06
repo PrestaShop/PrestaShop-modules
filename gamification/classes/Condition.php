@@ -199,6 +199,32 @@ class Condition extends ObjectModel
 
 		return $ids;
 	}
+	
+	public static function getIdsByBadgeGroup($badge_group)
+	{
+		$ids = array();
+		
+		$sub_query = new DbQuery();
+		$sub_query->select('id_badge');
+		$sub_query->from('badge', 'b');
+		$sub_query->where('b.`id_group` = '.(int)$badge_group);
+		$sub_query->where('b.`validated` = 0');
+		$sub_query->groupBy('b.`id_group`');
+		
+		$query = new DbQuery();
+		$query->select('c.`id_condition`');
+		$query->from('condition', 'c');
+		$query->join('LEFT JOIN `'._DB_PREFIX_.'condition_badge` cb ON cb.`id_condition` = c.`id_condition`');
+		$query->where('c.`validated` = 0');
+		$query->where('cb.`id_badge` IN ('.$sub_query.')');
+		$query->groupBy('c.`id_condition`');
+		
+		$result = Db::getInstance()->executeS($query);
+		foreach($result as $r)
+			$ids[] = $r['id_condition'];
+
+		return $ids;
+	}
 		
 	public function processCalculation()
 	{

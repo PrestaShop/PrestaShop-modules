@@ -75,6 +75,13 @@ class Badge extends ObjectModel
 		return self::BAGDE_IMG_URL.'/'.(int)$this->id_ps_badge.'/'.(int)$this->validated.'.png';
 	}
 	
+	public function validate()
+	{
+		$this->validated = 1;
+		$this->save();
+		return true;
+	}
+	
 	public static function getIdByIdPs($id_ps_badge)
 	{
 		$query = new DbQuery();
