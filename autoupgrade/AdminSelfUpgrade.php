@@ -1522,7 +1522,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		foreach ($allFiles as $file)
 			if ($file[0] != '.')
 			{
-				$fullPath = $dir.DIRECTORY_SEPARATOR.$file;
+				$fullPath = $dir.$file;
 				if (!$this->_skipFile($file, $fullPath, $way))
 				{
 					if (is_dir($fullPath))
