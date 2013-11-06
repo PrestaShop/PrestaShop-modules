@@ -1517,6 +1517,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public function _listFilesInDir($dir, $way = 'backup', $list_directories = false)
 	{
 		$list = array();
+		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
 		$allFiles = scandir($dir);
 		foreach ($allFiles as $file)
 			if ($file[0] != '.')
@@ -1763,7 +1764,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$allModules = scandir($dir);
 		foreach ($allModules as $module_name)
 		{
-			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name))
+			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
 			{
 				if(is_array($this->modules_addons))
 					$id_addons = array_search($module_name, $this->modules_addons);
@@ -1836,65 +1837,31 @@ class AdminSelfUpgrade extends AdminSelfTab
 			//deactivate backward_compatibility, not used in 1.5.X
 			if (version_compare($this->install_version, '1.5.0.0', '>='))
 			{
-				Db::getInstance()->execute('DELETE ms.*, hm.*
-				FROM `'._DB_PREFIX_.'module_shop` ms
-				INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
-				WHERE m.`name` LIKE \'backwardcompatibility\'');
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'backwardcompatibility\'');
+				$modules_to_delete['backwardcompatibility'] = 'Backward Compatibility';
+				$modules_to_delete['dibs'] = 'Dibs';
+				$modules_to_delete['cloudcache'] = 'Cloudcache';
+				$modules_to_delete['mobile_theme'] = 'The 1.4 mobile_theme';
+				$modules_to_delete['trustedshops'] = 'Trustedshops';
+				$modules_to_delete['dejala'] = 'Dejala';
 
-				Db::getInstance()->execute('DELETE ms.*, hm.*
-				FROM `'._DB_PREFIX_.'module_shop` ms
-				INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
-				WHERE m.`name` LIKE \'mobile_theme\'');
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'mobile_theme\'');
+				foreach($modules_to_delete as $key => $module)
+				{
+					Db::getInstance()->execute('DELETE ms.*, hm.*
+					FROM `'._DB_PREFIX_.'module_shop` ms
+					INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
+					INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
+					WHERE m.`name` LIKE \''.pSQL($key).'\'');
 
-				Db::getInstance()->execute('DELETE ms.*, hm.*
-				FROM `'._DB_PREFIX_.'module_shop` ms
-				INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
-				WHERE m.`name` LIKE \'cloudcache\'');
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'cloudcache\'');
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \''.pSQL($key).'\'');
 
-				Db::getInstance()->execute('DELETE ms.*, hm.*
-				FROM `'._DB_PREFIX_.'module_shop` ms
-				INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
-				INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
-				WHERE m.`name` LIKE \'trustedshops\'');
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \'trustedshops\'');
-
-				$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'dibs'.DIRECTORY_SEPARATOR;
-				if (file_exists($path.'dibs.php'))
-				{
-					if (self::deleteDirectory($path))
-						$this->nextQuickInfo[] = $this->l('Dibs module is not compatible with 1.5.X, it will be removed from your ftp.');
-					else																			
-						$this->nextErrors[] = $this->l('Dibs module is not compatible with 1.5.X, please remove it on your ftp.');
-				}
-				$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'cloudcache'.DIRECTORY_SEPARATOR;
-				if (file_exists($path.'cloudcache.php'))
-				{
-					if (self::deleteDirectory($path))
-						$this->nextQuickInfo[] = $this->l('Cloudcache module is not compatible with 1.5.X, it will be removed from your ftp.');
-					else																			
-						$this->nextErrors[] = $this->l('Cloudcache module is not compatible with 1.5.X, please remove it on your ftp.');
-				}
-				$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'mobile_theme'.DIRECTORY_SEPARATOR;
-				if (file_exists($path.'mobile_theme.php'))
-				{
-					if (self::deleteDirectory($path))
-						$this->nextQuickInfo[] = $this->l('The 1.4 mobile_theme module is not compatible with 1.5.X, it will be removed from your ftp.');
-					else																			
-						$this->nextErrors[] = $this->l('The 1.4 mobile_theme module is not compatible with 1.5.X, please remove it on your ftp.');
-				}
-				$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'trustedshops'.DIRECTORY_SEPARATOR;
-				if (file_exists($path.'trustedshops.php'))
-				{
-					if (self::deleteDirectory($path))
-						$this->nextQuickInfo[] = $this->l('Trustedshops module is not compatible with 1.5.X, it will be removed from your ftp.');
-					else																			
-						$this->nextErrors[] = $this->l('Trustedshops module is not compatible with 1.5.X, please remove it on your ftp.');
+					$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR.$key.'.php';
+					if (file_exists($path))
+					{
+						if (self::deleteDirectory($path))
+							$this->nextQuickInfo[] = sprintf($this->l('%1 module is not compatible with 1.5.X, it will be removed from your ftp.'), $module);
+						else																			
+							$this->nextErrors[] = sprintf($this->l('%1 module is not compatible with 1.5.X, please remove it on your ftp.'), $module);						
+					}
 				}
 			}
 			if (version_compare($this->install_version, '1.5.5.0', '='))
