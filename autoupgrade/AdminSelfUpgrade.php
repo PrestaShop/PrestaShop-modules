@@ -1494,7 +1494,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 	private function _listSampleFiles($dir, $fileext = '.jpg'){
 		$res = true;
 		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
-		$toDel = scandir($dir);
+		$toDel = false;
+		if (is_dir($dir) && is_readable($dir))
+			$toDel = scandir($dir);
 		// copied (and kind of) adapted from AdminImages.php
 		if (is_array($toDel))
 			foreach ($toDel AS $file)
@@ -1518,23 +1520,26 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		$list = array();
 		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
-		$allFiles = scandir($dir);
-		foreach ($allFiles as $file)
-			if ($file[0] != '.')
-			{
-				$fullPath = $dir.$file;
-				if (!$this->_skipFile($file, $fullPath, $way))
+		$allFiles = false;
+		if (is_dir($dir) && is_readable($dir))
+			$allFiles = scandir($dir);
+		if (is_array($allFiles))
+			foreach ($allFiles as $file)
+				if ($file[0] != '.')
 				{
-					if (is_dir($fullPath))
+					$fullPath = $dir.$file;
+					if (!$this->_skipFile($file, $fullPath, $way))
 					{
-						$list = array_merge($list, $this->_listFilesInDir($fullPath, $way, $list_directories));
-						if ($list_directories)
+						if (is_dir($fullPath))
+						{
+							$list = array_merge($list, $this->_listFilesInDir($fullPath, $way, $list_directories));
+							if ($list_directories)
+								$list[] = $fullPath;
+						}
+						else
 							$list[] = $fullPath;
 					}
-					else
-						$list[] = $fullPath;
 				}
-			}
 		return $list;
 	}
 
