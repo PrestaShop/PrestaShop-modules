@@ -267,38 +267,15 @@ class AdminSelfUpgrade extends AdminSelfTab
 	private $restoreFilesFilename = null;
 	private $restoreDbFilenames = array();
 
-	/**
-	 * int loopBackupFiles : if your server has a low memory size, lower this value
-	 */
-	public static $loopBackupFiles = 500;
-	/**
-	 * int loopBackupDbTime : if your server has a low memory size, lower this value
-	 */
+	public static $loopBackupFiles = 400;
+	public static $maxBackupFileSize = 15728640; // 15 Mo
 	public static $loopBackupDbTime = 6;
-	/**
-	 * int max_written_allowed : if your server has a low memory size, lower this value
-	 */
 	public static $max_written_allowed = 4194304; // 4096 ko
-	/**
-	 * int loopUpgradeFiles : if your server has a low memory size, lower this value
-	 */
-	public static $loopUpgradeFiles = 1000;
-	/**
-	 * int loopRestoreFiles : if your server has a low memory size, lower this value
-	 */
-	public static $loopRestoreFiles = 500;
-	/**
-	 * int loopRestoreQueryTime : if your server has a low memory size, lower this value (in sec)
-	 */
+	public static $loopUpgradeFiles = 600;
+	public static $loopRestoreFiles = 400;
 	public static $loopRestoreQueryTime = 6;
-	/**
-	 * int loopUpgradeModulesTime : if your server has a low memory size, lower this value (in sec)
-	 */
 	public static $loopUpgradeModulesTime = 6;
-	/**
-	 * int loopRemoveSamples : if your server has a low memory size, lower this value
-	 */
-	public static $loopRemoveSamples = 1000;
+	public static $loopRemoveSamples = 400;
 
 	/* usage :  key = the step you want to ski
 	 * value = the next step you want instead
@@ -412,9 +389,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 		$this->db = Db::getInstance();
 
-		// Performance settings
+		// Performance settings, if your server has a low memory size, lower these values	
 		$perf_array = array(
 			'loopBackupFiles' => array(400, 800, 1600),
+			'maxBackupFileSize' => array(15728640, 31457280, 62914560),			
 			'loopBackupDbTime' => array(6, 12, 25),
 			'max_written_allowed' => array(4194304, 8388608, 16777216),
 			'loopUpgradeFiles' => array(600, 1200, 2400),
@@ -885,7 +863,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		if (Tools14::isSubmit('deletebackup'))
 		{
-			$res = true;
+			$res = false;
 			$name = Tools14::getValue('name');
 			$filelist = scandir($this->backupPath);
 			foreach($filelist as $filename)
@@ -1492,7 +1470,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	 * @return void
 	 */
 	private function _listSampleFiles($dir, $fileext = '.jpg'){
-		$res = true;
+		$res = false;
 		$dir = rtrim($dir,'/').DIRECTORY_SEPARATOR;
 		$toDel = false;
 		if (is_dir($dir) && is_readable($dir))
@@ -1838,7 +1816,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$modules_left = count($listModules);
 			file_put_contents($this->autoupgradePath.DIRECTORY_SEPARATOR.$this->toUpgradeModuleList, base64_encode(serialize($listModules)));
 			unset($listModules);
-			
+		
+			$this->next = 'upgradeModules';
+			if ($modules_left)
+				$this->next_desc = sprintf($this->l('%s modules left to upgrade.'), $modules_left);
+			$this->stepDone = false;
+		}
+		else
+		{
 			//deactivate backward_compatibility, not used in 1.5.X
 			if (version_compare($this->install_version, '1.5.0.0', '>='))
 			{
@@ -1863,9 +1848,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 					if (file_exists($path))
 					{
 						if (self::deleteDirectory($path))
-							$this->nextQuickInfo[] = sprintf($this->l('%1 module is not compatible with 1.5.X, it will be removed from your ftp.'), $module);
+							$this->nextQuickInfo[] = sprintf($this->l('%1$s module is not compatible with 1.5.X, it will be removed from your ftp.'), $module);
 						else																			
-							$this->nextErrors[] = sprintf($this->l('%1 module is not compatible with 1.5.X, please remove it on your ftp.'), $module);						
+							$this->nextErrors[] = sprintf($this->l('%1$s module is not compatible with 1.5.X, please remove it on your ftp.'), $module);						
 					}
 				}
 			}
@@ -1876,13 +1861,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
 			}
-			$this->next = 'upgradeModules';
-			if ($modules_left)
-				$this->next_desc = sprintf($this->l('%s modules left to upgrade.'), $modules_left);
-			$this->stepDone = false;
-		}
-		else
-		{
+			
 			$this->stepDone = true;
 			$this->status = 'ok';
 			$this->next = 'cleanDatabase';
@@ -3500,14 +3479,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next_desc = sprintf($this->l('Backup files in progress. %d files left'), count($filesToBackup));
 		if (is_array($filesToBackup))
 		{
+			$res = false;		
 			if (!self::$force_pclZip && class_exists('ZipArchive', false))
 			{
 				$this->nextQuickInfo[] = $this->l('using class ZipArchive ...');
 				$zip_archive = true;
 				$zip = new ZipArchive();
-				$zip->open($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename, ZIPARCHIVE::CREATE);
+				$res = $zip->open($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename, ZIPARCHIVE::CREATE);
+				if ($res)
+					$res = (isset($zip->filename) && $zip->filename) ? true : false;
 			}
-			else
+
+			if(!$res)
 			{
 				$zip_archive = false;
 				$this->nextQuickInfo[] = $this->l('using class pclzip ...');
@@ -3515,8 +3498,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (!class_exists('PclZip',false))
 					require_once(dirname(__FILE__).'/classes/pclzip.lib.php');
 				$zip = new PclZip($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
+				$res = true;
 			}
-			if ($zip)
+
+			if($zip && $res)
 			{
 				$this->next = 'backupFiles';
 				$this->stepDone = false;
@@ -3537,35 +3522,44 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$file = array_shift($filesToBackup);
 
 					$archiveFilename = ltrim(str_replace($this->prodRootDir, '', $file), DIRECTORY_SEPARATOR);
-					if ($zip_archive)
+					$size = filesize($file);
+					if ($size < self::$maxBackupFileSize)
 					{
-						$added_to_zip = $zip->addFile($file, $archiveFilename);
-						if ($added_to_zip)
+						if ($zip_archive)
 						{
-							if ($filesToBackup)
-								$this->nextQuickInfo[] = sprintf($this->l('%1$s added to archive. %2$s left.', 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup));
+							$added_to_zip = $zip->addFile($file, $archiveFilename);
+							if ($added_to_zip)
+							{
+								if ($filesToBackup)
+									$this->nextQuickInfo[] = sprintf($this->l('%1$s added to archive. %2$s left.', 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup));
+							}
+							else
+							{
+								// if an error occur, it's more safe to delete the corrupted backup
+								$zip->close();
+								if (file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
+									unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
+								$this->next = 'error';
+								$this->error = 1;
+								$this->next_desc = sprintf($this->l('error when trying to add %1$s to archive %2$s.', 'AdminSelfUpgrade', true), $file, $archiveFilename);
+								$close_flag = false;
+								break;
+							}
 						}
 						else
 						{
-							// if an error occur, it's more safe to delete the corrupted backup
-							$zip->close();
-							if (file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
-								unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);
-							$this->next = 'error';
-							$this->error = 1;
-							$this->next_desc = sprintf($this->l('error when trying to add %1$s to archive %2$s.', 'AdminSelfUpgrade', true), $file, $archiveFilename);
-							$close_flag = false;
-							break;
+							$files_to_add[] = $file;
+							if (count($filesToBackup))
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.'.' '.(filesize($file)) , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
+							else
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) added  to archive.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
 						}
 					}
 					else
 					{
-						$files_to_add[] = $file;
-						if (count($filesToBackup))
-							$this->nextQuickInfo[] = sprintf($this->l('%1$s added to archive. %2$s left.', 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup));
-						else
-							$this->nextQuickInfo[] = sprintf($this->l('%1$s added to archive.', 'AdminSelfUpgrade', true), $archiveFilename);
-					}
+						$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) has been skipped during backup.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
+						$this->nextErrors[] = sprintf($this->l('%1$s (size : %2$s) has been skipped during backup.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
+					}						
 				}
 
 				if ($zip_archive && $close_flag && is_object($zip))
@@ -3573,9 +3567,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 				elseif(!$zip_archive)
 				{
 					$added_to_zip = $zip->add($files_to_add, PCLZIP_OPT_REMOVE_PATH, $this->prodRootDir);
-					$zip->privCloseFd();
+					if($added_to_zip)
+						$zip->privCloseFd();
 					if (!$added_to_zip)
 					{
+						if (file_exists($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename))
+							unlink($this->backupPath.DIRECTORY_SEPARATOR.$this->backupFilesFilename);					
 						$this->nextQuickInfo[] = '[ERROR] error on backup using pclzip : '.$zip->errorInfo(true);
 						$this->nextErrors[] = '[ERROR] error on backup using pclzip : '.$zip->errorInfo(true);
 						$this->next = 'error';
@@ -5342,13 +5339,15 @@ $(document).ready(function()
 			else
 				chmod($to_dir, 0775);
 
+		$res = false;
 		if (!self::$force_pclZip && class_exists('ZipArchive', false))
 		{
 			$this->nextQuickInfo[] = $this->l('using class ZipArchive ...');
 			$zip = new ZipArchive();
-			if ($zip->open($from_file) === true)
+			if ($zip->open($from_file) === true && isset($zip->filename) && $zip->filename)
 			{
 				$extract_result = true;
+				$res = true; 
 				// We extract file by file, it is very fast
 				for ($i = 0; $i < $zip->numFiles; $i++)
 					$extract_result &= $zip->extractTo($to_dir, array($zip->getNameIndex($i)));
@@ -5365,14 +5364,14 @@ $(document).ready(function()
 					return false;
 				}
 			}
-			else
+			elseif(isset($zip->filename) && $zip->filename)
 			{
 				$this->nextQuickInfo[] = sprintf($this->l('Unable to open zipFile %s'), $from_file);
 				$this->nextErrors[] = sprintf($this->l('Unable to open zipFile %s'), $from_file);
 				return false;
 			}
 		}
-		else
+		if(!$res)
 		{
 			if (!class_exists('PclZip', false))
 				require_once(_PS_ROOT_DIR_.'/modules/autoupgrade/classes/pclzip.lib.php');
@@ -5433,24 +5432,27 @@ $(document).ready(function()
 	{
 		if (file_exists($zipfile))
 		{
+			$res = false;
 			if (!self::$force_pclZip && class_exists('ZipArchive', false))
 			{
 				$this->nextQuickInfo[] = $this->l('using class ZipArchive ...');
 				$files = array();
 				$zip = new ZipArchive();
-				$zip->open($zipfile);
-				if ($zip){
+				$res = $zip->open($zipfile);
+				if ($res)
+					$res = (isset($zip->filename) && $zip->filename) ? true : false;				
+				if ($zip && $res === true){
 					for ($i = 0; $i < $zip->numFiles; $i++)
 						$files[] = $zip->getNameIndex($i);
 					return $files;
 				}
-				else
+				elseif($res)
 				{
 					$this->nextQuickInfo[] = '[ERROR] Unable to list archived files';
 					return false;
 				}
 			}
-			else
+			if (!$res)
 			{
 				$this->nextQuickInfo[] = $this->l('using class pclzip ...');
 				if (!class_exists('PclZip',false))
