@@ -37,7 +37,7 @@
 		</b>
 	</p>
 </div>
-<form action="index.php?{if (_PS_VERSION <= '1.5')}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
+<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=8&section=specifics" method="post" class="form" id="configForm8">
 	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
