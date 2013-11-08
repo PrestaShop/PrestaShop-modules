@@ -73,7 +73,7 @@ class ThemeInstallator extends Module
 		@ini_set('memory_limit', '2G');
 
 		$this->name = 'themeinstallator';
-		$this->version = '2.4';
+		$this->version = '2.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, 1.4) >= 0)
@@ -725,12 +725,12 @@ class ThemeInstallator extends Module
 							{
 								if (_PS_VERSION_ < '1.5')
 									Db::getInstance()->execute('
-										INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
+										INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_hook`, `position`)
 										VALUES ('.(int)$obj->id.', '.(int)Hook::get($hook[$count]).', '.(int)$position[$count].')
 									');
 								else
 									Db::getInstance()->execute('
-										INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
+										INSERT IGNORE INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 										VALUES ('.(int)$obj->id.', '.(int)$id_shop.', '.(int)Hook::getIdByName($hook[$count]).', '.(int)$position[$count].')
 									');
 

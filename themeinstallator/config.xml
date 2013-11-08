@@ -2,7 +2,7 @@
 <module>
 	<name>themeinstallator</name>
 	<displayName><![CDATA[Import/export a theme]]></displayName>
-	<version><![CDATA[2.4]]></version>
+	<version><![CDATA[2.5]]></version>
 	<description><![CDATA[Export or Install a theme and its modules on your shop.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[administration]]></tab>
