@@ -1261,10 +1261,10 @@ class Tools14
 		if (!extension_loaded('openssl') AND strpos('https://', $url) === true)
 			$url = str_replace('https', 'http', $url);
 		if ($stream_context == null && preg_match('/^https?:\/\//', $url))
-			$stream_context = stream_context_create(array('http' => array('timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n")));
+			$stream_context = @stream_context_create(array('http' => array('timeout' => $curl_timeout, 'header' => "User-Agent:MyAgent/1.0\r\n")));
 		if (in_array(ini_get('allow_url_fopen'), array('On', 'on', '1')) || !preg_match('/^https?:\/\//', $url))
 		{
-			$var = file_get_contents($url, $use_include_path, $stream_context);
+			$var = @file_get_contents($url, $use_include_path, $stream_context);
 			if ($var)
 				return $var;
 		}
@@ -1276,7 +1276,6 @@ class Tools14
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_setopt($curl, CURLOPT_SSLVERSION, 3);
 			$opts = stream_context_get_options($stream_context);
 			if (isset($opts['http']['method']) && self::strtolower($opts['http']['method']) == 'post')
 			{
