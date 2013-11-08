@@ -198,7 +198,7 @@
 			<b data-dialoghelp="http://pages.ebay.com/help/sell/listing-variations.html" data-inlinehelp="{l s='Find out more about multi-variation listings.' mod='ebay'}"><img src="../modules/ebay/views/img/warn.png" />{l s='Note: If some of your categories don’t support multi-variation listings, all variations will appear as separate listings.' mod='ebay'}</b>
 		</div>
 		<div class="informations margin-form">
-			{l s='You are going to list ' mod='module'} <span id="nbproducttosync">{$nb_products}</span> {l s='products to ebay' mod='module'}
+			{l s='You are going to list ' mod='ebay'} <span id="nbproducttosync">{$nb_products}</span> {l s='products to ebay' mod='ebay'}
 		</div>
 		<div class="margin-form">
 			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and publish' mod='ebay'}" />

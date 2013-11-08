@@ -102,5 +102,5 @@
 		<br />{if in_array('SellerBusinessType', $alert)}<img src="../modules/ebay/views/img/warn.png" />{else}<img src="../modules/ebay/views/img/valid.png" />{/if} 4) {l s='Please register an eBay business seller account to configure the application' mod='ebay'}
 	{/if}
 
-	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}</div>
+	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}<br/><a href="../modules/ebay/documentation/doc_en.pdf" target="_blank">{l s='Download documentation' mod='ebay'}</a></div>
 </fieldset><div class="clear">&nbsp;</div>
