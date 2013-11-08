@@ -26,9 +26,7 @@
  */
 
 include_once dirname(__FILE__).'/../../../config/config.inc.php';
-if (version_compare(_PS_VERSION_, '1.5', '<')) {
-	include_once dirname(__FILE__).'/../../../init.php';
-}
+include_once dirname(__FILE__).'/../../../init.php';
 include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();

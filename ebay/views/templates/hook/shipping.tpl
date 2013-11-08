@@ -167,7 +167,7 @@
 			string += "<td>";
 			string += "<div class='excludedLocation'>";
 			string += "<input type='checkbox' name='excludeLocation[{$regionvalue}]' {if in_array($regionvalue, $excludeShippingLocation.excluded)} checked='checked'{/if}/> {$region.description}<br/>";
-			string += "<span class='showCountries' data-region='{$regionvalue}'>({l s='Show all countries'})</span>";
+			string += "<span class='showCountries' data-region='{$regionvalue}'>({l s='Show all countries' mod='ebay'})</span>";
 			string += "<div class='listcountry'></div>"
 			string += "</div>";
 			string += "</td>";

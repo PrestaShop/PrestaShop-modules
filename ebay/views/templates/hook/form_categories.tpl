@@ -85,8 +85,7 @@
 	</table>
 	<div style="text-align: right; margin-top: 5px; float: right;">
 		{l s='Change extra pictures numbers for all products' mod='ebay'} <input type="number" id="all-extra-images-selection" value="0" min="0" max="99"> 
-		<input id="update-all-extra-images" type="button" value="{l s='Set maximum pictures for all
-products' mod='ebay'}" class="button">
+		<input id="update-all-extra-images" type="button" value="{l s='Set maximum pictures for all products' mod='ebay'}" class="button">
 		<input type="hidden" id="all-extra-images-value" name="all-extra-images-value" value="-1"/>
 	</div>
 	
