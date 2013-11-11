@@ -1289,7 +1289,7 @@ class ShoppingFluxExport extends Module
 		$updateOrderInvoice = array(
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
 			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
-			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`total_price_tax_excl`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 			'total_products_wt' => (float)($order->TotalProducts),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
 			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
@@ -1407,16 +1407,28 @@ class ShoppingFluxExport extends Module
 	private function _getMarketplaces()
 	{
 		return array(
-			'Amazon',
-			'Brandalley',
-			'CDiscount',
-			'eBay',
-			'Facebook',
-			'Fnac',
-			'Laredoute',
-			'Pixmania',
-			'PriceMinister',
-			'RueDuCommerce'
+                    'Amazon',
+                    'Babyssima',
+                    'Brandalley',
+                    'CDiscount',
+                    'Decofinder',
+                    'Docteurdiscount',
+                    'eBay',
+                    'Ecitizen',
+                    'Fnac',
+                    'Glamour',
+                    'GreenRepublic',
+                    'Gstk',
+                    'Holosfind',
+                    'Jardinermalin',
+                    'Laredoute',
+                    'Mistergooddeal',
+                    'Monechelle',
+                    'Pixmania',
+                    'PriceMinister',
+                    'Rdc',
+                    'Rueducommerceean',
+                    'ToutAPorter'
 		);
 	}
 }
