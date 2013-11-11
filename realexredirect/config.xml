@@ -2,7 +2,7 @@
         <module>
             <name>realexredirect</name>
             <displayName><![CDATA[Realex Payments]]></displayName>
-            <version><![CDATA[1.0]]></version>
+            <version><![CDATA[1.1]]></version>
             <description><![CDATA[Use Realex Payments as your payments service provider.]]></description>
             <author><![CDATA[Coccinet]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
