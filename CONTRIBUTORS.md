@@ -27,6 +27,7 @@
 - gRoussac 
 - GuigZ 
 - hadjedjvincent 
+- IsabelleCoccinet 
 - J. Danse 
 - Jerome Nadaud 
 - Julien 
@@ -38,6 +39,7 @@
 - MatthieuB 
 - modem 
 - Obvious1809 
+- OliverMuellerShopgate 
 - PrestaEdit 
 - quadrateam 
 - Quadra Team 
