@@ -583,7 +583,8 @@ class Gsitemap extends Module
 		foreach ($link_sitemap as $key => $file)
 		{
 			fwrite($writeFd, '<url>'."\r\n");
-			$this->_addSitemapNode($writeFd, htmlspecialchars(strip_tags($file['link'])), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), $file['lastmod']);
+			$lastmod = ( isset($file['lastmod']) && !empty($file['lastmod']) )? date('c', strtotime($file['lastmod'])) : NULL;
+			$this->_addSitemapNode($writeFd, htmlspecialchars(strip_tags($file['link'])), $this->_getPriorityPage($file['page']), Configuration::get('GSITEMAP_FREQUENCY'), $lastmod);
 			if ($file['image'])
 			{
 				$this->_addSitemapNodeImage($writeFd, htmlspecialchars(strip_tags($file['image']['link'])), isset($file['image']['title_img']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['title_img']))) : '', isset($file['image']['caption']) ? htmlspecialchars(str_replace(array("\r\n", "\r", "\n"), '', strip_tags($file['image']['caption']))) : '');
