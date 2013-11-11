@@ -2,7 +2,7 @@
 <module>
 	<name>shoppingfluxexport</name>
 	<displayName><![CDATA[Export Shopping Flux]]></displayName>
-	<version><![CDATA[2.0.5]]></version>
+	<version><![CDATA[3.1]]></version>
 	<description><![CDATA[Exportez vos produits vers plus de 100 comparateurs de prix et places de march&eacute;]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[smart_shopping]]></tab>
