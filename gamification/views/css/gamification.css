@@ -61,6 +61,7 @@ ul#gamification_badges_list {
 	overflow: auto;
 	height: 300px;
 	width: 340px;
+	padding-top:10px;
 }
 
 ul#gamification_badges_list li {
