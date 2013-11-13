@@ -1,0 +1,4 @@
+﻿Cet e-mail a été envoyé via MailinBlue SMTP.
+Félicitation, votre module MailinBlue SMTP est bien configuré.
+L\'équipe de Mailin
+Blue
