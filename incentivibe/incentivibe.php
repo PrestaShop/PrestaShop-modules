@@ -17,7 +17,7 @@ class Incentivibe extends Module
 	{
 		$this->name = 'incentivibe';
 		$this->tab = 'administration';
-		$this->version = 1.0;
+		$this->version = 1.1;
 		$this->author = 'Incentivibe';
 		$this->need_instance = 0;
 		$this->is_configurable = 1;
