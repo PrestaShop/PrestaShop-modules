@@ -62,7 +62,7 @@
         <label>{l s='Seller expedition cost in France' mod='socolissimo'} : </label>
         <div class="margin-form">
             <input type="radio" name="costseller" id="sel_on" value="1" {if isset($costseller) && $costseller}checked="checked" {/if}'/>
-            <label class="t" for="sel_on"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled' mod='socolissimo'}" title="{l s='Enabled' mod='socolissimo'}" /></label>
+                   <label class="t" for="sel_on"> <img src="../img/admin/enabled.gif" alt="{l s='Enabled' mod='socolissimo'}" title="{l s='Enabled' mod='socolissimo'}" /></label>
             <input type="radio" name="costseller" id="sel_off" value="0" {if  isset($costseller) && !$costseller} checked="checked" {/if}/>
             <label class="t" for="sel_off"> <img src="../img/admin/disabled.gif" alt="{l s='Disabled' mod='socolissimo'}'" title="{l s='Disabled' mod='socolissimo'}" /></label>
             <p>{l s='Seller expedition cost in France' mod='socolissimo'} <br><span style="color:red">
@@ -130,6 +130,32 @@
             <input type="text" size="45" name="url_sup" value="{if isset($url_sup)}{$url_sup|escape:'htmlall':'UTF-8'}{/if}" />
             <p>{l s='The monitor URL is to ensure the availability of the socolissimo service. We strongly recommend that you do not disable it' mod='socolissimo'}</p>
         </div>
+        <label>{l s='Allocation socolissimo' mod='socolissimo'} : </label>
+        <div class="margin-form">
+            <select name="id_socolissimo_allocation">
+                {foreach $carrier_socolissimo as $carrier}
+                      {if $carrier.id_carrier == $id_socolissimo}
+                        <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}" selected>{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
+                    {else}
+                        <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}">{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
+                    {/if}
+                {/foreach}
+            </select>
+            <p>{l s='Re allocation of SoColissimo id carrier.' mod='socolissimo'}</p>
+        </div>
+        <label>{l s='Allocation socolissimo CC' mod='socolissimo'} : </label>
+        <div class="margin-form">
+            <select name="id_socolissimocc_allocation">
+                {foreach $carrier_socolissimo_cc as $carrier}
+                    {if $carrier.id_carrier == $id_socolissimo_cc}
+                        <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}" selected>{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
+                    {else}
+                        <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}">{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
+                    {/if}
+                {/foreach}
+            </select>
+            <p>{l s='Re allocation of SoColissimo CC id carrier.' mod='socolissimo'}</p>
+        </div>
         <div class="margin-form">
             <input type="submit" value="{l s='Save' mod='socolissimo'}" name="submitSave" class="button" style="margin:10px 0px 0px 25px;" />
         </div>
@@ -146,14 +172,14 @@
         <p>{if isset($return_url)}{$return_url}{/if}</p>
     </div>
 </fieldset>
-{literal}	
-<script type="text/javascript">
-$( document ).ready(function(){
-$( ".supcostbelg" ).change(function(){
-var ttc = $( ".supcostbelg" ).val() *(1+($( ".taxrate" ).val()/100));
-ttc = Math.round(ttc *100)/100;
-$( ".costbelgttc" ).val(ttc);
+{literal}
+    <script type="text/javascript">
+    $( document ).ready(function(){
+    $( ".supcostbelg" ).change(function(){
+    var ttc = $( ".supcostbelg" ).val() *(1+($( ".taxrate" ).val()/100));
+    ttc = Math.round(ttc *100)/100;
+    $( ".costbelgttc" ).val(ttc);
+        });
     });
-});
-</script>
-{/literal}	
+    </script>
+{/literal}
