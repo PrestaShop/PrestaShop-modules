@@ -188,7 +188,7 @@ a {
 .incentivibe-form .btn-submit
 {
     padding: 10px 25px;
-    width: 325px;
+    width: auto;
     background: linear-gradient(#80BA2D, #669524) repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 1px solid #50751C;
     border-radius: 10px 10px 10px 10px;

@@ -90,7 +90,7 @@ $( document ).ready(function() {
       									<input id="giveaway_url" name="user_shop" type="hidden" value="{$user_shop|escape:'htmlall':'UTF-8'}">
       									<p>
       										<label>&nbsp;</label>
-      										<input id="incentivibe_signup" class="btn-submit" name="incentivibe_signup" type="submit" value="{l s='Sign Up For Free 14-Day Trial' mod='incentivibe'}"> <a class="right_signin" href="JavaScript:void(0);">Sign in</a><span class="right_span">or</span>
+      										<input id="incentivibe_signup" class="btn-submit" name="incentivibe_signup" type="submit" value="{l s='Sign Up For Free 14-Day Trial' mod='incentivibe'}"> <a class="right_signin" href="JavaScript:void(0);">{l s='Sign In' mod='incentivibe'}</a><span class="right_span">{l s='or' mod='incentivibe'}</span>
       									</p>
       									{*<p class="subscript"><label></label>{l s='No credit card required to join' mod='incentivibe'}</p>*}
       								</form>

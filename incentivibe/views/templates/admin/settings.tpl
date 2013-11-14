@@ -25,7 +25,8 @@
 
 .start-free-trial-btn, .enter-contest-button {
   display: block;
-  width: 351px;
+  width: auto;
+  padding: 0 10px;
   height: 46px;
   font-size: 24px;
   font-family: 'Novecentowide-Medium', sans-serif;
