@@ -44,7 +44,7 @@ class NqGatewayNeteven extends Module
 		else
 			$this->tab = 'Tools';
 		
-		$this->version = '1.7.9';
+		$this->version = '1.8';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -68,10 +68,6 @@ class NqGatewayNeteven extends Module
 	{
 		if (!parent::install() OR
 			!$this->registerHook('updateOrderStatus') OR
-			!$this->registerHook('addProduct') OR
-			!$this->registerHook('updateProduct') OR
-			!$this->registerHook('updateQuantity') OR
-			!$this->registerHook('updateProductAttribute') OR
 			!$this->installDB() OR
 			!$this->installConfig())
 			return false;
@@ -265,11 +261,13 @@ class NqGatewayNeteven extends Module
 	
 	public function hookAddProduct($params)
 	{
+        return;
 		$this->hookUpdateProduct($params);
 	}
 	
 	public function hookUpdateProduct($params)
 	{
+        return;
 		// If SOAP is not installed
 		if (!$this->getSOAP())
 			return;
@@ -283,6 +281,7 @@ class NqGatewayNeteven extends Module
 
 	public function hookUpdateProductAttribute($params)
 	{
+        return;
 		// If SOAP is not installed
 		if (!$this->getSOAP())
 			return;
@@ -302,6 +301,7 @@ class NqGatewayNeteven extends Module
 
 	public function hookUpdateQuantity($params)
 	{
+        return;
 		// If SOAP is not installed
 		if (!$this->getSOAP())
 			return;
@@ -315,6 +315,7 @@ class NqGatewayNeteven extends Module
 
 	public function hookNewOrder($params)
 	{
+        return;
 		// If SOAP is not installed
 		if (!$this->getSOAP())
 			return;
