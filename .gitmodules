@@ -103,3 +103,6 @@
 [submodule "realexredirect/backward_compatibility"]
 	path = realexredirect/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "gointerpay/backward_compatibility"]
+	path = gointerpay/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
