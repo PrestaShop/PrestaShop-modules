@@ -26,6 +26,10 @@ function gamificationTasks()
 			initHeaderNotification(jsonData.header_notification);
 			
 			$('.gamification_fancybox').fancybox();
+			
+			$(".preactivationLink").on('click', function() {
+				preactivationLinkClick($(this).attr("rel"));
+			});
 		}
 	});
 }
@@ -123,4 +127,18 @@ function filterBadge(type)
 }
 
 
+function preactivationLinkClick(module) {
+	$.ajax({
+		url : admin_gamification_ajax_url,
+		data : {
+			ajax : "1",
+			controller : "AdminGamification",
+			action : "savePreactivationRequest",
+			module : module,
+		},
+		type: 'POST',
+		success : function(jsonData){
 
+		}
+	});
+}
