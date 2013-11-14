@@ -1,0 +1,34 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{ferbuy}prestashop>ferbuy_fa4f7e17743c0289df8128c34a02f7b4'] = 'Přijmutí plateb s FerBuy';
+$_MODULE['<{ferbuy}prestashop>ferbuy_65032ae3c891c8a684a3e9310596cdc1'] = 'Opravdu si přejete vymazat Vaše údaje?';
+$_MODULE['<{ferbuy}prestashop>ferbuy_8539be4ee3af86fd1558d43d894de2b2'] = 'FerBuy modul požaduje zpětnou kompatibilitu modulu alespoň v0.3 v PrestaShopu v1.4.';
+$_MODULE['<{ferbuy}prestashop>ferbuy_e991b71085336e1b95dfbde4f87604b6'] = 'Tento modul je zdarma ke stažení zde: http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html';
+$_MODULE['<{ferbuy}prestashop>ferbuy_2097b69329408746e3679094f5b16f0c'] = 'Váš přístupový kód  a/nebo skrytý kód není nastaven. Prosíme o ověření zkopírováním a následným vložením ze https://my.ferbuy.com/';
+$_MODULE['<{ferbuy}prestashop>ferbuy_0c0b373a1b66606867919b8047911433'] = 'PHP cURL rozšíření musí být na Vašem serveru povolené.';
+$_MODULE['<{ferbuy}prestashop>ferbuy_85ef11b11c9da31a15d6ce8ca4d0d848'] = 'Je požadována vyšší verze 1.4 Prestashopu.';
+$_MODULE['<{ferbuy}prestashop>ferbuy_11c69e7f1303b719cd1f4c8eab06cf9e'] = 'Neupoužíváte zpětnou kompatibilitu modulu. Abyste mohli používat FerBuy, musíte ho zpřístupnit.';
+$_MODULE['<{ferbuy}prestashop>config_16994509323370f8be6aef25d9b28a04'] = 'FerBuy (Kupte teď, Plaťte později)';
+$_MODULE['<{ferbuy}prestashop>config_a82be0f551b8708bc08eb33cd9ded0cf'] = 'Informace';
+$_MODULE['<{ferbuy}prestashop>config_2eb7021dedc622addb019187aa734aa2'] = 'Verze modulu';
+$_MODULE['<{ferbuy}prestashop>config_0d15d192a04014d6881c1283a0f348e4'] = 'URL ověření';
+$_MODULE['<{ferbuy}prestashop>config_f4f70727dc34561dfde1a3c529b6205c'] = 'Nastavení';
+$_MODULE['<{ferbuy}prestashop>config_dbc8f2c52a4d7f3316dc0689ec3f5d82'] = 'Zvolte demo- nebo živé zobrazení';
+$_MODULE['<{ferbuy}prestashop>config_943bfde19aa3b18b6cdb713ed55fcd2e'] = 'Demo verze zobrazení';
+$_MODULE['<{ferbuy}prestashop>config_a849a06e943c4fa48e32586816a93852'] = 'Živé zobrazení';
+$_MODULE['<{ferbuy}prestashop>config_d9001e659975636595e95fc4169bf848'] = 'Vyberte mezi demo nebo živým zobrazením pro FerBuy platební modul';
+$_MODULE['<{ferbuy}prestashop>config_b250a007769c7ffe655c74cfb8176b8c'] = 'Přístupový kód';
+$_MODULE['<{ferbuy}prestashop>config_3171a58cf5f5da5905eb36c612c03bbb'] = 'Vložte Váš přístupový kód. Naleznete ho na Můj FerBuy.';
+$_MODULE['<{ferbuy}prestashop>config_9e0cc30ff1ef2e213661a750b8bc45ce'] = 'Skrytý kód ';
+$_MODULE['<{ferbuy}prestashop>config_b81b7d58932691a661efaaf6f8bd7e67'] = 'Vložte Váš skrytý kód. Naleznete ho na Můj FerBuy.';
+$_MODULE['<{ferbuy}prestashop>config_9daf1fb753b42c3cdc8f1d01669cd6d8'] = 'Ulož nastavení';
+$_MODULE['<{ferbuy}prestashop>confirmation_878ab45f98700dc31d81cd24187ea49f'] = 'Transakce dokončena';
+$_MODULE['<{ferbuy}prestashop>confirmation_c43b55c2cda0d833ef3533f8c2c4ac32'] = 'Platba za Vaši objednávku byla přijata.';
+$_MODULE['<{ferbuy}prestashop>confirmation_1f0def7ae25e8b14080e586e6a766173'] = 'Bude Vám zaslán email, jakmile transakce bude dokončena nebo můžete sledovat stav Vaší objednávky na našich stránkách.';
+$_MODULE['<{ferbuy}prestashop>confirmation_ac8320111189f1d80e5fd79552e54772'] = 'Vaše transakce byla zrušena.';
+$_MODULE['<{ferbuy}prestashop>confirmation_fdd1c42a07cac456991821162b52400b'] = 'Objednávka byla zařazena ale transakce byla zrušena.';
+$_MODULE['<{ferbuy}prestashop>confirmation_3f864e377ad88afe0f99e0d1e16cec03'] = 'Transakce neproběhla úspěšně.';
+$_MODULE['<{ferbuy}prestashop>confirmation_d78d6581a0f74f36ef2ee79fbef6144c'] = 'Objednávka byla zařazena ale transakce neproběhla úspěšně.';
+$_MODULE['<{ferbuy}prestashop>payment_16994509323370f8be6aef25d9b28a04'] = 'FerBuy (Kupte teď, Plaťte později)';
