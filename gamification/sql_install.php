@@ -75,6 +75,8 @@ $sql[_DB_PREFIX_.'advice'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'advice`
 			  `validated` tinyint(1) unsigned NOT NULL DEFAULT 0,
 			  `location` enum(\'after\', \'before\') NOT NULL,
 			  `selector` varchar(255),
+			  `start_day` int(11) NOT NULL DEFAULT 0,
+			  `stop_day` int(11) NOT NULL DEFAULT 0,
 			  PRIMARY KEY (`id_advice`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 

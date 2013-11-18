@@ -40,6 +40,10 @@ class Advice extends ObjectModel
 	
 	public $html;
 	
+	public $day_from;
+	
+	public $day_to;
+	
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -53,6 +57,8 @@ class Advice extends ObjectModel
 			'selector' =>		array('type' => self::TYPE_STRING),
 			'location' =>		array('type' => self::TYPE_STRING),
 			'validated' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'start_day' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'stop_day' =>			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
 			// Lang fields
 			'html' => 			array('type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'),
@@ -78,7 +84,11 @@ class Advice extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'advice_lang` al ON al.`id_advice` = a.`id_advice`
 			LEFT JOIN `'._DB_PREFIX_.'tab_advice` at ON at.`id_advice` = a.`id_advice` ');
 		
-		$query->where('a.validated = 1 AND al.id_lang = '.(int)Context::getContext()->language->id.' AND at.`id_tab` = '.(int)$id_tab);
+		$query->where('
+			a.validated = 1 AND 
+			al.id_lang = '.(int)Context::getContext()->language->id.' AND 
+			at.`id_tab` = '.(int)$id_tab.' AND 
+			((a.start_day = 0 AND a.stop_day = 0) OR ('.date('d').' >= a.start_day AND '.date('d').' <= a.stop_day))');
 		
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
