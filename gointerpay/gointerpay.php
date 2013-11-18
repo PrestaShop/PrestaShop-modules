@@ -23,7 +23,7 @@ class GoInterpay extends PaymentModule
 	{	
 		$this->name = 'gointerpay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.4';
+		$this->version = '1.7.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -829,6 +829,8 @@ $env[0][2] = 'test';
 		INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (cp.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$this->context->cookie->id_lang.' AND pl.`id_shop` = '.(int)$this->context->shop->id.')
 		INNER JOIN `'._DB_PREFIX_.'product_shop` ps ON (cp.`id_product` = ps.`id_product` AND ps.`id_shop` = '.(int)$this->context->shop->id.')
 		AND cp.`id_product` = '.(int)$idProduct);
+
+		$export = array();
 
 		foreach ($product_categories as $export_product)
 		{
