@@ -331,16 +331,14 @@ class EbayOrder
 	{
 
 		$total_price_tax_excl = 0;
-		
+		$total_shipping_tax_incl = 0;
+		$total_shipping_tax_excl = 0;
 		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
 		
 		if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
 			$carrier_tax_rate = (float)$this->_getTaxByCarrier((int)$id_carrier);
 		else
 			$carrier_tax_rate = (float)Tax::getCarrierTaxRate((int)$id_carrier);
-
-		$total_shipping_tax_incl = $this->shippingServiceCost;
-		$total_shipping_tax_excl = $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
 
 		foreach ($this->product_list as $product)
 		{
@@ -353,13 +351,19 @@ class EbayOrder
 
 			$detail_data = array(
 				'product_price'        => (float)($product['price'] / $coef_rate),
-				'unit_price_tax_incl'  => (float)$product['price'],
-				'unit_price_tax_excl'  => (float)($product['price'] / $coef_rate ),
-				'total_price_tax_incl' => (float)($product['price'] * $product['quantity']),
-				'total_price_tax_excl' => (float)(($product['price'] / $coef_rate) * $product['quantity']),
 				'reduction_percent'    => 0,
 				'reduction_amount'     => 0
 			);
+
+			if(version_compare(_PS_VERSION_, '1.5', '>'))
+			{
+				$detail_data = array_merge($detail_data, array(
+					'unit_price_tax_incl'  => (float)$product['price'],
+					'unit_price_tax_excl'  => (float)($product['price'] / $coef_rate ),
+					'total_price_tax_incl' => (float)($product['price'] * $product['quantity']),
+					'total_price_tax_excl' => (float)(($product['price'] / $coef_rate) * $product['quantity']),
+				));
+			}
 
 			Db::getInstance()->autoExecute(
 				_DB_PREFIX_.'order_detail', 
@@ -367,7 +371,6 @@ class EbayOrder
 				'UPDATE', 
 				'`id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']
 			);
-
 
 			if(version_compare(_PS_VERSION_, '1.5', '>')) 
 			{
@@ -381,6 +384,8 @@ class EbayOrder
 			
 			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
 			// ebay get one shipping cost by product
+			$total_shipping_tax_incl += $this->shippingServiceCost;
+			$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
 
 		}
 
@@ -390,21 +395,11 @@ class EbayOrder
 			'total_products'          => (float)$total_price_tax_excl,
 			'total_products_wt'       => (float)($this->amount - $this->shippingServiceCost),
 			'total_shipping'          => (float)$total_shipping_tax_incl,
-			'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
-			'total_shipping_tax_excl' => (float)$total_shipping_tax_excl
+			
 		);
 
 
-		if((float)$this->shippingServiceCost == 0) 
-		{
-			$data = array_merge(
-				$data,
-				array(
-					'total_shipping_tax_excl' => 0,
-					'total_shipping_tax_incl' => 0
-				)
-			);
-		}
+		
 
 
 		if(version_compare(_PS_VERSION_, '1.5', '>')) 
@@ -415,10 +410,22 @@ class EbayOrder
 				$data, 
 				array(
 					'total_paid_tax_incl' => (float)$this->amount,
-					'total_paid_tax_excl' => (float)($total_price_tax_excl + $total_shipping_tax_excl),
+					'total_paid_tax_excl' => (float)($total_price_tax_excl + $order->total_shipping_tax_excl),
+					'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
+					'total_shipping_tax_excl' => (float)$total_shipping_tax_excl
 				)
 			);
 
+			if((float)$this->shippingServiceCost == 0) 
+			{
+				$data = array_merge(
+					$data,
+					array(
+						'total_shipping_tax_excl' => 0,
+						'total_shipping_tax_incl' => 0
+					)
+				);
+			}
 			// Update Incoice
 			$invoice_data = $data;
 			unset($invoice_data['total_paid'], $invoice_data['total_paid_real'], $invoice_data['total_shipping']);
