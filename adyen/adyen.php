@@ -376,12 +376,12 @@ class Adyen extends PaymentModule
 								'values' => array (
 										array (
 												'id' => 'prod',
-												'value' => 1,
+												'value' => 'live',
 												'label' => $this->l('Production')
 										),
 										array (
 												'id' => 'test',
-												'value' => 0,
+												'value' => 'test',
 												'label' => $this->l('Test')
 										)
 								),
