@@ -2,7 +2,7 @@
 <module>
   <name>adyen</name>
   <displayName><![CDATA[Adyen]]></displayName>
-  <version><![CDATA[2.0]]></version>
+  <version><![CDATA[2.1]]></version>
   <description><![CDATA[Accepts payments by Adyen&#039;s Hosted Payment Page.]]></description>
   <author><![CDATA[Rik ter Beek]]></author>
   <tab><![CDATA[payments_gateways]]></tab>

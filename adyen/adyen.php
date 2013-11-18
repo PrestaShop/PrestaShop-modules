@@ -36,7 +36,7 @@ class Adyen extends PaymentModule
 	{
 		$this->name = 'adyen';
 		$this->tab = 'payments_gateways';
-		$this->version = 2.0;
+		$this->version = 2.1;
 		$this->author = 'Adyen';
 		
 		// The need_instance flag indicates whether to load the module's class when displaying the "Modules" page in the back-office
