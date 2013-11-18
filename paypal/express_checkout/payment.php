@@ -1,4 +1,4 @@
-<?php
+ <?php
 /*
 * 2007-2013 PrestaShop
 *
@@ -79,13 +79,14 @@ function setCustomerInformation($ppec, $email)
 	return $customer;
 }
 
+
 /**
  * Set customer address (when not logged in)
  * Used to create user address with PayPal account information
  */
-function setCustomerAddress($ppec, $customer)
+function setCustomerAddress($ppec, $customer, $id = null)
 {
-	$address = new Address();
+	$address = new Address($id);
 	$address->id_country = Country::getByIso($ppec->result['COUNTRYCODE']);
 	$address->alias = 'Paypal_Address';
 	$address->lastname = $customer->lastname;
@@ -178,7 +179,7 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		$addresses = $customer->getAddresses($ppec->context->language->id);
 		foreach ($addresses as $address)
 			if ($address['alias'] == 'Paypal_Address')
-			{
+			{//If address has already been created
 				$address = new Address($address['id_address']);
 				break;
 			}
@@ -188,9 +189,14 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 			$address = new Address($address['id_address']);
 
 		if ((!$address || !$address->id) && $customer->id)
-		{
+		{//If address does not exists, we create it
 			$address = setCustomerAddress($ppec, $customer);
 			$address->add();
+		}
+		else if($customer->id)
+		{//If address exists, we update it with new informations
+			$address = setCustomerAddress($ppec, $customer, $address->id);
+			$address->save();
 		}
 
 		if ($customer->id && !$address->id)
