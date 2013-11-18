@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.4';
+		$this->version = '1.9.5';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
@@ -273,7 +273,7 @@ class PaymentSense extends PaymentModule
 			}
 
 			// Display the form
-			$this->_html .= '<form action="'.htmlentities($_SERVER['REQUEST_URI'], ENT_COMPAT | ENT_HTML401, 'UTF-8').'" method="post">
+			$this->_html .= '<form action="'.htmlentities($_SERVER['REQUEST_URI'], ENT_COMPAT, 'UTF-8').'" method="post">
 			<table width="945px"><tr><td width="247px" align="right">';
 
 			//Display options
