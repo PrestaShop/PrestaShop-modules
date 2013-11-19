@@ -64,7 +64,7 @@ class Socolissimo extends CarrierModule
     {
         $this->name = 'socolissimo';
         $this->tab = 'shipping_logistics';
-        $this->version = '2.8.6';
+        $this->version = '2.8.7';
         $this->author = 'Quadra Informatique';
         $this->limited_countries = array('fr');
         $this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -472,7 +472,7 @@ class Socolissimo extends CarrierModule
         elseif (!Validate::isFloat(Tools::getValue('overcost')))
             $this->post_errors[] = $this->l('Invalid additional cost');
         if ((int)Tools::getValue('id_socolissimo_allocation') == (int)Tools::getValue('id_socolissimocc_allocation'))
-             $this->post_errors[] = $this->l('Socolissimo carrier cannot be the same as socolissimo CC');
+            $this->post_errors[] = $this->l('Socolissimo carrier cannot be the same as socolissimo CC');
     }
 
     protected function postPersonalProcess()
@@ -555,20 +555,20 @@ class Socolissimo extends CarrierModule
             {
                 Configuration::updateValue(
                         'SOCOLISSIMO_CARRIER_ID_HIST', Configuration::get(
-                                'SOCOLISSIMO_CARRIER_ID_HIST').'|'.(int)Configuration::get('SOCOLISSIMO_CARRIER_ID'));
+                                'SOCOLISSIMO_CARRIER_ID_HIST').'|'.(int)Tools::getValue('id_socolissimo_allocation'));
                 Configuration::updateValue(
                         'SOCOLISSIMO_CARRIER_ID', (int)Tools::getValue('id_socolissimo_allocation'));
-                $this->rebuildHist((int)Configuration::get('SOCOLISSIMO_CARRIER_ID'));
+                $this->reallocationCarrier((int)Configuration::get('SOCOLISSIMO_CARRIER_ID'));
             }
             // re allocation id socolissimo CC  if needed
             if ((int)Tools::getValue('id_socolissimocc_allocation') != (int)Configuration::get('SOCOLISSIMO_CARRIER_ID_SELLER'))
             {
                 Configuration::updateValue(
                         'SOCOLISSIMO_CARRIER_ID_HIST', Configuration::get(
-                                'SOCOLISSIMO_CARRIER_ID_HIST').'|'.(int)Configuration::get('SOCOLISSIMO_CARRIER_ID_SELLER'));
+                                'SOCOLISSIMO_CARRIER_ID_HIST').'|'.(int)Tools::getValue('id_socolissimocc_allocation'));
                 Configuration::updateValue(
                         'SOCOLISSIMO_CARRIER_ID_SELLER', (int)Tools::getValue('id_socolissimocc_allocation'));
-                $this->rebuildHist((int)Configuration::get('SOCOLISSIMO_CARRIER_ID_SELLER'));
+                $this->reallocationCarrier((int)Configuration::get('SOCOLISSIMO_CARRIER_ID_SELLER'));
             }
             $data_sync = (($so_login = Configuration::get('SOCOLISSIMO_ID')) ?
                             '<img src="http://api.prestashop.com/modules/socolissimo.png?ps_id='.urlencode($so_login).'" style="float:right"/>' : '');
@@ -1473,7 +1473,6 @@ class Socolissimo extends CarrierModule
         {
             return Db::getInstance()->ExecuteS('SELECT c.name, c.id_carrier
             FROM '._DB_PREFIX_.'carrier c
-            LEFT JOIN '._DB_PREFIX_.'carrier_shop sh ON sh.id_carrier = c.id_carrier
             WHERE c.deleted = 0 AND c.id_carrier <> '.(int)$id_socolissimo);
         }
         else
@@ -1485,25 +1484,22 @@ class Socolissimo extends CarrierModule
         }
     }
 
-    public function rebuildHist($id_socolissimo)
+    public function reallocationCarrier($id_socolissimo)
     {
-        if (!in_array((int)$id_socolissimo, explode('|', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST'))))
-            return true;
-        else
-        {
-            $tab_history = explode('|', Configuration::get('SOCOLISSIMO_CARRIER_ID_HIST'));
-            $i = 0;
-            foreach ($tab_history as $elt)
-            {
-                if ((int)$elt == (int)$id_socolissimo)
-                    unset($tab_history[$i]);
-                elseif ($elt)
-                    $history .= '|'.$elt;
-                $i++;
-            }
-            Configuration::updateValue('SOCOLISSIMO_CARRIER_ID_HIST', $history);
-        }
-        return true;
+        // carrier must be module carrier
+        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'carrier SET
+            shipping_handling = 0,
+            is_module = 1,
+            shipping_external = 1,
+            need_range = 1,
+            external_module_name = "socolissimo"
+            WHERE  id_carrier = '.(int)$id_socolissimo);
+        
+        // old carrier no longer linked with socolissimo
+        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'carrier SET
+            is_module = 0,
+            external_module_name = ""
+            WHERE  id_carrier NOT IN ( '.(int)Configuration::get('SOCOLISSIMO_CARRIER_ID_SELLER').','.(int)Configuration::get('SOCOLISSIMO_CARRIER_ID').')');
     }
 
 }
