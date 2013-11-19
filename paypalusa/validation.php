@@ -47,13 +47,13 @@ class paypal_usa_validation
 			/* Case 1 - This script is called by PayPal to validate an order placed using PayPal Payments Standard (IPN) */
 			if (Configuration::get('PAYPAL_USA_PAYMENT_STANDARD') && Tools::getValue('pps'))
 				$this->_paymentStandard();
-			
+
 			/* Case 2 - This script is called by PayPal to validate an order placed using PayPal Payments Advanced (from the <iframe>) */
 			elseif ((Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') || Configuration::get('PAYPAL_USA_PAYFLOW_LINK'))&& isset($_POST['RESULT']) && Tools::getValue('TYPE') == 'S' && Tools::getValue('PNREF') != '')
 				$this->_paymentAdvanced();
 		}
 	}
-	
+
 	/**
 	 * This method is called by PayPal and is also named "IPN" (Instant Payment Notification) by PayPal
 	 * More details about the IPN: https://www.paypal.com/cgi-bin/webscr?cmd=p/acc/ipn-info-outside
@@ -99,11 +99,11 @@ class paypal_usa_validation
 						else
 						{
 							/* Step 4 - Determine the order status in accordance with the response from PayPal */
-							if (strtoupper(Tools::getValue('payment_status')) == 'COMPLETED')
+							if (Tools::strtoupper(Tools::getValue('payment_status')) == 'COMPLETED')
 								$order_status = (int)Configuration::get('PS_OS_PAYMENT');
-							elseif (strtoupper(Tools::getValue('payment_status')) == 'PENDING')
+							elseif (Tools::strtoupper(Tools::getValue('payment_status')) == 'PENDING')
 								$order_status = (int)Configuration::get('PS_OS_PAYPAL');
-							elseif (strtoupper(Tools::getValue('payment_status')) == 'REFUNDED')
+							elseif (Tools::strtoupper(Tools::getValue('payment_status')) == 'REFUNDED')
 								$order_status = (int)Configuration::get('PS_OS_REFUND');
 							else
 								$order_status = (int)Configuration::get('PS_OS_ERROR');
@@ -117,7 +117,7 @@ class paypal_usa_validation
 								$new_history->changeIdOrderState((int)$order_status, $order, true);
 								$new_history->addWithemail(true);
 							}
-							
+
 							/* Step 5b - Else, it is a new order that we need to create in the database */
 							else
 							{
@@ -161,7 +161,7 @@ class paypal_usa_validation
 		else
 			die('Invalid PayPal order, please contact our Customer service.');
 	}
-	
+
 	/**
 	 * This method is called by PayPal when an order has been placed by a customer using PayPal Payments Advanced (from the <iframe>)
 	 *
@@ -170,10 +170,12 @@ class paypal_usa_validation
 	private function _paymentAdvanced()
 	{
 		/* Step 1 - The tokens sent by PayPal must match the ones stores in the customer cookie while displaying the <iframe> (see hookPayment() method in paypalusa.php)  */
-		if (isset($this->context->cookie->paypal_advanced_token) && Tools::getValue('SECURETOKEN') != '' && Tools::getValue('SECURETOKEN') == $this->context->cookie->paypal_advanced_token)
+		if (isset($this->context->cookie->paypal_advanced_token)
+            && Tools::getValue('SECURETOKEN') != ''
+            && Tools::getValue('SECURETOKEN') == $this->context->cookie->paypal_advanced_token)
 		{
 			/* Step 2 - Determine the order status in accordance with the response from PayPal */
-			
+
 			/* Approved */
 			if (Tools::getValue('RESULT') == 0)
 				$order_status = (int)Configuration::get('PS_OS_PAYMENT');
@@ -183,10 +185,10 @@ class paypal_usa_validation
 			/* Payment error */
 			else
 				$order_status = (int)Configuration::get('PS_OS_ERROR');
-			
+
 			$credit_card_types = array('Visa', 'MasterCard', 'Discover', 'American Express', 'Diners Club', 'JCB');
 			$currency = new Currency((int)$this->context->cart->id_currency);
-			
+
 			$message = '
 			Status: '.Tools::getValue('Review').'
 			Comment: '.Tools::getValue('RESPMSG').'
@@ -199,7 +201,7 @@ class paypal_usa_validation
 			Method: '.Tools::getValue('METHOD').'
 			PayPal result code: '.(int)Tools::getValue('RESULT').'
 			Transaction ID: '.Tools::getValue('PNREF');
-			
+
 			/* Step 3 - Create the order in the database */
 			$customer = new Customer((int)$this->context->cart->id_customer);
 			if ($this->paypal_usa->validateOrder((int)$this->context->cart->id, (int)$order_status, (float)Tools::getValue('AMT'), $this->paypal_usa->displayName, $message, array(), null, false, false))
@@ -210,16 +212,17 @@ class paypal_usa_validation
 				'id_order' => (int)$this->paypal_usa->currentOrder, 'id_transaction' => Tools::getValue('PNREF'), 'amount' => (float)Tools::getValue('AMT'),
 				'currency' => $currency->iso_code, 'cc_type' => $credit_card_types[Tools::getValue('CARDTYPE')], 'cc_exp' => Tools::getValue('EXPDATE'), 'cc_last_digits' => Tools::getValue('ACCT'), 'cvc_check' => 0, 'fee' => 0));
 			}
-			
+
 			/* Reset the PayPal's token so the customer will be able to place a new order in the future */
 			unset($this->context->cookie->paypal_advanced_token);
-			
+
+			$redirect = '';
 			/* Step 4 - Redirect the user to the order confirmation page */
-			if (_PS_VERSION_ < 1.4)
+			if(version_compare(_PS_VERSION_, '1.4', '<'))
 				$redirect = _PS_BASE_URL_.'/order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
 			else
 				$redirect = _PS_BASE_URL_.'/index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
-			
+
 			die('
 			<script type="text/javascript">
 			<!--

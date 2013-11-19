@@ -1,16 +1,36 @@
 <?php
-class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
-
-	
+/*
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController
+{
 	/**
 	 * @see FrontController::initContent()
 	 */
 	public function initContent()
 	{
-
-		
 		//PAYPAL_USA_PAYMENT_BML
-
 		$this->paypal_usa = new PayPalUSA();
 		if ($this->paypal_usa->active && Configuration::get('PAYPAL_USA_PAYMENT_BML') == 1)
 		{
@@ -110,24 +130,20 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 				'&PAYMENTREQUEST_0_TAXAMT='.(float)($totalToPay - $totalToPayWithoutTaxes);
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
-		$currency = new Currency((int)$this->context->cart->id_currency);
+		$currency = new Currency((int)$this->context->cart->id_currency);		
+		$nvp_request .= '&UserSelectedFundingSource=BML';
+		$nvp_request .= '&SOLUTIONTYPE=SOLE';
 
-		
-		$nvp_request .='&UserSelectedFundingSource=BML';
-		$nvp_request .='&SOLUTIONTYPE=SOLE';
-
-
-		
-		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($express_url).'&CANCELURL='.urlencode($order_url).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
+		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.Tools::substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($express_url).'&CANCELURL='.urlencode($order_url).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
 		
 		
 		
 		
 		
-		if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+		if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 		{
 		//_xclick
-			header('Location: https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
+			Tools::redirect('https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
 			exit;
 		}
 		else
@@ -165,7 +181,7 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
 	
 
-		if ((strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
+		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
 			/* Checks if a customer already exists for this e-mail address */
 			if (Validate::isEmail($result['EMAIL']))
@@ -200,8 +216,8 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 			$address->id_country = (int)Country::getByIso($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
 			$address->id_state = (int)State::getIdByIso($result['PAYMENTREQUEST_0_SHIPTOSTATE'], (int)$address->id_country);
 			$address->alias = 'PayPal';
-			$address->lastname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
-			$address->firstname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - strlen($address->lastname));
+			$address->lastname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
+			$address->firstname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname));
 			$address->address1 = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
 			if (!empty($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] ))
 				$address->address2 = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
@@ -252,8 +268,6 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 	 */
 	private function _bmlCheckoutPayment()
 	{
-
-	
 		$express_url = '';
 		$order_url = '';
 	
@@ -268,19 +282,18 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_bml_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_bml_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
 
-			if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+			if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 			{
 				/* Prepare the order status, in accordance with the response from PayPal */
-				if (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
+				if (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
 					$order_status = (int)Configuration::get('PS_OS_PAYMENT');
-				elseif (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
+				elseif (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
 					$order_status = (int)Configuration::get('PS_OS_PAYPAL');
 				else
 					$order_status = (int)Configuration::get('PS_OS_ERROR');
 
 				/* Prepare the transaction details that will appear in the Back-office on the order details page */
-				$message =
-						'Transaction ID: '.$result['PAYMENTINFO_0_TRANSACTIONID'].'
+				$message = 'Transaction ID: '.$result['PAYMENTINFO_0_TRANSACTIONID'].'
 				Transaction type: '.$result['PAYMENTINFO_0_TRANSACTIONTYPE'].'
 				Payment type: '.$result['PAYMENTINFO_0_PAYMENTTYPE'].'
 				Order time: '.$result['PAYMENTINFO_0_ORDERTIME'].'
@@ -326,7 +339,6 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 			}
 			else
 			{
-			
 				foreach ($result as $key => $val)
 					$result[$key] = urldecode($val);
 
@@ -341,13 +353,12 @@ class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController{
 				 * He/she will have to go back to PayPal to select another funding source or resolve the payment error
 				 */
 				 
-				  //*bugfix 2013-11-1 clear token if payment got error
+				//*bugfix 2013-11-1 clear token if payment got error
 				unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
 				$this->context->smarty->assign('paypal_usa_action', $express_url);
 
 				$this->context->smarty->assign('paypal_usa_errors', $result);
-				
-			
+
 				$this->setTemplate('express-checkout-messages.tpl');
 			
 			}

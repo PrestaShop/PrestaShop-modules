@@ -24,52 +24,9 @@
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
- 
- 
+
+
 class paypal_usa_expresscheckout{
-
-	public function oldversion14(){
-
-		if(	version_compare(_PS_VERSION_, '1.5', '<')){
-			$this->tab = 'Payment';
-		}
-		if($country = Configuration::get('PS_SHOP_COUNTRY')){
-			$this->_shop_country = new Country(Country::getIdByName(null,$country));
-		}
-		if (version_compare(_PS_VERSION_, '1.5', '>=')){
-			if(!$this->context){
-				$this->context = Context::getContext();
-				$this->smarty = $this->context->smarty;
-			}
-		}else{
-			if(!isset($this->context)){
-				global $smarty, $cookie;
-				$this->context = new StdClass();
-				$this->context->smarty = $smarty;
-				$this->context->cookie = $cookie;
-				$this->smarty = $smarty;
-			}
-		}
-		
-		if(!isset($this->context->cart)){
-			global $cart;
-			$this->context->cart = $cart;
-			
-		}
-		if(!isset($this->context->customer)){
-			global $customer;
-			$this->context->customer = $customer;
-		}
-		
-		if(!isset($this->context->link)){
-			$protocol_link = Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://';
-			$link = new Link($protocol_link, $protocol_link);
-			$this->context->link = $link;
-		}
-
-	}
-	
-	
 
 	/**
 	 * @see FrontController::initContent()
@@ -77,7 +34,10 @@ class paypal_usa_expresscheckout{
 	public function initContent()
 	{
 
-		$this->oldversion14();
+		/* Backward compatibility */
+		require(_PS_MODULE_DIR_.'paypalusa/backward_compatibility/backward.php');
+		$this->context->smarty->assign('base_dir', __PS_BASE_URI__);
+
 		$this->paypal_usa = new PayPalUSA();
 		if ($this->paypal_usa->active && Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1)
 		{
@@ -151,23 +111,12 @@ class paypal_usa_expresscheckout{
 		}
 		// 2013-11-8 add 1.4 support
 		$shipping_cost = 0;
-		
+
 		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
 			$shipping_cost = $this->context->cart->getTotalShippingCost();
 		}else{
 			$shipping_cost = $this->context->cart->getOrderShippingCost();
 		}
-		
-		$express_url = '';
-		$order_url = '';
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$express_url = $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,));
-			$order_url = $this->context->link->getPageLink('order.php');
-		}else{
-			$express_url = _PS_BASE_URL_.'/modules/paypalusa/expresscheckout.php?pp_exp_checkout=1';
-			$order_url = _PS_BASE_URL_.'/order.php';
-		}
-		
 
 		if (($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
 		{
@@ -186,10 +135,10 @@ class paypal_usa_expresscheckout{
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
 		$currency = new Currency((int)$this->context->cart->id_currency);
 
-		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($express_url).'&CANCELURL='.urlencode($order_url).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
-		if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.Tools::substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,))).'&CANCELURL='.urlencode($this->context->link->getPageLink('order.php')).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
+		if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 		{
-			header('Location: https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
+			Tools::redirect('https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']),'');
 			exit;
 		}
 		else
@@ -214,20 +163,11 @@ class paypal_usa_expresscheckout{
 	 */
 	private function _expressCheckout()
 	{
-		// 2013-11-8 add 1.4 support
-		$express_url = '';
-		$order_url = '';
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$express_url = $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,));
-			$order_url = $this->context->link->getPageLink('order.php', false, null, array('step' => '3'));
-		}else{
-			$express_url = _PS_BASE_URL_.'/modules/paypalusa/expresscheckout.php?pp_exp_checkout=1';
-			$order_url = _PS_BASE_URL_.'/order.php?step=3';
-		}
-		
+
+
 		/* We need to double-check that the token provided by PayPal is the one expected */
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
-		if ((strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
+		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
 			/* Checks if a customer already exists for this e-mail address */
 			if (Validate::isEmail($result['EMAIL']))
@@ -262,8 +202,8 @@ class paypal_usa_expresscheckout{
 			$address->id_country = (int)Country::getByIso($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
 			$address->id_state = (int)State::getIdByIso($result['PAYMENTREQUEST_0_SHIPTOSTATE'], (int)$address->id_country);
 			$address->alias = 'PayPal';
-			$address->lastname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
-			$address->firstname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - strlen($address->lastname));
+			$address->lastname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
+			$address->firstname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname));
 			$address->address1 = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
 			if ($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] != '')
 				$address->address2 = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
@@ -289,13 +229,13 @@ class paypal_usa_expresscheckout{
 			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
 			$this->context->cookie->paypal_express_checkout_payer_id = $result['PAYERID'];
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				Module::hookExec('authentication');
 			else
 				Hook::exec('authentication');
 
 			/* Redirect the use to the "Shipping" step/page of the order process */
-			Tools::redirectLink($order_url);
+			Tools::redirectLink($this->context->link->getPageLink('order.php'));
 			exit;
 		}
 		else
@@ -318,17 +258,7 @@ class paypal_usa_expresscheckout{
 	 */
 	private function _expressCheckoutPayment()
 	{	
-		// 2013-11-8 add 1.4 support
-		$express_url = '';
-		$order_url = '';
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$express_url = $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,));
-			$order_url = $this->context->link->getPageLink('order.php', false, null, array('step' => '3'));
-		}else{
-			$express_url = _PS_BASE_URL_.'/modules/paypalusa/expresscheckout.php?pp_exp_checkout=1';
-			$order_url = _PS_BASE_URL_.'/order.php?step=3';
-		}
-		
+
 		/* Verifying the Payer ID and Checkout tokens (stored in the customer cookie during step 2) */
 		if (isset($this->context->cookie->paypal_express_checkout_token) && !empty($this->context->cookie->paypal_express_checkout_token))
 		{
@@ -336,12 +266,12 @@ class paypal_usa_expresscheckout{
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_express_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_express_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
 
-			if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+			if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 			{
 				/* Prepare the order status, in accordance with the response from PayPal */
-				if (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
+				if (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
 					$order_status = (int)Configuration::get('PS_OS_PAYMENT');
-				elseif (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
+				elseif (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
 					$order_status = (int)Configuration::get('PS_OS_PAYPAL');
 				else
 					$order_status = (int)Configuration::get('PS_OS_ERROR');
@@ -388,9 +318,9 @@ class paypal_usa_expresscheckout{
 
 				/* Redirect the customer to the Order confirmation page */
 				if(	version_compare(_PS_VERSION_, '1.5', '<'))
-					Tools::redirect('order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key);
+					Tools::redirect('order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key,'');
 				else
-					Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key);
+					Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key,'');
 				exit;
 			}
 			else
@@ -411,15 +341,15 @@ class paypal_usa_expresscheckout{
 				if (isset($result['L_ERRORCODE0']) && (int)$result['L_ERRORCODE0'] == 10486)
 				{
 					unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
-					$this->context->smarty->assign('paypal_usa_action', $express_url);
+					$this->context->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,)));
 				}
 
 				$this->context->smarty->assign('paypal_usa_errors', $result);
-				
+
 				if(	version_compare(_PS_VERSION_, '1.5', '>=')){
 					$this->setTemplate('express-checkout-messages.tpl');
 				}else{
-		
+
 					echo $this->context->smarty->fetch( dirname(__FILE__).'/views/templates/front/express-checkout-messages.tpl');
 				}
 			}
