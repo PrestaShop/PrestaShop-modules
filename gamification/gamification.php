@@ -46,6 +46,7 @@ class Gamification extends Module
 		$this->displayName = $this->l('Merchant Expertise');
 		$this->description = $this->l('Become an e-commerce expert within the blink of an eye!');
 		$this->cache_data = dirname(__FILE__).'/data/';
+		// @todo : when SSL is activated you loose green bar because of this. It should check and use https://
 		$this->url_data = 'http://gamification.prestashop.com/json/';		
 	}
 
