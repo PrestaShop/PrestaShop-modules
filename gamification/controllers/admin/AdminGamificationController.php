@@ -32,12 +32,15 @@ class AdminGamificationController extends ModuleAdminController
 	
 	public function initToolBarTitle()
 	{
-		$this->toolbar_title = $this->l('Your Merchant Expertise');
+		$this->toolbar_title[] = $this->l('Administration');
+		$this->toolbar_title[] = $this->l('Merchant Expertise');
 	}
 	
-	public function initToolBar()
+	public function initPageHeaderToolbar()
 	{
-		return true;
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['back']);
+
 	}
 	
 	public function renderView()
