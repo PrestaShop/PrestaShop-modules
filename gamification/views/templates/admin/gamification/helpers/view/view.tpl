@@ -83,7 +83,7 @@
 	<ul class="badge_list" id="list_{$key}" style="">
 		{foreach from=$type.badges item=badge}
 		<li class="badge_square badge_all {if $badge->validated}validated {else} not_validated{/if} group_{$badge->id_group} level_{$badge->group_position} " id="{$badge->id|intval}">
-			<div class="gamification_badges_img"><img src="{$badge->getBadgeImgUrl()}"></div>
+			<div class="gamification_badges_img"><img src="{$badge->getBadgeImgUrl()}" alt="" /></div>
 			<div class="gamification_badges_name">{$badge->name|escape:html:'UTF-8'}</div>
 			<div class="gamification_badges_description" style="display:none">{$badge->description|escape:html:'UTF-8'}</div>
 		</li>
