@@ -873,9 +873,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
 						$res &= unlink($this->backupPath.DIRECTORY_SEPARATOR.$filename);
-
-					if (!empty($name) && is_dir($this->backupPath.DIRECTORY_SEPARATOR.$name))
-						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name);
+					elseif (!empty($name) && is_dir($this->backupPath.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR))
+						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
 				}
 			if ($res)
 				Tools14::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools14::getValue('token'));
@@ -1749,7 +1748,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			if (is_file($dir.DIRECTORY_SEPARATOR.$module_name))
 				continue;
-			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
+			elseif (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
 			{
 				if(is_array($this->modules_addons))
 					$id_addons = array_search($module_name, $this->modules_addons);
@@ -1826,7 +1825,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 		else
 		{
-			//deactivate backward_compatibility, not used in 1.5.X
 			if (version_compare($this->install_version, '1.5.0.0', '>='))
 			{
 				$modules_to_delete['backwardcompatibility'] = 'Backward Compatibility';
@@ -1843,11 +1841,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 					INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
 					INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
 					WHERE m.`name` LIKE \''.pSQL($key).'\'');
-
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \''.pSQL($key).'\'');
 
-					$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR.$key.'.php';
-					if (file_exists($path))
+					$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR;
+					if (file_exists($path.$key.'.php'))
 					{
 						if (self::deleteDirectory($path))
 							$this->nextQuickInfo[] = sprintf($this->l('%1$s module is not compatible with 1.5.X, it will be removed from your ftp.'), $module);
@@ -2354,10 +2351,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 					{
-						if ( is_file($dir.$file))
+						if (is_file($dir.$file))
 							unlink($dir.$file);
-						elseif( is_dir($dir.$file))
-							self::deleteDirectory($dir.$file);
+						elseif(is_dir($dir.$file.DIRECTORY_SEPARATOR))
+							self::deleteDirectory($dir.$file.DIRECTORY_SEPARATOR);
 						$this->nextQuickInfo[] = sprintf($this->l('[cleaning cache] %s removed'), $file);
 					}
 		
