@@ -80,7 +80,7 @@
 					<option value="{$smarty.section.date_y.index}">{'Y'|date + $smarty.section.date_y.index}</option>{/section}
 				</select>
 				<img src="{$module_dir}secure.png" alt="" style="margin-left: 5px;" /><br /><br />
-				<label style="margin-top: 4px; margin-left: 35px; display: block; width: 90px; float: left;">{l s='CVV' mod='authorizeaim'}</label> <input type="text" name="x_card_code" id="x_card_code" size="4" maxlength="4" /><img src="{$module_dir}secure.png" alt="" style="margin-left: 5px;"/> <img src="{$module_dir}help.png" id="cvv_help" title="{l s='the 3 last digits on the back of your credit card' mod='authorizeaim'}" alt="" /><br /><br />
+				<label style="margin-top: 4px; margin-left: 35px; display: block; width: 90px;">{l s='CVV' mod='authorizeaim'}</label> <input type="text" name="x_card_code" id="x_card_code" size="4" maxlength="4" /><img src="{$module_dir}secure.png" alt="" style="margin-left: 5px;"/> <img src="{$module_dir}help.png" id="cvv_help" title="{l s='the 3 last digits on the back of your credit card' mod='authorizeaim'}" alt="" /><br /><br />
 			<img src="{$module_dir}cvv.png" id="cvv_help_img" alt=""style="display: none;margin-left: 211px;" />
 				<input type="button" id="asubmit" value="{l s='Validate order' mod='authorizeaim'}" style="margin-left: 129px; padding-left: 25px; padding-right: 25px; float: left;" class="button" />
 				<br class="clear" />
