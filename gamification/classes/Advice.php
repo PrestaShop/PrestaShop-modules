@@ -40,9 +40,9 @@ class Advice extends ObjectModel
 	
 	public $html;
 	
-	public $day_from;
+	public $start_day;
 	
-	public $day_to;
+	public $stop_day;
 	
 	/**
 	 * @see ObjectModel::$definition
