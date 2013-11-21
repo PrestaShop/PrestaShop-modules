@@ -2256,6 +2256,17 @@ class AdminSelfUpgrade extends AdminSelfTab
 							if (version_compare(INSTALL_VERSION, '1.5.5.0', '=') && $func_name == 'fix_download_product_feature_active')
 								continue;
 
+							if (version_compare(INSTALL_VERSION, '1.5.6.1', '=') && $func_name == 'migrate_orders')
+							{
+								$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php';
+								$content = file_get_contents($filename);			
+								$str_old[] = '$values_order_detail = array();';
+								$str_old[] = '$values_order = array();';
+								$str_old[] = '$col_order_detail = array();';
+								$content = str_replace($str_old, '', $content);
+								file_put_contents($filename, $content);
+							}
+
 							if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
 							{
 								$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - missing file '.$query.'</div>';
