@@ -74,7 +74,7 @@
 		<span class="gamification_progress-label" id="gamification_progress-label_tab">{l s="Level" mod='gamification' mod='gamification'} {$current_level|intval} : {$current_level_percent|intval} %</span>
 	</div>
 </fieldset>
-<div class="clear"></br></div>
+<div class="clear"><br/></div>
 
 {foreach from=$badges_type key=key item=type}
 <fieldset>
@@ -93,5 +93,5 @@
 	</ul>
 	<p id="no_badge_{$key}" class="gamification_badges_name" style="display:none;text-align:center">{l s="No badge in this section" mod='gamification'}</p>
 </fieldset>
-<div class="clear"></br></div>
+<div class="clear"><br/></div>
 {/foreach}
