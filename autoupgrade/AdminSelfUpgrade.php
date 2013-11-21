@@ -1747,7 +1747,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$allModules = scandir($dir);
 		foreach ($allModules as $module_name)
 		{
-			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name))
+			if (is_file($dir.DIRECTORY_SEPARATOR.$module_name))
+				continue;
+			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
 			{
 				if(is_array($this->modules_addons))
 					$id_addons = array_search($module_name, $this->modules_addons);
