@@ -44,7 +44,7 @@ class NqGatewayNeteven extends Module
 		else
 			$this->tab = 'Tools';
 		
-		$this->version = '1.8';
+		$this->version = '2';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -61,8 +61,12 @@ class NqGatewayNeteven extends Module
 		
 		if (_PS_VERSION_ < '1.5')
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-		
+
+        $this->unInstallHookByVersion();
+
 	}
+
+
 
 	public function install()
 	{
@@ -246,6 +250,22 @@ class NqGatewayNeteven extends Module
 		return true;
 	}
 
+    public function unInstallHookByVersion(){
+        if ($this->version < 2)
+            return;
+
+        $is_unregister =  Gateway::getConfig('UNREGISTER_HOOK');
+        if(!empty($is_unregister))
+            return;
+
+        $this->unregisterHook('addProduct');
+        $this->unregisterHook('updateProduct');
+        $this->unregisterHook('updateQuantity');
+        $this->unregisterHook('updateProductAttribute');
+
+        Gateway::updateConfig('UNREGISTER_HOOK', 1);
+    }
+
 	public function hookUpdateOrderStatus($params)
 	{
 		// If SOAP is not installed
@@ -258,80 +278,7 @@ class NqGatewayNeteven extends Module
 
 		GatewayOrder::getInstance()->setOrderNetEven($params);		
 	}
-	
-	public function hookAddProduct($params)
-	{
-        return;
-		$this->hookUpdateProduct($params);
-	}
-	
-	public function hookUpdateProduct($params)
-	{
-        return;
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
 
-		GatewayProduct::getInstance()->updateOneProduct(isset($params['id_product']) ? (int)$params['id_product'] : (int)$params['product']->id);
-	}
-
-	public function hookUpdateProductAttribute($params)
-	{
-        return;
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-
-		$id_product = Db::getInstance()->getValue('
-							SELECT `id_product`
-							FROM `'._DB_PREFIX_.'product_attribute`
-							WHERE `id_product_attribute` = '.(int)$params['id_product_attribute']
-						);
-		
-		GatewayProduct::getInstance()->updateOneProduct((int)$id_product, (int)$params['id_product_attribute'], false);
-	}
-
-	public function hookUpdateQuantity($params)
-	{
-        return;
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-			
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-		
-		GatewayProduct::getInstance()->updateOneProduct(isset($params['id_product']) ? (int)$params['id_product'] : (int)$params['product']->id);
-	}
-
-	public function hookNewOrder($params)
-	{
-        return;
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-
-		foreach($params['cart']->getProducts() as $product)
-		{
-			$id_product = (int)$product['id_product'];
-			$id_product_attribute = (isset($product['id_product_attribute'])) ? (int)$product['id_product_attribute'] : 0;
-
-			GatewayProduct::getInstance()->updateOneProduct((int)$id_product, (int)$id_product_attribute);
-		}
-	}
 
 	public function getSOAP()
 	{
