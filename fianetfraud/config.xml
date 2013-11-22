@@ -2,7 +2,7 @@
 <module>
 	<name>fianetfraud</name>
 	<displayName><![CDATA[Fia-Net - Certissim]]></displayName>
-	<version><![CDATA[3.6.1]]></version>
+	<version><![CDATA[3.7]]></version>
 	<description><![CDATA[Protect your shop against payment frauds.]]></description>
 	<author><![CDATA[Fia-Net]]></author>
 	<tab><![CDATA[payment_security]]></tab>
