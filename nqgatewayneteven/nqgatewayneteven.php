@@ -63,15 +63,16 @@ class NqGatewayNeteven extends Module
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
         $this->unInstallHookByVersion();
-
+        $this->installHookByVersion();
+        $this->installCarrier();
 	}
-
 
 
 	public function install()
 	{
 		if (!parent::install() OR
 			!$this->registerHook('updateOrderStatus') OR
+            !$this->registerHook('updateCarrier') OR
 			!$this->installDB() OR
 			!$this->installConfig())
 			return false;
@@ -150,8 +151,58 @@ class NqGatewayNeteven extends Module
 		Gateway::updateConfig('SHIPPING_BY_PRODUCT_FIELDNAME', 'additional_shipping_cost');
 		Gateway::updateConfig('IMAGE_TYPE_NAME', '');
 
+        $this->installCarrier();
+
 		return true;
 	}
+
+
+    private function installCarrier(){
+
+        $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
+        if(!empty($id_carrier_neteven))
+            return;
+
+        $id_carrier = $this->addCarrier('NetEven carrier');
+        Gateway::updateConfig('CARRIER_NETEVEN', $id_carrier);
+    }
+
+    private function installHookByVersion(){
+        if ($this->version < 2)
+            return;
+
+        $is_unregister =  Gateway::getConfig('REGISTER_HOOK');
+        if(!empty($is_unregister))
+            return;
+
+        $this->registerHook('updateCarrier');
+
+        Gateway::updateConfig('REGISTER_HOOK', 1);
+    }
+
+
+    private function addCarrier($name, $delay = 'fast')
+    {
+        $ret = false;
+
+        if (($carrier = new Carrier()))
+        {
+            $delay_lang = array();
+            foreach (Language::getLanguages(false) as $lang)
+                $delay_lang[$lang['id_lang']] = $delay;
+            $carrier->name = $name;
+            $carrier->active = 0;
+            $carrier->range_behavior = 1;
+            $carrier->need_range = 1;
+            $carrier->external_module_name = 'nqgatewayneteven';
+            $carrier->shipping_method = 1;
+            $carrier->delay = $delay_lang;
+            $carrier->is_module = (_PS_VERSION_ < '1.4') ? 0 : 1;
+
+            $ret = $carrier->add();
+        }
+        return $ret ? $carrier->id : false;
+    }
 	
 	public function installDB()
 	{
@@ -264,6 +315,18 @@ class NqGatewayNeteven extends Module
         $this->unregisterHook('updateProductAttribute');
 
         Gateway::updateConfig('UNREGISTER_HOOK', 1);
+    }
+
+    public function hookUpdateCarrier($params)
+    {
+        if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
+        {
+            $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
+            if($params['id_carrier'] != $id_carrier_neteven)
+                return;
+
+            Gateway::updateConfig('CARRIER_NETEVEN', $params['carrier']->id);
+        }
     }
 
 	public function hookUpdateOrderStatus($params)

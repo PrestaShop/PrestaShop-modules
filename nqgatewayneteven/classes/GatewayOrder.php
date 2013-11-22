@@ -53,6 +53,7 @@ class GatewayOrder extends Gateway
 	 */
 	public function getOrderNetEven($display = true)
 	{
+
 		try
 		{
 			$params = array();
@@ -195,7 +196,8 @@ class GatewayOrder extends Gateway
 			$order = new Order((int)$id_order);
 
 			if (!$order->id_carrier)
-				$order->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
+				$order->id_carrier = (int)Gateway::getConfig('CARRIER_NETEVEN');
+
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
@@ -377,13 +379,14 @@ class GatewayOrder extends Gateway
 			$cart->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 			$cart->id_customer = (int)$id_customer;
 			$cart->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-			$cart->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
+			$cart->id_carrier = Gateway::getConfig('CARRIER_NETEVEN');
 			$cart->recyclable = 1;
 			$cart->gift	= 0;
 			$cart->gift_message = '';
 			$cart->date_add	= $date_now;
 			$cart->secure_key = $secure_key_default;
 			$cart->date_upd	= $date_now;
+
 
 			if (!$cart->add())
 				Toolbox::addLogLine(self::getL('Failed for cart creation / NetEven Order Id').' '.(int)$neteven_order->OrderID);
@@ -394,10 +397,11 @@ class GatewayOrder extends Gateway
 				Toolbox::displayDebugMessage(self::getL('Cart').' : '.((int)$this->current_time_0-(int)$this->current_time_2).'s');
 			}
 
-			// Creating order
+
+            // Creating order
 			$id_order_temp = 0;
 			$order = new Order();
-			$order->id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
+			$order->id_carrier = Gateway::getConfig('CARRIER_NETEVEN');
 			$order->id_lang = Configuration::get('PS_LANG_DEFAULT');
 			$order->id_customer = $id_customer;
 			$order->id_cart = $cart->id;
@@ -431,7 +435,7 @@ class GatewayOrder extends Gateway
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
-           
+
             if(method_exists($carrier, 'getTaxesRate'))
                 $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
             elseif(method_exists('Tax', 'getCarrierTaxRate'))
@@ -479,7 +483,7 @@ class GatewayOrder extends Gateway
 			{
 				$id_order_temp = $order->id;
 
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) VALUES ('.(int)$id_order_temp.', '.(int)Configuration::get('PS_CARRIER_DEFAULT').', 0, 0, 0, 0, 0,"'.pSQL(date('Y-m-d H:i:s')).'")');
+				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) VALUES ('.(int)$id_order_temp.', '.(int)Gateway::getConfig('CARRIER_NETEVEN').', 0, 0, 0, 0, 0,"'.pSQL(date('Y-m-d H:i:s')).'")');
 
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "Place de marché '.$neteven_order->MarketPlaceName.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "ID order NetEven '.$neteven_order->MarketPlaceOrderId.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
