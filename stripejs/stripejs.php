@@ -612,7 +612,7 @@ class StripeJs extends PaymentModule
 			$tests['ssl'] = array('name' => $this->l('SSL must be enabled on your store (before entering Live mode)'), 'result' => Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'));
 		$tests['currencies'] = array('name' => $this->l('The currency USD, EUR, GBP or CAD must be enabled on your store'), 'result' => Currency::exists('GBP', 0) || Currency::exists('EUR', 0) || Currency::exists('USD', 0) || Currency::exists('CAD', 0));
 		$tests['php52'] = array('name' => $this->l('Your server must run PHP 5.2 or greater'), 'result' => version_compare(PHP_VERSION, '5.2.0', '>='));
-		$tests['configuration'] = array('name' => $this->l('Your must sign-up for Stripe and configure your account settings in the module (publishable key, secret key...etc.)'), 'result' => $this->checkSettings());
+		$tests['configuration'] = array('name' => $this->l('You must sign-up for Stripe and configure your account settings in the module (publishable key, secret key...etc.)'), 'result' => $this->checkSettings());
 
 		if (_PS_VERSION_ < 1.5)
 		{
