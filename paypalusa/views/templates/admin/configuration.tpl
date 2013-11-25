@@ -125,6 +125,17 @@
 					<center><input type="checkbox" id="paypal_usa_express_checkout" name="paypal_usa_express_checkout" {if $paypal_usa_configuration.PAYPAL_USA_EXPRESS_CHECKOUT} checked="checked"{/if} /> <label for="paypal_usa_express_checkout"> {l s='Enabled' mod='paypalusa'}</label></center>
 				</div>
 			</div>
+			
+			<div class="paypal-usa-onecol">
+				<div class="paypal-usa-product_eco fixCol{if $paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML} paypal-usa-product-active{/if}">
+					<h4>{l s='PayPal Bill Me Later' mod='paypalusa'}</h4>
+					<a class="paypal_usa-module-btn" href="https://www.paypal.com/us/webapps/mpp/referral/paypal-express-checkout?partner_id=XYAYGKRUJMJTG" target="_blank">{l s='Sign Up' mod='paypalusa'}</a><br />
+					<p>{l s='If you accept credit cards online, you can also accept PayPal payments by adding an Bill Me Later button. It\'s a proven way to grow your business. No setup or monthly charges.' mod='paypalusa'}</p>
+					<center><input type="checkbox" id="paypal_usa_billmelater" name="paypal_usa_billmelater" {if $paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML} checked="checked"{/if} /> <label for="paypal_usa_billmelater"> {l s='Enabled' mod='paypalusa'}</label></center>
+				</div>
+			</div>
+			
+			
 			<div class="clear centerText">
 				<input type="submit" name="SubmitPayPalProducts" class="button MB15" value="{l s='Enable selected product(s)' mod='paypalusa'}" />
 			</div>
@@ -174,6 +185,22 @@
 					<input class="colorSelector" type="text" id="paypal_usa_checkbox_border_color" name="paypal_usa_checkbox_border_color" value="{$paypal_usa_configuration.PAYPAL_USA_EXP_CHK_BORDER_COLOR|escape:'htmlall':'UTF-8'}" />
 				</div>
 			</div>
+			
+			
+			<div id="paypal_usa_express_checkout_config" {if !$paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML}style="display:none;"{/if}>
+				<h4 class="sep-title">{l s='PayPal Bill Me Later settings:' mod='paypalusa'}</h4>
+				<label for="paypal_usa_billmelater_checkbox_product">{l s='Show BillMeLater Checkout on' mod='paypalusa'}</label>
+				<div class="margin-form PT3">
+					<input type="checkbox" name="paypal_usa_billmelater_checkbox_product"{if $paypal_usa_configuration.PAYPAL_USA_BML_CHK_PRODUCT} checked="checked"{/if} /> <label for="paypal_usa_billmelater_checkbox_product" class="resetLabel">{l s='Product page' mod='paypalusa'}</label> 
+					<input type="checkbox" name="paypal_usa_billmelater_checkbox_shopping_cart"{if $paypal_usa_configuration.PAYPAL_USA_BML_CHK_SHOPPING_CART} checked="checked"{/if} /> <label for="paypal_usa_billmelater_checkbox_shopping_cart}" class="resetLabel">{l s='Shopping Cart' mod='paypalusa'}</label>
+				</div>
+				<label for="paypal_usa_billmelater_checkbox_border_color">{l s='Express Checkout border color' mod='paypalusa'}</label></td>
+				<div class="margin-form">
+					<input class="colorSelector" type="text" id="paypal_usa_billmelater_checkbox_border_color" name="paypal_usa_billmelater_checkbox_border_color" value="{$paypal_usa_configuration.PAYPAL_USA_BML_CHK_BORDER_COLOR|escape:'htmlall':'UTF-8'}" />
+				</div>
+			</div>
+			
+			
 			<div class="margin-form">
 				<input type="submit" name="SubmitBasicSettings" class="button" value="{l s='Save settings' mod='paypalusa'}" />
 			</div>

@@ -95,11 +95,11 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 						else
 						{
 							/* Step 4 - Determine the order status in accordance with the response from PayPal */
-							if (strtoupper(Tools::getValue('payment_status')) == 'COMPLETED')
+							if (Tools::strtoupper(Tools::getValue('payment_status')) == 'COMPLETED')
 								$order_status = (int)Configuration::get('PS_OS_PAYMENT');
-							elseif (strtoupper(Tools::getValue('payment_status')) == 'PENDING')
+							elseif (Tools::strtoupper(Tools::getValue('payment_status')) == 'PENDING')
 								$order_status = (int)Configuration::get('PS_OS_PAYPAL');
-							elseif (strtoupper(Tools::getValue('payment_status')) == 'REFUNDED')
+							elseif (Tools::strtoupper(Tools::getValue('payment_status')) == 'REFUNDED')
 								$order_status = (int)Configuration::get('PS_OS_REFUND');
 							else
 								$order_status = (int)Configuration::get('PS_OS_ERROR');
@@ -211,7 +211,7 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 			unset($this->context->cookie->paypal_advanced_token);
 			
 			/* Step 4 - Redirect the user to the order confirmation page */
-			if (_PS_VERSION_ < 1.4)
+			if (version_compare(_PS_VERSION_, '1.4', '<'))
 				$redirect = __PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
 			else
 				$redirect = __PS_BASE_URI__.'index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
