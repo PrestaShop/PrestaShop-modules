@@ -30,7 +30,7 @@ class KwixoCarrier extends KwixoXMLElement {
   public function createDropOffPoint($name = null, $id = null, KwixoXMLElement $address = null) {
     $drop_off_point = $this->addChild(new KwixoDropOffPoint());
     if (!is_null($name))
-      $drop_off_point->createChild('nom', $name);
+      $drop_off_point->createChild('enseigne', $name);
     if (!is_null($id))
       $drop_off_point->createChild('identifiant', $id);
     if (!is_null($address))
