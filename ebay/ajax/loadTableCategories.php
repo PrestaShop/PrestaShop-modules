@@ -107,15 +107,10 @@ foreach ($category_config_list as &$category) {
 	}
 }
 
-if (version_compare(_PS_VERSION_, '1.5', '>')) {
-	$smarty = $ebay->getContext()->smarty;
-	$id_currency = Context::getContext()->cookie->id_currency;
-}
-else {
-	global $smarty, $cookie;
-	$id_currency = Configuration::get('PS_CURRENCY_DEFAULT');
-}
-	$currency = new Currency((int) $id_currency);
+$smarty =  Context::getContext()->smarty;
+$id_currency = Context::getContext()->cookie->id_currency;
+$currency = new Currency((int) $id_currency);
+
 
 /* Smarty datas */
 $template_vars = array(
