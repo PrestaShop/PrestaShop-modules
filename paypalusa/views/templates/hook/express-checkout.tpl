@@ -21,7 +21,7 @@
 ** Step 8: The customer is redirected to the Order confirmation page
 **
 *}
-{if ($page_name == 'order' && (!isset($paypal_usa_express_checkout_no_token) || !$paypal_usa_express_checkout_no_token) && ((isset($smarty.get.step) && $smarty.get.step > 1) || (isset($smarty.post.step) && $smarty.post.step > 1))) || ($page_name == 'order-opc' && $smarty.get.isPaymentStep == true && isset($paypal_usa_express_checkout_hook_payment))}
+{if ($page_name == 'order' && (!isset($paypal_usa_express_checkout_no_token) || !$paypal_usa_express_checkout_no_token) && ((isset($smarty.get.step) && $smarty.get.step > 1) || (isset($smarty.post.step) && $smarty.post.step > 1))) || ($page_name == 'order-opc' && (isset($smarty.get.isPaymentStep) && $smarty.get.isPaymentStep == true)  && isset($paypal_usa_express_checkout_hook_payment))}
 	<p class="payment_module">
 	<div id="paypal-express-checkout">
 		<form id="paypal-express-checkout-form" action="{$paypal_usa_action|escape:'htmlall':'UTF-8'}" method="post">

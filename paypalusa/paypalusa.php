@@ -421,6 +421,7 @@ class PayPalUSA extends PaymentModule
 			$amount = $this->context->cart->getOrderTotal(true);
 			$taxes = $amount - $this->context->cart->getOrderTotal(false);
 			$i = 0;
+			$nvp_request = '';
 			if ($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS) == 0)
 			{
 				foreach ($this->context->cart->getProducts() as $product)
@@ -440,7 +441,7 @@ class PayPalUSA extends PaymentModule
 					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation').
 					'&CANCELURL='.$this->context->link->getPageLink('order.php','').
 					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation'), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
-			if ($result['RESULT'] == 0 && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && Tools::strtoupper($result['RESPMSG']) == 'APPROVED')
+			if ((isset($result['RESULT']) && $result['RESULT']== 0) && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && Tools::strtoupper($result['RESPMSG']) == 'APPROVED')
 			{
 				/* Store the PayPal response token in the customer cookie for later use (payment confirmation) */
 				Context::getContext()->cookie->paypal_advanced_token = $result['SECURETOKEN'];
