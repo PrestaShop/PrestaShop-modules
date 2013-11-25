@@ -44,7 +44,7 @@ class NqGatewayNeteven extends Module
 		else
 			$this->tab = 'Tools';
 		
-		$this->version = '1.7.7';
+		$this->version = '2';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -61,17 +61,18 @@ class NqGatewayNeteven extends Module
 		
 		if (_PS_VERSION_ < '1.5')
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-		
+
+        $this->unInstallHookByVersion();
+        $this->installHookByVersion();
+        $this->installCarrier();
 	}
+
 
 	public function install()
 	{
 		if (!parent::install() OR
 			!$this->registerHook('updateOrderStatus') OR
-			!$this->registerHook('addProduct') OR
-			!$this->registerHook('updateProduct') OR
-			!$this->registerHook('updateQuantity') OR
-			!$this->registerHook('updateProductAttribute') OR
+            !$this->registerHook('updateCarrier') OR
 			!$this->installDB() OR
 			!$this->installConfig())
 			return false;
@@ -150,8 +151,58 @@ class NqGatewayNeteven extends Module
 		Gateway::updateConfig('SHIPPING_BY_PRODUCT_FIELDNAME', 'additional_shipping_cost');
 		Gateway::updateConfig('IMAGE_TYPE_NAME', '');
 
+        $this->installCarrier();
+
 		return true;
 	}
+
+
+    private function installCarrier(){
+
+        $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
+        if(!empty($id_carrier_neteven))
+            return;
+
+        $id_carrier = $this->addCarrier('NetEven carrier');
+        Gateway::updateConfig('CARRIER_NETEVEN', $id_carrier);
+    }
+
+    private function installHookByVersion(){
+        if ($this->version < 2)
+            return;
+
+        $is_unregister =  Gateway::getConfig('REGISTER_HOOK');
+        if(!empty($is_unregister))
+            return;
+
+        $this->registerHook('updateCarrier');
+
+        Gateway::updateConfig('REGISTER_HOOK', 1);
+    }
+
+
+    private function addCarrier($name, $delay = 'fast')
+    {
+        $ret = false;
+
+        if (($carrier = new Carrier()))
+        {
+            $delay_lang = array();
+            foreach (Language::getLanguages(false) as $lang)
+                $delay_lang[$lang['id_lang']] = $delay;
+            $carrier->name = $name;
+            $carrier->active = 0;
+            $carrier->range_behavior = 1;
+            $carrier->need_range = 1;
+            $carrier->external_module_name = 'nqgatewayneteven';
+            $carrier->shipping_method = 1;
+            $carrier->delay = $delay_lang;
+            $carrier->is_module = (_PS_VERSION_ < '1.4') ? 0 : 1;
+
+            $ret = $carrier->add();
+        }
+        return $ret ? $carrier->id : false;
+    }
 	
 	public function installDB()
 	{
@@ -250,6 +301,34 @@ class NqGatewayNeteven extends Module
 		return true;
 	}
 
+    public function unInstallHookByVersion(){
+        if ($this->version < 2)
+            return;
+
+        $is_unregister =  Gateway::getConfig('UNREGISTER_HOOK');
+        if(!empty($is_unregister))
+            return;
+
+        $this->unregisterHook('addProduct');
+        $this->unregisterHook('updateProduct');
+        $this->unregisterHook('updateQuantity');
+        $this->unregisterHook('updateProductAttribute');
+
+        Gateway::updateConfig('UNREGISTER_HOOK', 1);
+    }
+
+    public function hookUpdateCarrier($params)
+    {
+        if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
+        {
+            $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
+            if($params['id_carrier'] != $id_carrier_neteven)
+                return;
+
+            Gateway::updateConfig('CARRIER_NETEVEN', $params['carrier']->id);
+        }
+    }
+
 	public function hookUpdateOrderStatus($params)
 	{
 		// If SOAP is not installed
@@ -262,75 +341,7 @@ class NqGatewayNeteven extends Module
 
 		GatewayOrder::getInstance()->setOrderNetEven($params);		
 	}
-	
-	public function hookAddProduct($params)
-	{
-		$this->hookUpdateProduct($params);
-	}
-	
-	public function hookUpdateProduct($params)
-	{
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
 
-		GatewayProduct::getInstance()->updateOneProduct(isset($params['id_product']) ? (int)$params['id_product'] : (int)$params['product']->id);
-	}
-
-	public function hookUpdateProductAttribute($params)
-	{
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-
-		$id_product = Db::getInstance()->getValue('
-							SELECT `id_product`
-							FROM `'._DB_PREFIX_.'product_attribute`
-							WHERE `id_product_attribute` = '.(int)$params['id_product_attribute']
-						);
-		
-		GatewayProduct::getInstance()->updateOneProduct((int)$id_product, (int)$params['id_product_attribute'], false);
-	}
-
-	public function hookUpdateQuantity($params)
-	{
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-			
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-		
-		GatewayProduct::getInstance()->updateOneProduct(isset($params['id_product']) ? (int)$params['id_product'] : (int)$params['product']->id);
-	}
-
-	public function hookNewOrder($params)
-	{
-		// If SOAP is not installed
-		if (!$this->getSOAP())
-			return;
-		
-		// If synchronization product is not active
-		if (!Gateway::getConfig('SYNCHRONISATION_PRODUCT'))
-			return;
-
-		foreach($params['cart']->getProducts() as $product)
-		{
-			$id_product = (int)$product['id_product'];
-			$id_product_attribute = (isset($product['id_product_attribute'])) ? (int)$product['id_product_attribute'] : 0;
-
-			GatewayProduct::getInstance()->updateOneProduct((int)$id_product, (int)$id_product_attribute);
-		}
-	}
 
 	public function getSOAP()
 	{
