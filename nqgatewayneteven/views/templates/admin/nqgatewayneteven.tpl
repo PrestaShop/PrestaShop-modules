@@ -37,22 +37,22 @@
 <fieldset>
 	<h2 style="margin-top: 0;"><a href="http://www.neteven.com/" target="_blank"><img src="{$module_path}/img/logo.gif" style="vertical-align:middle; margin-right:15px;" alt="{$module_display_name}" /></a></h2>
 
-	<p class="neteven-description-title">{l s='NetEven, logiciel et services dediés à la gestion des marketplaces européennes'}</p>
+	<p class="neteven-description-title">{l s='NetEven, logiciel et services dediés à la gestion des marketplaces européennes' mod='nqgatewayneteven'}</p>
 	<p>
-	{l s='Synchronisez votre site PrestaShop avec Neteven et pilotez tout le cycle de vente sur les marketplaces de manière simple et intégrée.'}<br />
+	{l s='Synchronisez votre site PrestaShop avec Neteven et pilotez tout le cycle de vente sur les marketplaces de manière simple et intégrée.' mod='nqgatewayneteven'}<br />
 	{l s='Distribuez vos produits en Europe sur les plus grands sites e-commerce depuis une interface unique :'  mod='nqgatewayneteven'}  La Redoute - Amazon - eBay – Pixmania – PriceMinister - Cdiscount.com – SFR – RueDuCommerce – Fnac - BrandAlley - OneWorldAvenue - Zalando – Atosho – Play – Hmv - Otto.de - Rakuten.de ...<br />
-	{l s='Vos produits seront à la disposition de plus de 20 millions d\’acheteurs français et 50 millions d’européens !'}<br/>
+	{l s='Vos produits seront à la disposition de plus de 20 millions d\'acheteurs français et 50 millions d'européens !' mod='nqgatewayneteven'}<br/>
 		<br />
 		<span style="font-size: 1.1em;">{l s='Parmi les fonctionnalités disponibles :' mod='nqgatewayneteven'}</span>
 	</p>
 
 	<ul style="list-style: disc; margin-top: -5px; margin-left: 20px; font-weight: ">
-		<li>{l s='Inventaire central compatible avec l\’ensemble des marketplaces' mod='nqgatewayneteven'}</li>
+		<li>{l s='Inventaire central compatible avec l\'ensemble des marketplaces' mod='nqgatewayneteven'}</li>
 		<li>{l s='Publication par code barre' mod='nqgatewayneteven'}</li>
 		<li>{l s='Création de fiches produits complètes' mod='nqgatewayneteven'}</li>
 		<li>{l s='Automatisation des étapes du cycle de vente' mod='nqgatewayneteven'}</li>
 		<li>{l s='Outils d\'animation commerciale' mod='nqgatewayneteven'}</li>
-		<li>{l s='Fonctionnalité d’ajustement des prix sur le concurrence' mod='nqgatewayneteven'}</li>
+		<li>{l s='Fonctionnalité d'ajustement des prix sur le concurrence' mod='nqgatewayneteven'}</li>
 		<li>{l s='Centralisation des fins de transaction' mod='nqgatewayneteven'}</li>
 		<li>{l s='Automatisation de la communication client' mod='nqgatewayneteven'}</li>
 		<li>{l s='Module de Reporting avancé' mod='nqgatewayneteven'}</li>
@@ -60,8 +60,8 @@
 		<li>{l s='Editions des factures, bordereaux, étiquettes...' mod='nqgatewayneteven'}</li>
 	</ul>
 
-	<p class="neteven-description-title">{l s='Services d\’accompagnement à la distribution' mod='nqgatewayneteven'}</p>
-	<p>{l s='Appuyez vous sur les experts marketplaces de l\’équipe Neteven pour vendre plus et mieux ! Toutes les informations sur les services proposés par NetEven sont disponibles' mod='nqgatewayneteven'} <a href="http://www.neteven.com/offres-logiciel-service.html" target="_blank" style="text-decoration: underline;">{l s='ici' mod='nqgatewayneteven'}</a>.</p>
+	<p class="neteven-description-title">{l s='Services d\'accompagnement à la distribution' mod='nqgatewayneteven'}</p>
+	<p>{l s='Appuyez vous sur les experts marketplaces de l\'équipe Neteven pour vendre plus et mieux ! Toutes les informations sur les services proposés par NetEven sont disponibles' mod='nqgatewayneteven'} <a href="http://www.neteven.com/offres-logiciel-service.html" target="_blank" style="text-decoration: underline;">{l s='ici' mod='nqgatewayneteven'}</a>.</p>
 
 	<p class="neteven-description-title">{l s='Configuration du module' mod='nqgatewayneteven'}</p>
 	<p>{l s='Créez votre compte client' mod='nqgatewayneteven'} <a href="http://www.neteven.com/neteven-inscription.html" target="_blank" style="text-decoration: underline;">{l s='ici' mod='nqgatewayneteven'}</a> {l s='puis paramétrez le module en remplissant les formulaires ci-dessous.' mod='nqgatewayneteven'}</p>
