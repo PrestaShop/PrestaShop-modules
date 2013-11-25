@@ -2,8 +2,8 @@
 
 class KwixoControl extends KwixoDOMDocument {
 
-	private $fianetmodule = 'api_php';
-	private $fianetmoduleversion = '4.2';
+	private $fianetmodule = 'api_prestashop_kwixo';
+	private $fianetmoduleversion = '4.3';
 
 	public function __construct() {
 		@parent::__construct('1.0', 'UTF-8');
@@ -12,7 +12,7 @@ class KwixoControl extends KwixoDOMDocument {
 		//parent::__construct("<control></control>");
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('kwixomodule', '6.2');
+		$this->root->setAttribute('kwixomodule', '6.3');
 	}
 
 	/**
