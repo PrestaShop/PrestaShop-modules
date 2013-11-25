@@ -53,6 +53,7 @@ class GatewayOrder extends Gateway
 	 */
 	public function getOrderNetEven($display = true)
 	{
+
 		try
 		{
 			$params = array();
@@ -195,11 +196,20 @@ class GatewayOrder extends Gateway
 			$order = new Order((int)$id_order);
 
 			if (!$order->id_carrier)
-				$order->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
+				$order->id_carrier = (int)Gateway::getConfig('CARRIER_NETEVEN');
+
 			
 			$carrier = new Carrier((int)$order->id_carrier);
-			$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
+
+            $carrier_tax_rate = 100;
+            if(method_exists($carrier, 'getTaxesRate'))
+                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+
+            if(method_exists('Tax', 'getCarrierTaxRate'))
+                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+
+
+            $total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
@@ -335,6 +345,7 @@ class GatewayOrder extends Gateway
 		$total_wt = 0;
 		$total_product = 0;
 		$total_product_wt = 0;
+        $total_taxe = 0;
 
 		foreach ($neteven_orders as $neteven_order_temp)
 		{
@@ -345,6 +356,7 @@ class GatewayOrder extends Gateway
 				
 				$total_product += ((floatval($neteven_order_temp->Price->_) - floatval($neteven_order_temp->VAT->_)));
 				$total_product_wt += (floatval($neteven_order_temp->Price->_));
+                $total_taxe += $neteven_order_temp->VAT->_;
 			}
 		}
 
@@ -367,13 +379,14 @@ class GatewayOrder extends Gateway
 			$cart->id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 			$cart->id_customer = (int)$id_customer;
 			$cart->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-			$cart->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
+			$cart->id_carrier = Gateway::getConfig('CARRIER_NETEVEN');
 			$cart->recyclable = 1;
 			$cart->gift	= 0;
 			$cart->gift_message = '';
 			$cart->date_add	= $date_now;
 			$cart->secure_key = $secure_key_default;
 			$cart->date_upd	= $date_now;
+
 
 			if (!$cart->add())
 				Toolbox::addLogLine(self::getL('Failed for cart creation / NetEven Order Id').' '.(int)$neteven_order->OrderID);
@@ -384,10 +397,11 @@ class GatewayOrder extends Gateway
 				Toolbox::displayDebugMessage(self::getL('Cart').' : '.((int)$this->current_time_0-(int)$this->current_time_2).'s');
 			}
 
-			// Creating order
+
+            // Creating order
 			$id_order_temp = 0;
 			$order = new Order();
-			$order->id_carrier = Configuration::get('PS_CARRIER_DEFAULT');
+			$order->id_carrier = Gateway::getConfig('CARRIER_NETEVEN');
 			$order->id_lang = Configuration::get('PS_LANG_DEFAULT');
 			$order->id_customer = $id_customer;
 			$order->id_cart = $cart->id;
@@ -421,39 +435,43 @@ class GatewayOrder extends Gateway
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
-			$carrier_tax_rate = false;
-			if (method_exists($carrier, 'getTaxesRate'))
-				$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
+            if(method_exists($carrier, 'getTaxesRate'))
+                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+            elseif(method_exists('Tax', 'getCarrierTaxRate'))
+                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+            else
+                $carrier_tax_rate = 100;
+
+            $total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
-			
-			$order->total_discounts_tax_excl = 0;
-			$order->total_discounts_tax_incl = 0;
-			$order->total_discounts = 0;
-			$order->total_wrapping_tax_excl = 0;
-			$order->total_wrapping_tax_incl = 0;
-			$order->total_wrapping = 0;
-			$order->total_products = (float)number_format($total_product, 2, '.', '');
-			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
-			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
-			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-			$order->total_paid_tax_excl = (float)number_format($total, 2, '.', '');
-			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
-			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
-			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
-			$order->carrier_tax_rate = 0;
-			$order->total_wrapping = 0;
-			$order->invoice_number = 0;
-			$order->delivery_number = 0;
-			$order->invoice_date = $date_now;
-			$order->delivery_date = $date_now;
-			$order->valid = 1;
-			$order->date_add = $date_now;
-			$order->date_upd = $date_now;
+
+            $order->total_discounts_tax_excl = 0;
+            $order->total_discounts_tax_incl = 0;
+            $order->total_discounts = 0;
+            $order->total_wrapping_tax_excl = 0;
+            $order->total_wrapping_tax_incl = 0;
+            $order->total_wrapping = 0;
+            $order->total_products = (float)number_format($total_product, 2, '.', '');
+            $order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+            $order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+            $order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+            $order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+            $order->total_paid_tax_excl = (float)number_format($total_wt - $total_taxe, 2, '.', '');
+            $order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+            $order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+            $order->total_paid = (float)number_format($total_wt, 2, '.', '');
+            $order->carrier_tax_rate = 0;
+            $order->total_wrapping = 0;
+            $order->invoice_number = 0;
+            $order->delivery_number = 0;
+            $order->invoice_date = $date_now;
+            $order->delivery_date = $date_now;
+            $order->valid = 1;
+            $order->date_add = $date_now;
+            $order->date_upd = $date_now;
 
 
 			if(Configuration::get('PS_SHOP_ENABLE'))
@@ -465,7 +483,7 @@ class GatewayOrder extends Gateway
 			{
 				$id_order_temp = $order->id;
 
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) VALUES ('.(int)$id_order_temp.', '.(int)Configuration::get('PS_CARRIER_DEFAULT').', 0, 0, 0, 0, 0,"'.pSQL(date('Y-m-d H:i:s')).'")');
+				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'order_carrier` (`id_order`, `id_carrier`, `id_order_invoice`, `weight`, `shipping_cost_tax_excl`, `shipping_cost_tax_incl`, `tracking_number`, `date_add`) VALUES ('.(int)$id_order_temp.', '.(int)Gateway::getConfig('CARRIER_NETEVEN').', 0, 0, 0, 0, 0,"'.pSQL(date('Y-m-d H:i:s')).'")');
 
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "Place de marché '.$neteven_order->MarketPlaceName.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
 				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'message` (`id_order`, `message`, `date_add`) VALUES ('.(int)$id_order_temp.', "ID order NetEven '.$neteven_order->MarketPlaceOrderId.'", "'.pSQL(date('Y-m-d H:i:s')).'")');
