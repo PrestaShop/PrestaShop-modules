@@ -109,3 +109,6 @@
 [submodule "textmaster/backward_compatibility"]
 	path = textmaster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "sofortbanking/backward_compatibility"]
+	path = sofortbanking/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
