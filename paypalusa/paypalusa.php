@@ -20,7 +20,7 @@ class PayPalUSA extends PaymentModule
 	{
 		$this->name = 'paypalusa';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.7';
+		$this->version = '1.2.8';
 
 		parent::__construct();
 
@@ -336,11 +336,13 @@ class PayPalUSA extends PaymentModule
 		{
 			/* Create a unique token and a PayPal payment request to display an <iframe> loading the marchant Hosted Checkout page (see PayPal Manager website) */
 			$token = Tools::passwdGen(36);
+			
 			$amount = $this->context->cart->getOrderTotal(true);
 			$taxes = $amount - $this->context->cart->getOrderTotal(false);
 			$i = 0;
 			if ($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS) == 0)
 			{
+				$nvp_request = '';
 				foreach ($this->context->cart->getProducts() as $product)
 				{
 					$nvp_request .= '&L_NAME'.$i.'['.strlen(urlencode($product['name'])).']='.urlencode($product['name']).
@@ -353,11 +355,12 @@ class PayPalUSA extends PaymentModule
 				$nvp_request .= '&FREIGHTAMT['.strlen(urlencode((float)$this->context->cart->getTotalShippingCost())).']='.urlencode((float)$this->context->cart->getTotalShippingCost()).
 						'&TAXAMT['.strlen(urlencode((float)$taxes)).']='.urlencode((float)$taxes);
 			}
+			
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
-					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation').
-					'&CANCELURL='.$this->context->link->getPageLink('order.php').
-					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation'), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
+					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation', array(), 1)).']='.$this->context->link->getModuleLink('paypalusa', 'validation', array(), 1).
+					'&CANCELURL['.strlen($this->context->link->getPageLink('order.php', true)).']='.$this->context->link->getPageLink('order.php', true).
+					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation', array(), 1)).']='.$this->context->link->getModuleLink('paypalusa', 'validation', array(), 1), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
 			if ($result['RESULT'] == 0 && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && strtoupper($result['RESPMSG']) == 'APPROVED')
 			{
 				/* Store the PayPal response token in the customer cookie for later use (payment confirmation) */
