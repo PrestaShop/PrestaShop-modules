@@ -122,7 +122,7 @@ function insertCategoryRow(category_id, data)
 		trs += '<tr id="switch-optionals-' + category_id + '"><td><a href="#" onclick="return showOptionals(' + category_id + ')">See optional items</a></td><td></td></tr>';
 
 	var row = $('#specifics-' + category_id);
-	row.children('td::nth-child(1)').attr('rowspan', $(trs).length + 1);
+	row.children('td:nth-child(1)').attr('rowspan', $(trs).length + 1);
 	$(trs + trs_optionals).insertAfter(row);
 	
 }
