@@ -715,6 +715,7 @@ class ShoppingFluxExport extends Module
 			$combinations[$combinaison['id_product_attribute']]['attributes'][$combinaison['group_name']] = $combinaison['attribute_name'];
 			$combinations[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
 			$combinations[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
+			$combinations[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
 		}
 
 		foreach ($combinations as $id => $combination)
