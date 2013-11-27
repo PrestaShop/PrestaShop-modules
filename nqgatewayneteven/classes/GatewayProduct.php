@@ -44,6 +44,8 @@ class GatewayProduct extends Gateway
 		if (!isset(self::$instance[$wsdl]))
 			self::$instance[$wsdl] = new GatewayProduct($client);
 
+        self::$type_sku = (Gateway::getConfig('TYPE_SKU') !== false)?Gateway::getConfig('TYPE_SKU'):'reference';
+
 		return self::$instance[$wsdl];
 	}
 	
