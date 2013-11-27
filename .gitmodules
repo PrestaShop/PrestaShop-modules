@@ -112,3 +112,6 @@
 [submodule "sofortbanking/backward_compatibility"]
 	path = sofortbanking/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "trustpilot/backward_compatibility"]
+	path = trustpilot/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
