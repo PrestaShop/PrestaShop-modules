@@ -338,12 +338,18 @@ class MailAlerts extends Module
 		);
 
 		$iso = Language::getIsoById($id_lang);
-
+		$dir_mail = false;
 		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
-			file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
-		{
-			// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
-			$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
+		file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
+			$dir_mail = dirname(__FILE__).'/mails/';
+		// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
+		$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
+
+		if (file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.txt') &&
+			file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.html'))
+				$dir_mail = _PS_MAIL_DIR_;
+
+		if ($dir_mail)
 			foreach ($merchant_mails as $merchant_mail)
 			{
 				Mail::Send(
@@ -357,7 +363,7 @@ class MailAlerts extends Module
 					$configuration['PS_SHOP_NAME'],
 					null,
 					null,
-					dirname(__FILE__).'/mails/',
+					$dir_mail,
 					null,
 					$id_shop
 				);
