@@ -60,15 +60,29 @@ class PSCleaner extends Module
 				$conf .= '</ul>';
 			}
 			else
+				$conf = $this->l('Nothing that need to be fixed');
+			$html .= $this->displayConfirmation($conf);
+		}
+		elseif (Tools::isSubmit('submitCleanAndOptimize'))
+		{
+			$logs = self::cleanAndOptimize();
+			if (count($logs))
+			{
+				$conf = $this->l('The following queries successfuly cleaned your database').'<br /><ul>';
+				foreach ($logs as $query => $entries)
+					$conf .= '<li>'.Tools::htmlentitiesUTF8($query).'<br />'.sprintf($this->l('%d line(s)'), $entries).'</li>';
+				$conf .= '</ul>';
+			}
+			else
 				$conf = $this->l('Nothing that need to be cleaned');
 			$html .= $this->displayConfirmation($conf);
 		}
-		if (Tools::isSubmit('submitTruncateCatalog'))
+		elseif (Tools::isSubmit('submitTruncateCatalog'))
 		{
 			self::truncate('catalog');
 			$html .= $this->displayConfirmation($this->l('Catalog truncated'));
 		}
-		if (Tools::isSubmit('submitTruncateSales'))
+		elseif (Tools::isSubmit('submitTruncateSales'))
 		{
 			self::truncate('sales');
 			$html .= $this->displayConfirmation($this->l('Orders and customers truncated'));
@@ -78,13 +92,23 @@ class PSCleaner extends Module
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#submitTruncateCatalog").click(function(){
-					if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all catalog data?')).'\'))
-						return true; 
+					if ($(\'#submitTruncateCatalog_on\').attr(\'checked\') != "checked")
+					{
+						alert(\''.addslashes(html_entity_decode($this->l('Please read the disclaimer and click "Yes" above'))).'\');
+						return false;
+					}
+					if (confirm(\''.addslashes(html_entity_decode($this->l('Are you sure that you want to delete all catalog data?'))).'\'))
+						return true;
 					return false;
 				});
 				$("#submitTruncateSales").click(function(){
-					if (confirm(\''.addslashes($this->l('Are you sure that you want to delete all sales data?')).'\'))
-						return true; 
+					if ($(\'#submitTruncateSales_on\').attr(\'checked\') != "checked")
+					{
+						alert(\''.addslashes(html_entity_decode($this->l('Please read the disclaimer and click "Yes" above'))).'\');
+						return false;
+					}
+					if (confirm(\''.addslashes(html_entity_decode($this->l('Are you sure that you want to delete all sales data?'))).'\'))
+						return true;
 					return false;
 				});
 			});
@@ -370,6 +394,7 @@ class PSCleaner extends Module
 					'product_lang',
 					'category_product',
 					'product_tag',
+					'tag',
 					'image',
 					'image_lang',
 					'image_shop',
@@ -506,7 +531,15 @@ class PSCleaner extends Module
 	// Not called yet
 	public static function cleanAndOptimize()
 	{
-		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart` WHERE id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'cart`) AND date_add < "'.pSQL(date('Y-m-d', strtotime('-1 month'))).'"');
+		$logs = array();
+		$query = '
+		DELETE FROM `'._DB_PREFIX_.'cart`
+		WHERE id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+		AND date_add < "'.pSQL(date('Y-m-d', strtotime('-1 month'))).'"';
+		if (Db::getInstance()->Execute($query))
+			if ($affected_rows = Db::getInstance()->Affected_Rows())
+				$logs[$query] = $affected_rows;
+		return $logs;
 	}
 	
 	protected static function bulle($array)
@@ -538,21 +571,39 @@ class PSCleaner extends Module
 	}
 	
 	public function renderForm()
-	{	
+	{
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Catalog'),
 					'icon' => 'icon-cogs'
 				),
-				'description' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers…'),
-			'submit' => array(
-				'title' => $this->l('Delete catalog'),
-				'class' => 'btn btn-default',
-				'name' => 'submitTruncateCatalog',
-				'id' => 'submitTruncateCatalog',
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
+						'name' => 'submitTruncateCatalog',
+						'values' => array(
+							array(
+								'id' => 'submitTruncateCatalog_on',
+								'value' => 1,
+								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
+							),
+							array(
+								'id' => 'submitTruncateCatalog_off',
+								'value' => 0,
+								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+							)
+						)
+					)
+				),
+				'submit' => array(
+					'title' => $this->l('Delete catalog'),
+					'class' => 'btn btn-default',
+					'name' => 'submitTruncateCatalog',
+					'id' => 'submitTruncateCatalog',
 				)
-			),
+			)
 		);
 		
 		$fields_form_2 = array(
@@ -561,14 +612,32 @@ class PSCleaner extends Module
 					'title' => $this->l('Orders and customers'),
 					'icon' => 'icon-cogs'
 				),
-				'description' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
+						'name' => 'checkTruncateSales',
+						'values' => array(
+							array(
+								'id' => 'checkTruncateSales_on',
+								'value' => 1,
+								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
+							),
+							array(
+								'id' => 'checkTruncateSales_off',
+								'value' => 0,
+								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+							)
+						)
+					)
+				),
 				'submit' => array(
 					'title' => $this->l('Delete orders & customers'),
 					'class' => 'btn btn-default',
 					'name' => 'submitTruncateSales',
 					'id' => 'submitTruncateSales',
-					)
-			),
+				)
+			)
 		);
 		
 		$fields_form_3 = array(
@@ -577,12 +646,25 @@ class PSCleaner extends Module
 					'title' => $this->l('Functional integrity constraints'),
 					'icon' => 'icon-cogs'
 				),
-			'submit' => array(
-				'title' => $this->l('Check & fix'),
-				'class' => 'btn btn-default',
-				'name' => 'submitCheckAndFix',
+				'submit' => array(
+					'title' => $this->l('Check & fix'),
+					'class' => 'btn btn-default',
+					'name' => 'submitCheckAndFix',
 				)
-			),
+			)
+		);
+		$fields_form_4 = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Database cleaning'),
+					'icon' => 'icon-cogs'
+				),
+				'submit' => array(
+					'title' => $this->l('Clean & Optimize'),
+					'class' => 'btn btn-default',
+					'name' => 'submitCleanAndOptimize',
+				)
+			)
 		);
 		
 		$helper = new HelperForm();
@@ -603,11 +685,11 @@ class PSCleaner extends Module
 			'id_language' => $this->context->language->id
 		);
 
-		return $helper->generateForm(array($fields_form_1, $fields_form_2, $fields_form_3));
+		return $helper->generateForm(array($fields_form_1, $fields_form_2, $fields_form_3, $fields_form_4));
 	}
 	
 	public function getConfigFieldsValues()
 	{
-		return array('value' => '');
+		return array('checkTruncateSales' => '0', 'submitTruncateCatalog' => 0);
 	}
 }
