@@ -253,7 +253,7 @@ class PaymentSense extends PaymentModule
 			// Display errors / confirmation
 			if (Tools::getValue('paymentsense_SUBMIT') != '')
 			{
-				if (preg_match('/merchant/', Tools::getValue('PAYMENTSENSE_GATEWAYID')) || !preg_match( '/^([a-zA-Z]{6})([-])([0-9]{7})$/', Tools::getValue('PAYMENTSENSE_GATEWAYID')))
+				if (preg_match('/merchant/', Tools::getValue('PAYMENTSENSE_GATEWAYID')) || !preg_match( '/^([a-zA-Z0-9]{6})([-])([0-9]{7})$/', Tools::getValue('PAYMENTSENSE_GATEWAYID')))
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Merchant ID').'</b> - Your Gateway Merchant ID should contain 
 					<strong>the first 6 characters of the company name followed by a hyphen (-) and 7 numbers</strong>';
 
