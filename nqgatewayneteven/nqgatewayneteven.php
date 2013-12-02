@@ -27,22 +27,24 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-if(strpos(dirname(__FILE__), 'nqgatewayneteven') !== false)
+if (strpos(dirname(__FILE__), 'nqgatewayneteven') !== false)
 	include_once(dirname(__FILE__).'/classes/Gateway.php');
 
 class NqGatewayNeteven extends Module
 {
-	private $_html = '';
-	private $gateway = NULL;
+	private $html = '';
+	private $gateway = null;
 
 	public function __construct()
 	{
 		$this->name = 'nqgatewayneteven';
-		
+
+        $tab_name = 'Tools';
+
 		if (constant('_PS_VERSION_') >= 1.4)
-			$this->tab = 'market_place';
-		else
-			$this->tab = 'Tools';
+            $tab_name = 'market_place';
+
+        $this->tab = $tab_name;
 		
 		$this->version = '2';
 		$this->author = 'NetEven';
@@ -58,8 +60,8 @@ class NqGatewayNeteven extends Module
 		
 		if (!$this->getSOAP())
 			$this->warning = $this->l('SOAP should be installed for this module');
-		
-		if (_PS_VERSION_ < '1.5')
+
+        if (version_compare(_PS_VERSION_, '1.5', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
         $this->unInstallHookByVersion();
@@ -70,10 +72,10 @@ class NqGatewayNeteven extends Module
 
 	public function install()
 	{
-		if (!parent::install() OR
-			!$this->registerHook('updateOrderStatus') OR
-            !$this->registerHook('updateCarrier') OR
-			!$this->installDB() OR
+		if (!parent::install() ||
+			!$this->registerHook('updateOrderStatus') ||
+            !$this->registerHook('updateCarrier') ||
+			!$this->installDB() ||
 			!$this->installConfig())
 			return false;
 		return true;
@@ -87,7 +89,7 @@ class NqGatewayNeteven extends Module
 			return false;
 		
 		// Uninstalling the module
-		if (!Configuration::deleteByName('neteven_date_export_product') OR !$this->uninstallDB() OR !parent::uninstall())
+		if (!Configuration::deleteByName('neteven_date_export_product') || !$this->uninstallDB() || !parent::uninstall())
 			return false;
 		
 		return true;
@@ -159,8 +161,8 @@ class NqGatewayNeteven extends Module
 
     private function installCarrier(){
 
-        $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
-        if(!empty($id_carrier_neteven))
+        $id_carrier_neteven = Gateway::getConfig('CARRIER_NETEVEN');
+        if (!empty($id_carrier_neteven))
             return;
 
         $id_carrier = $this->addCarrier('NetEven carrier');
@@ -171,8 +173,8 @@ class NqGatewayNeteven extends Module
         if ($this->version < 2)
             return;
 
-        $is_unregister =  Gateway::getConfig('REGISTER_HOOK');
-        if(!empty($is_unregister))
+        $is_unregister = Gateway::getConfig('REGISTER_HOOK');
+        if (!empty($is_unregister))
             return;
 
         $this->registerHook('updateCarrier');
@@ -262,9 +264,8 @@ class NqGatewayNeteven extends Module
 			PRIMARY KEY (`id_order_gateway_feature`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-		foreach ($queries as $query) {
+		foreach ($queries as $query)
 			$result &= Db::getInstance()->Execute($query);
-		}
 
 		if (!$result)
 			return false;
@@ -305,8 +306,8 @@ class NqGatewayNeteven extends Module
         if ($this->version < 2)
             return;
 
-        $is_unregister =  Gateway::getConfig('UNREGISTER_HOOK');
-        if(!empty($is_unregister))
+        $is_unregister = Gateway::getConfig('UNREGISTER_HOOK');
+        if (!empty($is_unregister))
             return;
 
         $this->unregisterHook('addProduct');
@@ -321,8 +322,8 @@ class NqGatewayNeteven extends Module
     {
         if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
         {
-            $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
-            if($params['id_carrier'] != $id_carrier_neteven)
+            $id_carrier_neteven = Gateway::getConfig('CARRIER_NETEVEN');
+            if ($params['id_carrier'] != $id_carrier_neteven)
                 return;
 
             Gateway::updateConfig('CARRIER_NETEVEN', $params['carrier']->id);
@@ -352,7 +353,7 @@ class NqGatewayNeteven extends Module
 
 	public function getContent()
 	{
-		$this->_html = '';
+		$this->html = '';
 
 		if (Tools::isSubmit('submitNetEven'))
 		{
@@ -366,10 +367,10 @@ class NqGatewayNeteven extends Module
 				Gateway::updateConfig('SYNCHRONISATION_ORDER', (int)Tools::getValue('SYNCHRONISATION_ORDER'));
 				Gateway::updateConfig('SYNCHRONISATION_PRODUCT', (int)Tools::getValue('SYNCHRONISATION_PRODUCT'));
 				
-				$this->_html .= $this->displayConfirmation($this->l('Les paramètres ont bien été mis à jour'));
+				$this->html .= $this->displayConfirmation($this->l('Les paramètres ont bien été mis à jour'));
 			}
 			else
-				$this->_html .= $this->displayError($this->l('Les login et mot de passe NetEven sont obligatoire'));
+				$this->html .= $this->displayError($this->l('Les login et mot de passe NetEven sont obligatoire'));
 
 		}
 		elseif (Tools::isSubmit('submitNetEvenShipping'))
@@ -386,7 +387,7 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('SHIPPING_ZONE_INTERNATIONAL', Tools::getValue('SHIPPING_ZONE_INTERNATIONAL'));
 
 
-			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
+			$this->html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitDev'))
 		{
@@ -396,7 +397,7 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('DEBUG', (int)Tools::getValue('DEBUG'));
 			Gateway::updateConfig('SEND_REQUEST_BY_EMAIL', (int)Tools::getValue('SEND_REQUEST_BY_EMAIL'));
 			
-			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de maintenance ont bien été mis à jour'));
+			$this->html .= $this->displayConfirmation($this->l('Les paramètres de maintenance ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitCustomizableFeilds'))
 		{
@@ -438,11 +439,11 @@ class NqGatewayNeteven extends Module
 		}
 		
 		if ($this->getSOAP())
-			$this->_html .= $this->displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories);
+			$this->html .= $this->displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories);
 		else
-			$this->_html .= $this->displayError($this->l('This module requires the SOAP extension to run'));
+			$this->html .= $this->displayError($this->l('This module requires the SOAP extension to run'));
 
-		return $this->_html;
+		return $this->html;
 	}
 
 	public function displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories)
@@ -496,7 +497,7 @@ class NqGatewayNeteven extends Module
 		return $this->display(__FILE__, 'views/templates/admin/nqgatewayneteven.tpl');
 	}
 	
-	public function getL($key = NULL)
+	public function getL($key = null)
 	{
 		$translations = array(
 			'Send email to' => $this->l('Send email to'),
