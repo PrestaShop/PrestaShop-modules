@@ -81,7 +81,7 @@ class LinkNew extends LinkCore
 	
 	public function getModuleLink($module, $link, $args){
 		
-		$url = _PS_BASE_URL_.'/modules/'.$module.'/'.$link.'.php?';
+		 $url = _PS_BASE_URL_.__PS_BASE_URI__.'modules/'.$module.'/'.$link.'.php?';
 		foreach($args as $k=>$v){
 			$url .= $k.'='.$v.'&';
 		}
