@@ -654,6 +654,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$upgrader->checkPSVersion(true, array('minor'));
 				$this->install_version = $upgrader->version_num;
 		}
+
+		if (is_null($this->install_version) || empty($this->install_version))
+			$this->install_version = _PS_VERSION_;
+
 		// If you have defined this somewhere, you know what you do
 		/* load options from configuration if we're not in ajax mode */
 		if (!$this->ajax)
