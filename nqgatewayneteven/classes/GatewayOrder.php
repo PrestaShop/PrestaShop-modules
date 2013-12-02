@@ -294,8 +294,10 @@ class GatewayOrder extends Gateway
 			$this->current_time_2 = time();
 
 		/* Treatment of order details */
-		if ($id_order_temp != 0)
+		if ($id_order_temp != 0){
 			$this->createOrderDetails($neteven_order, $id_order_temp);
+            $this->addStatusOnOrder($id_order_temp, $neteven_order);
+        }
 
 		if ($this->time_analyse)
 		{ 
@@ -498,23 +500,6 @@ class GatewayOrder extends Gateway
 
 				Toolbox::addLogLine(self::getL('Add order Id').' '.(int)$id_order_temp.' '.self::getL('NetEven Order Id').' '.(int)$neteven_order->OrderID);
 
-				/* Update order state in order */
-				$order_state = array_merge($this->getValue('order_state_before'), array($this->getValue('id_order_state_neteven')), $this->getValue('order_state_after'));
-
-				if (is_array($order_state) && count($order_state) > 0)
-				{
-					foreach ($order_state as $id_order_state)
-					{
-						if (class_exists('OrderInvoiceOverride' && method_exists('OrderInvoiceOverride', 'clearCacheTotalPaid')))
-							OrderInvoiceOverride::clearCacheTotalPaid();
-							
-						$new_history = new OrderHistory();
-						$new_history->id_order = (int)$id_order_temp;
-						$new_history->changeIdOrderState((int)$id_order_state, $id_order_temp);
-						$new_history->addWithemail(true, array());
-						Toolbox::addLogLine(self::getL('Save order state Id').' '.(int)$id_order_state.' '.self::getL('NetEven Order Id').' '.(int)$neteven_order->OrderID);
-					}
-				}
 
 				if ($this->time_analyse)
 				{
@@ -538,6 +523,26 @@ class GatewayOrder extends Gateway
 		
 		return $id_order_temp;
 	}
+
+    private function addStatusOnOrder($id_order, $neteven_order){
+        /* Update order state in order */
+        $order_state = array_merge($this->getValue('order_state_before'), array($this->getValue('id_order_state_neteven')), $this->getValue('order_state_after'));
+
+        if (is_array($order_state) && count($order_state) > 0)
+        {
+            foreach ($order_state as $id_order_state)
+            {
+                if (class_exists('OrderInvoiceOverride' && method_exists('OrderInvoiceOverride', 'clearCacheTotalPaid')))
+                    OrderInvoiceOverride::clearCacheTotalPaid();
+
+                $new_history = new OrderHistory();
+                $new_history->id_order = (int)$id_order;
+                $new_history->changeIdOrderState((int)$id_order_state, $id_order);
+                $new_history->addWithemail(true, array());
+                Toolbox::addLogLine(self::getL('Save order state Id').' '.(int)$id_order_state.' '.self::getL('NetEven Order Id').' '.(int)$neteven_order->OrderID);
+            }
+        }
+    }
 
 	/**
 	 * Creating order details of order
