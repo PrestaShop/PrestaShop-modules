@@ -365,7 +365,6 @@ class NqGatewayNeteven extends Module
 				Gateway::updateConfig('IMAGE_TYPE_NAME', Tools::getValue('IMAGE_TYPE_NAME'));
 				Gateway::updateConfig('SYNCHRONISATION_ORDER', (int)Tools::getValue('SYNCHRONISATION_ORDER'));
 				Gateway::updateConfig('SYNCHRONISATION_PRODUCT', (int)Tools::getValue('SYNCHRONISATION_PRODUCT'));
-                Gateway::updateConfig('TYPE_SKU', (string)Tools::getValue('TYPE_SKU'));
 				
 				$this->_html .= $this->displayConfirmation($this->l('Les paramètres ont bien été mis à jour'));
 			}
@@ -491,8 +490,7 @@ class NqGatewayNeteven extends Module
 			'NETEVEN_NS' => Tools::safeOutput(Tools::getValue('NETEVEN_NS', Gateway::getConfig('NETEVEN_NS'))),
 			'MAIL_LIST_ALERT' => Tools::safeOutput(Tools::getValue('MAIL_LIST_ALERT', Gateway::getConfig('MAIL_LIST_ALERT'))),
 			'DEBUG' => (int)Gateway::getConfig('DEBUG'),
-			'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL'),
-            'TYPE_SKU' => (int)(Gateway::getConfig('TYPE_SKU') !== false)?Gateway::getConfig('TYPE_SKU'):'reference'
+			'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL')
 		));
 			
 		return $this->display(__FILE__, 'views/templates/admin/nqgatewayneteven.tpl');
