@@ -117,6 +117,15 @@
 		</select>
 	</div>
 
+    <label>{l s='Type SKU' mod='nqgatewayneteven'}</label>
+    <div class="margin-form">
+        <input type="radio" name="TYPE_SKU" id="TYPE_SKU_ref" value="reference"{if $TYPE_SKU == 'reference'} checked="checked"{/if} />
+        <label class="t" for="TYPE_SKU_ref">{l s='référence'}</label>
+        <input type="radio" name="TYPE_SKU" id="TYPE_SKU_id" value="id"{if $TYPE_SKU == 'id'} checked="checked"{/if} />
+        <label class="t" for="TYPE_SKU_id"> {l s='id produit / id déclinaison'}</label>
+        <br class="clear"/>
+    </div>
+
 	<br class="clear" />
 	<center><input type="submit" name="submitNetEven" value="{l s='Enregistrer' mod='nqgatewayneteven'}" class="button" /></center>
 </fieldset>
