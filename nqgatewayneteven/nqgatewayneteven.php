@@ -114,6 +114,8 @@ class NqGatewayNeteven extends Module
 		$new_customer->firstname = 'NetEven';
 		$new_customer->passwd = '$&-$&-$&-$&';
 		$new_customer->email = 'neteven@newquest.fr';
+        $new_customer->newsletter = 0;
+        $new_customer->optin = 0;
 		$new_customer->add();
 		Gateway::updateConfig('ID_CUSTOMER_NETEVEN', (int)$new_customer->id);
 
