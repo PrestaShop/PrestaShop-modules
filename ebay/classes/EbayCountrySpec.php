@@ -276,7 +276,7 @@ class EbayCountrySpec
 
 		$ebay_country = new EbayCountrySpec(new Country($id_country));
 		$ebay_country->setDev($dev);
-		$ebay_country->ebay_iso = $key;
+		$ebay_country->ebay_iso = is_numeric($key) ? self::getKeyForEbayCountry() : $key;
 
 		return $ebay_country;
 	}
