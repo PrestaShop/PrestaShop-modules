@@ -73,4 +73,8 @@
 2012-09-03
 ----
 1) Fixed bug: when trying to get the product url. 
+
+2012-11-21
+----
+1) Load yQuery asynchronously   
    

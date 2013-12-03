@@ -48,17 +48,17 @@
 					<div class="y-code">
 					{literal}
 					&lt;div class=&quot;yotpo reviews&quot; </br>
-					data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;</br>
-					data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;</br>
+					data-appkey=&quot;{$yotpoAppkey|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;</br>
+					data-domain=&quot;{$yotpoDomain|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;</br>
 					data-product-id=&quot;{$yotpoProductId|intval}&quot;</br>
-					data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; </br>
+					data-product-models=&quot;{$yotpoProductModel|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
+					data-name=&quot;{$yotpoProductName|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
 					data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
-					data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;</br>
-					data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; </br>
-					{$richSnippetsCode|escape:'UTF-8'} <br>
+					data-image-url=&quot;{$yotpoProductImageUrl|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
+					data-description=&quot;{$yotpoProductDescription|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
+					data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;</br>
+					data-lang=&quot;{$yotpoLanguage|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;&gt; </br>
+					{$richSnippetsCode|escape:&#39;UTF-8&#39;} <br>
 					&lt;/div&gt;
 					{/literal}
 					</div>
@@ -86,16 +86,16 @@
 	          <div class="y-code">
 	            {literal}
 	            &lt;div class=&quot;yotpo bottomLine&quot; <br>
-	               data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;<br>
-	               data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;<br>
+	               data-appkey=&quot;{$yotpoAppkey|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;<br>
+	               data-domain=&quot;{$yotpoDomain|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;<br>
 	               data-product-id=&quot;{$yotpoProductId|intval}&quot;<br>
-	               data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; <br>
+	               data-product-models=&quot;{$yotpoProductModel|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
+	               data-name=&quot;{$yotpoProductName|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
 	               data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
-	               data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;&gt;<br>
-	               data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; <br>
+	               data-image-url=&quot;{$yotpoProductImageUrl|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
+	               data-description=&quot;{$yotpoProductDescription|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
+	               data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;&gt;<br>
+	               data-lang=&quot;{$yotpoLanguage|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot;&gt; <br>
 	              &lt;/div&gt;
 	           {/literal}
 	         </div>
