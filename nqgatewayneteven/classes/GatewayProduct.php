@@ -208,7 +208,7 @@ class GatewayProduct extends Gateway
 
 		$separator = $this->getValue('separator');
 
-		$id_lang = isset($context->cookie->id_lang) ? (int)$cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
+		$id_lang = isset($context->cookie->id_lang) ? (int)$context->cookie->id_lang : (int)Configuration::get('PS_LANG_DEFAULT');
 		$sql = 'SELECT
 			'.(self::$shipping_by_product && !empty(self::$shipping_by_product_fieldname) ? 'p.`'.pSQL(self::$shipping_by_product_fieldname).'`,' : '').'
 			pl.`link_rewrite`,
