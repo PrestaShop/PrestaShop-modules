@@ -257,6 +257,13 @@ function validateOrder($customer, $cart, $ppec)
 	// Payment error
 	else
 	{
+		//Check if error is 10486, if it is redirect user to paypal
+		if($ppec->result['L_ERRORCODE0'] == 10486)
+		{
+			$ppec->redirectToAPI();
+		}
+
+		
 		$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
 		$payment_type = (int)Configuration::get('PS_OS_ERROR');
 
