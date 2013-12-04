@@ -368,7 +368,6 @@ class MailAlerts extends Module
 					$id_shop
 				);
 			}
-		}
 	}
 
 	public function hookActionProductOutOfStock($params)
