@@ -707,14 +707,6 @@ class Ebay extends Module
 			EbayCategory::updateCategoryTable($ebay->getCategoriesSkuCompliancy());
 		}
 
-		// Checking Country
-		if (Tools::getValue('ebay_country_default_fr') == 'ok')
-			$this->setConfiguration('EBAY_COUNTRY_DEFAULT', 8);
-
-		// Check the country
-		if (!$this->ebay_country->checkCountry())
-				return $this->html.'<center>'.$this->displayError($this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es').'.<br /><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>').'</center>';
-
 		// Checking Extension
 		if (!extension_loaded('curl') || !ini_get('allow_url_fopen'))
 		{
