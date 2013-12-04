@@ -1576,8 +1576,8 @@ class Mailinblue extends Module {
 	public function amdRequest()
 	{
 		$data['key'] = Configuration::get('Mailin_Api_Key');
-		$data['campaign_id'] = '1';
-		$data['campaign_short_code'] = '1';
+		$data['campaign_id'] = '2147';
+		$data['campaign_short_code'] = 'qPf7';
 		$list_response = $this->curlRequest($data);
 	}
 
