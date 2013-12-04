@@ -2238,7 +2238,9 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		{
 			$order = new Order(Tools::getValue('id_order'));
 			$address = new Address(intval($order->id_address_delivery));
-
+			$currency = new Currency();
+			$id_currency = $order->id_currency;
+			$currency_data = $currency->getCurrency($id_currency);
 			$customer_civility_result = Db::getInstance()->ExecuteS('SELECT id_gender,firstname,lastname FROM '._DB_PREFIX_.'customer WHERE `id_customer` = '.(int)$order->id_customer);
 			$firstname = (isset($address->firstname)) ? $address->firstname : '';
 			$lastname  = (isset($address->lastname)) ? $address->lastname : '';
@@ -2271,6 +2273,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 
 					$msgbody = Configuration::get('Mailin_Sender_Shipment_Message');
 					$total_pay = (isset($order->total_paid)) ? $order->total_paid : 0;
+					$total_pay = $total_pay.''.$currency_data['iso_code'];
 					if (_PS_VERSION_ < '1.5.0.0')
 					$ref_num = (isset($order->id)) ? $order->id : '';
 					else
@@ -2365,11 +2368,12 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	*/
 	public function addCss()
 	{
+		$min = $_SERVER['HTTP_HOST'] == 'localhost' ? '' : '.min';
 		$so = $this->l('Select option');
 		$selected = $this->l('selected');
 		$html = '<script>  var selectoption = "'.$so.'"; </script>';
 		$html .= '<script>  var selected = "'.$selected.'"; </script>';
-		$mailin_js_path = $this->path.$this->name.'/js/'.$this->name.'.js?_='.time();
+		$mailin_js_path = $this->path.$this->name.'/js/'.$this->name.$min.'.js?_='.time();
 		$js_ddl_list = $this->path.$this->name.'/js/jquery.multiselect.min.js';
 		$liveclickquery = $this->path.$this->name.'/js/jquery.livequery.min.js';
 		$s_css = $this->path.$this->name.'/css/'.$this->name.'.css?_='.time();
@@ -2395,7 +2399,9 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		global $cookie;
 
 		$employee = new Customer((int)$cookie->id_customer);
-
+		$currency = new Currency();
+			$id_currency = $params['objOrder']->id_currency;
+			$currency_data = $currency->getCurrency($id_currency);
 		$customerid  = (isset($params['objOrder']->id_customer)) ? $params['objOrder']->id_customer : '';
 		$customer_result = Db::getInstance()->ExecuteS('SELECT id_gender,firstname,lastname  FROM '._DB_PREFIX_.
 		'customer WHERE `id_customer` = '.(int)$customerid);
@@ -2443,7 +2449,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 					else
 					$civility = '';
 
-					$total_pay = $total_to_pay.$params['currency'];
+					$total_pay = $total_to_pay.''.$currency_data['iso_code'];
 					$msgbody = Configuration::get('Mailin_Sender_Order_Message');
 					$civiliti = str_replace('{civility}', $civility, $msgbody);
 					$fname = str_replace('{first_name}', $firstname, $civiliti);
@@ -2550,6 +2556,7 @@ $this->l('contact@mailinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 
 	public function checkMobileNumber($number, $call_prefix)
 	{
+		$number = preg_replace('/\s+/', '', $number);
 		$charone = substr($number, 0, 1);
 		$chartwo = substr($number, 0, 2);
 		if ($charone == '0' && $chartwo != '00')

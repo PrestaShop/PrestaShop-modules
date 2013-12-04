@@ -67,15 +67,13 @@ $(document).ready(
 			}
             
             $('#sender_order_message').keyup(function () {
-                //alert(this.value.length);
-				
+               				
 				var chars = this.value.length,
 				messages = Math.ceil(chars / 160),
 				remaining = messages * 160 - (chars % (messages * 160) || messages * 160);
 				if(remaining == 0)
 				{
 				  remaining = 160.
-				  
 				}
 				
 				$('#sender_order_message_text').text(remaining);
@@ -625,6 +623,7 @@ $(document).ready(
 });
 function testsmssend() {
 		
+		var token=$('#customtoken').val();
 		var langvalue=$('#langvalue').val();
 		var sender=$('#sender_order').val();
 		var message=$('#sender_order_message').val();
@@ -635,7 +634,7 @@ function testsmssend() {
 			async : false,
 			url : base_url
 				+ "modules/mailinblue/ajaxtestsms.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue,
+			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -649,6 +648,7 @@ function testsmssend() {
 	
 function testSmsShipped() {
 	
+		var token=$('#customtoken').val();
 		var langvalue=$('#langvalue').val();
 		var sender=$('#sender_shipment').val();
 		var message=$('#sender_shipment_message').val();
@@ -659,7 +659,7 @@ function testSmsShipped() {
 			async : false,
 			url : base_url
 				+ "modules/mailinblue/ajaxTestSmsShipped.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue,
+			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -672,7 +672,8 @@ function testSmsShipped() {
 	}	
 	
 	function testSmsCampaign(sendererr,mobileerr,messageerr) {
-	
+		
+	    var token=$('#customtoken').val();
 		var langvalue=$('#langvalue').val();
 		var sender=$('#sender_campaign').val();
 		var message=$('#sender_campaign_message').val();
@@ -695,7 +696,7 @@ function testSmsShipped() {
 			async : false,
 			url : base_url
 				+ "modules/mailinblue/ajaxCampaignSmsTest.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue,
+			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},

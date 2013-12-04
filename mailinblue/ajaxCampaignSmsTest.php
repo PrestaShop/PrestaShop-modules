@@ -27,6 +27,10 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/mailinblue.php');
+
+if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
+	die('Error: Invalid Token');
+
 global $cookie;
 $cookie->id_lang = Tools::getValue('langvalue');
 $mailin = new Mailinblue();
