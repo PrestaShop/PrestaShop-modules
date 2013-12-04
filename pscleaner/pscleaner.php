@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.1';
+		$this->version = '1.1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -619,12 +619,12 @@ class PSCleaner extends Module
 						'name' => 'checkTruncateSales',
 						'values' => array(
 							array(
-								'id' => 'checkTruncateSales_on',
+								'id' => 'submitTruncateSales_on',
 								'value' => 1,
 								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							),
 							array(
-								'id' => 'checkTruncateSales_off',
+								'id' => 'submitTruncateSales_off',
 								'value' => 0,
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
 							)
