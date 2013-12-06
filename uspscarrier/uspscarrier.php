@@ -1553,7 +1553,7 @@ class UspsCarrier extends CarrierModule
 				{
 					$conversionRate = 1;
 					$conversionRate = $this->getCartCurrencyRate((int)($config['id_currency']), (int)$wsParams['id_cart']);
-					$cost += ($config['additional_charges'] * $conversionRate);
+					$cost += ($config['additional_charges'] * $product['quantity']  * $conversionRate);
 				}
 			}
 		}
