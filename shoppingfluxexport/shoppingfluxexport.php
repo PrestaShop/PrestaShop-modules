@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '3.1';
+	 	$this->version = '3.1.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 
@@ -1346,6 +1346,9 @@ class ShoppingFluxExport extends Module
 		$cart->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 		$cart->add();
 
+                //compatibylity with socolissmo
+                $this->context->cart = $cart;
+                
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
@@ -1427,7 +1430,7 @@ class ShoppingFluxExport extends Module
                     'Monechelle',
                     'Pixmania',
                     'PriceMinister',
-                    'Rdc',
+                    'RueDuCommerce',
                     'Rueducommerceean',
                     'ToutAPorter'
 		);
