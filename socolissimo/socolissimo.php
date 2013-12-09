@@ -1216,6 +1216,8 @@ class Socolissimo extends CarrierModule
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
+			if(!is_object($this->context->cart))
+				$this->context->cart = new Cart();
 			if (Configuration::get('PS_SHIPPING_METHOD'))
 				if ($carrier->getDeliveryPriceByWeight($this->context->cart->getTotalWeight(), $id_zone))
 					return $carrier->getDeliveryPriceByWeight($this->context->cart->getTotalWeight(), $id_zone);
