@@ -36,7 +36,7 @@
 	
 		<form action="{$link->getPageLink('index.php')}" method="post">
 			<p style="padding-top:10px;">
-				<input type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='mailinblue'}{/if}" onfocus="javascript:if(this.value=='{l s='your e-mail' mod='mailinblue'}')this.value='';" onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='mailinblue'}';" />
+				<input style="width: 170px;" type="text" name="email" size="18" value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='mailinblue'}{/if}" onfocus="javascript:if(this.value=='{l s='your e-mail' mod='mailinblue'}')this.value='';" onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='mailinblue'}';" />
 			</p>
 			
 			{if isset($Mailin_dropdown) && $Mailin_dropdown==1}

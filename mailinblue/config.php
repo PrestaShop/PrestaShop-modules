@@ -28,6 +28,5 @@ class Pathfind
 	public function pathdisp()
 	{
 		return $path = _PS_BASE_URL_.__PS_BASE_URI__.'modules/';
-		//return $path = _PS_BASE_URL_.__PS_BASE_URI__.'vente/modules/';
 	}
 }
