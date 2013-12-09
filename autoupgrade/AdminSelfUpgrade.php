@@ -654,6 +654,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$upgrader->checkPSVersion(true, array('minor'));
 				$this->install_version = $upgrader->version_num;
 		}
+
+		if (is_null($this->install_version) || empty($this->install_version))
+			$this->install_version = _PS_VERSION_;
+
 		// If you have defined this somewhere, you know what you do
 		/* load options from configuration if we're not in ajax mode */
 		if (!$this->ajax)
@@ -2190,6 +2194,17 @@ class AdminSelfUpgrade extends AdminSelfTab
 			deactivate_custom_modules();
 		}
 
+		if (version_compare(INSTALL_VERSION, '1.5.6.1', '='))
+		{
+			$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php';
+			$content = file_get_contents($filename);			
+			$str_old[] = '$values_order_detail = array();';
+			$str_old[] = '$values_order = array();';
+			$str_old[] = '$col_order_detail = array();';
+			$content = str_replace($str_old, '', $content);
+			file_put_contents($filename, $content);
+		}
+
 		foreach($neededUpgradeFiles as $version)
 		{
 			$file = $upgrade_dir_sql.DIRECTORY_SEPARATOR.$version.'.sql';
@@ -2213,7 +2228,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$sqlContent = preg_split("/;\s*[\r\n]+/",$sqlContent);
 			$sqlContentVersion[$version] = $sqlContent;
 		}
-
 
 		//sql file execution
 		global $requests, $warningExist;
@@ -2256,17 +2270,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 							if (version_compare(INSTALL_VERSION, '1.5.5.0', '=') && $func_name == 'fix_download_product_feature_active')
 								continue;
 
-							if (version_compare(INSTALL_VERSION, '1.5.6.1', '=') && $func_name == 'migrate_orders')
-							{
-								$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php';
-								$content = file_get_contents($filename);			
-								$str_old[] = '$values_order_detail = array();';
-								$str_old[] = '$values_order = array();';
-								$str_old[] = '$col_order_detail = array();';
-								$content = str_replace($str_old, '', $content);
-								file_put_contents($filename, $content);
-							}
-
 							if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
 							{
 								$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - missing file '.$query.'</div>';
@@ -2308,26 +2311,29 @@ class AdminSelfUpgrade extends AdminSelfTab
 						if (isset($phpRes))
 							unset($phpRes);
 					}
-					elseif (!$this->db->execute($query, false))
+					else
 					{
-						$error = $this->db->getMsgError();
-						$error_number = $this->db->getNumberError();
-
+						$result = $this->db->execute($query, false);
+						if (!$result)
+						{
+							$error = $this->db->getMsgError();
+							$error_number = $this->db->getNumberError();
 							$this->nextQuickInfo[] = '
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-						if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
-						{
-							$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
-							$warningExist = true;
+							if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+							{
+								$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
+								$warningExist = true;
+							}
 						}
+						else
+							$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 					}
-					else
-						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
+					if (isset($query))
+						unset($query);
 				}
-				if (isset($query))
-					unset($query);
 			}
 			if ($this->next == 'error')
 			{

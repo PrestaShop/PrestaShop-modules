@@ -66,8 +66,7 @@ class KwixoUrlcallModuleFrontController extends ModuleFrontController
 		$this->context->smarty->assign('products', $products);
 		$this->context->smarty->assign('path_order', $link->getPageLink('order', true));
 		$this->context->smarty->assign('path_history', $link->getPageLink('history', true));
-		$this->context->smarty->assign('path_contact', $link->getPageLink('contact', true));
-
+		
 		$this->setTemplate('urlcall.tpl');
 	}
 

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', '{$ganalytics_id}']);
-// Recommanded value by Google doc and has to before the trackPageView
+// Recommended value by Google doc and has to before the trackPageView
 _gaq.push(['_setSiteSpeedSampleRate', 5]);
 
 _gaq.push(['_trackPageview'{if isset($pageTrack)}, '{$pageTrack}'{/if}]);

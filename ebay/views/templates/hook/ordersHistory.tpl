@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<h2>{l s='Review imported orders' mod='ebay'} :</h2>
+<h2>{l s='Here is a record of your eBays orders' mod='ebay'} :</h2>
 <p>
 	<b>{$date_last_import}</b>
 </p>

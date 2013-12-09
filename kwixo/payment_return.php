@@ -66,8 +66,7 @@ if (_PS_VERSION_ < '1.5')
 		$smarty->assign('total_shipping', $total_shipping);
 		$smarty->assign('path_order', __PS_BASE_URI__.'order.php');
 		$smarty->assign('path_history', __PS_BASE_URI__.'history.php');
-		$smarty->assign('path_contact', __PS_BASE_URI__.'contact-form.php');
-
+	
 		echo $smarty->display(dirname(__FILE__).'/views/templates/front/urlcall.tpl');
 		require_once(dirname(__FILE__).'/../../footer.php');
 	}

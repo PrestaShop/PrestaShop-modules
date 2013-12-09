@@ -86,8 +86,8 @@ class Toolbox
 			postcode = "'.pSQL($order_infos->PostalCode).'" AND
 			phone = "'.pSQL(Toolbox::numericFilter($order_infos->Phone)).'" AND
 			phone_mobile = "'.pSQL(Toolbox::numericFilter($order_infos->Mobile)).'" AND
-			id_country = '.intval($id_country).' AND
-			id_customer = '.intval($id_customer));
+			id_country = '.(int)($id_country).' AND
+			id_customer = '.(int)($id_customer));
 
 		if ($addr)
 			return $addr["id_address"];
