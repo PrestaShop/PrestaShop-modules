@@ -355,7 +355,7 @@ class MailAlerts extends Module
 				Mail::Send(
 					$id_lang,
 					$template,
-					sprintf(Mail::l('New order - #%06d', $id_lang), $order->id),
+					sprintf(Mail::l('New order - %06d', $id_lang), $order->reference),
 					$template_vars,
 					$merchant_mail,
 					null,
