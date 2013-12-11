@@ -312,11 +312,6 @@ class paypal_usa_expresscheckout extends PayPalUSA
 				if ($this->paypal_usa->validateOrder((int)$this->context->cart->id, (int)$order_status, (float)$result['PAYMENTINFO_0_AMT'], $this->paypal_usa->displayName, $message, array(), null, false, false))
 				{
 					/* Store transaction ID and details */
-					mail('youness.ziouane@prestashop.com', 'paypal expressChekout', print_r(array('DoExpressCheckoutPayment', 
-					'&TOKEN='.urlencode($this->context->cookie->paypal_express_checkout_token).'&PAYERID='.
-					urlencode($this->context->cookie->paypal_express_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.
-					$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).
-					'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']), $result, $message), true));
 					$this->paypal_usa->addTransactionId((int)$this->paypal_usa->currentOrder, $result['PAYMENTINFO_0_TRANSACTIONID']);
 					$this->paypal_usa->addTransaction('payment', array('source' => 'express', 'id_shop' => (int)$this->context->cart->id_shop, 'id_customer' => (int)$this->context->cart->id_customer, 'id_cart' => (int)$this->context->cart->id,
 						'id_order' => (int)$this->paypal_usa->currentOrder, 'id_transaction' => $result['PAYMENTINFO_0_TRANSACTIONID'], 'amount' => $result['PAYMENTINFO_0_AMT'],
