@@ -237,11 +237,11 @@ class paypal_usa_expresscheckout extends PayPalUSA
 				Hook::exec('authentication');
 
 			/* Redirect the use to the "Shipping" step/page of the order process */
-			//d($this->context->link->getPageLink('order.php'));
+			
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE'))
 				Tools::redirectLink($this->context->link->getPageLink('order-opc.php'));
 			else
-				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=2');
+				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=3');
 			exit;
 		}
 		else
