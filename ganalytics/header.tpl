@@ -1,3 +1,52 @@
+{if $universal_analytics eq true}
+<script type="text/javascript">
+    {literal}
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    {/literal}
+        
+        ga('create', '{$ganalytics_id}', '{if isset($pageTrack)}{$pageTrack}{/if}');
+        
+        {if $isOrder eq true}
+            ga('require', 'ecommerce', 'ecommerce.js'); 
+        {else}
+            ga('send', 'pageview');    
+        {/if}
+
+
+        {if $isOrder eq true}       
+            ga('ecommerce:addTransaction', {
+                'id': '{$trans.id}', 
+                'store': '{$trans.store}',   
+                'total': {$trans.total}',       
+                'tax': '{$trans.tax}',          
+                'shipping': '{$trans.shipping}', 
+                'city': '{$trans.city}', 
+                'state':'{$trans.state}', 
+                'country': '{$trans.country}' ,
+                'currency': 'EUR' 
+            });
+
+            {foreach from=$items item=item}
+            ga('ecommerce:addItem', {
+               'id': '{$item.OrderId}', 
+               'sku': '{$item.SKU}', 
+               'name': '{$item.Product}', 
+               'category': '{$item.Category}', 
+               'price': '{$item.Price}', 
+               'quantity': '{$item.Quantity}'
+            });
+            {/foreach}
+            ga('ecommerce:send');
+        {/if}
+</script>
+{else}
 <script type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', '{$ganalytics_id}']);
@@ -40,3 +89,4 @@ _gaq.push(['_trackPageview'{if isset($pageTrack)}, '{$pageTrack}'{/if}]);
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })(); {/literal}
 </script>
+{/if}
