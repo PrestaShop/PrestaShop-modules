@@ -31,8 +31,6 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 
-
-
 class paypal_usa_validation extends PayPalUSA
 {
 	/**

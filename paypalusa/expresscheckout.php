@@ -164,10 +164,8 @@ class paypal_usa_expresscheckout extends PayPalUSA
 	private function _expressCheckout()
 	{
 
-
 		/* We need to double-check that the token provided by PayPal is the one expected */
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
-		p($result);
 		
 		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
@@ -213,11 +211,6 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$address->postcode = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
 			$address->save();
 
-			/* Update the cart billing and delivery addresses */
-			$this->context->cart->id_address_delivery = (int)$address->id;
-			$this->context->cart->id_address_invoice = (int)$address->id;
-			$this->context->cart->update();
-
 			/* Update the customer cookie to simulate a logged-in session */
 			$this->context->cookie->id_customer = (int)$customer->id;
 			$this->context->cookie->customer_lastname = $customer->lastname;
@@ -226,6 +219,12 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$this->context->cookie->email = $customer->email;
 			$this->context->cookie->is_guest = $customer->isGuest();
 			$this->context->cookie->logged = 1;
+			
+			/* Update the cart billing and delivery addresses */
+			$this->context->cart->id_address_delivery = (int)$address->id;
+			$this->context->cart->id_address_invoice = (int)$address->id;
+			$this->context->cart->secure_key = $customer->secure_key;
+			$this->context->cart->update();
 
 			/* Save the Payer ID and Checkout token for later use (during the payment step/page) */
 			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
@@ -237,11 +236,11 @@ class paypal_usa_expresscheckout extends PayPalUSA
 				Hook::exec('authentication');
 
 			/* Redirect the use to the "Shipping" step/page of the order process */
-			//d($this->context->link->getPageLink('order.php'));
+			
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE'))
 				Tools::redirectLink($this->context->link->getPageLink('order-opc.php'));
 			else
-				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=2');
+				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=3');
 			exit;
 		}
 		else
@@ -361,7 +360,6 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			}
 		}
 	}
-
 }
 
 $validation = new paypal_usa_expresscheckout();
