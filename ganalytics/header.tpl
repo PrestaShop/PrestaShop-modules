@@ -1,4 +1,4 @@
-{if universal_code eq true}
+{if universal_analytics eq true}
 <script type="text/javascript">
     {literal}
         (function () {
