@@ -33,9 +33,9 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '3.1.1';
+	 	$this->version = '3.1.2';
 		$this->author = 'PrestaShop';
-		$this->limited_countries = array('fr');
+		$this->limited_countries = array('fr', 'us');
 
 	 	parent::__construct();
 
@@ -261,15 +261,15 @@ class ShoppingFluxExport extends Module
 		return '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 					<fieldset>
 						<legend>'.$this->l('Vos paramètres').'</legend>
-						<p><label>Login Shopping Flux : </label><input type="text" name="SHOPPING_FLUX_LOGIN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_LOGIN']).'"/></p>
-						<p><label>Token Shopping Flux : </label><input type="text" name="SHOPPING_FLUX_TOKEN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'" style="width:auto"/></p>
-						<p><label>Buyline : </label><input type="checkbox" name="SHOPPING_FLUX_BUYLINE" '.Tools::safeOutput($configuration['SHOPPING_FLUX_BUYLINE']).'/> les origines de toutes vos commandes seront trackées.</p>
-						<p><label>Tracking ventes : </label><input type="checkbox" name="SHOPPING_FLUX_TRACKING" '.Tools::safeOutput($configuration['SHOPPING_FLUX_TRACKING']).'/> les commandes venant des comparateurs seront trackées.</p>
-						<p><label>Remontée commandes : </label><input type="checkbox" name="SHOPPING_FLUX_ORDERS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_ORDERS']).'/> les commandes venant des places de marché seront automatiquement importées.</p>
-						<p><label>Expédition des commandes : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_SHIPPED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_SHIPPED']).'/> les commandes qui passeront en statut <b>'.$this->_getOrderStates($configuration['PS_LANG_DEFAULT'], 'shipped').'</b> seront expédiées sur les places de marché.</p>
-						<p><label>Annulation des commandes : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_CANCELED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_CANCELED']).'/> les commandes qui passeront en statut <b>'.$this->_getOrderStates($configuration['PS_LANG_DEFAULT'], 'order_canceled').'</b> seront annulées sur les places de marché.</p>
-						<p><label>Synchronisation des stocks et des prix : </label><input type="checkbox" name="SHOPPING_FLUX_STOCKS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STOCKS']).'/> chaque mouvement de stock ou de prix sera répercuté sur les places de marché.</p>
-						<p style="margin-top:20px"><input type="submit" value="Valider" name="rec_config" class="button"/></p>
+						<p><label>'.$this->l('Login Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_LOGIN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_LOGIN']).'"/></p>
+						<p><label>'.$this->l('Token Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_TOKEN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'" style="width:auto"/></p>
+						<p><label>'.$this->l('Buyline').' : </label><input type="checkbox" name="SHOPPING_FLUX_BUYLINE" '.Tools::safeOutput($configuration['SHOPPING_FLUX_BUYLINE']).'/> '.$this->l('les origines de toutes vos commandes seront trackées').'.</p>
+						<p><label>'.$this->l('Tracking ventes').' : </label><input type="checkbox" name="SHOPPING_FLUX_TRACKING" '.Tools::safeOutput($configuration['SHOPPING_FLUX_TRACKING']).'/> '.$this->l('les commandes venant des comparateurs seront trackées').'.</p>
+						<p><label>'.$this->l('Remontée commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_ORDERS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_ORDERS']).'/> '.$this->l('les commandes venant des places de marché seront automatiquement importées').'.</p>
+						<p><label>'.$this->l('Expédition des commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_SHIPPED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_SHIPPED']).'/> '.$this->l('les commandes qui passeront en statut').' <b>'.$this->_getOrderStates($configuration['PS_LANG_DEFAULT'], 'shipped').'</b> '.$this->l('seront expédiées sur les places de marché').'.</p>
+						<p><label>'.$this->l('Annulation des commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_CANCELED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_CANCELED']).'/> '.$this->l('les commandes qui passeront en statut').' <b>'.$this->_getOrderStates($configuration['PS_LANG_DEFAULT'], 'order_canceled').'</b> '.$this->l('seront annulées sur les places de marché').'.</p>
+						<p><label>'.$this->l('Synchronisation des stocks et des prix').' : </label><input type="checkbox" name="SHOPPING_FLUX_STOCKS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STOCKS']).'/> '.$this->l('chaque mouvement de stock ou de prix sera répercuté sur les places de marché').'.</p>
+						<p style="margin-top:20px"><input type="submit" value="'.$this->l('Valider').'" name="rec_config" class="button"/></p>
 					</fieldset>
 				</form>';
 	}
