@@ -72,6 +72,7 @@ class GAnalytics extends Module
 		if (Tools::isSubmit('submitGAnalytics') AND ($gai = Tools::getValue('ganalytics_id')))
 		{
 			Configuration::updateValue('GANALYTICS_ID', $gai);
+			Configuration::updateValue('UGANALYTICS',Tools::getValue('universal_analytics'));
 			$output .= '
 			<div class="conf confirm">
 				<img src="../img/admin/ok.gif" alt="" title="" />
@@ -91,6 +92,10 @@ class GAnalytics extends Module
 				<div class="margin-form">
 					<input type="text" name="ganalytics_id" value="'.Tools::safeOutput(Tools::getValue('ganalytics_id', Configuration::get('GANALYTICS_ID'))).'" />
 					<p class="clear">'.$this->l('Example:').' UA-1234567-1</p>
+					<input type="checkbox" name="universal_analytics" '.
+            (Tools::getValue('universal_analytics', Configuration::get('UGANALYTICS'))? 'checked="checked"':'')
+                    .' />
+					<p class="clear">'.$this->l('Universal Analytics Active').'</p>
 				</div>
 				<center><input type="submit" name="submitGAnalytics" value="'.$this->l('Update ID').'" class="button" /></center>
 			</fieldset>
@@ -168,6 +173,7 @@ class GAnalytics extends Module
 			$this->context->smarty->assign('pageTrack', '/order/step'.(int)Tools::getValue('step').'.html');
 
 		$this->context->smarty->assign('ganalytics_id', Configuration::get('GANALYTICS_ID'));
+		$this->context->smarty->assign('universal_analytics', Configuration::get('UGANALYTICS'));
 		$this->context->smarty->assign('isOrder', false);
 
 		return $this->display(__FILE__, 'header.tpl');
@@ -233,6 +239,7 @@ class GAnalytics extends Module
 			$this->context->smarty->assign('items', $items);
 			$this->context->smarty->assign('trans', $trans);
 			$this->context->smarty->assign('ganalytics_id', $ganalytics_id);
+			$this->context->smarty->assign('universal_analytics', Configuration::get('UGANALYTICS'));
 			$this->context->smarty->assign('isOrder', true);
 			return $this->display(__FILE__, 'header.tpl');
 		}
