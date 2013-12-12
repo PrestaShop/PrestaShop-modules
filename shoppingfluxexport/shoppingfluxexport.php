@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '3.1.2';
+	 	$this->version = '3.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -191,25 +191,26 @@ class ShoppingFluxExport extends Module
 		$html = '<h2>'.$this->displayName.'</h2>
 		<fieldset>
 			<legend>'.$this->l('Informations').'</legend>
-			<p><b>'.$this->l('Shopping Flux vous permettra de :').'</b></p>
-			<p>
+			<p style="padding-bottom:10px"><b>'.$this->l('Shopping Flux est un logiciel qui rencontre un énorme succès chez les utilisateurs de PrestaShop.').'</b></p>
+			<p><b>'.$this->l('Il permet de diffuser vos produits sur plus de 1.000 réseaux et d\'augmenter ainsi le Chiffre d\'Affaires de votre boutique en ligne :').'</b></p>
+			<p style="padding-bottom:5px">
 					<ol>
-							<li>'.$this->l('Promouvoir vos produits sur plus de 100 Comparateurs de Prix (Google Shopping, Leguide.com, Kelkoo, Cherchons.com, etc...)').'</li>
-							<li>'.$this->l('Choisir les produits que vous souhaitez diffuser et en calculer la rentabilité en fonction du Comparateur de Prix').'</li>
-							<li>'.$this->l('Vendre sur toutes les Places de Marché (PriceMinister, Amazon, RueDuCommerce, eBay, Cdiscount, Fnac, etc...)').'</li>
-							<li>'.$this->l('Ré-importer vos commandes Places de Marché directement dans votre Prestashop').'</li>
-							<li>'.$this->l('Créer en masse des campagnes Adwords pour chacune de vos fiches produit.').'</li>
+							<li style="padding-bottom:5px">1. '.$this->l('Bénéficier d\'un flux pré-formaté pour plus de 500 Comparateurs de Prix. Aussi bien des généralistes (Google Shopping, LeGuide.co, Kelkoo, etc.) que des Comparateurs de Prix spécialisés (sport, mode, animalerie, bricolage, puériculture) et donc avec une excellente rentabilité.').'</li>
+							<li style="padding-bottom:5px">2. '.$this->l('Connexion à des dizaines de Places de Marché (Amazon, eBay, Cdiscount, MisterGoodDeal, LaRedoute, PriceMinister, GodSaveTheKids, etc.), avec la possibilité de modifier le prix sur chaque Place de Marché poru otpimiser votre rentabilité.').'</li>
+							<li style="padding-bottom:5px">3. '.$this->l('Remontée et validation des commandes; mise à jour des stocks en temps réels directement depuis votre PrestaShop : vous gagnerez en temps de traitement de vos commandes et bénéficierez ainsi de bonnes notes sur ces réseaux.').'</li>
+							<li style="padding-bottom:10px">4. '.$this->l('Et enfin, une nouveauté : BuyLine, qui vous permettra de suivre le parcours externe de vos acheteurs, c\'est-à-dire tous les sites qu\'ils auront visités avant d\'acheter sur votre PrestaShop.').'</li>
 					</ol>
 			</p>';
 			
 		if ($price != 0)
-			$html .= '<p><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois. ').'</b>';
+			$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois, ').'</b>';
 		else
-			$html .= '<p><b>'.$this->l('A partir de 79€ H.T/mois. ').'</b>';
+			$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de 79€ H.T/mois, ').'</b>';
 			
-		$html .= $this->l('Bénéficiez de 1 mois de test gratuit et sans engagement. Vous serez facturés automatiquement à la fin de votre période d\'essai.').'</p>';
+		$html .= $this->l('Shopping Flux propose à tous les PrestaShop activant ce module une période de test gratuite et sans engagement. '); 
 			
-		$html .= '<p>'.$this->l('Utilisé par plus de 500 clients, Shopping Flux réussit à doubler votre chiffre d\'affaires après 4 mois d\'utilisation quotidienne.').'</p>
+		$html .= $this->l('Plus de 700 marchands utilisent déjà ce logiciel, dont l\'objectif est de multiplier par 2 votre CA en moins de 4 mois.').'</p>
+			<p>'.$this->l('N\'hésitez pas à tester ce logiciel en activant ce module, et recevez en plus leur Livre Blanc "Stratégie pour vos flux".').'</p>
 			<br/>
 			<p>'.$this->l('Voici des copies d\'écrans').' :</p>
 			<p style="text-align:center">';
@@ -261,9 +262,9 @@ class ShoppingFluxExport extends Module
 		return '<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
 					<fieldset>
 						<legend>'.$this->l('Vos paramètres').'</legend>
-						<p><label>'.$this->l('Login Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_LOGIN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_LOGIN']).'"/></p>
-						<p><label>'.$this->l('Token Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_TOKEN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'" style="width:auto"/></p>
-						<p><label>'.$this->l('Buyline').' : </label><input type="checkbox" name="SHOPPING_FLUX_BUYLINE" '.Tools::safeOutput($configuration['SHOPPING_FLUX_BUYLINE']).'/> '.$this->l('les origines de toutes vos commandes seront trackées').'.</p>
+						<p><label>Login '.$this->l('Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_LOGIN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_LOGIN']).'"/></p>
+						<p><label>Token '.$this->l('Shopping Flux').' : </label><input type="text" name="SHOPPING_FLUX_TOKEN" value="'.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'" style="width:auto"/></p>
+						<p><label>Buyline : </label><input type="checkbox" name="SHOPPING_FLUX_BUYLINE" '.Tools::safeOutput($configuration['SHOPPING_FLUX_BUYLINE']).'/> '.$this->l('les origines de toutes vos commandes seront trackées').'.</p>
 						<p><label>'.$this->l('Tracking ventes').' : </label><input type="checkbox" name="SHOPPING_FLUX_TRACKING" '.Tools::safeOutput($configuration['SHOPPING_FLUX_TRACKING']).'/> '.$this->l('les commandes venant des comparateurs seront trackées').'.</p>
 						<p><label>'.$this->l('Remontée commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_ORDERS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_ORDERS']).'/> '.$this->l('les commandes venant des places de marché seront automatiquement importées').'.</p>
 						<p><label>'.$this->l('Expédition des commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_SHIPPED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_SHIPPED']).'/> '.$this->l('les commandes qui passeront en statut').' <b>'.$this->_getOrderStates($configuration['PS_LANG_DEFAULT'], 'shipped').'</b> '.$this->l('seront expédiées sur les places de marché').'.</p>
@@ -277,13 +278,22 @@ class ShoppingFluxExport extends Module
 	/* Fieldset for feed URI */
 	private function _getFeedContent($configuration)
 	{
+		//uri feed
+		if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())
+		{
+			$shop = Context::getContext()->shop;
+			$uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+		}
+		else
+			$uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+	
 		return '
 		<img style="margin:10px" src="'.Tools::safeOutput($configuration['SHOPPING_FLUX_INDEX']).'modules/shoppingfluxexport/logo.jpg" height="75" />
 		<fieldset>
 			<legend>'.$this->l('Vos flux produits').'</legend>
 			<p>
-				<a href="'.Tools::safeOutput($configuration['SHOPPING_FLUX_INDEX']).'modules/shoppingfluxexport/flux.php?token='.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'" target="_blank">
-					'.Tools::safeOutput($configuration['SHOPPING_FLUX_INDEX']).'modules/shoppingfluxexport/flux.php?token='.Tools::safeOutput($configuration['SHOPPING_FLUX_TOKEN']).'
+				<a href="'.Tools::safeOutput($uri).'" target="_blank">
+					'.Tools::safeOutput($uri).'
 				</a>
 			</p>
 		</fieldset>
@@ -1345,9 +1355,6 @@ class ShoppingFluxExport extends Module
 		$cart->id_carrier = (int)Configuration::get('PS_CARRIER_DEFAULT');
 		$cart->add();
 
-                //compatibylity with socolissmo
-                $this->context->cart = $cart;
-                
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
@@ -1429,7 +1436,7 @@ class ShoppingFluxExport extends Module
                     'Monechelle',
                     'Pixmania',
                     'PriceMinister',
-                    'RueDuCommerce',
+                    'Rdc',
                     'Rueducommerceean',
                     'ToutAPorter'
 		);
