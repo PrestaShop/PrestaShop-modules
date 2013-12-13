@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.1.1';
+		$this->version = '1.1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -102,7 +102,7 @@ class PSCleaner extends Module
 					return false;
 				});
 				$("#submitTruncateSales").click(function(){
-					if ($(\'#submitTruncateSales_on\').attr(\'checked\') != "checked")
+					if ($(\'#checkTruncateSales_on\').attr(\'checked\') != "checked")
 					{
 						alert(\''.addslashes(html_entity_decode($this->l('Please read the disclaimer and click "Yes" above'))).'\');
 						return false;
