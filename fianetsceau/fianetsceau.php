@@ -466,7 +466,7 @@ class FianetSceau extends Module
 
 		/** database tables creation * */
 		$sqlfile = dirname(__FILE__).'/install.sql';
-		if (!file_exists($sqlfile) || !($sql = file_get_contents($sqlfile)))
+		if (!file_exists($sqlfile) || !($sql = Tools::file_get_contents($sqlfile)))
 			return false;
 
 		$sql = str_replace('PREFIX_', _DB_PREFIX_, $sql);
