@@ -24,7 +24,7 @@
             ga('ecommerce:addTransaction', {
                 'id': '{$trans.id}', 
                 'store': '{$trans.store}',   
-                'total': {$trans.total}',       
+                'total': '{$trans.total}',       
                 'tax': '{$trans.tax}',          
                 'shipping': '{$trans.shipping}', 
                 'city': '{$trans.city}', 
