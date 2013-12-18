@@ -38,4 +38,4 @@ $_MODULE['<{gamification}prestashop>notification_a0db49ba470c1c9ae2128c347033915
 $_MODULE['<{gamification}prestashop>notification_ca96b4f8d13722aac99da25f94ea1711'] = 'Votre Expertise PrestaShop';
 $_MODULE['<{gamification}prestashop>notification_16a1daea9e8873542aec1e820798aa44'] = 'Dernier badge gagné :';
 $_MODULE['<{gamification}prestashop>notification_15377177c0259c6f79341cc57da13f19'] = 'Prochain badge :';
-$_MODULE['<{gamification}prestashop>notification_f8978f781f97e6f851e9c8f7059c37b2'] = 'Voir mon orofil complet';
+$_MODULE['<{gamification}prestashop>notification_f8978f781f97e6f851e9c8f7059c37b2'] = 'Voir mon profil complet';
