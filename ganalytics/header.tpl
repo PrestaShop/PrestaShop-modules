@@ -11,7 +11,7 @@
         })();
     {/literal}
         
-        ga('create', '{$ganalytics_id}'{if isset($pageTrack)}, '{$pageTrack}'{/if}););
+        ga('create', '{$ganalytics_id}'{if isset($pageTrack)}, '{$pageTrack}'{/if});
         
         {if $isOrder eq true}
             ga('require', 'ecommerce', 'ecommerce.js'); 
