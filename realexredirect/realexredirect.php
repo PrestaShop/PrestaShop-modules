@@ -59,10 +59,9 @@ class RealexRedirect extends PaymentModule
 		parent::__construct();
 
 		if (Configuration::get('PS_SSL_ENABLED'))
-			$link_site = Tools::getShopDomainSsl();
+			$this->url_validation = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'module/'.$this->name.'/validation';
 		else
-			$link_site = Tools::getShopDomain();
-		$this->url_validation = Tools::getShopProtocol().$link_site.'/module/realexredirect/validation';
+			$this->url_validation = Tools::getShopDomain(true, true).__PS_BASE_URI__.'module/'.$this->name.'/validation';
 		$this->displayName = $this->l('Realex Payments');
 		$this->description = $this->l('Use Realex Payments as your payments service provider.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete this information?');
@@ -374,12 +373,12 @@ class RealexRedirect extends PaymentModule
 		elseif ($this->liability == '1')
 			$checked_liability_yes = "checked='checked'";
 		elseif ($this->liability == '0')
-			$checked_liability_no = "checked='checked'";
+			$checked_liability_no = "checked='checked'";		
+		
 		if (Configuration::get('PS_SSL_ENABLED'))
-			$link_site = Tools::getShopDomainSsl();
+			$link_request = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'module/'.$this->name.'/payment';
 		else
-			$link_site = Tools::getShopDomain();
-		$link_request = Tools::getShopProtocol().$link_site.'/module/realexredirect/payment';
+			$link_request = Tools::getShopDomain(true, true).__PS_BASE_URI__.'module/'.$this->name.'/payment';
 		$link_response = $this->url_validation;
 		$this->html .=	'<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
 		$this->html .=	'<fieldset>';
