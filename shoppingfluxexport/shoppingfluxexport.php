@@ -850,18 +850,14 @@ class ShoppingFluxExport extends Module
 			foreach ($ordersXML->Response->Orders->Order as $order)
 			{
 			try {
-					
-
-
-
-				
 				$mail = (string)$order->BillingAddress->Email;
 
 				$email = (empty($mail)) ? pSQL($order->IdOrder.'@'.$order->Marketplace.'.sf') : pSQL($mail);
 
 				$id_customer = $this->_getCustomer($email, (string)$order->BillingAddress->LastName, (string)$order->BillingAddress->FirstName);
-				$id_address_billing = $this->_getAddress($order->BillingAddress, $id_customer, 'Billing');
-				$id_address_shipping = $this->_getAddress($order->ShippingAddress, $id_customer, 'Shipping');
+                                //avoid update of old orders by the same merchant with different addresses
+				$id_address_billing = $this->_getAddress($order->BillingAddress, $id_customer, 'Billing-'.(string)$order->IdOrder);
+				$id_address_shipping = $this->_getAddress($order->ShippingAddress, $id_customer, 'Shipping-'.(string)$order->IdOrder);
 				$products_available = $this->_checkProducts($order->Products);
 
 				$current_customer = new Customer((int)$id_customer);
@@ -883,6 +879,9 @@ class ShoppingFluxExport extends Module
 
 					if ($cart)
 					{
+                                                //compatibylity with socolissmo
+                                                $this->context->cart = $cart;
+                                                
 						Db::getInstance()->autoExecute(_DB_PREFIX_.'customer', array('email' => 'do-not-send@alerts-shopping-flux.com'), 'UPDATE', '`id_customer` = '.(int)$id_customer);
 
 			$customerClear = new Customer();
