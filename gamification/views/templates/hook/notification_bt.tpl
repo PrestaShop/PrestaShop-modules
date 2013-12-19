@@ -12,7 +12,7 @@
 		</span>
 	</a>
 	<div class="dropdown-menu notifs_dropdown">
-		<section id="gamification_notif_wrapper" class="notifs_panel">
+		<section id="gamification_notif_wrapper" class="notifs_panel" style="width:325px">
 			<header class="notifs_panel_header">
 				<h3>{l s='Your Merchant Expertise'}</h3>
 			</header>
