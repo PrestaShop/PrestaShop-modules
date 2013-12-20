@@ -1011,6 +1011,7 @@ class Socolissimo extends CarrierModule
         $sql = Db::getInstance()->getRow('SELECT c.id_country, cl.name FROM '._DB_PREFIX_.'country c
 										  LEFT JOIN '._DB_PREFIX_.'country_lang cl ON cl.id_lang = '.(int)$this->context->language->id.'
 										  AND cl.id_country = c.id_country WHERE iso_code = "'.pSQL($return['cecountry']).'"');
+
         $name_country = $sql['name'];
         $iso_code = $sql['id_country'];
 
@@ -1258,6 +1259,8 @@ class Socolissimo extends CarrierModule
     {
         if (version_compare(_PS_VERSION_, '1.5', '<'))
         {
+			if (!is_object($this->context->cart))
+				$this->context->cart = new Cart();
             if (Configuration::get('PS_SHIPPING_METHOD'))
                 if ($carrier->getDeliveryPriceByWeight($this->context->cart->getTotalWeight(), $id_zone))
                     return $carrier->getDeliveryPriceByWeight($this->context->cart->getTotalWeight(), $id_zone);
