@@ -65,7 +65,7 @@
 	input.primary {
 		text-shadow: none;
 		background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
-		background: -moz-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+		background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
 		color: white;
 	}
 
