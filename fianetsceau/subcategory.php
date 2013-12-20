@@ -37,7 +37,6 @@ $sceau = new Sceau();
 
 if (Tools::getValue('token') == Tools::getAdminToken($sceau->getSiteid().$sceau->getAuthkey().$sceau->getLogin()))
 {
-
 	$category_id = Tools::getValue('category_id');
 	$elem_id = Tools::getValue('elem_id');
 
@@ -46,9 +45,8 @@ if (Tools::getValue('token') == Tools::getAdminToken($sceau->getSiteid().$sceau-
 	$subcategory = $module->loadFianetSubCategories($category_id);
 
 	if ($category_id == '0')
-	{
 		$select = "";
-	} else
+	else
 	{
 		$select = "<select id='fianetsceau_".$elem_id."_subcategory' name='fianetsceau_".$elem_id."_subcategory'>";
 		foreach ($subcategory as $value)
@@ -58,5 +56,6 @@ if (Tools::getValue('token') == Tools::getAdminToken($sceau->getSiteid().$sceau-
 	}
 
 	echo $select;
-} else
+}
+else
 	header("Location: ../");

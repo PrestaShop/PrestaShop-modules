@@ -637,7 +637,8 @@ class FianetSceau extends Module
 		{
 			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip = '.long2ip($query_result['ip_address']));
 			return(long2ip($query_result['ip_address']));
-		} else
+		}
+		else
 		{
 			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip missing');
 			return false;
@@ -767,14 +768,16 @@ class FianetSceau extends Module
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '2'));
 				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' sended');
 				return true;
-			} else
+			}
+			else
 			{
 				//update fianetsceau_state 3:error
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
 				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
 				return false;
 			}
-		} else
+		}
+		else
 		{
 			//update fianetsceau_state 3:error
 			$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
@@ -797,7 +800,8 @@ class FianetSceau extends Module
 		if ($status_founded === false)
 		{
 			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Statut de paiement non reconnu : '.$order_state->name);
-		} else
+		}
+		else
 		{
 			//send xml to FIA-NET when Kwixo payment is confirmed
 			$id_order = $params['id_order'];
@@ -854,7 +858,8 @@ class FianetSceau extends Module
 			));
 
 			return $this->display(__FILE__, '/views/templates/admin/'.$tpl_name.'.tpl');
-		} else
+		}
+		else
 		{
 			//if label doesn't exist, we load nosend.tpl, order was sent before FIA-NET Sceau installation
 			$img = 'error.gif';
@@ -1160,7 +1165,8 @@ class FianetSceau extends Module
 			$show_status = Tools::getValue('fianetsceau_showstatus');
 			$fianetsceau_default_category = Tools::getValue('fianetsceau_0_category');
 			$fianetsceau_default_subcategory = Tools::getValue('fianetsceau_0_subcategory');
-		} else
+		}
+		else
 		{
 			//if no submit form and 0 value in database, we put a defaut value
 			$login = (Configuration::get('FIANETSCEAU_LOGIN') === false ? '' : Configuration::get('FIANETSCEAU_LOGIN'));
