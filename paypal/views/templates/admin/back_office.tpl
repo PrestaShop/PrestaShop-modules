@@ -216,6 +216,26 @@
 				<p><span class="bold">2.</span> {$PayPal_content.setup_reminder_2}</p>
 
 				<h4>{$PayPal_content.configuration_options_title}</h4>
+				<div id="integral_evolution_solution" class="paypal-hide">
+					<p class="description">
+						{$PayPal_content.integral_evolution_solution}
+					</p>
+					<input type="radio" name="integral_evolution_solution" id="integral_evolution_solution_iframe" value="1" {if $PayPal_integral_evolution_solution == 1}checked="checked"{/if} /> <label for="integral_evolution_solution_iframe">{$PayPal_content.integral_evolution_solution_iframe}</label><br />
+					<input type="radio" name="integral_evolution_solution" id="integral_evolution_solution_no_iframe" value="0" {if $PayPal_integral_evolution_solution == 0}checked="checked"{/if} /> <label for="integral_evolution_solution_no_iframe">{$PayPal_content.integral_evolution_solution_no_iframe}</label><br/>
+					<div id="integral_evolution_template">
+						<p class="description">
+						{$PayPal_content.template_to_choose}
+						</p>
+						<img src="../modules/paypal/img/template.png" alt=""><br/>
+						<input type="radio" name="integral_evolution_template" id="integral_evolution_template_A" value="1" {if $PayPal_integral_evolution_template == "A"}checked="checked"{/if} /> <label for="integral_evolution_template">A</label><br />
+						<input type="radio" name="integral_evolution_template" id="integral_evolution_template_B" value="1" {if $PayPal_integral_evolution_template == "B"}checked="checked"{/if} /> <label for="integral_evolution_template">B</label><br />
+						<input type="radio" name="integral_evolution_template" id="integral_evolution_template_C" value="1" {if $PayPal_integral_evolution_template == "C"}checked="checked"{/if} /> <label for="integral_evolution_template">C</label><br />
+						<input type="radio" name="integral_evolution_template" id="integral_evolution_template_D" value="1" {if $PayPal_integral_evolution_template == "D"}checked="checked"{/if} /> <label for="integral_evolution_template">D</label><br />
+					</div>
+					
+					
+				</div>
+
 				<div id="express_checkout_shortcut" class="paypal-hide">
 					<p>{$PayPal_content.express_checkout_shortcut_title}</p>
 					<p class="description">{$PayPal_content.express_checkout_shortcut_tagline}</p>
