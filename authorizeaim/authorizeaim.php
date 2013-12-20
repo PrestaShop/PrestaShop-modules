@@ -33,7 +33,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.4';
+		$this->version = '1.4.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
