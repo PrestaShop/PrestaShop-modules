@@ -218,9 +218,10 @@ class Editorial extends Module
 			if ($input['name'] != 'body_homepage_logo')
 				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
 		
-		$helper->fields_value['body_homepage_logo']['image'] = (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') ? '<img src="'.$this->_path.'homepage_logo_'.(int)$id_shop.'.jpg">' : '');
-		if ($helper->fields_value['body_homepage_logo'])
-			$helper->fields_value['body_homepage_logo']['size'] = filesize(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg') / 1000;
+		$file = dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg';
+		$helper->fields_value['body_homepage_logo']['image'] = (file_exists($file) ? '<img src="'.$this->_path.'homepage_logo_'.(int)$id_shop.'.jpg">' : '');
+		if ($helper->fields_value['body_homepage_logo'] && file_exists($file))
+			$helper->fields_value['body_homepage_logo']['size'] = filesize($file) / 1000;
 		
 		$this->_html .= $helper->generateForm($this->fields_form);
 		return $this->_html;
