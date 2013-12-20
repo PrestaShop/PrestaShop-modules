@@ -1436,7 +1436,7 @@ class ShoppingFluxExport extends Module
                     'Monechelle',
                     'Pixmania',
                     'PriceMinister',
-                    'Rdc',
+                    'RueDuCommerce',
                     'Rueducommerceean',
                     'ToutAPorter'
 		);
