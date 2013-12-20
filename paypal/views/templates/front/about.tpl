@@ -37,5 +37,5 @@
 			<li>{l s='PayPal is accepted by millions of businesses worldwide and is the preferred payment method on eBay' mod='paypal'}</li>
 		</ul>
 	</p>
-	<p><a href="https://www.paypal.com/{$iso_code}/cgi-bin/webscr?cmd=_registration-run&pal=TWJHHUL9AEP9C">{l s='Start using PayPal today!' mod='paypal'}</a></p>
+	<p><a href="https://www.paypal.com/{$iso_code|escape:'htmlall':'UTF-8'}/cgi-bin/webscr?cmd=_registration-run&pal=TWJHHUL9AEP9C">{l s='Start using PayPal today!' mod='paypal'}</a></p>
 </div>

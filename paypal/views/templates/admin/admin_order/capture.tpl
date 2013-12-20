@@ -23,13 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form id="paypal_payment_form" action="{$base_dir_ssl}modules/paypal/express_checkout/payment.php" data-ajax="false" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
-	{if isset($smarty.get.id_product)}<input type="hidden" name="id_product" value="{$smarty.get.id_product|intval}" />{/if}
-	
-	<!-- Change dynamicaly when the form is submitted -->
-	<input type="hidden" name="quantity" value="1" />
-	<input type="hidden" name="id_p_attr" value="" />
-	<input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
-	<input type="hidden" name="current_shop_url" value="{$PayPal_current_page|escape:'htmlall':'UTF-8'}" />
-	<input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
-</form>
+<br />
+<fieldset {if isset($ps_version) && ($ps_version < '1.5')}style="width: 400px"{/if}>
+	<legend><img src="{$base_url}modules/{$module_name}/logo.gif" alt="" />{l s='PayPal Capture' mod='paypal'}</legend>
+	<p><b>{l s='Information:' mod='paypal'}</b> {l s='Funds ready to be captured before shipping' mod='paypal'}</p>
+	<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
+		<input type="hidden" name="id_order" value="{$params.id_order|intval}" />
+		<p class="center"><input type="submit" class="button" name="submitPayPalCapture" value="{l s='Get the money' mod='paypal'}" onclick="return confirm('{l s='Are you sure you want to capture?' mod='paypal'}');" /></p>
+	</form>
+</fieldset>

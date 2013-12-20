@@ -23,13 +23,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form id="paypal_payment_form" action="{$base_dir_ssl}modules/paypal/express_checkout/payment.php" data-ajax="false" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
-	{if isset($smarty.get.id_product)}<input type="hidden" name="id_product" value="{$smarty.get.id_product|intval}" />{/if}
-	
-	<!-- Change dynamicaly when the form is submitted -->
-	<input type="hidden" name="quantity" value="1" />
-	<input type="hidden" name="id_p_attr" value="" />
-	<input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
-	<input type="hidden" name="current_shop_url" value="{$PayPal_current_page|escape:'htmlall':'UTF-8'}" />
-	<input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
-</form>
+<br />
+<fieldset {if isset($ps_version) && ($ps_version < '1.5')}style="width: 400px"{/if}>
+	<legend><img src="{$base_url}modules/{$module_name}/logo.gif" alt="" />{l s='PayPal Refund' mod='paypal'}</legend>
+	<p><b>{l s='Information:' mod='paypal'}</b> {l s='Payment accepted' mod='paypal'}</p>
+	<p><b>{l s='Information:' mod='paypal'}</b> {l s='When you refund a product, a partial refund is made unless you select "Generate a voucher".' mod='paypal'}</p>
+	<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
+		<input type="hidden" name="id_order" value="{$params.id_order|intval}" />
+		<p class="center">
+			<input type="submit" class="button" name="submitPayPalRefund" value="{l s='Refund total transaction' mod='paypal'}" onclick="if (!confirm('{l s='Are you sure?' mod='paypal'}'))return false;" />
+		</p>
+	</form>
+</fieldset>
