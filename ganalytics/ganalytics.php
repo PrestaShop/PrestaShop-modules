@@ -34,7 +34,7 @@ class GAnalytics extends Module
 	{
 	 	$this->name = 'ganalytics';
 	 	$this->tab = 'analytics_stats';
-	 	$this->version = '1.4.3';
+	 	$this->version = '1.4.4';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
@@ -92,9 +92,7 @@ class GAnalytics extends Module
 				<div class="margin-form">
 					<input type="text" name="ganalytics_id" value="'.Tools::safeOutput(Tools::getValue('ganalytics_id', Configuration::get('GANALYTICS_ID'))).'" />
 					<p class="clear">'.$this->l('Example:').' UA-1234567-1</p>
-					<input type="checkbox" name="universal_analytics" '.
-            (Tools::getValue('universal_analytics', Configuration::get('UGANALYTICS'))? 'checked="checked"':'')
-                    .' />
+					<input type="checkbox" name="universal_analytics" '.(Tools::getValue('universal_analytics', Configuration::get('UGANALYTICS'))? 'checked="checked"' : '').' />
 					<p class="clear">'.$this->l('Universal Analytics Active').'</p>
 				</div>
 				<center><input type="submit" name="submitGAnalytics" value="'.$this->l('Update ID').'" class="button" /></center>
