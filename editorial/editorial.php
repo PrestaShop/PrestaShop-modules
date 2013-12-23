@@ -251,7 +251,9 @@ class Editorial extends Module
 			$id_shop = (int)$this->context->shop->id;
 			$editorial = EditorialClass::getByIdShop($id_shop);
 			$editorial->copyFromPost();
-			$editorial->update();
+			if (empty($editorial->id_shop))
+				$editorial->id_shop = (int)$id_shop;
+			$editorial->save();
 
 			/* upload the image */
 			if (isset($_FILES['body_homepage_logo']) && isset($_FILES['body_homepage_logo']['tmp_name']) && !empty($_FILES['body_homepage_logo']['tmp_name']))
