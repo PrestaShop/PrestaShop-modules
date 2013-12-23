@@ -770,6 +770,7 @@ class Ebay extends Module
 			'path' => $this->_path,
 			'multishop' => (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
 			'site_extension' => $this->ebay_country->getSiteExtension(),
+			'documentation_lang' => $this->ebay_country->getDocumentationLang(),
 			'is_version_one_dot_five' => version_compare(_PS_VERSION_, '1.5', '>'),
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 			'css_file' => $this->_path . 'views/css/ebay_back.css',
