@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.8';
+		$this->version = '2.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -355,7 +355,7 @@ class MailAlerts extends Module
 				Mail::Send(
 					$id_lang,
 					$template,
-					sprintf(Mail::l('New order - %06d', $id_lang), $order->reference),
+					sprintf(Mail::l('New order - %06d', $id_lang), $order->id),
 					$template_vars,
 					$merchant_mail,
 					null,
