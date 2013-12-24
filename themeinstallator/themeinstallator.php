@@ -334,9 +334,10 @@ class ThemeInstallator extends Module
 			elseif (!copy($url, ARCHIVE_NAME))
 				$this->errors[] = $this->l('Error during the file download');
 			elseif (Tools::ZipTest(ARCHIVE_NAME))
-				$this->errors[] = $this->l('Zip file seems to be broken');
-			else
 				$this->page = 2;
+			else
+				$this->errors[] = $this->l('Zip file seems to be broken');
+
 		}
 		elseif (Tools::isSubmit('submitImport3'))
 		{
