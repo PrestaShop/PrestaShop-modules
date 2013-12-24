@@ -140,7 +140,13 @@ class Gamification extends Module
 		{
 			$this->context->controller->addJquery();
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
-
+			
+			//add css for advices
+			$advices = Advice::getValidatedByIdTab($this->context->controller->id);
+			$css_str = '';
+			foreach ($advices as $advice)
+				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
+			
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
 				$this->context->controller->addJs($this->_path.'views/js/gamification_bt.js');
 			else
@@ -148,7 +154,7 @@ class Gamification extends Module
 
 			$this->context->controller->addJqueryPlugin('fancybox');
 		
-			return '<script>
+			return $css_str.'<script>
 				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
 				var current_id_tab = '.(int)$this->context->controller->id.';
 			</script>';

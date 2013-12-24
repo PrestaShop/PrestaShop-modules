@@ -78,7 +78,7 @@ class Advice extends ObjectModel
 	public static function getValidatedByIdTab($id_tab)
 	{
 		$query = new DbQuery();
-		$query->select('a.`selector`, a.`location`, al.`html`');
+		$query->select('a.`id_ps_advice`, a.`selector`, a.`location`, al.`html`');
 		$query->from('advice', 'a');
 		$query->join('
 			LEFT JOIN `'._DB_PREFIX_.'advice_lang` al ON al.`id_advice` = a.`id_advice`
@@ -94,7 +94,12 @@ class Advice extends ObjectModel
 		
 		$advices = array();
 		foreach ($result as $res)
-			$advices[] = array('selector' => $res['selector'], 'location' => $res['location'], 'html' => $res['html']);
+			$advices[] = array(
+				'selector' => $res['selector'],
+				'location' => $res['location'],
+				'html' => $res['html'],
+				'id_ps_advice' => $res['id_ps_advice'],
+				);
 		
 		return $advices;
 	}
