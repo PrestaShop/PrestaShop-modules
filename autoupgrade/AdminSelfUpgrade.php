@@ -4250,7 +4250,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<fieldset id="activityLogBlock" style="display:none">
 			<legend><img src="../img/admin/slip.gif" /> '.$this->l('Activity Log').'</legend>
 			<p id="upgradeResultCheck"></p>
-			<div id="upgradeResultToDoList"></div>
+			<div id="upgradeResultToDoList" style="width:890px!important;"></div>
 			<div id="currentlyProcessing" style="display:none;float:left">
 			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img class="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 			<div id="infoStep" class="processing" >'.$this->l('Analyzing the situation ...').'</div>
