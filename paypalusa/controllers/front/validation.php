@@ -59,6 +59,7 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 	private function _paymentStandard()
 	{
 		/* Step 1 - Double-check that the order sent by PayPal is valid one */
+		$post_params = $this->_stripslashesDeep($_POST);
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, 'https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/cgi-bin/webscr');
 		curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -66,7 +67,7 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, 'cmd=_notify-validate&'.http_build_query($_POST));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, 'cmd=_notify-validate&'.http_build_query($post_params));
 		$response = curl_exec($ch);
 		curl_close($ch);
 
@@ -228,5 +229,12 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 			$this->context->smarty->assign('paypal_usa_error_messages', array($this->paypal_usa->l('Invalid PayPal token')));
 			$this->setTemplate('errors-messages.tpl');
 		}
+	}
+
+	/* Unquotes a string in an array */
+	private function _stripslashesDeep($value)
+	{
+		$value = is_array($value) ? array_map(array($this, '_stripslashesDeep'), $value) : stripslashes($value);
+    	return $value;
 	}
 }
