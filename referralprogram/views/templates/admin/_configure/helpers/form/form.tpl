@@ -30,8 +30,8 @@
 			<table class="table table-condensed" id="discount_value">
 				<thead>
 					<tr>
-						<th>{l s="Currency"}</th>
-						<th>{l s="Voucher amount"}</th>
+						<th>{l s="Currency" mod='referralprogram'}</th>
+						<th>{l s="Voucher amount" mod='referralprogram'}</th>
 					</tr>
 				</thead>
 				{foreach from=$currencies item=currency}

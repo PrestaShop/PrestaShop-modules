@@ -79,7 +79,7 @@
                                 </p>
                             </form>
                         {/if}
-                        <a href="javascript:;" class="exclusive" onclick="WishlistBuyProduct('{$token|escape:'html':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='homefeatured'}" rel="nofollow">{l s='Add to cart' mod='blockwishlist'}</a>
+                        <a href="javascript:;" class="exclusive" onclick="WishlistBuyProduct('{$token|escape:'html':'UTF-8'}', '{$product.id_product}', '{$product.id_product_attribute}', '{$product.id_product}_{$product.id_product_attribute}', this, {$ajax});" title="{l s='Add to cart' mod='blockwishlist'}" rel="nofollow">{l s='Add to cart' mod='blockwishlist'}</a>
                     {else}
                         <span class="exclusive">{l s='Add to cart' mod='blockwishlist'}</span>
                     {/if}
