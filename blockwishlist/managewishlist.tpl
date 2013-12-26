@@ -96,7 +96,7 @@
 				<input class="button" type="submit" value="{l s='Send' mod='blockwishlist'}" name="submitWishlist" onclick="WishlistSend('wl_send', '{$id_wishlist}', 'email');" />
 			</p>
 			<p class="required">
-				<sup>*</sup> {l s='Required field'}
+				<sup>*</sup> {l s='Required field' mod='blockwishlist'}
 			</p>
 		</fieldset>
 	</form>
