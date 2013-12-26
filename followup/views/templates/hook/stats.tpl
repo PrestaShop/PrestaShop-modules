@@ -24,7 +24,7 @@
 *}
 
 <div class="panel" id="fieldset_4">
-    <h3><i class="icon-bar-chart"></i> {l s="Statistics"}</h3>
+    <h3><i class="icon-bar-chart"></i> {l s="Statistics" mod='followup'}</h3>
 	<p>{l s="Detailed statistics for last 30 days:"}</p>
 	<p style="font-size: 10px; font-weight: bold;">
 		{l s="S = Number of sent e-mails"}<br />
