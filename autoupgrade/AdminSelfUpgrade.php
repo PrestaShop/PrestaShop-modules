@@ -2194,6 +2194,17 @@ class AdminSelfUpgrade extends AdminSelfTab
 			deactivate_custom_modules();
 		}
 
+		if (version_compare(INSTALL_VERSION, '1.5.6.1', '='))
+		{
+			$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php';
+			$content = file_get_contents($filename);			
+			$str_old[] = '$values_order_detail = array();';
+			$str_old[] = '$values_order = array();';
+			$str_old[] = '$col_order_detail = array();';
+			$content = str_replace($str_old, '', $content);
+			file_put_contents($filename, $content);
+		}
+
 		foreach($neededUpgradeFiles as $version)
 		{
 			$file = $upgrade_dir_sql.DIRECTORY_SEPARATOR.$version.'.sql';
@@ -2217,7 +2228,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$sqlContent = preg_split("/;\s*[\r\n]+/",$sqlContent);
 			$sqlContentVersion[$version] = $sqlContent;
 		}
-
 
 		//sql file execution
 		global $requests, $warningExist;
@@ -2260,17 +2270,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 							if (version_compare(INSTALL_VERSION, '1.5.5.0', '=') && $func_name == 'fix_download_product_feature_active')
 								continue;
 
-							if (version_compare(INSTALL_VERSION, '1.5.6.1', '=') && $func_name == 'migrate_orders')
-							{
-								$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php';
-								$content = file_get_contents($filename);			
-								$str_old[] = '$values_order_detail = array();';
-								$str_old[] = '$values_order = array();';
-								$str_old[] = '$col_order_detail = array();';
-								$content = str_replace($str_old, '', $content);
-								file_put_contents($filename, $content);
-							}
-
 							if (!file_exists(_PS_INSTALLER_PHP_UPGRADE_DIR_.strtolower($func_name).'.php'))
 							{
 								$this->nextQuickInfo[] = '<div class="upgradeDbError">[ERROR] '.$upgrade_file.' PHP - missing file '.$query.'</div>';
@@ -2312,26 +2311,29 @@ class AdminSelfUpgrade extends AdminSelfTab
 						if (isset($phpRes))
 							unset($phpRes);
 					}
-					elseif (!$this->db->execute($query, false))
+					else
 					{
-						$error = $this->db->getMsgError();
-						$error_number = $this->db->getNumberError();
-
+						$result = $this->db->execute($query, false);
+						if (!$result)
+						{
+							$error = $this->db->getMsgError();
+							$error_number = $this->db->getNumberError();
 							$this->nextQuickInfo[] = '
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-						if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
-						{
-							$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
-							$warningExist = true;
+							if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+							{
+								$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
+								$warningExist = true;
+							}
 						}
+						else
+							$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 					}
-					else
-						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
+					if (isset($query))
+						unset($query);
 				}
-				if (isset($query))
-					unset($query);
 			}
 			if ($this->next == 'error')
 			{
@@ -3564,7 +3566,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						{
 							$files_to_add[] = $file;
 							if (count($filesToBackup))
-								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.'.' '.(filesize($file)) , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.' , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
 							else
 								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) added  to archive.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
 						}
@@ -4248,7 +4250,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<fieldset id="activityLogBlock" style="display:none">
 			<legend><img src="../img/admin/slip.gif" /> '.$this->l('Activity Log').'</legend>
 			<p id="upgradeResultCheck"></p>
-			<div id="upgradeResultToDoList"></div>
+			<div id="upgradeResultToDoList" style="width:890px!important;"></div>
 			<div id="currentlyProcessing" style="display:none;float:left">
 			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img class="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 			<div id="infoStep" class="processing" >'.$this->l('Analyzing the situation ...').'</div>

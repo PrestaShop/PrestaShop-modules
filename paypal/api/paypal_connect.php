@@ -50,7 +50,7 @@ class PayPalConnect
 		if (!$simple_mode || !preg_match('/[A-Z]+=/', $tmp, $result))
 			return $tmp;
 
-		return substr($tmp, strpos($tmp, $result[0]));
+		return Tools::substr($tmp, strpos($tmp, $result[0]));
 	}
 
 	public function getLogs()
@@ -104,7 +104,7 @@ class PayPalConnect
 			$this->_logs[] = $this->paypal->l('Connect failed with fsockopen method');
 		else
 		{
-			$header = $this->_makeHeader($host, $script, strlen($body));
+			$header = $this->_makeHeader($host, $script, Tools::strlen($body));
 			$this->_logs[] = $this->paypal->l('Connect with fsockopen method successful');
 			$this->_logs[] = $this->paypal->l('Sending this params:').' '.$header.$body;
 

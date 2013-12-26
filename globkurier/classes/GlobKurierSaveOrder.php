@@ -42,6 +42,8 @@ class GlobKurierSaveOrder extends ObjectModel {
 	private $str_shop_key;
 	private $str_date;
 	private $str_pickup_date;
+	private $str_pickup_time_from;
+	private $str_pickup_time_to;
 	private $str_base_service;
 
 	private $arr_addons = array();
@@ -219,6 +221,26 @@ class GlobKurierSaveOrder extends ObjectModel {
 	protected function getStrPickupDate()
 	{
 		return $this->str_pickup_date;
+	}
+
+	public function setStrPickupTimeFrom($str_pickup_time_from)
+	{
+		$this->str_pickup_time_from = $str_pickup_time_from;
+	}
+
+	protected function getStrPickupTimeFrom()
+	{
+		return $this->str_pickup_time_from;
+	}
+
+	public function setStrPickupTimeTo($str_pickup_time_to)
+	{
+		$this->str_pickup_time_to = $str_pickup_time_to;
+	}
+
+	protected function getStrPickupTimeTo()
+	{
+		return $this->str_pickup_time_to;
 	}
 
 	public function setStrBaseService($str_base_service)
@@ -545,18 +567,21 @@ class GlobKurierSaveOrder extends ObjectModel {
 						<reference>'.$this->getStrReference().'</reference>
 						<order_number>'.$this->getStrOrderNumber().'</order_number>
 						<sent_date>'.$this->getStrPickupDate().'</sent_date>
+						<time_from>'.$this->getStrPickupTimeFrom().'</time_from>
+						<time_to>'.$this->getStrPickupTimeTo().'</time_to>
 						<base_service>'.$this->getStrBaseService().'</base_service>
 						<additional_services>';
-		foreach ($this->getArrAddons() as $a)
-			$xml .= '<additional_service>'.$a.'</additional_service>';
-
+		if(is_array($this->getArrAddons()))
+		{
+			foreach ($this->getArrAddons() as $a)
+				$xml .= '<additional_service>'.$a.'</additional_service>';
+		}
 		$xml .= '</additional_services>
 						<cod_amount>'.$this->getFloCodAmount().'</cod_amount>
 						<cod_account>'.$this->getStrCodAccount().'</cod_account>
 						<insurance_amount>'.$this->getFloInsuranceAmount().'</insurance_amount>
 						<declared_value>'.$this->getFloDeclaredValue().'</declared_value>
 						<payment_type>'.$this->getStrPaymentType().'</payment_type>
-						<declared_value></declared_value>
 						<content>'.$this->getStrContent().'</content>
 						<length>'.$this->getFloLength().'</length>
 						<width>'.$this->getFloWidth().'</width>

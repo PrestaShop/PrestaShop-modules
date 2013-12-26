@@ -52,10 +52,10 @@ class GlobKurier extends Module {
 	*/
 	public function __construct()
 	{
-		$this->name = $this->l('globkurier');
-		$this->tab = $this->l('shipping_logistics');
-		$this->version = $this->l('1.0');
-		$this->author = $this->l('GlobKurier | Solik Tomasz <info@tomaszsolik.pl>');
+		$this->name = 'globkurier';
+		$this->tab = 'shipping_logistics';
+		$this->version = '1.0';
+		$this->author = 'GlobKurier | Solik Tomasz <info[at]tomaszsolik.pl>';
 		$this->need_instance = 0;
 
 		parent::__construct();
@@ -172,16 +172,20 @@ class GlobKurier extends Module {
 		$obj_customer = new Customer($params['cart']->id_customer);
 		$arr_product_detail = $this->context->cart->getProducts();
 
-		// Pricing
-		$this->getProductOrder();
 		// Make order
 		$this->doOrder($params);
 
 		$this->context->controller->addCSS($this->_path.'css/main.css', 'all');
 		$this->context->controller->addCSS($this->_path.'css/jquery-ui-1.8.14.custom.css', 'all');
+		$this->context->controller->addCSS($this->_path.'css/content_picker.css', 'all');
+		$this->context->controller->addCSS($this->_path.'css/time_picker.css', 'all');
 		$this->context->controller->addJquery();
+                $this->context->controller->addJS($this->_path.'js/rsv_validator.js', 'all');
 		$this->context->controller->addJS($this->_path.'js/jquery-ui-1.8.14.custom.min.js', 'all');
 		$this->context->controller->addJS($this->_path.'js/jquery.customDataPicker.js', 'all');
+		$this->context->controller->addJS($this->_path.'js/pricing.js', 'all');
+		$this->context->controller->addJS($this->_path.'js/content_picker.js', 'all');
+		$this->context->controller->addJS($this->_path.'js/time_picker.js', 'all');
 		$this->context->controller->addJS($this->_path.'js/globkurier.js', 'all');
 
 		if (!$obj_json_login->status)
@@ -202,6 +206,7 @@ class GlobKurier extends Module {
 					'arr_order_products' => $this->arr_order_products,
 					'arr_addons_err' => $this->arr_addons_err,
 					'arr_addons_result' => $this->arr_addons_result,
+					'client_id' => Configuration::get($this->name.'_C_NUMBER'),
 					'sender_name' => Configuration::get($this->name.'_S_COMPANY').' '.Configuration::get($this->name.'_S_NAME').' '.Configuration::get($this->name.'_S_SURNAME'),
 					'sender_email' => GlobKurierTools::gkDecryptString(Configuration::get($this->name.'_LOGIN')),
 					'sender_address1' => Configuration::get($this->name.'_S_ADDRESS_STREET'),
@@ -228,98 +233,12 @@ class GlobKurier extends Module {
 					'parcel_width' => Tools::getValue('parcel_width'),
 					'parcel_height' => Tools::getValue('parcel_height'),
 					'parcel_content' => Tools::getValue('parcel_content'),
-					'parcel_pickup_date' => ((Tools::getValue('parcel_pickup_date') == false) ? GlobKurierTools::getCorrectDate() : Tools::getValue('parcel_pickup_date'))
+					'pickup_date' => ((Tools::getValue('pickup_date') == false) ? GlobKurierTools::getCorrectDate() : Tools::getValue('pickup_date')),
+					'pickup_time_from' => Tools::getValue('pickup_time_from'),
+					'pickup_time_to' => Tools::getValue('pickup_time_to')
 				)
 		);
 		return $this->display(__FILE__, 'views/templates/hook/form_order_open.tpl');
-	}
-
-	/**
-	* Pricing - given product list
-	* 
-	* @param void
-	* @return void
-	*/
-	private function getProductOrder()
-	{
-		if (Tools::isSubmit('gk_price_order'))
-		{
-			// Check error
-			$obj_globkurier_pricing = new GlobKurierPricing();
-			$obj_globkurier_pricing->setFloWeight((float)Tools::getValue('parcel_weight'));
-			$obj_globkurier_pricing->setIntLenght((int)Tools::getValue('parcel_lenght'));
-			$obj_globkurier_pricing->setIntWidth((int)Tools::getValue('parcel_width'));
-			$obj_globkurier_pricing->setIntHeight((int)Tools::getValue('parcel_height'));
-			$obj_globkurier_pricing->setIntClientId(Configuration::get($this->name.'_C_NUMBER'));
-			$obj_globkurier_pricing->setIntCount((int)Tools::getValue('parcel_count'));
-			$obj_globkurier_pricing->setIntDeliveryPostalCode(Tools::getValue('recipient_zipcode'));
-
-			if (Tools::getValue('parcel_content') == null)
-				$this->arr_order_err[] = $this->l('Please complete contents of the shipment.');
-			// Set params to get product
-			if ((int)Tools::getValue('sender_country') == 0 && (int)Tools::getValue('recipient_country') > 0)
-			{
-				$row_country = GlobKurierCountry::getById((int)Tools::getValue('recipient_country'));
-				$obj_globkurier_pricing->setStrExport($row_country['country_code']);
-				$obj_json_product = Tools::jsonDecode($obj_globkurier_pricing->sendData());
-			}
-			elseif ((int)Tools::getValue('sender_country') > 0 && (int)Tools::getValue('recipient_country') == 0)
-			{
-				$row_country = GlobKurierCountry::getById((int)Tools::getValue('sender_country'));
-				$obj_globkurier_pricing->setStrImport($row_country['country_code']);
-				$obj_json_product = Tools::jsonDecode($obj_globkurier_pricing->sendData());
-			}
-			elseif ((int)Tools::getValue('sender_country') == 0 && (int)Tools::getValue('recipient_country') == 0)
-				$obj_json_product = Tools::jsonDecode($obj_globkurier_pricing->sendData());
-			else
-				$this->arr_order_err[] = $this->l('This shipping is not available for selected countries.');
-
-			// Json get product
-			if (isset($obj_json_product->errors))
-			{
-				foreach ($obj_json_product->errors as $item)
-					$this->arr_order_err[] = $item;
-			}
-			elseif ($obj_json_product->products)
-			{
-				foreach ($obj_json_product->products as $key1 => $product)
-				{
-					foreach ($product as $key2 => $item)
-					{
-						$this->arr_order_products[$key1][$key2] = $item;
-						if ($key2 == 'timely_delivery' && $item > 0)
-							$this->arr_order_products['btn_more_products'] = true;
-					}
-				}
-			}
-			else
-				$this->arr_order_err[] = $this->l('The dimensions require indyvidual pricing. Make an inquiry on kontakt@globkurier.pl or change the parameters of the shipment.');
-
-			// Set params to get add-ons
-			if (count($this->arr_order_err) == 0 && (int)Tools::getValue('sender_country') == 0 && (int)Tools::getValue('recipient_country') == 0)
-			{
-				$obj_globkurier_addons = new GlobKurierAddons();
-				$obj_globkurier_addons->setIntClientId(Configuration::get($this->name.'_C_NUMBER'));
-				$obj_json_addons = Tools::jsonDecode($obj_globkurier_addons->sendData());
-				// Json get addons
-				if (isset($obj_json_addons->errors))
-				{
-					foreach ($obj_json_addons->errors as $item)
-						$this->arr_addons_err[] = $item;
-				}
-				elseif ($obj_json_addons->addons)
-				{
-					foreach ($obj_json_addons->addons as $key => $item)
-					{
-						$this->arr_addons_result[$key]['name'] = $item->name;
-						$this->arr_addons_result[$key]['symbol'] = $item->symbol;
-						$this->arr_addons_result[$key]['price'] = $item->price;
-					}
-				}
-				else
-					$this->arr_addons_err[] = $this->l('Incorrect data.');
-			}
-		}
 	}
 
 	/**
@@ -328,7 +247,7 @@ class GlobKurier extends Module {
 	* @param array $params
 	* @return void
 	*/
-	private function doOrder($params)
+	public function doOrder($params)
 	{
 		if (Tools::isSubmit('gk_process_order'))
 		{
@@ -351,9 +270,11 @@ class GlobKurier extends Module {
 			$obj_json_save_order->setStrSecureKey((string)$params['cart']->secure_key);
 			$obj_json_save_order->setStrReference((string)$obj_order->reference);
 			$obj_json_save_order->setStrOrderNumber((string)$order_number);
-			$obj_json_save_order->setStrBaseService((string)Tools::getValue('parcel_symbol'));
+			$obj_json_save_order->setStrBaseService((string)Tools::getValue('base_service'));
 			$obj_json_save_order->setStrDate((string)$params['cart']->date_upd);
-			$obj_json_save_order->setStrPickupDate((string)Tools::getValue('parcel_pickup_date'));
+			$obj_json_save_order->setStrPickupDate((string)Tools::getValue('pickup_date'));
+			$obj_json_save_order->setStrPickupTimeFrom((string)Tools::getValue('pickup_time_from'));
+			$obj_json_save_order->setStrPickupTimeTo((string)Tools::getValue('pickup_time_to'));
 			$obj_json_save_order->setPaymentType((string)Tools::getValue('payment'));
 			// Parcel params
 			$obj_json_save_order->setStrContent((string)Tools::getValue('parcel_content'));
@@ -363,11 +284,11 @@ class GlobKurier extends Module {
 			$obj_json_save_order->setFloWeight((float)Tools::getValue('parcel_weight'));
 			$obj_json_save_order->setIntParcels((int)Tools::getValue('parcel_count'));
 			// Addons
-			$obj_json_save_order->setArrAddons(array((string)Tools::getValue('B001'),(string)Tools::getValue('B002'),(string)Tools::getValue('B003')));
-			$obj_json_save_order->setFloCodAmount((float)Tools::getValue('cod-value'));
-			$obj_json_save_order->setStrCodAccount((string)Tools::getValue('cod-account'));
-			$obj_json_save_order->setFloInsuranceAmount((float)Tools::getValue('insurance-value'));
-			$obj_json_save_order->setFloDeclaredValue((float)Tools::getValue('declared-value'));
+			$obj_json_save_order->setArrAddons(Tools::getValue('additional_services'));
+			$obj_json_save_order->setFloCodAmount((float)Tools::getValue('cod_amount'));
+			$obj_json_save_order->setStrCodAccount((string)Tools::getValue('cod_account_number'));
+			$obj_json_save_order->setFloInsuranceAmount((float)Tools::getValue('insurance_amount'));
+			$obj_json_save_order->setFloDeclaredValue((float)Tools::getValue('declared_value'));
 			// Sender
 			$obj_json_save_order->setStrSenderName((string)Tools::getValue('sender_name'));
 			$obj_json_save_order->setStrSenderAddress1((string)Tools::getValue('sender_address1'));
@@ -389,7 +310,6 @@ class GlobKurier extends Module {
 			// Token
 			$obj_json_save_order->setStrToken(sha1((string)Tools::getValue('sender_name').$this->apikey));
 			$obj_json_save_order = Tools::jsonDecode($obj_json_save_order->sendData());
-
 			if ($obj_json_save_order->status == true)
 			{
 				if (!$obj_order_gk)
@@ -445,7 +365,7 @@ class GlobKurier extends Module {
 			$obj_globkurier_insert_order->setStrOrderNumber((string)$order_number);
 			$obj_globkurier_insert_order->setIntIdCustomer((int)$params['cart']->id_customer);
 			$obj_globkurier_insert_order->setStrSecureKey((string)$params['cart']->secure_key);
-			$obj_globkurier_insert_order->setStrShopKey((string)Configuration::get($this->name.'_SHOP_KEY'));
+			$obj_globkurier_insert_order->setStrShopKey(Configuration::get('GLOBKURIER_SHOP_KEY'));
 			$obj_globkurier_insert_order->setStrDate((string)$params['cart']->date_upd);
 			$obj_globkurier_insert_order->setStrRecipientName((string)$obj_delivery_address->company.' '.$obj_delivery_address->lastname.' '.$obj_delivery_address->firstname);
 			$obj_globkurier_insert_order->setStrRecipientAddress1((string)$obj_delivery_address->address1);

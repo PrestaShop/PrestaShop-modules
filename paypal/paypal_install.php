@@ -123,7 +123,7 @@ class PayPalInstall
 
 			foreach (Language::getLanguages() as $language)
 			{
-				if (strtolower($language['iso_code']) == 'fr')
+				if (Tools::strtolower($language['iso_code']) == 'fr')
 					$orderState->name[$language['id_lang']] = 'Autorisation acceptée par PayPal';
 				else
 					$orderState->name[$language['id_lang']] = 'Authorization accepted from PayPal';
