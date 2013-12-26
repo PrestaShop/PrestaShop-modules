@@ -122,7 +122,7 @@ class LoyaltyModule extends ObjectModel
 					$total -= $cart_rule['value_tax_exc'];
 				else
 					$total -= $cart_rule['value_real'];
-				
+
 		}
 
 		return self::getNbPointsByPrice($total);
@@ -131,7 +131,7 @@ class LoyaltyModule extends ObjectModel
 	public static function getVoucherValue($nbPoints, $id_currency = NULL)
 	{
 		$currency = $id_currency ? new Currency($id_currency) : Context::getContext()->currency->id;
-			
+
 		return (int)$nbPoints * (float)Tools::convertPrice(Configuration::get('PS_LOYALTY_POINT_VALUE'), $currency);
 	}
 
@@ -153,32 +153,47 @@ class LoyaltyModule extends ObjectModel
 
 	public static function getPointsByCustomer($id_customer)
 	{
-		return 
-		Db::getInstance()->getValue('
+
+		$validity_period = Configuration::get('PS_LOYALTY_VALIDITY_PERIOD');
+		$sql_period = '';
+		if ((int)$validity_period > 0)
+			$sql_period = ' AND datediff(NOW(),f.date_add) <= '.$validity_period;
+
+		return
+			Db::getInstance()->getValue('
 		SELECT SUM(f.points) points
 		FROM `'._DB_PREFIX_.'loyalty` f
 		WHERE f.id_customer = '.(int)($id_customer).'
-		AND f.id_loyalty_state IN ('.(int)(LoyaltyStateModule::getValidationId()).', '.(int)(LoyaltyStateModule::getNoneAwardId()).')')
-		+		
-		Db::getInstance()->getValue('
+		AND f.id_loyalty_state IN ('.(int)(LoyaltyStateModule::getValidationId()).', '.(int)(LoyaltyStateModule::getNoneAwardId()).')
+		'.$sql_period)
+			+
+			Db::getInstance()->getValue('
 		SELECT SUM(f.points) points
 		FROM `'._DB_PREFIX_.'loyalty` f
 		WHERE f.id_customer = '.(int)($id_customer).'
-		AND f.id_loyalty_state = '.(int)LoyaltyStateModule::getCancelId().' AND points < 0');	
+		AND f.id_loyalty_state = '.(int)LoyaltyStateModule::getCancelId().'
+		AND points < 0
+		'.$sql_period);
 	}
 
 	public static function getAllByIdCustomer($id_customer, $id_lang, $onlyValidate = false, $pagination = false, $nb = 10, $page = 1)
 	{
+
+		$validity_period = Configuration::get('PS_LOYALTY_VALIDITY_PERIOD');
+		$sql_period = '';
+		if ((int)$validity_period > 0)
+			$sql_period = ' AND datediff(NOW(),f.date_add) <= '.$validity_period;
+
 		$query = '
 		SELECT f.id_order AS id, f.date_add AS date, (o.total_paid - o.total_shipping) total_without_shipping, f.points, f.id_loyalty, f.id_loyalty_state, fsl.name state
 		FROM `'._DB_PREFIX_.'loyalty` f
 		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (f.id_order = o.id_order)
 		LEFT JOIN `'._DB_PREFIX_.'loyalty_state_lang` fsl ON (f.id_loyalty_state = fsl.id_loyalty_state AND fsl.id_lang = '.(int)($id_lang).')
-		WHERE f.id_customer = '.(int)($id_customer);
+		WHERE f.id_customer = '.(int)($id_customer).$sql_period;
 		if ($onlyValidate === true)
 			$query .= ' AND f.id_loyalty_state = '.(int)LoyaltyStateModule::getValidationId();
 		$query .= ' GROUP BY f.id_loyalty '.
-		($pagination ? 'LIMIT '.(((int)($page) - 1) * (int)($nb)).', '.(int)($nb) : '');
+			($pagination ? 'LIMIT '.(((int)($page) - 1) * (int)($nb)).', '.(int)($nb) : '');
 
 		return Db::getInstance()->executeS($query);
 	}
@@ -189,7 +204,7 @@ class LoyaltyModule extends ObjectModel
 		SELECT f.id_cart_rule AS id_cart_rule, f.date_upd AS date_add
 		FROM `'._DB_PREFIX_.'loyalty` f
 		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (f.`id_order` = o.`id_order`)
-		WHERE f.`id_customer` = '.(int)($id_customer).' 
+		WHERE f.`id_customer` = '.(int)($id_customer).'
 		AND f.`id_cart_rule` > 0
 		AND o.`valid` = 1';
 		if ($last === true)
@@ -208,13 +223,13 @@ class LoyaltyModule extends ObjectModel
 		foreach ($items AS $item)
 		{
 			$lm = new LoyaltyModule((int)$item['id_loyalty']);
-			
+
 			/* Check for negative points for this order */
 			$negativePoints = (int)Db::getInstance()->getValue('SELECT SUM(points) points FROM '._DB_PREFIX_.'loyalty WHERE id_order = '.(int)$f->id_order.' AND id_loyalty_state = '.(int)LoyaltyStateModule::getCancelId().' AND points < 0');
-			
+
 			if ($lm->points + $negativePoints <= 0)
 				continue;
-			
+
 			$lm->id_cart_rule = (int)$cartRule->id;
 			$lm->id_loyalty_state = (int)LoyaltyStateModule::getConvertId();
 			$lm->save();
