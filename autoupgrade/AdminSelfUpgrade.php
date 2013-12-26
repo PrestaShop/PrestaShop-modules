@@ -3566,7 +3566,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						{
 							$files_to_add[] = $file;
 							if (count($filesToBackup))
-								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.') , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.' , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
 							else
 								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) added  to archive.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
 						}
