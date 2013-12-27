@@ -20,4 +20,4 @@
 *}
 
 {* Negative margin is used to compensate the 15px margin added by PayPal inside the <iframe>, you can alter the CSS styles below if needed *}
-<iframe src="{$paypal_usa_advanced_iframe_url}" name="paypal_advanced" scrolling="no" style="width: 570px; height: 540px; margin-left: -15px; border: none;" border="0"></iframe>
+<iframe src="{$paypal_usa_advanced_iframe_url|escape:'htmlall':'UTF-8'}" name="paypal_advanced" scrolling="no" style="width: 570px; height: 540px; margin-left: -15px; border: none;" border="0"></iframe>
