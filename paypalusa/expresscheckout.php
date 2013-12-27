@@ -104,6 +104,12 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$i++;
 		}
 		// 2013-11-8 add 1.4 support
+		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
+			$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
+		}else{
+			$cart_discount = 0 ;
+		}
+		// 2013-11-8 add 1.4 support
 		$shipping_cost = 0;
 
 		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
@@ -112,14 +118,14 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$shipping_cost = $this->context->cart->getOrderShippingCost();
 		}
 
-		if ($cart_discount = $this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS))
+		if (($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($cart_discount,2)).
+					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($cart_discount['description'], 80))).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes)),2)).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
-		
 		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
 				'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$shipping_cost).
 				'&L_PAYMENTREQUEST_0_QTY'.$i.'=1'.
@@ -231,11 +237,11 @@ class paypal_usa_expresscheckout extends PayPalUSA
 				Hook::exec('authentication');
 
 			/* Redirect the use to the "Shipping" step/page of the order process */
-			
+			//d($this->context->link->getPageLink('order.php'));
 			if (Configuration::get('PS_ORDER_PROCESS_TYPE'))
 				Tools::redirectLink($this->context->link->getPageLink('order-opc.php'));
 			else
-				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=3');
+				Tools::redirectLink($this->context->link->getPageLink('order.php').'?step=2');
 			exit;
 		}
 		else

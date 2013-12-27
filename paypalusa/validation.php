@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2013 PrestaShop SA
@@ -31,7 +31,7 @@
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../header.php');
 
-mail('youness.ziouane@prestashop.com','test', '1.4');
+
 
 class paypal_usa_validation extends PayPalUSA
 {
@@ -73,7 +73,7 @@ class paypal_usa_validation extends PayPalUSA
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'cmd=_notify-validate&'.http_build_query($_POST));
 		$response = curl_exec($ch);
 		curl_close($ch);
-		
+
 		if ($response == 'VERIFIED')
 		{
 			/* Step 2 - Check the "custom" field returned by PayPal (it should contain both the Cart ID and the Shop ID, e.g. "42;1") */
@@ -94,6 +94,10 @@ class paypal_usa_validation extends PayPalUSA
 						$errors[] = $this->paypal_usa->l('Invalid Currency ID').' '.($currency->id.'|'.$cart->id_currency);
 					else
 					{
+					 /* Forcing the context currency to the order currency */
+						$context = Context::getContext();
+						$context->currency->id = (int)$currency->id;
+						
 						if (Tools::getValue('mc_gross') != $cart->getOrderTotal(true))
 							$errors[] = $this->paypal_usa->l('Invalid Amount paid');
 						else
@@ -122,9 +126,11 @@ class paypal_usa_validation extends PayPalUSA
 							else
 							{
 								$customer = new Customer((int)$cart->id_customer);
-								$paypal_products = array('express' => 'PayPal Express Checkout', 'instant' => 'PayPal Standard', 'advanced' => 'PayPal Payments Advanced',  'payflow_pro' => 'PayPal PayFlow Pro');
-								$message = 'Transaction ID: '.Tools::getValue('txn_id').'
-								Payment Type: '.$paypal_products[Tools::getValue('payment_type')].'
+								$payment_type = isset($paypal_products[Tools::getValue('payment_type')]) ? $paypal_products[Tools::getValue('payment_type')] : $paypal_products['standard'];
+								
+								$message =
+								'Transaction ID: '.Tools::getValue('txn_id').'
+								Payment Type: '.$payment_type.'
 								Order time: '.Tools::getValue('payment_date').'
 								Final amount charged: '.Tools::getValue('mc_gross').'
 								Currency code: '.Tools::getValue('mc_currency').'

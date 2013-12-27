@@ -86,14 +86,18 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$totalToPayWithoutTaxes = (float)$this->context->cart->getOrderTotal(false);
 		$total_price = 0;
 
+		$total = 0;
+
 		foreach ($this->context->cart->getProducts() as $product)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($product['name']).
 					'&L_PAYMENTREQUEST_0_NUMBER'.$i.'='.urlencode((int)$product['id_product']).
 					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($product['description_short'], 80))).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price']).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price_wt']).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'='.urlencode((int)$product['cart_quantity']);
-			$total_product += (float)$product['price'] * (int)$product['cart_quantity'];
+					
+			$total += ((float)$product['price_wt'] * (int)$product['cart_quantity']);
+			
 			$i++;
 		}
 
@@ -104,11 +108,11 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
-		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
-				'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$this->context->cart->getTotalShippingCost()).
-				'&L_PAYMENTREQUEST_0_QTY'.$i.'=1'.
-				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$totalToPayWithoutTaxes.
-				'&PAYMENTREQUEST_0_TAXAMT='.(float)($totalToPay - $totalToPayWithoutTaxes);
+		
+		$shipping = (float)$this->context->cart->getTotalShippingCost();
+		
+		$nvp_request .= '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping).
+				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$total;
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
 		$currency = new Currency((int)$this->context->cart->id_currency);
