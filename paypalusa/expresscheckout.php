@@ -104,12 +104,6 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$i++;
 		}
 		// 2013-11-8 add 1.4 support
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
-		}else{
-			$cart_discount = 0 ;
-		}
-		// 2013-11-8 add 1.4 support
 		$shipping_cost = 0;
 
 		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
@@ -118,14 +112,14 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$shipping_cost = $this->context->cart->getOrderShippingCost();
 		}
 
-		if (($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
+		if ($cart_discount = $this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS))
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
-					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($cart_discount['description'], 80))).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes)),2)).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($cart_discount,2)).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
+		
 		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
 				'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$shipping_cost).
 				'&L_PAYMENTREQUEST_0_QTY'.$i.'=1'.
@@ -164,8 +158,10 @@ class paypal_usa_expresscheckout extends PayPalUSA
 	private function _expressCheckout()
 	{
 
+
 		/* We need to double-check that the token provided by PayPal is the one expected */
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
+		p($result);
 		
 		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
@@ -211,6 +207,11 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$address->postcode = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
 			$address->save();
 
+			/* Update the cart billing and delivery addresses */
+			$this->context->cart->id_address_delivery = (int)$address->id;
+			$this->context->cart->id_address_invoice = (int)$address->id;
+			$this->context->cart->update();
+
 			/* Update the customer cookie to simulate a logged-in session */
 			$this->context->cookie->id_customer = (int)$customer->id;
 			$this->context->cookie->customer_lastname = $customer->lastname;
@@ -219,12 +220,6 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			$this->context->cookie->email = $customer->email;
 			$this->context->cookie->is_guest = $customer->isGuest();
 			$this->context->cookie->logged = 1;
-			
-			/* Update the cart billing and delivery addresses */
-			$this->context->cart->id_address_delivery = (int)$address->id;
-			$this->context->cart->id_address_invoice = (int)$address->id;
-			$this->context->cart->secure_key = $customer->secure_key;
-			$this->context->cart->update();
 
 			/* Save the Payer ID and Checkout token for later use (during the payment step/page) */
 			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
@@ -360,6 +355,7 @@ class paypal_usa_expresscheckout extends PayPalUSA
 			}
 		}
 	}
+
 }
 
 $validation = new paypal_usa_expresscheckout();
