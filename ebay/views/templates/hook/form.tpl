@@ -65,7 +65,7 @@
 	input.primary {
 		text-shadow: none;
 		background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
-		background: -moz-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+		background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
 		color: white;
 	}
 
@@ -102,5 +102,5 @@
 		<br />{if in_array('SellerBusinessType', $alert)}<img src="../modules/ebay/views/img/warn.png" />{else}<img src="../modules/ebay/views/img/valid.png" />{/if} 4) {l s='Please register an eBay business seller account to configure the application' mod='ebay'}
 	{/if}
 
-	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}<br/><a href="../modules/ebay/documentation/doc_en.pdf" target="_blank">{l s='Download documentation' mod='ebay'}</a></div>
+	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}<br/><a href="http://www.202-ecommerce.com/ebay/doc_{$documentation_lang}.pdf" target="_blank">{l s='Download documentation' mod='ebay'}</a></div>
 </fieldset><div class="clear">&nbsp;</div>

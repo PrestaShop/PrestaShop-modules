@@ -40,6 +40,7 @@ class EbayCountrySpec
 	private static $country_data = array(
 		'it' => array(
 			'site_id'        => 101,
+			'documentation'  => 'it',
 			'language'       => 'it_IT',
 			'currency'       => 'EUR',
 			'site_name'      => 'Italy',
@@ -51,6 +52,7 @@ class EbayCountrySpec
 		),
 		'gb' => array(
 			'site_id'        => 3,
+			'documentation'  => 'en',
 			'language'       => 'en_GB',
 			'currency'       => 'GBP',
 			'site_name'      => 'UK',
@@ -62,6 +64,7 @@ class EbayCountrySpec
 		),
 		'es' => array(
 			'site_id'        => 186,
+			'documentation'  => 'es',
 			'language'       => 'es_ES',
 			'currency'       => 'EUR',
 			'site_name'      => 'Spain',
@@ -73,6 +76,7 @@ class EbayCountrySpec
 		),
 		'fr' => array(
 			'site_id'        => 71,
+			'documentation'  => 'fr',
 			'language'       => 'fr_FR',
 			'currency'       => 'EUR',
 			'site_name'      => 'France',
@@ -84,6 +88,7 @@ class EbayCountrySpec
 		),
 		'nl' => array(
 			'site_id'        => 146,
+			'documentation'  => 'nl',
 			'language'       => 'nl_NL',
 			'currency'       => 'EUR',
 			'site_name'      => 'Netherlands',
@@ -95,6 +100,7 @@ class EbayCountrySpec
 		),
 		'pl' => array(
 			'site_id'        => 212,
+			'documentation'  => 'pl',
 			'language'       => 'pl_PL',
 			'currency'       => 'PLN',
 			'site_name'      => 'Poland',
@@ -106,6 +112,7 @@ class EbayCountrySpec
 		),
 		'be-fr' => array(
 			'site_id'        => 23,
+			'documentation'  => 'befr',
 			'language'       => 'fr_BE',
 			'currency'       => 'EUR',
 			'site_name'      => 'Belgium_French',
@@ -118,6 +125,7 @@ class EbayCountrySpec
 		),
 		'be-nl' => array(
 			'site_id'        => 123,
+			'documentation'  => 'benl',
 			'language'       => 'nl_BE',
 			'currency'       => 'EUR',
 			'site_name'      => 'Belgium_Dutch',
@@ -141,6 +149,11 @@ class EbayCountrySpec
 	public function getSiteID()
 	{
 		return $this->_getCountryData('site_id');
+	}
+
+	public function getDocumentationLang()
+	{
+		return $this->_getCountryDATA('documentation');
 	}
 
 	public function getLanguage()

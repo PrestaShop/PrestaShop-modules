@@ -30,7 +30,7 @@
 {else}
 	{foreach from=$categoryList key=k  item=c}
 		<tr{if $k % 2 !== 0} class="alt_row"{/if} id="category-{$c.id_category}">
-			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category})" href="#">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
+			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category})">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
 				{$getCatInStock[$c.id_category]}
 				{/if})
 			</td>
