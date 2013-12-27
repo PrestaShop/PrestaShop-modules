@@ -28,12 +28,10 @@
 <script type="text/javascript" src="{$smarty.const._PS_JS_DIR_}jquery/jquery.cluetip.js"></script>
 <script type="text/javascript">
 	{literal}
-	$(function()
-	{
-		$('input[@type=radio].star').rating();
+	$(function() {
+		$('input.star').rating();
 	});
-	$(function()
-	{
+	$(function() {
 		$('.auto-submit-star').rating();
 	});
 	

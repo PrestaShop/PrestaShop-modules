@@ -1,6 +1,6 @@
 <script type="text/javascript">
 	$( document ).ready(function() {
-		$('input[@type=radio].star').rating();
+		$('input.star').rating();
 		$('.auto-submit-star').rating();
 	});
 </script>
