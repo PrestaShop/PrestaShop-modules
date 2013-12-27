@@ -38,7 +38,7 @@ class StripeJs extends PaymentModule
 	{
 		$this->name = 'stripejs';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.9.6';
+		$this->version = '0.9.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -102,7 +102,7 @@ class StripeJs extends PaymentModule
 					Configuration::updateValue($u, $v);
 			}
 
-		$ret = parent::install() && $this->registerHook('payment') && $this->registerHook('header') && $this->registerHook('backOfficeHeader') && $this->registerHook('orderConfirmation') &&
+		$ret = parent::install() && $this->registerHook('payment') && $this->registerHook('header') && $this->registerHook('backOfficeHeader') && $this->registerHook('paymentReturn') &&
 		Configuration::updateValue('STRIPE_MODE', 0) && Configuration::updateValue('STRIPE_SAVE_TOKENS', 1) &&
 		Configuration::updateValue('STRIPE_SAVE_TOKENS_ASK', 1) && Configuration::updateValue('STRIPE_PENDING_ORDER_STATUS', (int)Configuration::get('PS_OS_PAYMENT')) &&
 		Configuration::updateValue('STRIPE_PAYMENT_ORDER_STATUS', (int)Configuration::get('PS_OS_PAYMENT')) &&
@@ -359,7 +359,7 @@ class StripeJs extends PaymentModule
 	 *
 	 * @param array Hook parameters
 	 */
-	public function hookOrderConfirmation($params)
+	public function hookPaymentReturn($params)
 	{
 		if (!isset($params['objOrder']) || ($params['objOrder']->module != $this->name))
 			return false;
