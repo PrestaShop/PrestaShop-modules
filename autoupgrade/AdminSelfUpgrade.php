@@ -939,8 +939,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 									if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
 										unset($files_list[$i]);
 								foreach($files_list as $file)
-								if (isset($file['filename']) && is_string($file['filename']))
-									$files_listing[] = $file['filename'];
+									if (isset($file['filename']) && is_string($file['filename']))
+										$files_listing[] = $file['filename'];
 								if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
 									continue;
 							}
