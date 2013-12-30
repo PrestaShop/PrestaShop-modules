@@ -34,9 +34,7 @@ $(function(){
 	});
 });
 </script>
-
-{if $logged == 1 || $nbComments != 0}
-</div><!-- Close the OosHook -->
+{if (!$content_only && (($nbComments == 0 && $too_early == false) || ($nbComments != 0)))}
 <div id="product_comments_block_extra">
 	{if $nbComments != 0}
 	<div class="comments_note">
@@ -62,6 +60,5 @@ $(function(){
 		{/if}
 	</div>
 </div>
-<div><!-- new div for the next content if any -->
 {/if}
 <!--  /Module ProductComments -->
