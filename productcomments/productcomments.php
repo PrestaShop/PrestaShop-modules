@@ -701,6 +701,7 @@ class ProductComments extends Module
 	public function hookTop($params)
 	{
 		$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
+		$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/fancybox/jquery.fancybox.js');
 		return $this->display(__FILE__, 'productcomments_top.tpl');
 	}
 
