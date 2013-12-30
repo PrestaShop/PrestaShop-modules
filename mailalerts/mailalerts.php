@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.9';
+		$this->version = '3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -713,7 +713,7 @@ class MailAlerts extends Module
 		$helper->module = $this;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$helper->identifier = $this->identifier;
-		$helper->submit_action = 'submitMailAlert';
+		$helper->submit_action = 'submitMailAlertConfiguration';
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(
