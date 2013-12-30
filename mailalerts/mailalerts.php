@@ -121,7 +121,7 @@ class MailAlerts extends Module
 		Configuration::deleteByName('MA_MERCHANT_COVERAGE');
 		Configuration::deleteByName('MA_PRODUCT_COVERAGE');
 
-		if (!Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.MailAlert::$definition['table']))
+		if (!Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.MailAlert::$definition['table']))
 			return false;
 
 		return parent::uninstall();
