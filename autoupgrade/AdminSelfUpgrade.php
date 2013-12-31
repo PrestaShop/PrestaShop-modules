@@ -919,7 +919,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
 			$langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-			if(is_array($langs))
+			if (is_array($langs))
 				foreach ($langs as $lang)
 				{
 					$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
@@ -935,17 +935,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 							$files_list = $gz->listContent();					
 							if (!$this->keepMails)
 							{
+								$files_listing = array();
 								foreach($files_list as $i => $file)
 									if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
 										unset($files_list[$i]);
 								foreach($files_list as $file)
 									if (isset($file['filename']) && is_string($file['filename']))
 										$files_listing[] = $file['filename'];
-								if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
-									continue;
+								if (is_array($files_listing))
+									$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 							}
-							elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-									continue;
+							else
+								$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false);
 						}
 					}
 				}
