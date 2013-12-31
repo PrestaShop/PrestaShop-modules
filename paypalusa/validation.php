@@ -79,25 +79,29 @@ class paypal_usa_validation extends PayPalUSA
 			/* Step 2 - Check the "custom" field returned by PayPal (it should contain both the Cart ID and the Shop ID, e.g. "42;1") */
 			$errors = array();
 			$custom = explode(';', Tools::getValue('custom'));
+			
 			if (count($custom) != 2)
 				$errors[] = $this->paypal_usa->l('Invalid value for the "custom" field');
 			else
 			{
 				/* Step 3 - Check the shopping cart, the currency used to place the order and the amount really paid by the customer */
-				$cart = new Cart((int)$custom[0]);		
+				$shop = new Shop((int)$custom[1]);
+				/*fixing cart currency 01/10/2014*/
+				global $cart;
+				$cart = new Cart((int)$custom[0]);	
+				
 				if (!Validate::isLoadedObject($cart))
 					$errors[] = $this->paypal_usa->l('Invalid Cart ID');
 				else
 				{
+					$context->cart = $cart;
 					$currency = new Currency((int)Currency::getIdByIsoCode(Tools::getValue('mc_currency')));
+					
 					if (!Validate::isLoadedObject($currency) || $currency->id != $cart->id_currency)
 						$errors[] = $this->paypal_usa->l('Invalid Currency ID').' '.($currency->id.'|'.$cart->id_currency);
 					else
 					{
 					 /* Forcing the context currency to the order currency */
-						$context = Context::getContext();
-						$context->currency->id = (int)$currency->id;
-						
 						if (Tools::getValue('mc_gross') != $cart->getOrderTotal(true))
 							$errors[] = $this->paypal_usa->l('Invalid Amount paid');
 						else
@@ -143,7 +147,7 @@ class paypal_usa_validation extends PayPalUSA
 								receipt_id: '.Tools::getValue('receipt_id').'
 								ipn_track_id: '.Tools::getValue('ipn_track_id').'
 								verify_sign: '.Tools::getValue('verify_sign').'
-								Mode: '.(Tools::getValue('mode') ? 'Test (Sandbox)' : 'Live');	
+								Mode: '.(Tools::getValue('test_ipn') ? 'Test (Sandbox)' : 'Live');	
 
 								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, false, new Shop((int)$custom[1])))
 								{
