@@ -118,3 +118,6 @@
 [submodule "globkurier/backward_compatibility"]
 	path = globkurier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "ferbuy/backward_compatibility"]
+	path = ferbuy/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
