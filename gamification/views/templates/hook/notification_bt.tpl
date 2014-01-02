@@ -6,7 +6,7 @@
 </script>
 <li id="gamification_notif" style="background:none" class="dropdown">
 	<a href="javascript:void(0);" class="dropdown-toggle gamification_notif" data-toggle="dropdown">
-		<i class="icon-bookmark"></i>
+		<i class="icon-trophy"></i>
 		<span id="gamification_notif_number_wrapper" class="notifs_badge">
 			<span id="gamification_notif_value">{$notification|intval}</span>
 		</span>
