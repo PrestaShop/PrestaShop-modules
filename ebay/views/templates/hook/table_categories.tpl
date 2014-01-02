@@ -47,9 +47,17 @@
 				{/if}
 			</td>
 			<td>
-				<input type="text" size="4" maxlength="4" name="percent[{$c.id_category}]" id="percent{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px;" value="{if isset($categoryConfigList[$c.id_category]) && isset($categoryConfigList[$c.id_category].var)}{$categoryConfigList[$c.id_category].percent}{/if}" />
+				<select name="percent[{$c.id_category}][sign]">
+					<option{if isset($categoryConfigList[$c.id_category].percent.sign) && $categoryConfigList[$c.id_category].percent.sign == ''} selected{/if}>+</option>
+					<option{if isset($categoryConfigList[$c.id_category].percent.sign) && $categoryConfigList[$c.id_category].percent.sign == '-'} selected{/if}>-</option>
+				</select>
+				<input type="text" size="3" maxlength="3" name="percent[{$c.id_category}][value]" id="percent{$c.id_category}" rel="{$c.id_category}" style="font-size: 12px;" value="{if isset($categoryConfigList[$c.id_category]) && isset($categoryConfigList[$c.id_category].var)}{$categoryConfigList[$c.id_category].percent.value}{/if}" />
+				<select name="percent[{$c.id_category}][type]">
+					<option value="currency"{if isset($categoryConfigList[$c.id_category].percent.type) && $categoryConfigList[$c.id_category].percent.type == ''} selected{/if}>{$currencySign|html_entity_decode:2:"UTF-8"}</option>
+					<option value="percent"{if isset($categoryConfigList[$c.id_category].percent.type) && $categoryConfigList[$c.id_category].percent.type == '%'} selected{/if}>%</option>
+				</select>
 			</td>
-			<td colspan="2" class="show-products" style="text-align:center"><a  id="show-products-switch-string{$c.id_category}" href="javascript:showProducts({$c.id_category})">{l s='Select products that you do NOT want to list on eBay' mod='ebay'}</a></td>			
+			<td colspan="2" class="show-products" style="text-align:center"><a  id="show-products-switch-string{$c.id_category}" href="javascript:showProducts({$c.id_category})">{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}</a></td>			
 		</tr>
 	{/foreach}
 {/if}

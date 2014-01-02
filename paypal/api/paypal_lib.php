@@ -44,13 +44,13 @@ class PaypalLib
 		return $this->_logs;
 	}
 
-	public function makeCall($host, $script, $methodName, $data, $method_version = '')
+	public function makeCall($host, $script, $method_name, $data, $method_version = '')
 	{
 		// Making request string
 		$method_version = (!empty($method_version)) ? $method_version : PAYPAL_API_VERSION;
 
 		$params = array(
-			'METHOD' => $methodName,
+			'METHOD' => $method_name,
 			'VERSION' => $method_version,
 			'PWD' => Configuration::get('PAYPAL_API_PASSWORD'),
 			'USER' => Configuration::get('PAYPAL_API_USER'),
@@ -73,12 +73,12 @@ class PaypalLib
 		if (!Configuration::get('PAYPAL_DEBUG_MODE'))
 			$this->_logs = array();
 
-		$toExclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
+		$to_exclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
 		$this->_logs[] = '<b>'.$this->paypal->l('PayPal response:').'</b>';
 
 		foreach ($return as $key => $value)
 		{
-			if (!Configuration::get('PAYPAL_DEBUG_MODE') && in_array($key, $toExclude))
+			if (!Configuration::get('PAYPAL_DEBUG_MODE') && in_array($key, $to_exclude))
 				continue;
 			$this->_logs[] = $key.' -> '.$value;
 		}

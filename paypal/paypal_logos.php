@@ -105,8 +105,8 @@ class PayPalLogos
 					$values['Local'.$key] = _MODULE_DIR_.$destination;
 
 					// Load back office cards path
-					if (file_exists(dirname(__FILE__).'/img/bo-cards/'.strtoupper($iso_code).'_bo_cards.png'))
-						$values['BackOfficeCards'] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.'/img/bo-cards/'.strtoupper($iso_code).'_bo_cards.png';
+					if (file_exists(dirname(__FILE__).'/img/bo-cards/'.Tools::strtoupper($iso_code).'_bo_cards.png'))
+						$values['BackOfficeCards'] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.'/img/bo-cards/'.Tools::strtoupper($iso_code).'_bo_cards.png';
 					else if (file_exists(dirname(__FILE__).'/img/bo-cards/default.png'))
 						$values['BackOfficeCards'] = _MODULE_DIR_._PAYPAL_MODULE_DIRNAME_.'/img/bo-cards/default.png';
 				}

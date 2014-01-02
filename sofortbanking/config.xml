@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <module>
+            <name>sofortbanking</name>
+            <displayName><![CDATA[SOFORT &Uuml;berweisung]]></displayName>
+            <version><![CDATA[2.0]]></version>
+            <description><![CDATA[Akzeptieren der Zahlm&ouml;glichkeit SOFORT &Uuml;berweisung]]></description>
+            <author><![CDATA[touchdesign]]></author>
+            <tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall>Sicher das Sie das Modul mit allen Details löschen möchten?</confirmUninstall>
+            <is_configurable>1</is_configurable>
+            <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+        </module>

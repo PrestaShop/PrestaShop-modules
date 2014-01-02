@@ -47,17 +47,17 @@
 				<div class="y-label">{l s='In order to locate the widget in a custom position, please open the "root" folder, then enter the "themes" library. Locate the specific theme you would like the widget to show up on, and in this specific themes folder, locate the file "product.tpl". Add the code here, wherever you would like it placed.' mod='yotpo'}<br> <br> 
 					<div class="y-code">
 					{literal}
-					&lt;div class=&quot;yotpo reviews&quot; </br>
-					data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;</br>
-					data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;</br>
-					data-product-id=&quot;{$yotpoProductId|intval}&quot;</br>
-					data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; </br>
-					data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; </br>
-					data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;</br>
-					data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; </br>
+					&lt;div class="yotpo reviews" </br>
+					data-appkey="{$yotpoAppkey|escape:'htmlall':'UTF-8'}"</br>
+					data-domain="{$yotpoDomain|escape:'htmlall':'UTF-8'}"</br>
+					data-product-id="{$yotpoProductId|intval}"</br>
+					data-product-models="{$yotpoProductModel|escape:'htmlall':'UTF-8'}" </br>
+					data-name="{$yotpoProductName|escape:'htmlall':'UTF-8'}" </br>
+					data-url="{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:'htmlall':'UTF-8'}" </br>
+					data-image-url="{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}" </br>
+					data-description="{$yotpoProductDescription|escape:'htmlall':'UTF-8'}" </br>
+					data-bread-crumbs="{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}"</br>
+					data-lang="{$yotpoLanguage|escape:'htmlall':'UTF-8'}"&gt; </br>
 					{$richSnippetsCode|escape:'UTF-8'} <br>
 					&lt;/div&gt;
 					{/literal}
@@ -85,17 +85,17 @@
 	        <div class="y-label">{l s='In order to locate the bottom line in a custom position, please open the "root" folder, then enter the "themes" library. Locate the specific theme you would like the widget to show up on, and in this specific themes folder, locate the file "product.tpl". Add the code here, wherever you would like it placed.' mod='yotpo'}<br /><br /> 
 	          <div class="y-code">
 	            {literal}
-	            &lt;div class=&quot;yotpo bottomLine&quot; <br>
-	               data-appkey=&quot;{$yotpoAppkey|escape:'htmlall':'UTF-8'}&quot;<br>
-	               data-domain=&quot;{$yotpoDomain|escape:'htmlall':'UTF-8'}&quot;<br>
-	               data-product-id=&quot;{$yotpoProductId|intval}&quot;<br>
-	               data-product-models=&quot;{$yotpoProductModel|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-name=&quot;{$yotpoProductName|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-url=&quot;{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:&#39;htmlall&#39;:&#39;UTF-8&#39;}&quot; <br>
-	               data-image-url=&quot;{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-description=&quot;{$yotpoProductDescription|escape:'htmlall':'UTF-8'}&quot; <br>
-	               data-bread-crumbs=&quot;{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}&quot;&gt;<br>
-	               data-lang=&quot;{$yotpoLanguage|escape:'htmlall':'UTF-8'}&quot;&gt; <br>
+	            &lt;div class="yotpo bottomLine" <br>
+	               data-appkey="{$yotpoAppkey|escape:'htmlall':'UTF-8'}"<br>
+	               data-domain="{$yotpoDomain|escape:'htmlall':'UTF-8'}"<br>
+	               data-product-id="{$yotpoProductId|intval}"<br>
+	               data-product-models="{$yotpoProductModel|escape:'htmlall':'UTF-8'}" <br>
+	               data-name="{$yotpoProductName|escape:'htmlall':'UTF-8'}" <br>
+	               data-url="{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:'htmlall':'UTF-8'}" <br>
+	               data-image-url="{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}" <br>
+	               data-description="{$yotpoProductDescription|escape:'htmlall':'UTF-8'}" <br>
+	               data-bread-crumbs="{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}"&gt;<br>
+	               data-lang="{$yotpoLanguage|escape:'htmlall':'UTF-8'}"&gt; <br>
 	              &lt;/div&gt;
 	           {/literal}
 	         </div>

@@ -96,7 +96,8 @@ if (is_object($adminObj))
 	else
 	{
 		// If this is an XSS attempt, then we should only display a simple, secure page
-		ob_clean();
+		if (ob_get_level() && ob_get_length() > 0)
+			ob_clean();
 		die('{wrong token}');
 	}
 }

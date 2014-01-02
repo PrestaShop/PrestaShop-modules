@@ -195,7 +195,7 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 			else
 			{
 				//update order history
-				$payment->updateOrderHistory($id_order, $psosstatus);
+				$order->setCurrentState($psosstatus);
 			}
 		}
 	}

@@ -1,0 +1,105 @@
+// Version 20
+
+Remove old Payment tab
+Replace globals by Tools::getValue()
+Remove unused code from touchdesign lib
+Move template files to views
+Rewrite admin display form for views
+Cast some user values for "better performances"...
+Remove some unused code for old backwards
+Add token for payment.php
+Code cleanup for PrestaShop coding standards
+Add backward_compatibility
+Replace ucfrist with Tools::ucfirst
+Escape template vars
+Replace strtolower with Tools::strtolower
+Add some compatibility fixes for PS 1.4
+Add extra string for payment button
+
+// Version 19
+
+Add currency paramater for CHF,GBP and Euro currencies
+Add module lang fallback
+Add new translation for gb
+Fix translation strings
+
+// Version 18
+
+Small fix to grep backend language with or without context
+Add index.php protection for sub-directories
+Add some compats in dev_mode for PS 1.5
+Add controllers and views for PS 1.5
+Replace spaces by tabs
+Code cleanup
+Fix cancellation link for PS 1.5
+
+// Version 17
+
+Add backward compatibility for PS 1.4
+
+// Version 16
+
+Add compatibility for PS 1.5.4
+Fix payment tpl {l ...} tag
+Add multi language support for images
+Add new translations for es, fr, it, nl and pl
+Fix module name translation
+
+// Version 15
+
+Add compatibility for PS 1.5.3
+Update translations
+Switch icon
+
+// Version 14
+
+Logo update
+
+// Version 13
+
+Add compatibility for PS 1.5
+
+// Version 12
+
+Add optional force redirect (usefull for non EU and modified stores)
+
+// Version 11
+
+...
+
+// Version 10
+
+Update README
+Update Translations
+Update logos
+Rename sofortueberweisung -> sofortbanking
+Add secure_key
+
+// Version 09
+
+Fix guest checkout
+Add touchdesign library
+Fix redirects
+
+// Version 08
+
+Small changes for prestashop version 1.4 compatibility
+Add confirm before payment page
+Update README
+Update Translations
+
+// Version 07
+
+Update cancel url
+Add readme/install doc
+Update translation
+Add payment block
+Add success message
+Add required note
+Add confirmation page
+Update order states
+Code cleanup
+Add changelog
+Add customer protection by sofort bank
+
+// ...

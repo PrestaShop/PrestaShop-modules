@@ -52,7 +52,7 @@ class UspsCarrier extends CarrierModule
 	{
 		$this->name = 'uspscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3.1';
+		$this->version = '1.3.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = '9ac173da9614868dbd15c56cf8ad008a';
@@ -1553,7 +1553,7 @@ class UspsCarrier extends CarrierModule
 				{
 					$conversionRate = 1;
 					$conversionRate = $this->getCartCurrencyRate((int)($config['id_currency']), (int)$wsParams['id_cart']);
-					$cost += ($config['additional_charges'] * $conversionRate);
+					$cost += ($config['additional_charges'] * $product['quantity']  * $conversionRate);
 				}
 			}
 		}

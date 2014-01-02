@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.6.9';
+		$this->version = '1.7.1';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();

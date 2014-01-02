@@ -22,7 +22,7 @@ if (!defined('_PS_VERSION_')) exit;
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.3.5');
+define('SHOPGATE_PLUGIN_VERSION', '2.3.6');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
@@ -45,10 +45,11 @@ class ShopGate extends PaymentModule {
 	
 	function __construct() {
 		$this->name = 'shopgate';
-		if(version_compare(_PS_VERSION_, '1.5.0.0', '<')){
-			$this->tab = 'market_place';
-		} else {
+		if(version_compare(_PS_VERSION_, '1.5', '>='))
+		{
 			$this->tab = 'mobile';
+		} else {
+			$this->tab = 'market_place';
 		}
 		
 		$this->version = SHOPGATE_PLUGIN_VERSION;

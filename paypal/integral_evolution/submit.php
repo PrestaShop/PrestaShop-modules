@@ -27,7 +27,7 @@
 include_once(dirname(__FILE__).'/../../../config/config.inc.php');
 include_once(dirname(__FILE__).'/../../../init.php');
 
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 	require_once(_PS_ROOT_DIR_.'/controllers/OrderConfirmationController.php');
 
 class PayPalIntegralEvolutionSubmit extends OrderConfirmationControllerCore
@@ -67,7 +67,7 @@ $key = Tools::getValue('key');
 
 if ($id_module && $id_order && $id_cart && $key)
 {
-	if (_PS_VERSION_ < '1.5')
+	if (version_compare(_PS_VERSION_, '1.5', '<'))
 	{
 		$integral_evolution_submit = new PayPalIntegralEvolutionSubmit();
 		$integral_evolution_submit->run();
@@ -82,11 +82,9 @@ elseif ($id_cart)
 		'id_order' => (int)Order::getOrderByCartId((int)$id_cart),
 	);
 
-	if (_PS_VERSION_ < '1.5')
+	if (version_compare(_PS_VERSION_, '1.5', '<'))
 	{
-		global $cookie;
-		
-		$customer = new Customer($cookie->id_customer);
+		$customer = new Customer(Context::getContext()->cookie->id_customer);
 		$values['key'] = $customer->secure_key;
 		$url = _MODULE_DIR_.'/paypal/integral_evolution/submit.php';
 		Tools::redirectLink($url.'?'.http_build_query($values, '', '&'));
@@ -100,5 +98,4 @@ elseif ($id_cart)
 }
 else
 	Tools::redirectLink(__PS_BASE_URI__);
-	
 exit(0);

@@ -109,3 +109,12 @@
 [submodule "textmaster/backward_compatibility"]
 	path = textmaster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "sofortbanking/backward_compatibility"]
+	path = sofortbanking/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "trustpilot/backward_compatibility"]
+	path = trustpilot/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "globkurier/backward_compatibility"]
+	path = globkurier/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

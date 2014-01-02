@@ -33,7 +33,7 @@ class BackwardCompatibility extends Module
 	{
 		$this->name = 'backwardcompatibility';
 		$this->tab = 'compatibility_tools';
-		$this->version = 0.5;
+		$this->version = 0.6;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
@@ -146,6 +146,19 @@ class BackwardCompatibility extends Module
 		}
 
 		return $results;
+	}
+
+	protected function getVersion($ini_file = false)
+	{
+		if (!$ini_file)
+			$ini_file = dirname(__FILE__).'/backward_compatibility/backward.ini';
+
+		if (file_exists($ini_file))
+		{
+			$ini_values = parse_ini_file($ini_file);
+			return array_shift($ini_values);
+		}
+		return false;
 	}
 }
 

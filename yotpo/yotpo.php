@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.2';
+		$this->version = '1.3.3';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -103,7 +103,13 @@ class Yotpo extends Module
 		$smarty->assign(array('yotpoAppkey' => Configuration::get('yotpo_app_key'), 
 							  'yotpoDomain' => $this->getShopDomain(),
 							  'yotpoLanguage' => $this->getLanguage()));
-		return '<script src="https://www.yotpo.com/js/yQuery.js"></script>';
+		
+		if(isset($this->context) && isset($this->context->controller) && method_exists($this->context->controller, 'addJS')) {
+			$this->context->controller->addJS(($this->_path).'headerScript.js');
+		}
+		else {
+			return '<script type="text/javascript" src="'.$this->_path.'headerScript.js"></script>';				
+		}
 	}
 
 	public function hookproductfooter($params)

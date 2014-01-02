@@ -12,7 +12,7 @@
 		</span>
 	</a>
 	<div class="dropdown-menu notifs_dropdown">
-		<section id="gamification_notif_wrapper" class="notifs_panel">
+		<section id="gamification_notif_wrapper" class="notifs_panel" style="width:325px">
 			<header class="notifs_panel_header">
 				<h3>{l s='Your Merchant Expertise'}</h3>
 			</header>
@@ -24,7 +24,7 @@
 				<span class="sr-only">{l s='Level'} {$current_level|intval} : {$current_level_percent|intval} %</span>
 				</div>
 			</div>
-			<ul id="gamification_badges_list" style="{if $badges_to_display|count <= 2} height:140px;{/if} padding-left:0">
+			<ul id="gamification_badges_list" style="{if $badges_to_display|count <= 2} height:155px;{/if} padding-left:0">
 				{foreach from=$badges_to_display name=badge_list item=badge}
 				{if $badge->id}
 					<li class="{if $badge->validated} unlocked {else} locked {/if}" style="float:left;">

@@ -24,19 +24,19 @@
 *}
 <script>
 	function checkToken()
-	{
-		$.ajax({
+	{ldelim}
+		$.ajax({ldelim}
 			url: '{$url}',
 			cache: false,
 			success: function(data)
-			{
+			{ldelim}
 				if (data == 'OK')
 					window.location.href = '{$window_location_href}';
 				else
 					setTimeout ("checkToken()", 5000);
-			}
-		});
-	}
+			{rdelim}
+		{rdelim});
+	{rdelim}
 	checkToken();
 </script>
 	<p align="center" class="warning"><a href="{$request_uri}&action=logged&relogin=1" target="_blank" class="button">{l s='If you\'ve been logged out of eBay and not redirected to the configuration page, please click here' mod='ebay'}</a></p>

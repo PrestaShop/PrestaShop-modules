@@ -526,17 +526,17 @@ class Tools14
 	*/
 	public static function deleteDirectory($dirname, $delete_self = true)
 	{
-		$dirname = rtrim($dirname, '/').'/';
+		$dirname = rtrim($dirname, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 		if (file_exists($dirname))
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
     				if ($file != '.' && $file != '..' && $file != '.svn')
     				{
-    					if (is_dir($dirname.$file))
-    						Tools::deleteDirectory($dirname.$file, true);
-    					elseif (file_exists($dirname.$file))
+    					if (is_file($dirname.$file))
     						unlink($dirname.$file);
+    					elseif (is_dir($dirname.$file.DIRECTORY_SEPARATOR))
+    						self::deleteDirectory($dirname.$file.DIRECTORY_SEPARATOR, true);
     				}
 				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))

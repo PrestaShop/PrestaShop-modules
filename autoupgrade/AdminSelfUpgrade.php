@@ -654,6 +654,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$upgrader->checkPSVersion(true, array('minor'));
 				$this->install_version = $upgrader->version_num;
 		}
+
+		if (is_null($this->install_version) || empty($this->install_version))
+			$this->install_version = _PS_VERSION_;
+
 		// If you have defined this somewhere, you know what you do
 		/* load options from configuration if we're not in ajax mode */
 		if (!$this->ajax)
@@ -873,9 +877,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
 						$res &= unlink($this->backupPath.DIRECTORY_SEPARATOR.$filename);
-
-					if (!empty($name) && is_dir($this->backupPath.DIRECTORY_SEPARATOR.$name))
-						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name);
+					elseif (!empty($name) && is_dir($this->backupPath.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR))
+						self::deleteDirectory($this->backupPath.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR);
 				}
 			if ($res)
 				Tools14::redirectAdmin($this->currentIndex.'&conf=1&token='.Tools14::getValue('token'));
@@ -1747,7 +1750,9 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$allModules = scandir($dir);
 		foreach ($allModules as $module_name)
 		{
-			if (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
+			if (is_file($dir.DIRECTORY_SEPARATOR.$module_name))
+				continue;
+			elseif (is_dir($dir.DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR))
 			{
 				if(is_array($this->modules_addons))
 					$id_addons = array_search($module_name, $this->modules_addons);
@@ -1824,7 +1829,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 		else
 		{
-			//deactivate backward_compatibility, not used in 1.5.X
 			if (version_compare($this->install_version, '1.5.0.0', '>='))
 			{
 				$modules_to_delete['backwardcompatibility'] = 'Backward Compatibility';
@@ -1841,11 +1845,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 					INNER JOIN `'._DB_PREFIX_.'hook_module` hm USING (`id_module`)
 					INNER JOIN `'._DB_PREFIX_.'module` m USING (`id_module`)				
 					WHERE m.`name` LIKE \''.pSQL($key).'\'');
-
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'module` SET `active` = 0 WHERE `name` LIKE \''.pSQL($key).'\'');
 
-					$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR.$key.'.php';
-					if (file_exists($path))
+					$path = $this->prodRootDir.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR;
+					if (file_exists($path.$key.'.php'))
 					{
 						if (self::deleteDirectory($path))
 							$this->nextQuickInfo[] = sprintf($this->l('%1$s module is not compatible with 1.5.X, it will be removed from your ftp.'), $module);
@@ -2191,6 +2194,17 @@ class AdminSelfUpgrade extends AdminSelfTab
 			deactivate_custom_modules();
 		}
 
+		if (version_compare(INSTALL_VERSION, '1.5.6.1', '='))
+		{
+			$filename = _PS_INSTALLER_PHP_UPGRADE_DIR_.'migrate_orders.php';
+			$content = file_get_contents($filename);			
+			$str_old[] = '$values_order_detail = array();';
+			$str_old[] = '$values_order = array();';
+			$str_old[] = '$col_order_detail = array();';
+			$content = str_replace($str_old, '', $content);
+			file_put_contents($filename, $content);
+		}
+
 		foreach($neededUpgradeFiles as $version)
 		{
 			$file = $upgrade_dir_sql.DIRECTORY_SEPARATOR.$version.'.sql';
@@ -2214,7 +2228,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$sqlContent = preg_split("/;\s*[\r\n]+/",$sqlContent);
 			$sqlContentVersion[$version] = $sqlContent;
 		}
-
 
 		//sql file execution
 		global $requests, $warningExist;
@@ -2298,26 +2311,29 @@ class AdminSelfUpgrade extends AdminSelfTab
 						if (isset($phpRes))
 							unset($phpRes);
 					}
-					elseif (!$this->db->execute($query, false))
+					else
 					{
-						$error = $this->db->getMsgError();
-						$error_number = $this->db->getNumberError();
-
+						$result = $this->db->execute($query, false);
+						if (!$result)
+						{
+							$error = $this->db->getMsgError();
+							$error_number = $this->db->getNumberError();
 							$this->nextQuickInfo[] = '
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-						if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
-						{
-							$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
-							$warningExist = true;
+							if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+							{
+								$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
+								$warningExist = true;
+							}
 						}
+						else
+							$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
 					}
-					else
-						$this->nextQuickInfo[] = '<div class="upgradeDbOk">[OK] SQL '.$upgrade_file.' '.$query.'</div>';
+					if (isset($query))
+						unset($query);
 				}
-				if (isset($query))
-					unset($query);
 			}
 			if ($this->next == 'error')
 			{
@@ -2352,10 +2368,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 				foreach (scandir($dir) as $file)
 					if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 					{
-						if ( is_file($dir.$file))
+						if (is_file($dir.$file))
 							unlink($dir.$file);
-						elseif( is_dir($dir.$file))
-							self::deleteDirectory($dir.$file);
+						elseif(is_dir($dir.$file.DIRECTORY_SEPARATOR))
+							self::deleteDirectory($dir.$file.DIRECTORY_SEPARATOR);
 						$this->nextQuickInfo[] = sprintf($this->l('[cleaning cache] %s removed'), $file);
 					}
 		
@@ -3550,7 +3566,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						{
 							$files_to_add[] = $file;
 							if (count($filesToBackup))
-								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.'.' '.(filesize($file)) , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.') , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
 							else
 								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) added  to archive.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
 						}
