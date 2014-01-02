@@ -124,3 +124,6 @@
 [submodule "klarnaprestashop/backward_compatibility"]
 	path = klarnaprestashop/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "paypalusa/backward_compatibility"]
+	path = paypalusa/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
