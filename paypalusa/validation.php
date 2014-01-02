@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *
 *  International Registered Trademark & Property of PrestaShop SA
 *
