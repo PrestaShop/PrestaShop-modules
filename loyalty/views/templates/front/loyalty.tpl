@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -61,7 +61,7 @@
 	</table>
 	<div id="block-order-detail" class="hidden">&nbsp;</div>
 	{else}
-		<p class="warning">{l s='You have not placed any orders.'}</p>
+		<p class="warning">{l s='You have not placed any orders.' mod='loyalty'}</p>
 	{/if}
 </div>
 <div id="pagination" class="pagination">
@@ -105,7 +105,7 @@
 	{if $orders|@count > 10}
 		<form action="{$pagination_link}" method="get" class="pagination">
 			<p>
-				<input type="submit" class="button_mini" value="{l s='OK'}" />
+				<input type="submit" class="button_mini" value="{l s='OK' mod='loyalty'}" />
 				<label for="nb_item">{l s='items:' mod='loyalty'}</label>
 				<select name="n" id="nb_item">
 				{foreach from=$nArray item=nValue}
@@ -178,7 +178,7 @@
 	<div id="block-order-detail" class="hidden">&nbsp;</div>
 </div>
 
-{if $minimalLoyalty > 0}<p>{l s='The minimum order amount in order to use these vouchers is:'} {convertPrice price=$minimalLoyalty}</p>{/if}
+{if $minimalLoyalty > 0}<p>{l s='The minimum order amount in order to use these vouchers is:' mod='loyalty'} {convertPrice price=$minimalLoyalty}</p>{/if}
 
 <script type="text/javascript">
 {literal}

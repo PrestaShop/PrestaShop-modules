@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2013 PrestaShop SA
+*	@copyright	2007-2014 PrestaShop SA
 *	@version	Release: $Revision: 11834 $
 *	@license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
@@ -919,7 +919,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				define('_PS_MAILS_DIR_', _PS_ROOT_DIR_.'/mails/');
 			$langs = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang` WHERE `active` = 1');
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
-			if(is_array($langs))
+			if (is_array($langs))
 				foreach ($langs as $lang)
 				{
 					$lang_pack = Tools14::jsonDecode(Tools::file_get_contents('http'.(extension_loaded('openssl')? 's' : '').'://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$this->install_version.'&iso_lang='.$lang['iso_code']));
@@ -935,17 +935,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 							$files_list = $gz->listContent();					
 							if (!$this->keepMails)
 							{
+								$files_listing = array();
 								foreach($files_list as $i => $file)
 									if (preg_match('/^mails\/'.$lang['iso_code'].'\/.*/', $file['filename']))
 										unset($files_list[$i]);
 								foreach($files_list as $file)
-								if (isset($file['filename']) && is_string($file['filename']))
-									$files_listing[] = $file['filename'];
-								if (is_array($files_listing) && !$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', ''))
-									continue;
+									if (isset($file['filename']) && is_string($file['filename']))
+										$files_listing[] = $file['filename'];
+								if (is_array($files_listing))
+									$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 							}
-							elseif (!$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false))
-									continue;
+							else
+								$gz->extract(_PS_TRANSLATIONS_DIR_.'../', false);
 						}
 					}
 				}
@@ -3566,7 +3567,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 						{
 							$files_to_add[] = $file;
 							if (count($filesToBackup))
-								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.') , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
+								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %3$s) added to archive. %2$s left.' , 'AdminSelfUpgrade', true), $archiveFilename, count($filesToBackup), $size);
 							else
 								$this->nextQuickInfo[] = sprintf($this->l('%1$s (size : %2$s) added  to archive.', 'AdminSelfUpgrade', true), $archiveFilename, $size);
 						}
@@ -4250,7 +4251,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			<fieldset id="activityLogBlock" style="display:none">
 			<legend><img src="../img/admin/slip.gif" /> '.$this->l('Activity Log').'</legend>
 			<p id="upgradeResultCheck"></p>
-			<div id="upgradeResultToDoList"></div>
+			<div id="upgradeResultToDoList" style="width:890px!important;"></div>
 			<div id="currentlyProcessing" style="display:none;float:left">
 			<h4 id="pleaseWait">'.$this->l('Currently processing').' <img class="pleaseWait" src="'.__PS_BASE_URI__.'img/loader.gif"/></h4>
 			<div id="infoStep" class="processing" >'.$this->l('Analyzing the situation ...').'</div>

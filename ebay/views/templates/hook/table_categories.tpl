@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,7 +30,7 @@
 {else}
 	{foreach from=$categoryList key=k  item=c}
 		<tr{if $k % 2 !== 0} class="alt_row"{/if} id="category-{$c.id_category}">
-			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category})" href="#">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
+			<td><a id="show-products-switch-{$c.id_category}" showing="0" class="show-products" href="javascript:showProducts({$c.id_category})">&#9654;</a> {$c.name} ({if isset($getCatInStock[$c.id_category])}
 				{$getCatInStock[$c.id_category]}
 				{/if})
 			</td>

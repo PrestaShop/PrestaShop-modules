@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  2007-2013 PrestaShop
+ *  2007-2014 PrestaShop
  * 
  * NOTICE OF LICENSE
  * This source file is subject to the Academic Free License (AFL 3.0)
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  * 
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @version  Release: $Revision: 7515 $
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -537,7 +537,7 @@ class Gsitemap extends Module
 					$type = '';
 					$id_obj = 0;
 				}
-			} $this->_recursiveSitemapCreator($link_sitemap, $lang, $index);
+			} $this->_recursiveSitemapCreator($link_sitemap, $lang['iso_code'], $index);
 			$page = '';
 			$index = 0;
 		}
@@ -576,7 +576,7 @@ class Gsitemap extends Module
 		if (!count($link_sitemap))
 			return false;
 
-		$sitemap_link = $this->context->shop->id.'_'.$lang['iso_code'].'_'.$index.'_sitemap.xml';
+		$sitemap_link = $this->context->shop->id.'_'.$lang.'_'.$index.'_sitemap.xml';
 		$writeFd = fopen(dirname(__FILE__).'/../../'.$sitemap_link, 'w');
 
 		fwrite($writeFd, '<?xml version="1.0" encoding="UTF-8"?>'."\r\n".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">'."\r\n");
