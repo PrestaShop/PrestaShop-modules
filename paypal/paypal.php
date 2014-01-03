@@ -1246,7 +1246,7 @@ class PayPal extends PaymentModule
 
 	protected function getGiftWrappingPrice()
 	{
-		if (version_compare(_PS_VERSION_, '1.5', '>='))
+		if (version_compare(_PS_VERSION_, '1.5.3.0', '>='))
 			$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 		else
 		{
