@@ -143,7 +143,7 @@ class paypal_usa_validation extends PayPalUSA
 								receipt_id: '.Tools::getValue('receipt_id').'
 								ipn_track_id: '.Tools::getValue('ipn_track_id').'
 								verify_sign: '.Tools::getValue('verify_sign').'
-								Mode: '.(Tools::getValue('mode') ? 'Test (Sandbox)' : 'Live');	
+								Mode: '.(Tools::getValue('test_ipn') ? 'Test (Sandbox)' : 'Live');	
 
 								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, false, new Shop((int)$custom[1])))
 								{
