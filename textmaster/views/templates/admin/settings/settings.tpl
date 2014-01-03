@@ -28,7 +28,7 @@
     {assign var=settings value=$values}
 {/if}
 
-{if settings_view}
+{if $settings_view}
 <form id="settings_form" class="defaultForm" action="{$saveAction|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data">
 {/if}
     {if $settings_view}

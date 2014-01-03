@@ -71,3 +71,4 @@ define('TEXTMASTER_API_VERSION', 'v1');
 define('TEXTMASTER_API_TIMEOUT_IN_SECONDS', 30);
 define('TEXTMASTER_TRACKER_ID', '517e6cf34fe01600020006b2');
 define('TEXTMASTER_PRICING_URL', 'http://eu.textmaster.com/clients/pricing');
+define('TEXTMASTER_DEFAULT_LOCALE', 'en-EU');
