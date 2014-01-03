@@ -594,7 +594,7 @@ class PayPal extends PaymentModule
 		$message = $this->l('Cancel products result:').'<br>';
 
 		$amount = (float)($products[(int)$order_detail->id]['product_price_wt'] * (int)$cancel_quantity[(int)$order_detail->id]);
-		$refund = $this->_makeRefund($paypal_order->id_transaction, (int)$order->id, $amount);
+		$refund = $this->_makeRefund($paypal_order['id_transaction'], (int)$order->id, $amount);
 		$this->formatMessage($refund, $message);
 		$this->_addNewPrivateMessage((int)$order->id, $message);
 	}
@@ -1090,7 +1090,7 @@ class PayPal extends PaymentModule
 
 		$paypal_lib	= new PaypalLib();
 		$response = $paypal_lib->makeCall($this->getAPIURL(), $this->getAPIScript(), 'GetTransactionDetails',
-			'&'.http_build_query(array('TRANSACTIONID' => $paypal_order->id_transaction), '', '&'));
+			'&'.http_build_query(array('TRANSACTIONID' => $paypal_order['id_transaction']), '', '&'));
 
 		if (array_key_exists('ACK', $response))
 		{
