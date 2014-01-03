@@ -34,7 +34,7 @@ class GAnalytics extends Module
 	{
 	 	$this->name = 'ganalytics';
 	 	$this->tab = 'analytics_stats';
-	 	$this->version = '1.4.4';
+	 	$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
@@ -52,27 +52,16 @@ class GAnalytics extends Module
 
 	function install()
 	{
-		if (!parent::install() ||
-				!$this->registerHook('header') ||
-				!$this->registerHook('orderConfirmation'))
-			return false;
-		return true;
+		return (parent::install() && $this->registerHook('header') && $this->registerHook('orderConfirmation'));
 	}
-	
-	function uninstall()
-	{
-		if (!Configuration::deleteByName('GANALYTICS_ID') || !parent::uninstall())
-			return false;
-		return true;
-	}
-	
+
 	public function getContent()
 	{
 		$output = '<h2>Google Analytics</h2>';
-		if (Tools::isSubmit('submitGAnalytics') AND ($gai = Tools::getValue('ganalytics_id')))
+		if (Tools::isSubmit('submitGAnalytics'))
 		{
-			Configuration::updateValue('GANALYTICS_ID', $gai);
-			Configuration::updateValue('UGANALYTICS',Tools::getValue('universal_analytics'));
+			Configuration::updateValue('GANALYTICS_ID', Tools::getValue('ganalytics_id'));
+			Configuration::updateValue('UGANALYTICS', Tools::getValue('universal_analytics'));
 			$output .= '
 			<div class="conf confirm">
 				<img src="../img/admin/ok.gif" alt="" title="" />
