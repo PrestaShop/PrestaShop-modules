@@ -351,7 +351,7 @@ class PayPal extends PaymentModule
 			$id_hook = (int)Configuration::get('PS_MOBILE_HOOK_HEADER_ID');
 			if ($id_hook > 0)
 			{
-				$module = Hook::getModuleFromHook($id_hook, $this->id);
+				$module = Hook::getModulesFromHook($id_hook, $this->id);
 				if (!$module)
 					$this->registerHook('displayMobileHeader');
 			}
