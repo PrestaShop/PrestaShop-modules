@@ -30,6 +30,10 @@
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
 include(dirname(__FILE__).'/../../init.php');
+/* Backward compatibility */
+if (_PS_VERSION_ < 1.5)
+	require(_PS_MODULE_DIR_.'gsitemap/backward_compatibility/backward.php');
+	
 /* Check to security tocken */
 if (substr(Tools::encrypt('gsitemap/cron'), 0, 10) != Tools::getValue('token') || !Module::isInstalled('gsitemap'))
 	die('Bad token');
@@ -39,14 +43,17 @@ $gsitemap = new Gsitemap();
 /* Check if the module is enabled */
 if ($gsitemap->active)
 {
-	/* Check if the requested shop exists */
-	$shops = Db::getInstance()->ExecuteS('SELECT id_shop FROM `'._DB_PREFIX_.'shop`');
-	$list_id_shop = array();
-	foreach ($shops as $shop)
-		$list_id_shop[] = (int)$shop['id_shop'];
-
-	$id_shop = (isset($_GET['id_shop']) && in_array($_GET['id_shop'], $list_id_shop)) ? (int)$_GET['id_shop'] : (int)Configuration::get('PS_SHOP_DEFAULT');
 	$gsitemap->cron = true;
+	/* Check if the requested shop exists */
+	$list_id_shop = array(1);
+	if ($gsitemap->tableColumnExists(_DB_PREFIX_.'shop'))
+	{		
+		$shops = Db::getInstance()->ExecuteS('SELECT id_shop FROM `'._DB_PREFIX_.'shop`');
+		$list_id_shop = array();
+		foreach ($shops as $shop)
+			$list_id_shop[] = (int)$shop['id_shop'];
+	}	
+	$id_shop = (isset($_GET['id_shop']) && in_array($_GET['id_shop'], $list_id_shop)) ? (int)$_GET['id_shop'] : (int)Configuration::get('PS_SHOP_DEFAULT');
 	
 	/* for the main run initiat the sitemap's files name stored in the database */
 	if (!isset($_GET['continue']))

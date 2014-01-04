@@ -19,7 +19,7 @@
 		<br/>
 		<form action="{$gsitemap_refresh_page|escape:'htmlall':'UTF-8'}" method="post" id="gsitemap_generate_sitmap">
 			<img src="../img/loader.gif" alt=""/>
-			<input type="submit" class="button" value="{l s='Continue' mod='gsitemap'}" style="display: none;"/>
+			<input type="submit" class="button" value="{l s='Continue' mod='gsitemap'}" />
 		</form>
 	</fieldset>
 {else}
@@ -30,11 +30,13 @@
 			<a href="{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$shop->id|intval}_index_sitemap.xml" target="_blank"><span style="color: blue;">{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$shop->id|intval}_index_sitemap.xml</span></a><br/><br/>
 			{l s='This URL is the master Sitemap and refers to:' mod='gsitemap'}
 			<div style="max-height: 220px; overflow: auto;">
-				<ul>
-					{foreach from=$gsitemap_links item=gsitemap_link}
-						<li><a target="_blank" style="color: blue;" href="{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$gsitemap_link.link|escape:'htmlall':'UTF-8'}">{$gsitemap_link.link|escape:'htmlall':'UTF-8'}</a></li>
+				{foreach from=$gsitemap_languages item=gsitemap_lang}
+					<ul style="list-style: linear-gradient; float: left; margin:5px 10px 5px 0; ">
+						{foreach from=$gsitemap_links[$gsitemap_lang.iso_code] item=gsitemap_link}
+							<li><a target="_blank" style="color: blue;" href="{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$gsitemap_link.link|escape:'htmlall':'UTF-8'}">{$gsitemap_link.link|escape:'htmlall':'UTF-8'}</a></li>
 						{/foreach}
-				</ul>
+					</ul>
+				{/foreach}
 			</div>
 			<p>{l s='Your last update was:' mod='gsitemap'} {$gsitemap_last_export|escape:'htmlall':'UTF-8'}</p>
 		</fieldset>
@@ -43,7 +45,7 @@
 	{if ($gsitemap_customer_limit.max_exec_time < 30 && $gsitemap_customer_limit.max_exec_time > 0) || ($gsitemap_customer_limit.memory_limit < 128 && $gsitemap_customer_limit.memory_limit > 0)}
 		<div class="warn" style="width: 700px; margin: 0 auto;">
 			<p>{l s='For a better use of the module, please make sure that you have' mod='gsitemap'}<br/>
-			<ul>
+			<ul style="list-style: none;">
 				{if $gsitemap_customer_limit.memory_limit < 128 && $gsitemap_customer_limit.memory_limit > 0}
 					<li>{l s='a minimum memory limit of 128MB' mod='gsitemap'}</li>
 					{/if}
@@ -71,13 +73,17 @@
 					<option{if $gsitemap_frequency == 'never'} selected="selected"{/if} value='never'>{l s='never' mod='gsitemap'}</option>
 				</select></label>
 		</div>
-		<label for="ggsitemap_check_image_file" style="width: 526px;">{l s='Check this box if you wish to check the presence of the image files on the server' mod='gsitemap'}
+		<label for="gsitemap_check_image_file" style="width: 526px;">{l s='Check this box if you wish to check the presence of the image files on the server' mod='gsitemap'}
 			<input type="checkbox" name="gsitemap_check_image_file" value="1" {if $gsitemap_check_image_file}checked{/if}></label>
-		<label for="ggsitemap_check_all" style="width: 526px;"><span>{l s='check all' mod='gsitemap'}</span>
+		{if $prestashop_ssl}
+		<label for="gsitemap_enable_ssl_link" style="width: 526px;">{l s='Check this box if you want to use SSL links for your Google Sitemap' mod='gsitemap'}
+			<input type="checkbox" name="gsitemap_enable_ssl_link" value="1" {if $gsitemap_enable_ssl_link}checked{/if}></label>
+		{/if}
+		<label for="gsitemap_check_all" style="width: 526px;"><span>{l s='check all' mod='gsitemap'}</span>
 			<input type="checkbox" name="gsitemap_check_all" value="1" class="check"></label>
 		<br class="clear" />
 		<p for="gsitemap_meta">{l s='Which page don\'t you want to include in your Sitemap:' mod='gsitemap'}</p>
-		<ul>
+		<ul style="list-style: none;">
 			{foreach from=$store_metas item=store_meta}
 				<li style="float: left; width: 200px; margin: 1px;">
 					<input type="checkbox" class="gsitemap_metas" name="gsitemap_meta[]"{if in_array($store_meta.id_meta, $gsitemap_disable_metas)} checked="checked"{/if} value="{$store_meta.id_meta|intval}" /> {$store_meta.title|escape:'htmlall':'UTF-8'} [{$store_meta.page|escape:'htmlall':'UTF-8'}]
