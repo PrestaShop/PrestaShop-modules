@@ -46,7 +46,7 @@ class NqGatewayNeteven extends Module
 
         $this->tab = $tab_name;
 		
-		$this->version = '2.3';
+		$this->version = '2.4';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -64,10 +64,13 @@ class NqGatewayNeteven extends Module
         if (version_compare(_PS_VERSION_, '1.5', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
-        $this->unInstallHookByVersion();
-        $this->installHookByVersion();
-        $this->installCarrier();
-	}
+        if (Module::isInstalled($this->name))
+        {
+            $this->unInstallHookByVersion();
+            $this->installHookByVersion();
+            $this->installCarrier();
+        }
+    }
 
 
 	public function install()
