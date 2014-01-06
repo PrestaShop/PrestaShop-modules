@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '3.2';
+	 	$this->version = '3.2.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -1287,7 +1287,7 @@ class ShoppingFluxExport extends Module
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
 			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
 			'total_paid_real' => (float)($order->TotalAmount),
-			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`)*`product_quantity` FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 			'total_products_wt' => (float)($order->TotalProducts),
 			'total_shipping' => (float)($order->TotalShipping),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
@@ -1299,7 +1299,7 @@ class ShoppingFluxExport extends Module
 		$updateOrderInvoice = array(
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
 			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
-			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`total_price_tax_excl`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`)*`product_quantity` FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 			'total_products_wt' => (float)($order->TotalProducts),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
 			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
