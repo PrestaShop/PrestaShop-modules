@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2014 PrestaShop SA
+*	@copyright	2007-2013 PrestaShop SA
 *	@version	Release: $Revision: 11834 $
 *	@license		http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
@@ -4400,9 +4400,9 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	public function display()
 	{
-		$this->_html .= '<script type="text/javascript">var jQueryVersionPS = parseFloat("."+$().jquery.replace(/\./g, ""));</script>
+		$this->_html .= '<script type="text/javascript">var jQueryVersionPS = parseInt($().jquery.replace(/\./g, ""));</script>
 		<script type="text/javascript" src="'.__PS_BASE_URI__.'modules/autoupgrade/js/jquery-1.6.2.min.js"></script>
-		<script type="text/javascript">if (jQueryVersionPS >= 0.162) jq162 = jQuery.noConflict(true);</script>';
+		<script type="text/javascript">if (jQueryVersionPS >= 162) jq162 = jQuery.noConflict(true);</script>';
 		
 		/* PrestaShop demo mode */
 		if (defined('_PS_MODE_DEMO_') && _PS_MODE_DEMO_)
