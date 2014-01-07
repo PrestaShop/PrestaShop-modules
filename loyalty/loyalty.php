@@ -653,7 +653,7 @@ class Loyalty extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary')
+				)
 			),
 		);
 
@@ -701,7 +701,7 @@ class Loyalty extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-primary')
+				)
 			),
 		);
 
