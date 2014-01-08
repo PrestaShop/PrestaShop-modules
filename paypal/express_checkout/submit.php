@@ -54,7 +54,7 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 		
 		$price = Tools::displayPrice($paypal_order['total_paid'], $this->context->currency);
 		
-		$order_state = new OrderState($id_order);
+		$order_state = $order->getCurrentOrderState();
 		
 		if ($order_state)
 			$order_state_message = $order_state->template[$this->context->language->id];
