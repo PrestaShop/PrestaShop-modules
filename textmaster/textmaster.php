@@ -597,23 +597,19 @@ class TextMaster extends Module
 
     public function getFullLocale()
     {
-        $locale = '';
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-        {
-            $array = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-            if (isset($array[0]))
-                $locale = $array[0];
-        }
-
         $available_locales = array();
         $textmaster_api_obj = new TextMasterAPI();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
             $available_locales[] = $locale_info['code'];
-
-        if (in_array($locale, $available_locales))
+        
+        foreach ($available_locales as $locale)
+        if (Tools::substr($locale, 0, 2) == $this->context->language->language_code)
             return $locale;
-        else
-            return $available_locales[0];
+        
+        if (in_array(TEXTMASTER_DEFAULT_LOCALE, $available_locales))
+            return TEXTMASTER_DEFAULT_LOCALE;
+        
+        return isset($available_locales[0]) ? $available_locales[0] : '';
     }
 
     /*function createNewTextMasterUser($oAuthTokenNew, $email, $password)
@@ -698,7 +694,6 @@ class TextMaster extends Module
         }
         else
         {
-            $this->_html .= $this->displayWarnings(array($this->l('Add API key and API secret codes to continue.')));
             return false;
         }
         $this->api_instance = $textmasterAPI;
@@ -1306,13 +1301,15 @@ class TextMaster extends Module
                 $view->getProjectSummary();
                 break;
         }
-
+        $textmasterAPI = new TextMasterAPI($this);
         $this->context->smarty->assign(array('textmaster_token' => sha1(_COOKIE_KEY_.$this->name),
             'view' => $view,
             'module_link' => self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu=create_project&token='.Tools::getValue('token') . (($id_project) ? "&id_project=$id_project" : ''),
             'steps' => $steps,
             'id_lang' => $this->context->language->id,
-            'project_step' => $this->textmaster_data_with_cookies_manager_obj->getProjectData('project_step')));
+            'project_step' => $this->textmaster_data_with_cookies_manager_obj->getProjectData('project_step'),
+            'authors' => $textmasterAPI->authors['my_authors']
+        ));
 
         $this->_html .= $this->context->smarty->fetch(TEXTMASTER_TPL_DIR . 'admin/project/index.tpl');
     }
@@ -1345,11 +1342,6 @@ class TextMaster extends Module
         $documentation = $textmasterAPI->getDocumentation();
         if (isset($documentation['web_content']))
             $this->_html .= '<fieldset>'.$documentation['web_content'] . '</fieldset>';
-        elseif (isset($documentation['message']))
-        {
-            $documentation = $textmasterAPI->getDocumentation('en-EU');
-            $this->_html .= '<fieldset>'.$documentation['web_content'] . '</fieldset>';
-        }
     }
 
     /**
@@ -1632,7 +1624,7 @@ class TextMaster extends Module
             $products = DB::getInstance()->executeS("
 				SELECT
 					p.`id_product` 		AS `id_product`,
-					IF(at.`quantity` IS NULL, p.`quantity`, SUM(at.`quantity`)) 	AS `quantity`,
+					IFNULL((SELECT SUM(`at`.`quantity`) FROM `ps_product_attribute` `at` WHERE `at`.`id_product` = `cp`.`id_product`), p.`quantity`) AS `quantity`,
 					p.`reference` 		AS `reference`,
 					p.`price` 			AS `price`,
 					cl.`name` 			AS `category`,
@@ -1646,9 +1638,8 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."image` i ON (i.`id_product` = cp.`id_product` AND i.`cover` = '1')
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."')
-				LEFT JOIN `"._DB_PREFIX_."product_attribute` at ON (at.`id_product` = cp.`id_product`)
+				
 				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)."
-				GROUP BY at.`id_product`
                 ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
