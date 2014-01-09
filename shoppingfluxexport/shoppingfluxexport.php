@@ -282,7 +282,7 @@ class ShoppingFluxExport extends Module
 		if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())
 		{
 			$shop = Context::getContext()->shop;
-			$base_uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+			$base_uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri;
 		}
 		else
 			$base_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__;
