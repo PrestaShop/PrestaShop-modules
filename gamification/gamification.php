@@ -181,7 +181,7 @@ class Gamification extends Module
 			'badges_to_display' => $badges_to_display,
 			'current_id_tab' => (int)$this->context->controller->id,
 			'notification' => (int)Configuration::get('GF_NOTIFICATION'),
-			
+			'advice_hide_url' => 'http://gamification.prestashop.com/api/AdviceHide/',
 			));
 
 		if (version_compare(_PS_VERSION_, '1.6.0', '>='))
