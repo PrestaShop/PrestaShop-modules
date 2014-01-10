@@ -124,6 +124,7 @@ class ProductCommentsDefaultModuleFrontController extends ModuleFrontController
 					$comment->save();
 				}
 				$result = true;
+				Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('productcomments-reviews.tpl'));
 			}
 			else
 			{

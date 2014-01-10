@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.2';
+		$this->version = '1.5.3';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -631,7 +631,10 @@ class ReferralProgram extends Module
 	
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $lang)
+		{
 			$fields_values['discount_description'][$lang['id_lang']] = Tools::getValue('discount_description_'.(int)$lang['id_lang'], Configuration::get('REFERRAL_DISCOUNT_DESCRIPTION', (int)$lang['id_lang']));
+			$fields_values['body_paragraph'][$lang['id_lang']] = '';
+		}
 		
 		$currencies = Currency::getCurrencies();
 		foreach ($currencies as $currency)
