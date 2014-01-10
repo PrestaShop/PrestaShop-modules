@@ -73,6 +73,7 @@ $sql[_DB_PREFIX_.'advice'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'advice`
 			  `id_tab` int(11) NOT NULL,
 			  `ids_tab` TEXT,
 			  `validated` tinyint(1) unsigned NOT NULL DEFAULT 0,
+			  `hide` tinyint(1) NOT NULL DEFAULT 0,
 			  `location` enum(\'after\', \'before\') NOT NULL,
 			  `selector` varchar(255),
 			  `start_day` int(11) NOT NULL DEFAULT 0,
