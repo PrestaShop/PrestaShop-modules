@@ -166,5 +166,5 @@ function adviceCloseClick(id_advice) {
 			
 		}	
 	});
-	$('#id_advice_'+id_advice).fadeOut();
+	$('#wrap_id_advice_'+id_advice).fadeOut();
 }
