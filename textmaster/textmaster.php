@@ -601,14 +601,14 @@ class TextMaster extends Module
         $textmaster_api_obj = new TextMasterAPI();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
             $available_locales[] = $locale_info['code'];
-        
+
         foreach ($available_locales as $locale)
         if (Tools::substr($locale, 0, 2) == $this->context->language->language_code)
             return $locale;
-        
+
         if (in_array(TEXTMASTER_DEFAULT_LOCALE, $available_locales))
             return TEXTMASTER_DEFAULT_LOCALE;
-        
+
         return isset($available_locales[0]) ? $available_locales[0] : '';
     }
 
@@ -1624,7 +1624,7 @@ class TextMaster extends Module
             $products = DB::getInstance()->executeS("
 				SELECT
 					p.`id_product` 		AS `id_product`,
-					IF(at.`quantity` IS NULL, p.`quantity`, SUM(at.`quantity`)) 	AS `quantity`,
+					IFNULL((SELECT SUM(`at`.`quantity`) FROM `ps_product_attribute` `at` WHERE `at`.`id_product` = `cp`.`id_product`), p.`quantity`) AS `quantity`,
 					p.`reference` 		AS `reference`,
 					p.`price` 			AS `price`,
 					cl.`name` 			AS `category`,
@@ -1638,9 +1638,8 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."image` i ON (i.`id_product` = cp.`id_product` AND i.`cover` = '1')
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."')
-				LEFT JOIN `"._DB_PREFIX_."product_attribute` at ON (at.`id_product` = cp.`id_product`)
+
 				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)."
-				GROUP BY at.`id_product`
                 ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
