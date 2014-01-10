@@ -23,6 +23,15 @@ function gamificationTasks()
 					$(jsonData.advices_to_display.advices[i].selector).after(jsonData.advices_to_display.advices[i].html);
 				else
 					$(jsonData.advices_to_display.advices[i].selector).before(jsonData.advices_to_display.advices[i].html);
+				
+			//display close button only for last version of the module
+			$('.gamification_close').show();
+			
+			$('.gamification_close').on('click', function () {
+				adviceCloseClick($(this).attr('id'));
+				return false;
+			});
+			
 			initHeaderNotification(jsonData.header_notification);
 			
 			$('.gamification_fancybox').fancybox();
@@ -141,4 +150,21 @@ function preactivationLinkClick(module) {
 
 		}
 	});
+}
+
+function adviceCloseClick(id_advice) {
+	$.ajax({
+		url : admin_gamification_ajax_url,
+		data : {
+			ajax : "1",
+			controller : "AdminGamification",
+			action : "closeAdvice",
+			id_advice : id_advice,
+		},
+		type: 'POST',
+		success : function(jsonData){
+			
+		}	
+	});
+	$('#id_advice_'+id_advice).fadeOut();
 }

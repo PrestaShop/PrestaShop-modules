@@ -252,4 +252,15 @@ class AdminGamificationController extends ModuleAdminController
 		die($return);
 	}
 
+	public function ajaxProcessCloseAdvice()
+	{
+		$id_advice = (int)Tools::getValue('id_advice');
+		$advice = new Advice($id_advice);
+		if (Validate::isLoadedObject($advice))
+		{
+			$advice->hide = 1;
+			$advice->save();
+		}
+		die();
+	}
 }
