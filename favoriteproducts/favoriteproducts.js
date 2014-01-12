@@ -75,4 +75,29 @@ $('document').ready(function(){
 		 	}
 		});
 	});
+
+	$('a[rel^=ajax_id_favoriteproduct_]').click(function()
+	{
+		var idFavoriteProduct =  $(this).attr('rel').replace('ajax_id_favoriteproduct_', '');
+		var parent = $(this).parent().parent();
+
+		$.ajax({
+			url: favorite_products_url_remove,
+			type: "POST",
+			data: {
+				'id_product': idFavoriteProduct,
+				'ajax': true
+			},
+			success: function(result)
+			{
+				if (result == '0')
+				{
+					parent.fadeOut("normal", function()
+					{
+						parent.remove();
+					});
+				}
+ 		 	}
+		});
+	});
 })
