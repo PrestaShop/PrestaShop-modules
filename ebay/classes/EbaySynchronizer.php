@@ -681,6 +681,7 @@ class EbaySynchronizer
 				$price = $carrier->getDeliveryPriceByWeight($product->weight, $zone);
 			else // Shipping by price
 				$price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
+
 		}
 		else if ($carrier->shipping_method == 1)
 		{ // Shipping by weight
@@ -695,10 +696,9 @@ class EbaySynchronizer
 			// return 0 if is an other shipping method
 			return 0;
 		}
-		
+
 		if ($carrier->shipping_handling) //Add shipping handling fee
 				$price += Configuration::get('PS_SHIPPING_HANDLING');
-
 
 		$price += $price * Tax::getCarrierTaxRate($carrier_id) / 100;
 
