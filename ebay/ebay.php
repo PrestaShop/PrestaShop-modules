@@ -1931,10 +1931,10 @@ class Ebay extends Module
 	 **/
 	private function _displayHelp()
 	{
-		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getIsoCode()).'.html';
+		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getDocumentationLang()).'.html';
 
 		if (!file_exists($help_file))
-			$help_file = dirname(__FILE__).'/help/help-gb.html';
+			$help_file = dirname(__FILE__).'/help/help-en.html';
 
 		return Tools::file_get_contents($help_file);
 	}
