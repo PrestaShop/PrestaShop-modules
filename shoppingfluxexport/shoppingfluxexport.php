@@ -1182,6 +1182,9 @@ class ShoppingFluxExport extends Module
 
 	private function _getAddress($addressNode, $id_customer, $type)
 	{
+                //alias is limited
+                $type = substr($type, 0, 32);
+            
 		$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` 
 			FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \''.pSQL($type).'\'');
 
