@@ -557,7 +557,8 @@ class ShoppingFluxExport extends Module
 			16 => 'ecotaxe',
 			17 => 'tva',
 			18 => 'ref-constructeur',
-			19 => 'ref-fournisseur'
+			19 => 'ref-fournisseur',
+                        20 => 'upc'
 		);
 
 		$data[0]  = $product->id;
@@ -578,6 +579,7 @@ class ShoppingFluxExport extends Module
 		$data[17] = $product->tax_rate;
 		$data[18] = $product->reference;
 		$data[19] = $product->supplier_reference;
+                $data[20] = $product->upc;
 
 		foreach ($titles as $key => $balise)
 			$ret .= '<'.$balise.'><![CDATA['.$data[$key].']]></'.$balise.'>';
@@ -726,6 +728,7 @@ class ShoppingFluxExport extends Module
 		{
 			$combinations[$combinaison['id_product_attribute']]['attributes'][$combinaison['group_name']] = $combinaison['attribute_name'];
 			$combinations[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
+                        $combinations[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 			$combinations[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 			$combinations[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
 		}
@@ -735,6 +738,7 @@ class ShoppingFluxExport extends Module
 			$ret .= '<declinaison>';
 			$ret .= '<id><![CDATA['.$id.']]></id>';
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
+                        $ret .= '<upc><![CDATA['.$combination['upc'].']]></upc>';
 			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
 			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
 			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
