@@ -1,4 +1,4 @@
-$('document').ready(function(){
+$(document).ready(function(){
 	$('#favoriteproducts_block_extra_add').click(function(){
 		$.ajax({
 			url: favorite_products_url_add + '&rand=' + new Date().getTime(),
