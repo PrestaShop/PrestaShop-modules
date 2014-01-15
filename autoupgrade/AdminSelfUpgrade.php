@@ -1922,8 +1922,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 			{
 				if ((bool)file_put_contents($zip_fullpath, $content))
 				{
+					if (filesize($zip_fullpath) <= 101)
+						unlink($zip_fullpath);
 					// unzip in modules/[mod name] old files will be conserved
-					if(filesize($zip_fullpath) > 101 && $this->ZipExtract($zip_fullpath, $dest_extract))
+					elseif($this->ZipExtract($zip_fullpath, $dest_extract))
 					{
 						$this->nextQuickInfo[] = sprintf($this->l('module %s files has been upgraded'), $name);
 						if (file_exists($zip_fullpath))
@@ -2340,9 +2342,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-							if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+
+							$duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
+							if (!in_array($error_number, $duplicates))
 							{
-								$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
+								$this->nextErrors[] = 'SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
 								$warningExist = true;
 							}
 						}
