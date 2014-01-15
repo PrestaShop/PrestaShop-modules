@@ -958,7 +958,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (!$this->warning_exists)
 			$this->next_desc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
 		else
-			$this->next_desc = $this->l('Upgrade process done, but some warnings has been found.');
+			$this->next_desc = $this->l('Upgrade process done, but some warnings have been found.');
 		$this->next = '';
 
 		if ($this->getConfig('channel') != 'archive' && file_exists($this->getFilePath()) && unlink($this->getFilePath()))
@@ -1838,6 +1838,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$modules_to_delete['mobile_theme'] = 'The 1.4 mobile_theme';
 				$modules_to_delete['trustedshops'] = 'Trustedshops';
 				$modules_to_delete['dejala'] = 'Dejala';
+				$modules_to_delete['stripejs'] = 'Stripejs';
 
 				foreach($modules_to_delete as $key => $module)
 				{
@@ -1895,7 +1896,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$addons_url = 'api.addons.prestashop.com';
 		$protocolsList = array('https://' => 443, 'http://' => 80);
 		if (!extension_loaded('openssl'))		
-			unset($protocolsList['https://']);		
+			unset($protocolsList['https://']);
+		else
+			unset($protocolsList['http://']);
+
 		$postData = 'version='.$this->install_version.'&method=module&id_module='.(int)$id_module;
 
 		// Make the request
@@ -1919,7 +1923,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if ((bool)file_put_contents($zip_fullpath, $content))
 				{
 					// unzip in modules/[mod name] old files will be conserved
-					if ($this->ZipExtract($zip_fullpath, $dest_extract))
+					if(filesize($zip_fullpath) > 101 && $this->ZipExtract($zip_fullpath, $dest_extract))
 					{
 						$this->nextQuickInfo[] = sprintf($this->l('module %s files has been upgraded'), $name);
 						if (file_exists($zip_fullpath))
@@ -1933,8 +1937,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				}
 				else
 				{
-					$this->nextQuickInfo[] = sprintf($this->l('[ERROR] unable to write in temporary directory.'), $name);
-					$this->nextErrors[] = sprintf($this->l('[ERROR] unable to write in temporary directory.'), $name);
+					$this->nextQuickInfo[] = sprintf($this->l('[ERROR] unable to write zip module %s in temporary directory.'), $name);
+					$this->nextErrors[] = sprintf($this->l('[ERROR] unable to write zip module %s in temporary directory.'), $name);
 					$this->warning_exists = 1;
 				}
 			}
@@ -2314,6 +2318,19 @@ class AdminSelfUpgrade extends AdminSelfTab
 					}
 					else
 					{
+
+						if (strstr($query, 'CREATE TABLE') !== false)
+						{
+							$pattern = '/CREATE TABLE.*[`]*'._DB_PREFIX_.'([^`]*)[`]*\s\(/';
+							preg_match($pattern, $query, $matches);;
+							if (isset($matches[1]) && $matches[1])
+							{
+								$drop = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.$matches[1].'`;';
+								$result = $this->db->execute($drop, false);
+								if ($result)
+									$this->nextQuickInfo[] = '<div class="upgradeDbOk">'.sprintf($this->l('[DROP] SQL %s table has been dropped.'), '`'._DB_PREFIX_.$matches[1].'`').'</div>';
+							}
+						}
 						$result = $this->db->execute($query, false);
 						if (!$result)
 						{
@@ -2806,7 +2823,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$this->restoreDbFilenames[] = $file;
 
 			// order files is important !
-			sort($this->restoreDbFilenames);
+			if (is_array($this->restoreDbFilenames))
+				sort($this->restoreDbFilenames);
 			if (count($this->restoreDbFilenames) == 0)
 			{
 				$this->next = 'error';
@@ -3946,7 +3964,7 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 	protected function _displayRollbackForm()
 	{
 		$backup_available = array_intersect($this->getBackupDbAvailable(), $this->getBackupFilesAvailable());
-		if (is_array($backup_available) && count($backup_available) && !in_array($this->backupName, $backup_available))
+		if (!$this->getConfig('PS_AUTOUP_BACKUP') && is_array($backup_available) && count($backup_available) && !in_array($this->backupName, $backup_available))
 			$this->backupName = end($backup_available);
 		$this->_html .= '
 		<fieldset style="margin-top:10px">
