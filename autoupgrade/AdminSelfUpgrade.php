@@ -4759,8 +4759,7 @@ function startProcess(type){
 		{
 			$.xhrPool.abortAll();
 			$(window).unbind("beforeunload");
-			$("#rollback").click();
-			return false;
+			return true;
 		}
 		else
 		{
