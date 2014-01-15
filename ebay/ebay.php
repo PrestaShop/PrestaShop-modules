@@ -80,7 +80,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.6.2';
+		$this->version = '1.6.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
