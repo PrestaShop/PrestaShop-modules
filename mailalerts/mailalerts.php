@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '3.1';
+		$this->version = '3.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -255,8 +255,10 @@ class MailAlerts extends Module
 
 					$customization_text .= '---<br />';
 				}
-
-				$customization_text = Tools::rtrimString($customization_text, '---<br />');
+				if (method_exists('Tools', 'rtrimString'))
+					$customization_text = Tools::rtrimString($customization_text, '---<br />');
+				else
+					$customization_text = preg_replace('/---<br \/>$/', '', $customization_text);
 			}
 
 			$items_table .=
@@ -570,6 +572,7 @@ class MailAlerts extends Module
 
 	public function hookDisplayHeader($params)
 	{
+		$this->context->controller->addJS($this->_path.'mailalerts.js');
 		$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
 	}
 	
@@ -604,7 +607,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default pull-right',
+				'class' => 'btn btn-default',
 				'name' => 'submitMailAlert',
 				)
 			),
@@ -697,7 +700,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default pull-right',
+				'class' => 'btn btn-default',
 				'name' => 'submitMAMerchant',
 				)
 			),
