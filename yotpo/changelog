@@ -73,4 +73,12 @@
 2012-09-03
 ----
 1) Fixed bug: when trying to get the product url. 
+
+2012-11-21
+----
+1) Load yQuery asynchronously
+
+2014-01-09
+----
+1) Added b2c2b registarion support.
    
