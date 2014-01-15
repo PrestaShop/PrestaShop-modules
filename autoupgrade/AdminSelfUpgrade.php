@@ -3945,7 +3945,9 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	protected function _displayRollbackForm()
 	{
-		$backup_available = array_intersect($this->getBackupDbAvailable(), $this->getBackupFilesAvailable());		
+		$backup_available = array_intersect($this->getBackupDbAvailable(), $this->getBackupFilesAvailable());
+		if (is_array($backup_available) && count($backup_available) && !in_array($this->backupName, $backup_available))
+			$this->backupName = end($backup_available);
 		$this->_html .= '
 		<fieldset style="margin-top:10px">
 			<legend><img src="../img/admin/previous.gif"/>'.$this->l('Rollback').'</legend>
