@@ -1,5 +1,5 @@
 ﻿SendinBlue module for PrestaShop
-Copyright (C) 2013 https://www.sendinblue.com 
+Copyright (C) 2014 https://www.sendinblue.com 
 
 You can freely use this module in your PrestaShop e-commerce website. For updates, please visit:
  https://resources.sendinblue.com/plugin-prestashop/ 

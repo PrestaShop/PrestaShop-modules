@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright  2007-2013 PrestaShop SA
+* @copyright  2007-2014 PrestaShop SA
 * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- sendin Newsletter module display on registration page-->
+<!-- sendinblue Newsletter module display on registration page-->
 <h3 style="margin-bottom:0!important;">{l s='Newsletter' mod='sendinblue'}</h3>
 <fieldset class="account_creation" style="padding:15px 0 8px 40px; margin-top:0!important;">
 <p class="checkbox">
@@ -32,4 +32,4 @@
 </p>
 </fieldset>
 
-<!-- /sendin Newsletter module-->
+<!-- /sendinblue Newsletter module-->
