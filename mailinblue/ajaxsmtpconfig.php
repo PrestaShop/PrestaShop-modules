@@ -1,6 +1,6 @@
 <?php 
 /*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,21 +19,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright  2007-2014 PrestaShop SA
+* @copyright  2007-2013 PrestaShop SA
 * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/mailinblue.php');
+include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-$mailin = new Mailinblue();
-Configuration::updateValue('Mailin_Api_Smtp_Status', Tools::getValue('smtptest'));
+$sendin = new Sendinblue();
+Configuration::updateValue('Sendin_Api_Smtp_Status', Tools::getValue('smtptest'));
 
 if (Tools::getValue('smtptest') == 1)
-	echo $mailin->postProcessConfiguration();
+	echo $sendin->postProcessConfiguration();
 else
-	$mailin->resetConfigMailinSmtp();
+	$sendin->resetConfigSendinSmtp();

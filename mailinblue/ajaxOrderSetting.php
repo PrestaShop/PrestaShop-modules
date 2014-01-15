@@ -1,6 +1,6 @@
 <?php 
 /*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright  2007-2014 PrestaShop SA
+* @copyright  2007-2013 PrestaShop SA
 * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,15 +28,15 @@ if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME'
 	die('Error: Invalid Token');
 
 if (Tools::getValue('type') == 'Order')
-	Configuration::updateValue('Mailin_Api_Sms_Order_Status', Tools::getValue('orderSetting'));
+	Configuration::updateValue('Sendin_Api_Sms_Order_Status', Tools::getValue('orderSetting'));
 
 
 if (Tools::getValue('type') == 'shiping')
-	Configuration::updateValue('Mailin_Api_Sms_shipment_Status', Tools::getValue('shipingSetting'));
+	Configuration::updateValue('Sendin_Api_Sms_shipment_Status', Tools::getValue('shipingSetting'));
 
 
 if (Tools::getValue('type') == 'campaign')
-	Configuration::updateValue('Mailin_Api_Sms_Campaign_Status', Tools::getValue('campaignSetting'));
+	Configuration::updateValue('Sendin_Api_Sms_Campaign_Status', Tools::getValue('campaignSetting'));
 
 if (Tools::getValue('type') == 'sms_credit')
-	Configuration::updateValue('Mailin_Api_Sms_Credit', Tools::getValue('sms_credit'));
+	Configuration::updateValue('Sendin_Api_Sms_Credit', Tools::getValue('sms_credit'));

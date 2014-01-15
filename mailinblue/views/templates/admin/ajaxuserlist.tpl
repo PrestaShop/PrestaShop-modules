@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright  2007-2014 PrestaShop SA
+* @copyright  2007-2013 PrestaShop SA
 * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 *}
@@ -63,9 +63,9 @@
 			
 			<a href="javascript:void(0)" class="ajax_contacts_href" email="{$sourceInfo.email}" status="{$pstatus}">
 			{if $pstatus==1}
-			<img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='mailinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/disabled.gif" />
+			<img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/disabled.gif" />
 			{else}
-			<img class="toolTip1 imgstatus" title="{l s='Unsubscribe the contact' mod='mailinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/enabled.gif" />
+			<img class="toolTip1 imgstatus" title="{l s='Unsubscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/enabled.gif" />
 			{/if}
 			</a>
 		</td>
@@ -84,16 +84,16 @@
 		<div class='pagination'>
 			<ul>
 				{if $first_btn && $cur_page > 1}
-					<li p='1' class='active'>{l s='First' mod='mailinblue'}</li>
+					<li p='1' class='active'>{l s='First' mod='sendinblue'}</li>
 				{elseif $first_btn}
-					<li p='1' class='inactive'>{l s='First' mod='mailinblue'}</li>
+					<li p='1' class='inactive'>{l s='First' mod='sendinblue'}</li>
 				{/if}
 	
 				{if $previous_btn && $cur_page > 1}
 					{assign var=pre value=$cur_page-1}
-					<li p='{$pre}' class='active'>{l s='Previous' mod='mailinblue'}</li>
+					<li p='{$pre}' class='active'>{l s='Previous' mod='sendinblue'}</li>
 				{elseif $previous_btn}
-					<li class='inactive'>{l s='Previous' mod='mailinblue'}</li>
+					<li class='inactive'>{l s='Previous' mod='sendinblue'}</li>
 				{/if}
 	
 				{section name=cu start=$start_loop loop=$end_loop+1 step=1}
@@ -108,15 +108,15 @@
 	
 				{if $last_btn && $cur_page < $no_of_paginations}
 					{assign var=nex value=$cur_page+1}
-					<li p='{$nex}' class='active'>{l s='Next' mod='mailinblue'}</li>
+					<li p='{$nex}' class='active'>{l s='Next' mod='sendinblue'}</li>
 				{elseif $next_btn}
-					<li class='inactive'>{l s='Next' mod='mailinblue'}</li>
+					<li class='inactive'>{l s='Next' mod='sendinblue'}</li>
 				{/if}
 				
 				{if $last_btn && $cur_page < $no_of_paginations}
-					<li p='{$no_of_paginations}' class='active'>{l s='Last' mod='mailinblue'}</li>
+					<li p='{$no_of_paginations}' class='active'>{l s='Last' mod='sendinblue'}</li>
 				{elseif $last_btn}
-					<li p='{$no_of_paginations}' class='inactive'>{l s='Last' mod='mailinblue'}</li>
+					<li p='{$no_of_paginations}' class='inactive'>{l s='Last' mod='sendinblue'}</li>
 				{/if}
 			</ul>
 		</div>
