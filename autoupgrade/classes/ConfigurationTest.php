@@ -240,4 +240,9 @@ class ConfigurationTestCore
 	{
 		return extension_loaded('Dom');
 	}
+
+	static function test_mobile()
+	{
+		return !(int)Module::isInstalled('mobile_theme');
+	}
 }

@@ -555,8 +555,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$allowed_array['root_writable'] = $this->getRootWritable();
 			$allowed_array['shop_deactivated'] = (!Configuration::get('PS_SHOP_ENABLE') || (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], array('127.0.0.1', 'localhost'))));
 			$allowed_array['cache_deactivated'] = !(defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_);
-
 			$allowed_array['module_version_ok'] = $this->checkAutoupgradeLastVersion();
+			$allowed_array['test_mobile'] = ConfigurationTest::test_mobile();
 		}
 		return $allowed_array;
 	}
@@ -2084,6 +2084,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (file_exists(SETTINGS_FILE))
 		{
 			include_once(SETTINGS_FILE);
+
 			// include_once(DEFINES_FILE);
 			$oldversion = _PS_VERSION_;
 
@@ -4053,6 +4054,11 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$this->_html .= '
 			<tr><td>'.$this->l('You must disable the Caching features of PrestaShop').'</td>
 			<td>'.($current_ps_config['cache_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
+
+		if (version_compare(_PS_VERSION_,'1.5.0.0','<'))	
+			$this->_html .= '
+				<tr><td>'.$this->l('You must disable the mobile theme').'</td>
+				<td>'.($current_ps_config['test_mobile'] ? $pic_ok : $pic_nok).'</td></tr>';
 
 		// for informaiton, display time limit
 		$max_exec_time = ini_get('max_execution_time');
