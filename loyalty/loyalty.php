@@ -298,6 +298,7 @@ class Loyalty extends Module
 									   'none_award' => Configuration::get('PS_LOYALTY_NONE_AWARD')
 								  ));
 
+			$this->context->controller->addJS(($this->_path).'js/loyalty.js');
 			return $this->display(__FILE__, 'product.tpl');
 		}
 
