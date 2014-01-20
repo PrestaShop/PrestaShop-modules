@@ -29,7 +29,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$this->name = 'realexredirect';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'Coccinet';
 		$this->bout_valide = $this->l('Validate');
 		$this->bout_suppr = $this->l('Do you want to delete your stored card ?');
@@ -91,7 +91,7 @@ class RealexRedirect extends PaymentModule
 	*/
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn') || !$this->registerHook('displayHeader')
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn') || !$this->registerHook('header')
 			|| !Db::getInstance()->Execute(
 			'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'realex_payerref` (
 				`id_realex_payerref` INT(10) NOT NULL AUTO_INCREMENT,
@@ -536,10 +536,10 @@ class RealexRedirect extends PaymentModule
 	}
 
 	/**
-	* Attach the module to the hook "DisplayHeader"
+	* Attach the module to the hook "Header"
 	* Add CSS
 	*/
-	public function hookDisplayHeader($params)
+	public function hookHeader($params)
 	{
 		$this->context->controller->addCSS($this->_path.'css/realexredirect.css', 'all');
 	}
