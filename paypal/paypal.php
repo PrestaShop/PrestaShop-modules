@@ -32,13 +32,11 @@ include_once(_PS_MODULE_DIR_.'/paypal/paypal_logos.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_orders.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_tools.php');
 
-define('WPS', 1); //Paypal Integral
-define('HSS', 2); //Paypal Integral Evolution
-define('ECS', 4); //Paypal Option +
+define('WPS', 1);
+define('HSS', 2);
+define('ECS', 4);
 
-define('TRACKING_INTEGRAL_EVOLUTION', 'FR_PRESTASHOP_H3S');
-define('TRACKING_INTEGRAL', 'PRESTASHOP_EC');
-define('TRACKING_OPTION_PLUS', 'PRESTASHOP_ECM');
+define('TRACKING_CODE', 'FR_PRESTASHOP_H3S');
 define('SMARTPHONE_TRACKING_CODE', 'Prestashop_Cart_smartphone_EC');
 define('TABLET_TRACKING_CODE', 'Prestashop_Cart_tablet_EC');
 
@@ -449,7 +447,7 @@ class PayPal extends PaymentModule
 				'cancel_return' => $this->context->link->getPageLink('order.php'),
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/notifier.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
-				'tracking_code' => $this->getTrackingCode($method), 
+				'tracking_code' => $this->getTrackingCode(), 
 				'iso_code' => strtoupper($this->context->language->iso_code)
 			));
 
@@ -464,7 +462,7 @@ class PayPal extends PaymentModule
 				'PayPal_payment_method' => $method,
 				'PayPal_payment_type' => 'payment_cart',
 				'PayPal_current_page' => $this->getCurrentUrl(),
-				'PayPal_tracking_code' => $this->getTrackingCode($method)));
+				'PayPal_tracking_code' => $this->getTrackingCode()));
 
 			return $this->fetchTemplate('express_checkout_payment.tpl');
 		}
@@ -484,7 +482,7 @@ class PayPal extends PaymentModule
 			'PayPal_payment_type' => 'cart',
 			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($values[$this->context->language->iso_code]) ? $values[$this->context->language->iso_code] : 'en_US'),
-			'PayPal_tracking_code' => $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD')),
+			'PayPal_tracking_code' => $this->getTrackingCode(),
 			'include_form' => true,
 			'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
 
@@ -678,7 +676,7 @@ class PayPal extends PaymentModule
 		return false;
 	}
 
-	public function getTrackingCode($method)
+	public function getTrackingCode()
 	{
 		if ((_PS_VERSION_ < '1.5') && (_THEME_NAME_ == 'prestashop_mobile' || (isset($_GET['ps_mobile_site']) && $_GET['ps_mobile_site'] == 1)))
 		{
@@ -694,13 +692,6 @@ class PayPal extends PaymentModule
 			elseif ($this->context->mobile_detect->isMobile())
 				return SMARTPHONE_TRACKING_CODE;
 		}
-		if($method == WPS)
-			return TRACKING_INTEGRAL;
-		if($method == HSS)
-			return TRACKING_INTEGRAL_EVOLUTION;
-		if($method == ECS)
-			return TRACKING_OPTION_PLUS;
-
 		return TRACKING_CODE;
 	}
 
