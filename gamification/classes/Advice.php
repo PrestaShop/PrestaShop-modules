@@ -33,6 +33,8 @@ class Advice extends ObjectModel
 	public $id_tab;
 	
 	public $validated;
+
+	public $hide;
 	
 	public $selector;
 	
@@ -85,10 +87,11 @@ class Advice extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'tab_advice` at ON at.`id_advice` = a.`id_advice` ');
 		
 		$query->where('
-			a.validated = 1 AND 
-			al.id_lang = '.(int)Context::getContext()->language->id.' AND 
+			a.`validated` = 1 AND 
+			a.`hide` = 0 AND 
+			al.`id_lang` = '.(int)Context::getContext()->language->id.' AND 
 			at.`id_tab` = '.(int)$id_tab.' AND 
-			((a.start_day = 0 AND a.stop_day = 0) OR ('.date('d').' >= a.start_day AND '.date('d').' <= a.stop_day))');
+			((a.`start_day` = 0 AND a.`stop_day` = 0) OR ('.date('d').' >= a.`start_day` AND '.date('d').' <= a.`stop_day`))');
 		
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
@@ -113,9 +116,9 @@ class Advice extends ObjectModel
 		$query->join('
 			LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 1 
 			LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
-		$query->where('a.validated = 0');
+		$query->where('a.`validated` = 0');
 		$query->groupBy('a.`id_advice`');
-		$query->having('count(*) = SUM(c.validated)');
+		$query->having('count(*) = SUM(c.`validated`)');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
@@ -133,9 +136,9 @@ class Advice extends ObjectModel
 		$query->join('
 			LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 0 
 			LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
-		$query->where('a.validated = 1');
+		$query->where('a.`validated` = 1');
 		$query->groupBy('a.`id_advice`');
-		$query->having('count(*) = SUM(c.validated)');
+		$query->having('count(*) = SUM(c.`validated`)');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		

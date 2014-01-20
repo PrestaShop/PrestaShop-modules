@@ -555,8 +555,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$allowed_array['root_writable'] = $this->getRootWritable();
 			$allowed_array['shop_deactivated'] = (!Configuration::get('PS_SHOP_ENABLE') || (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], array('127.0.0.1', 'localhost'))));
 			$allowed_array['cache_deactivated'] = !(defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_);
-
 			$allowed_array['module_version_ok'] = $this->checkAutoupgradeLastVersion();
+			$allowed_array['test_mobile'] = ConfigurationTest::test_mobile();
 		}
 		return $allowed_array;
 	}
@@ -958,7 +958,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (!$this->warning_exists)
 			$this->next_desc = $this->l('Upgrade process done. Congratulations ! You can now reactive your shop.');
 		else
-			$this->next_desc = $this->l('Upgrade process done, but some warnings has been found.');
+			$this->next_desc = $this->l('Upgrade process done, but some warnings have been found.');
 		$this->next = '';
 
 		if ($this->getConfig('channel') != 'archive' && file_exists($this->getFilePath()) && unlink($this->getFilePath()))
@@ -1838,6 +1838,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$modules_to_delete['mobile_theme'] = 'The 1.4 mobile_theme';
 				$modules_to_delete['trustedshops'] = 'Trustedshops';
 				$modules_to_delete['dejala'] = 'Dejala';
+				$modules_to_delete['stripejs'] = 'Stripejs';
 
 				foreach($modules_to_delete as $key => $module)
 				{
@@ -1895,7 +1896,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$addons_url = 'api.addons.prestashop.com';
 		$protocolsList = array('https://' => 443, 'http://' => 80);
 		if (!extension_loaded('openssl'))		
-			unset($protocolsList['https://']);		
+			unset($protocolsList['https://']);
+		else
+			unset($protocolsList['http://']);
+
 		$postData = 'version='.$this->install_version.'&method=module&id_module='.(int)$id_module;
 
 		// Make the request
@@ -1918,8 +1922,10 @@ class AdminSelfUpgrade extends AdminSelfTab
 			{
 				if ((bool)file_put_contents($zip_fullpath, $content))
 				{
+					if (filesize($zip_fullpath) <= 101)
+						unlink($zip_fullpath);
 					// unzip in modules/[mod name] old files will be conserved
-					if ($this->ZipExtract($zip_fullpath, $dest_extract))
+					elseif($this->ZipExtract($zip_fullpath, $dest_extract))
 					{
 						$this->nextQuickInfo[] = sprintf($this->l('module %s files has been upgraded'), $name);
 						if (file_exists($zip_fullpath))
@@ -1933,8 +1939,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 				}
 				else
 				{
-					$this->nextQuickInfo[] = sprintf($this->l('[ERROR] unable to write in temporary directory.'), $name);
-					$this->nextErrors[] = sprintf($this->l('[ERROR] unable to write in temporary directory.'), $name);
+					$this->nextQuickInfo[] = sprintf($this->l('[ERROR] unable to write zip module %s in temporary directory.'), $name);
+					$this->nextErrors[] = sprintf($this->l('[ERROR] unable to write zip module %s in temporary directory.'), $name);
 					$this->warning_exists = 1;
 				}
 			}
@@ -2078,6 +2084,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (file_exists(SETTINGS_FILE))
 		{
 			include_once(SETTINGS_FILE);
+
 			// include_once(DEFINES_FILE);
 			$oldversion = _PS_VERSION_;
 
@@ -2314,6 +2321,19 @@ class AdminSelfUpgrade extends AdminSelfTab
 					}
 					else
 					{
+
+						if (strstr($query, 'CREATE TABLE') !== false)
+						{
+							$pattern = '/CREATE TABLE.*[`]*'._DB_PREFIX_.'([^`]*)[`]*\s\(/';
+							preg_match($pattern, $query, $matches);;
+							if (isset($matches[1]) && $matches[1])
+							{
+								$drop = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.$matches[1].'`;';
+								$result = $this->db->execute($drop, false);
+								if ($result)
+									$this->nextQuickInfo[] = '<div class="upgradeDbOk">'.sprintf($this->l('[DROP] SQL %s table has been dropped.'), '`'._DB_PREFIX_.$matches[1].'`').'</div>';
+							}
+						}
 						$result = $this->db->execute($query, false);
 						if (!$result)
 						{
@@ -2323,9 +2343,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 								<div class="upgradeDbError">
 								[WARNING] SQL '.$upgrade_file.'
 								'.$error_number.' in '.$query.': '.$error.'</div>';
-							if ((defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) || !in_array($error_number, array('1050', '1060', '1061', '1062', '1091')))
+
+							$duplicates = array('1050', '1054', '1060', '1061', '1062', '1091');
+							if (!in_array($error_number, $duplicates))
 							{
-								$this->nextErrors[] = '[ERROR] SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
+								$this->nextErrors[] = 'SQL '.$upgrade_file.' '.$error_number.' in '.$query.': '.$error;
 								$warningExist = true;
 							}
 						}
@@ -2806,7 +2828,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$this->restoreDbFilenames[] = $file;
 
 			// order files is important !
-			sort($this->restoreDbFilenames);
+			if (is_array($this->restoreDbFilenames))
+				sort($this->restoreDbFilenames);
 			if (count($this->restoreDbFilenames) == 0)
 			{
 				$this->next = 'error';
@@ -3945,7 +3968,9 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 
 	protected function _displayRollbackForm()
 	{
-		$backup_available = array_intersect($this->getBackupDbAvailable(), $this->getBackupFilesAvailable());		
+		$backup_available = array_intersect($this->getBackupDbAvailable(), $this->getBackupFilesAvailable());
+		if (!$this->getConfig('PS_AUTOUP_BACKUP') && is_array($backup_available) && count($backup_available) && !in_array($this->backupName, $backup_available))
+			$this->backupName = end($backup_available);
 		$this->_html .= '
 		<fieldset style="margin-top:10px">
 			<legend><img src="../img/admin/previous.gif"/>'.$this->l('Rollback').'</legend>
@@ -4029,6 +4054,11 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 		$this->_html .= '
 			<tr><td>'.$this->l('You must disable the Caching features of PrestaShop').'</td>
 			<td>'.($current_ps_config['cache_deactivated'] ? $pic_ok : $pic_nok).'</td></tr>';
+
+		if (version_compare(_PS_VERSION_,'1.5.0.0','<'))	
+			$this->_html .= '
+				<tr><td>'.$this->l('You must disable the mobile theme').'</td>
+				<td>'.($current_ps_config['test_mobile'] ? $pic_ok : $pic_nok).'</td></tr>';
 
 		// for informaiton, display time limit
 		$max_exec_time = ini_get('max_execution_time');
@@ -4757,8 +4787,7 @@ function startProcess(type){
 		{
 			$.xhrPool.abortAll();
 			$(window).unbind("beforeunload");
-			$("#rollback").click();
-			return false;
+			return true;
 		}
 		else
 		{

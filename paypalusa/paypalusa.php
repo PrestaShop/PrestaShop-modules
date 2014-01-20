@@ -19,7 +19,7 @@ class PayPalUSA extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.0';
+		$this->version = '1.3.1';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
 		$this->tab = 'payments_gateways';
@@ -374,7 +374,7 @@ class PayPalUSA extends PaymentModule
 				'paypal_usa_cancel_url' => $this->context->link->getPageLink('order.php',''),
 				'paypal_usa_notify_url' => $this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1), false), 
 				'paypal_usa_return_url' => /*26/12/2013 fix for Backward compatibilies on confirmation page*/
-					(version_compare(_PS_VERSION_, '1.4', '<')) ?
+					((int)version_compare(_PS_VERSION_, '1.4', '>')) ?
 					(Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).
 					__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&key='.$this->context->customer->secure_key : 
 					$this->context->link->getPageLink('order-confirmation.php', null, null, array('id_cart' => (int)$this->context->cart->id, 'key' => $this->context->customer->secure_key, 'id_module' => $this->id)),

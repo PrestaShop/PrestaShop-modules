@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.1.2';
+		$this->version = '1.1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -44,6 +44,20 @@ class PSCleaner extends Module
 		$this->displayName = $this->l('PrestaShop Cleaner');
 		$this->description = $this->l('Check and fix functional integrity constraints and remove default data');
 		$this->secure_key = Tools::encrypt($this->name);
+	}
+	
+	protected function getMultiShopValues($key)
+	{
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			return Configuration::getMultiShopValues($key);
+		else
+		{
+			$shops = Shop::getShops(false, null, true);
+			$resultsArray = array();
+			foreach ($shops as $id_shop)
+				$resultsArray[$id_shop] = Configuration::get($key, $id_lang, null, $id_shop);
+			return $resultsArray;
+		}
 	}
 
 	public function getContent()
@@ -379,11 +393,11 @@ class PSCleaner extends Module
 		switch ($case)
 		{
 			case 'catalog':
-				$id_home = Configuration::get('PS_HOME_CATEGORY');
-				$id_root = Configuration::get('PS_ROOT_CATEGORY');
-				$db->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
-				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
-				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE id_category NOT IN ('.(int)$id_home.', '.(int)$id_root.')');
+				$id_home = $this->getMultiShopValues('PS_HOME_CATEGORY');
+				$id_root = $this->getMultiShopValues('PS_ROOT_CATEGORY');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category NOT IN ('.implode(array_map('intval', $id_home), ',').', '.implode(array_map('intval',$id_root), ',').')');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category NOT IN ('.implode(array_map('intval', $id_home), ',').', '.implode(array_map('intval',$id_root), ',').')');
+				$db->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE id_category NOT IN ('.implode(array_map('intval', $id_home), ',').', '.implode(array_map('intval',$id_root), ',').')');
 				foreach (scandir(_PS_CAT_IMG_DIR_) as $dir)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $dir))
 						unlink(_PS_CAT_IMG_DIR_.$dir);

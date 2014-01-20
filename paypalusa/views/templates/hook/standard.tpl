@@ -42,7 +42,7 @@
 		{if $paypal_usa_total_discounts == 0}
 			{foreach from=$cart->getProducts() item=paypal_usa_product name="paypal_usa_products"}
 				<input type="hidden" name="item_name_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.name|escape:'htmlall':'UTF-8'}" />
-				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.price_wt|floatval}" />
+				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.price|floatval}" />
 				<input type="hidden" name="quantity_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.quantity|intval}" />
 			{/foreach}
 			{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(true, Cart::ONLY_SHIPPING)}
@@ -55,9 +55,9 @@
 			<input type="hidden" name="item_name_1" value="{l s="Your order" mod="paypalusa"}" />
 			<input type="hidden" name="amount_1" value="{$cart->getOrderTotal(!$show_taxes)|floatval}" />
 		{/if}
-		{if $paypal_usa_total_tax && $use_taxes && $show_taxes}
-			<input type="hidden" name="tax_cart" value="{$paypal_usa_total_tax|floatval}" />
-		{/if} 
+		
+		<input type="hidden" name="tax_cart" value="{$paypal_usa_total_tax|floatval}" />
+		
 		<input type="hidden" name="notify_url" value="{$paypal_usa_notify_url|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="return" value="{$paypal_usa_return_url|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="cancel_return" value="{$paypal_usa_cancel_url|escape:'htmlall':'UTF-8'}" />
