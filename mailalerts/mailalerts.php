@@ -611,7 +611,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitMailAlert',
 				)
 			),
@@ -704,7 +704,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitMAMerchant',
 				)
 			),
