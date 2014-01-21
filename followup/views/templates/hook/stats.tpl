@@ -43,14 +43,14 @@
 			<td class="center">{l s='S' mod='followup'}</td>
 			<td class="center">{l s='U' mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
 		</tr>
 		{foreach from=$stats_array key='date' item='stats'}
