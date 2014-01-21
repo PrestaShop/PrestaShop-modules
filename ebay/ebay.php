@@ -80,7 +80,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.6.2';
+		$this->version = '1.6.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -1931,10 +1931,10 @@ class Ebay extends Module
 	 **/
 	private function _displayHelp()
 	{
-		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getIsoCode()).'.html';
+		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getDocumentationLang()).'.html';
 
 		if (!file_exists($help_file))
-			$help_file = dirname(__FILE__).'/help/help-gb.html';
+			$help_file = dirname(__FILE__).'/help/help-en.html';
 
 		return Tools::file_get_contents($help_file);
 	}
