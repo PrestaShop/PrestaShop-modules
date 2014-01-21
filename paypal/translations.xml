@@ -72,6 +72,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe in the site</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Redirected to a Paypal secured page</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Use express checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 2-click payment option</express_checkout_shortcut_tagline>
 

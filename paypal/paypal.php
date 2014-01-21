@@ -39,6 +39,11 @@ define('ECS', 4); //Paypal Option +
 define('TRACKING_INTEGRAL_EVOLUTION', 'FR_PRESTASHOP_H3S');
 define('TRACKING_INTEGRAL', 'PRESTASHOP_EC');
 define('TRACKING_OPTION_PLUS', 'PRESTASHOP_ECM');
+define('PAYPAL_HSS_REDIRECTION', 0);
+define('PAYPAL_HSS_IFRAME', 1);
+
+
+define('TRACKING_CODE', 'FR_PRESTASHOP_H3S');
 define('SMARTPHONE_TRACKING_CODE', 'Prestashop_Cart_smartphone_EC');
 define('TABLET_TRACKING_CODE', 'Prestashop_Cart_tablet_EC');
 
@@ -330,8 +335,10 @@ class PayPal extends PaymentModule
 			'PayPal_country_default' => (int)$this->default_country,
 			'PayPal_change_country_url' => 'index.php?tab=AdminCountries&token='.Tools::getAdminTokenLite('AdminCountries').'#footer',
 			'Countries'	=> Country::getCountries($english_language_id),
-			'One_Page_Checkout'	=> (int)Configuration::get('PS_ORDER_PROCESS_TYPE'))
-		);
+			'One_Page_Checkout'	=> (int)Configuration::get('PS_ORDER_PROCESS_TYPE'),
+			'PayPal_integral_evolution_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
+			'PayPal_integral_evolution_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+		));
 
 		$this->getTranslations();
 
@@ -452,8 +459,12 @@ class PayPal extends PaymentModule
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
 				'tracking_code' => $this->getTrackingCode($method), 
 				'iso_code' => Tools::strtoupper($this->context->language->iso_code)
+				'tracking_code' => $this->getTrackingCode(), 
+				'iso_code' => Tools::strtoupper($this->context->language->iso_code),
+				'payment_hss_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+				'payment_hss_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
 			));
-
+			$this->getTranslations();
 			return $this->fetchTemplate('integral_evolution_payment.tpl');
 		}
 		elseif ($method == WPS || $method == ECS)
@@ -932,6 +943,12 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_SANDBOX', (int)Tools::getValue('sandbox_mode'));
 				Configuration::updateValue('PAYPAL_CAPTURE', (int)Tools::getValue('payment_capture'));
 
+				//EXPRESS CHECKOUT TEMPLATE
+				Configuration::updateValue('PAYPAL_HSS_SOLUTION', (int)Tools::getValue('integral_evolution_solution'));
+				if(Tools::getValue('integral_evolution_solution') == PAYPAL_HSS_IFRAME)
+					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', 'D');
+				else
+					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', Tools::getValue('integral_evolution_template'));				
 				$this->context->smarty->assign('PayPal_save_success', true);
 			}
 			else
