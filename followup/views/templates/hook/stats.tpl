@@ -43,23 +43,23 @@
 			<td class="center">{l s='S' mod='followup'}</td>
 			<td class="center">{l s='U' mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
 		</tr>
 		{foreach from=$stats_array key='date' item='stats'}
 		<tr>
-			<td class="center">{$date}</td>
+			<td class="center">{$date|escape:'htmlall':'UTF-8'}</td>
 			{foreach from=$stats key='key' item='val'}
-				<td class="center">{$val.nb}</td>
-				<td class="center">{$val.nb_used}</td>
-				<td class="center">{$val.rate}</td>
+				<td class="center">{$val.nb|escape:'htmlall':'UTF-8'}</td>
+				<td class="center">{$val.nb_used|escape:'htmlall':'UTF-8'}</td>
+				<td class="center">{$val.rate|escape:'htmlall':'UTF-8'}</td>
 			{/foreach}	
 		</tr>
 		{foreachelse}
