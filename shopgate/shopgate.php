@@ -22,7 +22,7 @@ if (!defined('_PS_VERSION_')) exit;
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.3.6');
+define('SHOPGATE_PLUGIN_VERSION', '2.3.7');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
