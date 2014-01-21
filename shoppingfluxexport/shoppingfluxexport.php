@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 	 	$this->name = 'shoppingfluxexport';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '3.2';
+	 	$this->version = '3.2.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -282,13 +282,15 @@ class ShoppingFluxExport extends Module
 		if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())
 		{
 			$shop = Context::getContext()->shop;
-			$uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+			$base_uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri;
 		}
 		else
-			$uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
+			$base_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__;
+                
+                $uri = $base_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
 	
 		return '
-		<img style="margin:10px" src="'.Tools::safeOutput($configuration['SHOPPING_FLUX_INDEX']).'modules/shoppingfluxexport/logo.jpg" height="75" />
+		<img style="margin:10px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/logo.jpg" height="75" />
 		<fieldset>
 			<legend>'.$this->l('Vos flux produits').'</legend>
 			<p>
@@ -555,7 +557,8 @@ class ShoppingFluxExport extends Module
 			16 => 'ecotaxe',
 			17 => 'tva',
 			18 => 'ref-constructeur',
-			19 => 'ref-fournisseur'
+			19 => 'ref-fournisseur',
+                        20 => 'upc'
 		);
 
 		$data[0]  = $product->id;
@@ -576,6 +579,7 @@ class ShoppingFluxExport extends Module
 		$data[17] = $product->tax_rate;
 		$data[18] = $product->reference;
 		$data[19] = $product->supplier_reference;
+                $data[20] = $product->upc;
 
 		foreach ($titles as $key => $balise)
 			$ret .= '<'.$balise.'><![CDATA['.$data[$key].']]></'.$balise.'>';
@@ -724,6 +728,7 @@ class ShoppingFluxExport extends Module
 		{
 			$combinations[$combinaison['id_product_attribute']]['attributes'][$combinaison['group_name']] = $combinaison['attribute_name'];
 			$combinations[$combinaison['id_product_attribute']]['ean13'] = $combinaison['ean13'];
+                        $combinations[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 			$combinations[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 			$combinations[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
 		}
@@ -733,6 +738,7 @@ class ShoppingFluxExport extends Module
 			$ret .= '<declinaison>';
 			$ret .= '<id><![CDATA['.$id.']]></id>';
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
+                        $ret .= '<upc><![CDATA['.$combination['upc'].']]></upc>';
 			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
 			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
 			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
@@ -1176,6 +1182,9 @@ class ShoppingFluxExport extends Module
 
 	private function _getAddress($addressNode, $id_customer, $type)
 	{
+                //alias is limited
+                $type = substr($type, 0, 32);
+            
 		$id_address = (int)Db::getInstance()->getValue('SELECT `id_address` 
 			FROM `'._DB_PREFIX_.'address` WHERE `id_customer` = '.(int)$id_customer.' AND `alias` = \''.pSQL($type).'\'');
 
@@ -1287,7 +1296,7 @@ class ShoppingFluxExport extends Module
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
 			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
 			'total_paid_real' => (float)($order->TotalAmount),
-			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`)*`product_quantity` FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 			'total_products_wt' => (float)($order->TotalProducts),
 			'total_shipping' => (float)($order->TotalShipping),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
@@ -1299,7 +1308,7 @@ class ShoppingFluxExport extends Module
 		$updateOrderInvoice = array(
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
 			'total_paid_tax_excl' => (float)((float)$order->TotalAmount / (1 + ($tax_rate / 100))),
-			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`total_price_tax_excl`) FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
+			'total_products' => (float)(Db::getInstance()->getValue('SELECT SUM(`product_price`)*`product_quantity` FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order)),
 			'total_products_wt' => (float)($order->TotalProducts),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
 			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
