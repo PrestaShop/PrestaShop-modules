@@ -350,41 +350,45 @@ class Yotpo extends Module
 			  	($is_mail_valid['json'] == false && preg_match("/available[\W]*(true)/",$is_mail_valid['response']) == 1))
 			{
 				$response = $this->httpClient()->check_if_b2c_user($email);
-                if (empty($response['response']['data'])){
-				$registerResponse = $this->httpClient()->register($email, $name, $password, _PS_BASE_URL_);
-				if ($registerResponse['status_code'] == 200)
-				{
-					$app_key ='';
-					$secret = '';
-					if ($registerResponse['json'] == true)
-						$app_key = $registerResponse['response']['app_key'];
-					else 
+                if (empty($response['response']['data']))
+                {
+					$registerResponse = $this->httpClient()->register($email, $name, $password, _PS_BASE_URL_);
+					
+					if ($registerResponse['status_code'] == 200)
 					{
-						preg_match("/app_key[\W]*[\"'](.*?)[\"']/",$registerResponse['response'], $matches);
-						$app_key = $matches[1];
-						unset($matches);
-					}
-					$secret ='';
-					if ($registerResponse['json'] == true)
-						$secret = $registerResponse['response']['secret'];
-					else 
-					{
-						preg_match("/secret[\W]*[\"'](.*?)[\"']/",$registerResponse['response'], $matches);
-						$secret = $matches[1];
-					}					
-					$accountPlatformResponse = $this->httpClient()->createAcountPlatform($app_key, $secret, _PS_BASE_URL_);
-					if ($accountPlatformResponse['status_code'] == 200)
-					{
-						Configuration::updateValue('yotpo_app_key', $app_key, false);
-						Configuration::updateValue('yotpo_oauth_token', $secret, false);
-						return $this->prepareSuccess($this->l('Account successfully created'));
+						$app_key ='';
+						$secret = '';
+						if ($registerResponse['json'] == true)
+							$app_key = $registerResponse['response']['app_key'];
+						else 
+						{
+							preg_match("/app_key[\W]*[\"'](.*?)[\"']/",$registerResponse['response'], $matches);
+							$app_key = $matches[1];
+							unset($matches);
+						}
+						$secret ='';
+						if ($registerResponse['json'] == true)
+							$secret = $registerResponse['response']['secret'];
+						else 
+						{
+							preg_match("/secret[\W]*[\"'](.*?)[\"']/",$registerResponse['response'], $matches);
+							$secret = $matches[1];
+						}					
+						$accountPlatformResponse = $this->httpClient()->createAcountPlatform($app_key, $secret, _PS_BASE_URL_);
+						if ($accountPlatformResponse['status_code'] == 200)
+						{
+							Configuration::updateValue('yotpo_app_key', $app_key, false);
+							Configuration::updateValue('yotpo_oauth_token', $secret, false);
+							return $this->prepareSuccess($this->l('Account successfully created'));
+						}
+						else
+							return $this->prepareError($accountPlatformResponse['status_message']);	
 					}
 					else
-						return $this->prepareError($accountPlatformResponse['status_message']);	
-				}
-				else
-					return $this->prepareError($registerResponse['status_message']);
-                                } else {
+						return $this->prepareError($registerResponse['status_message']);
+                }
+                else
+                {
                     $id = $response['response']['data']['id'];
                     $data = array(
                         'password'=> $password,

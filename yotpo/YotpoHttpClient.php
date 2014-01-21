@@ -12,15 +12,18 @@ class YotpoHttpClient
 		$this->name = $name;
   	}
   	
-    public function check_if_b2c_user($email) {
+    public function check_if_b2c_user($email)
+    {
         return $this->makeGetRequest(self::YOTPO_API_URL . '/users/find_by_type_and_email.json', array('type' => 'b2c', 'email' => $email));
     }
 
-    public function create_user_migration($id, array $data) {
+    public function create_user_migration($id, array $data)
+    {
         return $this->makePostRequest(self::YOTPO_API_URL . '/users/'.$id.'/migration', array('data' => $data));
     }
 
-    public function notify_user_migration($id) {
+    public function notify_user_migration($id)
+    {
         return $this->makeGetRequest(self::YOTPO_API_URL . '/users/'.$id.'/migration/notify');
     }
     
@@ -51,7 +54,7 @@ class YotpoHttpClient
 		if (!empty($token))
 		{
 			$data['utoken'] = $token;
-		    return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data,20);
+		    return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data, 20);
 		}
 	}
 
