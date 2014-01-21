@@ -7,7 +7,7 @@ $_MODULE['<{globkurier}prestashop>globkurier_cc6771ccdc0a3b09de55a44bd9db368d'] 
 $_MODULE['<{globkurier}prestashop>globkurier_e4c2e8edac362acab7123654b9e73432'] = '1.0';
 $_MODULE['<{globkurier}prestashop>globkurier_79236f67a812f0f83c681af9c58e8c5a'] = 'GlobKurier | Solik Tomasz ';
 $_MODULE['<{globkurier}prestashop>globkurier_4f970b74bb74da1d9bdb957ae668f46b'] = 'GlobKurier.pl';
-$_MODULE['<{globkurier}prestashop>globkurier_adb5cd0fab38353dc02ae90a733c3fbb'] = 'Wysyłaj przesyłki o 80% taniej niż bezpośrednio w UPS, DHL, DPD,  DHL !';
+$_MODULE['<{globkurier}prestashop>globkurier_adb5cd0fab38353dc02ae90a733c3fbb'] = 'Wysyłaj przesyłki o 80% taniej niż bezpośrednio w UPS, DHL, DPD!';
 $_MODULE['<{globkurier}prestashop>globkurier_f85a5b520ece4108266fd3764430ccf1'] = 'Uwaga: wszystkie dane zapisane w module zostaną usunięte. Czy chcesz odinstalować moduł ?';
 $_MODULE['<{globkurier}prestashop>globkurier_3147f742040dc688f988c951479e15d4'] = 'Proszę uzupełnić zawartość przesyłki.';
 $_MODULE['<{globkurier}prestashop>globkurier_8c815f025124262f4e0048fdb0cc3408'] = 'Przesyłka nie jest dostępna dla wybranych krajów.';
