@@ -242,7 +242,7 @@ class Newsletter extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Export .CSV file'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitExport',
 				)
 			),
@@ -301,7 +301,7 @@ class Newsletter extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Export .CSV file'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitExport',
 				)
 			),
