@@ -70,7 +70,6 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 		else
 			$kwixo = new KwixoPayment($cart->id_shop);
 
-
 		if ($kwixo->getAuthKey() == '')
 		{
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Clé privée Kwixo vide, retour UrlSys échoué');

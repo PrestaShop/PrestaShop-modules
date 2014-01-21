@@ -89,9 +89,8 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 
 		//Hash control
 		if ($waitedhash != $receivedhash)
-		{
 			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Hash control invalide (les données ne proviennent pas de Kwixo)");
-		} else
+		else
 		{
 			//check xml_params for urlcall payment
 			$xml_params = $payment->checkUrlCallXMLParams();
