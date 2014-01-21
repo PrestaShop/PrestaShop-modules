@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.3';
+		$this->version = '1.3.5';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -194,9 +194,9 @@ class Yotpo extends Module
 		else
 			echo '<link rel="stylesheet" type="text/css" href="../modules/yotpo/css/form.css" />';	
 
-		$this->processRegistrationForm();
+		$force_settings = $this->processRegistrationForm() == 'b2c';
 		$this->processSettingsForm();
-		$this->displayForm();
+		$this->displayForm($force_settings);
 
 		return '<img src="http://www.prestashop.com/modules/yotpo.png?url_site='.Tools::safeOutput($_SERVER['SERVER_NAME']).'" alt="" style="display: none;" />'.$this->_html;
 	}
@@ -349,6 +349,8 @@ class Yotpo extends Module
 			  	($is_mail_valid['json'] == true && $is_mail_valid['response']['available'] == true) || 
 			  	($is_mail_valid['json'] == false && preg_match("/available[\W]*(true)/",$is_mail_valid['response']) == 1))
 			{
+				$response = $this->httpClient()->check_if_b2c_user($email);
+                if (empty($response['response']['data'])){
 				$registerResponse = $this->httpClient()->register($email, $name, $password, _PS_BASE_URL_);
 				if ($registerResponse['status_code'] == 200)
 				{
@@ -382,6 +384,26 @@ class Yotpo extends Module
 				}
 				else
 					return $this->prepareError($registerResponse['status_message']);
+                                } else {
+                    $id = $response['response']['data']['id'];
+                    $data = array(
+                        'password'=> $password,
+                        'display_name'=> $name,
+                        'account' => array(
+                            'url' => _PS_BASE_URL_,
+                            'custom_platform_name'=>null,
+                            'install_step'=>8,
+                            'account_platform' => array(
+                                'shop_domain'=> _PS_BASE_URL_,
+                                'platform_type_id'=>8,
+                            )
+                        )
+                    );
+                    $this->httpClient()->create_user_migration($id,$data);
+                    $this->httpClient()->notify_user_migration($id);
+                    $this->prepareError($this->l('We have sent you a confirmation email. Please check and click on the link to get your app key and secret token to fill out below.'));
+                    return 'b2c';
+                }
 			}
 			else
 				return $is_mail_valid['status_code'] == 200 ? $this->prepareError($this->l('This e-mail address is already taken.')) : $this->prepareError();
@@ -446,7 +468,7 @@ class Yotpo extends Module
 		}
 	}
 
-	private function displayForm()
+	private function displayForm($force_settings = false)
 	{
 		global $smarty;
 
@@ -459,7 +481,7 @@ class Yotpo extends Module
 		if (Tools::isSubmit('yotpo_register'))
 			$smarty->assign('yotpo_finishedRegistration', true);
 
-		return Configuration::get('yotpo_app_key') == '' ? $this->displayRegistrationForm() : $this->displaySettingsForm();
+		return Configuration::get('yotpo_app_key') != '' || $force_settings ? $this->displaySettingsForm() : $this->displayRegistrationForm();
 	}
 
 	private function displayRegistrationForm()
