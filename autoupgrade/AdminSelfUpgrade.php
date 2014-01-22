@@ -556,7 +556,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$allowed_array['shop_deactivated'] = (!Configuration::get('PS_SHOP_ENABLE') || (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], array('127.0.0.1', 'localhost'))));
 			$allowed_array['cache_deactivated'] = !(defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_);
 			$allowed_array['module_version_ok'] = $this->checkAutoupgradeLastVersion();
-			$allowed_array['test_mobile'] = ConfigurationTest::test_mobile();
+			if (version_compare(_PS_VERSION_,'1.5.0.0','<'))
+				$allowed_array['test_mobile'] = ConfigurationTest::test_mobile();
 		}
 		return $allowed_array;
 	}
