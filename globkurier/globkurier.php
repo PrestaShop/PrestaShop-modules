@@ -54,7 +54,7 @@ class GlobKurier extends Module {
 	{
 		$this->name = 'globkurier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'GlobKurier | Solik Tomasz <info[at]tomaszsolik.pl>';
 		$this->need_instance = 0;
 
