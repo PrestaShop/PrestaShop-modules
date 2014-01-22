@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<module>
-    <name>shoppingfluxexport</name>
-    <displayName><![CDATA[Shopping Feed Export]]></displayName>
-    <version><![CDATA[3.2]]></version>
-    <description><![CDATA[Export all your products to Google Shopping, eBay, Amazon, Rakuten, etc...]]></description>
-    <author><![CDATA[PrestaShop]]></author>
-    <tab><![CDATA[smart_shopping]]></tab>
-	<confirmUninstall><![CDATA[Delete this plugin ?]]></confirmUninstall>
-    <is_configurable>1</is_configurable>
-    <need_instance>1</need_instance>
+        <module>
+            <name>shoppingfluxexport</name>
+            <displayName><![CDATA[Shopping Feed Export]]></displayName>
+            <version><![CDATA[3.3]]></version>
+            <description><![CDATA[Export all your products to Google Shopping, eBay, Amazon, Rakuten, etc...]]></description>
+            <author><![CDATA[PrestaShop]]></author>
+            <tab><![CDATA[smart_shopping]]></tab>
+	<confirmUninstall>Delete this plugin ?</confirmUninstall>
+            <is_configurable>1</is_configurable>
+            <need_instance>1</need_instance>
 	<limited_countries></limited_countries>
-</module>
+        </module>
