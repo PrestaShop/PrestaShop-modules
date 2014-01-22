@@ -26,12 +26,12 @@
 <link rel="stylesheet" type="text/css" href="{$module_dir}static/css/shop.css" />
 <meta property="og:title" content="{$meta_title|escape:'htmlall':'UTF-8'}" />
 {if $is_product_page}
-<meta property="og:type" content="addshoppers:product" />
+<meta property="og:type" content="product" />
 {if isset($image_url)}
 <meta property="og:image" content="{$image_url}" />
 {/if}
 {else}
-<meta property="og:type" content="addshoppers:website" />
+<meta property="og:type" content="website" />
 <meta property="og:image" content="{$logo_url}" />
 {/if}
 <meta property="og:site_name" content="{$shop_name|escape:'htmlall':'UTF-8'}" />
