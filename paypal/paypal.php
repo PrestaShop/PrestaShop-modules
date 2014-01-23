@@ -458,8 +458,6 @@ class PayPal extends PaymentModule
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/ipn.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
 				'tracking_code' => $this->getTrackingCode($method), 
-				'iso_code' => Tools::strtoupper($this->context->language->iso_code)
-				'tracking_code' => $this->getTrackingCode(), 
 				'iso_code' => Tools::strtoupper($this->context->language->iso_code),
 				'payment_hss_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
 				'payment_hss_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
