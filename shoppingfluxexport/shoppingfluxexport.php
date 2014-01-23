@@ -83,6 +83,10 @@ class ShoppingFluxExport extends Module
 			foreach (Shop::getShops() as $shop)
 			{
 			if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand()), false, null, $shop['id_shop']) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_CANCELED', Configuration::get('PS_OS_CANCELED'), false, null, $shop['id_shop']) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_SHIPPED', Configuration::get('PS_OS_SHIPPING'), false, null, $shop['id_shop']) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_IMAGE', ImageType::getFormatedName('large'), false, null, $shop['id_shop']) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_CARRIER', Configuration::get('PS_CARRIER_DEFAULT'), false, null, $shop['id_shop']) ||
 				!Configuration::updateValue('SHOPPING_FLUX_TRACKING','checked', false, null, $shop['id_shop']) ||
 				!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','checked', false, null, $shop['id_shop']) ||
 				!Configuration::updateValue('SHOPPING_FLUX_ORDERS','checked', false, null, $shop['id_shop']) ||
@@ -97,6 +101,10 @@ class ShoppingFluxExport extends Module
 		else {
 			
 			if (!Configuration::updateValue('SHOPPING_FLUX_TOKEN', md5(rand())) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_CANCELED', Configuration::get('PS_OS_CANCELED')) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_SHIPPED', Configuration::get('PS_OS_SHIPPING')) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_IMAGE', ImageType::getFormatedName('large')) ||
+                                !Configuration::updateValue('SHOPPING_FLUX_CARRIER', Configuration::get('PS_CARRIER_DEFAULT')) ||
 				!Configuration::updateValue('SHOPPING_FLUX_TRACKING','checked') ||
 				!Configuration::updateValue('SHOPPING_FLUX_BUYLINE','checked') ||
 				!Configuration::updateValue('SHOPPING_FLUX_ORDERS','checked') ||
@@ -287,7 +295,7 @@ class ShoppingFluxExport extends Module
             
             foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true) as $carrier)
             {
-                $selected = isset($configuration['SHOPPING_FLUX_CARRIER']) && (int)$configuration['SHOPPING_FLUX_CARRIER'] == (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
+                $selected = (int)$configuration['SHOPPING_FLUX_CARRIER'] === (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
                 $html .= '<option value="'.(int)$carrier['id_reference'].'" '.$selected.'>'.Tools::safeOutput ($carrier['name']).'</option>';
             }
             
@@ -302,10 +310,7 @@ class ShoppingFluxExport extends Module
             
             foreach (ImageType::getImagesTypes() as $imagetype)
             {
-                $selected = isset($configuration['SHOPPING_FLUX_IMAGE']) ?
-                        ($configuration['SHOPPING_FLUX_IMAGE'] == $imagetype['name'] ? 'selected = "selected"' : '') : 
-                        ($imagetype['name'] == 'large_default' ? 'selected = "selected"' : '');
-                
+                $selected = $configuration['SHOPPING_FLUX_IMAGE'] == $imagetype['name'] ? 'selected = "selected"' : '';
                 $html .= '<option value="'.$imagetype['name'].'" '.$selected.'>'.Tools::safeOutput ($imagetype['name']).'</option>';
             }
             
@@ -320,10 +325,7 @@ class ShoppingFluxExport extends Module
             
             foreach (OrderState::getOrderStates($configuration['PS_LANG_DEFAULT']) as $orderState)
             {
-                $selected = isset($configuration['SHOPPING_FLUX_SHIPPED']) ?
-                        ($configuration['SHOPPING_FLUX_SHIPPED'] == $orderState['id_order_state'] ? 'selected = "selected"' : '') : 
-                        ($orderState['template'] == 'shipped' ? 'selected = "selected"' : '');
-                
+                $selected = (int)$configuration['SHOPPING_FLUX_SHIPPED'] === (int)$orderState['id_order_state'] ? 'selected = "selected"' : '';
                 $html .= '<option value="'.$orderState['id_order_state'].'" '.$selected.'>'.Tools::safeOutput ($orderState['name']).'</option>';
             }
             
@@ -338,10 +340,7 @@ class ShoppingFluxExport extends Module
             
             foreach (OrderState::getOrderStates($configuration['PS_LANG_DEFAULT']) as $orderState)
             {
-                $selected = isset($configuration['SHOPPING_FLUX_CANCELED']) ?
-                        ($configuration['SHOPPING_FLUX_CANCELED'] == $orderState['id_order_state'] ? 'selected = "selected"' : '') : 
-                        ($orderState['template'] == 'order_canceled' ? 'selected = "selected"' : '');
-                
+                $selected = (int)$configuration['SHOPPING_FLUX_CANCELED'] === (int)$orderState['id_order_state'] ? 'selected = "selected"' : '';
                 $html .= '<option value="'.$orderState['id_order_state'].'" '.$selected.'>'.Tools::safeOutput ($orderState['name']).'</option>';
             }
             
@@ -493,8 +492,7 @@ class ShoppingFluxExport extends Module
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		
-		$id_carrier_sf = (int)Configuration::get('SHOPPING_FLUX_CARRIER');
-                $carrier = $id_carrier_sf !== 0 ? Carrier::getCarrierByReference($id_carrier_sf) : new Carrier(Configuration::get('PS_CARRIER_DEFAULT'));
+                $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
 
@@ -562,8 +560,7 @@ class ShoppingFluxExport extends Module
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		
-		$id_carrier_sf = (int)Configuration::get('SHOPPING_FLUX_CARRIER');
-                $carrier = $id_carrier_sf !== 0 ? Carrier::getCarrierByReference($id_carrier_sf) : new Carrier(Configuration::get('PS_CARRIER_DEFAULT'));
+		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], $current);
 		
@@ -735,7 +732,7 @@ class ShoppingFluxExport extends Module
 			foreach ($images as $image)
 			{
 				$ids = $product->id.'-'.$image['id_image'];
-				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, $configuration['SHOPPING_FLUX_IMAGE'] !== '' ? $configuration['SHOPPING_FLUX_IMAGE'] : 'large_default').']]></image>';
+				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, $configuration['SHOPPING_FLUX_IMAGE']).']]></image>';
 				$ret = str_replace('http://http://', 'http://', $ret);
 			}
 		}
@@ -837,7 +834,7 @@ class ShoppingFluxExport extends Module
 					$image_child = false;
 					break;
 				}
-				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, $configuration['SHOPPING_FLUX_IMAGE'] !== '' ? $configuration['SHOPPING_FLUX_IMAGE'] : 'large_default').']]></image>';
+				$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $product->id.'-'.$image, $configuration['SHOPPING_FLUX_IMAGE']).']]></image>';
 				$ret = str_replace('http://http://', 'http://', $ret);
 			}
 
@@ -846,7 +843,7 @@ class ShoppingFluxExport extends Module
 				foreach ($product->getImages($configuration['PS_LANG_DEFAULT']) as $images)
 				{
 					$ids = $product->id.'-'.$images['id_image'];
-					$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, $configuration['SHOPPING_FLUX_IMAGE'] !== '' ? $configuration['SHOPPING_FLUX_IMAGE'] : 'large_default').']]></image>';
+					$ret .= '<image><![CDATA[http://'.$link->getImageLink($product->link_rewrite, $ids, $configuration['SHOPPING_FLUX_IMAGE']).']]></image>';
 					$ret = str_replace('http://http://', 'http://', $ret);
 				}
 			}
@@ -1382,8 +1379,7 @@ class ShoppingFluxExport extends Module
 		
 		}
 		
-                $id_carrier_sf = (int)Configuration::get('SHOPPING_FLUX_CARRIER');
-                $carrier = $id_carrier_sf !== 0 ? Carrier::getCarrierByReference($id_carrier_sf) : new Carrier(Configuration::get('PS_CARRIER_DEFAULT'));
+                $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
 		$updateOrder = array(
                     'total_paid' => (float)($order->TotalAmount),
