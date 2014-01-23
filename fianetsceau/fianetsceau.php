@@ -41,325 +41,6 @@ class FianetSceau extends Module
 	);
 
 	/**
-	 * FIA-NET categories
-	 * 
-	 * @var array
-	 */
-	private $_fianetsceau_categories = array(
-		1 => 'Alimentation & Gastronomie',
-		2 => 'Animaux',
-		3 => 'Armurerie',
-		4 => 'Auto & Moto',
-		5 => 'B&eacute;b&eacute;s et Enfants',
-		6 => 'Culture & Divertissements',
-		7 => 'Electrom&eacute;nager',
-		8 => 'Ench&egrave;res & Achats group&eacute;s',
-		9 => 'Finance aux particuliers',
-		10 => 'Fleurs & Cadeaux',
-		11 => 'Hifi, Photos & Vid&eacute;os',
-		12 => 'Informatique & Logiciels',
-		13 => 'Maison & Jardin',
-		14 => 'Optique',
-		15 => 'Sant&eacute; & Beaut&eacute',
-		16 => 'Services aux professionnels',
-		17 => 'Sport',
-		18 => 'T&eacute;l&eacute;phonie & Communication',
-		19 => 'Ventes priv&eacute;es',
-		20 => 'V&ecirc;tements & Accessoires',
-		21 => 'Vie pratique',
-		22 => 'Voyage & Tourisme',
-	);
-
-	/**
-	 * FIA-NET subcategories
-	 * 
-	 * @var array
-	 */
-	private $_fianetsceau_subcategories = array(
-		2 => array('parent_id' => 1, 'label' => 'Chocolats & Confiseries'),
-		3 => array('parent_id' => 1, 'label' => 'Alimentation g&eacute;n&eacute;rale'),
-		4 => array('parent_id' => 1, 'label' => 'Produits du terroir'),
-		5 => array('parent_id' => 1, 'label' => 'Vins & Spiritueux'),
-		6 => array('parent_id' => 1, 'label' => 'Aliments pour animaux'),
-		78 => array('parent_id' => 1, 'label' => 'Chocolats & Confiseries'),
-		79 => array('parent_id' => 1, 'label' => 'Alimentation g&eacute;n&eacute;rale'),
-		248 => array('parent_id' => 1, 'label' => 'Produits du terroir'),
-		249 => array('parent_id' => 1, 'label' => 'Vins & Spiritueux'),
-		264 => array('parent_id' => 2, 'label' => 'Animaux'),
-		265 => array('parent_id' => 2, 'label' => 'Aliments pour animaux'),
-		266 => array('parent_id' => 2, 'label' => 'Pharmacie pour animaux'),
-		253 => array('parent_id' => 3, 'label' => 'Armes'),
-		7 => array('parent_id' => 4, 'label' => 'Accessoires'),
-		8 => array('parent_id' => 4, 'label' => 'Autre'),
-		9 => array('parent_id' => 4, 'label' => 'Pneumatiques'),
-		80 => array('parent_id' => 4, 'label' => 'Autoradios'),
-		82 => array('parent_id' => 4, 'label' => 'Antivols'),
-		84 => array('parent_id' => 4, 'label' => 'Produits d\'entretien'),
-		86 => array('parent_id' => 4, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es'),
-		166 => array('parent_id' => 4, 'label' => 'Autos'),
-		167 => array('parent_id' => 4, 'label' => '2 roues'),
-		175 => array('parent_id' => 4, 'label' => 'Sport automobile'),
-		186 => array('parent_id' => 4, 'label' => 'GPS'),
-		231 => array('parent_id' => 4, 'label' => 'Casques & Combinaison moto'),
-		232 => array('parent_id' => 4, 'label' => 'Caravanes & Camping-cars'),
-		233 => array('parent_id' => 4, 'label' => 'Scooters'),
-		234 => array('parent_id' => 4, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es & Tuning'),
-		235 => array('parent_id' => 4, 'label' => 'Voitures neuves & Occasions'),
-		236 => array('parent_id' => 4, 'label' => 'Motos neuves & occasions'),
-		237 => array('parent_id' => 4, 'label' => 'Autoradios & vid&eacute;o embarqu&eacute;e'),
-		281 => array('parent_id' => 4, 'label' => 'Code de la route'),
-		257 => array('parent_id' => 5, 'label' => 'Jeux & Jouets d\'&eacute;veil'),
-		258 => array('parent_id' => 5, 'label' => 'Pu&eacute;riculture'),
-		259 => array('parent_id' => 5, 'label' => 'Mobilier b&eacute;b&eacute;s'),
-		260 => array('parent_id' => 5, 'label' => 'Faire-part & Cartes de voeux'),
-		261 => array('parent_id' => 5, 'label' => 'Poussettes & Voyages'),
-		262 => array('parent_id' => 5, 'label' => 'Hygi&egrave;ne'),
-		263 => array('parent_id' => 5, 'label' => 'S&eacute;curit&eacute;'),
-		272 => array('parent_id' => 5, 'label' => 'Mode b&eacute;b&eacute;s & Enfants'),
-		10 => array('parent_id' => 6, 'label' => 'Arts graphiques'),
-		11 => array('parent_id' => 6, 'label' => 'Autres'),
-		12 => array('parent_id' => 6, 'label' => 'DVD'),
-		13 => array('parent_id' => 6, 'label' => 'Jeux & Jouets'),
-		14 => array('parent_id' => 6, 'label' => 'Jeux vid&eacute;os'),
-		15 => array('parent_id' => 6, 'label' => 'Livres'),
-		16 => array('parent_id' => 6, 'label' => 'Musique'),
-		17 => array('parent_id' => 6, 'label' => 'Spectacles & &eacutes;v&egrave;nements'),
-		87 => array('parent_id' => 6, 'label' => 'Art'),
-		88 => array('parent_id' => 6, 'label' => 'Bande dessin&eacute;es'),
-		90 => array('parent_id' => 6, 'label' => 'Collections et miniatures'),
-		91 => array('parent_id' => 6, 'label' => 'Magazines'),
-		92 => array('parent_id' => 6, 'label' => 'Cd-rom'),
-		93 => array('parent_id' => 6, 'label' => 'Vid&eacute;os'),
-		173 => array('parent_id' => 6, 'label' => 'Philat&eacute;lie'),
-		185 => array('parent_id' => 6, 'label' => 'Consoles Vid&eacute;os'),
-		244 => array('parent_id' => 6, 'label' => 'Instruments de musique'),
-		245 => array('parent_id' => 6, 'label' => 'Livres & magazines'),
-		246 => array('parent_id' => 6, 'label' => 'Vid&eacute;o DVD et Blu Ray'),
-		271 => array('parent_id' => 6, 'label' => 'Consoles & Jeux vid&eacute;os'),
-		273 => array('parent_id' => 6, 'label' => 'Mod&eacute;lisme'),
-		280 => array('parent_id' => 6, 'label' => 'D&eacute;guisement'),
-		283 => array('parent_id' => 6, 'label' => 'Enseignement'),
-		286 => array('parent_id' => 6, 'label' => 'Vente de produits d&eacute;riv&eacute;s d\'artistes'),
-		23 => array('parent_id' => 7, 'label' => 'R&eacute;frig&eacute;rateurs'),
-		24 => array('parent_id' => 7, 'label' => 'Cong&eacute;lateurs'),
-		25 => array('parent_id' => 7, 'label' => 'Lave-vaisselles'),
-		26 => array('parent_id' => 7, 'label' => 'Micro-ondes'),
-		27 => array('parent_id' => 7, 'label' => 'Fours'),
-		28 => array('parent_id' => 7, 'label' => 'Cuisini&egrave;res'),
-		100 => array('parent_id' => 7, 'label' => 'Hottes aspirantes'),
-		101 => array('parent_id' => 7, 'label' => 'Tables de cuisson'),
-		102 => array('parent_id' => 7, 'label' => 'Appareils culinaires'),
-		103 => array('parent_id' => 7, 'label' => 'Laves-linge'),
-		104 => array('parent_id' => 7, 'label' => 'S&egrave;ches-linge'),
-		105 => array('parent_id' => 7, 'label' => 'Aspirateurs'),
-		106 => array('parent_id' => 7, 'label' => 'S&egrave;ches-cheveux'),
-		108 => array('parent_id' => 7, 'label' => 'Rasoirs'),
-		109 => array('parent_id' => 7, 'label' => 'Epilateurs'),
-		110 => array('parent_id' => 7, 'label' => 'P&egrave;ses-personne'),
-		111 => array('parent_id' => 7, 'label' => 'Fers &agrave;  repasser'),
-		169 => array('parent_id' => 7, 'label' => 'Produits d\'entretien'),
-		183 => array('parent_id' => 7, 'label' => 'Accessoires'),
-		188 => array('parent_id' => 7, 'label' => 'Climatisation'),
-		200 => array('parent_id' => 7, 'label' => 'Machines &agrave;  coudre'),
-		201 => array('parent_id' => 7, 'label' => 'Cafeti&egrave;res & Expresso'),
-		202 => array('parent_id' => 7, 'label' => 'Caves &agrave;  vin'),
-		203 => array('parent_id' => 7, 'label' => 'Petit &eacute;lectrom&eacute;nager'),
-		204 => array('parent_id' => 7, 'label' => 'Centrales vapeurs & Fers &agrave;  repasser'),
-		205 => array('parent_id' => 7, 'label' => 'M&eacute;nage & Produits d\'entretien'),
-		206 => array('parent_id' => 7, 'label' => 'Chauffage, Climatisation & Energies renouvelables'),
-		29 => array('parent_id' => 8, 'label' => 'Achats group&eacute;s'),
-		30 => array('parent_id' => 8, 'label' => 'Clubs de consommateurs'),
-		31 => array('parent_id' => 8, 'label' => 'Ench&egrave;res'),
-		32 => array('parent_id' => 8, 'label' => 'Ench&egrave;res invers&eacute;es'),
-		254 => array('parent_id' => 9, 'label' => 'Assurance'),
-		255 => array('parent_id' => 9, 'label' => 'Informations juridiques'),
-		256 => array('parent_id' => 9, 'label' => 'Banque & Finance'),
-		290 => array('parent_id' => 9, 'label' => 'Rachat d\'or'),
-		33 => array('parent_id' => 10, 'label' => 'Service d\'aide pour les cadeaux'),
-		34 => array('parent_id' => 10, 'label' => 'Cartes'),
-		35 => array('parent_id' => 10, 'label' => 'Fleurs'),
-		36 => array('parent_id' => 10, 'label' => 'Souvenirs'),
-		112 => array('parent_id' => 10, 'label' => 'Chocolats & Confiseries'),
-		267 => array('parent_id' => 10, 'label' => 'Cartes & Papeterie'),
-		268 => array('parent_id' => 10, 'label' => 'Bons d\'achats & Ch&egrave;ques cadeaux'),
-		269 => array('parent_id' => 10, 'label' => 'Gadgets & Cadeaux personnalis&eacute;s'),
-		270 => array('parent_id' => 10, 'label' => 'Escapades & Coffrets cadeaux'),
-		278 => array('parent_id' => 10, 'label' => 'Accessoires fumeurs'),
-		142 => array('parent_id' => 11, 'label' => 'Radios cassettes'),
-		143 => array('parent_id' => 11, 'label' => 'Autoradios'),
-		145 => array('parent_id' => 11, 'label' => 'Vid&eacute;oprojecteurs'),
-		146 => array('parent_id' => 11, 'label' => 'Appareils photo'),
-		147 => array('parent_id' => 11, 'label' => 'Lecteur mp3'),
-		148 => array('parent_id' => 11, 'label' => 'T&eacute;l&eacute;viseurs'),
-		149 => array('parent_id' => 11, 'label' => 'Camescopes'),
-		150 => array('parent_id' => 11, 'label' => 'Chaines hifi'),
-		152 => array('parent_id' => 11, 'label' => 'Baladeurs'),
-		153 => array('parent_id' => 11, 'label' => 'Amplificateurs'),
-		154 => array('parent_id' => 11, 'label' => 'Enceintes'),
-		155 => array('parent_id' => 11, 'label' => 'Tables de mixage'),
-		156 => array('parent_id' => 11, 'label' => 'Lecteurs DVD'),
-		158 => array('parent_id' => 11, 'label' => 'Magn&eacute;toscopes'),
-		161 => array('parent_id' => 11, 'label' => 'Tirages photos'),
-		177 => array('parent_id' => 11, 'label' => 'Accessoires'),
-		179 => array('parent_id' => 11, 'label' => 'Home cin&eacute;ma'),
-		196 => array('parent_id' => 11, 'label' => 'Enregistreurs'),
-		197 => array('parent_id' => 11, 'label' => 'D&eacute;veloppement photos'),
-		198 => array('parent_id' => 11, 'label' => 'Lecteur DVD & Blu Ray'),
-		199 => array('parent_id' => 11, 'label' => 'Lecteur MP3 & Baladeurs'),
-		37 => array('parent_id' => 12, 'label' => 'Consommables'),
-		38 => array('parent_id' => 12, 'label' => 'Logiciels'),
-		39 => array('parent_id' => 12, 'label' => 'Ordinateurs'),
-		40 => array('parent_id' => 12, 'label' => 'P&eacute;riph&eacute;riques'),
-		41 => array('parent_id' => 12, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es'),
-		42 => array('parent_id' => 12, 'label' => 'T&eacute;l&eacute;chargements'),
-		113 => array('parent_id' => 12, 'label' => 'Imprimantes'),
-		114 => array('parent_id' => 12, 'label' => 'Lecteurs & Graveurs'),
-		115 => array('parent_id' => 12, 'label' => 'Moniteurs'),
-		116 => array('parent_id' => 12, 'label' => 'Cartes Graphiques'),
-		117 => array('parent_id' => 12, 'label' => 'Composants'),
-		118 => array('parent_id' => 12, 'label' => 'Assistants personnels'),
-		119 => array('parent_id' => 12, 'label' => 'Modems'),
-		120 => array('parent_id' => 12, 'label' => 'Scanners'),
-		159 => array('parent_id' => 12, 'label' => 'Portables'),
-		176 => array('parent_id' => 12, 'label' => 'Editeurs'),
-		184 => array('parent_id' => 12, 'label' => 'Accessoires'),
-		207 => array('parent_id' => 12, 'label' => 'Mini PC'),
-		208 => array('parent_id' => 12, 'label' => 'Cables & Connectiques'),
-		209 => array('parent_id' => 12, 'label' => 'GPS'),
-		210 => array('parent_id' => 12, 'label' => 'R&eacute;seau'),
-		211 => array('parent_id' => 12, 'label' => 'D&eacute;pannage informatique'),
-		212 => array('parent_id' => 12, 'label' => 'Stockage'),
-		213 => array('parent_id' => 12, 'label' => 'Ordinateurs PC & Mac'),
-		214 => array('parent_id' => 12, 'label' => 'Ordinateurs Portables'),
-		215 => array('parent_id' => 12, 'label' => 'Consommables & Accessoires'),
-		284 => array('parent_id' => 12, 'label' => 'Tablettes'),
-		285 => array('parent_id' => 12, 'label' => 'Accessoires pour tablettes'),
-		19 => array('parent_id' => 13, 'label' => 'Bricolage'),
-		20 => array('parent_id' => 13, 'label' => 'Jardinage'),
-		21 => array('parent_id' => 13, 'label' => 'Fournitures & Mobiliers'),
-		22 => array('parent_id' => 13, 'label' => 'Design'),
-		94 => array('parent_id' => 13, 'label' => 'D&eacute;coration'),
-		95 => array('parent_id' => 13, 'label' => 'Linge de maison'),
-		96 => array('parent_id' => 13, 'label' => 'Luminaires'),
-		97 => array('parent_id' => 13, 'label' => 'Mobilier de jardin'),
-		98 => array('parent_id' => 13, 'label' => 'Vaisselles'),
-		99 => array('parent_id' => 13, 'label' => 'Autres'),
-		170 => array('parent_id' => 13, 'label' => 'Produits d\'entretien'),
-		181 => array('parent_id' => 13, 'label' => 'Arts de la table'),
-		187 => array('parent_id' => 13, 'label' => 'Salles de bain'),
-		216 => array('parent_id' => 13, 'label' => 'Fen&ecirc;tres, Volets & Stores'),
-		217 => array('parent_id' => 13, 'label' => 'Animalerie'),
-		218 => array('parent_id' => 13, 'label' => 'Cuisines'),
-		219 => array('parent_id' => 13, 'label' => 'Ameublement'),
-		220 => array('parent_id' => 13, 'label' => 'Piscines'),
-		221 => array('parent_id' => 13, 'label' => 'Maisons en bois'),
-		222 => array('parent_id' => 13, 'label' => 'Chauffage, Climatisation & Energies renouvelables'),
-		223 => array('parent_id' => 13, 'label' => 'Barbecues, Plancha & Accessoires'),
-		224 => array('parent_id' => 13, 'label' => 'Protections & Alarmes'),
-		225 => array('parent_id' => 13, 'label' => 'Literie'),
-		227 => array('parent_id' => 13, 'label' => 'Bricolage & Outillage'),
-		228 => array('parent_id' => 13, 'label' => 'Mobilier & Am&eacute;nagement d\'exterieur'),
-		229 => array('parent_id' => 13, 'label' => 'Art de la table et de la cuisine'),
-		277 => array('parent_id' => 13, 'label' => 'Stickers & Adh&eacute;sifs'),
-		275 => array('parent_id' => 14, 'label' => 'Lunettes de soleil'),
-		276 => array('parent_id' => 14, 'label' => 'Lunettes & Lentilles'),
-		43 => array('parent_id' => 15, 'label' => 'Soins des cheveux'),
-		44 => array('parent_id' => 15, 'label' => 'Soins du corps'),
-		45 => array('parent_id' => 15, 'label' => 'Parfums'),
-		46 => array('parent_id' => 15, 'label' => 'Soins du visage'),
-		47 => array('parent_id' => 15, 'label' => 'Sexualit&eacute;'),
-		48 => array('parent_id' => 15, 'label' => 'Animaux'),
-		121 => array('parent_id' => 15, 'label' => 'Produits biologiques'),
-		122 => array('parent_id' => 15, 'label' => 'Produits di&eacute;t&eacute;tiques'),
-		123 => array('parent_id' => 15, 'label' => 'Parapharmacie'),
-		124 => array('parent_id' => 15, 'label' => 'Minceur'),
-		125 => array('parent_id' => 15, 'label' => 'Cosm&eacute;tiques'),
-		157 => array('parent_id' => 15, 'label' => 'B&eacute;b&eacute;'),
-		163 => array('parent_id' => 15, 'label' => 'Lunettes'),
-		238 => array('parent_id' => 15, 'label' => 'Appareils sant&eacute; beaut&eacute;'),
-		239 => array('parent_id' => 15, 'label' => 'Produits di&eacute;t&eacute;tiques & Bien-&ecirc;tre'),
-		240 => array('parent_id' => 15, 'label' => 'Cosm&eacute;tiques & Cosm&eacute;tiques bio'),
-		241 => array('parent_id' => 15, 'label' => 'Soins du corps et du visage'),
-		242 => array('parent_id' => 15, 'label' => 'Intimit&eacute; & Pr&eacute;servatifs'),
-		243 => array('parent_id' => 15, 'label' => 'Lentilles de contact & Lunettes de vue'),
-		288 => array('parent_id' => 15, 'label' => 'Accessoires'),
-		59 => array('parent_id' => 16, 'label' => 'Divers'),
-		60 => array('parent_id' => 16, 'label' => 'Ench&egrave;res professionnelles'),
-		61 => array('parent_id' => 16, 'label' => 'Formation'),
-		62 => array('parent_id' => 16, 'label' => 'Fournitures & Mobiliers'),
-		63 => array('parent_id' => 16, 'label' => 'Prestataires Internet'),
-		64 => array('parent_id' => 16, 'label' => 'Produits agricoles'),
-		172 => array('parent_id' => 16, 'label' => 'Information juridique'),
-		65 => array('parent_id' => 17, 'label' => 'Ev&egrave;nements'),
-		66 => array('parent_id' => 17, 'label' => 'Mat&eacute;riel'),
-		67 => array('parent_id' => 17, 'label' => 'Di&eacute;t&eacute;tique'),
-		68 => array('parent_id' => 17, 'label' => 'V&ecirc;tements'),
-		182 => array('parent_id' => 17, 'label' => 'Chaussures'),
-		247 => array('parent_id' => 17, 'label' => 'Fitness & Di&eacute;t&eacute;tique'),
-		279 => array('parent_id' => 17, 'label' => 'Ski'),
-		127 => array('parent_id' => 18, 'label' => 'Accessoires'),
-		128 => array('parent_id' => 18, 'label' => 'T&eacute;l&eacute;phones fixes'),
-		129 => array('parent_id' => 18, 'label' => 'T&eacute;l&eacute;phones mobiles'),
-		130 => array('parent_id' => 18, 'label' => 'Fax'),
-		160 => array('parent_id' => 18, 'label' => 'Abonnements'),
-		178 => array('parent_id' => 18, 'label' => 'Achats de minute'),
-		230 => array('parent_id' => 18, 'label' => 'Abonnements Internet & T&eacute;l&eacute;phonique'),
-		274 => array('parent_id' => 19, 'label' => 'Ventes priv&eacute;es'),
-		69 => array('parent_id' => 20, 'label' => 'Accessoires'),
-		70 => array('parent_id' => 20, 'label' => 'Bijoux'),
-		71 => array('parent_id' => 20, 'label' => 'Chaussures'),
-		72 => array('parent_id' => 20, 'label' => 'Lingerie'),
-		73 => array('parent_id' => 20, 'label' => 'Maroquinerie'),
-		74 => array('parent_id' => 20, 'label' => 'Mode enfants'),
-		75 => array('parent_id' => 20, 'label' => 'Mode femme'),
-		76 => array('parent_id' => 20, 'label' => 'Mode homme'),
-		77 => array('parent_id' => 20, 'label' => 'Montres'),
-		126 => array('parent_id' => 20, 'label' => 'Bagagerie'),
-		164 => array('parent_id' => 20, 'label' => 'Lunettes'),
-		190 => array('parent_id' => 20, 'label' => 'V&ecirc;tement femme enceinte'),
-		191 => array('parent_id' => 20, 'label' => 'Jeans'),
-		192 => array('parent_id' => 20, 'label' => 'Mode b&eacute;b&eacute;s & Enfants'),
-		193 => array('parent_id' => 20, 'label' => 'Lunettes de soleil'),
-		194 => array('parent_id' => 20, 'label' => 'Accessoires de mode'),
-		195 => array('parent_id' => 20, 'label' => 'Bijoux & Montres'),
-		287 => array('parent_id' => 20, 'label' => 'Vente de produits d&eacute;riv&eacute;s d\'artistes'),
-		289 => array('parent_id' => 20, 'label' => 'Militaire'),
-		49 => array('parent_id' => 21, 'label' => 'Actualit&eacute;s & Presse'),
-		50 => array('parent_id' => 21, 'label' => 'Assurance'),
-		51 => array('parent_id' => 21, 'label' => 'Banque & Finance'),
-		52 => array('parent_id' => 21, 'label' => 'Cartes & Plans'),
-		53 => array('parent_id' => 21, 'label' => 'Galeries marchandes'),
-		54 => array('parent_id' => 21, 'label' => 'Fournitures & Mobiliers'),
-		55 => array('parent_id' => 21, 'label' => 'Petites annonces'),
-		56 => array('parent_id' => 21, 'label' => 'Rencontres'),
-		57 => array('parent_id' => 21, 'label' => 'Science'),
-		58 => array('parent_id' => 21, 'label' => 'Animaux'),
-		162 => array('parent_id' => 21, 'label' => 'Tirages photos'),
-		165 => array('parent_id' => 21, 'label' => 'Immobilier'),
-		168 => array('parent_id' => 21, 'label' => 'Papeterie'),
-		171 => array('parent_id' => 21, 'label' => 'Information juridique'),
-		174 => array('parent_id' => 21, 'label' => 'Divers'),
-		180 => array('parent_id' => 21, 'label' => 'Armes'),
-		189 => array('parent_id' => 21, 'label' => 'S&eacute;curit&eacute;'),
-		226 => array('parent_id' => 21, 'label' => 'Mobilier d\'int&eacute;rieur'),
-		250 => array('parent_id' => 21, 'label' => 'Faire-part & Cartes de voeux'),
-		251 => array('parent_id' => 21, 'label' => 'Imprimerie & Cartes de visite'),
-		252 => array('parent_id' => 21, 'label' => 'Sciences'),
-		282 => array('parent_id' => 21, 'label' => 'Code de la route'),
-		131 => array('parent_id' => 22, 'label' => 'Billets d\'avion'),
-		132 => array('parent_id' => 22, 'label' => 'Location de voitures'),
-		133 => array('parent_id' => 22, 'label' => 'H&ocirc;tels'),
-		134 => array('parent_id' => 22, 'label' => 'S&eacute;jours'),
-		135 => array('parent_id' => 22, 'label' => 'Circuits'),
-		136 => array('parent_id' => 22, 'label' => 'Croisi&egrave;res'),
-		137 => array('parent_id' => 22, 'label' => 'Logements'),
-		138 => array('parent_id' => 22, 'label' => 'Week-ends'),
-		139 => array('parent_id' => 22, 'label' => 'Cartes & Guides'),
-		140 => array('parent_id' => 22, 'label' => 'Derni&egrave;re minute'),
-		141 => array('parent_id' => 22, 'label' => 'Bagagerie'),
-	);
-
-	/**
 	 * Table of differents status 
 	 * @var Array 
 	 */
@@ -435,7 +116,7 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.3';
+		$this->version = '2.4';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -456,7 +137,11 @@ class FianetSceau extends Module
 		}
 		else
 			$this->backward = true;
+
 		parent::__construct();
+
+		//check Sceau update
+		$this->checkSceauUpdate();
 	}
 
 	public function install()
@@ -503,6 +188,9 @@ class FianetSceau extends Module
 		$tab_controller_main->module = $this->name;
 		$tab_controller_main->add();
 		$tab_controller_main->move($this->getNewLastPosition(0));
+
+		//update kwixo version on configuration
+		Configuration::updateValue('FIANETSCEAU_MODULE_VERSION', $this->version);
 
 		//Hook register
 		return (parent::install()
@@ -683,23 +371,22 @@ class FianetSceau extends Module
 		if (_PS_VERSION_ < '1.5')
 		{
 			$civility = $customer->id_gender;
-
 			$accepted_civility = array("1", "2", "3");
 			if (!(in_array($civility, $accepted_civility)))
 				$civility = '1';
+
+			$id_shop = 1;
+			$fianetsceau = new Sceau();
 		}
 		else
 		{
 			$gender = new Gender($customer->id_gender);
 			$id_lang = Language::getIdByIso($this->context->language->iso_code);
 			$civility = $gender->name[$id_lang] == 'Mr.' ? 1 : 2;
-		}
 
-		//xml construction
-		if (_PS_VERSION_ < '1.5')
-			$fianetsceau = new Sceau();
-		else
-			$fianetsceau = new Sceau((int) $order->id_shop);
+			$id_shop = (int) $order->id_shop;
+			$fianetsceau = new Sceau($id_shop);
+		}
 
 		$lang = Language::getIsoById($order->id_lang) == 'fr' ? 'fr' : 'uk';
 
@@ -710,7 +397,7 @@ class FianetSceau extends Module
 		$sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order), $order->date_add, $lang);
 
 		//get default FIA-NET category
-		$default_product_type = $this->getFianetSubCategoryId(0);
+		$default_product_type = $this->getFianetSubCategoryId(0, $id_shop);
 
 		$products = $order->getProducts();
 
@@ -725,7 +412,7 @@ class FianetSceau extends Module
 			$prod = new Product($product['product_id']);
 
 			//gets the product FIA-NET category
-			$product_type = $this->getFianetSubCategoryId($product_category);
+			$product_type = $this->getFianetSubCategoryId($product_category, $id_shop);
 
 			if (!empty($prod->ean13) && ($prod->ean13 != 0 || $prod->ean13 != ''))
 				$codeean = $prod->ean13;
@@ -1028,15 +715,21 @@ class FianetSceau extends Module
 		Configuration::updateValue('FIANETSCEAU_WIDGET_NUMBER', Tools::getValue('fianetsceau_widget_number'));
 		Configuration::updateValue('FIANETSCEAU_SHOW_STATUS_ORDER', ((int) Tools::getValue('fianetsceau_showstatus') == 1 ? '1' : '0'));
 
+
+		if (_PS_VERSION_ < '1.5')
+			$id_shop = 1;
+		else
+			$id_shop = Context::getContext()->shop->id;
+
 		//update default category value
-		$this->manageFianetSubCategory(0, Tools::getValue('fianetsceau_0_subcategory'), 1);
+		$this->manageFianetSubCategory(0, Tools::getValue('fianetsceau_0_subcategory'), 1, $id_shop);
 
 
 		/** categories configuration * */
 		//lists all product categories and update FIA-NET categories
 		$shop_categories = $this->loadProductCategories();
 		foreach (array_keys($shop_categories) as $id)
-			$this->manageFianetSubCategory($id, Tools::getValue('fianetsceau_'.$id.'_subcategory'), 0);
+			$this->manageFianetSubCategory($id, Tools::getValue('fianetsceau_'.$id.'_subcategory'), 0, $id_shop);
 
 		/** update payment means settings * */
 		//list of payment means of the shop
@@ -1055,6 +748,8 @@ class FianetSceau extends Module
 	 */
 	private function formIsValid()
 	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
 		$iso_lang_current = Language::getIsoById($this->context->language->id);
 
@@ -1082,7 +777,7 @@ class FianetSceau extends Module
 			$this->_errors[] = $this->l("You must give a correct status.");
 
 		//check default product type
-		if (!in_array(Tools::getValue('fianetsceau_0_subcategory'), array_keys($this->_fianetsceau_subcategories)))
+		if (!in_array(Tools::getValue('fianetsceau_0_subcategory'), array_keys($_fianetsceau_subcategories)))
 			$this->_errors[] = $this->l('You must configure a valid default product type');
 
 		//check logo and widget position
@@ -1121,7 +816,7 @@ class FianetSceau extends Module
 		$shop_categories = $this->loadProductCategories();
 		foreach ($shop_categories as $id => $shop_category)
 			if (Tools::getValue('fianetsceau_'.$id.'_subcategory') != 0)
-				if (!in_array(Tools::getValue('fianetsceau_'.$id.'_subcategory'), (array_keys($this->_fianetsceau_subcategories))))
+				if (!in_array(Tools::getValue('fianetsceau_'.$id.'_subcategory'), (array_keys($_fianetsceau_subcategories))))
 					$this->_errors[] = $this->l('Invalid product type for category:')." '".$shop_category['name']."'";
 
 		return empty($this->_errors);
@@ -1134,6 +829,19 @@ class FianetSceau extends Module
 		//if some POST datas are found
 		//Get log file
 		$log_content = htmlentities(SceauLogger::getLogContent());
+
+		if (_PS_VERSION_ < '1.5')
+		{
+			$id_shop = 1;
+			$fianetsceau = new Sceau();
+		} else
+		{
+			$id_shop = Context::getContext()->shop->id;
+			$fianetsceau = new Sceau($id_shop);
+		}
+
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
 		if (Tools::isSubmit('submitSettings'))
 		{
@@ -1179,11 +887,9 @@ class FianetSceau extends Module
 			$fianetsceau_logo = (Configuration::get('FIANETSCEAU_LOGO_SIZE') === false ? '120' : Configuration::get('FIANETSCEAU_LOGO_SIZE'));
 			$widget_number = (Configuration::get('FIANETSCEAU_WIDGET_NUMBER') === false ? '1' : Configuration::get('FIANETSCEAU_WIDGET_NUMBER'));
 			$show_status = (Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER') === false ? '0' : Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER'));
-			$fianetsceau_default_subcategory = $this->getFianetSubCategoryId(0);
+			$fianetsceau_default_subcategory = $this->getFianetSubCategoryId(0, $id_shop);
 			$fianetsceau_default_category = $this->getFianetCategoryId($fianetsceau_default_subcategory);
 		}
-
-		$fianetsceau = new Sceau();
 
 		//token
 		$token = Tools::getAdminToken($fianetsceau->getSiteid().$fianetsceau->getAuthkey().$fianetsceau->getLogin());
@@ -1230,9 +936,10 @@ class FianetSceau extends Module
 			'fianetsceau_default_category' => Tools::safeOutput($fianetsceau_default_category),
 			'fianetsceau_default_subcategory' => Tools::safeOutput($fianetsceau_default_subcategory),
 			'logo_categories_path' => $base_url.'modules/'.$this->name.'/img/categories.gif',
-			'fianetsceau_categories' => $this->_fianetsceau_categories,
-			'fianetsceau_subcategories' => $this->_fianetsceau_subcategories,
+			'fianetsceau_categories' => $_fianetsceau_categories,
+			'fianetsceau_subcategories' => $_fianetsceau_subcategories,
 			'token' => $token,
+			'id_shop' => $id_shop,
 		));
 
 		//view selection by prestashop 1.4 or 1.5
@@ -1314,10 +1021,15 @@ class FianetSceau extends Module
 	{
 		$categories = Category::getSimpleCategories($this->context->language->id);
 
+		if (_PS_VERSION_ < '1.5')
+			$id_shop = 1;
+		else
+			$id_shop = Context::getContext()->shop->id;
+
 		$shop_categories = array();
 		foreach ($categories as $category)
 		{
-			$fianetsceau_type = Tools::isSubmit('fianetsceau_'.$category['id_category'].'_subcategory') ? Tools::getValue('fianetsceau_'.$category['id_category'].'_subcategory') : $this->getFianetSubCategoryId($category['id_category']);
+			$fianetsceau_type = Tools::isSubmit('fianetsceau_'.$category['id_category'].'_subcategory') ? Tools::getValue('fianetsceau_'.$category['id_category'].'_subcategory') : $this->getFianetSubCategoryId($category['id_category'], $id_shop);
 			$parent_id = $this->getFianetCategoryId($fianetsceau_type);
 			$shop_categories[$category['id_category']] = array(
 				'name' => $category['name'],
@@ -1335,8 +1047,10 @@ class FianetSceau extends Module
 	 */
 	public function loadFianetSubCategories($category_id)
 	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
-		$subcategories = $this->_fianetsceau_subcategories;
+		$subcategories = $_fianetsceau_subcategories;
 
 		$subcategories_array = array();
 		foreach ($subcategories as $key => $value)
@@ -1356,8 +1070,10 @@ class FianetSceau extends Module
 	 */
 	public function getFianetCategoryId($subcategory_id)
 	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
-		$subcategories = $this->_fianetsceau_subcategories;
+		$subcategories = $_fianetsceau_subcategories;
 
 		foreach ($subcategories as $key => $value)
 		{
@@ -1372,9 +1088,9 @@ class FianetSceau extends Module
 	 * @param int $category_id
 	 * @return int 
 	 */
-	public function getFianetSubCategoryId($category_id)
+	public function getFianetSubCategoryId($category_id, $id_shop)
 	{
-		$sql = "SELECT `id_fianetsceau_subcategory` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id;
+		$sql = "SELECT `id_fianetsceau_subcategory` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND `id_shop`= ".(int) $id_shop;
 
 		$query_result = Db::getInstance()->getRow($sql);
 		if ($query_result == false)
@@ -1390,15 +1106,16 @@ class FianetSceau extends Module
 	 * @param int $fianet_subcategory
 	 * @param bool $is_default_subcategory 
 	 */
-	public function manageFianetSubCategory($category_id, $fianet_subcategory, $is_default_subcategory)
+	public function manageFianetSubCategory($category_id, $fianet_subcategory, $is_default_subcategory, $id_shop)
 	{
-		$sql = "SELECT `id_category` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id;
+		$sql = "SELECT `id_category` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND id_shop = ".(int) $id_shop;
+
 		$query_result = Db::getInstance()->getRow($sql);
 
 		if ($query_result == false)
 		{
-			$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` (`id_category`, `id_fianetsceau_subcategory`, `default_category`) 
-				VALUES ('".$this->bqSQL($category_id)."', '".$this->bqSQL($fianet_subcategory)."', '".$this->bqSQL($is_default_subcategory)."')";
+			$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` (`id_category`, `id_fianetsceau_subcategory`, `default_category`, `id_shop`) 
+				VALUES ('".$this->bqSQL($category_id)."', '".$this->bqSQL($fianet_subcategory)."', '".$this->bqSQL($is_default_subcategory)."', '".$this->bqSQL($id_shop)."')";
 
 			$insert = Db::getInstance()->execute($sql);
 
@@ -1410,7 +1127,8 @@ class FianetSceau extends Module
 		else
 		{
 
-			$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` SET `id_fianetsceau_subcategory` = '".$this->bqSQL($fianet_subcategory)."', `default_category` = '".$this->bqSQL($is_default_subcategory)."' WHERE `id_category` = ".(int) $category_id."";
+			$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` SET `id_fianetsceau_subcategory` = '".$this->bqSQL($fianet_subcategory)."', `default_category` = '".$this->bqSQL($is_default_subcategory)."' 
+				WHERE `id_category` = ".(int) $category_id." AND `id_shop` = ".(int) $id_shop;
 
 			$update = Db::getInstance()->execute($sql);
 
@@ -1420,4 +1138,59 @@ class FianetSceau extends Module
 				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory updated : ".$fianet_subcategory);
 		}
 	}
+
+	/**
+	 * For Prestashop 1.4, check if module is enabled, from Module::isEnabled($module_name)
+	 * 
+	 * @param string $module_name
+	 * 
+	 */
+	public function checkModuleisEnabled($module_name)
+	{
+		return (bool) Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+	}
+
+	/**
+	 * Get Kwixo module version saved on configuration
+	 * @return int 
+	 */
+	public function getSceauModuleVersion()
+	{
+		$sceau_version = Configuration::get('FIANETSCEAU_MODULE_VERSION');
+
+		if (!$sceau_version)
+			return false;
+		else
+			return $sceau_version;
+	}
+
+	/**
+	 * Check Sceau module version and reinstall it if version is too old
+	 * 
+	 */
+	public function checkSceauUpdate()
+	{
+		if (_PS_VERSION_ >= '1.5')
+		//check if kwixo is enabled on PS 1.5
+			$sceau_is_enabled = Module::isEnabled('fianetsceau');
+		else
+		//check if kwixo is enabled on PS 1.4
+			$sceau_is_enabled = $this->checkModuleisEnabled('fianetsceau');
+
+		if (Module::isInstalled('fianetsceau') && $sceau_is_enabled)
+		{
+			$sceau_version = $this->getSceauModuleVersion();
+
+			if (!$sceau_version || $sceau_version < $this->version)
+			{
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module version < '.$this->version);
+				if ($this->uninstall())
+					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module uninstalled');
+
+				if ($this->install())
+					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module installed');
+			}
+		}
+	}
+
 }

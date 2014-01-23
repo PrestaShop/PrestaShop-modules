@@ -20,5 +20,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_SCEAU_CATEGORY_TABLE_NAME` (
 	`id_category` int(10) unsigned,
 	`id_fianetsceau_subcategory` int(10) NOT NULL,
 	`default_category` tinyint(1) NOT NULL,
-PRIMARY KEY (`id_category`)
+	`id_shop` int(2) unsigned NOT NULL,
+PRIMARY KEY (`id_category`,`id_shop`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
