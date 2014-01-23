@@ -1,5 +1,4 @@
 <?php
-
 /**
  * génère un code aléatoire composé de chiffres et de lettres (maj et min) sur $i caractères (10 par défaut)
  *
@@ -14,7 +13,7 @@ function generateRandomRefIdSceau($i = 10)
 	$code = '';
 
 	for ($k = 0; $k < $i; $k++)
-	{	//10 est le nombre de caractères
+	{ //10 est le nombre de caractères
 		$code .= substr($characts, rand() % (strlen($characts)), 1);
 	}
 
@@ -135,6 +134,7 @@ function insertLogSceau($func, $msg)
 {
 	SceauLogger::insertLogSceau($func, $msg);
 }
+
 /*
 function is_utf8($string)
 {
