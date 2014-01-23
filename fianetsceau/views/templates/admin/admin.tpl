@@ -224,6 +224,7 @@
 <br/>
 <center><input type="submit" name="submitSettings" value="{l s='Save' mod='fianetsceau'}" class="button" /></center>
 <input id="token_fianetsceau" name="token_fianetsceau" type="hidden" value="{$token}" />
+<input id="id_shop_fianetsceau" name="id_shop_fianetsceau" type="hidden" value="{$id_shop}" />
 </form>
 <br/>
 <center><input type="button" name="submitLog" onclick="ShowHideSceauLog();" value="{l s='Show/Hide FIA-NET Sceau log file' mod='fianetsceau'}" class="button" /></center>
