@@ -494,6 +494,9 @@ class ShoppingFluxExport extends Module
 		
                 $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+                
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
@@ -561,6 +564,9 @@ class ShoppingFluxExport extends Module
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		
 		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+                
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], $current);
 		
@@ -1381,6 +1387,9 @@ class ShoppingFluxExport extends Module
 		
                 $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+                
 		$updateOrder = array(
                     'total_paid' => (float)($order->TotalAmount),
                     'total_paid_tax_incl' => (float)($order->TotalAmount),
@@ -1454,8 +1463,10 @@ class ShoppingFluxExport extends Module
 		$cart->recyclable = 0;
 		$cart->secure_key = md5(uniqid(rand(), true));
                 
-                $id_carrier_sf = (int)Configuration::get('SHOPPING_FLUX_CARRIER');
-                $carrier = $id_carrier_sf !== 0 ? Carrier::getCarrierByReference($id_carrier_sf) : new Carrier(Configuration::get('PS_CARRIER_DEFAULT'));
+                $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+                
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
                 
 		$cart->id_carrier = $carrier->id_carrier;
                 
