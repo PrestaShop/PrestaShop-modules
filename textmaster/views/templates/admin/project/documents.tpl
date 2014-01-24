@@ -16,6 +16,11 @@
 * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 * International Registered Trademark & Property of TextMaster
 *}
+{foreach from=$documents item=document name=doc}
+    {if $document.status == 'completed'}
+        {$is_completed = "true"}
+    {/if}
+{/foreach}
 
 <table name="list_table" class="table_grid">
     <tbody>
@@ -29,6 +34,9 @@
                         <col width="20px">
                         <col width="50px">
                         <col width="50px">
+                        {if isset($is_completed) && $is_completed}
+                            <col width="50px">
+                        {/if}
                         {else}
                         <col width="10px">
                         <col>
@@ -44,6 +52,9 @@
                             <th class="center"><span class="title_box">{l s='Word count' mod='textmaster'}</span></th>
                             <th class="center"><span class="title_box">{l s='Status' mod='textmaster'}</span></th>
                             <th class="center"><span class="title_box">{l s='Approve' mod='textmaster'}</span></th>
+                            {if isset($is_completed) && $is_completed}
+                                <th class="center"><span class="title_box">{l s='Update product' mod='textmaster'}</span></th>
+                            {/if}
                         </tr>
                         {else}
                         <tr style="height: 40px" class="nodrag nodrop">
@@ -70,6 +81,11 @@
                                     <img class="approve" title="{l s='Approved' mod='textmaster'}" src="../modules/textmaster/img/approve.png" />
                                 {/if}
                                 </td>
+                                {if $document.status == 'completed'}
+                                    <td class="center">
+                                        <input type="button" class="button" style="cursor: pointer" onclick="updateDocument('{$document.id_product|escape:'htmlall':'UTF-8'}', '{$document.id|escape:'htmlall':'UTF-8'}', '{l s='Product fields will be automatically updated.' mod='textmaster' js=1}')" title="{l s='Update product' mod='textmaster'}" value="{l s='Update product' mod='textmaster'}" />
+                                    </td>
+                                {/if}
                             </tr>
                             {else}
                             <tr class="row_hover">

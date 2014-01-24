@@ -1169,44 +1169,70 @@ class TextMaster extends Module
             return false;
         }
     }
-
+    
     private function approveDocument()
     {
-        $result = true;
-        $id_document = (int)Tools::getValue('id_document');
-        $document = new TextMasterDocument($id_document);
-        if ($id_product = Tools::getValue('id_product'))
+        $update_product_only = (bool)Tools::getValue('update_product_only');
+        
+        if ($update_product_only)
         {
-            $product = new Product($id_product); // loading product object
-
-            $document_data = $document->getApiData(); // loading document data (we need project API ID and text, submited by author)
-            $project = TextMasterProject::getProjectByApiId($document_data['project_id'], true); // loading project object by project API ID
-            $project_data = $project->getProjectData(); // loading project data (we need to retrieve project language)
-            $id_lang = Language::getIdByIso($project_data['language_to']); // language ISO to language ID
-
-            if (isset($document_data['author_work']))
-            {
-                foreach ($document_data['author_work'] as $element => $content)
-                    $product->{$element}[$id_lang] = $content;
-
-                if (!$product->update())
-                {
-                    $this->_html .= $this->displayError(sprintf($this->l('Could not update product %d# field "%s" in %s language'), $id_product, $element, $project_data['language_to']));
-                    return;
-                }
-
-                if(!$document->approve())
-                    $result = false;
-            }
-        }
-
-        if ($result)
-        {
-            $this->addFlashMessage($this->l('Document was successfully approved'));
-            Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu='.Tools::getValue('menu').'&id_project='.Tools::getValue('id_project').'&viewproject&token='.Tools::getAdminTokenLite('AdminModules'));
+            $error_message = $this->l('Product data could not be updated');
+            $success_message = $this->l('Product data was successfully updated');
         }
         else
-            $this->_html .= $this->displayError($result);
+        {
+            $error_message = $this->l('Document could not be approved');
+            $success_message = $this->l('Document was successfully approved');
+        }
+        
+        $id_document = (int)Tools::getValue('id_document');
+        $id_product = (int)Tools::getValue('id_product');
+        
+        
+        $document = new TextMasterDocument((int)$id_document);
+        if (!Validate::isLoadedObject($document))
+            return $this->displayError($error_message);
+        
+        $document_data = $document->getApiData();
+        if (!$document_data || !isset($document_data['author_work']) || !isset($document_data['project_id']))
+            return $this->displayError($error_message);
+        
+        $product = new Product((int)$id_product);
+        if (!Validate::isLoadedObject($product))
+            return $this->displayError($error_message);
+        
+        $project = TextMasterProject::getProjectByApiId($document_data['project_id'], true);
+        if (!Validate::isLoadedObject($project))
+            return $this->displayError($error_message);
+        
+        $project_data = $project->getProjectData();
+        if (!isset($project_data['language_to']))
+            return $this->displayError($error_message);
+        
+        $id_lang = Language::getIdByIso($project_data['language_to']);
+        if (!$id_lang)
+            return $this->displayError($error_message);
+        
+        if (!$update_product_only)
+            if (!$document->approve())
+                return $this->displayError($error_message);
+        
+        if (!$this->updateProductData($document_data, $product, $id_lang))
+            return $this->displayError($error_message);
+        
+        $this->addFlashMessage($success_message);
+        Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu='.Tools::getValue('menu').'&id_project='.Tools::getValue('id_project').'&viewproject&token='.Tools::getAdminTokenLite('AdminModules'));
+    }
+    
+    private function updateProductData($document_data, $product, $id_lang)
+    {
+        foreach ($document_data['author_work'] as $element => $content)
+            $product->{$element}[$id_lang] = $content;
+
+        if (!$product->update())
+            return false;
+        
+        return true;
     }
 
     private function displayResults()
