@@ -77,6 +77,8 @@ class Addshoppers extends Module
 		$shop_id = $this->getShopId();
 		$buttons_code = $this->client->getButtonsCode();
 
+		$this->context->controller->addCSS($this->_path.'/static/css/shop.css', 'all');
+		
 		if (Configuration::get('ADDSHOPPERS_OPENGRAPH') == '1')
 			$this->context->smarty->assign('buttons_opengraph', $buttons_code['buttons']['open-graph']);
 		if (Configuration::get('ADDSHOPPERS_BUTTONS') == '1')
