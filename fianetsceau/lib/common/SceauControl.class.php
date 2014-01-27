@@ -12,7 +12,7 @@ class SceauControl extends SceauDOMDocument
 		@$this->root = $this->appendChild(new SceauXMLElement('control'));
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('sceaumodule', '2.3');
+		$this->root->setAttribute('sceaumodule', '2.4');
 	}
 
 	/**

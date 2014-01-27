@@ -164,6 +164,11 @@ abstract class SceauService extends SceauMother
 		}
 	}
 
+	public function statusIsAvailable($status)
+	{
+		return in_array($status, $this->_available_statuses);
+	}
+
 	public function __call($name, array $params)
 	{
 		if (preg_match('#^getUrl.+$#', $name) > 0)
