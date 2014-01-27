@@ -257,7 +257,7 @@ class PaymentSense extends PaymentModule
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Merchant ID').'</b> - Your Gateway Merchant ID should contain 
 					<strong>the first 6 characters of the company name followed by a hyphen (-) and 7 numbers</strong>';
 
-				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) <= 10)
+				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) < 10)
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Password').'</b> - 
 					Your gateway password is too short, this should contain 10 characters including 3 numbers. 
 					This password does <strong>NOT</strong> contain a symbol';
