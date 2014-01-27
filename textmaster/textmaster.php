@@ -564,7 +564,7 @@ class TextMaster extends Module
 
         $post_arr = $phone ? array(
             'user'=>array(
-                'locale' => $this->getFullLocale(),
+                'locale' => $this->getFullLocale(true),
                 'email'=>$email,
                 'password'=>$password,
                 'referer_tracker_id'=>TEXTMASTER_TRACKER_ID,
@@ -575,7 +575,7 @@ class TextMaster extends Module
             )
         ) : array(
             'user'=>array(
-                'locale' => $this->getFullLocale(),
+                'locale' => $this->getFullLocale(true),
                 'email'=>$email,
                 'referer_tracker_id'=>TEXTMASTER_TRACKER_ID,
                 'password'=>$password,
@@ -595,21 +595,75 @@ class TextMaster extends Module
         return curl_exec($curl);
     }
 
-    public function getFullLocale()
+    public function getFullLocale($registration = false)
     {
-        $available_locales = array();
+        if (!$registration)
+        {
+            $textmaster_api_obj = new TextMasterAPI($this);
+            $user_info = $textmaster_api_obj->getUserInfo();
+            return $user_info['locale'];
+        }
+        
+        $locales_from_api = array();
         $textmaster_api_obj = new TextMasterAPI();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
-            $available_locales[] = $locale_info['code'];
+            $locales_from_api[] = $locale_info['code'];
 
-        foreach ($available_locales as $locale)
-        if (Tools::substr($locale, 0, 2) == $this->context->language->language_code)
-            return $locale;
-
-        if (in_array(TEXTMASTER_DEFAULT_LOCALE, $available_locales))
-            return TEXTMASTER_DEFAULT_LOCALE;
-
-        return isset($available_locales[0]) ? $available_locales[0] : '';
+        $registration_locale = $this->getRegistrationLocale();
+        
+        if (in_array($registration_locale, $locales_from_api))
+            return $registration_locale;
+        
+        return TEXTMASTER_DEFAULT_LOCALE;
+    }
+    
+    private function getRegistrationLocale()
+    {
+        $country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $country_iso_code = $country->iso_code;
+        $language_iso_code = Tools::strtolower($this->context->language->iso_code);
+        
+        if ($language_iso_code == 'en' || $language_iso_code == 'pt')
+        {
+            switch ($country_iso_code)
+            {
+                case 'US':
+                    $locale = 'en-US';
+                    break;
+                case 'BR':
+                    $locale = 'pt-BR';
+                    break;
+                case 'PT':
+                    $locale = 'pt-PT';
+                    break;
+                default:
+                    $locale = TEXTMASTER_DEFAULT_LOCALE;
+                    break;
+            }
+        }
+        else
+        {
+            switch ($language_iso_code)
+            {
+                case 'es':
+                    $locale = 'es-ES';
+                    break;
+                case 'fr':
+                    $locale = 'fr-FR';
+                    break;
+                case 'it':
+                    $locale = 'it-IT';
+                    break;
+                case 'de':
+                    $locale = 'de-DE';
+                    break;
+                default:
+                    $locale = TEXTMASTER_DEFAULT_LOCALE;
+                    break;
+            }
+        }
+        
+        return $locale;
     }
 
     /*function createNewTextMasterUser($oAuthTokenNew, $email, $password)
