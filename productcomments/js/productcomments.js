@@ -1,5 +1,5 @@
 $(function() {
-	$('input[@type=radio].star').rating();
+	$('input.star').rating();
 	$('.auto-submit-star').rating();
 
 	$('.open-comment-form').fancybox({
@@ -56,8 +56,11 @@ $(function() {
 		e.preventDefault();
 
 		// Form element
-        
-		url_options = parseInt(productcomments_url_rewrite) ? '?' : '&';
+
+        url_options = '?';
+        if (!productcomments_url_rewrite)
+            url_options = '&';
+
 		$.ajax({
 			url: productcomments_controller_url + url_options + 'action=add_comment&secure_key=' + secure_key + '&rand=' + new Date().getTime(),
 			data: $('#id_new_comment_form').serialize(),

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,7 +73,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.6.2';
+		$this->version = '3.6.4';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -351,7 +351,7 @@ class PayPal extends PaymentModule
 			$id_hook = (int)Configuration::get('PS_MOBILE_HOOK_HEADER_ID');
 			if ($id_hook > 0)
 			{
-				$module = Hook::getModuleFromHook($id_hook, $this->id);
+				$module = Hook::getModulesFromHook($id_hook, $this->id);
 				if (!$module)
 					$this->registerHook('displayMobileHeader');
 			}
@@ -594,7 +594,7 @@ class PayPal extends PaymentModule
 		$message = $this->l('Cancel products result:').'<br>';
 
 		$amount = (float)($products[(int)$order_detail->id]['product_price_wt'] * (int)$cancel_quantity[(int)$order_detail->id]);
-		$refund = $this->_makeRefund($paypal_order->id_transaction, (int)$order->id, $amount);
+		$refund = $this->_makeRefund($paypal_order['id_transaction'], (int)$order->id, $amount);
 		$this->formatMessage($refund, $message);
 		$this->_addNewPrivateMessage((int)$order->id, $message);
 	}
@@ -1090,7 +1090,7 @@ class PayPal extends PaymentModule
 
 		$paypal_lib	= new PaypalLib();
 		$response = $paypal_lib->makeCall($this->getAPIURL(), $this->getAPIScript(), 'GetTransactionDetails',
-			'&'.http_build_query(array('TRANSACTIONID' => $paypal_order->id_transaction), '', '&'));
+			'&'.http_build_query(array('TRANSACTIONID' => $paypal_order['id_transaction']), '', '&'));
 
 		if (array_key_exists('ACK', $response))
 		{
@@ -1246,7 +1246,7 @@ class PayPal extends PaymentModule
 
 	protected function getGiftWrappingPrice()
 	{
-		if (version_compare(_PS_VERSION_, '1.5', '>='))
+		if (version_compare(_PS_VERSION_, '1.5.3.0', '>='))
 			$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 		else
 		{

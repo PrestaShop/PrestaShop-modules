@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -66,7 +66,8 @@ if (_PS_VERSION_ < '1.5')
 		$smarty->assign('total_shipping', $total_shipping);
 		$smarty->assign('path_order', __PS_BASE_URI__.'order.php');
 		$smarty->assign('path_history', __PS_BASE_URI__.'history.php');
-	
+		$smarty->assign('path_contact', __PS_BASE_URI__.'contact-form.php');
+
 		echo $smarty->display(dirname(__FILE__).'/views/templates/front/urlcall.tpl');
 		require_once(dirname(__FILE__).'/../../footer.php');
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.7.0';
+		$this->version = '1.7.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -134,13 +134,29 @@ class Gamification extends Module
 		}
 	}
 	
+	public function isUpdating()
+	{
+		$db_version = Db::getInstance()->getValue('SELECT `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+		return version_compare($this->version, $db_version, '>');
+	}
+	
 	public function hookDisplayBackOfficeHeader()
 	{
+		//check if currently updatingcheck if module is currently processing update
+		if ($this->isUpdating())
+			return false;
+		
 		if (method_exists($this->context->controller, 'addJquery'))
 		{
 			$this->context->controller->addJquery();
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
-
+			
+			//add css for advices
+			$advices = Advice::getValidatedByIdTab($this->context->controller->id);
+			$css_str = '';
+			foreach ($advices as $advice)
+				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
+			
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
 				$this->context->controller->addJs($this->_path.'views/js/gamification_bt.js');
 			else
@@ -148,7 +164,7 @@ class Gamification extends Module
 
 			$this->context->controller->addJqueryPlugin('fancybox');
 		
-			return '<script>
+			return $css_str.'<script>
 				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
 				var current_id_tab = '.(int)$this->context->controller->id.';
 			</script>';
@@ -157,6 +173,10 @@ class Gamification extends Module
 	
 	public function renderHeaderNotification()
 	{
+		//check if currently updatingcheck if module is currently processing update
+		if ($this->isUpdating())
+			return false;
+		
 		$current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
 		$current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 		
@@ -175,7 +195,7 @@ class Gamification extends Module
 			'badges_to_display' => $badges_to_display,
 			'current_id_tab' => (int)$this->context->controller->id,
 			'notification' => (int)Configuration::get('GF_NOTIFICATION'),
-			
+			'advice_hide_url' => 'http://gamification.prestashop.com/api/AdviceHide/',
 			));
 
 		if (version_compare(_PS_VERSION_, '1.6.0', '>='))

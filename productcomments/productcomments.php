@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.4';
+		$this->version = '2.9';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->secure_key = Tools::encrypt($this->name);
@@ -69,13 +69,13 @@ class ProductComments extends Module
 			!$this->registerHook('extraProductComparison') ||
 			!$this->registerHook('productTabContent') ||
 			!$this->registerHook('header') ||
-			!$this->registerHook('productOutOfStock') ||
+			!$this->registerHook('displayRightColumnProduct') ||
 			!$this->registerHook('displayProductListReviews') ||
 			!$this->registerHook('top') ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
-				return false;
+			return false;
 		return true;
 	}
 
@@ -86,13 +86,13 @@ class ProductComments extends Module
 			!Configuration::deleteByName('PRODUCT_COMMENTS_ALLOW_GUESTS') ||
 			!Configuration::deleteByName('PRODUCT_COMMENTS_MINIMAL_TIME') ||
 			!$this->unregisterHook('extraProductComparison') ||
-			!$this->unregisterHook('productOutOfStock') ||
+			!$this->unregisterHook('displayRightColumnProduct') ||
 			!$this->unregisterHook('productTabContent') ||
 			!$this->unregisterHook('header') ||
 			!$this->unregisterHook('productTab') ||
 			!$this->unregisterHook('top') ||
 			!$this->unregisterHook('displayProductListReviews'))
-				return false;
+			return false;
 		return true;
 	}
 
@@ -360,13 +360,13 @@ class ProductComments extends Module
 			<br />
 			<fieldset class="width2">
 				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Moderate Comments').'</legend>';
-			if (Configuration::get('PRODUCT_COMMENTS_MODERATE'))
+		if (Configuration::get('PRODUCT_COMMENTS_MODERATE'))
+		{
+			require_once(dirname(__FILE__).'/ProductComment.php');
+			$comments = ProductComment::getByValidate();
+			if (count($comments))
 			{
-				require_once(dirname(__FILE__).'/ProductComment.php');
-				$comments = ProductComment::getByValidate();
-				if (count($comments))
-				{
-					$this->_html .= '
+				$this->_html .= '
 					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_form">
 					<input type="hidden" name="id_product_comment[]" id="id_product_comment" />
 					<input type="hidden" name="action" id="action" />
@@ -381,8 +381,8 @@ class ProductComments extends Module
 					</tr>
 					</thead>
 					<tbody>';
-					foreach ($comments as $comment)
-						$this->_html .= '<tr>
+				foreach ($comments as $comment)
+					$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
 						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
@@ -390,7 +390,7 @@ class ProductComments extends Module
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
-						$this->_html .= '
+				$this->_html .= '
 						<tr>
 							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
@@ -399,10 +399,10 @@ class ProductComments extends Module
 						</tbody>
 					</table>
 					</form>';
-				}
-				else
-					$this->_html .= $this->l('No comments to validate at this time.');
 			}
+			else
+				$this->_html .= $this->l('No comments to validate at this time.');
+		}
 		$this->_html .= '</fieldset><br />';
 	}
 
@@ -411,11 +411,11 @@ class ProductComments extends Module
 		$this->_html .= '<fieldset class="width2">
 				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Reported Comments').'</legend>';
 
-				require_once(dirname(__FILE__).'/ProductComment.php');
-				$comments = ProductComment::getReportedComments();
-				if (count($comments))
-				{
-					$this->_html .= '
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		$comments = ProductComment::getReportedComments();
+		if (count($comments))
+		{
+			$this->_html .= '
 					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="comment_form">
 					<input type="hidden" name="id_product_comment[]" id="id_product_comment" />
 					<input type="hidden" name="action" id="action" />
@@ -430,8 +430,8 @@ class ProductComments extends Module
 					</tr>
 					</thead>
 					<tbody>';
-					foreach ($comments as $comment)
-						$this->_html .= '<tr>
+			foreach ($comments as $comment)
+				$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="id_product_comment[]" /></td>
 						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
@@ -439,7 +439,7 @@ class ProductComments extends Module
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
 							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
-						$this->_html .= '
+			$this->_html .= '
 						<tr>
 							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
@@ -448,9 +448,9 @@ class ProductComments extends Module
 						</tbody>
 					</table>
 					</form>';
-				}
-				else
-					$this->_html .= $this->l('No reported comments at this time.');
+		}
+		else
+			$this->_html .= $this->l('No reported comments at this time.');
 		$this->_html .= '</fieldset><br />';
 	}
 
@@ -471,21 +471,21 @@ class ProductComments extends Module
 				<label>'.$this->l('Name').'</label>
 				<div class="margin-form">
 				<input type="hidden" name="id_product_comment_criterion" value="'.(int)$criterion->id.'" />';
-				foreach ($langs as $lang)
-					$this->_html .= '
+		foreach ($langs as $lang)
+			$this->_html .= '
 					<div id="criterion_'.(int)$lang['id_lang'].'" style="display: '.($lang['id_lang'] == $id_lang_default ? 'block' : 'none').'; float: left;">
 						<input value="'.$criterion->name[(int)$lang['id_lang']].'" type="text" class="text" name="criterion_'.(int)$lang['id_lang'].'" />
 					</div>';
-				$this->_html .= $this->displayFlags($langs, (int)$id_lang_default, $languageIds, 'criterion', true);
-				$this->_html .= '
+		$this->_html .= $this->displayFlags($langs, (int)$id_lang_default, $languageIds, 'criterion', true);
+		$this->_html .= '
 				</div>
 				<div class="clear">&nbsp;</div>
 				<label for="criterion_type">'.$this->l('Apply to').'</label>
 				<div class="margin-form">
 					<select name="criterion_type">';
-				foreach ($this->_productCommentsCriterionTypes as $k => $type)
-					$this->_html .= '<option value="'.(int)$k.'" '.($k == $criterion->id_product_comment_criterion_type ? 'selected="selected"' : '').'>'.$type.'</option>';
-				$this->_html .= '</select>
+		foreach ($this->_productCommentsCriterionTypes as $k => $type)
+			$this->_html .= '<option value="'.(int)$k.'" '.($k == $criterion->id_product_comment_criterion_type ? 'selected="selected"' : '').'>'.$type.'</option>';
+		$this->_html .= '</select>
 				</div>
 				<label>'.$this->l('Active').'</label>
 				<div class="margin-form">
@@ -498,11 +498,11 @@ class ProductComments extends Module
 					<input type="submit" name="submitAddCriterion" value="'.(Tools::getValue('editCriterion') ? $this->l('Modify this criterion') : $this->l('Add this criterion')).'" class="button" />
 				</div>
 				</form>';
-				require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
-				$criterions = ProductCommentCriterion::getCriterions($this->context->language->id);
-				if (count($criterions))
-				{
-						$this->_html .= '<br />
+		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
+		$criterions = ProductCommentCriterion::getCriterions($this->context->language->id);
+		if (count($criterions))
+		{
+			$this->_html .= '<br />
 						<table class="table">
 						<thead>
 						<tr>
@@ -514,18 +514,18 @@ class ProductComments extends Module
 						</thead>
 						<tbody>';
 
-						foreach ($criterions as $criterion)
-						{
-							$this->_html .= '<tr>
+			foreach ($criterions as $criterion)
+			{
+				$this->_html .= '<tr>
 							<td>'.$criterion['name'].'</td>
 							<td>'.$this->_productCommentsCriterionTypes[(int)$criterion['id_product_comment_criterion_type']].'</td>
 							<td style="text-align:center;"><img src="../img/admin/'.($criterion['active'] ? 'enabled' : 'disabled').'.gif" /></td>
 							<td><a href="'.Tools::safeOutput($this->_baseUrl).'&editCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/edit.gif" alt="'.$this->l('Edit').'" /></a>
 								<a href="'.Tools::safeOutput($this->_baseUrl).'&deleteCriterion='.(int)$criterion['id_product_comment_criterion'].'"><img src="../img/admin/delete.gif" alt="'.$this->l('Delete').'" /></a></td><tr>';
-						}
-					$this->_html .= '</tbody></table>';
-				}
-			$this->_html .= '</fieldset><br />';
+			}
+			$this->_html .= '</tbody></table>';
+		}
+		$this->_html .= '</fieldset><br />';
 	}
 
 	private function _displayFormApplicationCriterion()
@@ -566,8 +566,8 @@ class ProductComments extends Module
 ">
 						<select name="id_product_comment_criterion" id="id_product_comment_criterion" onchange="window.location=\''.Tools::safeOutput($this->_baseUrl).'&updateCriterion=\'+$(\'#id_product_comment_criterion option:selected\').val()">
 							<option value="-">- '.$this->l('Choose a criterion').' -</option>';
-						foreach ($criterions as $foo)
-								$this->_html .= '<option value="'.(int)($foo['id_product_comment_criterion']).'" '.($foo['id_product_comment_criterion'] == $id_criterion ? 'selected="selected"' : '').'>'.$foo['name'].'</option>';
+			foreach ($criterions as $foo)
+				$this->_html .= '<option value="'.(int)($foo['id_product_comment_criterion']).'" '.($foo['id_product_comment_criterion'] == $id_criterion ? 'selected="selected"' : '').'>'.$foo['name'].'</option>';
 			$this->_html .= '</select>
 					</div>
 				</form>';
@@ -615,11 +615,11 @@ class ProductComments extends Module
 			<fieldset class="width2">
 				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Manage Comments').'</legend>';
 
-				require_once(dirname(__FILE__).'/ProductComment.php');
-				$comments = ProductComment::getAll();
-				if (count($comments))
-				{
-					$this->_html .= '
+		require_once(dirname(__FILE__).'/ProductComment.php');
+		$comments = ProductComment::getAll();
+		if (count($comments))
+		{
+			$this->_html .= '
 					<form action="'.Tools::safeOutput($this->_baseUrl).'" method="post" name="delete_comment_form">
 					<input type="hidden" name="delete_id_product_comment[]" id="delete_id_product_comment" />
 					<input type="hidden" name="delete_action" id="delete_action" />
@@ -633,14 +633,14 @@ class ProductComments extends Module
 					</tr>
 					</thead>
 					<tbody>';
-					foreach ($comments as $comment)
-						$this->_html .= '<tr>
+			foreach ($comments as $comment)
+				$this->_html .= '<tr>
 						<td><input class="noborder" type="checkbox" value="'.$comment['id_product_comment'].'" name="delete_id_product_comment[]" /></td>
 						<td>'.htmlspecialchars($comment['customer_name'], ENT_COMPAT, 'UTF-8').'.</td>
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
-						$this->_html .= '
+			$this->_html .= '
 						<tr>
 							<td colspan="3" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="delComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
@@ -648,9 +648,9 @@ class ProductComments extends Module
 						</tbody>
 					</table>
 					</form>';
-				}
-				else
-					$this->_html .= $this->l('No comments to manage at this time.');
+		}
+		else
+			$this->_html .= $this->l('No comments to manage at this time.');
 
 		$this->_html .= '</fieldset><br />';
 	}
@@ -667,14 +667,14 @@ class ProductComments extends Module
 				require_once(dirname(__FILE__).'/ProductComment.php');
 				if ($action == 'delete')
 				{
-						foreach ($product_comments as $id_product_comment)
-						{
-							if (!$id_product_comment)
-								continue;
-							$comment = new ProductComment((int)$id_product_comment);
-							$comment->delete();
-							ProductComment::deleteGrades((int)$id_product_comment);
-						}
+					foreach ($product_comments as $id_product_comment)
+					{
+						if (!$id_product_comment)
+							continue;
+						$comment = new ProductComment((int)$id_product_comment);
+						$comment->delete();
+						ProductComment::deleteGrades((int)$id_product_comment);
+					}
 				}
 			}
 		}
@@ -682,42 +682,50 @@ class ProductComments extends Module
 
 	public function hookProductTab($params)
 	{
-    	require_once(dirname(__FILE__).'/ProductComment.php');
+		require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
-		
+
 		$average = ProductComment::getAverageGrade((int)Tools::getValue('id_product'));
 
 		$this->context->smarty->assign(array(
-			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
-			'comments' => ProductComment::getByProduct((int)(Tools::getValue('id_product'))),
-			'criterions' => ProductCommentCriterion::getByProduct((int)(Tools::getValue('id_product')), $this->context->language->id),
-			'averageTotal' => round($average['grade']),
-			'nbComments' => (int)(ProductComment::getCommentNumber((int)(Tools::getValue('id_product'))))
-		));
+											'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
+											'comments' => ProductComment::getByProduct((int)(Tools::getValue('id_product'))),
+											'criterions' => ProductCommentCriterion::getByProduct((int)(Tools::getValue('id_product')), $this->context->language->id),
+											'averageTotal' => round($average['grade']),
+											'nbComments' => (int)(ProductComment::getCommentNumber((int)(Tools::getValue('id_product'))))
+									   ));
 
 		return ($this->display(__FILE__, '/tab.tpl'));
 	}
 
 	public function hookTop($params)
 	{
-		$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
-		return $this->display(__FILE__, 'productcomments_top.tpl');
+		$this->page_name = Dispatcher::getInstance()->getController();
+		if (in_array($this->page_name, array('product', 'productscomparison')))
+		{
+			$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
+			if (in_array($this->page_name, array('productscomparison')))
+			{
+				$this->context->controller->addjqueryPlugin('cluetip');
+				$this->context->controller->addJS($this->_path.'js/products-comparison.js');
+			}
+		}
 	}
 
 	public function hookDisplayProductListReviews($params)
 	{
 		require_once(dirname(__FILE__).'/ProductComment.php');
-		
+
 		$average = ProductComment::getAverageGrade((int)$params['product']['id_product']);
 		$this->smarty->assign(array(
-			'product' => $params['product'],
-			'averageTotal' => round($average['grade']),
-			'nbComments' => (int)(ProductComment::getCommentNumber((int)$params['product']['id_product']))
-		));
+								   'product' => $params['product'],
+								   'averageTotal' => round($average['grade']),
+								   'nbComments' => (int)(ProductComment::getCommentNumber((int)$params['product']['id_product']))
+							  ));
 		return $this->display(__FILE__, 'productcomments_reviews.tpl');
 	}
 
-	public function hookproductOutOfStock($params)
+	public function hookDisplayRightColumnProduct($params)
 	{
 		require_once(dirname(__FILE__).'/ProductComment.php');
 		require_once(dirname(__FILE__).'/ProductCommentCriterion.php');
@@ -733,7 +741,7 @@ class ProductComments extends Module
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
 			'product' => $this->context->controller->getProduct(),
 			'secure_key' => $this->secure_key,
-			'logged' => (int)$this->context->customer->isLogged(true),
+			'logged' => $this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -742,13 +750,13 @@ class ProductComments extends Module
 			'averageTotal' => round($average['grade']),
 			'too_early' => ($customerComment && (strtotime($customerComment['date_add']) + Configuration::get('PRODUCT_COMMENTS_MINIMAL_TIME')) > time()),
 			'nbComments' => (int)(ProductComment::getCommentNumber((int)Tools::getValue('id_product')))
-		));
+	   ));
 
 		return ($this->display(__FILE__, '/productcomments-extra.tpl'));
 	}
 
-    public function hookProductTabContent($params)
-    {
+	public function hookProductTabContent($params)
+	{
 		$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
 		$this->context->controller->addJS($this->_path.'js/jquery.textareaCounter.plugin.js');
 		$this->context->controller->addJS($this->_path.'js/productcomments.js');
@@ -765,7 +773,7 @@ class ProductComments extends Module
 		$image = Product::getCover((int)Tools::getValue('id_product'));
 
 		$this->context->smarty->assign(array(
-			'logged' => (int)$this->context->customer->isLogged(true),
+			'logged' => $this->context->customer->isLogged(true),
 			'action_url' => '',
 			'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, $this->context->cookie->id_customer),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
@@ -783,7 +791,7 @@ class ProductComments extends Module
 			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
 			'productcomments_url_rewriting_activated' => Configuration::get('PS_REWRITING_SETTINGS', 0),
 			'moderation_active' => (int)Configuration::get('PRODUCT_COMMENTS_MODERATE')
-		));
+	   ));
 
 		$this->context->controller->pagination((int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')));
 
@@ -816,8 +824,8 @@ class ProductComments extends Module
 				{
 					if (isset($grades[$criterion['id_product_comment_criterion']]))
 					{
-					$list_product_grades[$criterion['id_product_comment_criterion']][$id_product] = $grades[$criterion['id_product_comment_criterion']];
-					$grade_total += (float)($grades[$criterion['id_product_comment_criterion']]);
+						$list_product_grades[$criterion['id_product_comment_criterion']][$id_product] = $grades[$criterion['id_product_comment_criterion']];
+						$grade_total += (float)($grades[$criterion['id_product_comment_criterion']]);
 					}
 					else
 						$list_product_grades[$criterion['id_product_comment_criterion']][$id_product] = 0;
@@ -835,7 +843,7 @@ class ProductComments extends Module
 			return false;
 
 		$this->context->smarty->assign(array('grades' => $list_grades,	'product_grades' => $list_product_grades, 'list_ids_product' => $params['list_ids_product'],
-		'list_product_average' => $list_product_average, 'product_comments' => $list_product_comment));
+											'list_product_average' => $list_product_average, 'product_comments' => $list_product_comment));
 
 		return $this->display(__FILE__, '/products-comparison.tpl');
 	}

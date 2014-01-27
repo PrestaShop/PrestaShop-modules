@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '2.8';
+		$this->version = '3.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -121,7 +121,7 @@ class MailAlerts extends Module
 		Configuration::deleteByName('MA_MERCHANT_COVERAGE');
 		Configuration::deleteByName('MA_PRODUCT_COVERAGE');
 
-		if (!Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.MailAlert::$definition['table']))
+		if (!Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.MailAlert::$definition['table']))
 			return false;
 
 		return parent::uninstall();
@@ -255,8 +255,10 @@ class MailAlerts extends Module
 
 					$customization_text .= '---<br />';
 				}
-
-				$customization_text = Tools::rtrimString($customization_text, '---<br />');
+				if (method_exists('Tools', 'rtrimString'))
+					$customization_text = Tools::rtrimString($customization_text, '---<br />');
+				else
+					$customization_text = preg_replace('/---<br \/>$/', '', $customization_text);
 			}
 
 			$items_table .=
@@ -355,7 +357,7 @@ class MailAlerts extends Module
 				Mail::Send(
 					$id_lang,
 					$template,
-					sprintf(Mail::l('New order - %06d', $id_lang), $order->reference),
+					sprintf(Mail::l('New order : #%d - %s', $id_lang), $order->id, $order->reference),
 					$template_vars,
 					$merchant_mail,
 					null,
@@ -570,7 +572,12 @@ class MailAlerts extends Module
 
 	public function hookDisplayHeader($params)
 	{
-		$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
+		$this->page_name = Dispatcher::getInstance()->getController();
+		if ($this->page_name == 'product')
+		{
+			$this->context->controller->addJS($this->_path.'mailalerts.js');
+			$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
+		}
 	}
 	
 	public function renderForm()
@@ -604,7 +611,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitMailAlert',
 				)
 			),
@@ -697,7 +704,7 @@ class MailAlerts extends Module
 				),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default pull-right',
 				'name' => 'submitMAMerchant',
 				)
 			),
@@ -713,7 +720,7 @@ class MailAlerts extends Module
 		$helper->module = $this;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
 		$helper->identifier = $this->identifier;
-		$helper->submit_action = 'submitMailAlert';
+		$helper->submit_action = 'submitMailAlertConfiguration';
 		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 		$helper->token = Tools::getAdminTokenLite('AdminModules');
 		$helper->tpl_vars = array(

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -66,7 +66,8 @@ class KwixoUrlcallModuleFrontController extends ModuleFrontController
 		$this->context->smarty->assign('products', $products);
 		$this->context->smarty->assign('path_order', $link->getPageLink('order', true));
 		$this->context->smarty->assign('path_history', $link->getPageLink('history', true));
-		
+		$this->context->smarty->assign('path_contact', $link->getPageLink('contact', true));
+
 		$this->setTemplate('urlcall.tpl');
 	}
 

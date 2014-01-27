@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,6 +73,7 @@ $sql[_DB_PREFIX_.'advice'] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'advice`
 			  `id_tab` int(11) NOT NULL,
 			  `ids_tab` TEXT,
 			  `validated` tinyint(1) unsigned NOT NULL DEFAULT 0,
+			  `hide` tinyint(1) NOT NULL DEFAULT 0,
 			  `location` enum(\'after\', \'before\') NOT NULL,
 			  `selector` varchar(255),
 			  `start_day` int(11) NOT NULL DEFAULT 0,

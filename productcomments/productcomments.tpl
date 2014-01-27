@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -63,7 +63,7 @@ var moderation_active = {$moderation_active};
 						{if $comment.total_advice > 0}
 							<li>{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}</li>
 						{/if}
-						{if $logged == 1}
+						{if $logged}
 							{if !$comment.customer_advice}
 							<li>{l s='Was this comment useful to you?' mod='productcomments'}<button class="usefulness_btn" data-is-usefull="1" data-id-product-comment="{$comment.id_product_comment}">{l s='yes' mod='productcomments'}</button><button class="usefulness_btn" data-is-usefull="0" data-id-product-comment="{$comment.id_product_comment}">{l s='no' mod='productcomments'}</button></li>
 							{/if}
@@ -139,7 +139,7 @@ var moderation_active = {$moderation_active};
 				<label for="content">{l s='Comment' mod='productcomments'}: <sup class="required">*</sup></label>
 				<textarea id="content" name="content"></textarea>
 
-				{if $allow_guests == true && $logged == 0}
+				{if $allow_guests == true && !$logged}
 				<label>{l s='Your name' mod='productcomments'}: <sup class="required">*</sup></label>
 				<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 				{/if}

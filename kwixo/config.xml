@@ -2,7 +2,7 @@
         <module>
             <name>kwixo</name>
             <displayName><![CDATA[Kwixo]]></displayName>
-            <version><![CDATA[6.3]]></version>
+            <version><![CDATA[6.4]]></version>
             <description><![CDATA[Accepte les paiements par &amp;quot;Kwixo&amp;quot;]]></description>
             <author><![CDATA[]]></author>
             <tab><![CDATA[payments_gateways]]></tab>

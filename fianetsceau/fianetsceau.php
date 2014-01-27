@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -111,11 +111,12 @@ class FianetSceau extends Module
 
 	const SCEAU_ORDER_TABLE_NAME = 'fianetsceau_order';
 	const SCEAU_STATE_TABLE_NAME = 'fianetsceau_state';
+	const SCEAU_CATEGORY_TABLE_NAME = 'fianetsceau_category';
 
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.2';
+		$this->version = '2.4';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -136,7 +137,11 @@ class FianetSceau extends Module
 		}
 		else
 			$this->backward = true;
+
 		parent::__construct();
+
+		//check Sceau update
+		$this->checkSceauUpdate();
 	}
 
 	public function install()
@@ -152,6 +157,7 @@ class FianetSceau extends Module
 		$sql = str_replace('PREFIX_', _DB_PREFIX_, $sql);
 		$sql = str_replace('SCEAU_ORDER_TABLE_NAME', self::SCEAU_ORDER_TABLE_NAME, $sql);
 		$sql = str_replace('SCEAU_STATE_TABLE_NAME', self::SCEAU_STATE_TABLE_NAME, $sql);
+		$sql = str_replace('SCEAU_CATEGORY_TABLE_NAME', self::SCEAU_CATEGORY_TABLE_NAME, $sql);
 		$queries = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($queries as $query)
 			if (!Db::getInstance()->Execute(trim($query)))
@@ -183,6 +189,9 @@ class FianetSceau extends Module
 		$tab_controller_main->add();
 		$tab_controller_main->move($this->getNewLastPosition(0));
 
+		//update kwixo version on configuration
+		Configuration::updateValue('FIANETSCEAU_MODULE_VERSION', $this->version);
+
 		//Hook register
 		return (parent::install()
 			&& $this->registerHook('newOrder')
@@ -193,6 +202,8 @@ class FianetSceau extends Module
 			&& $this->registerHook('footer')
 			&& $this->registerHook('leftColumn')
 			&& $this->registerHook('rightColumn')
+			&& $this->registerHook('postUpdateOrderStatus')
+
 			);
 	}
 
@@ -209,6 +220,10 @@ class FianetSceau extends Module
 
 			//drop sceau state table
 			Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.self::SCEAU_STATE_TABLE_NAME.'`');
+
+			//drop sceau category table
+			Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME.'`');
+
 			return true;
 		}
 	}
@@ -298,9 +313,24 @@ class FianetSceau extends Module
 	 */
 	private function getCustomerIP($id_order)
 	{
-		$sql = "SELECT `customer_ip_address` FROM `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` WHERE `id_order` = '".(int) $id_order."'";
+
+		$sql = "SELECT c.`ip_address` FROM `"._DB_PREFIX_."connections` c 
+			LEFT JOIN `"._DB_PREFIX_."guest` g ON c.id_guest = g.id_guest
+			LEFT JOIN `"._DB_PREFIX_."customer` cu ON cu.id_customer = g.id_customer
+			LEFT JOIN `"._DB_PREFIX_."orders` o ON o.id_customer = cu.id_customer
+			WHERE o.`id_order` = '".(int) $id_order."'";
+
 		$query_result = Db::getInstance()->getRow($sql);
-		return($query_result['customer_ip_address']);
+		if ($query_result)
+		{
+			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip = '.long2ip($query_result['ip_address']));
+			return(long2ip($query_result['ip_address']));
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip missing');
+			return false;
+		}
 	}
 
 	//
@@ -327,6 +357,7 @@ class FianetSceau extends Module
 	 */
 	public function sendXML($id_order)
 	{
+
 		$order = new Order($id_order);
 		$montant = $order->total_paid;
 		$date = $order->date_add;
@@ -340,74 +371,129 @@ class FianetSceau extends Module
 		if (_PS_VERSION_ < '1.5')
 		{
 			$civility = $customer->id_gender;
-
 			$accepted_civility = array("1", "2", "3");
 			if (!(in_array($civility, $accepted_civility)))
 				$civility = '1';
+
+			$id_shop = 1;
+			$fianetsceau = new Sceau();
 		}
 		else
 		{
 			$gender = new Gender($customer->id_gender);
 			$id_lang = Language::getIdByIso($this->context->language->iso_code);
 			$civility = $gender->name[$id_lang] == 'Mr.' ? 1 : 2;
+
+			$id_shop = (int) $order->id_shop;
+			$fianetsceau = new Sceau($id_shop);
 		}
 
-		//xml construction
-		if (_PS_VERSION_ < '1.5')
-			$fianetsceau = new Sceau();
-		else
-			$fianetsceau = new Sceau((int) $order->id_shop);
+		$lang = Language::getIsoById($order->id_lang) == 'fr' ? 'fr' : 'uk';
 
-		$utilisateur = new SceauXMLElement('<utilisateur></utilisateur>');
-		$nom = $utilisateur->childNom($customer->lastname);
-		$nom->addAttribute('titre', $civility);
-		$utilisateur->childPrenom($customer->firstname);
-		$utilisateur->childEmail(strtolower($customer->email));
+		$sceaucontrol = new SceauControl();
 
-		$infocommande = new SceauXMLElement('<infocommande></infocommande>');
-		$infocommande->childSiteid($fianetsceau->getSiteid());
-		$infocommande->childRefid($id_order);
-		$montant = $infocommande->childMontant($order->total_paid);
-		$montant->addAttribute('devise', $currency->iso_code);
-		$ip = new SceauXMLElement('<ip>'.$this->getCustomerIP($id_order).'</ip>');
-		$ip->addAttribute('timestamp', $order->date_add);
-		$infocommande->childIp($ip);
+		$sceaucontrol->createCustomer('', $civility, $customer->lastname, $customer->firstname, strtolower($customer->email));
 
-		$paiement = new SceauXMLElement('<paiement></paiement>');
-		$paiement->childType($this->getPaymentFianetType($id_order));
+		$sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order), $order->date_add, $lang);
 
-		$lang = Language::getIsoById($order->id_lang);
-		$langue = $infocommande->childLangue($lang);
+		//get default FIA-NET category
+		$default_product_type = $this->getFianetSubCategoryId(0, $id_shop);
 
-		$xml_order = new SceauControl();
-		$xml_order->childUtilisateur($utilisateur);
-		$xml_order->childInfocommande($infocommande);
-		$xml_order->childPaiement($paiement);
-		
-		$fianetsceau->addCrypt($xml_order);
-		
-		$result = $fianetsceau->sendSendrating($xml_order);
-		if (!($result === false))
+		$products = $order->getProducts();
+
+		$productsceau = $sceaucontrol->createOrderProducts();
+
+		foreach ($products as $product)
 		{
-			$resxml = new SceauXMLElement($result);
-			if ($resxml->getAttribute('type') != "OK")
+
+			$product_categories = Product::getProductCategories((int) ($product['product_id']));
+			$product_category = array_pop($product_categories);
+
+			$prod = new Product($product['product_id']);
+
+			//gets the product FIA-NET category
+			$product_type = $this->getFianetSubCategoryId($product_category, $id_shop);
+
+			if (!empty($prod->ean13) && ($prod->ean13 != 0 || $prod->ean13 != ''))
+				$codeean = $prod->ean13;
+			else
+				$codeean = null;
+
+			$reference = (isset($prod->reference) AND !empty($prod->reference)) ? $prod->reference : $product['product_id'];
+
+			if ($product_type)//if a FIA-NET category is set: the type attribute takes the product FIA-NET type value
+				$fianet_type = $product_type;
+			else //if FIA-NET category not set: the type attribute takes the default value
+				$fianet_type = $default_product_type;
+
+			//get product image 
+			$images = Product::getCover($product['product_id']);
+
+			if (!empty($images))
+			{
+				$image = new Image($images['id_image']);
+				$image_url = _PS_BASE_URL_._THEME_PROD_DIR_.$image->getExistingImgPath().".".$image->image_format;
+			}
+
+
+			$productsceau->createProduct($codeean, str_replace("'", "", $reference), $fianet_type, str_replace("'", "", $product['product_name']), (string) $product['product_price_wt'], $image_url);
+		}
+
+		$sceaucontrol->createPayment($this->getPaymentFianetType($id_order));
+
+		$fianetsceau->addCrypt($sceaucontrol);
+
+		$result = $fianetsceau->sendSendrating($sceaucontrol);
+
+		if (isXMLstringSceau($result))
+		{
+			$resxml = new SceauSendratingResponse($result);
+
+			if ($resxml->isValid())
+			{
+				//update fianetsceau_state 2:sent
+				$this->updateOrder($id_order, array('id_fianetsceau_state' => '2'));
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' sended');
+				return true;
+			}
+			else
 			{
 				//update fianetsceau_state 3:error
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML Send error : '.$resxml->getChildByName('detail')->getValue());
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
 				return false;
 			}
-			else
-			//update fianetsceau_state 2:sent
-				$this->updateOrder($id_order, array('id_fianetsceau_state' => '2'));
-			return true;
 		}
 		else
 		{
 			//update fianetsceau_state 3:error
 			$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML Send error : '.$resxml->getChildByName('detail')->getValue());
+			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
 			return false;
+		}
+	}
+
+	/**
+	 * Send XML data to FIA-NET when Kwixo payment is accepted with status : Kwixo paiement accepté - score vert
+	 * 
+	 * @param type $params 
+	 */
+	public function hookPostUpdateOrderStatus($params)
+	{
+
+		$order_state = $params['newOrderStatus'];
+
+		$status_founded = strpos($order_state->name, 'score vert');
+		if ($status_founded === false)
+		{
+			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Statut de paiement non reconnu : '.$order_state->name);
+		}
+		else
+		{
+			//send xml to FIA-NET when Kwixo payment is confirmed
+			$id_order = $params['id_order'];
+			$this->sendXML((int) $id_order);
+			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, $order_state->name);
 		}
 	}
 
@@ -459,7 +545,8 @@ class FianetSceau extends Module
 			));
 
 			return $this->display(__FILE__, '/views/templates/admin/'.$tpl_name.'.tpl');
-		} else
+		}
+		else
 		{
 			//if label doesn't exist, we load nosend.tpl, order was sent before FIA-NET Sceau installation
 			$img = 'error.gif';
@@ -628,6 +715,22 @@ class FianetSceau extends Module
 		Configuration::updateValue('FIANETSCEAU_WIDGET_NUMBER', Tools::getValue('fianetsceau_widget_number'));
 		Configuration::updateValue('FIANETSCEAU_SHOW_STATUS_ORDER', ((int) Tools::getValue('fianetsceau_showstatus') == 1 ? '1' : '0'));
 
+
+		if (_PS_VERSION_ < '1.5')
+			$id_shop = 1;
+		else
+			$id_shop = Context::getContext()->shop->id;
+
+		//update default category value
+		$this->manageFianetSubCategory(0, Tools::getValue('fianetsceau_0_subcategory'), 1, $id_shop);
+
+
+		/** categories configuration * */
+		//lists all product categories and update FIA-NET categories
+		$shop_categories = $this->loadProductCategories();
+		foreach (array_keys($shop_categories) as $id)
+			$this->manageFianetSubCategory($id, Tools::getValue('fianetsceau_'.$id.'_subcategory'), 0, $id_shop);
+
 		/** update payment means settings * */
 		//list of payment means of the shop
 		$payment_modules = $this->loadPaymentMethods();
@@ -645,6 +748,8 @@ class FianetSceau extends Module
 	 */
 	private function formIsValid()
 	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
 		$iso_lang_current = Language::getIsoById($this->context->language->id);
 
@@ -670,6 +775,10 @@ class FianetSceau extends Module
 		//check status
 		if (!in_array(Tools::getValue('fianetsceau_status'), $this->_fianetsceau_statuses))
 			$this->_errors[] = $this->l("You must give a correct status.");
+
+		//check default product type
+		if (!in_array(Tools::getValue('fianetsceau_0_subcategory'), array_keys($_fianetsceau_subcategories)))
+			$this->_errors[] = $this->l('You must configure a valid default product type');
 
 		//check logo and widget position
 		if (Tools::getValue('fianetsceau_logo_position') == "nothing" && Tools::getValue('fianetsceau_widget_position') == "nothing")
@@ -703,15 +812,36 @@ class FianetSceau extends Module
 		if (!in_array(Tools::getValue('fianetsceau_widget_number'), array_keys($this->_fianetsceau_widgets)))
 			$this->_errors[] = $this->l("You must give a correct widget type");
 
+		//categories check
+		$shop_categories = $this->loadProductCategories();
+		foreach ($shop_categories as $id => $shop_category)
+			if (Tools::getValue('fianetsceau_'.$id.'_subcategory') != 0)
+				if (!in_array(Tools::getValue('fianetsceau_'.$id.'_subcategory'), (array_keys($_fianetsceau_subcategories))))
+					$this->_errors[] = $this->l('Invalid product type for category:')." '".$shop_category['name']."'";
+
 		return empty($this->_errors);
 	}
 
 	public function getContent()
 	{
+
 		$head_msg = '';
 		//if some POST datas are found
 		//Get log file
 		$log_content = htmlentities(SceauLogger::getLogContent());
+
+		if (_PS_VERSION_ < '1.5')
+		{
+			$id_shop = 1;
+			$fianetsceau = new Sceau();
+		} else
+		{
+			$id_shop = Context::getContext()->shop->id;
+			$fianetsceau = new Sceau($id_shop);
+		}
+
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
 		if (Tools::isSubmit('submitSettings'))
 		{
@@ -736,13 +866,15 @@ class FianetSceau extends Module
 			$siteid = (Tools::isSubmit('fianetsceau_siteid') ? Tools::getValue('fianetsceau_siteid') : $fianetsceau->getSiteid());
 			$authkey = (Tools::isSubmit('fianetsceau_authkey') ? Tools::getValue('fianetsceau_authkey') : $fianetsceau->getAuthkey());
 			$status = (Tools::isSubmit('fianetsceau_status') ? Tools::getValue('fianetsceau_status') : $fianetsceau->getStatus());
-
 			$fianetsceau_logo_position = Tools::getValue('fianetsceau_logo_position');
 			$fianetsceau_widget_position = Tools::getValue('fianetsceau_widget_position');
 			$fianetsceau_logo = Tools::getValue('fianetsceau_logo_sizes');
 			$widget_number = Tools::getValue('fianetsceau_widget_number');
 			$show_status = Tools::getValue('fianetsceau_showstatus');
-		} else
+			$fianetsceau_default_category = Tools::getValue('fianetsceau_0_category');
+			$fianetsceau_default_subcategory = Tools::getValue('fianetsceau_0_subcategory');
+		}
+		else
 		{
 			//if no submit form and 0 value in database, we put a defaut value
 			$login = (Configuration::get('FIANETSCEAU_LOGIN') === false ? '' : Configuration::get('FIANETSCEAU_LOGIN'));
@@ -750,18 +882,24 @@ class FianetSceau extends Module
 			$siteid = (Configuration::get('FIANETSCEAU_SITEID') === false ? '' : Configuration::get('FIANETSCEAU_SITEID'));
 			$authkey = (Configuration::get('FIANETSCEAU_AUTHKEY') === false ? '' : Configuration::get('FIANETSCEAU_AUTHKEY'));
 			$status = (Configuration::get('FIANETSCEAU_STATUS') === false ? 'test' : Configuration::get('FIANETSCEAU_STATUS'));
-
 			$fianetsceau_logo_position = (Configuration::get('FIANETSCEAU_LOGO_POSITION') === false ? 'left' : Configuration::get('FIANETSCEAU_LOGO_POSITION'));
 			$fianetsceau_widget_position = (Configuration::get('FIANETSCEAU_WIDGET_POSITION') === false ? 'left' : Configuration::get('FIANETSCEAU_WIDGET_POSITION'));
 			$fianetsceau_logo = (Configuration::get('FIANETSCEAU_LOGO_SIZE') === false ? '120' : Configuration::get('FIANETSCEAU_LOGO_SIZE'));
 			$widget_number = (Configuration::get('FIANETSCEAU_WIDGET_NUMBER') === false ? '1' : Configuration::get('FIANETSCEAU_WIDGET_NUMBER'));
 			$show_status = (Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER') === false ? '0' : Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER'));
+			$fianetsceau_default_subcategory = $this->getFianetSubCategoryId(0, $id_shop);
+			$fianetsceau_default_category = $this->getFianetCategoryId($fianetsceau_default_subcategory);
 		}
 
-		$fianetsceau = new Sceau();
+		//token
+		$token = Tools::getAdminToken($fianetsceau->getSiteid().$fianetsceau->getAuthkey().$fianetsceau->getLogin());
 
 		//listing payment type of the shop
 		$payment_modules = $this->loadPaymentMethods();
+
+		//lists all categories
+		$shop_categories = $this->loadProductCategories();
+
 		$base_url = __PS_BASE_URI__;
 		$logo_sizes = array();
 		foreach ($this->_fianetsceau_logo_sizes as $size => $img_name)
@@ -794,6 +932,14 @@ class FianetSceau extends Module
 			'path_prefix' => $base_url.'modules/'.$this->name.'/img',
 			'fianetsceaushow_status' => (int) $show_status,
 			'log_content' => $log_content,
+			'shop_categories' => $shop_categories,
+			'fianetsceau_default_category' => Tools::safeOutput($fianetsceau_default_category),
+			'fianetsceau_default_subcategory' => Tools::safeOutput($fianetsceau_default_subcategory),
+			'logo_categories_path' => $base_url.'modules/'.$this->name.'/img/categories.gif',
+			'fianetsceau_categories' => $_fianetsceau_categories,
+			'fianetsceau_subcategories' => $_fianetsceau_subcategories,
+			'token' => $token,
+			'id_shop' => $id_shop,
 		));
 
 		//view selection by prestashop 1.4 or 1.5
@@ -825,7 +971,7 @@ class FianetSceau extends Module
 		}
 		return $payment_modules;
 	}
-	
+
 	/**
 	 * List all installed and active payment modules
 	 * @see Module::getPaymentModules() if you need a list of module related to the user context
@@ -844,8 +990,8 @@ class FianetSceau extends Module
 			AND m.`active` = 1
 		');
 	}
-	
-		/**
+
+	/**
 	 * For Prestashop < 1.4.5
 	 * Return an available position in subtab for parent $id_parent
 	 * 
@@ -854,9 +1000,9 @@ class FianetSceau extends Module
 	 */
 	public function getNewLastPosition($id_parent)
 	{
-		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)$id_parent);
+		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int) $id_parent);
 	}
-	
+
 	/**
 	 * For Prestashop < 1.4.5
 	 * Protect SQL queries
@@ -864,6 +1010,187 @@ class FianetSceau extends Module
 	public function bqSQL($string)
 	{
 		return str_replace('`', '\`', pSQL($string));
+	}
+
+	/**
+	 * returns the product categories list as an array indexed by category_id and containing the category name and the corresponding fia-net product family
+	 * 
+	 * @return array
+	 */
+	private function loadProductCategories()
+	{
+		$categories = Category::getSimpleCategories($this->context->language->id);
+
+		if (_PS_VERSION_ < '1.5')
+			$id_shop = 1;
+		else
+			$id_shop = Context::getContext()->shop->id;
+
+		$shop_categories = array();
+		foreach ($categories as $category)
+		{
+			$fianetsceau_type = Tools::isSubmit('fianetsceau_'.$category['id_category'].'_subcategory') ? Tools::getValue('fianetsceau_'.$category['id_category'].'_subcategory') : $this->getFianetSubCategoryId($category['id_category'], $id_shop);
+			$parent_id = $this->getFianetCategoryId($fianetsceau_type);
+			$shop_categories[$category['id_category']] = array(
+				'name' => $category['name'],
+				'fianetsceau_type' => $fianetsceau_type,
+				'parent_id' => $parent_id
+			);
+		}
+		return $shop_categories;
+	}
+
+	/**
+	 * Load FIA-NET subcategory from category_id
+	 * @param int $category_id
+	 * @return array 
+	 */
+	public function loadFianetSubCategories($category_id)
+	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
+
+		$subcategories = $_fianetsceau_subcategories;
+
+		$subcategories_array = array();
+		foreach ($subcategories as $key => $value)
+		{
+
+			if ($value['parent_id'] == $category_id)
+				$subcategories_array[] = array('subcategory_id' => $key, 'label' => $value['label']);
+		}
+
+		return($subcategories_array);
+	}
+
+	/**
+	 * Get FIA-NET category from subcategory_id
+	 * @param int $subcategory_id
+	 * @return int 
+	 */
+	public function getFianetCategoryId($subcategory_id)
+	{
+		//include FIA-NET categories array
+		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
+
+		$subcategories = $_fianetsceau_subcategories;
+
+		foreach ($subcategories as $key => $value)
+		{
+			if ($key == $subcategory_id)
+				return $value['parent_id'];
+		}
+	}
+
+	/**
+	 * Get FIA-NET subcategory configuration from category_id
+	 * 
+	 * @param int $category_id
+	 * @return int 
+	 */
+	public function getFianetSubCategoryId($category_id, $id_shop)
+	{
+		$sql = "SELECT `id_fianetsceau_subcategory` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND `id_shop`= ".(int) $id_shop;
+
+		$query_result = Db::getInstance()->getRow($sql);
+		if ($query_result == false)
+			return false;
+		else
+			return $query_result['id_fianetsceau_subcategory'];
+	}
+
+	/**
+	 * Insert or update FIA-NET subcategory configuration
+	 * 
+	 * @param int $category_id
+	 * @param int $fianet_subcategory
+	 * @param bool $is_default_subcategory 
+	 */
+	public function manageFianetSubCategory($category_id, $fianet_subcategory, $is_default_subcategory, $id_shop)
+	{
+		$sql = "SELECT `id_category` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND id_shop = ".(int) $id_shop;
+
+		$query_result = Db::getInstance()->getRow($sql);
+
+		if ($query_result == false)
+		{
+			$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` (`id_category`, `id_fianetsceau_subcategory`, `default_category`, `id_shop`) 
+				VALUES ('".$this->bqSQL($category_id)."', '".$this->bqSQL($fianet_subcategory)."', '".$this->bqSQL($is_default_subcategory)."', '".$this->bqSQL($id_shop)."')";
+
+			$insert = Db::getInstance()->execute($sql);
+
+			if (!$insert)
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory $fianet_subcategory : insertion failed $sql: ".Db::getInstance()->getMsgError());
+			else
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory inserted ".$fianet_subcategory);
+		}
+		else
+		{
+
+			$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` SET `id_fianetsceau_subcategory` = '".$this->bqSQL($fianet_subcategory)."', `default_category` = '".$this->bqSQL($is_default_subcategory)."' 
+				WHERE `id_category` = ".(int) $category_id." AND `id_shop` = ".(int) $id_shop;
+
+			$update = Db::getInstance()->execute($sql);
+
+			if (!$update)
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory $fianet_subcategory : update failed $sql: ".Db::getInstance()->getMsgError());
+			else
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory updated : ".$fianet_subcategory);
+		}
+	}
+
+	/**
+	 * For Prestashop 1.4, check if module is enabled, from Module::isEnabled($module_name)
+	 * 
+	 * @param string $module_name
+	 * 
+	 */
+	public function checkModuleisEnabled($module_name)
+	{
+		return (bool) Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+	}
+
+	/**
+	 * Get Kwixo module version saved on configuration
+	 * @return int 
+	 */
+	public function getSceauModuleVersion()
+	{
+		$sceau_version = Configuration::get('FIANETSCEAU_MODULE_VERSION');
+
+		if (!$sceau_version)
+			return false;
+		else
+			return $sceau_version;
+	}
+
+	/**
+	 * Check Sceau module version and reinstall it if version is too old
+	 * 
+	 */
+	public function checkSceauUpdate()
+	{
+		if (_PS_VERSION_ >= '1.5')
+		//check if kwixo is enabled on PS 1.5
+			$sceau_is_enabled = Module::isEnabled('fianetsceau');
+		else
+		//check if kwixo is enabled on PS 1.4
+			$sceau_is_enabled = $this->checkModuleisEnabled('fianetsceau');
+
+		if (Module::isInstalled('fianetsceau') && $sceau_is_enabled)
+		{
+			$sceau_version = $this->getSceauModuleVersion();
+
+			if (!$sceau_version || $sceau_version < $this->version)
+			{
+				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module version < '.$this->version);
+				if ($this->uninstall())
+					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module uninstalled');
+
+				if ($this->install())
+					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module installed');
+			}
+		}
 	}
 
 }

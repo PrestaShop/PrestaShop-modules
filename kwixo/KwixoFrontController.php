@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,7 +51,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 
 		$customer = new Customer((int) $cart->id_customer);
-		$kx = new Kwixo();
+		$module = new Kwixo();
 		//For multishop
 		if (_PS_VERSION_ < '1.5')
 		{
@@ -142,8 +142,8 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 			case '6':
 
 				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
-				
-				$socolissimoinfo = $kx->getSoColissimoInfo($cart->id);
+
+				$socolissimoinfo = $module->getSoColissimoInfo($cart->id);
 
 				$socolissimo_installed_module = Module::getInstanceByName('socolissimo');
 
@@ -205,8 +205,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 				if ($carrier_type == 1)
 				{
-					$payment = new Kwixo();
-					if ($payment->checkShopAddress() == true)
+					if ($module->checkShopAddress() == true)
 					{
 						//xml <pointrelais>
 						$drop_off_point = $kwixo_carrier->createDropOffPoint(Configuration::get('PS_SHOP_NAME'), Configuration::get('PS_SHOP_NAME'));
@@ -230,16 +229,23 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		//xml <list>
 		$product_list = $order_details->createProductList();
 
+		$product_deliveries = array();
+
 		foreach ($products as $product)
 		{
 			$kwixo_categorie_id = (Configuration::get('KWIXO_PRODUCT_TYPE_'.(int) $product['id_category_default']) == 0 ? Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE') : Configuration::get('KWIXO_PRODUCT_TYPE_'.(int) $product['id_category_default']));
 			$product_reference = ((isset($product['reference']) AND !empty($product['reference'])) ? $product['reference'] : ((isset($product['ean13']) AND !empty($product['ean13'])) ? $product['ean13'] : $product['name']));
 			$product_list->createProduct($product['name'], str_replace("'", "", $product_reference), $kwixo_categorie_id, $product['price'], $product['cart_quantity']);
+
+			$product_deliveries[] = Configuration::get('KWIXO_PRODUCT_TYPE_DELIVERY_'.(int) $product['id_category_default']);
 		}
+
+
+		$kwixo_delivery = $module->getKwixoDelivery($product_deliveries, $carrier->id);
 
 		//xml <wallet>
 		$date_order = date('Y-m-d H:i:s');
-		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, Configuration::get('KWIXO_DELIVERY')));
+		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, $kwixo_delivery));
 		$wallet->addCrypt($kwixo->generateCrypt($control), '2.0');
 
 		//kwixo payment options   
@@ -260,8 +266,6 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 			$control->createPaymentOptions('comptant', 1, 0);
 
 		$xml_params = new KwixoXMLParams();
-		$module = new Kwixo();
-
 		$xml_params->addParam('custom', $cart->id);
 		$xml_params->addParam('amount', $cart->getOrderTotal(true));
 		$xml_params->addParam('secure_key', $customer->secure_key);

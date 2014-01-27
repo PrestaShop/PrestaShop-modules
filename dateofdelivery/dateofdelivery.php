@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -125,22 +125,26 @@ class DateOfDelivery extends Module
 				{
 					foreach ($carrier['package_list'] as $id_package)
 					{
-						$package = $package_list[$id_address][$id_package];
+						if (isset($package_list[$id_address][$id_package]))
+							$package = $package_list[$id_address][$id_package];
 						$oos = false; // For out of stock management
-						foreach ($package['product_list'] as $product)
-							if (StockAvailable::getQuantityAvailableByProduct($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id) <= 0)
-							{
-								$oos = true;
-								break;
-							}
-						$available_date = Product::getAvailableDate($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id);
-						$date_range = $this->_getDatesOfDelivery($id_carrier, $oos, $available_date);
-						if (is_null($date_from) || $date_from < $date_range[0])
+						if (isset($package['product_list']) && is_array($package['product_list']))
+							foreach ($package['product_list'] as $product)
+								if (StockAvailable::getQuantityAvailableByProduct($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id) <= 0)
+								{
+									$oos = true;
+									break;
+								}
+						if (isset($product) && is_array($product))
+							$available_date = Product::getAvailableDate($product['id_product'], ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), (int)$this->context->shop->id);
+						if (isset($available_date))
+							$date_range = $this->_getDatesOfDelivery($id_carrier, $oos, $available_date);
+						if (isset($date_range) && (is_null($date_from) || $date_from < $date_range[0]))
 						{
 							$date_from = $date_range[0][1];
 							$datesDelivery[$id_address][$key][0] = $date_range[0];
 						}
-						if (is_null($date_to) || $date_to < $date_range[1])
+						if (isset($date_range) && (is_null($date_to) || $date_to < $date_range[1]))
 						{
 							$date_to = $date_range[1][1];
 							$datesDelivery[$id_address][$key][1] = $date_range[1];
@@ -357,7 +361,7 @@ class DateOfDelivery extends Module
 		if (empty($carrier_rule))
 			return false;
 
-		if ($date != null AND Validate::isDate($date))
+		if ($date != null AND Validate::isDate($date) AND strtotime($date) > time())
 			$date_now = strtotime($date);
 		else
 			$date_now = time(); // Date on timestamp format

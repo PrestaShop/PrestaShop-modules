@@ -4,14 +4,29 @@ class YotpoHttpClient
 {
 	const YOTPO_API_URL = 'https://api.yotpo.com';
 	const YOTPO_API_URL_NO_SSL = 'http://api.yotpo.com';
-	const HTTP_REQUEST_TIMEOUT = 30;
+	const HTTP_REQUEST_TIMEOUT = 3;
   	const YOTPO_OAUTH_TOKEN_URL = 'https://api.yotpo.com/oauth/token';
 
 	public function __construct($name = null)
   	{
 		$this->name = $name;
   	}
+  	
+    public function check_if_b2c_user($email)
+    {
+        return $this->makeGetRequest(self::YOTPO_API_URL . '/users/find_by_type_and_email.json', array('type' => 'b2c', 'email' => $email));
+    }
 
+    public function create_user_migration($id, array $data)
+    {
+        return $this->makePostRequest(self::YOTPO_API_URL . '/users/'.$id.'/migration', array('data' => $data));
+    }
+
+    public function notify_user_migration($id)
+    {
+        return $this->makeGetRequest(self::YOTPO_API_URL . '/users/'.$id.'/migration/notify');
+    }
+    
   	public function checkeMailAvailability($email)
   	{
   		return $this->makePostRequest(self::YOTPO_API_URL . '/apps/check_availability', 
@@ -39,7 +54,7 @@ class YotpoHttpClient
 		if (!empty($token))
 		{
 			$data['utoken'] = $token;
-		    return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data);
+		    return $this->makePostRequest(self::YOTPO_API_URL.'/apps/'.$app_key.'/purchases/mass_create', $data, 20);
 		}
 	}
 

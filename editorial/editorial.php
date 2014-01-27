@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,7 +33,7 @@ class Editorial extends Module
 	{
 		$this->name = 'editorial';
 		$this->tab = 'front_office_features';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -72,16 +72,14 @@ class Editorial extends Module
 				PRIMARY KEY (`id_editorial`, `id_lang`))
 				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-
 		if ($res)
-			foreach
-			(Shop::getShops(false) as $shop)
+			foreach (Shop::getShops(false) as $shop)
 				$res &= $this->createExampleEditorial($shop['id_shop']);
 
-			if (!$res)
-				$res &= $this->uninstall();
+		if (!$res)
+			$res &= $this->uninstall();
 
-			return $res;
+		return $res;
 	}
 
 	private function createExampleEditorial($id_shop)
@@ -96,6 +94,7 @@ class Editorial extends Module
 			$editorial->body_paragraph[$lang['id_lang']] = '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>';
 			$editorial->body_logo_subheading[$lang['id_lang']] = 'Lorem ipsum presta shop amet';
 		}
+
 		return $editorial->add();
 	}
 
@@ -129,7 +128,7 @@ class Editorial extends Module
 		$helper->toolbar_btn = $this->initToolbar();
 		$helper->title = $this->displayName;
 		$helper->submit_action = 'submitUpdateEditorial';
-		
+
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
 			'legend' => array(
@@ -148,7 +147,7 @@ class Editorial extends Module
 					'name' => 'body_title',
 					'lang' => true,
 					'size' => 64,
-					'hint' => $this->l('Appears along top of your homepage'),
+					'desc' => $this->l('Appears along top of your homepage'),
 				),
 				array(
 					'type' => 'text',
@@ -163,7 +162,7 @@ class Editorial extends Module
 					'name' => 'body_paragraph',
 					'lang' => true,
 					'autoload_rte' => true,
-					'hint' => $this->l('For example... explain your mission, highlight a new product, or describe a recent event.'),
+					'desc' => $this->l('For example... explain your mission, highlight a new product, or describe a recent event.'),
 					'cols' => 60,
 					'rows' => 30
 				),
@@ -187,7 +186,8 @@ class Editorial extends Module
 					'size' => 33,
 				),
 			)
-		);		
+		);
+
 		return $helper;
 	}
 
@@ -197,7 +197,7 @@ class Editorial extends Module
 			'href' => '#',
 			'desc' => $this->l('Save')
 		);
-		
+
 		return $this->toolbar_btn;
 	}
 
@@ -205,25 +205,28 @@ class Editorial extends Module
 	{
 		$this->_html = '';
 		$this->postProcess();
-		
+
 		$helper = $this->initForm();
-		
+
 		$id_shop = (int)$this->context->shop->id;
 		$editorial = EditorialClass::getByIdShop($id_shop);
 
 		if (!$editorial) //if editorial ddo not exist for this shop => create a new example one
 			$this->createExampleEditorial($id_shop);
-		
+
 		foreach ($this->fields_form[0]['form']['input'] as $input) //fill all form fields
+		{
 			if ($input['name'] != 'body_homepage_logo')
 				$helper->fields_value[$input['name']] = $editorial->{$input['name']};
-		
+		}
+
 		$file = dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg';
 		$helper->fields_value['body_homepage_logo']['image'] = (file_exists($file) ? '<img src="'.$this->_path.'homepage_logo_'.(int)$id_shop.'.jpg">' : '');
 		if ($helper->fields_value['body_homepage_logo'] && file_exists($file))
 			$helper->fields_value['body_homepage_logo']['size'] = filesize($file) / 1000;
-		
+
 		$this->_html .= $helper->generateForm($this->fields_form);
+
 		return $this->_html;
 	}
 
@@ -251,7 +254,9 @@ class Editorial extends Module
 			$id_shop = (int)$this->context->shop->id;
 			$editorial = EditorialClass::getByIdShop($id_shop);
 			$editorial->copyFromPost();
-			$editorial->update();
+			if (empty($editorial->id_shop))
+				$editorial->id_shop = (int)$id_shop;
+			$editorial->save();
 
 			/* upload the image */
 			if (isset($_FILES['body_homepage_logo']) && isset($_FILES['body_homepage_logo']['tmp_name']) && !empty($_FILES['body_homepage_logo']['tmp_name']))
@@ -261,12 +266,12 @@ class Editorial extends Module
 					unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				if ($error = ImageManager::validateUpload($_FILES['body_homepage_logo']))
 					$errors .= $error;
-				elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmpName))
+				elseif (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES['body_homepage_logo']['tmp_name'], $tmp_name))
 					return false;
-				elseif (!ImageManager::resize($tmpName, dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
+				elseif (!ImageManager::resize($tmp_name, dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 					$errors .= $this->displayError($this->l('An error occurred while attempting to upload the image.'));
-				if (isset($tmpName))
-					unlink($tmpName);
+				if (isset($tmp_name))
+					unlink($tmp_name);
 			}
 			$this->_html .= $errors == '' ? $this->displayConfirmation($this->l('Settings updated successfully.')) : $errors;
 			if (file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
@@ -287,25 +292,26 @@ class Editorial extends Module
 			$id_shop = (int)$this->context->shop->id;
 			$editorial = EditorialClass::getByIdShop($id_shop);
 			if (!$editorial)
-				return;			
+				return;
 			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
 			if (!$editorial)
 				return;
 			$this->smarty->assign(array(
-					'editorial' => $editorial,
-					'default_lang' => (int)$this->context->language->id,
-					'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
-					'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-					'id_lang' => $this->context->language->id,
-					'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
-					'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
-				));
+				'editorial' => $editorial,
+				'default_lang' => (int)$this->context->language->id,
+				'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
+				'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
+				'id_lang' => $this->context->language->id,
+				'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
+				'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
+			));
 		}
+
 		return $this->display(__FILE__, 'editorial.tpl', $this->getCacheId());
 	}
 
 	public function hookDisplayHeader()
 	{
-		$this->context->controller->addCSS(($this->_path).'editorial.css', 'all');
+		$this->context->controller->addCSS(($this->_path).'css/editorial.css', 'all');
 	}
 }

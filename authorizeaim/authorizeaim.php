@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,13 +33,13 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.4';
+		$this->version = '1.4.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
-		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
+		$this->displayName = 'Authorize.net AIM';
 		$this->description = $this->l('Receive payment with Authorize.net');
 
 		/* For 1.4.3 and less compatibility */

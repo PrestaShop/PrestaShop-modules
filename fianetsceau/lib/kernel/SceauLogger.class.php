@@ -1,9 +1,14 @@
 <?php
 
+/**
+ * Class matching with the pattern Singleton that allow log insertions
+ * 
+ * @author ESPIAU Nicolas <nicolas.espiau at fia-net.com>
+ */
 class SceauLogger
 {
 
-	private static $_handle = null;
+	private static $_handle = null; //handle resource, defined when the log fil is opened
 
 	/**
 	 * creates a file localized @ $path and returns its ressource
@@ -31,14 +36,13 @@ class SceauLogger
 		if (!file_exists(SCEAU_ROOT_DIR.'/logs/'))
 			if (!mkdir(SCEAU_ROOT_DIR.'/logs/'))
 				die('Error creating logs folder');
-			
-		$log_filename = SCEAU_ROOT_DIR.'/logs/fianet_log.txt';
 
+		$log_filename = SCEAU_ROOT_DIR.'/logs/fianet_log.txt';
+		
 		//renames the log file and creates a new one if max allowed size reached
 		if (file_exists($log_filename) && filesize($log_filename) > 100000)
 		{
-			$prefix = SCEAU_ROOT_DIR.'/logs/fianet_log-';
-
+			$prefix = SCEAU_ROOT_DIR.'/logs/fianetlog-';
 			$base = date('YmdHis');
 			$sufix = '.txt';
 			$filename = $prefix.$base.$sufix;
@@ -69,7 +73,7 @@ class SceauLogger
 
 
 		//builds the entry string
-		$entry = date('d-m-Y H:i:s')." | $from | $msg\r\n";
+		$entry = date('d-m-Y h:i:s')." | $from | $msg\r";
 		//write the entry into the log file
 		fwrite(self::$_handle, $entry);
 	}
@@ -88,11 +92,7 @@ class SceauLogger
 			self::openHandle();
 		}
 
-		$log_content = '';
-		while (!feof(self::$_handle))
-			$log_content .= fgets(self::$_handle, 4096);
-
-		return $log_content;
+		return fgets(self::$_handle);
 	}
 
 }

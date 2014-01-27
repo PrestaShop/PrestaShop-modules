@@ -2,7 +2,7 @@
         <module>
             <name>followup</name>
             <displayName><![CDATA[Customer follow-up]]></displayName>
-            <version><![CDATA[1.0]]></version>
+            <version><![CDATA[1.1]]></version>
             <description><![CDATA[Follow-up with your customers with daily customized e-mails.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[advertising_marketing]]></tab>

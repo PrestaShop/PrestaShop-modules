@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http:// www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license http:// opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,7 +54,7 @@ class GlobKurier extends Module {
 	{
 		$this->name = 'globkurier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'GlobKurier | Solik Tomasz <info[at]tomaszsolik.pl>';
 		$this->need_instance = 0;
 

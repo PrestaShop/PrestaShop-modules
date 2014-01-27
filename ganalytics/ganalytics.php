@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -29,19 +29,19 @@ if (!defined('_PS_VERSION_'))
 	exit;
 
 class GAnalytics extends Module
-{	
-	function __construct()
+{
+	public function __construct()
 	{
-	 	$this->name = 'ganalytics';
-	 	$this->tab = 'analytics_stats';
-	 	$this->version = '1.4.3';
+		$this->name = 'ganalytics';
+		$this->tab = 'analytics_stats';
+		$this->version = '1.6';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
-		
-	 	parent::__construct();
-		
-		if ($this->id AND !Configuration::get('GANALYTICS_ID'))
+
+		parent::__construct();
+
+		if ($this->id && !Configuration::get('GANALYTICS_ID'))
 			$this->warning = $this->l('You have not yet set your Google Analytics ID');
 		$this->description = $this->l('Integrate Google Analytics script into your shop');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
@@ -50,34 +50,25 @@ class GAnalytics extends Module
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 	}
 
-	function install()
+	public function install()
 	{
-		if (!parent::install() ||
-				!$this->registerHook('header') ||
-				!$this->registerHook('orderConfirmation'))
-			return false;
-		return true;
+		return (parent::install() && $this->registerHook('header') && $this->registerHook('orderConfirmation'));
 	}
-	
-	function uninstall()
-	{
-		if (!Configuration::deleteByName('GANALYTICS_ID') || !parent::uninstall())
-			return false;
-		return true;
-	}
-	
+
 	public function getContent()
 	{
 		$output = '<h2>Google Analytics</h2>';
-		if (Tools::isSubmit('submitGAnalytics') AND ($gai = Tools::getValue('ganalytics_id')))
+		if (Tools::isSubmit('submitGAnalytics'))
 		{
-			Configuration::updateValue('GANALYTICS_ID', $gai);
+			Configuration::updateValue('GANALYTICS_ID', Tools::getValue('ganalytics_id'));
+			Configuration::updateValue('UGANALYTICS', Tools::getValue('universal_analytics'));
 			$output .= '
 			<div class="conf confirm">
 				<img src="../img/admin/ok.gif" alt="" title="" />
 				'.$this->l('Settings updated').'
 			</div>';
 		}
+
 		return $output.$this->displayForm();
 	}
 
@@ -91,11 +82,13 @@ class GAnalytics extends Module
 				<div class="margin-form">
 					<input type="text" name="ganalytics_id" value="'.Tools::safeOutput(Tools::getValue('ganalytics_id', Configuration::get('GANALYTICS_ID'))).'" />
 					<p class="clear">'.$this->l('Example:').' UA-1234567-1</p>
+					<input type="checkbox" name="universal_analytics" '.(Tools::getValue('universal_analytics', Configuration::get('UGANALYTICS')) ? 'checked="checked"' : '').' />
+					<p class="clear">'.$this->l('Universal Analytics Active').'</p>
 				</div>
 				<center><input type="submit" name="submitGAnalytics" value="'.$this->l('Update ID').'" class="button" /></center>
 			</fieldset>
 		</form>';
-		
+
 		$output .= '
 		<fieldset class="space">
 			<legend><img src="../img/admin/unknown.gif" alt="" class="middle" />'.$this->l('Help').'</legend>
@@ -151,90 +144,101 @@ class GAnalytics extends Module
 				<li>'.$this->l('Save this new goal').'</li>
 			</ol>
 		</fieldset>';
-		
+
 		return $output;
 	}
-	
-	function hookHeader($params)
+
+	public function hookHeader($params)
 	{
 		if ((method_exists('Language', 'isMultiLanguageActivated') && Language::isMultiLanguageActivated())
-			|| Language::countActiveLanguages() > 1)
+			|| Language::countActiveLanguages() > 1
+		)
 			$multilang = (string)Tools::getValue('isolang').'/';
 		else
 			$multilang = '';
 
-		$defaultMetaOrder = Meta::getMetaByPage('order',$this->context->language->id);
-		if (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 || strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.$multilang.$defaultMetaOrder['url_rewrite']) === 0)
+		$default_meta_order = Meta::getMetaByPage('order', $this->context->language->id);
+		if (strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.'order.php') === 0 || strpos($_SERVER['REQUEST_URI'], __PS_BASE_URI__.$multilang.$default_meta_order['url_rewrite']) === 0)
 			$this->context->smarty->assign('pageTrack', '/order/step'.(int)Tools::getValue('step').'.html');
 
 		$this->context->smarty->assign('ganalytics_id', Configuration::get('GANALYTICS_ID'));
+		$this->context->smarty->assign('universal_analytics', Configuration::get('UGANALYTICS'));
 		$this->context->smarty->assign('isOrder', false);
 
-		return $this->display(__FILE__, 'header.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/header.tpl');
 	}
-	
-	function hookFooter($params)
+
+	public function hookFooter($params)
 	{
 		// for retrocompatibility
 		if (!$this->isRegisteredInHook('header'))
 			$this->registerHook('header');
-		return ;
 	}
 
-	function hookOrderConfirmation($params)
+	public function hookOrderConfirmation($params)
 	{
 		// Setting parameters
 		$parameters = Configuration::getMultiple(array('PS_LANG_DEFAULT'));
-		
+
 		$order = $params['objOrder'];
 		if (Validate::isLoadedObject($order))
 		{
-			$deliveryAddress = new Address(intval($order->id_address_delivery));
+			$delivery_address = new Address((int)$order->id_address_delivery);
 
 			$conversion_rate = 1;
+			$currency = new Currency((int)$order->id_currency);
+
 			if ($order->id_currency != Configuration::get('PS_CURRENCY_DEFAULT'))
+				$conversion_rate = (int)$currency->conversion_rate;
+
+			$state_name = '';
+			if ((int)$delivery_address->id_state > 0)
 			{
-				$currency = new Currency(intval($order->id_currency));
-				$conversion_rate = floatval($currency->conversion_rate);
+				$state = New State($delivery_address->id_state);
+				$state_name = $state->name;
 			}
 
 			// Order general information
 			$trans = array(
-				'id' => intval($order->id),				// order ID - required
-						'store' => htmlentities(Configuration::get('PS_SHOP_NAME')), // affiliation or store name
-						'total' => Tools::ps_round(floatval($order->total_paid) / floatval($conversion_rate), 2),		// total - required
-						'tax' => '0', // tax
-						'shipping' => Tools::ps_round(floatval($order->total_shipping) / floatval($conversion_rate), 2),	// shipping
-						'city' => addslashes($deliveryAddress->city),		// city
-						'state' => '',				// state or province
-						'country' => addslashes($deliveryAddress->country) // country
-						);
+				'id' => (int)$order->id,
+				'store' => htmlentities(Configuration::get('PS_SHOP_NAME')),
+				'total' => Tools::ps_round((float)$order->total_paid / (float)$conversion_rate, 2),
+				'tax' => $order->getTotalProductsWithTaxes() - $order->getTotalProductsWithoutTaxes(),
+				'shipping' => Tools::ps_round((float)$order->total_shipping / (float)$conversion_rate, 2),
+				'city' => addslashes($delivery_address->city),
+				'state' => $state_name,
+				'country' => addslashes($delivery_address->country),
+				'currency' => $currency->iso_code
+			);
 
 			// Product information
 			$products = $order->getProducts();
-			foreach ($products AS $product)
+			$items = array();
+			foreach ($products as $product)
 			{
 				$category = Db::getInstance()->getRow('
 								SELECT name FROM `'._DB_PREFIX_.'category_lang` , '._DB_PREFIX_.'product 
-								WHERE `id_product` = '.intval($product['product_id']).' AND `id_category_default` = `id_category` 
-								AND `id_lang` = '.intval($parameters['PS_LANG_DEFAULT']));
-				
+								WHERE `id_product` = '.(int)$product['product_id'].' AND `id_category_default` = `id_category`
+								AND `id_lang` = '.(int)$parameters['PS_LANG_DEFAULT']);
+
 				$items[] = array(
-					'OrderId' => intval($order->id),								// order ID - required
-								'SKU' => addslashes($product['product_id']),		// SKU/code - required
-								'Product' => addslashes($product['product_name']),		// product name
-								'Category' => addslashes($category['name']),			// category or variation
-								'Price' => Tools::ps_round(floatval($product['product_price_wt']) / floatval($conversion_rate), 2),	// unit price - required
-								'Quantity' => addslashes(intval($product['product_quantity']))	//quantity - required
-								);
+					'OrderId' => (int)$order->id,
+					'SKU' => addslashes($product['product_id']),
+					'Product' => addslashes($product['product_name']),
+					'Category' => addslashes($category['name']),
+					'Price' => Tools::ps_round((float)$product['product_price_wt'] / (float)$conversion_rate, 2),
+					'Quantity' => addslashes((int)$product['product_quantity'])
+				);
 			}
 			$ganalytics_id = Configuration::get('GANALYTICS_ID');
 
 			$this->context->smarty->assign('items', $items);
 			$this->context->smarty->assign('trans', $trans);
 			$this->context->smarty->assign('ganalytics_id', $ganalytics_id);
+			$this->context->smarty->assign('universal_analytics', Configuration::get('UGANALYTICS'));
 			$this->context->smarty->assign('isOrder', true);
-			return $this->display(__FILE__, 'header.tpl');
+
+			return $this->display(__FILE__, 'views/templates/hook/header.tpl');
 		}
 	}
 }

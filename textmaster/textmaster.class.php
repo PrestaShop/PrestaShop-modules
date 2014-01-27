@@ -49,6 +49,7 @@ class TextMasterAPI
 		$this->connection &= $this->testConnection();
 
 		$this->module_instance  = (!$module_instance or !is_object($module_instance)) ? Module::getInstanceByName('textmaster') : $module_instance; // initiates module instance
+		$this->getAuthors();
     }
     
 	/* caches data */
@@ -346,9 +347,8 @@ class TextMasterAPI
 	{
 		if (!$locale)
 			$locale = $this->module_instance->getFullLocale();
-		//	$locale = Context::getContext()->language->language_code;
 		
-		return $this->request("clients/localized_contents/pretashop_help/en-EU");
+		return $this->request('clients/localized_contents/pretashop_help/'.$locale);
 	}
 	
 	public function getLanguages()

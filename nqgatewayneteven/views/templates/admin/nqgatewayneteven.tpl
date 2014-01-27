@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -172,7 +172,7 @@
 	<div>
 		<h4>{l s='Vos transporteurs pour calculer les frais de ports' mod='nqgatewayneteven'}</h4>
 
-		<h5>{l s='France' mod='nqgatewayneteven'}</h5>
+		<h5>{l s='Local' mod='nqgatewayneteven'}</h5>
 
 		<label>{l s='Transporteur' mod='nqgatewayneteven'}</label>
 		<div class="margin-form">

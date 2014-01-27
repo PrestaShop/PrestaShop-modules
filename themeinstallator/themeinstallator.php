@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -334,9 +334,10 @@ class ThemeInstallator extends Module
 			elseif (!copy($url, ARCHIVE_NAME))
 				$this->errors[] = $this->l('Error during the file download');
 			elseif (Tools::ZipTest(ARCHIVE_NAME))
-				$this->errors[] = $this->l('Zip file seems to be broken');
-			else
 				$this->page = 2;
+			else
+				$this->errors[] = $this->l('Zip file seems to be broken');
+
 		}
 		elseif (Tools::isSubmit('submitImport3'))
 		{
