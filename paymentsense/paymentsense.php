@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.6';
+		$this->version = '1.9.7';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
