@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.4';
+		$this->version = '3.4.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -1395,7 +1395,7 @@ class ShoppingFluxExport extends Module
 			'total_shipping' => (float)($order->TotalShipping),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
 			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
-			'id_carrier' => $carrier->id_carrier
+			'id_carrier' => $carrier->id
 		);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $updateOrder, 'UPDATE', '`id_order` = '.(int)$id_order);
@@ -1414,7 +1414,7 @@ class ShoppingFluxExport extends Module
 		$updateOrderTracking = array(
 			'shipping_cost_tax_incl' => (float)($order->TotalShipping),
 			'shipping_cost_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
-			'id_carrier' => $carrier->id_carrier
+			'id_carrier' => $carrier->id
 		);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_carrier', $updateOrderTracking, 'UPDATE', '`id_order` = '.(int)$id_order);
@@ -1457,7 +1457,7 @@ class ShoppingFluxExport extends Module
         
         //manage case PS_CARRIER_DEFAULT is deleted
         $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-		$cart->id_carrier = $carrier->id_carrier;
+		$cart->id_carrier = $carrier->id;
 		$cart->add();
 
 		foreach ($productsNode->Product as $product)
