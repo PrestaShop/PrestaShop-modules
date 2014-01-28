@@ -43,9 +43,11 @@ function upgrade_module_1_7_6($object)
 	
 	foreach ($cols as $name => $co)
 		if (in_array($name, array('start_day', 'stop_day')))
+		{
 			if (!$co['exist'])
 				Db::getInstance()->execute($co['sql']);
-		else if ($co['exist'])
+		}
+		elseif ($co['exist'])
 			Db::getInstance()->execute($co['sql']);
 
 	return true;
