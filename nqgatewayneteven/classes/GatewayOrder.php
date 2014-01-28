@@ -418,7 +418,7 @@ class GatewayOrder extends Gateway
 			$order->module = 'nqgatewayneteven';
 			$order->recyclable = 0;
 			$order->gift = 0;
-			$order->gift_message = '';
+			$order->gift_message = ' ';
 			$order->shipping_number = '';
 
 			/* generate reference order */
