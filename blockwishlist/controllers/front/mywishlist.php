@@ -90,8 +90,8 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 							'wishlink',
 							Mail::l('Your wishlist\'s link', $this->context->language->id),
 							array(
-							'{wishlist}' => $wishlist->name,
-							'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist->token),
+								'{wishlist}' => $wishlist->name,
+								'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist->token),
 							$this->context->customer->email,
 							$this->context->customer->firstname.' '.$this->context->customer->lastname,
 							null,
@@ -99,6 +99,8 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 							null,
 							null,
 							$this->module->getLocalPath().'mails/');
+
+						Tools::redirect($this->context->link->getModuleLink('blockwishlist', 'mywishlist'));
 					}
 				}
 			}
