@@ -96,13 +96,14 @@ class Advice extends ObjectModel
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
 		$advices = array();
-		foreach ($result as $res)
-			$advices[] = array(
-				'selector' => $res['selector'],
-				'location' => $res['location'],
-				'html' => $res['html'],
-				'id_ps_advice' => $res['id_ps_advice'],
-				);
+		if (is_array($result))
+			foreach ($result as $res)
+				$advices[] = array(
+					'selector' => $res['selector'],
+					'location' => $res['location'],
+					'html' => $res['html'],
+					'id_ps_advice' => $res['id_ps_advice'],
+					);
 		
 		return $advices;
 	}
@@ -122,8 +123,9 @@ class Advice extends ObjectModel
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
-		foreach($result as $advice)
-			$ids[] = $advice['id_advice'];
+		if (is_array($result))
+			foreach($result as $advice)
+				$ids[] = $advice['id_advice'];
 		return $ids;
 	}
 	
@@ -142,8 +144,9 @@ class Advice extends ObjectModel
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		
-		foreach($result as $advice)
-			$ids[] = $advice['id_advice'];
-		return $ids;
+		if (is_array($result))
+			foreach($result as $advice)
+				$ids[] = $advice['id_advice'];
+			return $ids;
 	}
 }
