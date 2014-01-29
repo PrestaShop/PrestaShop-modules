@@ -199,8 +199,8 @@ class Catalog
 		foreach ($lstC as $com)
 		{
 			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
-                        FROM `'._DB_PREFIX_.'ec_ecopresto_product_shop` ep, `'._DB_PREFIX_.'order_detail` od
-                        WHERE ep.`reference` = od.`product_supplier_reference`
+                        FROM `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca, `'._DB_PREFIX_.'order_detail` od
+                        WHERE (od.`product_supplier_reference` = ca.`reference` || od.`product_supplier_reference` = ca.`reference_attribute`)
                         AND `id_order` = '.(int)$com['id_order']);
 
 			if ($ok == 0)
@@ -245,7 +245,7 @@ class Catalog
 		$dossierTempo = 'files/csv/';
 		$handledir = opendir($dossierTempo);
 		while (false !== ($fichier = readdir($handledir)))
-			if (($fichier != '.') && ($fichier != '..'))
+			if (($fichier != '.') && ($fichier != '..') && ($fichier != 'index.php'))
 				unlink($dossierTempo.$fichier);
 
 			$file = $this->fichierImport;
@@ -283,7 +283,7 @@ class Catalog
 
 		$handledir = opendir($dossierTempo);
 		while (false !== ($fichier = readdir($handledir)))
-			if (($fichier != '.') && ($fichier != '..'))
+			if (($fichier != '.') && ($fichier != '..') && ($fichier != 'index.php'))
 				$nbFichier++;
 
 			return $nbFichier;
@@ -298,7 +298,7 @@ class Catalog
 			Db::getInstance()->Execute($requete);
 			return true;
 		}
-		catch (Exception $e)
+		catch (exception $e)
 		{
 			return false;
 		}
@@ -348,7 +348,8 @@ class Catalog
 
 	public function updateCatalogAll()
 	{
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET imported=1 WHERE `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
+		$inf = self::getInfoEco('ID_SHOP');
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET imported=1 WHERE `id_shop`='.(int)$inf);
 	}
 
 	public function updateMAJStock($info = 1)
@@ -361,12 +362,9 @@ class Catalog
 		}
 		else
 		{
-			$v = array();
-			
-			foreach ($info as $val)
-				$v[] = '"'.pSQL($val).'"';
-			
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module` VALUES ('.implode(',', $v).')');
+			foreach ($info as $key => $val)
+				$v[] = '"'.$val.'"';
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module` VALUES ("'.implode(',', pSQL($v)).'")');
 		}
 	}
 
@@ -505,11 +503,11 @@ class Catalog
 	public function getCategory($categories, $current, $id_category = 1, $id_selected = 1)
 	{
 		$output = '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>';
-		$output .= str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).Tools::stripslashes($current['infos']['name']).'</option>';
+		$output .= str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		
 		if (isset($categories[$id_category]))
 			foreach ($categories[$id_category] as $key => $row)
-				$output .= self::getCategory($categories, $row, $key, $id_selected);
+				$output .= self::getCategory($categories, $categories[$id_category][$key], $key, $id_selected);
 		
 		return $output;
 	}
@@ -634,9 +632,10 @@ class Catalog
 
 	public function insertAttributes()
 	{
+		$inf = self::getInfoEco('ID_LANG');
 		foreach ($this->tabAttributes as $value)
 			if (!Db::getInstance()->getValue('SELECT `id_attribute_eco` FROM `'._DB_PREFIX_.'ec_ecopresto_attribute`  WHERE `value`="'.pSQL($value).'"'))
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_attribute` (`value`,`id_lang`) VALUES ("'.pSQL($value).'",'.(int)self::getInfoEco('ID_LANG').')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_attribute` (`value`,`id_lang`) VALUES ("'.pSQL($value).'",'.(int)$inf.')');
 
 	}
 
@@ -663,21 +662,19 @@ class Catalog
 			
 			if (isset($lst_Sup) && $lst_Sup[0])
 			{
-				$supp = array();
-			
 				foreach ($lst_Sup as $tab_Sup)
-					$supp[] = '"'.pSQL($tab_Sup).'"';
+					$supp[] = $tab_Sup;
 
 				$supp = implode(',', $supp);
 			}
 			else
-				$supp = '""';
+				$supp = '9999999999999';
 
 		}
 		$totalPdt = Db::getInstance()->getValue('SELECT count(ps.`reference`)
 											FROM `'._DB_PREFIX_.'ec_ecopresto_catalog` c, `'._DB_PREFIX_.'ec_ecopresto_product_shop` ps
 											WHERE c.`reference` = ps.`reference`
-											'.($this->tabConfig['UPDATE_PRODUCT'] == 1?' AND ps.`reference` NOT IN ('.$supp.') ':'').'
+											'.($this->tabConfig['UPDATE_PRODUCT'] == 1?' AND ps.`reference` NOT IN ("'.pSQL($supp).'") ':'').'
 											AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
 
 		$totalPdtSup = Db::getInstance()->getValue('SELECT count(`reference`)
