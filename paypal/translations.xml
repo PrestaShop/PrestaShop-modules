@@ -72,6 +72,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Use express checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 2-click payment option</express_checkout_shortcut_tagline>
 
@@ -215,6 +220,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -350,6 +360,11 @@
 
         <configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
         <express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -483,6 +498,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -619,6 +639,12 @@
 		<setup_reminder_2>Fügen Sie in Ihrem PayPal-Konto Ihr Bankkonto oder Ihre Kreditkarte hinzu. Loggen Sie sich in Ihren PayPal Account ein und klicken auf "Mein Geschäftskonto einrichten".</setup_reminder_2>
 
 		<configuration_options_title>Weitere Einstellungen</configuration_options_title>
+
+		<integral_evolution_solution>Bitte wählen Sie, welche Lösung Sie nutzen möchten</integral_evolution_solution>
+		<integral_evolution_solution_iframe>iFrame</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full Page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Bitte wählen Sie Ihr Template</template_to_choose>
+
 
 		<express_checkout_shortcut_title>Nutzen Sie Express Checkout Shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Per Klick gelangen Ihre Kunden ohne Umwege direkt zur PayPal-Zahlungsseite</express_checkout_shortcut_tagline>
@@ -760,6 +786,11 @@
 
         <configuration_options_title>Opciones de configuración</configuration_options_title>
 
+		<integral_evolution_solution>Seleccione la solución que desea usar</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Redirección de página completa</integral_evolution_solution_no_iframe>
+		<template_to_choose>Seleccione una plantilla</template_to_choose>
+
         <express_checkout_shortcut_title>Utilice Pago exprés (acceso rápido)</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>Ofrezca a sus clientes una opción de pago con tan solo 2 clics</express_checkout_shortcut_tagline>
 
@@ -894,6 +925,11 @@
 
 		<configuration_options_title>Options de configuration PayPal</configuration_options_title>
 
+		<integral_evolution_solution>Choisissez votre solution</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Redirection complète de la page</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choisissez un template</template_to_choose>
+
 		<express_checkout_shortcut_title>Utilisez PayPal Express</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offrez à vos clients la possibilité de payer en 2 clics</express_checkout_shortcut_tagline>
 
@@ -1027,6 +1063,11 @@
         <setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
         <configuration_options_title>Configuration options</configuration_options_title>
+		
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
         <express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -1162,6 +1203,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+			
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -1302,6 +1348,11 @@
         <setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
         <configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
         <express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -1572,6 +1623,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -1714,6 +1770,11 @@
 
         <configuration_options_title>Opzioni di configurazione</configuration_options_title>
 
+		<integral_evolution_solution>Scegli la soluzione che vuoi utilizzare</integral_evolution_solution>
+		<integral_evolution_solution_iframe>iFrame</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Reindirizzamento completo della pagina</integral_evolution_solution_no_iframe>
+		<template_to_choose>Scegli il template</template_to_choose>
+
         <express_checkout_shortcut_title>Scegli il pulsante di Pagamento express</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>I tuoi clienti pagano in soli 2 clic</express_checkout_shortcut_tagline>
 
@@ -1847,6 +1908,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -1984,6 +2050,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -2119,6 +2190,11 @@
 
 		<configuration_options_title>PayPal configuratieopties</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Gebruik PayPal Express Checkout Shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Geef je klanten de mogelijkheid om in twee stappen te betalen</express_checkout_shortcut_tagline>
 
@@ -2249,6 +2325,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -2388,6 +2469,11 @@
 
 		<configuration_options_title>Opcje konfiguracji</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+		
 		<express_checkout_shortcut_title>Wybierz PayPal Express</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>pozwól swoim klientom płacić dwoma kliknięciami</express_checkout_shortcut_tagline>
 
@@ -2520,6 +2606,11 @@
 		<setup_reminder_2>Vincule sua conta do Paypal à uma conta bancária ou uma conta de cartão de crédito: Acesse sua conta PayPal e vá à “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Opções de Configuração</configuration_options_title>
+
+		<integral_evolution_solution>Escolha a solução que quer utilizar</integral_evolution_solution>
+		<integral_evolution_solution_iframe>iFrame</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Redireccionamento de página completa</integral_evolution_solution_no_iframe>
+		<template_to_choose>Seleccione um template</template_to_choose>
 
 		<express_checkout_shortcut_title>Atalho para Checkout Express</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Ofereça ao seu cliente uma experiência de 3 cliques para finalização da compra</express_checkout_shortcut_tagline>
@@ -2658,6 +2749,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -2795,6 +2891,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -2928,6 +3029,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -3066,6 +3172,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -3200,6 +3311,11 @@
 
 		<configuration_options_title>Hesap ayarı seçenekleriniz</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>PayPal Express Checkout kullanın</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Müşterilerinize 2 tıkla ödeme seçeneği sunun</express_checkout_shortcut_tagline>
 
@@ -3333,6 +3449,11 @@
 		<setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
 		<configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
@@ -3471,6 +3592,11 @@
 
 		<configuration_options_title>Configuration options</configuration_options_title>
 
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
+
 		<express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
 		<express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
 
@@ -3605,6 +3731,11 @@
         <setup_reminder_2>Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to “My business setup”</setup_reminder_2>
 
         <configuration_options_title>Configuration options</configuration_options_title>
+
+		<integral_evolution_solution>Choose the solution you want to use</integral_evolution_solution>
+		<integral_evolution_solution_iframe>Iframe</integral_evolution_solution_iframe>
+		<integral_evolution_solution_no_iframe>Full page redirect</integral_evolution_solution_no_iframe>
+		<template_to_choose>Choose your template</template_to_choose>
 
         <express_checkout_shortcut_title>Express Checkout shortcut</express_checkout_shortcut_title>
         <express_checkout_shortcut_tagline>Offer your customers a 3-click checkout experience</express_checkout_shortcut_tagline>
