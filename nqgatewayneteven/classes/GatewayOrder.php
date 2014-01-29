@@ -418,7 +418,7 @@ class GatewayOrder extends Gateway
 			$order->module = 'nqgatewayneteven';
 			$order->recyclable = 0;
 			$order->gift = 0;
-			$order->gift_message = '';
+			$order->gift_message = ' ';
 			$order->shipping_number = '';
 
 			/* generate reference order */
@@ -865,6 +865,7 @@ class GatewayOrder extends Gateway
 		{
 			$status = '';
 			$track = '';
+            $amounttorefund = 0;
 			$date_now = date('Y-m-d H:i:s');
 
 			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_PREPARATION'))
@@ -880,8 +881,11 @@ class GatewayOrder extends Gateway
 				$track = $res_order['shipping_number'];
 			}
 
-			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_REFUND'))
+			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_REFUND')) {
 				$status = 'Refunded';
+                $amounttorefund = Db::getInstance()->getValue('SELECT `total_paid_real` FROM `'._DB_PREFIX_.'orders` WHERE `id_order` = '.(int)$params['id_order']);
+
+            }
 
 			if ($status != '')
 			{
@@ -889,6 +893,9 @@ class GatewayOrder extends Gateway
 					'OrderID' => $res['id_order_neteven'],
 					'Status' => $status
 				);
+
+                if (!empty($amounttorefund))
+                    $order1['AmountToRefund'] = $amounttorefund;
 
 				if (!empty($track))
 					$order1['TrackingNumber'] = $track;

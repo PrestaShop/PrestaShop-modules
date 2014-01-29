@@ -473,7 +473,7 @@ class GatewayProduct extends Gateway
 			SELECT `id_image`, `cover`
 			FROM `'._DB_PREFIX_.'image`
 			WHERE `id_product` = '.(int)$product['id_product'].'
-			ORDER BY `cover` DESC
+			ORDER BY `cover` DESC, `position` ASC
 			LIMIT 6
 		');
 
@@ -486,7 +486,7 @@ class GatewayProduct extends Gateway
 			INNER JOIN `'._DB_PREFIX_.'image` i USING(id_image)
 			WHERE i.`id_product` = '.(int)$product['id_product'].'
 			AND pai.`id_product_attribute` = '.(int)$product['id_product_attribute'].'
-			ORDER BY i.`cover` DESC
+			ORDER BY i.`cover` DESC, i.`position` ASC
 			LIMIT 6
 		');
 
