@@ -116,7 +116,7 @@ if (!isset($response[7]) || !isset($response[3]) || !isset($response[9]))
 }
 
 $message = $response[3];
-$payment_method = $this->displayName;
+$payment_method = 'Authorize.net AIM';
 
 switch ($response[0]) // Response code
 {
