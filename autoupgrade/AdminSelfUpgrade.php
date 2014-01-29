@@ -873,7 +873,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$filelist = scandir($this->backupPath);
 			foreach($filelist as $filename)
 				// the following will match file or dir related to the selected backup
-				if (!empty($name) && $name[0] != '.' && $name != 'index.php' && $name != '.htaccess' 
+				if (!empty($filename) && $filename[0] != '.' && $filename != 'index.php' && $filename != '.htaccess' 
 					&& preg_match('#^(auto-backupfiles_|)'.preg_quote($name).'(\.zip|)$#', $filename, $matches))
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
@@ -2305,14 +2305,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 							// $this->next = 'error';
 							$this->nextQuickInfo[] = '
 								<div class="upgradeDbError">
-									[ERROR] PHP '.$upgrade_file.' '.$query.'
-									'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-									'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']).'
+									[ERROR] PHP '.$upgrade_file.' '.$query."\n".'
+									'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
+									'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']."\n").'
 								</div>';
 							$this->nextErrors[] = '
-								[ERROR] PHP '.$upgrade_file.' '.$query.'
-								'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']);
+								[ERROR] PHP '.$upgrade_file.' '.$query."\n".'
+								'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
+								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']."\n");
 							$warningExist = true;
 						}
 						else
