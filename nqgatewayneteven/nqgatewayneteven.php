@@ -46,7 +46,7 @@ class NqGatewayNeteven extends Module
 
         $this->tab = $tab_name;
 		
-		$this->version = '2.4';
+		$this->version = '2.5';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -99,15 +99,19 @@ class NqGatewayNeteven extends Module
 	}
 
 	public function installConfig()
-	{		
+	{
+        $rand_letters = range('a','z');
+        shuffle($rand_letters);
+
 		// Creation of employee NetEven
 		$new_employe = new Employee();
-		$new_employe->lastname = 'Bot';
+		$new_employe->lastname = 'Employee';
 		$new_employe->firstname = 'NetEven';
 		$new_employe->id_lang = (int)$this->context->language->id;
-		$new_employe->email = 'neteven@newquest.fr';
-		$new_employe->passwd = '$&-$&-$&-$&';
-		$new_employe->id_profile = 1;
+		$new_employe->email = 'empl'.rand(0, 100).$rand_letters[0].rand(0, 100).'@neteven.com';
+		$new_employe->passwd = $rand_letters[0].'$&-$&-$&-$&'.rand(0, 1000);
+		$new_employe->id_profile = 3;
+        $new_employe->active = 0;
 		$new_employe->add();
 		Gateway::updateConfig('ID_EMPLOYEE_NETEVEN', (int)$new_employe->id);
 
@@ -115,8 +119,8 @@ class NqGatewayNeteven extends Module
 		$new_customer = new Customer();
 		$new_customer->lastname	= 'Client';
 		$new_customer->firstname = 'NetEven';
-		$new_customer->passwd = '$&-$&-$&-$&';
-		$new_customer->email = 'neteven@newquest.fr';
+		$new_customer->passwd = $rand_letters[0].'$&-$&-$&-$&'.rand(0, 1000);
+		$new_customer->email = 'cust'.rand(0, 100).$rand_letters[0].rand(0, 100).'@neteven.com';
         $new_customer->newsletter = 0;
         $new_customer->optin = 0;
 		$new_customer->add();
