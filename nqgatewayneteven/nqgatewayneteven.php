@@ -72,7 +72,6 @@ class NqGatewayNeteven extends Module
         }
     }
 
-
 	public function install()
 	{
 		if (!parent::install() ||

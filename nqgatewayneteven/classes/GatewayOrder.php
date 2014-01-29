@@ -20,7 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -38,14 +38,15 @@ class GatewayOrder extends Gateway
 
 	public static function getInstance($client = null)
 	{
-		$wsdl = 0;
 		if ($client != null)
 			$wsdl = 1;
+		else
+			$wsdl = 0;
 			
 		if (!isset(self::$instance[$wsdl]))
 			self::$instance[$wsdl] = new GatewayOrder($client);
 
-        self::$type_sku = (Gateway::getConfig('TYPE_SKU') !== false)?Gateway::getConfig('TYPE_SKU'):'reference';
+		self::$type_sku = (Gateway::getConfig('TYPE_SKU') !== false)?Gateway::getConfig('TYPE_SKU'):'reference';
 
 		return self::$instance[$wsdl];
 	}
@@ -203,15 +204,15 @@ class GatewayOrder extends Gateway
 			
 			$carrier = new Carrier((int)$order->id_carrier);
 
-            $carrier_tax_rate = 100;
-            if (method_exists($carrier, 'getTaxesRate'))
-                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			$carrier_tax_rate = 100;
+			if (method_exists($carrier, 'getTaxesRate'))
+				$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
-            if (method_exists('Tax', 'getCarrierTaxRate'))
-                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			if (method_exists('Tax', 'getCarrierTaxRate'))
+				$carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 
-            $total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
+			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
@@ -296,8 +297,8 @@ class GatewayOrder extends Gateway
 		/* Treatment of order details */
 		if ($id_order_temp != 0){
 			$this->createOrderDetails($neteven_order, $id_order_temp);
-            $this->addStatusOnOrder($id_order_temp, $neteven_order);
-        }
+			$this->addStatusOnOrder($id_order_temp, $neteven_order);
+		}
 
 		if ($this->time_analyse)
 		{ 
@@ -349,7 +350,7 @@ class GatewayOrder extends Gateway
 		$total_wt = 0;
 		$total_product = 0;
 		$total_product_wt = 0;
-        $total_taxe = 0;
+		$total_taxe = 0;
 
 		foreach ($neteven_orders as $neteven_order_temp)
 		{
@@ -360,7 +361,7 @@ class GatewayOrder extends Gateway
 				
 				$total_product += (((float)($neteven_order_temp->Price->_) - (float)($neteven_order_temp->VAT->_)));
 				$total_product_wt += ((float)($neteven_order_temp->Price->_));
-                $total_taxe += $neteven_order_temp->VAT->_;
+				$total_taxe += $neteven_order_temp->VAT->_;
 			}
 		}
 
@@ -402,7 +403,7 @@ class GatewayOrder extends Gateway
 			}
 
 
-            /* Creating order */
+			/* Creating order */
 			$id_order_temp = 0;
 			$order = new Order();
 			$order->id_carrier = Gateway::getConfig('CARRIER_NETEVEN');
@@ -440,42 +441,42 @@ class GatewayOrder extends Gateway
 			$carrier = new Carrier((int)$order->id_carrier);
 
 
-            if (method_exists($carrier, 'getTaxesRate'))
-                $carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
-            elseif (method_exists('Tax', 'getCarrierTaxRate'))
-                $carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-            else
-                $carrier_tax_rate = 100;
+			if (method_exists($carrier, 'getTaxesRate'))
+				$carrier_tax_rate = $carrier->getTaxesRate(new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			elseif (method_exists('Tax', 'getCarrierTaxRate'))
+				$carrier_tax_rate = (float)Tax::getCarrierTaxRate($order->id_carrier, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+			else
+				$carrier_tax_rate = 100;
 
-            $total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
+			$total_shipping_tax_excl = $carrier_tax_rate ? $neteven_order->OrderShippingCost->_ / ($carrier_tax_rate/100) : $neteven_order->OrderShippingCost->_;
 			
 			$total_wt = $total_product_wt + $neteven_order->OrderShippingCost->_;
 			$total = $total_product + $total_shipping_tax_excl;
 
-            $order->total_discounts_tax_excl = 0;
-            $order->total_discounts_tax_incl = 0;
-            $order->total_discounts = 0;
-            $order->total_wrapping_tax_excl = 0;
-            $order->total_wrapping_tax_incl = 0;
-            $order->total_wrapping = 0;
-            $order->total_products = (float)number_format($total_product, 2, '.', '');
-            $order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
-            $order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
-            $order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-            $order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
-            $order->total_paid_tax_excl = (float)number_format($total_wt - $total_taxe, 2, '.', '');
-            $order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
-            $order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
-            $order->total_paid = (float)number_format($total_wt, 2, '.', '');
-            $order->carrier_tax_rate = 0;
-            $order->total_wrapping = 0;
-            $order->invoice_number = 0;
-            $order->delivery_number = 0;
-            $order->invoice_date = $date_now;
-            $order->delivery_date = $date_now;
-            $order->valid = 1;
-            $order->date_add = $date_now;
-            $order->date_upd = $date_now;
+			$order->total_discounts_tax_excl = 0;
+			$order->total_discounts_tax_incl = 0;
+			$order->total_discounts = 0;
+			$order->total_wrapping_tax_excl = 0;
+			$order->total_wrapping_tax_incl = 0;
+			$order->total_wrapping = 0;
+			$order->total_products = (float)number_format($total_product, 2, '.', '');
+			$order->total_products_wt = (float)number_format($total_product_wt, 2, '.', '');
+			$order->total_shipping_tax_excl = (float)number_format($total_shipping_tax_excl, 2, '.', '');
+			$order->total_shipping_tax_incl = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_shipping = (float)number_format($neteven_order->OrderShippingCost->_, 2, '.', '');
+			$order->total_paid_tax_excl = (float)number_format($total_wt - $total_taxe, 2, '.', '');
+			$order->total_paid_tax_incl = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid_real = (float)number_format($total_wt, 2, '.', '');
+			$order->total_paid = (float)number_format($total_wt, 2, '.', '');
+			$order->carrier_tax_rate = 0;
+			$order->total_wrapping = 0;
+			$order->invoice_number = 0;
+			$order->delivery_number = 0;
+			$order->invoice_date = $date_now;
+			$order->delivery_date = $date_now;
+			$order->valid = 1;
+			$order->date_add = $date_now;
+			$order->date_upd = $date_now;
 
 
 			if (Configuration::get('PS_SHOP_ENABLE'))
@@ -524,25 +525,25 @@ class GatewayOrder extends Gateway
 		return $id_order_temp;
 	}
 
-    private function addStatusOnOrder($id_order, $neteven_order){
-        /* Update order state in order */
-        $order_state = array_merge($this->getValue('order_state_before'), array($this->getValue('id_order_state_neteven')), $this->getValue('order_state_after'));
+	private function addStatusOnOrder($id_order, $neteven_order){
+		/* Update order state in order */
+		$order_state = array_merge($this->getValue('order_state_before'), array($this->getValue('id_order_state_neteven')), $this->getValue('order_state_after'));
 
-        if (is_array($order_state) && count($order_state) > 0)
-        {
-            foreach ($order_state as $id_order_state)
-            {
-                if (class_exists('OrderInvoiceOverride' && method_exists('OrderInvoiceOverride', 'clearCacheTotalPaid')))
-                    OrderInvoiceOverride::clearCacheTotalPaid();
+		if (is_array($order_state) && count($order_state) > 0)
+		{
+			foreach ($order_state as $id_order_state)
+			{
+				if (class_exists('OrderInvoiceOverride' && method_exists('OrderInvoiceOverride', 'clearCacheTotalPaid')))
+					OrderInvoiceOverride::clearCacheTotalPaid();
 
-                $new_history = new OrderHistory();
-                $new_history->id_order = (int)$id_order;
-                $new_history->changeIdOrderState((int)$id_order_state, $id_order);
-                $new_history->addWithemail(true, array());
-                Toolbox::addLogLine(self::getL('Save order state Id').' '.(int)$id_order_state.' '.self::getL('NetEven Order Id').' '.(int)$neteven_order->OrderID);
-            }
-        }
-    }
+				$new_history = new OrderHistory();
+				$new_history->id_order = (int)$id_order;
+				$new_history->changeIdOrderState((int)$id_order_state, $id_order);
+				$new_history->addWithemail(true, array());
+				Toolbox::addLogLine(self::getL('Save order state Id').' '.(int)$id_order_state.' '.self::getL('NetEven Order Id').' '.(int)$neteven_order->OrderID);
+			}
+		}
+	}
 
 	/**
 	 * Creating order details of order
@@ -552,7 +553,7 @@ class GatewayOrder extends Gateway
 	 */
 	private function createOrderDetails($neteven_order, $id_order)
 	{
-        $context = Context::getContext();
+		$context = Context::getContext();
 
 		$date_now = date('Y-m-d H:i:s');
 
@@ -615,7 +616,7 @@ class GatewayOrder extends Gateway
 				$order = new Order($id_order);
 
 				if (!Db::getInstance()->getRow('SELECT `id_cart` FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$order->id_cart.' AND `id_product` = '.(int)$res_product['id_product'].' AND `id_product_attribute` = '.(int)$id_product_attribute))
-				    Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_product` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`) VALUES ('.(int)$order->id_cart.', '.(int)$res_product['id_product'].', '.(int)$id_product_attribute.', '.(int)$neteven_order->Quantity.', "'.pSQL($date_now).'")');
+					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'cart_product` (`id_cart`, `id_product`, `id_product_attribute`, `quantity`, `date_add`) VALUES ('.(int)$order->id_cart.', '.(int)$res_product['id_product'].', '.(int)$id_product_attribute.', '.(int)$neteven_order->Quantity.', "'.pSQL($date_now).'")');
 
 				if ($this->time_analyse)
 				{
@@ -681,7 +682,7 @@ class GatewayOrder extends Gateway
 					if (class_exists('StockAvailable')){
 						/* Update quantity of product */
 						if ($control_attribute_product)
-                            StockAvailable::setQuantity($res_product['id_product'], $id_product_attribute, StockAvailable::getQuantityAvailableByProduct($res_product['id_product'], $id_product_attribute) - $neteven_order->Quantity);
+							StockAvailable::setQuantity($res_product['id_product'], $id_product_attribute, StockAvailable::getQuantityAvailableByProduct($res_product['id_product'], $id_product_attribute) - $neteven_order->Quantity);
 						else
 							StockAvailable::setQuantity($res_product['id_product'], 0, StockAvailable::getQuantityAvailableByProduct($res_product['id_product']) - $neteven_order->Quantity);
 
@@ -865,7 +866,7 @@ class GatewayOrder extends Gateway
 		{
 			$status = '';
 			$track = '';
-            $amounttorefund = 0;
+			$amounttorefund = 0;
 			$date_now = date('Y-m-d H:i:s');
 
 			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_PREPARATION'))
@@ -881,11 +882,11 @@ class GatewayOrder extends Gateway
 				$track = $res_order['shipping_number'];
 			}
 
-			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_REFUND')) {
+			if ($params['newOrderStatus']->id == (int)Configuration::get('PS_OS_REFUND'))
+			{
 				$status = 'Refunded';
-                $amounttorefund = Db::getInstance()->getValue('SELECT `total_paid_real` FROM `'._DB_PREFIX_.'orders` WHERE `id_order` = '.(int)$params['id_order']);
-
-            }
+				$amounttorefund = Db::getInstance()->getValue('SELECT `total_paid_real` FROM `'._DB_PREFIX_.'orders` WHERE `id_order` = '.(int)$params['id_order']);
+			}
 
 			if ($status != '')
 			{
@@ -894,8 +895,8 @@ class GatewayOrder extends Gateway
 					'Status' => $status
 				);
 
-                if (!empty($amounttorefund))
-                    $order1['AmountToRefund'] = $amounttorefund;
+				if (!empty($amounttorefund))
+					$order1['AmountToRefund'] = $amounttorefund;
 
 				if (!empty($track))
 					$order1['TrackingNumber'] = $track;
@@ -922,7 +923,6 @@ class GatewayOrder extends Gateway
 					
 					if ($this->getValue('send_request_to_mail'))
 						$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Fail for update order state'), self::getL('Order Id').' ('.(int)$params['id_order'].'). '.self::getL('NetEven response').' : '.$complement);
-					
 				}
 				
 				if (!empty($order_status) && !is_null($order_status))
