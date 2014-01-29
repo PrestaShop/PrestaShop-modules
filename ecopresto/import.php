@@ -57,8 +57,10 @@ if ($catalog->tabConfig['UPDATE_PRODUCT'] == 1)
 											WHERE status=0');
 	if (isset($lst_Sup) && $lst_Sup[0])
 	{
+		$supp = array();
+	
 		foreach ($lst_Sup as $tab_Sup)
-			$supp[] = $tab_Sup;
+			$supp[] = '"'.pSQL($tab_Sup).'"';
 
 		$supp = implode(',', $supp);
 	}
