@@ -2,7 +2,7 @@
 
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
+ *  @copyright  2007-2013 PrestaShop SA
  *
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -16,13 +16,17 @@ class PayPalUSA extends PaymentModule
 	private $_validation = array();
 	private $_shop_country = array();
 
+
+
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.1';
+		$this->version = '1.2.7';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
-		$this->tab = 'payments_gateways';
+
+		version_compare(_PS_VERSION_, '1.5', '<') ? $tab = 'payments_gateways':$tab = 'Payment';
+		$this->tab = $tab;
 
 		parent::__construct();
 
@@ -30,6 +34,8 @@ class PayPalUSA extends PaymentModule
 		$this->displayName = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'PayPal Mexico' : 'PayPal USA, Canada');
 		$this->description = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard.' : 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard, Advanced, Pro, or Payflow.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+
+
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.'paypalusa/backward_compatibility/backward.php');
 		$this->context->smarty->assign('base_dir', __PS_BASE_URI__);
@@ -69,11 +75,16 @@ class PayPalUSA extends PaymentModule
 		Configuration::updateValue('PAYPAL_USA_EXP_CHK_SHOPPING_CART', true);
 		Configuration::updateValue('PAYPAL_USA_MANAGER_PARTNER', 'PayPal');
 
+		/* 2013-11-8 Configuration of PayPal BillMeLater */
+		Configuration::updateValue('PAYPAL_USA_BML_CHK_SHOPPING_CART', true);
+		Configuration::updateValue('PAYPAL_USA_PAYMENT_BML', false);
+
 		/* Configuration of the Payment options */
 		Configuration::updateValue('PAYPAL_USA_PAYMENT_STANDARD', true);
 		Configuration::updateValue('PAYPAL_USA_PAYMENT_ADVANCED', false);
 		Configuration::updateValue('PAYPAL_USA_EXPRESS_CHECKOUT', false);
 		Configuration::updateValue('PAYPAL_USA_PAYFLOW_LINK', false);
+
 		// 2013-11-8 if there is no country specified, choose US, otherwise module will fail
 		if(	version_compare(_PS_VERSION_, '1.5', '<')){
 			Configuration::updateValue('PS_SHOP_COUNTRY','US');
@@ -131,7 +142,10 @@ class PayPalUSA extends PaymentModule
 			'PAYPAL_USA_API_SIGNATURE', 'PAYPAL_USA_EXP_CHK_PRODUCT', 'PAYPAL_USA_EXP_CHK_SHOPPING_CART', 'PAYPAL_USA_EXP_CHK_BORDER_COLOR',
 			'PAYPAL_USA_MANAGER_USER', 'PAYPAL_USA_MANAGER_LOGIN', 'PAYPAL_USA_MANAGER_PASSWORD', 'PAYPAL_USA_MANAGER_PARTNER',
 			'PAYPAL_USA_PAYMENT_STANDARD', 'PAYPAL_USA_PAYMENT_ADVANCED', 'PAYPAL_USA_EXPRESS_CHECKOUT', 'PAYPAL_USA_PAYFLOW_LINK',
-			'PAYPAL_USA_SANDBOX_ADVANCED');
+			'PAYPAL_USA_SANDBOX_ADVANCED',
+			//2013-11-8 add bml configuration
+			'PAYPAL_USA_BML_CHK_SHOPPING_CART','PAYPAL_USA_BML_CHK_PRODUCT', 'PAYPAL_USA_PAYMENT_BML'
+			);
 
 		$result = true;
 		foreach ($keys_to_uninstall as $key_to_uninstall)
@@ -171,24 +185,15 @@ class PayPalUSA extends PaymentModule
 		elseif (Tools::isSubmit('SubmitAdvancedSettings'))
 			$this->_saveSettingsAdvanced();
 
+
 		/* If PayPal Payments Advanced has been enabled, the Shop country has to be USA */
 		if (Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') && Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code != 'US')
 			$this->context->smarty->assign('paypal_usa_advanced_only_us', true);
 
 		/* If PayPal Payments Advanced has been enabled, PayPal's Manager credentials must be filled */
-		if ((Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') || Configuration::get('PAYPAL_USA_PAYFLOW_LINK'))&& (Configuration::get('PAYPAL_USA_MANAGER_USER') == '' ||
+		if (Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') && (Configuration::get('PAYPAL_USA_MANAGER_USER') == '' ||
 				Configuration::get('PAYPAL_USA_MANAGER_PASSWORD') == '' || Configuration::get('PAYPAL_USA_MANAGER_PARTNER') == ''))
 			$this->_error[] = $this->l('In order to use PayPal Payments Advanced, please provide your PayPal Manager credentials.');
-
-		/* If PayPal Express Checkout has been enabled, PayPal's API credentials must be filled */
-		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') && (Configuration::get('PAYPAL_USA_API_USERNAME') == '' ||
-				Configuration::get('PAYPAL_USA_API_PASSWORD') == '' || Configuration::get('PAYPAL_USA_API_SIGNATURE') == ''))
-			$this->_error[] = $this->l('In order to use PayPal ExpessCheckOut, please provide your PayPal API credentials.');
-		
-		/* If PayPal Standard has been enabled, PayPal's API credentials should be filled to use the refund feature */
-		if (Configuration::get('PAYPAL_USA_PAYMENT_STANDARD') && (Configuration::get('PAYPAL_USA_API_USERNAME') == '' ||
-				Configuration::get('PAYPAL_USA_API_PASSWORD') == '' || Configuration::get('PAYPAL_USA_API_SIGNATURE') == ''))
-			$this->_warning[] = $this->l('In order to use PayPal refund feature with PayPal Standard, please provide your PayPal API credentials.');
 
 		// 2013-11-8 add 1.4 token support
 		if(method_exists('Tools','getAdminTokenLite')){
@@ -198,24 +203,25 @@ class PayPalUSA extends PaymentModule
 			$employee_id = (int)$this->context->cookie->id_employee;
 			$token = 'AdminModules'.$tabid.$employee_id;
 			$token = Tools::getAdminToken($token);
-		}
+		}		
+
+
+
 		$this->context->smarty->assign(array(
 			'paypal_usa_tracking' => 'http://www.prestashop.com/modules/paypalusa.png?url_site='.Tools::safeOutput($_SERVER['SERVER_NAME']).'&id_lang='.(int)$this->context->cookie->id_lang,
-			'paypal_usa_form_link' => './index.php?tab=AdminModules&configure=paypalusa&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=paypalusa',
+			'paypal_usa_form_link' => './index.php?tab=AdminModules&configure=paypalusa&token='.$token.'&tab_module='.$this->tab.'&module_name=paypalusa',
 			'paypal_usa_ssl' => Configuration::get('PS_SSL_ENABLED'),
 			'paypal_usa_validation' => (empty($this->_validation) ? false : $this->_validation),
 			'paypal_usa_error' => (empty($this->_error) ? false : $this->_error),
-			'paypal_usa_warning' => (empty($this->_warning) ? false : $this->_warning),
 			'paypal_usa_configuration' => Configuration::getMultiple(array('PAYPAL_USA_SANDBOX', 'PAYPAL_USA_PAYMENT_STANDARD', 'PAYPAL_USA_PAYMENT_ADVANCED',
 				'PAYPAL_USA_EXPRESS_CHECKOUT', 'PAYPAL_USA_PAYFLOW_LINK', 'PAYPAL_USA_ACCOUNT', 'PAYPAL_USA_API_USERNAME',
 				'PAYPAL_USA_API_PASSWORD', 'PAYPAL_USA_API_SIGNATURE', 'PAYPAL_USA_EXP_CHK_PRODUCT', 'PAYPAL_USA_EXP_CHK_SHOPPING_CART',
 				'PAYPAL_USA_EXP_CHK_BORDER_COLOR', 'PAYPAL_USA_MANAGER_USER', 'PAYPAL_USA_MANAGER_LOGIN', 'PAYPAL_USA_MANAGER_PASSWORD',
-				'PAYPAL_USA_MANAGER_PARTNER', 'PAYPAL_USA_SANDBOX_ADVANCED')),
+				'PAYPAL_USA_MANAGER_PARTNER', 'PAYPAL_USA_SANDBOX_ADVANCED',
+				// 2013-11-8 add bml configuration
+				'PAYPAL_USA_BML_CHK_PRODUCT', 'PAYPAL_USA_BML_CHK_SHOPPING_CART','PAYPAL_USA_PAYMENT_BML','PAYPAL_USA_BML_CHK_BORDER_COLOR')),
 			'paypal_usa_merchant_country_is_usa' => (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'US'),
-			'paypal_usa_merchant_country_is_mx' => (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'),
-			'paypal_usa_ps_14' => (version_compare(_PS_VERSION_, '1.5', '<') ? 1 : 0),
-			'paypal_usa_b1width' => (version_compare(_PS_VERSION_, '1.5', '>') ? '350' : '300'),
-			'paypal_usa_js_files' => stripcslashes('"'._PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js","'.$this->_path.'js/colorpicker.js","'.$this->_path.'js/jquery.lightbox_me.js","'.$this->_path.'js/paypalusa.js'.'"')
+			'paypal_usa_merchant_country_is_mx' => (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX')
 		));
 
 		return $this->display(__FILE__, 'views/templates/admin/configuration'.((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? '-mx' : '').'.tpl');
@@ -227,7 +233,7 @@ class PayPalUSA extends PaymentModule
 
 	private function _saveSettingsProducts()
 	{
-		if (!isset($_POST['paypal_usa_products']) && !isset($_POST['paypal_usa_express_checkout']))
+		if (!isset($_POST['paypal_usa_products']) && !isset($_POST['paypal_usa_express_checkout']) && !isset($_POST['paypal_usa_billmelater']))
 			$this->_error[] = $this->l('You must choose at least one PayPal product to enable.');
 		else
 		{
@@ -238,6 +244,11 @@ class PayPalUSA extends PaymentModule
 
 			if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') && !Configuration::get('PAYPAL_USA_EXP_CHK_PRODUCT') && !Configuration::get('PAYPAL_USA_EXP_CHK_SHOPPING_CART'))
 				Configuration::updateValue('PAYPAL_USA_EXP_CHK_PRODUCT', 1);
+
+			// 2013-11-8 add billmelater 
+			Configuration::updateValue('PAYPAL_USA_PAYMENT_BML', isset($_POST['paypal_usa_billmelater']));
+			if (Configuration::get('PAYPAL_USA_PAYMENT_BML') && !Configuration::get('PAYPAL_USA_BML_CHK_PRODUCT') && !Configuration::get('PAYPAL_USA_BML_CHK_SHOPPING_CART'))
+			Configuration::updateValue('PAYPAL_USA_EXP_CHK_PRODUCT', 1);
 
 			$this->_validation[] = $this->l('Congratulations, your configuration was updated successfully');
 		}
@@ -251,21 +262,18 @@ class PayPalUSA extends PaymentModule
 	{
 		if (!isset($_POST['paypal_usa_account']) || !$_POST['paypal_usa_account'])
 			$this->_error[] = $this->l('Your Paypal Business Account is required.');
-		
+		if (!isset($_POST['paypal_usa_api_username']) || !$_POST['paypal_usa_api_username'])
+			$this->_error[] = $this->l('Your Paypal API Username is required.');
+		if (!isset($_POST['paypal_usa_api_password']) || !$_POST['paypal_usa_api_password'])
+			$this->_error[] = $this->l('Your Paypal API Password is required.');
+		if (!isset($_POST['paypal_usa_api_signature']) || !$_POST['paypal_usa_api_signature'])
+			$this->_error[] = $this->l('Your Paypal API Signature is required.');
+
 		Configuration::updateValue('PAYPAL_USA_ACCOUNT', pSQL(Tools::getValue('paypal_usa_account')));
-		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT'))
-		{	
-			if (!isset($_POST['paypal_usa_api_username']) || !$_POST['paypal_usa_api_username'])
-				$this->_error[] = $this->l('Your Paypal API Username is required.');
-			if (!isset($_POST['paypal_usa_api_password']) || !$_POST['paypal_usa_api_password'])
-				$this->_error[] = $this->l('Your Paypal API Password is required.');
-			if (!isset($_POST['paypal_usa_api_signature']) || !$_POST['paypal_usa_api_signature'])
-				$this->_error[] = $this->l('Your Paypal API Signature is required.');
-		}
-			Configuration::updateValue('PAYPAL_USA_API_USERNAME', pSQL(Tools::getValue('paypal_usa_api_username')));
-			Configuration::updateValue('PAYPAL_USA_API_PASSWORD', pSQL(Tools::getValue('paypal_usa_api_password')));
-			Configuration::updateValue('PAYPAL_USA_API_SIGNATURE', pSQL(Tools::getValue('paypal_usa_api_signature')));
-			Configuration::updateValue('PAYPAL_USA_SANDBOX', (bool)Tools::getValue('paypal_usa_sandbox'));
+		Configuration::updateValue('PAYPAL_USA_API_USERNAME', pSQL(Tools::getValue('paypal_usa_api_username')));
+		Configuration::updateValue('PAYPAL_USA_API_PASSWORD', pSQL(Tools::getValue('paypal_usa_api_password')));
+		Configuration::updateValue('PAYPAL_USA_API_SIGNATURE', pSQL(Tools::getValue('paypal_usa_api_signature')));
+		Configuration::updateValue('PAYPAL_USA_SANDBOX', (bool)Tools::getValue('paypal_usa_sandbox'));
 
 		/* PayPal Express Checkout options */
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') && !isset($_POST['paypal_usa_checkbox_shopping_cart']) && !isset($_POST['paypal_usa_checkbox_product']))
@@ -275,6 +283,17 @@ class PayPalUSA extends PaymentModule
 			Configuration::updateValue('PAYPAL_USA_EXP_CHK_PRODUCT', isset($_POST['paypal_usa_checkbox_product']));
 			Configuration::updateValue('PAYPAL_USA_EXP_CHK_SHOPPING_CART', isset($_POST['paypal_usa_checkbox_shopping_cart']));
 			Configuration::updateValue('PAYPAL_USA_EXP_CHK_BORDER_COLOR', pSQL(Tools::getValue('paypal_usa_checkbox_border_color')));
+		}
+
+
+		//2013-11-8 PayPal Bill Me Later Checkout options 
+		if (Configuration::get('PAYPAL_USA_PAYMENT_BML') && !isset($_POST['paypal_usa_billmelater_checkbox_shopping_cart']) && !isset($_POST['paypal_usa_billmelater_checkbox_product']))
+			$this->_error[] = $this->l('As PayPal Bill Me Later is enabled, please select where it should be displayed.');
+		else
+		{
+			Configuration::updateValue('PAYPAL_USA_BML_CHK_PRODUCT', isset($_POST['paypal_usa_billmelater_checkbox_product']));
+			Configuration::updateValue('PAYPAL_USA_BML_CHK_SHOPPING_CART', isset($_POST['paypal_usa_billmelater_checkbox_shopping_cart']));
+			Configuration::updateValue('PAYPAL_USA_BML_CHK_BORDER_COLOR', pSQL(Tools::getValue('paypal_usa_billmelater_checkbox_border_color')));
 		}
 
 		/* Automated check to verify the API credentials configured by the merchant */
@@ -337,7 +356,10 @@ class PayPalUSA extends PaymentModule
 	{
 		$html = '';
 		$paypal_usa_express_checkout_no_token = (!isset($this->context->cookie->paypal_express_checkout_token) || empty($this->context->cookie->paypal_express_checkout_token));
-		
+
+		// 2013-11-8 add billmelater hook token
+		$paypal_usa_bml_checkout_no_token = (!isset($this->context->cookie->paypal_bml_checkout_token) || empty($this->context->cookie->paypal_bml_checkout_token));
+
 		/* 2013-11-8 modify to adapt 1.4, PayPal Express Checkout */
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT'))
 		{
@@ -345,16 +367,27 @@ class PayPalUSA extends PaymentModule
 			$this->context->smarty->assign(array('paypal_usa_express_checkout_hook_payment' => true,
 				'paypal_usa_merchant_country_is_mx' => (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'),
 				'paypal_usa_express_checkout_no_token' => $paypal_usa_express_checkout_no_token,
-				'paypal_usa_action_payment' => $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_payment' => 1)), 
-				'paypal_usa_action' => $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1))));
+				));
+			$this->context->smarty->assign(array('paypal_usa_action' => $this->context->link->getModuleLink('paypalusa', 'expresscheckout', ($paypal_usa_express_checkout_no_token) ? array('pp_exp_initial' => 1) : array('pp_exp_payment' => 1))));
+
 			$html .= $this->display(__FILE__, 'views/templates/hook/express-checkout.tpl');
 		}
-		else
+
+		// 2013-11-8 add PayPal Bill Me Later 
+		if (Configuration::get('PAYPAL_USA_PAYMENT_BML'))
 		{
-			/*If paypal express checkout not active clean up previous */
-			unset($this->context->cookie->paypal_express_checkout_token,$this->context->cookie->paypal_express_checkout_payer_id);
-			$paypal_usa_express_checkout_no_token = true;
-		}	
+			/* Display the PayPal Express Checkout button to confirm the payment */
+			$this->context->smarty->assign(array('paypal_usa_billmelater_checkout_hook_payment' => true,
+				'paypal_usa_merchant_country_is_mx' => (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'),
+
+				'paypal_usa_bml_checkout_no_token' => $paypal_usa_bml_checkout_no_token,
+				));
+
+			$this->context->smarty->assign(array('paypal_usa_action' => $this->context->link->getModuleLink('paypalusa', 'billmelater', ($paypal_usa_bml_checkout_no_token) ? array('pp_bml_initial' => 1) : array('pp_bml_payment' => 1))));
+
+			$html .= $this->display(__FILE__, 'views/templates/hook/billmelater-checkout.tpl');
+
+		}
 
 		/* PayPal Payments Standard */
 
@@ -372,12 +405,8 @@ class PayPalUSA extends PaymentModule
 				'paypal_usa_billing_address' => $billing_address,
 				'paypal_usa_total_tax' => (float)$this->context->cart->getOrderTotal(true) - (float)$this->context->cart->getOrderTotal(false),
 				'paypal_usa_cancel_url' => $this->context->link->getPageLink('order.php',''),
-				'paypal_usa_notify_url' => $this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1), false), 
-				'paypal_usa_return_url' => /*26/12/2013 fix for Backward compatibilies on confirmation page*/
-					((int)version_compare(_PS_VERSION_, '1.4', '>')) ?
-					(Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).
-					__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&key='.$this->context->customer->secure_key : 
-					$this->context->link->getPageLink('order-confirmation.php', null, null, array('id_cart' => (int)$this->context->cart->id, 'key' => $this->context->customer->secure_key, 'id_module' => $this->id)),
+				'paypal_usa_notify_url' => $this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1)), 
+				'paypal_usa_return_url' => $this->context->link->getPageLink('order-confirmation.php',''),
 
 				));
 
@@ -389,11 +418,9 @@ class PayPalUSA extends PaymentModule
 		{
 			/* Create a unique token and a PayPal payment request to display an <iframe> loading the marchant Hosted Checkout page (see PayPal Manager website) */
 			$token = Tools::passwdGen(36);
-			
 			$amount = $this->context->cart->getOrderTotal(true);
 			$taxes = $amount - $this->context->cart->getOrderTotal(false);
 			$i = 0;
-			$nvp_request = '';
 			if ($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS) == 0)
 			{
 				foreach ($this->context->cart->getProducts() as $product)
@@ -408,13 +435,12 @@ class PayPalUSA extends PaymentModule
 				$nvp_request .= '&FREIGHTAMT['.strlen(urlencode((float)$this->context->cart->getTotalShippingCost())).']='.urlencode((float)$this->context->cart->getTotalShippingCost()).
 						'&TAXAMT['.strlen(urlencode((float)$taxes)).']='.urlencode((float)$taxes);
 			}
-			
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
 					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation').
 					'&CANCELURL='.$this->context->link->getPageLink('order.php','').
 					'&RETURNURL['.strlen($this->context->link->getModuleLink('paypalusa', 'validation')).']='.$this->context->link->getModuleLink('paypalusa', 'validation'), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
-			if ((isset($result['RESULT']) && $result['RESULT']== 0) && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && Tools::strtoupper($result['RESPMSG']) == 'APPROVED')
+			if ($result['RESULT'] == 0 && !empty($result['SECURETOKEN']) && $result['SECURETOKENID'] == $token && Tools::strtoupper($result['RESPMSG']) == 'APPROVED')
 			{
 				/* Store the PayPal response token in the customer cookie for later use (payment confirmation) */
 				Context::getContext()->cookie->paypal_advanced_token = $result['SECURETOKEN'];
@@ -435,15 +461,22 @@ class PayPalUSA extends PaymentModule
 
 	public function hookBackOfficeHeader()
 	{
+
 		// 2013-11-8 Add 1.4 js and css support 
 		if(	version_compare(_PS_VERSION_, '1.5', '<')){
 			$css_files = array($this->_path.'css/paypal-usa.css', $this->_path.'css/colorpicker.css');
+			$js_files = array(_PS_JS_DIR_.'jquery/jquery-ui-1.8.10.custom.min.js', $this->_path.'js/colorpicker.js', $this->_path.	'js/jquery.lightbox_me.js', $this->_path.'js/paypalusa.js');
 
 			foreach($css_files as $cssfile){
 				echo 	'<link type="text/css" rel="stylesheet" href="'.$cssfile.'" />';
 			}
 
+			foreach($js_files as $jsfile){
+				echo	'<script type="text/javascript" src="'.$jsfile.'"></script>';
+			}
 		}
+
+
 		/* Continue only if we are on the order's details page (Back-office) */
 		if (!isset($_GET['vieworder']) || !isset($_GET['id_order']))
 			return;
@@ -458,7 +491,7 @@ class PayPalUSA extends PaymentModule
 				/* Check how much has been refunded already on this order */
 				$paypal_usa_refunded = Db::getInstance()->getValue('SELECT SUM(amount) FROM '._DB_PREFIX_.'paypal_usa_transaction WHERE id_order = '.(int)$_GET['id_order'].' AND type = \'refund\' AND id_shop = '.(int)$this->context->shop->id);
 				if ($_POST['refund_amount'] <= number_format($paypal_usa_transaction_details['amount'] - $paypal_usa_refunded, 2, '.', ''))
-					$this->_processRefund(Tools::getValue('id_transaction'), (float)Tools::getValue('refund_amount'), $paypal_usa_transaction_details);
+					$this->_processRefund((float)Tools::getValue('id_transaction'), (float)Tools::getValue('refund_amount'), $paypal_usa_transaction_details);
 				else
 				{
 					$this->context->smarty->assign('paypal_usa_refund', 0);
@@ -567,8 +600,8 @@ class PayPalUSA extends PaymentModule
 			SELECT amount, date_add, currency
 			FROM '._DB_PREFIX_.'paypal_usa_transaction
 			WHERE id_order = '.(int)$_GET['id_order'].' AND type = \'refund\' AND id_shop = '.(int)$this->context->shop->id.' ORDER BY date_add DESC');
-
-			$paypal_products = array('express' => 'PayPal Express Checkout', 'standard' => 'PayPal Standard', 'advanced' => 'PayPal Payments Advanced', 'payflow_pro' => 'PayPal PayFlow Pro');
+			// 2013-11-8 add bill me later
+			$paypal_products = array('express' => 'PayPal Express Checkout', 'standard' => 'PayPal Standard', 'advanced' => 'PayPal Payments Advanced', 'payflow_pro' => 'PayPal PayFlow Pro', 'billmelater'=>'Bill Me Later');
 			$paypal_usa_transaction_details['source'] = $paypal_products[$paypal_usa_transaction_details['source']];
 
 			$this->context->smarty->assign(array(
@@ -621,10 +654,23 @@ class PayPalUSA extends PaymentModule
 	{
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1 && Configuration::get('PAYPAL_USA_EXP_CHK_SHOPPING_CART'))
 		{
-			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1)));
+
 			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
 
+			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1)));
+
 			return $this->display(__FILE__, 'views/templates/hook/express-checkout.tpl');
+		}
+
+		// 2013-11-8 add bill me later support
+		if (Configuration::get('PAYPAL_USA_PAYMENT_BML') == 1 && Configuration::get('PAYPAL_USA_EXP_CHK_SHOPPING_CART'))
+		{
+
+			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'billmelater', array('pp_bml_initial' => 1)));
+
+			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
+
+			return $this->display(__FILE__, 'views/templates/hook/billmelater.tpl');
 		}
 	}
 
@@ -637,16 +683,32 @@ class PayPalUSA extends PaymentModule
 
 	public function hookProductFooter($params)
 	{
+		// 2013-11-8 add bill me later
+		$content = '';
+
 		$product_quantity = Product::getQuantity((int)Tools::getValue('id_product'));
 		if ($product_quantity == 0)
 			return;
 		if (Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1 && Configuration::get('PAYPAL_USA_EXP_CHK_PRODUCT'))
 		{
+
 			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_initial' => 1)));
+
 			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
 
-			return $this->display(__FILE__, 'views/templates/hooks/express-checkout.tpl');
+			$content .=  $this->display(__FILE__, 'views/templates/hook/express-checkout.tpl');
 		}
+
+		if (Configuration::get('PAYPAL_USA_PAYMENT_BML') == 1 && Configuration::get('PAYPAL_USA_BML_CHK_PRODUCT'))
+		{
+			$this->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'billmelater', array('pp_bml_initial' => 1)));
+
+			$this->smarty->assign('paypal_usa_merchant_country_is_mx', (Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX'));
+
+			$content .= $this->display(__FILE__, 'views/templates/hook/billmelater-checkout.tpl');
+		}
+
+		return $content;
 	}
 
 	/* PayPal USA Order Transaction ID update

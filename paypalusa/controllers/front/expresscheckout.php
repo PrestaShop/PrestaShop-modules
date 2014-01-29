@@ -2,7 +2,7 @@
 
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
+ *  @copyright  2007-2013 PrestaShop SA
  *
  *  International Registered Trademark & Property of PrestaShop SA
  *
@@ -86,33 +86,32 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$totalToPayWithoutTaxes = (float)$this->context->cart->getOrderTotal(false);
 		$total_price = 0;
 
-		$total = 0;
-
 		foreach ($this->context->cart->getProducts() as $product)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($product['name']).
 					'&L_PAYMENTREQUEST_0_NUMBER'.$i.'='.urlencode((int)$product['id_product']).
 					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($product['description_short'], 80))).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price_wt']).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price']).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'='.urlencode((int)$product['cart_quantity']);
-					
-			$total += ((float)$product['price_wt'] * (int)$product['cart_quantity']);
-			
+			$total_product += (float)$product['price'] * (int)$product['cart_quantity'];
 			$i++;
 		}
 
-		if ($cart_discount = $this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS))
+		$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
+
+		if (($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($cart_discount,2)).
+					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($cart_discount['description'], 80))).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes)),2)).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
-		
-		$shipping = (float)$this->context->cart->getTotalShippingCost();
-		
-		$nvp_request .= '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping).
-				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$total;
+		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
+				'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$this->context->cart->getTotalShippingCost()).
+				'&L_PAYMENTREQUEST_0_QTY'.$i.'=1'.
+				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$totalToPayWithoutTaxes.
+				'&PAYMENTREQUEST_0_TAXAMT='.(float)($totalToPay - $totalToPayWithoutTaxes);
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
 		$currency = new Currency((int)$this->context->cart->id_currency);
@@ -187,6 +186,11 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			$address->postcode = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
 			$address->save();
 
+			/* Update the cart billing and delivery addresses */
+			$this->context->cart->id_address_delivery = (int)$address->id;
+			$this->context->cart->id_address_invoice = (int)$address->id;
+			$this->context->cart->update();
+
 			/* Update the customer cookie to simulate a logged-in session */
 			$this->context->cookie->id_customer = (int)$customer->id;
 			$this->context->cookie->customer_lastname = $customer->lastname;
@@ -195,13 +199,7 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			$this->context->cookie->email = $customer->email;
 			$this->context->cookie->is_guest = $customer->isGuest();
 			$this->context->cookie->logged = 1;
-			
-			/* Update the cart billing and delivery addresses */
-			$this->context->cart->id_address_delivery = (int)$address->id;
-			$this->context->cart->id_address_invoice = (int)$address->id;
-			$this->context->cart->secure_key = $customer->secure_key;
-			$this->context->cart->update();
-			
+
 			/* Save the Payer ID and Checkout token for later use (during the payment step/page) */
 			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
 			$this->context->cookie->paypal_express_checkout_payer_id = $result['PAYERID'];
@@ -238,6 +236,7 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			/* Confirm the payment to PayPal */
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_express_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_express_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
+
 			if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 			{
 				/* Prepare the order status, in accordance with the response from PayPal */
@@ -275,7 +274,6 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 
 				/* Creating the order */
 				$customer = new Customer((int)$this->context->cart->id_customer);
-
 				if ($this->paypal_usa->validateOrder((int)$this->context->cart->id, (int)$order_status, (float)$result['PAYMENTINFO_0_AMT'], $this->paypal_usa->displayName, $message, array(), null, false, $customer->secure_key))
 				{
 					/* Store transaction ID and details */
@@ -288,8 +286,6 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 					/* Reset the PayPal's token so the customer will be able to place a new order in the future */
 					unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
 				}
-				else
-					throw new Exception();
 
 				/* Redirect the customer to the Order confirmation page */
 				if (version_compare(_PS_VERSION_, '1.4', '<'))
@@ -324,4 +320,5 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			}
 		}
 	}
+
 }

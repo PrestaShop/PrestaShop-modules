@@ -1,64 +1,58 @@
 <?php
-
 /*
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
- *
- *  International Registered Trademark & Property of PrestaShop SA
- *
- * Description: PayPal "Express Checkout" controller (Product page, Shopping cart content page, Payment page/step)
- *
- * PayPal Express Checkout can be either offered on the Product pages, the Shopping cart content page depending on your preferences (Back-office addon's configuration)
- * It will also always be offered on the payment page/step to confirm the payment
- *
- * Step 1: The customer is clicking on the PayPal Express Checkout button from a product page or the shopping cart content page
- * Step 2: The customer is redirected to PayPal and selecting a funding source (PayPal account, credit card, etc.)
- * Step 3: PayPal redirects the customer to your store ("Shipping" checkout process page/step)
- * Step 4: PayPal is also sending you the customer details (delivery address, e-mail address, etc.)
- * If we do not have these info yet, we update your store database and create the related customer
- * Step 5: The customer is selected his/her shipping preference and is redirected to the payment page/step (still on your store)
- * Step 6: The customer is clicking on the second PayPal Express Checkout button to confirm his/her payment
- * Step 7: The transaction success or failure is sent to you by PayPal at the following URL: http://www.mystore.com/modules/paypalusa/controllers/front/expresscheckout.php?pp_exp_payment=1
- * Step 8: The customer is redirected to the Order confirmation page
- */
-
-include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../header.php');
-
-
-class paypal_usa_expresscheckout{
-
+* 2007-2013 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2013 PrestaShop SA
+*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+class PayPalusaBillMeLaterModuleFrontController extends ModuleFrontController
+{
 	/**
 	 * @see FrontController::initContent()
 	 */
 	public function initContent()
 	{
-
-		/* Backward compatibility */
-		require(_PS_MODULE_DIR_.'paypalusa/backward_compatibility/backward.php');
-		$this->context->smarty->assign('base_dir', __PS_BASE_URI__);
-
+		//PAYPAL_USA_PAYMENT_BML
 		$this->paypal_usa = new PayPalUSA();
-		if ($this->paypal_usa->active && Configuration::get('PAYPAL_USA_EXPRESS_CHECKOUT') == 1)
+		if ($this->paypal_usa->active && Configuration::get('PAYPAL_USA_PAYMENT_BML') == 1)
 		{
-			$pp_exp = 1 * (int)Tools::getValue('pp_exp_initial') + 2 * (int)Tools::getValue('pp_exp_checkout') + 3 * (int)Tools::getValue('pp_exp_payment');
+			$pp_exp = 1 * (int)Tools::getValue('pp_bml_initial') + 2 * (int)Tools::getValue('pp_bml_checkout') + 3 * (int)Tools::getValue('pp_bml_payment');
+			
 
 			switch ($pp_exp)
 			{
-				/* Step 1 - Called the 1st time customer is clicking on the PayPal Express Checkout button */
+				/* Step 1 - Called the 1st time customer is clicking on the PayPal BillMeLater Checkout button */
 				case 1:
-					$this->_expressCheckoutInitial();
+					$this->_bmlCheckoutInitial();
 					break;
 				/* Step 2 - Called by PayPal when the customer is redirected back from PayPal to the store (to retrieve the customer address and details) */
 				case 2:
-					$this->_expressCheckout();
+					$this->_bmlCheckout();
 					break;
 				/* Step 3 - Called when the customer is placing his/her order / making his payment */
 				case 3:
-					$this->_expressCheckoutPayment();
+					$this->_bmlCheckoutPayment();
 					break;
 				default :
-					$this->_expressCheckoutInitial();
+					$this->_bmlCheckoutInitial();
 			}
 		}
 	}
@@ -68,11 +62,12 @@ class paypal_usa_expresscheckout{
 	 * If the customer was coming from a product page, it will also add the product to his/her shopping cart.
 	 * Eventually it will redirect the customer to PayPal (to log-in or to fill his/her credit card info)
 	 */
-	private function _expressCheckoutInitial()
+	private function _bmlCheckoutInitial()
 	{
+		
 		/* If the customer has no cart yet, we need to create an empty one */
 		if (!$this->context->cart->id)
-		{
+		{	
 			if ($this->context->cookie->id_guest)
 			{
 				$guest = new Guest((int)$this->context->cookie->id_guest);
@@ -82,16 +77,16 @@ class paypal_usa_expresscheckout{
 			if ($this->context->cart->id)
 				$this->context->cookie->id_cart = (int)$this->context->cart->id;
 		}
+
 		/* If the customer is coming from a product page, we need to add his/her product to the cart */
-		if (Tools::getValue('paypal_express_checkout_id_product') != '')
-			$this->context->cart->updateQty((int)Tools::getValue('paypal_express_checkout_quantity'), (int)Tools::getValue('paypal_express_checkout_id_product'), (int)Tools::getValue('paypal_express_checkout_id_product_attribute'));
+		if (Tools::getValue('paypal_billmelater_checkout_id_product') != '')
+			$this->context->cart->updateQty((int)Tools::getValue('paypal_billmelater_checkout_quantity'), (int)Tools::getValue('paypal_billmelater_checkout_id_product'), (int)Tools::getValue('paypal_billmelater_checkout_id_product_attribute'));
 
 		$nvp_request = '';
 		$i = 0;
 		$totalToPay = (float)$this->context->cart->getOrderTotal(true);
 		$totalToPayWithoutTaxes = (float)$this->context->cart->getOrderTotal(false);
 		$total_price = 0;
-		// 2013-11-8 add 1.4 support
 		$total_product = 0;
 		foreach ($this->context->cart->getProducts() as $product)
 		{
@@ -103,21 +98,23 @@ class paypal_usa_expresscheckout{
 			$total_product += (float)$product['price'] * (int)$product['cart_quantity'];
 			$i++;
 		}
-		// 2013-11-8 add 1.4 support
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
-		}else{
-			$cart_discount = 0 ;
-		}
-		// 2013-11-8 add 1.4 support
+		
+		$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
+		
+
+		
 		$shipping_cost = 0;
+		
 
-		if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-			$shipping_cost = $this->context->cart->getTotalShippingCost();
-		}else{
-			$shipping_cost = $this->context->cart->getOrderShippingCost();
-		}
+		$shipping_cost = $this->context->cart->getTotalShippingCost();
+		
+		$express_url = '';
+		$order_url = '';
 
+		$express_url = $this->context->link->getModuleLink('paypalusa', 'billmelater', array('pp_bml_checkout' => 1,));
+		$order_url = $this->context->link->getPageLink('order.php');
+	
+		
 		if (($totalToPay - ($total_product + $shipping_cost+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
@@ -133,12 +130,20 @@ class paypal_usa_expresscheckout{
 				'&PAYMENTREQUEST_0_TAXAMT='.(float)($totalToPay - $totalToPayWithoutTaxes);
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
-		$currency = new Currency((int)$this->context->cart->id_currency);
+		$currency = new Currency((int)$this->context->cart->id_currency);		
+		$nvp_request .= '&UserSelectedFundingSource=BML';
+		$nvp_request .= '&SOLUTIONTYPE=SOLE';
 
-		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.Tools::substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,))).'&CANCELURL='.urlencode($this->context->link->getPageLink('order.php')).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
+		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.Tools::substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($express_url).'&CANCELURL='.urlencode($order_url).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
+		
+		
+		
+		
+		
 		if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 		{
-			Tools::redirect('https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']),'');
+		//_xclick
+			Tools::redirect('https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
 			exit;
 		}
 		else
@@ -147,11 +152,9 @@ class paypal_usa_expresscheckout{
 				$result[$key] = urldecode($val);
 
 			$this->context->smarty->assign('paypal_usa_errors', $result);
-			if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-				$this->setTemplate('express-checkout-messages.tpl');
-			}else{
-				echo $this->context->smarty->fetch( dirname(__FILE__).'/views/templates/front/express-checkout-messages.tpl');
-			}
+	
+			$this->setTemplate('express-checkout-messages.tpl');
+			
 		}
 	}
 
@@ -161,12 +164,23 @@ class paypal_usa_expresscheckout{
 	 * If no customer is found, we create a new one and we simulate a logged customer session.
 	 * Eventually it will redirect the customer to the "Shipping" step/page of the order process
 	 */
-	private function _expressCheckout()
+	private function _bmlCheckout()
 	{
+	
+	
 
+		$express_url = '';
+		$order_url = '';
 
+		$express_url = $this->context->link->getModuleLink('paypalusa', 'billmelater', array('pp_exp_checkout' => 1,));
+		$order_url = $this->context->link->getPageLink('order.php', false, null, array('step' => '3'));
+		
+
+	
 		/* We need to double-check that the token provided by PayPal is the one expected */
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
+	
+
 		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
 			/* Checks if a customer already exists for this e-mail address */
@@ -186,7 +200,7 @@ class paypal_usa_expresscheckout{
 				$customer->passwd = Tools::encrypt(Tools::passwdGen());
 				$customer->add();
 			}
-
+		
 			/* Look for an existing PayPal address for this customer */
 			$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
 			foreach ($addresses as $address)
@@ -205,7 +219,7 @@ class paypal_usa_expresscheckout{
 			$address->lastname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
 			$address->firstname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname));
 			$address->address1 = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
-			if ($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] != '')
+			if (!empty($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] ))
 				$address->address2 = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 			$address->city = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
 			$address->postcode = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
@@ -215,27 +229,26 @@ class paypal_usa_expresscheckout{
 			$this->context->cart->id_address_delivery = (int)$address->id;
 			$this->context->cart->id_address_invoice = (int)$address->id;
 			$this->context->cart->update();
-
+	
 			/* Update the customer cookie to simulate a logged-in session */
 			$this->context->cookie->id_customer = (int)$customer->id;
 			$this->context->cookie->customer_lastname = $customer->lastname;
 			$this->context->cookie->customer_firstname = $customer->firstname;
-			$this->context->cookie->passwd = $customer->passwd;
+		
+			$this->context->cookie->passwd = $customer->passwd; 
 			$this->context->cookie->email = $customer->email;
+			
 			$this->context->cookie->is_guest = $customer->isGuest();
 			$this->context->cookie->logged = 1;
 
 			/* Save the Payer ID and Checkout token for later use (during the payment step/page) */
-			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
-			$this->context->cookie->paypal_express_checkout_payer_id = $result['PAYERID'];
+			$this->context->cookie->paypal_bml_checkout_token = $result['TOKEN'];
+			$this->context->cookie->paypal_bml_checkout_payer_id = $result['PAYERID'];
 
-			if (version_compare(_PS_VERSION_, '1.5', '<'))
-				Module::hookExec('authentication');
-			else
-				Hook::exec('authentication');
+			Module::hookExec('authentication');
 
 			/* Redirect the use to the "Shipping" step/page of the order process */
-			Tools::redirectLink($this->context->link->getPageLink('order.php'));
+			Tools::redirectLink($order_url);
 			exit;
 		}
 		else
@@ -243,11 +256,8 @@ class paypal_usa_expresscheckout{
 			foreach ($result as $key => $val)
 				$result[$key] = urldecode($val);
 
-			if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-				$this->setTemplate('express-checkout-messages.tpl');
-			}else{
-				echo $this->context->smarty->fetch( dirname(__FILE__).'/views/templates/front/express-checkout-messages.tpl');
-			}
+			$this->context->smarty->assign('paypal_usa_errors', $result);
+			$this->setTemplate('express-checkout-messages.tpl');		
 		}
 	}
 
@@ -256,15 +266,21 @@ class paypal_usa_expresscheckout{
 	 * this function is verifying the Payer ID and Checkout tokens and confirming the payment to PayPal
 	 * Eventually it will create the order and redirect the customer to the Order confirmatione page
 	 */
-	private function _expressCheckoutPayment()
-	{	
+	private function _bmlCheckoutPayment()
+	{
+		$express_url = '';
+		$order_url = '';
+	
+		$express_url = $this->context->link->getModuleLink('paypalusa', 'billmelater', array('pp_exp_initial' => 1,));
+		$order_url = $this->context->link->getPageLink('order.php', false, null, array('step' => '3'));
+		
 
 		/* Verifying the Payer ID and Checkout tokens (stored in the customer cookie during step 2) */
-		if (isset($this->context->cookie->paypal_express_checkout_token) && !empty($this->context->cookie->paypal_express_checkout_token))
+		if (isset($this->context->cookie->paypal_bml_checkout_token) && !empty($this->context->cookie->paypal_bml_checkout_token))
 		{
 			/* Confirm the payment to PayPal */
 			$currency = new Currency((int)$this->context->cart->id_currency);
-			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_express_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_express_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
+			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_bml_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_bml_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
 
 			if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 			{
@@ -277,8 +293,7 @@ class paypal_usa_expresscheckout{
 					$order_status = (int)Configuration::get('PS_OS_ERROR');
 
 				/* Prepare the transaction details that will appear in the Back-office on the order details page */
-				$message =
-						'Transaction ID: '.$result['PAYMENTINFO_0_TRANSACTIONID'].'
+				$message = 'Transaction ID: '.$result['PAYMENTINFO_0_TRANSACTIONID'].'
 				Transaction type: '.$result['PAYMENTINFO_0_TRANSACTIONTYPE'].'
 				Payment type: '.$result['PAYMENTINFO_0_PAYMENTTYPE'].'
 				Order time: '.$result['PAYMENTINFO_0_ORDERTIME'].'
@@ -300,11 +315,12 @@ class paypal_usa_expresscheckout{
 
 				if (isset($result['PAYMENTINFO_0_PENDINGREASON']) && !empty($result['PAYMENTINFO_0_PENDINGREASON']) && isset($pending_reasons[$result['PAYMENTINFO_0_PENDINGREASON']]))
 					$message .= "\n".'Pending reason: '.$pending_reasons[$result['PAYMENTINFO_0_PENDINGREASON']];
-
+	
 				/* Creating the order */
 				$customer = new Customer((int)$this->context->cart->id_customer);
+	
 				if ($this->paypal_usa->validateOrder((int)$this->context->cart->id, (int)$order_status, (float)$result['PAYMENTINFO_0_AMT'], $this->paypal_usa->displayName, $message, array(), null, false, false))
-				{
+				{			
 					/* Store transaction ID and details */
 					$this->paypal_usa->addTransactionId((int)$this->paypal_usa->currentOrder, $result['PAYMENTINFO_0_TRANSACTIONID']);
 					$this->paypal_usa->addTransaction('payment', array('source' => 'express', 'id_shop' => (int)$this->context->cart->id_shop, 'id_customer' => (int)$this->context->cart->id_customer, 'id_cart' => (int)$this->context->cart->id,
@@ -313,15 +329,13 @@ class paypal_usa_expresscheckout{
 						'fee' => $result['PAYMENTINFO_0_FEEAMT']));
 
 					/* Reset the PayPal's token so the customer will be able to place a new order in the future */
-					unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
+					unset($this->context->cookie->paypal_bml_checkout_token, $this->context->cookie->paypal_bml_checkout_payer_id);
 				}
 
 				/* Redirect the customer to the Order confirmation page */
-				if(	version_compare(_PS_VERSION_, '1.5', '<'))
-					Tools::redirect('order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key,'');
-				else
-					Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key,'');
-				exit;
+			
+				Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key);
+
 			}
 			else
 			{
@@ -338,26 +352,19 @@ class paypal_usa_expresscheckout{
 				 * Therefore, we are displaying a new PayPal Express Checkout button and a warning message to the customer
 				 * He/she will have to go back to PayPal to select another funding source or resolve the payment error
 				 */
-				if (isset($result['L_ERRORCODE0']) && (int)$result['L_ERRORCODE0'] == 10486)
-				{
-					unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
-					$this->context->smarty->assign('paypal_usa_action', $this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,)));
-				}
+				 
+				//*bugfix 2013-11-1 clear token if payment got error
+				unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
+				$this->context->smarty->assign('paypal_usa_action', $express_url);
 
 				$this->context->smarty->assign('paypal_usa_errors', $result);
 
-				if(	version_compare(_PS_VERSION_, '1.5', '>=')){
-					$this->setTemplate('express-checkout-messages.tpl');
-				}else{
-
-					echo $this->context->smarty->fetch( dirname(__FILE__).'/views/templates/front/express-checkout-messages.tpl');
-				}
+				$this->setTemplate('express-checkout-messages.tpl');
+			
 			}
 		}
 	}
 
 }
 
-$validation = new paypal_usa_expresscheckout();
-$validation->initContent();
 

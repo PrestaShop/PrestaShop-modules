@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *
 *  International Registered Trademark & Property of PrestaShop SA
 *
@@ -33,7 +33,7 @@ include(dirname(__FILE__).'/../../header.php');
 
 
 
-class paypal_usa_validation extends PayPalUSA
+class paypal_usa_validation
 {
 	/**
 	* @see FrontController::initContent()
@@ -79,29 +79,21 @@ class paypal_usa_validation extends PayPalUSA
 			/* Step 2 - Check the "custom" field returned by PayPal (it should contain both the Cart ID and the Shop ID, e.g. "42;1") */
 			$errors = array();
 			$custom = explode(';', Tools::getValue('custom'));
-			
 			if (count($custom) != 2)
 				$errors[] = $this->paypal_usa->l('Invalid value for the "custom" field');
 			else
 			{
 				/* Step 3 - Check the shopping cart, the currency used to place the order and the amount really paid by the customer */
-				$shop = new Shop((int)$custom[1]);
-				/*fixing cart currency 01/10/2014*/
-				global $cart;
-				$cart = new Cart((int)$custom[0]);	
-				
+				$cart = new Cart((int)$custom[0]);		
 				if (!Validate::isLoadedObject($cart))
 					$errors[] = $this->paypal_usa->l('Invalid Cart ID');
 				else
 				{
-					$context->cart = $cart;
 					$currency = new Currency((int)Currency::getIdByIsoCode(Tools::getValue('mc_currency')));
-					
 					if (!Validate::isLoadedObject($currency) || $currency->id != $cart->id_currency)
 						$errors[] = $this->paypal_usa->l('Invalid Currency ID').' '.($currency->id.'|'.$cart->id_currency);
 					else
 					{
-					 /* Forcing the context currency to the order currency */
 						if (Tools::getValue('mc_gross') != $cart->getOrderTotal(true))
 							$errors[] = $this->paypal_usa->l('Invalid Amount paid');
 						else
@@ -130,11 +122,10 @@ class paypal_usa_validation extends PayPalUSA
 							else
 							{
 								$customer = new Customer((int)$cart->id_customer);
-								$payment_type = isset($paypal_products[Tools::getValue('payment_type')]) ? $paypal_products[Tools::getValue('payment_type')] : $paypal_products['standard'];
-								
+								$paypal_products = array('express' => 'PayPal Express Checkout', 'standard' => 'PayPal Standard', 'advanced' => 'PayPal Payments Advanced',  'payflow_pro' => 'PayPal PayFlow Pro');
 								$message =
 								'Transaction ID: '.Tools::getValue('txn_id').'
-								Payment Type: '.$payment_type.'
+								Payment Type: '.$paypal_products[Tools::getValue('payment_type')].'
 								Order time: '.Tools::getValue('payment_date').'
 								Final amount charged: '.Tools::getValue('mc_gross').'
 								Currency code: '.Tools::getValue('mc_currency').'
@@ -147,7 +138,7 @@ class paypal_usa_validation extends PayPalUSA
 								receipt_id: '.Tools::getValue('receipt_id').'
 								ipn_track_id: '.Tools::getValue('ipn_track_id').'
 								verify_sign: '.Tools::getValue('verify_sign').'
-								Mode: '.(Tools::getValue('test_ipn') ? 'Test (Sandbox)' : 'Live');	
+								Mode: '.(Tools::getValue('mode') ? 'Test (Sandbox)' : 'Live');
 
 								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, false, new Shop((int)$custom[1])))
 								{
@@ -227,9 +218,8 @@ class paypal_usa_validation extends PayPalUSA
 
 			$redirect = '';
 			/* Step 4 - Redirect the user to the order confirmation page */
-			if(version_compare(_PS_VERSION_, '1.5', '<'))
-				//$redirect = _PS_BASE_URL_.'/order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
-				$redirect = Link::getPageLink('order-confirmation.php', array('id_cart' => (int)$this->context->cart->id, 'id_module' => (int)$this->paypal_usa->id, 'id_order' => (int)$this->paypal_usa->currentOrder, 'key' => $customer->secure_key));
+			if(version_compare(_PS_VERSION_, '1.4', '<'))
+				$redirect = _PS_BASE_URL_.'/order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
 			else
 				$redirect = _PS_BASE_URL_.'/index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key;
 
