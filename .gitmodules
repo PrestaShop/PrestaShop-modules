@@ -127,3 +127,6 @@
 [submodule "paypalusa/backward_compatibility"]
 	path = paypalusa/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "feedaty/backward_compatibility"]
+	path = feedaty/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
