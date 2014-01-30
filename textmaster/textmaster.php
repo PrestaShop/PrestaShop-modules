@@ -564,7 +564,7 @@ class TextMaster extends Module
 
         $post_arr = $phone ? array(
             'user'=>array(
-                'locale' => $this->getFullLocale(),
+                'locale' => $this->getFullLocale(true),
                 'email'=>$email,
                 'password'=>$password,
                 'referer_tracker_id'=>TEXTMASTER_TRACKER_ID,
@@ -575,7 +575,7 @@ class TextMaster extends Module
             )
         ) : array(
             'user'=>array(
-                'locale' => $this->getFullLocale(),
+                'locale' => $this->getFullLocale(true),
                 'email'=>$email,
                 'referer_tracker_id'=>TEXTMASTER_TRACKER_ID,
                 'password'=>$password,
@@ -595,21 +595,75 @@ class TextMaster extends Module
         return curl_exec($curl);
     }
 
-    public function getFullLocale()
+    public function getFullLocale($registration = false)
     {
-        $available_locales = array();
+        if (!$registration)
+        {
+            $textmaster_api_obj = new TextMasterAPI($this);
+            $user_info = $textmaster_api_obj->getUserInfo();
+            return $user_info['locale'];
+        }
+        
+        $locales_from_api = array();
         $textmaster_api_obj = new TextMasterAPI();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
-            $available_locales[] = $locale_info['code'];
+            $locales_from_api[] = $locale_info['code'];
+
+        $registration_locale = $this->getRegistrationLocale();
         
-        foreach ($available_locales as $locale)
-        if (Tools::substr($locale, 0, 2) == $this->context->language->language_code)
-            return $locale;
+        if (in_array($registration_locale, $locales_from_api))
+            return $registration_locale;
         
-        if (in_array(TEXTMASTER_DEFAULT_LOCALE, $available_locales))
-            return TEXTMASTER_DEFAULT_LOCALE;
+        return TEXTMASTER_DEFAULT_LOCALE;
+    }
+    
+    private function getRegistrationLocale()
+    {
+        $country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $country_iso_code = $country->iso_code;
+        $language_iso_code = Tools::strtolower($this->context->language->iso_code);
         
-        return isset($available_locales[0]) ? $available_locales[0] : '';
+        if ($language_iso_code == 'en' || $language_iso_code == 'pt')
+        {
+            switch ($country_iso_code)
+            {
+                case 'US':
+                    $locale = 'en-US';
+                    break;
+                case 'BR':
+                    $locale = 'pt-BR';
+                    break;
+                case 'PT':
+                    $locale = 'pt-PT';
+                    break;
+                default:
+                    $locale = TEXTMASTER_DEFAULT_LOCALE;
+                    break;
+            }
+        }
+        else
+        {
+            switch ($language_iso_code)
+            {
+                case 'es':
+                    $locale = 'es-ES';
+                    break;
+                case 'fr':
+                    $locale = 'fr-FR';
+                    break;
+                case 'it':
+                    $locale = 'it-IT';
+                    break;
+                case 'de':
+                    $locale = 'de-DE';
+                    break;
+                default:
+                    $locale = TEXTMASTER_DEFAULT_LOCALE;
+                    break;
+            }
+        }
+        
+        return $locale;
     }
 
     /*function createNewTextMasterUser($oAuthTokenNew, $email, $password)
@@ -1169,44 +1223,70 @@ class TextMaster extends Module
             return false;
         }
     }
-
+    
     private function approveDocument()
     {
-        $result = true;
-        $id_document = (int)Tools::getValue('id_document');
-        $document = new TextMasterDocument($id_document);
-        if ($id_product = Tools::getValue('id_product'))
+        $update_product_only = (bool)Tools::getValue('update_product_only');
+        
+        if ($update_product_only)
         {
-            $product = new Product($id_product); // loading product object
-
-            $document_data = $document->getApiData(); // loading document data (we need project API ID and text, submited by author)
-            $project = TextMasterProject::getProjectByApiId($document_data['project_id'], true); // loading project object by project API ID
-            $project_data = $project->getProjectData(); // loading project data (we need to retrieve project language)
-            $id_lang = Language::getIdByIso($project_data['language_to']); // language ISO to language ID
-
-            if (isset($document_data['author_work']))
-            {
-                foreach ($document_data['author_work'] as $element => $content)
-                    $product->{$element}[$id_lang] = $content;
-
-                if (!$product->update())
-                {
-                    $this->_html .= $this->displayError(sprintf($this->l('Could not update product %d# field "%s" in %s language'), $id_product, $element, $project_data['language_to']));
-                    return;
-                }
-
-                if(!$document->approve())
-                    $result = false;
-            }
-        }
-
-        if ($result)
-        {
-            $this->addFlashMessage($this->l('Document was successfully approved'));
-            Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu='.Tools::getValue('menu').'&id_project='.Tools::getValue('id_project').'&viewproject&token='.Tools::getAdminTokenLite('AdminModules'));
+            $error_message = $this->l('Product data could not be updated');
+            $success_message = $this->l('Product data was successfully updated');
         }
         else
-            $this->_html .= $this->displayError($result);
+        {
+            $error_message = $this->l('Document could not be approved');
+            $success_message = $this->l('Document was successfully approved');
+        }
+        
+        $id_document = (int)Tools::getValue('id_document');
+        $id_product = (int)Tools::getValue('id_product');
+        
+        
+        $document = new TextMasterDocument((int)$id_document);
+        if (!Validate::isLoadedObject($document))
+            return $this->displayError($error_message);
+        
+        $document_data = $document->getApiData();
+        if (!$document_data || !isset($document_data['author_work']) || !isset($document_data['project_id']))
+            return $this->displayError($error_message);
+        
+        $product = new Product((int)$id_product);
+        if (!Validate::isLoadedObject($product))
+            return $this->displayError($error_message);
+        
+        $project = TextMasterProject::getProjectByApiId($document_data['project_id'], true);
+        if (!Validate::isLoadedObject($project))
+            return $this->displayError($error_message);
+        
+        $project_data = $project->getProjectData();
+        if (!isset($project_data['language_to']))
+            return $this->displayError($error_message);
+        
+        $id_lang = Language::getIdByIso($project_data['language_to']);
+        if (!$id_lang)
+            return $this->displayError($error_message);
+        
+        if (!$update_product_only)
+            if (!$document->approve())
+                return $this->displayError($error_message);
+        
+        if (!$this->updateProductData($document_data, $product, $id_lang))
+            return $this->displayError($error_message);
+        
+        $this->addFlashMessage($success_message);
+        Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu='.Tools::getValue('menu').'&id_project='.Tools::getValue('id_project').'&viewproject&token='.Tools::getAdminTokenLite('AdminModules'));
+    }
+    
+    private function updateProductData($document_data, $product, $id_lang)
+    {
+        foreach ($document_data['author_work'] as $element => $content)
+            $product->{$element}[$id_lang] = $content;
+
+        if (!$product->update())
+            return false;
+        
+        return true;
     }
 
     private function displayResults()
@@ -1624,7 +1704,7 @@ class TextMaster extends Module
             $products = DB::getInstance()->executeS("
 				SELECT
 					p.`id_product` 		AS `id_product`,
-					IF(at.`quantity` IS NULL, p.`quantity`, SUM(at.`quantity`)) 	AS `quantity`,
+					IFNULL((SELECT SUM(`at`.`quantity`) FROM `ps_product_attribute` `at` WHERE `at`.`id_product` = `cp`.`id_product`), p.`quantity`) AS `quantity`,
 					p.`reference` 		AS `reference`,
 					p.`price` 			AS `price`,
 					cl.`name` 			AS `category`,
@@ -1638,9 +1718,8 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."image` i ON (i.`id_product` = cp.`id_product` AND i.`cover` = '1')
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."')
-				LEFT JOIN `"._DB_PREFIX_."product_attribute` at ON (at.`id_product` = cp.`id_product`)
+
 				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)."
-				GROUP BY at.`id_product`
                 ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
