@@ -50,8 +50,10 @@ if ($context->customer->isLogged())
 {
 	if ($id_wishlist && WishList::exists($id_wishlist, $context->customer->id) === true)
 		$context->cookie->id_wishlist = (int)$id_wishlist;
-	else
+
+	if (!WishList::exists($context->cookie->id_wishlist, $context->customer->id))
 		$context->cookie->id_wishlist = '';
+
 	if (empty($context->cookie->id_wishlist) === true || $context->cookie->id_wishlist == false)
 		$context->smarty->assign('error', true);
 	if (($add || $delete) && empty($id_product) === false)
@@ -84,6 +86,5 @@ if ($context->customer->isLogged())
 		$context->smarty->display(dirname(__FILE__).'/blockwishlist-ajax.tpl');
 	else
 		echo $module->l('No template found', 'cart');
-}
-else
+} else
 	echo $module->l('You must be logged in to manage your wishlist.', 'cart');
