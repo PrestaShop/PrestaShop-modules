@@ -199,8 +199,8 @@ class Catalog
 		foreach ($lstC as $com)
 		{
 			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
-                        FROM `'._DB_PREFIX_.'ec_ecopresto_product_shop` ep, `'._DB_PREFIX_.'order_detail` od
-                        WHERE ep.`reference` = od.`product_supplier_reference`
+                        FROM `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca, `'._DB_PREFIX_.'order_detail` od
+                        WHERE (od.`product_supplier_reference` = ca.`reference` || od.`product_supplier_reference` = ca.`reference_attribute`)
                         AND `id_order` = '.(int)$com['id_order']);
 
 			if ($ok == 0)
@@ -245,7 +245,7 @@ class Catalog
 		$dossierTempo = 'files/csv/';
 		$handledir = opendir($dossierTempo);
 		while (false !== ($fichier = readdir($handledir)))
-			if (($fichier != '.') && ($fichier != '..'))
+			if (($fichier != '.') && ($fichier != '..') && ($fichier != 'index.php'))
 				unlink($dossierTempo.$fichier);
 
 			$file = $this->fichierImport;
@@ -283,7 +283,7 @@ class Catalog
 
 		$handledir = opendir($dossierTempo);
 		while (false !== ($fichier = readdir($handledir)))
-			if (($fichier != '.') && ($fichier != '..'))
+			if (($fichier != '.') && ($fichier != '..') && ($fichier != 'index.php'))
 				$nbFichier++;
 
 			return $nbFichier;
@@ -509,7 +509,7 @@ class Catalog
 		
 		if (isset($categories[$id_category]))
 			foreach ($categories[$id_category] as $key => $row)
-				$output .= self::getCategory($categories, $row, $key, $id_selected);
+				$output .= $output .= self::getCategory($categories, $categories[$id_category][$key], $key, $id_selected);
 		
 		return $output;
 	}
@@ -671,7 +671,7 @@ class Catalog
 				$supp = implode(',', $supp);
 			}
 			else
-				$supp = '""';
+				$supp = '99999999999999999999999999';
 
 		}
 		$totalPdt = Db::getInstance()->getValue('SELECT count(ps.`reference`)
