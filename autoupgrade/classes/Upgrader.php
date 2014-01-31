@@ -253,7 +253,7 @@ class UpgraderCore
 				unlink(_PS_ROOT_DIR_.'/config/xml');
 			mkdir(_PS_ROOT_DIR_.'/config/xml', 0777);
 		}
-		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
+		if ($refresh || !file_exists($xml_localfile) || @filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
 			$protocolsList = array('https://' => 443, 'http://' => 80);
 			if (!extension_loaded('openssl'))		
@@ -294,7 +294,7 @@ class UpgraderCore
 				unlink(_PS_ROOT_DIR_.'/config/xml');
 			mkdir(_PS_ROOT_DIR_.'/config/xml', 0777);
 		}
-		if ($refresh || !file_exists($xml_localfile) || filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
+		if ($refresh || !file_exists($xml_localfile) || @filemtime($xml_localfile) < (time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS)))
 		{
 			$xml_string = Tools14::file_get_contents($xml_remotefile, false, stream_context_create(array('http' => array('timeout' => 10))));
 			$xml = @simplexml_load_string($xml_string);
