@@ -51,6 +51,11 @@ $payer_id = Tools::getValue('PayerID');
 
 function setContextData($ppec)
 {
+	// saving current cart for further retivial
+	Context::getContext()->cookie->id_parked_cart = Context::getContext()->cart->id;
+	Context::getContext()->cookie->write();
+	Context::getContext()->cookie->update();
+	
 	// Create new Cart to avoid any refresh or other bad manipulations
 	$ppec->context->cart = new Cart();
 	$ppec->context->cart->id_currency = (int)$ppec->context->currency->id;
