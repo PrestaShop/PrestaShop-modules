@@ -33,12 +33,15 @@ class BlockWishListViewModuleFrontController extends ModuleFrontController
 		parent::__construct();
 		$this->context = Context::getContext();
 		include_once($this->module->getLocalPath().'WishList.php');
+		include_once($this->module->getLocalPath().'blockwishlist.php');
 	}
 
 	public function initContent()
 	{
 		parent::initContent();
 		$token = Tools::getValue('token');
+
+		$module = new BlockWishList();
 
 		if ($token)
 		{
@@ -48,6 +51,8 @@ class BlockWishListViewModuleFrontController extends ModuleFrontController
 			$products = WishList::getProductByIdCustomer((int)$wishlist['id_wishlist'], (int)$wishlist['id_customer'], $this->context->language->id, null, true);
 
 			$nb_products = count($products);
+			$priority_names = array(0=> $module->l('High'), 1=>$module->l('Medium'), 2=>$module->l('Low'));
+
 			for ($i = 0; $i < $nb_products; ++$i)
 			{
 				$obj = new Product((int)$products[$i]['id_product'], false, $this->context->language->id);
@@ -55,6 +60,7 @@ class BlockWishListViewModuleFrontController extends ModuleFrontController
 					continue;
 				else
 				{
+					$products[$i]['priority_name'] = $priority_names[$products[$i]['priority']];
 					$quantity = Product::getQuantity((int)$products[$i]['id_product'], $products[$i]['id_product_attribute']);
 					$products[$i]['attribute_quantity'] = $quantity;
 					$products[$i]['product_quantity'] = $quantity;

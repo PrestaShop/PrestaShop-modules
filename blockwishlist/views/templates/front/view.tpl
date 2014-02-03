@@ -57,12 +57,7 @@
                     {/if}
                         <br />{l s='Quantity' mod='blockwishlist'}:<input type="text" id="quantity_{$product.id_product}_{$product.id_product_attribute}" value="{$product.quantity|intval}" size="3"  />
                         <br /><br />
-                        {l s='Priority' mod='blockwishlist'}: 
-                        <select id="priority_{$product.id_product}_{$product.id_product_attribute}">
-                            <option value="0"{if $product.priority eq 0} selected="selected"{/if}>{l s='High' mod='blockwishlist'}</option>
-                            <option value="1"{if $product.priority eq 1} selected="selected"{/if}>{l s='Medium' mod='blockwishlist'}</option>
-                            <option value="2"{if $product.priority eq 2} selected="selected"{/if}>{l s='Low' mod='blockwishlist'}</option>
-                        </select>
+                        <span><strong>{l s='Priority' mod='blockwishlist'}:</strong> {$product.priority_name}</span>
                     </span>
                     </div>
                 </div>
