@@ -70,25 +70,35 @@ function DELDereferencement(){
     
     var tot = $('input:checked.cbDeref').length;
     var i=1;
-    var ec_token = $('#ec_token').val();    
-    $('input:checked.cbDeref').each(function() {
-		fenetreModalshow(1,textDerefEnCours);
-        var XHR = new XHRConnection();
-        XHR.sendAndLoad('../modules/ecopresto/ajax.php?ref='+$(this).attr('id')+'&actu='+i+'&tot='+tot+'&majsel=12&ec_token='+ec_token,'GET',resultat_DELDereferencement);            
-    });            
+    var ec_token = $('#ec_token').val(); 
+       
+	fenetreModalshow(1,textDerefEnCours);
+    var XHR = new XHRConnection();
+    
+    XHR.sendAndLoad('../modules/ecopresto/ajax.php?ref='+$('input:checked.cbDeref:eq(0)').attr('id')+'&actu=0&tot='+tot+'&majsel=12&ec_token='+ec_token,'GET',resultat_DELDereferencement);            
+               
+}
+
+function DELDereferencementSuite(actu,tot){  
+   fenetreModalshow(1,textDerefEnCours);
+   var XHR = new XHRConnection();
+   var ec_token = $('#ec_token').val(); 
+   XHR.sendAndLoad('../modules/ecopresto/ajax.php?ref='+$('input:checked.cbDeref:eq('+actu+')').attr('id')+'&actu='+actu+'&tot='+tot+'&majsel=12&ec_token='+ec_token,'GET',resultat_DELDereferencement);                        
 }
 
 resultat_DELDereferencement = function (obj)
 {
     maj = obj.responseText;
     a=maj.split(',');
-    
     var actu = parseInt(a[0]);
     var tot = parseInt(a[1]);
+    actu = parseInt(actu+1);    
     var charge = (actu*100)/tot;
-    loaderEtat2(charge);
+    loaderEtat2(charge);      
     if(actu==tot){
         fenetreModalhide(0,1,0,'');
+    }else{
+        DELDereferencementSuite(actu,tot)
     }
 }
 
