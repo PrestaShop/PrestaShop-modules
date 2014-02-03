@@ -127,6 +127,32 @@
 			<hr />
 		</div>
 
+		{* USE PAYPAL LOGIN *}
+		<div class="box" id="paypal_login">
+			<span class="paypal-section">2</span> <h3 class="inline">{l s='Use PayPal Login' mod='paypal'}</h3>
+			
+			<div id="paypal_login_yes_or_no" class="">
+				<p class="description">{l s='Description of PayPal Login' mod='paypal'}</p>
+				<input type="radio" name="paypal_login" id="paypal_login_yes" value="1" {if $paypal_login == 1}checked="checked"{/if} /> <label for="paypal_login_yes">{l s='Yes' mod='module'} </label>{if $paypal_login == 1}({l s='Configure' mod='paypal'}){/if}<br />
+				<input type="radio" name="paypal_login" id="paypal_login_no" value="0" {if $paypal_login == 0}checked="checked"{/if} /> <label for="paypal_login_no">{l s='No' mod='paypal'}</label>
+			</div>
+			<div id="paypal_login_configuration">
+				<dl>
+					<dt>
+						{l s='Client ID' mod='module'}
+					</dt>
+					<dd>
+						<input type="text" name="paypal_login_client_id">
+					</dd>
+				</dl>
+				<div class="clear"></div>
+			</div>
+			<hr />
+		</div>
+
+		
+		{* END OF USE PAYPAL LOGIN *}
+
 		{* SUBSCRIBE OR OPEN YOUR PAYPAL BUSINESS ACCOUNT *}
 		<div class="box" id="account">
 
