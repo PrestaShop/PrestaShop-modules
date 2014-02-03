@@ -199,9 +199,11 @@ class Catalog
 		foreach ($lstC as $com)
 		{
 			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
-                        FROM `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca, `'._DB_PREFIX_.'order_detail` od
-                        WHERE (od.`product_supplier_reference` = ca.`reference` || od.`product_supplier_reference` = ca.`reference_attribute`)
-                        AND `id_order` = '.(int)$com['id_order']);
+                        FROM `'._DB_PREFIX_.'order_detail` od
+			LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca ON (od.`product_supplier_reference` = ca.`reference_attribute`)
+			LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog` c ON (od.`product_supplier_reference` = c.`reference`)
+			WHERE `id_order`='.(int)$com['id_order'].'
+			GROUP BY od.`product_supplier_reference`');
 
 			if ($ok == 0)
 			{
