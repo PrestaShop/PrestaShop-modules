@@ -39,7 +39,7 @@
 			</li>
 			{/if}
 		</ul>
-		<p class="wishlisturl">{l s='Permalink' mod='blockwishlist'}: <input type="text" value="{$base_dir_ssl}modules/blockwishlist/view.php?token={$token_wish|escape:'html':'UTF-8'}" style="width:540px;" readonly="readonly" /></p>
+		<p class="wishlisturl">{l s='Permalink' mod='blockwishlist'}: <input type="text" value="{$base_dir_ssl}module/blockwishlist/view?token={$token_wish|escape:'html':'UTF-8'}" style="width:540px;" readonly="readonly" /></p>
 		<p class="submit">
 			<a href="#" id="showSendWishlist" class="button_account exclusive" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">{l s='Send this wishlist' mod='blockwishlist'}</a>
 		</p>
@@ -104,10 +104,10 @@
 	<table class="wlp_bought_infos hidden std">
 		<thead>
 			<tr>
-				<th class="first_item">{l s='Product' mod='blockwishlist'}</td>
-				<th class="item">{l s='Quantity' mod='blockwishlist'}</td>
-				<th class="item">{l s='Offered by' mod='blockwishlist'}</td>
-				<th class="last_item">{l s='Date' mod='blockwishlist'}</td>
+				<th class="first_item">{l s='Product' mod='blockwishlist'}</th>
+				<th class="item">{l s='Quantity' mod='blockwishlist'}</th>
+				<th class="item">{l s='Offered by' mod='blockwishlist'}</th>
+				<th class="last_item">{l s='Date' mod='blockwishlist'}</th>
 			</tr>
 		</thead>
 		<tbody>

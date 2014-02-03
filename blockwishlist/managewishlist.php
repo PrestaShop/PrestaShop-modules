@@ -68,7 +68,7 @@ if ($context->customer->isLogged())
 						$combination_imgs = $obj->getCombinationImages($context->language->id);
 						if (isset($combination_imgs[$products[$i]['id_product_attribute']][0]))
 							$products[$i]['cover'] = $obj->id.'-'.$combination_imgs[$products[$i]['id_product_attribute']][0]['id_image'];
-						else 
+						else
 						{
 							$cover = Product::getCover($obj->id);
 							$products[$i]['cover'] = $obj->id.'-'.$cover['id_image'];
@@ -102,18 +102,20 @@ if ($context->customer->isLogged())
 				if (sizeof($product['bought']))
 					$productBoughts[] = $product;
 			$context->smarty->assign(array(
-				'products' => $products,
-				'productsBoughts' => $productBoughts,
-				'id_wishlist' => $id_wishlist,
-				'refresh' => $refresh,
-				'token_wish' => $wishlist->token
-			));
+					'products' => $products,
+					'productsBoughts' => $productBoughts,
+					'id_wishlist' => $id_wishlist,
+					'refresh' => $refresh,
+					'token_wish' => $wishlist->token
+				));
 
 			// Instance of module class for translations
 			$module = new BlockWishList();
 
-			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/managewishlist.tpl'))
-				$context->smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/managewishlist.tpl');
+			if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/blockwishlist/views/templates/front/managewishlist.tpl'))
+				$context->smarty->display(_PS_THEME_DIR_.'modules/blockwishlist/views/templates/front/managewishlist.tpl');
+			elseif (Tools::file_exists_cache(dirname(__FILE__).'/views/templates/front/managewishlist.tpl'))
+				$context->smarty->display(dirname(__FILE__).'/views/templates/front/managewishlist.tpl');
 			elseif (Tools::file_exists_cache(dirname(__FILE__).'/managewishlist.tpl'))
 				$context->smarty->display(dirname(__FILE__).'/managewishlist.tpl');
 			else

@@ -27,7 +27,7 @@
 <h2>{l s='Wishlist' mod='blockwishlist'}</h2>
 {if $wishlists}
 <p>
-	{l s='Other wishlists of' mod='blockwishlist'} {$current_wishlist.firstname} {$current_wishlist.lastname}:
+    {l s='Other wishlists of %1s %2s:' sprintf=[$current_wishlist.firstname, $current_wishlist.lastname] mod='blockwishlist'}
 	{foreach from=$wishlists item=wishlist name=i}
 		{if $wishlist.id_wishlist != $current_wishlist.id_wishlist}
 			<a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}" title="{$wishlist.name}" rel="nofollow">{$wishlist.name}</a>

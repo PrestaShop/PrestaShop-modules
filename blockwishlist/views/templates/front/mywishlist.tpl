@@ -24,8 +24,13 @@
 *}
 
 <div id="mywishlist">
-	{capture name=path}<a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account' mod='blockwishlist'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='My wishlists' mod='blockwishlist'}{/capture}
-	{include file="$tpl_dir./breadcrumb.tpl"}
+    {capture name=path}
+        <a href="{$link->getPageLink('my-account', true)|escape:'html'}">{l s='My account' mod='blockwishlist'}</a>
+        <span class="navigation-pipe">{$navigationPipe}</span>
+        <a href="{$link->getModuleLink('blockwishlist', 'mywishlist')|escape:'html'}">{l s='My wishlists' mod='blockwishlist'}</a>
+        <span class="navigation-pipe">{$navigationPipe}</span>
+        {$current_wishlist.name}
+    {/capture}
 
 	<h2>{l s='My wishlists' mod='blockwishlist'}</h2>
 
