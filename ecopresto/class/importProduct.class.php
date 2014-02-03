@@ -306,6 +306,8 @@ class importerProduct
 			foreach ($category_data as $tmp)
 				$product->id_category[] = $tmp;
 		}
+		
+		$product->id_category = array_unique($product->id_category);
 
 		$product->save();
 
