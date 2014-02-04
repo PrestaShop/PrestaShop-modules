@@ -51,7 +51,7 @@ if ($context->customer->isLogged())
 	if ($id_wishlist && WishList::exists($id_wishlist, $context->customer->id) === true)
 		$context->cookie->id_wishlist = (int)$id_wishlist;
 
-	if (!WishList::exists($context->cookie->id_wishlist, $context->customer->id))
+	if ((int)$context->cookie->id_wishlist > 0 && !WishList::exists($context->cookie->id_wishlist, $context->customer->id))
 		$context->cookie->id_wishlist = '';
 
 	if (empty($context->cookie->id_wishlist) === true || $context->cookie->id_wishlist == false)
