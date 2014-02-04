@@ -56,14 +56,15 @@ if ($catalog->tabConfig['IMPORT_AUTO'] == 1 || (isset($idcS) && $idcS != 0))
 	{
 		$resu = '<gen>';
 		$reqExp = array();
+
 		$TotCom = Db::getInstance()->getRow('SELECT SUM(`product_quantity`) AS SPQ, `tax_rate`, SUM(`product_price`) AS SPP, SUM(`product_quantity`*`product_price`) AS STT
-											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_product_shop` ep
-                                            WHERE od.`product_supplier_reference` = ep.`reference`
+											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca
+                                            WHERE (od.`product_supplier_reference` = ca.`reference` || od.`product_supplier_reference` = ca.`reference_attribute`)
 											AND `id_order`='.(int)$com['id_order']);
 
 		$ComRef = Db::getInstance()->ExecuteS('SELECT `product_quantity`, `product_id`, `tax_rate`, `product_price`, `id_order`, `product_supplier_reference`
-											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_product_shop` ep
-                                            WHERE od.`product_supplier_reference` = ep.`reference`
+											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca
+                                            WHERE (od.`product_supplier_reference` = ca.`reference` || od.`product_supplier_reference` = ca.`reference_attribute`)
 											AND `id_order`='.(int)$com['id_order']);
 
 		$tem = 0;
