@@ -36,7 +36,7 @@
 						{foreach from=$products item=product name=products_list}
 							<li style="padding: 2px 0; height: 20px;{if $smarty.foreach.products_list.last} border-bottom: 1px solid #CCCCCC;{/if}">
 								<label for="prduct_{$smarty.foreach.main.index}_{$product['id_product']}" style="float: left; font-weight: bold;  text-align: left;  width: 450px; margin-right: 5px;">
-									<input type="checkbox" name="id_product[]" value="{$product['value']}" id="prduct_{$smarty.foreach.main.index}_{$product['id_product']}" style="margin:3px 5px;" {if $product['checked']}checked="checked"{/if} />
+									<input type="checkbox" name="id_product[]" value='{$product['value']}' id="prduct_{$smarty.foreach.main.index}_{$product['id_product']}" style="margin:3px 5px;" {if $product['checked']}checked="checked"{/if} />
 									{$product['name']}
 								</label>
 							</li>
