@@ -634,7 +634,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->initPath();
 		$upgrader = new Upgrader();
 		preg_match('#([0-9]+\.[0-9]+)(?:\.[0-9]+){1,2}#', _PS_VERSION_, $matches);
-		$upgrader->branch = $matches[1];
+		if (isset($matches[1]))
+			$upgrader->branch = $matches[1];
 		$channel = $this->getConfig('channel');
 		switch ($channel)
 		{
@@ -1168,7 +1169,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (isset($this->currentParams['directory_num']))
 		{
 			$config['channel'] = 'directory';
-			if (empty($this->currentParams['directory_num']))
+			if (empty($this->currentParams['directory_num']) || strpos($this->currentParams['directory_num'], '.') === false)
 			{
 				$this->error = 1;
 				$this->next_desc = sprintf($this->l('version number is missing. Unable to select that channel.'));
@@ -2193,6 +2194,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next = 'error';
 			$this->nextQuickInfo[] = $this->l('No upgrade is possible.');
 			$this->nextErrors[] = $this->l('No upgrade is possible.');
+			if (strpos(INSTALL_VERSION, '.') === false)
+			{
+				$this->nextQuickInfo[] = $this->l(INSTALL_VERSION.' is not a valid version number.');
+				$this->nextErrors[] = $this->l(INSTALL_VERSION.' is not a valid version number.');
+			}
 			return false;
 		}
 
@@ -4198,11 +4204,11 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			sprintf($this->l('The directory %1$s will be used for upgrading to version '),
 				'<b>/admin/autoupgrade/latest/prestashop/</b>' ).
 			' <input type="text" size="10" name="directory_num"
-			value="'.($this->getConfig('directory.version_num')?$this->getConfig('directory.version_num'):'').'" /> *
+			value="'.($this->getConfig('directory.version_num')?$this->getConfig('directory.version_num'):'').'" /> <small>(1.5.6.2 for instance)</small> *
 			<br/>
-			<div class="margin-form">'
+			<p>* '
 			.$this->l('This option will skip both download and unzip steps and will use admin/autoupgrde/download/prestashop/ as source.').'</div>
-			</div>';
+			</p>';
 		// backupFiles
 		// backupDb
 		$content .= '<div style="clear:both;">
@@ -4771,7 +4777,10 @@ function afterUpdateConfig(res)
 		newChannel.addClass("current");
 		newChannel.html("* "+newChannel.html());
 	}
-	showConfigResult(res.next_desc);
+	if (res.error == 1)
+		showConfigResult(res.next_desc, "error");
+	else
+		showConfigResult(res.next_desc);
 	$("#upgradeNow").unbind();
 	$("#upgradeNow").replaceWith("<a class=\"button-autoupgrade\" href=\"'.$this->currentIndex.'&token='.$this->token.'\" >'.$this->l('Click to refresh the page and use the new configuration', 'AdminSelfUpgrade', true).'</a>");
 }
@@ -5319,7 +5328,7 @@ $(document).ready(function()
 				params.channel = "directory";
 				params.directory_prestashop = $("select[name=directory_prestashop] option:selected").val();
 				directory_num = $("input[name=directory_num]").val();
-				if (directory_num == "")
+				if (directory_num == "" || directory_num.indexOf(".") == -1)
 				{
 					showConfigResult("'.$this->l('You need to enter the version number associated to the directory.').'", "error");
 					return false;
