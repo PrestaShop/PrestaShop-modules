@@ -1629,7 +1629,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					if (preg_match("#autoupgrade#", $path))
 						unset($list_files_diff[$k]);
 					else
-						$list_files_diff[$k] = str_replace(DIRECTORY_SEPARATOR.'admin', DIRECTORY_SEPARATOR.$admin_dir, $path);
+						$list_files_diff[$k] = str_replace('/'.'admin', '/'.$admin_dir, $path); // do not replace by DIRECTORY_SEPARATOR
 			}
 			else
 				$list_files_diff = array();
