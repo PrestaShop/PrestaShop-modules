@@ -65,7 +65,7 @@ if ($catalog->tabConfig['UPDATE_PRODUCT'] == 1)
 		$supp = implode(',', $supp);
 	}
 	else
-		$supp = '""';
+		$supp = '99999999999999999999';
 }
 
 if ($etp == 0)
@@ -257,7 +257,7 @@ foreach ($lstPdt as $pdt)
 					}
 				}
 
-				if (($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product) && (!$reference->getShopProduct($pdt['id_shop'], $reference->id_product)))
+				if (($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product) && ($reference->getShopProduct($pdt['id_shop'], $reference->id_product) == TRUE))
 					$pdt_final_att[] = array('wholesale_price' => (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$att['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$att['price']), 6),
 						'reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
@@ -283,7 +283,7 @@ foreach ($lstPdt as $pdt)
 
 			$idP = $import->execImport($import->array_to_object($pdt_final));
 			if ($tem > 0)
-				echo $import->execImportAttribute($import->array_to_object($pdt_final_att), $idP);
+				$import->execImportAttribute($import->array_to_object($pdt_final_att), $idP);
 
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ec_ecopresto_product_imported` WHERE `reference`= "'.pSQL($pdt['thereference']).'"');
 			$etp++;

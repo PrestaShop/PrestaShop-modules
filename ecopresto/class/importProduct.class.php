@@ -306,6 +306,8 @@ class importerProduct
 			foreach ($category_data as $tmp)
 				$product->id_category[] = $tmp;
 		}
+		
+		$product->id_category = array_unique($product->id_category);
 
 		$product->save();
 
@@ -724,6 +726,16 @@ class importerProduct
 					$imgSg->resize($tmpfile, $path.'-'.Tools::stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
 
 			}
+			elseif ($content = file_get_contents($url))
+			{
+				$fp = fopen($tmpfile, "w");
+				fwrite($fp, $content);
+				fclose($fp); 
+				$imgSg->resize($tmpfile, $path.'.jpg');
+				$images_types = ImageType::getImagesTypes($entity);
+				foreach ($images_types as $image_type)
+					$imgSg->resize($tmpfile, $path.'-'.Tools::stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
+			}
 			else
 			{
 				unlink($tmpfile);
@@ -742,6 +754,19 @@ class importerProduct
 				foreach ($images_types as $image_type)
 					ImageManager::resize($tmpfile, $path.'-'.Tools::stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
 
+				if (in_array($image_type['id_image_type'], $watermark_types))
+					Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
+			}
+			elseif ($content = file_get_contents($url))
+			{
+			    	$fp = fopen($tmpfile, "w");
+                		fwrite($fp, $content);
+		                fclose($fp); 
+		                ImageManager::resize($tmpfile, $path.'.jpg');
+				$images_types = ImageType::getImagesTypes($entity);
+				foreach ($images_types as $image_type)
+					ImageManager::resize($tmpfile, $path.'-'.Tools::stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
+	
 				if (in_array($image_type['id_image_type'], $watermark_types))
 					Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 			}
