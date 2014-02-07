@@ -320,8 +320,7 @@ class Gsitemap extends Module
 			if (isset($id_image['id_image']))
 			{
 				$image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.(int)$id_image['id_image']);
-				$image_link = (!in_array(Context::getContext()->shop->virtual_uri, explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
-			}
+				$image_link = (!in_array(rtrim(Context::getContext()->shop->virtual_uri,'/'), explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain.Context::getContext()->shop->physical_uri), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->physical_uri.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;			}
 			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
 			$image_product = array();
 			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
