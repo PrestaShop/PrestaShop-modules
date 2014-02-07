@@ -36,7 +36,7 @@ $_MODULE['<{sendinblue}prestashop>sendinblue_2ae3bc148eaba9146651be8d419bca04'] 
 $_MODULE['<{sendinblue}prestashop>sendinblue_a9688747b1ce4017d5da98785cea2a0c'] = 'Activer SendinBlue pour gérer vos contacts';
 $_MODULE['<{sendinblue}prestashop>sendinblue_6be4b14275fbb412209febb0fba11ab7'] = 'En activant cette fonctionnalité, vos nouveaux contacts seront automatiquement ajoutés / désinscrits de SendinBlue. Pour une synchronisation inverse (SendinBlue vers Prestashop), il faudra exécuter quotidiennement l\'url du CRON (cf remarque plus bas)';
 $_MODULE['<{sendinblue}prestashop>sendinblue_d364a1e6cec95805842edc1e6e9beba2'] = 'Gérer les désinscriptions du Front-Office';
-$_MODULE['<{sendinblue}prestashop>sendinblue_f6c1d645358988f357d1cf618bec8903'] = 'En activant cette option, vous laissez à vos contacts la possibilité de se désinscrire de votre newsletter à partir du bloc newsletter affiché sur la page d\'accueil. ';
+$_MODULE['<{sendinblue}prestashop>sendinblue_e6ce664dfa17c70938467beb02aa6310'] = 'En activant cette option, vous laissez à vos contacts la possibilité de se désinscrire de votre newsletter à partir du bloc newsletter affiché sur la page d\'accueil. ';
 $_MODULE['<{sendinblue}prestashop>sendinblue_06933067aafd48425d67bcb01bba5cb6'] = 'Mettre à jour';
 $_MODULE['<{sendinblue}prestashop>sendinblue_4a85edadc7601bdb29c2c8593a59ca03'] = 'Pour synchroniser les emails de vos clients de la plateforme SendinBlue vers votre site E-commerce, il faudra exécuter';
 $_MODULE['<{sendinblue}prestashop>sendinblue_c2e2fce3a995f59900d7afbbe58683f5'] = 'ce lien';
@@ -44,12 +44,12 @@ $_MODULE['<{sendinblue}prestashop>sendinblue_20f6cf4b46982d608dc164f23249b7c3'] 
 $_MODULE['<{sendinblue}prestashop>sendinblue_4b65c10607d36f0b385917e536f204a8'] = 'Si vous changez le nom de votre boutique (actuellement ';
 $_MODULE['<{sendinblue}prestashop>sendinblue_33f0325251ddc8bc133cc6498eb802a3'] = '), la valeur du token changera.';
 $_MODULE['<{sendinblue}prestashop>sendinblue_b9a62d1a7ff5b5959a10a47dbf959deb'] = 'Activer SendinBlue SMTP pour vos emails transactionnels';
-$_MODULE['<{sendinblue}prestashop>sendinblue_66f7086b92fafcfa511d04703dd76a3a'] = 'sendinBlue SMTP permet d’envoyer des emails transactionnels (un email transactionnel est envoyé pour attester d’une transaction ou d’un évènement. Exemple : email d’inscription, de confirmation de commande, une facture …). En activant cette fonctionnalité, vous êtes sûr que vos emails transactionnels parviennent bien à vos destinataires et vous pouvez consulter l\'historique de vos emails (ouvertures, clics …).';
+$_MODULE['<{sendinblue}prestashop>sendinblue_66f7086b92fafcfa511d04703dd76a3a'] = 'SendinBlue SMTP permet d’envoyer des emails transactionnels (un email transactionnel est envoyé pour attester d’une transaction ou d’un évènement. Exemple : email d’inscription, de confirmation de commande, une facture …). En activant cette fonctionnalité, vous êtes sûr que vos emails transactionnels parviennent bien à vos destinataires et vous pouvez consulter l\'historique de vos emails (ouvertures, clics …).';
 $_MODULE['<{sendinblue}prestashop>sendinblue_40be97420d49acc09e8ec2dc60e02533'] = 'Envoyer un email de test à';
 $_MODULE['<{sendinblue}prestashop>sendinblue_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_MODULE['<{sendinblue}prestashop>sendinblue_dd28538b67e7c720f37d3260c10d2747'] = 'sendinblue.png';
 $_MODULE['<{sendinblue}prestashop>sendinblue_5621ebf12c5f61b885a23ed959688e44'] = 'SendinBlue : LE plugin tout-en-un pour vos emails marketing et transactionnels.';
-$_MODULE['<{sendinblue}prestashop>sendinblue_765348f2191c658910db073788b9a6c3'] = 'Contactez l\'équipe SendinBlue';
+$_MODULE['<{sendinblue}prestashop>sendinblue_eb7a298d7741cef1a61147ab07237235'] = 'Contactez l\'équipe SendinBlue';
 $_MODULE['<{sendinblue}prestashop>sendinblue_e876af202306229a04cc9cf14aba0ff0'] = 'Contactez-nous';
 $_MODULE['<{sendinblue}prestashop>sendinblue_44a87f7752c32d2d4dba5b25cb2a966f'] = 'Email : ';
 $_MODULE['<{sendinblue}prestashop>sendinblue_ddf7d91d563667f08f1d467bc4a0d55a'] = 'contact@sendinblue.com';
@@ -100,7 +100,7 @@ $_MODULE['<{sendinblue}prestashop>smssetting_ce8ae9da5b7cd6c3df2929543a9af92d'] 
 $_MODULE['<{sendinblue}prestashop>smssetting_80d2677cf518f4d04320042f4ea6c146'] = 'Limite';
 $_MODULE['<{sendinblue}prestashop>smssetting_2c0d95d9112d4fcaff90732514ea4555'] = 'Seuil d\'alerte de crédits restants';
 $_MODULE['<{sendinblue}prestashop>smssetting_f92d3f9d05f27cd67ac265e91bc25420'] = 'Veuillez renseigner un email valide';
-$_MODULE['<{sendinblue}prestashop>smssetting_6c2077a1d1219890e628b2ab2c0fe2bc'] = 'Le champ limite doit être un nombre entier';
+$_MODULE['<{sendinblue}prestashop>smssetting_a32991ca63eda703f7c6796484077d92'] = 'Veuillez renseigner une limite supérieure à 0';
 $_MODULE['<{sendinblue}prestashop>smssetting_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{sendinblue}prestashop>smssetting_73240d3faddf47c297a6e4df7b18d865'] = 'Pour recevoir l\'e-mail de notification, il faudra exécuter ';
 $_MODULE['<{sendinblue}prestashop>smssetting_ff15c080a4cfc4ceab73d673cb2b817a'] = ' au moins une fois par jour.';
@@ -136,7 +136,7 @@ $_MODULE['<{sendinblue}prestashop>smssetting_1f12930ae41d1f4dddf551f713434fe6'] 
 $_MODULE['<{sendinblue}prestashop>smssetting_362d71dc6e1711dfd70015db822dec36'] = 'Numéro de téléphone du contact';
 $_MODULE['<{sendinblue}prestashop>smssetting_f1db011660dbe289df2807a6922ed0ee'] = 'Envoyer la campagne';
 $_MODULE['<{sendinblue}prestashop>smssetting_a5da3ccf6b1c7ba6a55dda6bc0d20767'] = 'Veuillez renseigner un expéditeur';
-$_MODULE['<{sendinblue}prestashop>smssetting_9a26a414b47c0d02765d10986bfd461c'] = 'Veuillez renseigner votre Téléphone Moblie';
+$_MODULE['<{sendinblue}prestashop>smssetting_23444d711d9490dbd5676fcf7506b984'] = 'Veuillez renseigner votre Téléphone Mobile';
 $_MODULE['<{sendinblue}prestashop>smssetting_7c45879beee43e8b1ce73aa6d0e484d4'] = 'Veuillez renseigner votre message';
 $_MODULE['<{sendinblue}prestashop>userlist_22948498d23c63ee0582342e312de294'] = 'Liste des contacts';
 $_MODULE['<{sendinblue}prestashop>userlist_577d7068826de925ea2aec01dbadf5e4'] = 'Client';

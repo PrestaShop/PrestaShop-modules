@@ -65,7 +65,7 @@
                             <input name="sendin_notify_email" id="sendin_notify_email" type="text" value="{$Sendin_Notify_Email}" size="40" /></p>
 							<p  class="form-data"> <label>{l s='Limit' mod='sendinblue'}</label>
                            <input name="sendin_notify_value" id="sendin_notify_value" type="text" value="{$Sendin_Notify_Value}" size="40" /><span style="position:absolute;" class="toolTip" title="{l s='Alert threshold for remaining credits' mod='sendinblue'}"></span></p>
-							<p  class="form-data"><input name="notify_sms_mail" type="submit"  onClick="return validate('{l s='Please provide valid Email!' mod='sendinblue'}','{l s='Please provide a limit in integer format' mod='sendinblue'}');" value="{l s='Save' mod='sendinblue'}" class="button" style=" margin-left: 658px;" /></p>
+							<p  class="form-data"><input name="notify_sms_mail" type="submit"  onClick="return validate('{l s='Please provide valid Email!' mod='sendinblue'}','{l s='Please provide a limit greater than 0' mod='sendinblue'}');" value="{l s='Save' mod='sendinblue'}" class="button" style=" margin-left: 658px;" /></p>
 							<p  class="mrgin-left">{l s='To get the email notification, you should run ' mod='sendinblue'}{$link}{l s=' atleast one time per day. ' mod='sendinblue'}
 							<span class="toolTip" title="{l s='Note that if you change the name of your Shop (currently ' mod='sendinblue'}
 			        {$site_name}{l s=') the token value changes.' mod='sendinblue'}">&nbsp;</span></p>
@@ -347,7 +347,7 @@
                                              <label style="padding-top:5px;">{l s='Send a test SMS' mod='sendinblue'}</label>
                                              <input name="sender_campaign_number_test" id="sender_campaign_number_test" maxlength="17" type="text" value="" class="input_bx" />
                                              <span class="toolTip" title="{l s=' The phone number should be in this form: 0033663309741 for this France mobile 06 63 30 97 41 (0033 is France prefix)' mod='sendinblue'}">&nbsp;</span>
-                                             <input name="sender_campaign_test_submit" id="sender_campaign_test_submit" onclick="return testSmsCampaign('{l s='Please fill the sender field' mod='sendinblue'}','{l s='Please fill the Moblie Phone field' mod='sendinblue'}','{l s='Please fill the message field' mod='sendinblue'}');" type="button" value="{l s='Send' mod='sendinblue'}" class="button"  />
+                                             <input name="sender_campaign_test_submit" id="sender_campaign_test_submit" onclick="return testSmsCampaign('{l s='Please fill the sender field' mod='sendinblue'}','{l s='Please fill the Mobile Phone field' mod='sendinblue'}','{l s='Please fill the message field' mod='sendinblue'}');" type="button" value="{l s='Send' mod='sendinblue'}" class="button"  />
                                           </td>
                                        </tr>
                                         </table>

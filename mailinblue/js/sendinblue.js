@@ -416,8 +416,17 @@ $(document).ready(
 		
 			if ($('#userDetails').is(':hidden'))
 			{
-				$('#Spantextless').show();
-				$('#Spantextmore').hide();
+				var table_data_len = $(".midleft tr").length;
+				if (table_data_len <= 0) {
+					if (loadData(1, token)) {
+						$('#Spantextless').show();
+						$('#Spantextmore').hide();
+					}
+				}
+				else {
+					$('#Spantextless').show();
+					$('#Spantextmore').hide();
+				}
 			} else {
 				$('#Spantextmore').show();
 				$('#Spantextless').hide();
@@ -582,11 +591,12 @@ $(document).ready(
 					function(event, request, settings) {
 						$(".midleft").html(msg);
 				});
+				return true;
 			}
 		});
 	}
 
-	loadData(1, token); // For first time page load
+	//loadData(1, token); // For first time page load
 	// default
 	// results
 
@@ -729,7 +739,7 @@ function testSmsShipped() {
      document.notify_sms_mail_form.sendin_notify_email.focus() ;
      return false;
    }
-   if( document.notify_sms_mail_form.sendin_notify_value.value == "" ||
+   if( document.notify_sms_mail_form.sendin_notify_value.value <= 0 ||
            isNormalInteger( document.notify_sms_mail_form.sendin_notify_value.value)== false )
    {
      alert(limiter);

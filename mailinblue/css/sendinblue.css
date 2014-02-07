@@ -322,3 +322,8 @@ color: #268CCD;}
 	margin-left: 20px;
 	margin-right: 10px;
 }
+.form-display label{  float: left;
+    font-weight: bold;
+    padding: 0.2em 0.5em 0 0;
+    text-align: right;
+    width: 250px;}
