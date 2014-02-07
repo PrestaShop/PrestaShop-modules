@@ -310,7 +310,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public function checkToken()
 	{
 		// simple checkToken in ajax-mode, to be free of Cookie class (and no Tools::encrypt() too )
-		if ($this->ajax)
+		if ($this->ajax && isset($_COOKIE['id_employee']))
 			return ($_COOKIE['autoupgrade'] == $this->encrypt($_COOKIE['id_employee']));
 		else
 			return parent::checkToken();
@@ -753,9 +753,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		if (!$this->updateDefaultTheme) /* If set to false, we need to preserve the default themes */
 		{
-			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
-			if (version_compare(_PS_VERSION_, '1.5.0.0', '>'))
+			if (version_compare(_PS_VERSION_, '1.6.0.0', '>'))
+				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default-bootstrap';
+			elseif (version_compare(_PS_VERSION_, '1.5.0.0', '>'))
 				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default';
+			else
+				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
 		}
 	}
 
@@ -2411,7 +2414,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (file_exists(_PS_ROOT_DIR_.'/cache/class_index.php'))
 				unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
 
-			if (defined('_THEME_NAME_') && $this->updateDefaultTheme && preg_match('#(default|prestashop)$#', _THEME_NAME_))
+			if (defined('_THEME_NAME_') && $this->updateDefaultTheme && preg_match('#(default|prestashop|default-boostrap)$#', _THEME_NAME_))
 			{
 				$separator = addslashes(DIRECTORY_SEPARATOR);
 				$file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
@@ -2442,12 +2445,21 @@ class AdminSelfUpgrade extends AdminSelfTab
 						if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 							if (file_exists($dir.basename(str_replace('.php', '', $file).'.php')))
 								unlink($dir.basename($file));
+			}
 
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
-				if ($this->updateDefaultTheme)
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
+			if ($this->updateDefaultTheme)
+			{
+				if (version_compare(INSTALL_VERSION, '1.6.0.0', '>'))
 				{
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
-						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\' WHERE id_shop = 1 AND id_theme = 1)');
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default-bootstrap\') WHERE id_shop = 1 AND id_theme = 1');
+					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'default\' LIMIT 1');
+				}
+				elseif (version_compare(INSTALL_VERSION, '1.5.0.0', '>'))
+				{
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\') WHERE id_shop = 1 AND id_theme = 1');
 					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'prestashop\' LIMIT 1');
 				}
 			}
