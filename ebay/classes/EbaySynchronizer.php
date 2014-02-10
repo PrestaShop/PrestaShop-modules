@@ -52,6 +52,11 @@ class EbaySynchronizer
 		$product_ids = array_map(array('EbaySynchronizer', 'getIdProduct'), $products);
 		$products_configuration = EbayProductConfiguration::getByProductIds($product_ids);
 
+		if(method_exists('Cache', 'clean'))
+		{
+			 Cache::clean('StockAvailable::getQuantityAvailableByProduct_*');
+		}
+		
 		foreach ($products as $p)
 		{
 			$product = new Product((int)$p['id_product'], true, $id_lang);
