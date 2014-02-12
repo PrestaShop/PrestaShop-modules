@@ -30,7 +30,7 @@
 	{l s='Other wishlists of' mod='blockwishlist'} {$current_wishlist.firstname} {$current_wishlist.lastname}:
 	{foreach from=$wishlists item=wishlist name=i}
 		{if $wishlist.id_wishlist != $current_wishlist.id_wishlist}
-			<a href="{$base_dir_ssl}modules/blockwishlist/view.php?token={$wishlist.token}" title="{$wishlist.name}" rel="nofollow">{$wishlist.name}</a>
+			<a href="{$base_dir_ssl|rtrim:'/'}{$modules_dir}/blockwishlist/view.php?token={$wishlist.token}" title="{$wishlist.name}" rel="nofollow">{$wishlist.name}</a>
 			{if !$smarty.foreach.i.last}
 				/
 			{/if}
