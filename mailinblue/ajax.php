@@ -29,8 +29,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-Configuration::updateValue('Mailin_Tracking_Status', Tools::getValue('script'));
+Configuration::updateValue('Sendin_Tracking_Status', Tools::getValue('script'));
 
 echo 'done';
 exit;
-
