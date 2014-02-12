@@ -25,10 +25,10 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/mailinblue.php');
+include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 die('Error: Invalid Token');
 
-$mailin = new Mailinblue();
-$mailin->updateNewsletterStatus();
+$sendin = new Sendinblue();
+$sendin->updateNewsletterStatus();

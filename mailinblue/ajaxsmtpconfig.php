@@ -25,15 +25,15 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/mailinblue.php');
+include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-$mailin = new Mailinblue();
-Configuration::updateValue('Mailin_Api_Smtp_Status', Tools::getValue('smtptest'));
+$sendin = new Sendinblue();
+Configuration::updateValue('Sendin_Api_Smtp_Status', Tools::getValue('smtptest'));
 
 if (Tools::getValue('smtptest') == 1)
-	echo $mailin->postProcessConfiguration();
+	echo $sendin->postProcessConfiguration();
 else
-	$mailin->resetConfigMailinSmtp();
+	$sendin->resetConfigSendinSmtp();

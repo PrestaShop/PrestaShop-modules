@@ -23,13 +23,13 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<!-- mailin Newsletter module display on registration page-->
-<h3 style="margin-bottom:0!important;">{l s='Newsletter' mod='mailinblue'}</h3>
+<!-- sendinblue Newsletter module display on registration page-->
+<h3 style="margin-bottom:0!important;">{l s='Newsletter' mod='sendinblue'}</h3>
 <fieldset class="account_creation" style="padding:15px 0 8px 40px; margin-top:0!important;">
 <p class="checkbox">
 <input id="newsletter" type="checkbox" value="1" checked="checked" name="newsletter">
-<label for="newsletter">{l s='Subscribe to our newsletter' mod='mailinblue'}</label>
+<label for="newsletter">{l s='Subscribe to our newsletter' mod='sendinblue'}</label>
 </p>
 </fieldset>
 
-<!-- /mailin Newsletter module-->
+<!-- /sendinblue Newsletter module-->
