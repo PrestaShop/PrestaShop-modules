@@ -288,7 +288,6 @@ class MailAlerts extends Module
 			$invoice_state = new State((int)$invoice->id_state);
 
 		// Filling-in vars for email
-		$template = 'new_order';
 		$template_vars = array(
 			'{firstname}' => $customer->firstname,
 			'{lastname}' => $customer->lastname,
@@ -341,14 +340,14 @@ class MailAlerts extends Module
 
 		$iso = Language::getIsoById($id_lang);
 		$dir_mail = false;
-		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
-		file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
+		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/new_order.txt') &&
+		file_exists(dirname(__FILE__).'/mails/'.$iso.'/new_order.html'))
 			$dir_mail = dirname(__FILE__).'/mails/';
 		// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
 		$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
 
-		if (file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.txt') &&
-			file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.html'))
+		if (file_exists(_PS_MAIL_DIR_.$iso.'/new_order.txt') &&
+			file_exists(_PS_MAIL_DIR_.$iso.'/new_order.html'))
 				$dir_mail = _PS_MAIL_DIR_;
 
 		if ($dir_mail)
