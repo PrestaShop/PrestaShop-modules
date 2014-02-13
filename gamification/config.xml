@@ -2,7 +2,7 @@
 <module>
 	<name>gamification</name>
 	<displayName><![CDATA[Merchant Expertise]]></displayName>
-	<version><![CDATA[1.7.8]]></version>
+	<version><![CDATA[1.7.9]]></version>
 	<description><![CDATA[Become an e-commerce expert within the blink of an eye!]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[administration]]></tab>
