@@ -557,6 +557,7 @@ class ecopresto extends Module{
 		/************************************************************/
 		$html .= '<div id="menuTab8Sheet" class="tabItem">';
 		/* INFO */
+		$html .= '<h2><a href="http://www.ecopresto.com/images/pdf/support_presta_v2_fr.pdf" target="_blank">'.$this->l('Pour télécharger la documentation cliquez-ici').'</a></h2><br /><br />';
 		$html .= '<p>'.$this->description.'</p>
 						<p>'.$this->l('Développé par : Agence ').$this->author.'</p>
 						<p>Site : <a href="http://www.ethercreation.com">www.ethercreation.com</a></p>
