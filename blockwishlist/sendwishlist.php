@@ -36,12 +36,13 @@ $module = new BlockWishList();
 
 if (Configuration::get('PS_TOKEN_ENABLE') == 1 AND
 	strcmp(Tools::getToken(false), Tools::getValue('token')) AND
-	$context->customer->isLogged() === true)
+	$context->customer->isLogged() === true
+)
 	exit($module->l('invalid token', 'sendwishlist'));
 
 if ($context->customer->isLogged())
 {
-	$id_wishlist = (int)(Tools::getValue('id_wishlist'));
+	$id_wishlist = (int)Tools::getValue('id_wishlist');
 	if (empty($id_wishlist) === true)
 		exit($module->l('Invalid wishlist', 'sendwishlist'));
 	for ($i = 1; empty($_POST['email'.strval($i)]) === false; ++$i)
@@ -60,10 +61,12 @@ if ($context->customer->isLogged())
 				'wishlist',
 				sprintf(Mail::l('Message from %1$s %2$s', $context->language->id), $customer->lastname, $customer->firstname),
 				array(
-				'{lastname}' => $customer->lastname,
-				'{firstname}' => $customer->firstname,
-				'{wishlist}' => $wishlist['name'],
-				'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/blockwishlist/view.php?token='.$wishlist['token']),
-				$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname, NULL, NULL, dirname(__FILE__).'/mails/');
+					'{lastname}' => $customer->lastname,
+					'{firstname}' => $customer->firstname,
+					'{wishlist}' => $wishlist['name'],
+					'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'module/blockwishlist/view?token='.$wishlist['token']
+				),
+				$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, dirname(__FILE__).'/mails/'
+			);
 	}
 }

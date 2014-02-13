@@ -33,7 +33,10 @@ require_once(dirname(__FILE__).'/../../init.php');
 include_once 'fianetsceau.php';
 
 
-$sceau = new Sceau();
+if (_PS_VERSION_ < '1.5')
+	$sceau = new Sceau();
+else
+	$sceau = new Sceau(Tools::getValue('id_shop'));
 
 if (Tools::getValue('token') == Tools::getAdminToken($sceau->getSiteid().$sceau->getAuthkey().$sceau->getLogin()))
 {

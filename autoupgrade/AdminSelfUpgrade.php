@@ -310,7 +310,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 	public function checkToken()
 	{
 		// simple checkToken in ajax-mode, to be free of Cookie class (and no Tools::encrypt() too )
-		if ($this->ajax)
+		if ($this->ajax && isset($_COOKIE['id_employee']))
 			return ($_COOKIE['autoupgrade'] == $this->encrypt($_COOKIE['id_employee']));
 		else
 			return parent::checkToken();
@@ -634,7 +634,8 @@ class AdminSelfUpgrade extends AdminSelfTab
 		$this->initPath();
 		$upgrader = new Upgrader();
 		preg_match('#([0-9]+\.[0-9]+)(?:\.[0-9]+){1,2}#', _PS_VERSION_, $matches);
-		$upgrader->branch = $matches[1];
+		if (isset($matches[1]))
+			$upgrader->branch = $matches[1];
 		$channel = $this->getConfig('channel');
 		switch ($channel)
 		{
@@ -752,9 +753,12 @@ class AdminSelfUpgrade extends AdminSelfTab
 
 		if (!$this->updateDefaultTheme) /* If set to false, we need to preserve the default themes */
 		{
-			$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
-			if (version_compare(_PS_VERSION_, '1.5.0.0', '>'))
+			if (version_compare(_PS_VERSION_, '1.6.0.0', '>'))
+				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default-bootstrap';
+			elseif (version_compare(_PS_VERSION_, '1.5.0.0', '>'))
 				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/default';
+			else
+				$this->excludeAbsoluteFilesFromUpgrade[] = '/themes/prestashop';
 		}
 	}
 
@@ -873,7 +877,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$filelist = scandir($this->backupPath);
 			foreach($filelist as $filename)
 				// the following will match file or dir related to the selected backup
-				if (!empty($name) && $name[0] != '.' && $name != 'index.php' && $name != '.htaccess' 
+				if (!empty($filename) && $filename[0] != '.' && $filename != 'index.php' && $filename != '.htaccess' 
 					&& preg_match('#^(auto-backupfiles_|)'.preg_quote($name).'(\.zip|)$#', $filename, $matches))
 				{
 					if (is_file($this->backupPath.DIRECTORY_SEPARATOR.$filename))
@@ -1168,7 +1172,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		if (isset($this->currentParams['directory_num']))
 		{
 			$config['channel'] = 'directory';
-			if (empty($this->currentParams['directory_num']))
+			if (empty($this->currentParams['directory_num']) || strpos($this->currentParams['directory_num'], '.') === false)
 			{
 				$this->error = 1;
 				$this->next_desc = sprintf($this->l('version number is missing. Unable to select that channel.'));
@@ -1628,7 +1632,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					if (preg_match("#autoupgrade#", $path))
 						unset($list_files_diff[$k]);
 					else
-						$list_files_diff[$k] = str_replace(DIRECTORY_SEPARATOR.'admin', DIRECTORY_SEPARATOR.$admin_dir, $path);
+						$list_files_diff[$k] = str_replace('/'.'admin', '/'.$admin_dir, $path); // do not replace by DIRECTORY_SEPARATOR
 			}
 			else
 				$list_files_diff = array();
@@ -2193,6 +2197,11 @@ class AdminSelfUpgrade extends AdminSelfTab
 			$this->next = 'error';
 			$this->nextQuickInfo[] = $this->l('No upgrade is possible.');
 			$this->nextErrors[] = $this->l('No upgrade is possible.');
+			if (strpos(INSTALL_VERSION, '.') === false)
+			{
+				$this->nextQuickInfo[] = $this->l(INSTALL_VERSION.' is not a valid version number.');
+				$this->nextErrors[] = $this->l(INSTALL_VERSION.' is not a valid version number.');
+			}
 			return false;
 		}
 
@@ -2305,14 +2314,14 @@ class AdminSelfUpgrade extends AdminSelfTab
 							// $this->next = 'error';
 							$this->nextQuickInfo[] = '
 								<div class="upgradeDbError">
-									[ERROR] PHP '.$upgrade_file.' '.$query.'
-									'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-									'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']).'
+									[ERROR] PHP '.$upgrade_file.' '.$query."\n".'
+									'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
+									'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']."\n").'
 								</div>';
 							$this->nextErrors[] = '
-								[ERROR] PHP '.$upgrade_file.' '.$query.'
-								'.(empty($phpRes['error']) ? '' : $phpRes['error']).'
-								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']);
+								[ERROR] PHP '.$upgrade_file.' '.$query."\n".'
+								'.(empty($phpRes['error']) ? '' : $phpRes['error']."\n").'
+								'.(empty($phpRes['msg']) ? '' : ' - '.$phpRes['msg']."\n");
 							$warningExist = true;
 						}
 						else
@@ -2405,7 +2414,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 			if (file_exists(_PS_ROOT_DIR_.'/cache/class_index.php'))
 				unlink(_PS_ROOT_DIR_.'/cache/class_index.php');
 
-			if (defined('_THEME_NAME_') && $this->updateDefaultTheme && preg_match('#(default|prestashop)$#', _THEME_NAME_))
+			if (defined('_THEME_NAME_') && $this->updateDefaultTheme && preg_match('#(default|prestashop|default-boostrap)$#', _THEME_NAME_))
 			{
 				$separator = addslashes(DIRECTORY_SEPARATOR);
 				$file = _PS_ROOT_DIR_.$separator.'themes'.$separator._THEME_NAME_.$separator.'cache'.$separator;
@@ -2436,12 +2445,21 @@ class AdminSelfUpgrade extends AdminSelfTab
 						if (!is_dir($file) && $file[0] != '.' && $file != 'index.php' && $file != '.htaccess')
 							if (file_exists($dir.basename(str_replace('.php', '', $file).'.php')))
 								unlink($dir.basename($file));
+			}
 
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
-				if ($this->updateDefaultTheme)
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value=0 WHERE name=\'PS_REWRITING_SETTINGS\'');
+			if ($this->updateDefaultTheme)
+			{
+				if (version_compare(INSTALL_VERSION, '1.6.0.0', '>'))
 				{
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
-						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\' WHERE id_shop = 1 AND id_theme = 1)');
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default-bootstrap\') WHERE id_shop = 1 AND id_theme = 1');
+					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'default\' LIMIT 1');
+				}
+				elseif (version_compare(INSTALL_VERSION, '1.5.0.0', '>'))
+				{
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'shop` 
+						SET id_theme = (SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE name LIKE \'default\') WHERE id_shop = 1 AND id_theme = 1');
 					Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'theme` WHERE  name LIKE \'prestashop\' LIMIT 1');
 				}
 			}
@@ -4198,11 +4216,11 @@ txtError[37] = "'.$this->l('The config/defines.inc.php file was not found. Where
 			sprintf($this->l('The directory %1$s will be used for upgrading to version '),
 				'<b>/admin/autoupgrade/latest/prestashop/</b>' ).
 			' <input type="text" size="10" name="directory_num"
-			value="'.($this->getConfig('directory.version_num')?$this->getConfig('directory.version_num'):'').'" /> *
+			value="'.($this->getConfig('directory.version_num')?$this->getConfig('directory.version_num'):'').'" /> <small>(1.5.6.2 for instance)</small> *
 			<br/>
-			<div class="margin-form">'
+			<p>* '
 			.$this->l('This option will skip both download and unzip steps and will use admin/autoupgrde/download/prestashop/ as source.').'</div>
-			</div>';
+			</p>';
 		// backupFiles
 		// backupDb
 		$content .= '<div style="clear:both;">
@@ -4771,7 +4789,10 @@ function afterUpdateConfig(res)
 		newChannel.addClass("current");
 		newChannel.html("* "+newChannel.html());
 	}
-	showConfigResult(res.next_desc);
+	if (res.error == 1)
+		showConfigResult(res.next_desc, "error");
+	else
+		showConfigResult(res.next_desc);
 	$("#upgradeNow").unbind();
 	$("#upgradeNow").replaceWith("<a class=\"button-autoupgrade\" href=\"'.$this->currentIndex.'&token='.$this->token.'\" >'.$this->l('Click to refresh the page and use the new configuration', 'AdminSelfUpgrade', true).'</a>");
 }
@@ -5319,7 +5340,7 @@ $(document).ready(function()
 				params.channel = "directory";
 				params.directory_prestashop = $("select[name=directory_prestashop] option:selected").val();
 				directory_num = $("input[name=directory_num]").val();
-				if (directory_num == "")
+				if (directory_num == "" || directory_num.indexOf(".") == -1)
 				{
 					showConfigResult("'.$this->l('You need to enter the version number associated to the directory.').'", "error");
 					return false;

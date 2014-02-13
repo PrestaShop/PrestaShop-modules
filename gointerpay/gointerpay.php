@@ -23,7 +23,7 @@ class GoInterpay extends PaymentModule
 	{	
 		$this->name = 'gointerpay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.5';
+		$this->version = '1.7.6';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -443,16 +443,16 @@ class GoInterpay extends PaymentModule
 		WHERE c.is_root_category = 0
 		ORDER BY category, pl.`name` ASC');
 
-		foreach ($sqlprod as $row)
-		{
-			$category = $row['category'];
-			$row['value'] = Tools::jsonEncode(array($row['id_category'], $row['id_product']), JSON_NUMERIC_CHECK);
-			$gointerpay_export_product = Tools::jsonDecode(Configuration::get('GOINTERPAY_EXPORT_PRODUCT'));
-			$row['checked'] = (in_array('['.$row['id_category'].','.$row['id_product'].']', (is_array($gointerpay_export_product)) ? $gointerpay_export_product : array()));
-			unset($row['category'], $row['id_category']);
+        foreach ($sqlprod as $row)
+        {
+            $category = $row['category'];
+            $row['value'] = Tools::jsonEncode(array((int)$row['id_category'], (int)$row['id_product']), JSON_NUMERIC_CHECK);
+            $gointerpay_export_product = Tools::jsonDecode(Configuration::get('GOINTERPAY_EXPORT_PRODUCT'));
+            $row['checked'] = (in_array('['.(int)$row['id_category'].','.(int)$row['id_product'].']', (is_array($gointerpay_export_product)) ? $gointerpay_export_product : array()));
+            unset($row['category'], $row['id_category']);
 
-			$gointerpay_category_products_list[$category][] = $row;
-		}
+            $gointerpay_category_products_list[$category][] = $row;
+        }
 
 		$this->context->smarty->assign('category_products', $gointerpay_category_products_list);
 

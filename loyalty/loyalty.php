@@ -42,7 +42,7 @@ class Loyalty extends Module
 	{
 		$this->name = 'loyalty';
 		$this->tab = 'pricing_promotion';
-		$this->version = '1.9';
+		$this->version = '1.11';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -643,7 +643,7 @@ class Loyalty extends Module
 								'Uncheck All' => $this->l('Uncheck All')
 							),
 							'selected_cat' => $selected_categories,
-							'input_name' => 'categoryBox',
+							'input_name' => 'categoryBox[]',
 							'use_radio' => false,
 							'use_search' => false,
 							'disabled_categories' => array(),

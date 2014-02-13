@@ -84,8 +84,8 @@ class MailAlert extends ObjectModel
 	{
 		$sql = '
 			DELETE FROM `'._DB_PREFIX_.self::$definition['table'].'`
-			WHERE '.(($id_customer > 0) ? '(`customer_email` = \''.pSQL(Context::getContext()->customer->email).'\' OR `id_customer` = '.(int)$id_customer.')' :
-				'`customer_email` = \''.pSQL(Context::getContext()->customer->email).'\'').
+			WHERE '.(($id_customer > 0) ? '(`customer_email` = \''.pSQL($customer_email).'\' OR `id_customer` = '.(int)$id_customer.')' :
+				'`customer_email` = \''.pSQL($customer_email).'\'').
 			' AND `id_product` = '.(int)$id_product.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute.'
 			AND `id_shop` = '.(int)Context::getContext()->shop->id;

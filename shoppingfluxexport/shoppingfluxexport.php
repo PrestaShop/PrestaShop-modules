@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.3';
+		$this->version = '3.4.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -490,8 +490,10 @@ class ShoppingFluxExport extends Module
 
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
-
-		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+        $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+        
+        //manage case PS_CARRIER_DEFAULT is deleted
+        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
@@ -563,6 +565,9 @@ class ShoppingFluxExport extends Module
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+		
+        //manage case PS_CARRIER_DEFAULT is deleted
+        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], $current);
 
 		$str = '';
@@ -1375,9 +1380,11 @@ class ShoppingFluxExport extends Module
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail_tax', $updateOrderDetailTax, 'UPDATE', '`id_order_detail` = '.(int)$id_order_detail);
 
 		}
-
-		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-
+        $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+        
+        //manage case PS_CARRIER_DEFAULT is deleted
+        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+        
 		$updateOrder = array(
 			'total_paid' => (float)($order->TotalAmount),
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
@@ -1388,7 +1395,7 @@ class ShoppingFluxExport extends Module
 			'total_shipping' => (float)($order->TotalShipping),
 			'total_shipping_tax_incl' => (float)($order->TotalShipping),
 			'total_shipping_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
-			'id_carrier' => $carrier->id_carrier
+			'id_carrier' => $carrier->id
 		);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $updateOrder, 'UPDATE', '`id_order` = '.(int)$id_order);
@@ -1407,7 +1414,7 @@ class ShoppingFluxExport extends Module
 		$updateOrderTracking = array(
 			'shipping_cost_tax_incl' => (float)($order->TotalShipping),
 			'shipping_cost_tax_excl' => (float)((float)$order->TotalShipping / (1 + ($tax_rate / 100))),
-			'id_carrier' => $carrier->id_carrier
+			'id_carrier' => $carrier->id
 		);
 
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'order_carrier', $updateOrderTracking, 'UPDATE', '`id_order` = '.(int)$id_order);
@@ -1445,11 +1452,12 @@ class ShoppingFluxExport extends Module
 		$cart->id_lang = Configuration::get('PS_LANG_DEFAULT');
 		$cart->recyclable = 0;
 		$cart->secure_key = md5(uniqid(rand(), true));
-
-		$id_carrier_sf = (int)Configuration::get('SHOPPING_FLUX_CARRIER');
-		$carrier = $id_carrier_sf !== 0 ? Carrier::getCarrierByReference($id_carrier_sf) : new Carrier(Configuration::get('PS_CARRIER_DEFAULT'));
-
-		$cart->id_carrier = $carrier->id_carrier;
+		
+        $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+        
+        //manage case PS_CARRIER_DEFAULT is deleted
+        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+		$cart->id_carrier = $carrier->id;
 		$cart->add();
 
 		foreach ($productsNode->Product as $product)

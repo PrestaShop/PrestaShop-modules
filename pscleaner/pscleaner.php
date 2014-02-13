@@ -34,9 +34,11 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.1.3';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
+			$this->multishop_context = Shop::CONTEXT_ALL;
 
 		$this->bootstrap = true;
 		parent::__construct();	
@@ -48,7 +50,7 @@ class PSCleaner extends Module
 	
 	protected function getMultiShopValues($key)
 	{
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+		if (version_compare(_PS_VERSION_, '1.6.0.3', '>=') === true)
 			return Configuration::getMultiShopValues($key);
 		else
 		{
@@ -91,12 +93,12 @@ class PSCleaner extends Module
 				$conf = $this->l('Nothing that need to be cleaned');
 			$html .= $this->displayConfirmation($conf);
 		}
-		elseif (Tools::isSubmit('submitTruncateCatalog'))
+		elseif (Tools::getValue('submitTruncateCatalog') && Tools::getValue('checkTruncateCatalog'))
 		{
 			self::truncate('catalog');
 			$html .= $this->displayConfirmation($this->l('Catalog truncated'));
 		}
-		elseif (Tools::isSubmit('submitTruncateSales'))
+		elseif (Tools::getValue('submitTruncateSales') && Tools::getValue('checkTruncateSales'))
 		{
 			self::truncate('sales');
 			$html .= $this->displayConfirmation($this->l('Orders and customers truncated'));

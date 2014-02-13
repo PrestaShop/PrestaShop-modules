@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.7.5';
+		$this->version = '1.7.8';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -443,7 +443,7 @@ class Gamification extends Module
 		{
 			if (filesize($file) < 1)
 				return false;
-			return ((time() - filemtime($file)) < $timeout);
+			return ((time() - @filemtime($file)) < $timeout);
 		}
 		else
 			return false;

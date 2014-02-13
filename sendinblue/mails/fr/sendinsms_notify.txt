@@ -1,0 +1,4 @@
+﻿Cet email est envoyé pour vous informer que vous n'avez plus assez de crédits pour envoyer des SMS à partir de votre site PrestaShop
+Actuellement, vous avez {present_credit} crédits SMS.
+Cordialement,
+L'équipe de SendinBlue

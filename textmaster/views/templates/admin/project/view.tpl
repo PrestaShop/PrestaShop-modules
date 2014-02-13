@@ -116,6 +116,21 @@
         });
     });
     
+    function updateDocument(id_product, id_document, confirmText)
+    {
+        var approveUrl = module_url+'&id_document='+encodeURIComponent(id_document)+'&approveDocument&update_product_only=1';
+        if (confirmText != '' && id_product != '')
+        {
+            if (confirm(confirmText))
+            {
+                window.location = approveUrl+'&id_product='+encodeURIComponent(id_product);
+                return true;
+            }
+            else return false;   
+        }
+        window.location = approveUrl;
+    }
+    
     function approveDocument(id_product, id_document, confirmText)
     {
         var approveUrl = module_url+'&id_document='+encodeURIComponent(id_document)+'&approveDocument';

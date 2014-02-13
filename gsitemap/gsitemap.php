@@ -548,7 +548,7 @@ class Gsitemap extends Module
 		Tools::file_get_contents('http://www.google.com/webmasters/sitemaps/ping?sitemap='.urlencode('http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).$this->context->shop->physical_uri.$this->context->shop->virtual_uri.$this->context->shop->id.'_index_sitemap.xml'));
 
 		if ($this->cron)
-			return true;
+			die();
 		header('location: ./index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&validation');
 		die();
 	}
