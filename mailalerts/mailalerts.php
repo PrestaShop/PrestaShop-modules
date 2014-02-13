@@ -356,7 +356,7 @@ class MailAlerts extends Module
 			{
 				Mail::Send(
 					$id_lang,
-					$template,
+					'new_order',
 					sprintf(Mail::l('New order : #%d - %s', $id_lang), $order->id, $order->reference),
 					$template_vars,
 					$merchant_mail,
@@ -408,7 +408,7 @@ class MailAlerts extends Module
 		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
 		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
-		
+
 		$check_oos = ($product_has_attributes && $id_product_attribute) || (!$product_has_attributes && !$id_product_attribute);
 		
 		if ($check_oos && $product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
@@ -709,9 +709,9 @@ class MailAlerts extends Module
 				)
 			),
 		);
-		
-		
-		
+
+
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -731,7 +731,7 @@ class MailAlerts extends Module
 
 		return $helper->generateForm(array($fields_form_1, $fields_form_2));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
