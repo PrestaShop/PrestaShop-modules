@@ -204,18 +204,13 @@ class Catalog
 											AND `id_order`='.(int)$com['id_order'].'
                                             GROUP BY od.`product_supplier_reference`');
 
-			if ($ok == 0)
-			{
-				unset($lstC[$i]);
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
-			}
             
-            	$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
+            		$ok2 = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
                                             FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca 
                                             WHERE od.`product_supplier_reference` = ca.`reference_attribute`
 											AND `id_order`='.(int)$com['id_order'].'
                                             GROUP BY od.`product_supplier_reference`');
-            	if ($ok == 0)
+            		if ($ok == 0 && $ok2 == 0)
 			{
 				unset($lstC[$i]);
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
