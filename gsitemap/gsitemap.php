@@ -308,7 +308,7 @@ class Gsitemap extends Module
 			$product = new Product((int)$product_id['id_product'], false, (int)$lang['id_lang']);
 			$url = null;
 			
-			if (_PS_VERSION_ >= 1.5 && $product->isAssociatedToShop() && $product->active)
+			if (version_compare(_PS_VERSION_, '1.5', '>=') && $product->isAssociatedToShop() && $product->active)
 			{
 				$url = $link->getProductLink($product, $product->link_rewrite, htmlspecialchars(strip_tags($product->category)), $product->ean13, (int)$lang['id_lang'], (int)$this->context->shop->id, 0, true);
 			}
