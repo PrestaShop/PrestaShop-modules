@@ -44,16 +44,16 @@
 
   var AddShoppersTracking = {
   {/literal}{if $is_product_page}{literal}
-      name: "{/literal}{$product_name|escape:'htmlall':'UTF-8'}{literal}",
-      description: "{/literal}{$product_description|escape:html:'UTF-8'|replace:"\r\n":''|replace:"\n":''}{literal}",
-      image: "{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}",
-      price: "{/literal}{$price}{literal}",
-      stock: "{/literal}{$stock}{literal}"
+      name:        '{/literal}{$product_name|unescape:'htmlall'|escape:'quotes':'UTF-8'}{literal}',
+      description: '{/literal}{$product_description|unescape:'htmlall'|escape:'quotes':'UTF-8'|replace:"\r\n":''|replace:"\n":''}{literal}',
+      image:       '{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}',
+      price:       '{/literal}{$price|unescape:'htmlall'|escape:'quotes':'UTF-8'}{literal}',
+      stock:       '{/literal}{$stock}{literal}'
       {/literal}{if isset($instock)},instock: {$instock}{/if}{literal}
   {/literal}{else}{literal}
-      name: "{/literal}{$meta_title|escape:'htmlall':'UTF-8'}{literal}",
-      description: "{/literal}{$meta_description|escape:html:'UTF-8'}{literal}",
-      image: "{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}"
+      name:        '{/literal}{$meta_title|unescape:'htmlall'|escape:'quotes':'UTF-8'}{literal}',
+      description: '{/literal}{$meta_description|unescape:'htmlall'|escape:'quotes':'UTF-8'}{literal}',
+      image:       '{/literal}{if isset($image_url)}{$image_url}{else}{$logo_url}{/if}{literal}'
   {/literal}{/if}{literal}
   };
 
