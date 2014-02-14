@@ -44,6 +44,8 @@ if (Tools::getValue('cryptToken') == $cryptToken && ((time() - $timeGenerated) <
 
 	$order_details  = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS($sql);
 
+	$final_products = array();
+
 	if (is_array($order_details) && count($order_details) > 0)
 		foreach ($order_details as $ar_order)
 		{
@@ -63,7 +65,6 @@ if (Tools::getValue('cryptToken') == $cryptToken && ((time() - $timeGenerated) <
 
 				if (is_array($products) && (count($products) > 0))
 				{
-					$final_products = array();
 					foreach ($products as $product)
 					{
 						/* For each product we collect image url, url, name, id */
@@ -95,7 +96,7 @@ if (Tools::getValue('cryptToken') == $cryptToken && ((time() - $timeGenerated) <
 			/* Every row it's a product on order */
 			$csv .= '"'.$p['OrderId'].'","'.$p['CustomerId'].'","'.$p['CustomerEmail'].'","'.$p['OrderDate'].'","'.$p['Id'].'","'.
 				str_replace('"', '""', $p['Name']).'","'.str_replace('"', '""', $p['Url']).'","'.
-				str_replace('"', '""', $p['ImageUrl']).'","PrestaShop"'."\r\n";
+				str_replace('"', '""', $p['ImageUrl']).'","'.str_replace('"', '""', $p['Platform']).'"'."\r\n";
 		}
 
 	/* Send header to force download of a file called export_date.csv */
