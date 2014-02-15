@@ -79,7 +79,7 @@ class CarrierCompare extends Module
 	
 	public function hookHeader($params)
 	{
-		if (!$this->isModuleAvailable())
+		if (!$this->isModuleAvailable() || !isset($this->context->controller->php_self) || $this->context->controller->php_self != 'order')
 			return;
 		$this->context->controller->addCSS(($this->_path).'style.css', 'all');
 		$this->context->controller->addJS(($this->_path).'carriercompare.js');
