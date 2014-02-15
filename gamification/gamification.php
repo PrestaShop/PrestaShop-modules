@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.7.3';
+		$this->version = '1.7.9';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -134,8 +134,18 @@ class Gamification extends Module
 		}
 	}
 	
+	public function isUpdating()
+	{
+		$db_version = Db::getInstance()->getValue('SELECT `version` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->name).'\'');
+		return version_compare($this->version, $db_version, '>');
+	}
+	
 	public function hookDisplayBackOfficeHeader()
 	{
+		//check if currently updatingcheck if module is currently processing update
+		if ($this->isUpdating())
+			return false;
+		
 		if (method_exists($this->context->controller, 'addJquery'))
 		{
 			$this->context->controller->addJquery();
@@ -163,6 +173,10 @@ class Gamification extends Module
 	
 	public function renderHeaderNotification()
 	{
+		//check if currently updatingcheck if module is currently processing update
+		if ($this->isUpdating())
+			return false;
+		
 		$current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
 		$current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 		
@@ -429,7 +443,7 @@ class Gamification extends Module
 		{
 			if (filesize($file) < 1)
 				return false;
-			return ((time() - filemtime($file)) < $timeout);
+			return ((time() - @filemtime($file)) < $timeout);
 		}
 		else
 			return false;

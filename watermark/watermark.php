@@ -43,27 +43,28 @@ class Watermark extends Module
 	{
 		$this->name = 'watermark';
 		$this->tab = 'administration';
-		$this->version = '0.4';
+		$this->version = '0.5';
 		$this->author = 'PrestaShop';
-		
+
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
+
+		$this->displayName = $this->l('Watermark');
+		$this->description = $this->l('Protect image by watermark.');
+		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 
 		$config = Configuration::getMultiple(array('WATERMARK_TYPES', 'WATERMARK_Y_ALIGN', 'WATERMARK_X_ALIGN', 'WATERMARK_TRANSPARENCY'));
 		if (!isset($config['WATERMARK_TYPES']))
 			$config['WATERMARK_TYPES'] = '';
 		$tmp = explode(',', $config['WATERMARK_TYPES']);
 		foreach (ImageType::getImagesTypes('products') as $type)
-		    if (in_array($type['id_image_type'], $tmp))
+			if (in_array($type['id_image_type'], $tmp))
 				$this->imageTypes[] = $type;
-		
+
 		$this->yAlign = isset($config['WATERMARK_Y_ALIGN']) ? $config['WATERMARK_Y_ALIGN'] : '';
 		$this->xAlign = isset($config['WATERMARK_X_ALIGN']) ? $config['WATERMARK_X_ALIGN'] : '';
 		$this->transparency = isset($config['WATERMARK_TRANSPARENCY']) ? $config['WATERMARK_TRANSPARENCY'] : 60;
 
-		$this->displayName = $this->l('Watermark');
-		$this->description = $this->l('Protect image by watermark.');
-		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 		if (!isset($this->transparency) || !isset($this->xAlign) || !isset($this->yAlign))
 			$this->warning = $this->l('Watermark image must be uploaded in order for this module to work correctly.');
 	}
@@ -94,13 +95,13 @@ class Watermark extends Module
 		$yalign = Tools::getValue('yalign');
 		$xalign = Tools::getValue('xalign');
 		$transparency = (int)(Tools::getValue('transparency'));
-		
+
 		$types = ImageType::getImagesTypes('products');
 		$id_image_type = array();
 		foreach ($types as $type)
 			if (!is_null(Tools::getValue('WATERMARK_TYPES_'.(int)$type['id_image_type'])))
 				$id_image_type['WATERMARK_TYPES_'.(int)$type['id_image_type']] = true;
-		
+
 		if (empty($transparency))
 			$this->_postErrors[] = $this->l('Transparency required.');
 		elseif ($transparency < 1 || $transparency > 100)
@@ -110,7 +111,7 @@ class Watermark extends Module
 			$this->_postErrors[] = $this->l('Y-Align is required.');
 		elseif (!in_array($yalign, $this->yaligns))
 			$this->_postErrors[] = $this->l('Y-Align is not in allowed range.');
-		
+
 		if (empty($xalign))
 			$this->_postErrors[] = $this->l('X-Align is required.');
 		elseif (!in_array($xalign, $this->xaligns))
@@ -123,7 +124,7 @@ class Watermark extends Module
 			if (!ImageManager::isRealImage($_FILES['PS_WATERMARK']['tmp_name'], $_FILES['PS_WATERMARK']['type'], array('image/gif')))
 				$this->_postErrors[] = $this->l('Image must be in GIF format.');
 		}
-		
+
 		return !count($this->_postErrors) ? true : false;
 	}
 
@@ -161,7 +162,7 @@ class Watermark extends Module
 		else
 			$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
 	}
-	
+
 	public function getAdminDir()
 	{
 		$admin_dir = str_replace('\\', '/', _PS_ADMIN_DIR_);
@@ -169,7 +170,7 @@ class Watermark extends Module
 		$len = count($admin_dir);
 		return $len > 1 ? $admin_dir[$len - 1] : _PS_ADMIN_DIR_;
 	}
-	
+
 	public function removeHtaccessSection()
 	{
 		$key1 = "\n# start ~ module watermark section";
@@ -277,7 +278,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 			return false;
 		return imagejpeg($image, $outputpath, 100); 
 	}
-	
+
 	public function renderForm()
 	{
 		$types = ImageType::getImagesTypes('products');
@@ -331,7 +332,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Watermark X align:'),
+						'label' => $this->l('Watermark Y align:'),
 						'name' => 'yalign',
 						'class' => 'fixed-width-md',
 						'options' => array(
@@ -366,7 +367,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-default')
+					'class' => 'btn btn-default pull-right')
 			),
 		);
 
@@ -397,12 +398,12 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 			'xalign' => Tools::getValue('xalign', Configuration::get('WATERMARK_X_ALIGN')),
 			'yalign' => Tools::getValue('yalign', Configuration::get('WATERMARK_Y_ALIGN')),
 		);
-		//get all images type available 
+		//get all images type available
 		$types = ImageType::getImagesTypes('products');
 		$id_image_type = array();
 		foreach ($types as $type)
 			$id_image_type[] = $type['id_image_type'];
-		
+
 		//get images type from $_POST
 		$id_image_type_post = array();
 		foreach ($id_image_type as $id)
@@ -418,13 +419,13 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 
 		foreach ($confs as $conf)
 			$id_image_type_config['WATERMARK_TYPES_'.(int)$conf] = true;
-		
+
 		//return only common values and value from post
 		if (Tools::isSubmit('btnSubmit'))
 			$config_fields = array_merge($config_fields, array_intersect($id_image_type_post, $id_image_type_config));
 		else
 			$config_fields = array_merge($config_fields, $id_image_type_config);
-		
+
 		return $config_fields;
 	}
 }

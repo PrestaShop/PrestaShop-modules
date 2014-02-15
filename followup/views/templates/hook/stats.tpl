@@ -24,47 +24,47 @@
 *}
 
 <div class="panel" id="fieldset_4">
-    <h3><i class="icon-bar-chart"></i> {l s="Statistics" mod='followup'}</h3>
-	<p>{l s="Detailed statistics for last 30 days:"}</p>
+    <h3><i class="icon-bar-chart"></i> {l s='Statistics' mod='followup'}</h3>
+	<p>{l s='Detailed statistics for last 30 days:' mod='followup'}</p>
 	<p style="font-size: 10px; font-weight: bold;">
-		{l s="S = Number of sent e-mails"}<br />
-		{l s="U = Number of discounts used (valid orders only)"}<br />
-		{l s="% = Conversion rate"}
+		{l s='S = Number of sent e-mails' mod='followup'}<br />
+		{l s='U = Number of discounts used (valid orders only)' mod='followup'}<br />
+		{l s='% = Conversion rate' mod='followup'}
 	</p>
 	<table class="table">
 		<tr>
-			<th rowspan="2" style="width: 75px;">{l s="Date"}</th>
-			<th colspan="3">{l s="Cancelled carts"}</th>
-			<th colspan="3">{l s="Re-order"}</th>
-			<th colspan="3">{l s="Best cust."}</th>
-			<th colspan="3">{l s="Bad cust."}</th>
+			<th rowspan="2" style="width: 75px;">{l s='Date' mod='followup'}</th>
+			<th colspan="3">{l s='Cancelled carts' mod='followup'}</th>
+			<th colspan="3">{l s='Re-order' mod='followup'}</th>
+			<th colspan="3">{l s='Best cust.' mod='followup'}</th>
+			<th colspan="3">{l s='Bad cust.' mod='followup'}</th>
 		</tr>
 		<tr>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s='S' mod='followup'}</td>
+			<td class="center">{l s='U' mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
-			<td class="center">{l s="S"}</td>
-			<td class="center">{l s="U"}</td>
+			<td class="center">{l s="S" mod='followup'}</td>
+			<td class="center">{l s="U" mod='followup'}</td>
 			<td class="center">%</td>
 		</tr>
 		{foreach from=$stats_array key='date' item='stats'}
 		<tr>
-			<td class="center">{$date}</td>
+			<td class="center">{$date|escape:'htmlall':'UTF-8'}</td>
 			{foreach from=$stats key='key' item='val'}
-				<td class="center">{$val.nb}</td>
-				<td class="center">{$val.nb_used}</td>
-				<td class="center">{$val.rate}</td>
+				<td class="center">{$val.nb|escape:'htmlall':'UTF-8'}</td>
+				<td class="center">{$val.nb_used|escape:'htmlall':'UTF-8'}</td>
+				<td class="center">{$val.rate|escape:'htmlall':'UTF-8'}</td>
 			{/foreach}	
 		</tr>
 		{foreachelse}
 			<tr>
-				<td colspan="13" style="font-weight: bold; text-align: center;">{l s="No statistics at this time."}</td>
+				<td colspan="13" style="font-weight: bold; text-align: center;">{l s='No statistics at this time.' mod='followup'}</td>
 			</tr>
 		{/foreach}
 	</table>

@@ -29,59 +29,66 @@ if (!defined('_PS_VERSION_'))
 
 class Newsletter extends Module
 {
-	private $_postErrors = array();
-	private $_html = '';
-	private $_postSucess;
+	private $post_errors = array();
+	private $html = '';
 
 	public function __construct()
 	{
 		$this->name = 'newsletter';
 		$this->tab = 'administration';
-		$this->version = 2.0;
+		$this->version = '2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		$this->bootstrap = true;
-		parent::__construct();	
+		parent::__construct();
 
 		$this->displayName = $this->l('Newsletter');
 		$this->description = $this->l('Generates a .CSV file for mass mailings');
 
 		if ($this->id)
 		{
-			$this->_file = 'export_'.Configuration::get('PS_NEWSLETTER_RAND').'.csv';
-			$this->_postValid = array();
+			$this->file = 'export_'.Configuration::get('PS_NEWSLETTER_RAND').'.csv';
+			$this->post_valid = array();
 
 			// Getting data...
-			$_countries = Country::getCountries($this->context->language->id);
+			$countries = Country::getCountries($this->context->language->id);
 
 			// ...formatting array
-			$countries[0] = $this->l('All countries');
-			foreach ($_countries as $country)
-				$countries[$country['id_country']] = $country['name'];
+			$countries_list = array($this->l('All countries'));
+			foreach ($countries as $country)
+				$countries_list[$country['id_country']] = $country['name'];
 
 			// And filling fields to show !
-			$this->_fieldsExport = array(
-			'COUNTRY' => array(
-				'title' => $this->l('Customers\' country'),
-				'desc' => $this->l('Operate a filter on customers\' country.'),
-				'type' => 'select',
-				'value' => $countries,
-				'value_default' => 0
+			$this->fields_export = array(
+				'COUNTRY' => array(
+					'title' => $this->l('Customers\' country'),
+					'desc' => $this->l('Operate a filter on customers\' country.'),
+					'type' => 'select',
+					'value' => $countries_list,
+					'value_default' => 0
 				),
-			'SUSCRIBERS' => array(
-				'title' => $this->l('Newsletter subscribers'),
-				'desc' => $this->l('Filter newsletter subscribers.'),
-				'type' => 'select',
-				'value' => array(0 => $this->l('All customers'), 2 => $this->l('Subscribers'), 1 => $this->l('Non-subscribers')),
-				'value_default' => 2
+				'SUSCRIBERS' => array(
+					'title' => $this->l('Newsletter subscribers'),
+					'desc' => $this->l('Filter newsletter subscribers.'),
+					'type' => 'select',
+					'value' => array(
+						0 => $this->l('All customers'),
+						2 => $this->l('Subscribers'),
+						1 => $this->l('Non-subscribers')
+					),
+					'value_default' => 2
 				),
-			'OPTIN' => array(
-				'title' => $this->l('Opted-in subscribers'),
-				'desc' => $this->l('Filter opted-in subscribers.'),
-				'type' => 'select',
-				'value' => array(0 => $this->l('All customers'), 2 => $this->l('Subscribers'), 1 => $this->l('Non-subscribers')),
-				'value_default' => 0
+				'OPTIN' => array(
+					'title' => $this->l('Opted-in subscribers'),
+					'desc' => $this->l('Filter opted-in subscribers.'),
+					'type' => 'select',
+					'value' => array(
+						0 => $this->l('All customers'),
+						2 => $this->l('Subscribers'),
+						1 => $this->l('Non-subscribers')
+					),
+					'value_default' => 0
 				),
 			);
 		}
@@ -89,48 +96,51 @@ class Newsletter extends Module
 
 	public function install()
 	{
-		return (parent::install() AND Configuration::updateValue('PS_NEWSLETTER_RAND', rand().rand()));
+		return (parent::install() && Configuration::updateValue('PS_NEWSLETTER_RAND', rand().rand()));
 	}
 
-	private function _postProcess()
+	private function postProcess()
 	{
 		if (Tools::isSubmit('submitExport') && $action = Tools::getValue('action'))
 		{
+			$result = array();
 			if ($action == 'customers')
-				$result = $this->_getCustomers();
+				$result = $this->getCustomers();
 			else
 			{
 				if (!Module::isInstalled('blocknewsletter'))
-					$this->_html .= $this->displayError('The module "blocknewsletter" is required for this feature');
+					$this->html .= $this->displayError('The module "blocknewsletter" is required for this feature');
 				else
-					$result = $this->_getBlockNewsletter();
+					$result = $this->getBlockNewsletter();
 			}
-			if (!$nb = (int)(Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows()))
-				$this->_html .= $this->displayError($this->l('No customers found with these filters!'));
-			elseif ($fd = @fopen(dirname(__FILE__).'/'.strval(preg_replace('#\.{2,}#', '.', $_POST['action'])).'_'.$this->_file, 'w'))
+			if (!$nb = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->NumRows())
+				$this->html .= $this->displayError($this->l('No customers found with these filters!'));
+			elseif ($fd = @fopen(dirname(__FILE__).'/'.strval(preg_replace('#\.{2,}#', '.', Tools::getValue('action'))).'_'.$this->file, 'w'))
 			{
-				foreach ($result AS $tab)
-					$this->_my_fputcsv($fd, $tab);
+				foreach ($result as $tab)
+					$this->myFputCsv($fd, $tab);
 				fclose($fd);
-				$this->_html .= $this->displayConfirmation(
-				sprintf($this->l('The .CSV file has been successfully exported. (%d customers found)'), $nb).'<br />
-				<a href="../modules/newsletter/'.Tools::safeOutput(strval($_POST['action'])).'_'.$this->_file.'"><b>'.$this->l('Download the file').' '.$this->_file.'</b></a>
+				$this->html .= $this->displayConfirmation(
+					sprintf($this->l('The .CSV file has been successfully exported. (%d customers found)'), $nb).'<br />
+				<a href="../modules/newsletter/'.Tools::safeOutput(strval(Tools::getValue('action'))).'_'.$this->file.'">
+				<b>'.$this->l('Download the file').' '.$this->file.'</b>
+				</a>
 				<br />
 				<ol style="margin-top: 10px;">
-					<li style="color: red;">'.$this->l('WARNING: If opening this .csv file with Excel, remember to choose UTF-8 encoding or you may see strange characters.').'</li>
+					<li style="color: red;">'.
+					$this->l('WARNING: If opening this .csv file with Excel, remember to choose UTF-8 encoding or you may see strange characters.').
+					'</li>
 				</ol>');
 			}
 			else
-				$this->_html .= $this->displayError($this->l('Error: cannot write').' '.dirname(__FILE__).'/'.strval($_POST['action']).'_'.$this->_file.' !');
+				$this->html .= $this->displayError($this->l('Error: cannot write').' '.dirname(__FILE__).'/'.strval(Tools::getValue('action')).'_'.$this->file.' !');
 		}
 	}
 
-	private function _getCustomers()
+	private function getCustomers()
 	{
 		$dbquery = new DbQuery();
-		$dbquery->select('c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`, c.`ip_registration_newsletter`, c.`newsletter_date_add`')
-				->from('customer', 'c')
-				->groupBy('c.`email`');
+		$dbquery->select('c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`, c.`ip_registration_newsletter`, c.`newsletter_date_add`')->from('customer', 'c')->groupBy('c.`email`');
 
 		if (Tools::getValue('SUSCRIBERS'))
 			$dbquery->where('c.`newsletter` = '.((int)Tools::getValue('SUSCRIBERS') - 1));
@@ -146,91 +156,95 @@ class Newsletter extends Module
 								AND a.`id_country` = '.(int)Tools::getValue('COUNTRY').') >= 1');
 
 		if (Context::getContext()->cookie->shopContext)
-			$dbquery->where('c.id_shop = '.(int)Context::getContext()->shop->id); 
+			$dbquery->where('c.id_shop = '.(int)Context::getContext()->shop->id);
 
 		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($dbquery->build());
 
 		$header = array('id_customer', 'lastname', 'firstname', 'email', 'ip_address', 'newsletter_date_add');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
+
 		return $result;
 	}
 
-	private function _getBlockNewsletter()
+	private function getBlockNewsletter()
 	{
-		$rqSql = 'SELECT `id`, `email`, `newsletter_date_add`, `ip_registration_newsletter`
+		$rq_sql = 'SELECT `id`, `email`, `newsletter_date_add`, `ip_registration_newsletter`
 		FROM `'._DB_PREFIX_.'newsletter`
 		WHERE `active` = 1';
 
 		if (Context::getContext()->cookie->shopContext)
-			$rqSql .= ' AND `id_shop` = '.(int)Context::getContext()->shop->id;
+			$rq_sql .= ' AND `id_shop` = '.(int)Context::getContext()->shop->id;
 
-		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($rqSql); 
+		$rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($rq_sql);
 
 		$header = array('id_customer', 'email', 'newsletter_date_add', 'ip_address', 'http_referer');
 		$result = (is_array($rq) ? array_merge(array($header), $rq) : $header);
+
 		return $result;
 	}
 
-	private function _my_fputcsv($fd, $array)
+	private function myFputCsv($fd, $array)
 	{
 		$line = implode(';', $array);
 		$line .= "\n";
 		if (!fwrite($fd, $line, 4096))
-			$this->_postErrors[] = $this->l('Error: cannot write').' '.dirname(__FILE__).'/'.$this->_file.' !';
-	}
-
-	private function _displayForm()
-	{
-		$this->_displayFormExport();
+			$this->post_errors[] = $this->l('Error: cannot write').' '.dirname(__FILE__).'/'.$this->file.' !';
 	}
 
 	public function getContent()
 	{
-		$this->_html .= '';
+		$this->html .= '';
 
 		if (!empty($_POST))
-			$this->_html .= $this->_postProcess();
-		$this->_html .= $this->renderForm();
+			$this->postProcess();
+		$this->html .= $this->renderForm();
 
-		return $this->_html;
+		return $this->html;
 	}
-	
+
 	public function renderForm()
 	{
-		
 		// Getting data...
-		$_countries = Country::getCountries($this->context->language->id);
+		$countries = Country::getCountries($this->context->language->id);
 
 		// ...formatting array
-		$countries[0] = array('id' => 0, 'name' => $this->l('All countries'));
-		foreach ($_countries as $country)
-			$countries[] = array('id' => $country['id_country'], 'name' => $country['name']);
+		$countries_list = array(array('id' => 0, 'name' => $this->l('All countries')));
+		foreach ($countries as $country)
+			$countries_list[] = array('id' => $country['id_country'], 'name' => $country['name']);
 
 		// And filling fields to show !
-		$this->_fieldsExport = array(
-		'COUNTRY' => array(
-			'title' => $this->l('Customers\' country'),
-			'desc' => $this->l('Operate a filter on customers\' country.'),
-			'type' => 'select',
-			'value' => $countries,
-			'value_default' => 0
+		$this->fields_export = array(
+			'COUNTRY' => array(
+				'title' => $this->l('Customers\' country'),
+				'desc' => $this->l('Operate a filter on customers\' country.'),
+				'type' => 'select',
+				'value' => $countries_list,
+				'value_default' => 0
 			),
-		'SUSCRIBERS' => array(
-			'title' => $this->l('Newsletter subscribers'),
-			'desc' => $this->l('Filter newsletter subscribers.'),
-			'type' => 'select',
-			'value' => array(0 => $this->l('All customers'), 2 => $this->l('Subscribers'), 1 => $this->l('Non-subscribers')),
-			'value_default' => 2
+			'SUSCRIBERS' => array(
+				'title' => $this->l('Newsletter subscribers'),
+				'desc' => $this->l('Filter newsletter subscribers.'),
+				'type' => 'select',
+				'value' => array(
+					0 => $this->l('All customers'),
+					2 => $this->l('Subscribers'),
+					1 => $this->l('Non-subscribers')
+				),
+				'value_default' => 2
 			),
-		'OPTIN' => array(
-			'title' => $this->l('Opted-in subscribers'),
-			'desc' => $this->l('Filter opted-in subscribers.'),
-			'type' => 'select',
-			'value' => array(0 => $this->l('All customers'), 2 => $this->l('Subscribers'), 1 => $this->l('Non-subscribers')),
-			'value_default' => 0
+			'OPTIN' => array(
+				'title' => $this->l('Opted-in subscribers'),
+				'desc' => $this->l('Filter opted-in subscribers.'),
+				'type' => 'select',
+				'value' => array(
+					0 => $this->l('All customers'),
+					2 => $this->l('Subscribers'),
+					1 => $this->l('Non-subscribers')
+				),
+				'value_default' => 0
 			),
 		);
-				
+
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
@@ -240,14 +254,14 @@ class Newsletter extends Module
 				'desc' => array(
 					array('text' => $this->l('Generate a .CSV file based on BlockNewsletter subscribers data. Only subscribers without an account on the shop will be exported.'))
 				),
-			'submit' => array(
-				'title' => $this->l('Export .CSV file'),
-				'class' => 'btn btn-default',
-				'name' => 'submitExport',
+				'submit' => array(
+					'title' => $this->l('Export .CSV file'),
+					'class' => 'btn btn-default pull-right',
+					'name' => 'submitExport',
 				)
 			),
 		);
-		
+
 		$fields_form_2 = array(
 			'form' => array(
 				'legend' => array(
@@ -263,7 +277,7 @@ class Newsletter extends Module
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,
 						'options' => array(
-							'query' => $countries,
+							'query' => $countries_list,
 							'id' => 'id',
 							'name' => 'name',
 						)
@@ -276,7 +290,11 @@ class Newsletter extends Module
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,
 						'options' => array(
-							'query' => array(array('id' => 0, 'name' => $this->l('All customers')), array('id' => 2, 'name' => $this->l('Subscribers')), array('id' => 1, 'name' => $this->l('Non-subscribers'))),
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('All customers')),
+								array('id' => 2, 'name' => $this->l('Subscribers')),
+								array('id' => 1, 'name' => $this->l('Non-subscribers'))
+							),
 							'id' => 'id',
 							'name' => 'name',
 						)
@@ -289,7 +307,11 @@ class Newsletter extends Module
 						'required' => false,
 						'default_value' => (int)$this->context->country->id,
 						'options' => array(
-							'query' => array(array('id' => 0, 'name' => $this->l('All customers')), array('id' => 2, 'name' => $this->l('Subscribers')), array('id' => 1, 'name' => $this->l('Non-subscribers'))),
+							'query' => array(
+								array('id' => 0, 'name' => $this->l('All customers')),
+								array('id' => 2, 'name' => $this->l('Subscribers')),
+								array('id' => 1, 'name' => $this->l('Non-subscribers'))
+							),
 							'id' => 'id',
 							'name' => 'name',
 						)
@@ -297,23 +319,22 @@ class Newsletter extends Module
 					array(
 						'type' => 'hidden',
 						'name' => 'action',
-						)
+					)
 				),
-			'submit' => array(
-				'title' => $this->l('Export .CSV file'),
-				'class' => 'btn btn-default',
-				'name' => 'submitExport',
+				'submit' => array(
+					'title' => $this->l('Export .CSV file'),
+					'class' => 'btn btn-default pull-right',
+					'name' => 'submitExport',
 				)
 			),
 		);
-		
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
-		$this->fields_form = array();
 		$helper->id = (int)Tools::getValue('id_carrier');
 		$helper->identifier = $this->identifier;
 		$helper->submit_action = 'btnSubmit';
@@ -327,7 +348,7 @@ class Newsletter extends Module
 
 		return $helper->generateForm(array($fields_form_1, $fields_form_2));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(
@@ -339,4 +360,3 @@ class Newsletter extends Module
 	}
 
 }
-

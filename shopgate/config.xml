@@ -2,7 +2,7 @@
 <module>
 	<name>shopgate</name>
 	<displayName><![CDATA[Shopgate]]></displayName>
-	<version><![CDATA[2.3.6]]></version>
+	<version><![CDATA[2.3.7]]></version>
 	<description><![CDATA[Sell your products with your individual app and a website optimized for mobile devices.]]></description>
 	<author><![CDATA[Shopgate]]></author>
 	<tab><![CDATA[mobile]]></tab>

@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.3';
+		$this->version = '1.5.4';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;

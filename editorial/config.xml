@@ -2,7 +2,7 @@
         <module>
             <name>editorial</name>
             <displayName><![CDATA[Home text editor]]></displayName>
-            <version><![CDATA[2.0]]></version>
+            <version><![CDATA[2.1]]></version>
             <description><![CDATA[A text-edit module for your homepage.]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[front_office_features]]></tab>

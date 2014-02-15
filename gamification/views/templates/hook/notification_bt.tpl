@@ -4,6 +4,7 @@
 	var current_level = {$current_level|intval};
 	var gamification_level = '{l s='Level' js=1}';
 	var advice_hide_url = '{$advice_hide_url}';
+	var hide_advice = '{l s='Do you really want to hide this advice?' js=1}';
 </script>
 <li id="gamification_notif" style="background:none" class="dropdown">
 	<a href="javascript:void(0);" class="dropdown-toggle gamification_notif" data-toggle="dropdown">

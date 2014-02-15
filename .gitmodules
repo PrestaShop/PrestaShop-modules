@@ -70,9 +70,6 @@
 [submodule "uspscarrier/backward_compatibility"]
 	path = uspscarrier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "wexpay/backward_compatibility"]
-	path = wexpay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "themeinstallator/backward_compatibility"]
 	path = themeinstallator/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
@@ -126,4 +123,10 @@
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paypalusa/backward_compatibility"]
 	path = paypalusa/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "feedaty/backward_compatibility"]
+	path = feedaty/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "alliance3/backward_compatibility"]
+	path = alliance3/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

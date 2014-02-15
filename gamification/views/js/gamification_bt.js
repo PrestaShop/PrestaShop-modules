@@ -28,7 +28,8 @@ function gamificationTasks()
 			$('.gamification_close').show();
 			
 			$('.gamification_close').on('click', function () {
-				adviceCloseClick($(this).attr('id'));
+				if (confirm(hide_advice))
+					adviceCloseClick($(this).attr('id'));
 				return false;
 			});
 			

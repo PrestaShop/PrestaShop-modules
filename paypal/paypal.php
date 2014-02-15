@@ -32,9 +32,16 @@ include_once(_PS_MODULE_DIR_.'/paypal/paypal_logos.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_orders.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_tools.php');
 
-define('WPS', 1);
-define('HSS', 2);
-define('ECS', 4);
+define('WPS', 1); //Paypal Integral
+define('HSS', 2); //Paypal Integral Evolution
+define('ECS', 4); //Paypal Option +
+
+define('TRACKING_INTEGRAL_EVOLUTION', 'FR_PRESTASHOP_H3S');
+define('TRACKING_INTEGRAL', 'PRESTASHOP_EC');
+define('TRACKING_OPTION_PLUS', 'PRESTASHOP_ECM');
+define('PAYPAL_HSS_REDIRECTION', 0);
+define('PAYPAL_HSS_IFRAME', 1);
+
 
 define('TRACKING_CODE', 'FR_PRESTASHOP_H3S');
 define('SMARTPHONE_TRACKING_CODE', 'Prestashop_Cart_smartphone_EC');
@@ -73,7 +80,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.6.4';
+		$this->version = '3.6.5';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -328,8 +335,10 @@ class PayPal extends PaymentModule
 			'PayPal_country_default' => (int)$this->default_country,
 			'PayPal_change_country_url' => 'index.php?tab=AdminCountries&token='.Tools::getAdminTokenLite('AdminCountries').'#footer',
 			'Countries'	=> Country::getCountries($english_language_id),
-			'One_Page_Checkout'	=> (int)Configuration::get('PS_ORDER_PROCESS_TYPE'))
-		);
+			'One_Page_Checkout'	=> (int)Configuration::get('PS_ORDER_PROCESS_TYPE'),
+			'PayPal_integral_evolution_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
+			'PayPal_integral_evolution_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+		));
 
 		$this->getTranslations();
 
@@ -448,10 +457,12 @@ class PayPal extends PaymentModule
 				'cancel_return' => $this->context->link->getPageLink('order.php'),
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/ipn.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
-				'tracking_code' => $this->getTrackingCode(), 
-				'iso_code' => Tools::strtoupper($this->context->language->iso_code)
+				'tracking_code' => $this->getTrackingCode($method), 
+				'iso_code' => Tools::strtoupper($this->context->language->iso_code),
+				'payment_hss_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+				'payment_hss_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
 			));
-
+			$this->getTranslations();
 			return $this->fetchTemplate('integral_evolution_payment.tpl');
 		}
 		elseif ($method == WPS || $method == ECS)
@@ -463,7 +474,7 @@ class PayPal extends PaymentModule
 				'PayPal_payment_method' => $method,
 				'PayPal_payment_type' => 'payment_cart',
 				'PayPal_current_page' => $this->getCurrentUrl(),
-				'PayPal_tracking_code' => $this->getTrackingCode()));
+				'PayPal_tracking_code' => $this->getTrackingCode($method)));
 
 			return $this->fetchTemplate('express_checkout_payment.tpl');
 		}
@@ -483,7 +494,7 @@ class PayPal extends PaymentModule
 			'PayPal_payment_type' => 'cart',
 			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($values[$this->context->language->iso_code]) ? $values[$this->context->language->iso_code] : 'en_US'),
-			'PayPal_tracking_code' => $this->getTrackingCode(),
+			'PayPal_tracking_code' => $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD')),
 			'include_form' => true,
 			'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
 
@@ -649,7 +660,7 @@ class PayPal extends PaymentModule
 			'PayPal_payment_type' => $type,
 			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($iso_lang[$this->context->language->iso_code])) ? $iso_lang[$this->context->language->iso_code] : 'en_US',
-			'PayPal_tracking_code' => $this->getTrackingCode())
+			'PayPal_tracking_code' => $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD')))
 		);
 
 		return $this->fetchTemplate('express_checkout_shortcut_button.tpl');
@@ -664,7 +675,7 @@ class PayPal extends PaymentModule
 		$this->context->smarty->assign(array(
 			'PayPal_payment_type' => $type,
 			'PayPal_current_page' => $this->getCurrentUrl(),
-			'PayPal_tracking_code' => $this->getTrackingCode())
+			'PayPal_tracking_code' => $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD')))
 		);
 
 		return $this->fetchTemplate('express_checkout_shortcut_form.tpl');
@@ -677,7 +688,7 @@ class PayPal extends PaymentModule
 		return false;
 	}
 
-	public function getTrackingCode()
+	public function getTrackingCode($method)
 	{
 		if ((_PS_VERSION_ < '1.5') && (_THEME_NAME_ == 'prestashop_mobile' || (isset($_GET['ps_mobile_site']) && $_GET['ps_mobile_site'] == 1)))
 		{
@@ -693,6 +704,13 @@ class PayPal extends PaymentModule
 			elseif ($this->context->mobile_detect->isMobile())
 				return SMARTPHONE_TRACKING_CODE;
 		}
+		if($method == WPS)
+			return TRACKING_INTEGRAL;
+		if($method == HSS)
+			return TRACKING_INTEGRAL_EVOLUTION;
+		if($method == ECS)
+			return TRACKING_OPTION_PLUS;
+
 		return TRACKING_CODE;
 	}
 
@@ -923,6 +941,12 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_SANDBOX', (int)Tools::getValue('sandbox_mode'));
 				Configuration::updateValue('PAYPAL_CAPTURE', (int)Tools::getValue('payment_capture'));
 
+				//EXPRESS CHECKOUT TEMPLATE
+				Configuration::updateValue('PAYPAL_HSS_SOLUTION', (int)Tools::getValue('integral_evolution_solution'));
+				if(Tools::getValue('integral_evolution_solution') == PAYPAL_HSS_IFRAME)
+					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', 'D');
+				else
+					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', Tools::getValue('integral_evolution_template'));				
 				$this->context->smarty->assign('PayPal_save_success', true);
 			}
 			else

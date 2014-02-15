@@ -23,11 +23,27 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<hr style="border-top: 1px dotted rgb(204, 204, 204);" />
 
-<iframe name="hss_iframe" width="556px" height="540px" style="overflow: hidden; border: none" class="payment_module"></iframe>
+{*Displaying a button or the iframe*}
+{if $payment_hss_solution == $smarty.const.PAYPAL_HSS_REDIRECTION}
+<p class="payment_module">
+	<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice}">
+		{if isset($logos.LocalPayPalHorizontalSolutionPP) && $PayPal_payment_method == $PayPal_integral}
+				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />
+			{else}
+				<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice}" />
+			{/if}
+			{$PayPal_content.payment_choice}
+	</a>
+</p>
+{else}
+	<hr style="border-top: 1px dotted rgb(204, 204, 204);" />
+	<iframe name="hss_iframe" width="556px" height="540px" style="overflow: hidden; border: none" class="payment_module"></iframe>
+{/if}
 
-<form style="display: none" target="hss_iframe" id="paypal_hss_iframe" name="form_iframe" method="post" action="{$action_url|escape:'htmlall':'UTF-8'}">
+
+
+<form style="display: none" {if $payment_hss_solution == $smarty.const.PAYPAL_HSS_IFRAME}target="hss_iframe"{/if} id="paypal_form" name="paypal_form" method="post" action="{$action_url|escape:'htmlall':'UTF-8'}">
 	<input type="hidden" name="cmd" value="_hosted-payment" />
 
 	<input type="hidden" name="billing_first_name" value="{$billing_address->firstname|escape:'htmlall':'UTF-8'}" />
@@ -65,7 +81,7 @@
 	<input type="hidden" name="notify_url" value="{$notify_url|escape:'htmlall':'UTF-8'}" />
 	<input type="hidden" name="paymentaction" value="sale" />
 	<input type="hidden" name="business" value="{$business_account|escape:'htmlall':'UTF-8'}" />
-	<input type="hidden" name="template" value="templateD" />
+	<input type="hidden" name="template" value="template{$payment_hss_template}" />
 	<input type="hidden" name="cbt" value="{l s='Return back to the merchant\'s website' mod='paypal'}" />
 	<input type="hidden" name="cancel_return" value="{$cancel_return|escape:'htmlall':'UTF-8'}" />
 	<input type="hidden" name="return" value="{$return_url|escape:'htmlall':'UTF-8'}" />
@@ -73,10 +89,12 @@
     <input type="hidden" name="lc" value="{$iso_code|escape:'htmlall':'UTF-8'}" />
 </form>
 
+{if $payment_hss_solution == $smarty.const.PAYPAL_HSS_IFRAME}
 {literal}
 <script type="text/javascript">
 	$(document).ready( function() {
-		$('#paypal_hss_iframe').submit();
+		$('#paypal_form').submit();
 	});
 </script>
 {/literal}
+{/if}
