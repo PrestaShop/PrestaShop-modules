@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.9.2';
+		$this->version = '2.9.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->ps_versions_compliancy = array(
@@ -738,16 +738,18 @@ class ProductComments extends Module
 		$customerComment = ProductComment::getByCustomer((int)(Tools::getValue('id_product')), (int)$this->context->cookie->id_customer, true, (int)$id_guest);
 
 		$average = ProductComment::getAverageGrade((int)Tools::getValue('id_product'));
-
+		$product = $this->context->controller->getProduct();
 		$image = Product::getCover((int)Tools::getValue('id_product'));
+		$cover_image = $this->context->link->getImageLink($product->link_rewrite, $image['id_image'], 'medium_default');
 
 		$this->context->smarty->assign(array(
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
-			'product' => $this->context->controller->getProduct(),
+			'product' => $product,
 			'secure_key' => $this->secure_key,
 			'logged' => $this->context->customer->isLogged(true),
 			'allow_guests' => (int)Configuration::get('PRODUCT_COMMENTS_ALLOW_GUESTS'),
-			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
+			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'], // retro compat
+			'productcomment_cover_image' => $cover_image,
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'action_url' => '',
@@ -774,11 +776,14 @@ class ProductComments extends Module
 			$averageTotal += (float)($average);
 		$averageTotal = count($averages) ? ($averageTotal / count($averages)) : 0;
 
+		$product = $this->context->controller->getProduct();
 		$image = Product::getCover((int)Tools::getValue('id_product'));
+		$cover_image = $this->context->link->getImageLink($product->link_rewrite, $image['id_image'], 'medium_default');
 
 		$this->context->smarty->assign(array(
 			'logged' => $this->context->customer->isLogged(true),
 			'action_url' => '',
+			'product' => $product,
 			'comments' => ProductComment::getByProduct((int)Tools::getValue('id_product'), 1, null, $this->context->cookie->id_customer),
 			'criterions' => ProductCommentCriterion::getByProduct((int)Tools::getValue('id_product'), $this->context->language->id),
 			'averages' => $averages,
@@ -790,6 +795,7 @@ class ProductComments extends Module
 			'id_product_comment_form' => (int)Tools::getValue('id_product'),
 			'secure_key' => $this->secure_key,
 			'productcomment_cover' => (int)Tools::getValue('id_product').'-'.(int)$image['id_image'],
+			'productcomment_cover_image' => $cover_image,
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 			'nbComments' => (int)ProductComment::getCommentNumber((int)Tools::getValue('id_product')),
 			'productcomments_controller_url' => $this->context->link->getModuleLink('productcomments'),
