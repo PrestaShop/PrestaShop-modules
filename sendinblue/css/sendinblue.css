@@ -1,0 +1,329 @@
+.pagination ul li.inactive, .pagination ul li.inactive:hover {
+	background-color:#ededed;
+	color:#bababa;
+	border:1px solid #bababa;
+	cursor: default;
+}
+.pagination {
+	width: 620px;
+	height: 25px;
+	margin:0 auto;
+}
+.pagination ul li {
+	list-style: none;
+	float: left;
+	border: 1px solid #000;
+	padding: 2px 6px 2px 6px;
+	margin: 0 3px 0 3px;
+	font-family: arial;
+	font-size: 12px;
+	color: #000;
+	font-weight: bold;
+	background-color: #f2f2f2;
+}
+.pagination ul li:hover {
+	color: #fff;
+	background-color: #000;
+	cursor: pointer;
+}
+.toolTip {
+	background: url("../img/help.gif") no-repeat scroll right center transparent;
+	color: #3366FF;
+	cursor: help;
+	padding:9px;/*-right: 20px;*/
+	position: relative;
+}
+#tipkk {
+	position:absolute;
+	z-index:999;
+	opacity:0.8;
+	background:#000000;
+	border:1px solid #000;
+	max-width:500px;
+	padding:10px;
+	color:#fff;
+}
+ul.listt {
+	text-align:justify;
+	margin:8px 0px 8px 0px;
+	list-style:none;
+	padding:0px;
+}
+ul.listt li:before {
+	content:"-";
+	position:relative;
+	left:-2px;
+}
+ul.listt li {
+	text-indent:-5px;
+	padding:5px 0px 5px 10px;
+}
+.ui-multiselect {
+	padding:2px 0 2px 4px;
+	text-align:left
+}
+.ui-multiselect span.ui-icon {
+	float:right
+}
+.ui-multiselect-single .ui-multiselect-checkboxes input {
+	position:absolute !important;
+	top: auto !important;
+	left:-9999px;
+}
+.ui-multiselect-single .ui-multiselect-checkboxes label {
+	padding:5px !important;
+}
+.ui-multiselect-header {
+	margin-bottom:3px;
+	padding:3px 0 3px 4px
+}
+.ui-multiselect-header ul {
+	font-size:0.9em
+}
+.ui-multiselect-header ul li {
+	float:left;
+	padding:0 10px 0 0
+}
+.ui-multiselect-header a {
+	text-decoration:none
+}
+.ui-multiselect-header a:hover {
+	text-decoration:underline
+}
+.ui-multiselect-header span.ui-icon {
+	float:left
+}
+.ui-multiselect-header li.ui-multiselect-close {
+	float:right;
+	text-align:right;
+	padding-right:0
+}
+.ui-multiselect-menu {
+	display:none;
+	padding:3px;
+	position:absolute;
+	z-index:10000;
+	text-align: left
+}
+.ui-multiselect-checkboxes {
+	position:relative /* fixes bug in IE6/7 */;
+	overflow-y:scroll
+}
+.ui-multiselect-checkboxes label {
+	width:98%;
+	cursor:default;
+	display:block;
+	border:1px solid transparent;
+	padding:3px 1px;
+	text-align:left;
+}
+.ui-multiselect-checkboxes label input {
+	position:relative;
+	top:1px
+}
+.ui-multiselect-checkboxes li {
+	clear:both;
+	font-size:0.9em;
+	padding-right:3px
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label {
+	text-align:center;
+	font-weight:bold;
+	border-bottom:1px solid
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a {
+	display:block;
+	padding:3px;
+	margin:1px 0;
+	text-decoration:none
+}
+/* remove label borders in IE6 because IE6 does not support transparency */
+* html .ui-multiselect-checkboxes label {
+	border:none
+}
+.tipTd img {
+	background:none;
+	cursor:pointer
+}
+#tabs_container {
+	border-bottom: 1px solid #ccc;
+}
+#tabs {
+	list-style: none;
+	padding: 5px 0 4px 0;
+	margin: 33px 0 0 10px;
+	font: 0.75em arial;
+}
+#tabs li {
+	display: inline;
+}
+#tabs li a {
+	border: 1px solid #ccc;
+	padding: 4px 6px;
+	text-decoration: none;
+	background-color: #eeeeee;
+	border-bottom: none;
+	outline: none;
+	font-size:12px;
+	border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+}
+#tabs li a:hover {
+	background-color: #dddddd;
+	padding: 4px 6px;
+}
+#tabs li.active a {
+	border-bottom: 1px solid #fff;
+	background-color: #fff;
+	padding: 4px 6px 5px 6px;
+	border-bottom: none;
+}
+#tabs li.active a:hover {
+	background-color: #eeeeee;
+	padding: 4px 6px 5px 6px;
+	border-bottom: none;
+}
+#tabs li a.icon_accept {
+	background-position: 5px;
+	background-repeat: no-repeat;
+	padding-left: 24px;
+}
+#tabs li a.icon_accept:hover {
+	padding-left: 24px;
+}
+#tabs_content_container {
+	border-top: none;
+	padding: 10px 10px 5px;
+}
+.tab_content {
+	display: none;
+}
+/*.wrapper {
+	width:820px;
+	margin:0px auto;
+}*/
+.wrapper .row1 {
+	padding:/*10px 12px*/0px;
+	border:none;
+}
+.wrapper h4 {
+	line-height:24px;
+	margin-top:25px;
+	clear:both;
+}
+.wrapper p {
+	margin-bottom:12px;
+}
+.r_label {
+	float:left;
+	width: auto;
+	font-weight: normal;
+	white-space:nowrap;
+}
+.radio_bx span {
+	margin:0px 15px 0px 0px;
+	float:left;
+}
+.email_field {
+	margin:15px auto;
+	width:350px;
+	clear:both;
+}
+.email_field label {
+	margin-right:25px;
+	margin-top: 6px;
+	width: auto;
+}
+.input_bx {
+	border:1px solid #000000;
+	margin:5px 0px;
+	padding:3px;
+}
+.form_table {
+	width:100%;/*548px;*/
+	/*margin:0px auto;*/
+	clear: both;
+}
+.form_table table tr td {
+	border-bottom:none;
+}
+.form_table label {
+	width:189px;
+	float:left;
+	line-height:20px;
+	font-weight: bold;
+}
+.hintmsg {
+	/*font-size:11px;*/
+	color:#666666;
+	clear:both;
+}
+.textarea_bx {
+	margin:5px 0px;
+	width:288px!important;
+}
+.btn_bx {
+	padding:2px;
+	cursor:pointer;
+	margin-left:15px;
+	background:#ffffff;
+	border:1px solid #000000;
+}
+.table-bottom td {
+	padding:15px!important;
+}
+.manage-label {
+	margin-left:50px;
+}
+.hidetableblock tr td td {
+	font-size: 11px;
+	height: 23px;
+	padding: 0 4px 0 6px;
+}
+.radio_nospaceing{
+	margin:0px 10px 0px 0px;}
+.radio_spaceing {
+	margin:0 10px!important;
+	vertical-align:top;
+}
+.radio_spaceing2 {
+	margin-left: 20px;
+	margin-right: 10px;
+}
+
+.link_action{ 
+color: #268CCD;}
+
+/*Form*/
+.table tr td {
+    color: #996633;
+    font-size:12px;
+}
+.form-data label{ width:450px; padding-right:20px; padding-top:0px;}
+.form-data2 label{ width:385px; padding-right:20px; padding-top:0px;}
+
+.mrgin-left{ margin-left:466px;}
+.label-small{ width:30px!important; text-align:left!important;}
+.no-padding td{ padding:0px;}
+.clear{ clear:both;}
+.module_error.error{ padding-top: 8px!important;}
+.module_error.error p{ display:inline-block;}
+#content .alert{ width:auto!important;}
+
+.radio_nospaceing{
+	margin:0px 10px 0px 0px;}
+.radio_spaceing {
+	margin:0 10px!important;
+	vertical-align:top;
+}
+.radio_spaceing2 {
+	margin-left: 20px;
+	margin-right: 10px;
+}
+.form-display label{  float: left;
+    font-weight: bold;
+    padding: 0.2em 0.5em 0 0;
+    text-align: right;
+    width: 250px;}

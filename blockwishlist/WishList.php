@@ -137,7 +137,8 @@ class WishList extends ObjectModel
 		SELECT `id_wishlist`, `name`, `token`
 		  FROM `'._DB_PREFIX_.'wishlist`
 		WHERE `id_wishlist` = '.(int)($id_wishlist).'
-		AND `id_customer` = '.(int)($id_customer));
+		AND `id_customer` = '.(int)($id_customer).'
+		AND `id_shop` = '.(int)Context::getContext()->shop->id);
 		if (empty($result) === false AND $result != false AND sizeof($result))
 		{
 			if ($return === false)
