@@ -25,7 +25,7 @@
 
 <div id="wishlist_block" class="block account">
 	<h4 class="title_block">
-		<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a>
+		<a href="{$link->getModuleLink('blockwishlist', 'mywishlist', array(), true)|addslashes}" title="{l s='My wishlists' mod='blockwishlist'}" rel="nofollow">{l s='Wishlist' mod='blockwishlist'}</a>
 	</h4>
 	<div class="block_content">
 		<div id="wishlist_block_list" class="expanded">
@@ -59,7 +59,7 @@
 			{/foreach}
 			</select>
 		{/if}
-			<a href="{$wishlist_link}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
+			<a href="{$link->getModuleLink('blockwishlist', 'mywishlist', array(), true)|addslashes}" title="{l s='My wishlists' mod='blockwishlist'}">&raquo; {l s='My wishlists' mod='blockwishlist'}</a>
 		</p>
 	</div>
 </div>

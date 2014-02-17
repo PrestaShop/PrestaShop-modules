@@ -1,4 +1,5 @@
-{*
+<?php
+/*
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -21,13 +22,14 @@
 *  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*}
+*/
 
-<!-- MODULE WishList -->
-<li class="lnk_wishlist">
-	<a href="{$link->getModuleLink('blockwishlist', 'mywishlist', array(), true)|escape:'html':'UTF-8'}" title="{l s='My wishlists' mod='blockwishlist'}">
-		<img src="{$module_template_dir}img/gift.gif" alt="{l s='My wishlists' mod='blockwishlist'}" class="icon" />
-		{l s='My wishlists' mod='blockwishlist'}
-	</a>
-</li>
-<!-- END : MODULE WishList -->
+if (!defined('_PS_VERSION_'))
+	exit;
+
+function upgrade_module_1_8_0($object)
+{
+	Configuration::updateValue('GF_INSTALL_CALC', 0);
+
+	return true;
+}

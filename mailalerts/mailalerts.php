@@ -288,7 +288,6 @@ class MailAlerts extends Module
 			$invoice_state = new State((int)$invoice->id_state);
 
 		// Filling-in vars for email
-		$template = 'new_order';
 		$template_vars = array(
 			'{firstname}' => $customer->firstname,
 			'{lastname}' => $customer->lastname,
@@ -341,14 +340,14 @@ class MailAlerts extends Module
 
 		$iso = Language::getIsoById($id_lang);
 		$dir_mail = false;
-		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.txt') &&
-		file_exists(dirname(__FILE__).'/mails/'.$iso.'/'.$template.'.html'))
+		if (file_exists(dirname(__FILE__).'/mails/'.$iso.'/new_order.txt') &&
+		file_exists(dirname(__FILE__).'/mails/'.$iso.'/new_order.html'))
 			$dir_mail = dirname(__FILE__).'/mails/';
 		// Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
 		$merchant_mails = explode(self::__MA_MAIL_DELIMITOR__, $this->_merchant_mails);
 
-		if (file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.txt') &&
-			file_exists(_PS_MAIL_DIR_.$iso.'/'.$template.'.html'))
+		if (file_exists(_PS_MAIL_DIR_.$iso.'/new_order.txt') &&
+			file_exists(_PS_MAIL_DIR_.$iso.'/new_order.html'))
 				$dir_mail = _PS_MAIL_DIR_;
 
 		if ($dir_mail)
@@ -356,7 +355,7 @@ class MailAlerts extends Module
 			{
 				Mail::Send(
 					$id_lang,
-					$template,
+					'new_order',
 					sprintf(Mail::l('New order : #%d - %s', $id_lang), $order->id, $order->reference),
 					$template_vars,
 					$merchant_mail,
@@ -408,7 +407,7 @@ class MailAlerts extends Module
 		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
 		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
-		
+
 		$check_oos = ($product_has_attributes && $id_product_attribute) || (!$product_has_attributes && !$id_product_attribute);
 		
 		if ($check_oos && $product->active == 1 && (int)$quantity <= $ma_last_qties && !(!$this->_merchant_oos || empty($this->_merchant_mails)) && $configuration['PS_STOCK_MANAGEMENT'])
@@ -573,7 +572,7 @@ class MailAlerts extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->page_name = Dispatcher::getInstance()->getController();
-		if ($this->page_name == 'product')
+		if (in_array($this->page_name, array('product', 'account')))
 		{
 			$this->context->controller->addJS($this->_path.'mailalerts.js');
 			$this->context->controller->addCSS($this->_path.'mailalerts.css', 'all');
@@ -709,9 +708,9 @@ class MailAlerts extends Module
 				)
 			),
 		);
-		
-		
-		
+
+
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -731,7 +730,7 @@ class MailAlerts extends Module
 
 		return $helper->generateForm(array($fields_form_1, $fields_form_2));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		return array(

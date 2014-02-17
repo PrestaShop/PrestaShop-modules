@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.7.8';
+		$this->version = '1.8.0';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -126,6 +126,10 @@ class Gamification extends Module
 		if (!Validate::isHookName($name))
 			return false;
 		$name = str_replace('hook', '', $name);
+		
+		if ($retro_name = Db::getInstance()->getValue('SELECT `name` FROM `'._DB_PREFIX_.'hook_alias` WHERE `alias` = \''.pSQL($name).'\''))
+			$name = $retro_name;
+		
 		$condition_ids = Condition::getIdsByHookCalculation($name);
 		foreach ($condition_ids as $id)
 		{
