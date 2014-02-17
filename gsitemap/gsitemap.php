@@ -306,7 +306,9 @@ class Gsitemap extends Module
 		foreach ($products_id as $product_id)
 		{
 			$product = new Product((int)$product_id['id_product'], false, (int)$lang['id_lang']);
-			if (_PS_VERSION_ >= 1.5)
+			$url = null;
+			
+			if (version_compare(_PS_VERSION_, '1.5', '>=') && $product->isAssociatedToShop() && $product->active)
 			{
 				$url = $link->getProductLink($product, $product->link_rewrite, htmlspecialchars(strip_tags($product->category)), $product->ean13, (int)$lang['id_lang'], (int)$this->context->shop->id, 0, true);
 			}
@@ -316,20 +318,23 @@ class Gsitemap extends Module
 				$url = $link->getProductLink($product, Configuration::get('PS_REWRITING_SETTINGS') ? $product->link_rewrite : false, htmlspecialchars(strip_tags($category->name)), $product->ean13, (int)$lang['id_lang']);
 			}
 
-			$id_image = Product::getCover((int)$product_id['id_product']);
-			if (isset($id_image['id_image']))
+			if (isset($url)) 
 			{
-				$image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.(int)$id_image['id_image']);
-				$image_link = (!in_array(rtrim(Context::getContext()->shop->virtual_uri,'/'), explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain.Context::getContext()->shop->physical_uri), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->physical_uri.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
+				$id_image = Product::getCover((int)$product_id['id_product']);
+				if (isset($id_image['id_image']))
+				{
+					$image_link = $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.(int)$id_image['id_image']);
+					$image_link = (!in_array(Context::getContext()->shop->virtual_uri, explode('/', $image_link))) ? str_replace(array('https', Context::getContext()->shop->domain), array('http', Context::getContext()->shop->domain.Context::getContext()->shop->virtual_uri), $image_link) : $image_link;
+				}
+				$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
+				$image_product = array();
+				if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
+					$image_product = array('title_img' => htmlspecialchars(strip_tags($product->name)), 'caption' => htmlspecialchars(strip_tags($product->description_short)), 'link' => $image_link);
+				if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'lastmod' => $product->date_upd, 'link' => $url, 'image' => $image_product), $lang['iso_code'], $index, $i, $product_id['id_product']))
+					return false;
+	
+				unset($image_link)
 			}
-			$file_headers = (Configuration::get('GSITEMAP_CHECK_IMAGE_FILE')) ? @get_headers($image_link) : true;
-			$image_product = array();
-			if (isset($image_link) && ($file_headers[0] != 'HTTP/1.1 404 Not Found' || $file_headers === true))
-				$image_product = array('title_img' => htmlspecialchars(strip_tags($product->name)), 'caption' => htmlspecialchars(strip_tags($product->description_short)), 'link' => $image_link);
-			if (!$this->_addLinkToSitemap($link_sitemap, array('type' => 'product', 'page' => 'product', 'lastmod' => $product->date_upd, 'link' => $url, 'image' => $image_product), $lang['iso_code'], $index, $i, $product_id['id_product']))
-				return false;
-
-			unset($image_link);
 		}
 		return true;
 	}
