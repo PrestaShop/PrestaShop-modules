@@ -426,6 +426,7 @@ class ecopresto extends Module{
 			$html .= '<script>
                        catSelSpeAfter();
                     </script>';
+                    	$html .= '<p>'.$this->l('Produit autorisé : ').'<span class="totAuth">'.$nbTot.'</span>/'.$tabLic[2].'<p>';
 			$html .= '<p><input type="submit" class="button" name="OK"  id="validSelect" value="'.$this->l('Enregistrer la sélection').'" onclick="javascript:MAJProduct();" /></p>';
 		}
 		$html .='</div>';
