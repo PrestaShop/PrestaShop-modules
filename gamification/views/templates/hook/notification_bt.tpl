@@ -35,12 +35,7 @@
 						<div class="gamification_badges_img"><img src="{$badge->getBadgeImgUrl()}"></div>
 						<div class="gamification_badges_name">{$badge->name|escape:html:'UTF-8'}</div>
 					</li>
-				{else}
-					<li style="height:130px"></li>
 				{/if}
-				{if $smarty.foreach.badge_list.iteration is not odd && $badges_to_display|count > 2}
-						<div class="clear">&nbsp;</div>
-					{/if}
 				{/foreach}
 			</ul>
 			<footer class="panel-footer">
