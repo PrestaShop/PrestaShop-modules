@@ -50,7 +50,10 @@ class Sendinblue extends Module {
 		global $cookie;
 		$this->langid = $cookie->id_lang;
 		$this->name = 'sendinblue';
-		$this->tab = 'advertising_marketing';
+		if (version_compare(_PS_VERSION_, '1.5', '>'))
+		$this->tab = 'emailing';
+		else
+		$this->tab = 'advertising_marketing';		
 		$this->author = 'SendinBlue';
 		$this->version = 1.4;
 		$pathconfig = new Pathfind();
@@ -59,7 +62,7 @@ class Sendinblue extends Module {
 
 		$this->page = basename(__FILE__, '.php');
 		$this->displayName = $this->l('SendinBlue');
-		$this->description = $this->l('Synchronize your PrestaShop contacts with SendinBlue platform, track customer\'s orders and send transactional emails easily to your customers.');
+		$this->description = $this->l('Synchronize your PrestaShop contacts with SendinBlue platform & easily send your marketing and transactional emails and SMS');
 		$this->confirmUninstall = $this->l('Are you sure you want to remove the SendinBlue module? N.B: we will enable php mail() send function (If you were using SMTP info before using SendinBlue SMTP, please update your configuration for the emails)');
 		$this->langCookie = $cookie;
 		// Checking Extension
@@ -76,6 +79,7 @@ class Sendinblue extends Module {
 		//Call the callhookRegister method to send an email to the SendinBlue user
 		//when someone registers.
 		$this->callhookRegister();
+		
 	}
 
 	/**
@@ -722,7 +726,7 @@ class Sendinblue extends Module {
 			foreach ($register_result as $register_row)
 			{
 				if (!empty($register_row['phone_mobile']) && $register_row['phone_mobile'] != '')
-						echo $mobile = $this->checkMobileNumber($register_row['phone_mobile'], $register_row['call_prefix']);
+						$mobile = $this->checkMobileNumber($register_row['phone_mobile'], $register_row['call_prefix']);
 					else
 						$mobile = '';
 
@@ -1290,6 +1294,7 @@ class Sendinblue extends Module {
 	{
 		$title = $this->l('[SendinBlue SMTP] test email');
 		$smtp_result = Tools::jsonDecode(Configuration::get('Sendin_Smtp_Result'));
+
 		if ($smtp_result->result->relay_data->status == 'enabled')
 		{
 			$data_sendinblue_smtpstatus = $this->realTimeSmtpResult();
@@ -1539,7 +1544,6 @@ class Sendinblue extends Module {
 		);
 
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $ndata);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -2084,6 +2088,8 @@ class Sendinblue extends Module {
 	private function displaySendin()
 	{
 		$this->_html .= $this->displayBankWire();
+		if ($this->checkOlderVesion() == 1)
+		$this->_html .= '<div class="module_error alert error">'.$this->l('We notified that you are using the previous version of our plugin, please uninstall it / remove it and keep only the latest version of SendinBlue').'</div>';
 		$this->_html .= '
 		<fieldset>
 		<legend><img src="'.$this->path.$this->name.'/logo.gif" alt="" /> '.$this->l('SendinBlue').'</legend>
@@ -2094,10 +2100,10 @@ class Sendinblue extends Module {
 ').'<br /><br />'.$this->l('Email : ').'<a href="mailto:'.$this->l('contact@sendinblue.com').'" style="color:#268CCD;">'.
 $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61').'</p>
 		<p style="padding-top:20px;"><b>'.$this->l('For further informations, please visit our website:').
-		'</b><br /><a href="'.$this->l('https://www.sendinblue.com/').'" target="_blank"
-		style="color:#268CCD;">'.$this->l('https://www.sendinblue.com/').'</a></p>
+		'</b><br /><a href="'.$this->l('https://www.sendinblue.com').'" target="_blank"
+		style="color:#268CCD;">'.$this->l('https://www.sendinblue.com').'</a></p>
 		</div>
-		<p>'.$this->l('With the SendinBlue plugin, you can find everything you need to easily and efficiently send your emailing campaigns to your prospects and customers. ').'</p>
+		<p>'.$this->l('With the SendinBlue plugin, you can find everything you need to easily and efficiently send your email & SMS campaigns to your prospects and customers. ').'</p>
 		<ul class="listt">
 			<li>'.$this->l(' Synchronize your subscribers with SendinBlue (subscribed and unsubscribed contacts)').'</li>
 			<li>'.$this->l(' Easily create good looking emailings').'</li>
@@ -2134,7 +2140,7 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		<legend><img src="'.$this->path.$this->name.'/logo.gif" alt="" />'.$this->l('Prerequisites').'</legend>';
 		$this->_html .= '<label">-
 		'.$this->l('You should have a SendinBlue account. You can create a free account here : ').
-		'<a href="'.$this->l('https://www.sendinblue.com/').'" class="link_action"  target="_blank">&nbsp;'.$this->l('https://www.sendinblue.com/').'</a></label><br />';
+		'<a href="'.$this->l('https://www.sendinblue.com').'" class="link_action"  target="_blank">&nbsp;'.$this->l('https://www.sendinblue.com').'</a></label><br />';
 
 		if (!extension_loaded('curl') || !ini_get('allow_url_fopen'))
 			$this->_html .= '<label">-
@@ -2477,6 +2483,7 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	*/
 	public function hookLeftColumn($params)
 	{
+		
 		if (!$this->syncSetting())
 			return false;
 
@@ -2527,6 +2534,63 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 
 		return $this->display(__FILE__, 'views/templates/front/sendinblue.tpl');
 	}
+	/**
+	* Displays the newsletter on the front page of PrestaShop
+	*/
+	public function hookRightColumn($params)
+	{
+		
+		if (!$this->syncSetting())
+			return false;
+
+		global $smarty;
+
+		$ddl_value = Configuration::get('Sendin_dropdown');
+
+		if ($ddl_value == 1)
+			$post_action = Tools::getValue('action');
+		else
+			$post_action = 1;
+
+		if (Tools::isSubmit('submitNewsletter'))
+		{
+			$this->newsletterRegistration();
+			$this->email = Tools::safeOutput(Tools::getValue('email'));
+
+			if ($this->error)
+			{
+				$smarty->assign( array(
+						'color' => 'red',
+						'msg' => $this->error,
+						'nw_value' => isset($this->email) ? $this->email : false,
+						'nw_error' => true,
+						'action' => $post_action
+				) );
+			}
+			elseif ($this->valid)
+			{
+				if (Configuration::get('NW_CONFIRMATION_EMAIL') && isset($post_action) && (int)$post_action == 0)
+					Mail::Send((int)$params['cookie']->id_lang,
+									'newsletter_conf',
+									Mail::l('Newsletter confirmation',
+									(int)$params['cookie']->id_lang),
+									array(),
+									$this->email,
+									null, null, null, null, null, dirname(__FILE__).'/mails/');
+				$smarty->assign( array(
+						'color' => 'green',
+						'msg' => $this->valid,
+						'nw_error' => false
+					) );
+			}
+		}
+
+		$smarty->assign('this_path', $this->_path);
+		$smarty->assign('Sendin_dropdown', $ddl_value);
+
+		return $this->display(__FILE__, 'views/templates/front/sendinblue.tpl');
+	}
+
 	/**
 	* Displays the newsletter option on registration page of PrestaShop
 	*/
@@ -2783,5 +2847,27 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		$value_config = $this->curlRequest($data);
 		$result = Tools::jsonDecode($value_config);
 		return $result;
+	}
+	public function checkOlderVesion()
+	{
+		if (_PS_VERSION_ <= '1.4.1.0')
+		{
+			$module_status = Db::getInstance()->getRow('select COUNT(*) totalvalue FROM `'._DB_PREFIX_.'module`  WHERE name ="mailin" || name ="mailinblue"');
+			if ($module_status['totalvalue'] > 0)
+			return 1;
+			else
+			return 0;
+		}
+		else
+		{
+		$module_newsletter = Module::getInstanceByName('mailin');
+		$module_newsletter_second = Module::getInstanceByName('mailinblue');
+		$data_first = !empty($module_newsletter->active)?$module_newsletter->active : '0';
+		$data_second = !empty($module_newsletter->active)?$module_newsletter->active : '0';
+		if ($data_first == 1 || $data_second == 1)
+		return 1;
+		else
+		return 0;
+		}
 	}
 }
