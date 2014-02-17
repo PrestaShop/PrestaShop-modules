@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<link rel="stylesheet" type="text/css" href="{$module_dir}static/css/shop.css" />
 <meta property="og:title" content="{$meta_title|escape:'htmlall':'UTF-8'}" />
 {if $is_product_page}
 <meta property="og:type" content="product" />
