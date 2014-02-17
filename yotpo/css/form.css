@@ -110,7 +110,20 @@
 	padding-bottom: 6px;
 	color: #8A8A8A;
 }
+.y-multiselect {
+	width:100%;
+	border:solid 1px #c0c0c0;
+	overflow:auto;
+}
 
+.y-multiselect label {
+	width: 45%;
+	display: inline-block;
+	padding: 5px 5px;
+	text-align: left;
+	font-weight: bold;
+	float: none;	
+}
 .y-submit-btn {
 	margin-left: 5px;
 	padding: 4px 12px;

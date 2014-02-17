@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.5';
+		$this->version = '1.3.6';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -44,8 +44,18 @@ class Yotpo extends Module
 		}			
 	}
 
-	public static function getAcceptedMapStatuses()
+	public function getAcceptedMapStatuses()
 	{
+		if(method_exists('Tools', "unSerialize")) {
+			$selected_statuses = Tools::unSerialize(Configuration::get('yotpo_map_status'));	
+		}
+		else {
+			$selected_statuses = @unserialize(Configuration::get('yotpo_map_status'));	
+		}
+		
+		if(!is_null($selected_statuses) && !empty($selected_statuses)) {
+			return $selected_statuses;
+		}
 		if (is_null(self::$_MAP_STATUS))
 		{
 			self::$_MAP_STATUS = array();
@@ -94,6 +104,8 @@ class Yotpo extends Module
 		Configuration::updateValue('yotpo_rich_snippets', 1, false);
 		
 		Configuration::updateValue('yotpo_rich_snippet_cache_created', 1, true);
+		
+		Configuration::updateValue('yotpo_map_status', serialize($this->getAcceptedMapStatuses()), false);
 		return true;
 	}
 
@@ -120,7 +132,7 @@ class Yotpo extends Module
 
 	public function hookpostUpdateOrderStatus($params)
 	{
-		if (in_array($params['newOrderStatus']->id, self::getAcceptedMapStatuses()))
+		if (in_array($params['newOrderStatus']->id, $this->getAcceptedMapStatuses()))
 		{
 			$data = $this->prepareMapData($params);
 			if (Configuration::get('yotpo_app_key') != '' && Configuration::get('yotpo_oauth_token') != '' && !is_null($data))
@@ -182,7 +194,7 @@ class Yotpo extends Module
     	Configuration::deleteByName('yotpo_language_as_site');
     	Configuration::deleteByName('yotpo_rich_snippets');
     	Configuration::deleteByName('yotpo_rich_snippet_cache_created');
-    	
+    	Configuration::deleteByName('yotpo_map_status');
     	YotpoSnippetCache::dropDB();    	
 		return parent::uninstall();
 	}
@@ -422,7 +434,8 @@ class Yotpo extends Module
 			$bottomLineLocation = Tools::getValue('yotpo_bottom_line_location');
 		    $language_as_site = Tools::getValue('yotpo_language_as_site');
 		    $widget_language_code = Tools::getValue('yotpo_widget_language_code');
-			$rich_snippet = Tools::getValue('yotpo_rich_snippets');  			
+			$rich_snippet = Tools::getValue('yotpo_rich_snippets');
+			$map_statuses = Tools::getValue('yotpo_map_status');  			
 			if ($api_key == '')
 				return $this->prepareError($this->l('Api key is missing'));	
 			if ($secret_token == '')
@@ -436,6 +449,7 @@ class Yotpo extends Module
 	        Configuration::updateValue('yotpo_language', $widget_language_code, false);
             Configuration::updateValue('yotpo_language_as_site', $language_as_site, false); 		
             Configuration::updateValue('yotpo_rich_snippets', $rich_snippet, false);
+            Configuration::updateValue('yotpo_map_status', serialize($map_statuses), false);
 			return $this->prepareSuccess();
 		}
 		elseif (Tools::isSubmit('yotpo_past_orders'))
@@ -503,7 +517,22 @@ class Yotpo extends Module
 			Configuration::updateValue('yotpo_rich_snippet_cache_created', 1, $created);
 		}
 		global $smarty;
-	
+		$all_statuses = OrderState::getOrderStates($this->getLanguageId());
+		
+			//no configuration found -- use default
+		if(Configuration::get('yotpo_map_status') == false) {
+			Configuration::updateValue('yotpo_map_status', serialize($this->getAcceptedMapStatuses()), false);			
+		}
+		
+		if(method_exists('Tools', "unSerialize")) {
+			$selected_statuses = Tools::unSerialize(Configuration::get('yotpo_map_status'));	
+		}
+		else {
+			$selected_statuses = @unserialize(Configuration::get('yotpo_map_status'));	
+		}
+		foreach ($all_statuses as &$status) {
+			$status['selected'] = in_array($status['id_order_state'], $selected_statuses) ? '1' : '0';
+		}
 		$smarty->assign(array(
 		'yotpo_action' => $_SERVER['REQUEST_URI'],
 		'yotpo_appKey' => Tools::getValue('yotpo_app_key',Configuration::get('yotpo_app_key')),
@@ -515,7 +544,8 @@ class Yotpo extends Module
 		'yotpo_bottomLineLocation' => Configuration::get('yotpo_bottom_line_location'),
 	    'yotpo_widget_language_code' => Configuration::get('yotpo_language'),
 	    'yotpo_language_as_site' => Configuration::get('yotpo_language_as_site'),
-		'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets')));
+		'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets'),
+		'yotpo_all_statuses' => $all_statuses));
 
 		$settings_template = $this->display(__FILE__, 'tpl/settingsForm.tpl');
 		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false)
@@ -655,7 +685,7 @@ class Yotpo extends Module
 		WHERE oh.`id_order_history` IN (SELECT MAX(`id_order_history`) FROM `'._DB_PREFIX_.'order_history` GROUP BY `id_order`) AND
 		o.`date_add` <  NOW() AND 
 		DATE_SUB(NOW(), INTERVAL '.self::PAST_ORDERS_DAYS_BACK.' day) < o.`date_add` AND 
-		oh.`id_order_state` IN ('.join(',', self::getAcceptedMapStatuses()).')
+		oh.`id_order_state` IN ('.join(',', $this->getAcceptedMapStatuses()).')
 		LIMIT 0,'.self::PAST_ORDERS_LIMIT.'');
 
 		if (is_array($result))
@@ -753,5 +783,14 @@ class Yotpo extends Module
 			}				
 		}
 		return $result;		
+	}
+	private function getLanguageId(){
+		if (isset($this->context) && isset($this->context->language) && isset($this->context->language->id)) {
+			return $this->context->language->id;
+		}
+		else {
+			global $cookie;
+			return $cookie->id_lang;
+		}
 	}		
 }
