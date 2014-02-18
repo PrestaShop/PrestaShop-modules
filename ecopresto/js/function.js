@@ -260,7 +260,7 @@ function supCatalogPS(etp,tot,typ)
     {
         var XHR = new XHRConnection();        
         var ec_token = $('#ec_token').val();        
-        XHR.sendAndLoad('../modules/ecopresto/supp.php?etp='+etp+'&total='+tot+'&typ='+typ+'ec_token='+ec_token,'GET',resultat_CatalogPS);
+        XHR.sendAndLoad('../modules/ecopresto/supp.php?etp='+etp+'&total='+tot+'&typ='+typ+'&ec_token='+ec_token,'GET',resultat_CatalogPS);
         return true;
     }
 }
