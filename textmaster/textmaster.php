@@ -1691,7 +1691,7 @@ class TextMaster extends Module
             }
         }
 
-        if (!$count && (!$orderBy && !$orderWay))
+        if (!$count)
         {
             $keys_array = array('id_product', 'reference', 'price', 'category', 'quantity', 'active', 'name', 'final_price');
             foreach ($keys_array AS $key => $value)
@@ -1718,8 +1718,7 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."image` i ON (i.`id_product` = cp.`id_product` AND i.`cover` = '1')
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."')
-
-				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)."
+				WHERE cp.`id_category` = '".(int)$id_category."' ".$filtering."
                 ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
@@ -1744,7 +1743,7 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."' AND cl.`id_shop` = '".(int) $this->context->shop->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."' AND pl.`id_shop` = '".(int) $this->context->shop->id."')
 				LEFT JOIN `"._DB_PREFIX_."stock_available` sav ON (sav.`id_product` = cp.`id_product` AND sav.`id_product_attribute` = 0 ".StockAvailable::addSqlShopRestriction(null, null, "sav").")
-				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)." AND psh.`id_shop` = " .(int)$id_shop . "
+				WHERE cp.`id_category` = '".(int)$id_category."' ".$filtering." AND psh.`id_shop` = " .(int)$id_shop . "
 				ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
