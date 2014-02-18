@@ -43,7 +43,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->context->controller->addJS(Tools::str_replace_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, __PS_BASE_URI__, _PS_MODULE_DIR_).'referralprogram/js/referralprogram.js');
+		$this->context->controller->addJS(_MODULE_DIR_.$this->module->name.'/js/'.$this->module->name.'.js');
 		$this->addJqueryPlugin(array('thickbox', 'idTabs'));
 	}
 
