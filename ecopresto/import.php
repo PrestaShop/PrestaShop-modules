@@ -157,9 +157,9 @@ foreach ($lstPdt as $pdt)
 			$pdt_final['date_upd'] = date('Y-m-d h:m:s');
 
 			if ($catalog->tabConfig['UPDATE_EAN'] == 1)
-				$pdt_final['ean13'] = (isset($pdt['ean13'])?(int)$pdt['ean13']:0);
+				$pdt_final['ean13'] = (isset($pdt['ean13'])?(string)$pdt['ean13']:0);
 
-			$pdt_final['weight'] = (isset($pdt['weight'])?(int)$pdt['weight']:0);
+			$pdt_final['weight'] = (isset($pdt['weight'])?(float)$pdt['weight']:0);
 
 			if ($catalog->tabConfig['UPDATE_IMAGE'] || !$reference->id_product )
 			{
@@ -261,7 +261,7 @@ foreach ($lstPdt as $pdt)
 					$pdt_final_att[] = array('wholesale_price' => (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$att['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$att['price']), 6),
 						'reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
-						'ean13' => (int)$att['ean13'],
+						'ean13' => (string)$att['ean13'],
 						'price' => (float)($att['pmvc']- $pdt['pmvc']),
 						'weight' => (float)($att['weight']-$pdt['weight']),
 						'default_on' => ($tem==0?1:0),
@@ -272,7 +272,7 @@ foreach ($lstPdt as $pdt)
 					$pdt_final_att[] = array('wholesale_price' => (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$att['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$att['price']), 6),
 						'reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
-						'ean13' => (int)$att['ean13'],
+						'ean13' => (string)$att['ean13'],
 						'weight' => (float)($att['weight']-$pdt['weight']),
 						'default_on' => ($tem==0?1:0),
 						'id_supplier' => (int)$catalog->tabConfig['PARAM_SUPPLIER'],
