@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
@@ -103,12 +103,14 @@ class PSCleaner extends Module
 			self::truncate('sales');
 			$html .= $this->displayConfirmation($this->l('Orders and customers truncated'));
 		}
+		
+		// d($_POST);
 
 		$html .= '
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#submitTruncateCatalog").click(function(){
-					if ($(\'#submitTruncateCatalog_on\').attr(\'checked\') != "checked")
+					if ($(\'#checkTruncateCatalog_on\').attr(\'checked\') != "checked")
 					{
 						alert(\''.addslashes(html_entity_decode($this->l('Please read the disclaimer and click "Yes" above'))).'\');
 						return false;
@@ -598,15 +600,15 @@ class PSCleaner extends Module
 					array(
 						'type' => 'switch',
 						'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
-						'name' => 'submitTruncateCatalog',
+						'name' => 'checkTruncateCatalog',
 						'values' => array(
 							array(
-								'id' => 'submitTruncateCatalog_on',
+								'id' => 'checkTruncateCatalog_on',
 								'value' => 1,
 								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							),
 							array(
-								'id' => 'submitTruncateCatalog_off',
+								'id' => 'checkTruncateCatalog_off',
 								'value' => 0,
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
 							)
@@ -635,12 +637,12 @@ class PSCleaner extends Module
 						'name' => 'checkTruncateSales',
 						'values' => array(
 							array(
-								'id' => 'submitTruncateSales_on',
+								'id' => 'checkTruncateSales_on',
 								'value' => 1,
 								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							),
 							array(
-								'id' => 'submitTruncateSales_off',
+								'id' => 'checkTruncateSales_off',
 								'value' => 0,
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
 							)
@@ -706,6 +708,6 @@ class PSCleaner extends Module
 	
 	public function getConfigFieldsValues()
 	{
-		return array('checkTruncateSales' => '0', 'submitTruncateCatalog' => 0);
+		return array('checkTruncateSales' => '0', 'checkTruncateCatalog' => 0);
 	}
 }
