@@ -291,7 +291,7 @@ class ShoppingFluxExport extends Module
 	private function _getCarriersSelect($configuration)
 	{
 		$html = '<select name="SHOPPING_FLUX_CARRIER">';
-                //getCarriers($ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
+                
 		foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true, false, false, null, 5) as $carrier)
 		{
 			$selected = (int)$configuration['SHOPPING_FLUX_CARRIER'] === (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
