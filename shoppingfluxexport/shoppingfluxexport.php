@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.4.1';
+		$this->version = '3.4.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -291,8 +291,8 @@ class ShoppingFluxExport extends Module
 	private function _getCarriersSelect($configuration)
 	{
 		$html = '<select name="SHOPPING_FLUX_CARRIER">';
-
-		foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true) as $carrier)
+                //getCarriers($ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
+		foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true, false, false, null, 5) as $carrier)
 		{
 			$selected = (int)$configuration['SHOPPING_FLUX_CARRIER'] === (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
 			$html .= '<option value="'.(int)$carrier['id_reference'].'" '.$selected.'>'.Tools::safeOutput ($carrier['name']).'</option>';
@@ -1463,7 +1463,8 @@ class ShoppingFluxExport extends Module
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
-			if (!$cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null)))
+                        $added = $cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null));
+			if ($added < 0 || $added === false)
 				return false;
 		}
 
