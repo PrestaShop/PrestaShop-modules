@@ -138,7 +138,7 @@ class Editorial extends Module
 			'submit' => array(
 				'name' => 'submitUpdateEditorial',
 				'title' => $this->l('Save '),
-				'class' => 'button'
+				'class' => 'button pull-right'
 			),
 			'input' => array(
 				array(

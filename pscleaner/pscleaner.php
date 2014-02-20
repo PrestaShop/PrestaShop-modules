@@ -687,7 +687,7 @@ class PSCleaner extends Module
 				'input' => $check_truncate_catalog_input,
 				'submit' => array(
 					'title' => $this->l('Delete catalog'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitTruncateCatalog',
 					'id' => 'submitTruncateCatalog',
 				)
@@ -703,7 +703,7 @@ class PSCleaner extends Module
 				'input' => $check_truncate_sales_input,
 				'submit' => array(
 					'title' => $this->l('Delete orders & customers'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitTruncateSales',
 					'id' => 'submitTruncateSales',
 				)
@@ -718,7 +718,7 @@ class PSCleaner extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Check & fix'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitCheckAndFix',
 				)
 			)
@@ -731,7 +731,7 @@ class PSCleaner extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Clean & Optimize'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitCleanAndOptimize',
 				)
 			)
