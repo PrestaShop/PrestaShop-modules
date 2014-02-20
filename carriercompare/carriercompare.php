@@ -307,8 +307,7 @@ class CarrierCompare extends Module
 					),
 				),
 			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default pull-right')
+				'title' => $this->l('Save'))
 			),
 		);
 		
