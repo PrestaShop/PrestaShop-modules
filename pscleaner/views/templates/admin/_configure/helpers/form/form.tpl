@@ -32,6 +32,7 @@
 {/block}
 
 {block name="input"}
+
     {if $input.type == 'switch'}
 		{foreach $input.values as $value}
 			<input type="radio" name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"

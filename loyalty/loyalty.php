@@ -527,85 +527,6 @@ class Loyalty extends Module
 		else
 			$selected_categories = explode(',', Configuration::get('PS_LOYALTY_VOUCHER_CATEGORY'));
 
-		/* Retro compat 1.5 for type SWITCH */
-		if (version_compare(_PS_VERSION_, '1.6.0.0')) {
-			$array_ps_loyalty_none_award = array(
-				'type' => 'radio',
-				'label' => $this->l('Give points on discounted products'),
-				'name' => 'PS_LOYALTY_NONE_AWARD',
-				'required' => false,
-				'class' => 't',
-				'is_bool' => true,
-				'values' => array(
-					array(
-						'id' => 'active_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
-					),
-					array(
-						'id' => 'active_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				),
-			);
-
-			$array_ps_loyalty_tax = array(
-				'type' => 'radio',
-				'label' => $this->l('Apply taxes on the voucher'),
-				'name' => 'PS_LOYALTY_TAX',
-				'required' => false,
-				'class' => 't',
-				'is_bool' => true,
-				'values' => array(
-					array(
-						'id' => 'active_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
-					),
-					array(
-						'id' => 'active_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				),
-			);
-		} else {
-			$array_ps_loyalty_none_award = array(
-				'type' => 'switch',
-				'label' => $this->l('Give points on discounted products'),
-				'name' => 'PS_LOYALTY_NONE_AWARD',
-				'values' => array(
-					array(
-						'id' => 'active_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
-					),
-					array(
-						'id' => 'active_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				)
-			);
-			$array_ps_loyalty_tax = array(
-				'type' => 'switch',
-				'label' => $this->l('Apply taxes on the voucher'),
-				'name' => 'PS_LOYALTY_TAX',
-				'values' => array(
-					array(
-						'id' => 'active_on',
-						'value' => 1,
-						'label' => $this->l('Enabled')
-					),
-					array(
-						'id' => 'active_off',
-						'value' => 0,
-						'label' => $this->l('Disabled')
-					)
-				)
-			);
-		}
 
 		$fields_form_1 = array(
 			'form' => array(
@@ -647,7 +568,24 @@ class Loyalty extends Module
 						'prefix' => $currency->sign,
 						'class' => 'fixed-width-sm',
 					),
-					$array_ps_loyalty_tax,
+					array(
+						'type' => 'switch',
+						'is_bool' => true, //retro-compat
+						'label' => $this->l('Apply taxes on the voucher'),
+						'name' => 'PS_LOYALTY_TAX',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						)
+					),
 					array(
 						'type' => 'select',
 						'label' => $this->l('Points are awarded when the order is'),
@@ -668,7 +606,24 @@ class Loyalty extends Module
 							'name' => 'name',
 						)
 					),
-					$array_ps_loyalty_none_award,
+					array(
+						'type' => 'switch',
+						'is_bool' => true, //retro-compat
+						'label' => $this->l('Give points on discounted products'),
+						'name' => 'PS_LOYALTY_NONE_AWARD',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						)
+					),
 					array(
 						'type' => 'categories',
 						'label' => $this->l('Vouchers created by the loyalty system can be used in the following categories :'),
@@ -755,6 +710,7 @@ class Loyalty extends Module
 		);
 
 		$helper = new HelperForm();
+		$helper->module = $this;
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));

@@ -590,101 +590,32 @@ class PSCleaner extends Module
 	
 	public function renderForm()
 	{
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true) {
-			$check_truncate_catalog_input = array(
-				array(
-					'type' => 'switch',
-					'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
-					'name' => 'checkTruncateCatalog',
-					'values' => array(
-						array(
-							'id' => 'checkTruncateCatalog_on',
-							'value' => 1,
-							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-						),
-						array(
-							'id' => 'checkTruncateCatalog_off',
-							'value' => 0,
-							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
-						)
-					)
-				)
-			);
-			$check_truncate_sales_input = array(
-				array(
-					'type' => 'switch',
-					'label' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
-					'name' => 'checkTruncateSales',
-					'values' => array(
-						array(
-							'id' => 'checkTruncateSales_on',
-							'value' => 1,
-							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-						),
-						array(
-							'id' => 'checkTruncateSales_off',
-							'value' => 0,
-							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
-						)
-					)
-				)
-			);
-		}
-		else
-		{
-			$check_truncate_catalog_input = array(
-				array(
-					'type' => 'radio',
-					'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
-					'name' => 'checkTruncateCatalog',
-					'required' => false,
-					'class' => 't',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'checkTruncateCatalog_on',
-							'value' => 1,
-							'label' => $this->l('Yes')
-						),
-						array(
-							'id' => 'checkTruncateCatalog_off',
-							'value' => 0,
-							'label' => $this->l('No')
-						)
-					),
-				)
-			);
-			$check_truncate_sales_input = array(
-				array(
-					'type' => 'radio',
-					'label' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
-					'name' => 'checkTruncateSales',
-					'required' => false,
-					'class' => 't',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'checkTruncateSales_on',
-							'value' => 1,
-							'label' => $this->l('Yes')
-						),
-						array(
-							'id' => 'checkTruncateSales_off',
-							'value' => 0,
-							'label' => $this->l('No')
-						)
-					),
-				)
-			);
-		}
-
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Catalog'),
 					'icon' => 'icon-cogs'
 				),
-				'input' => $check_truncate_catalog_input,
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'is_bool' => true,
+						'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
+						'name' => 'checkTruncateCatalog',
+						'values' => array(
+							array(
+								'id' => 'checkTruncateCatalog_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'checkTruncateCatalog_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						)
+					)
+				),
 				'submit' => array(
 					'title' => $this->l('Delete catalog'),
 					'class' => 'btn btn-default pull-right',
@@ -700,7 +631,26 @@ class PSCleaner extends Module
 					'title' => $this->l('Orders and customers'),
 					'icon' => 'icon-cogs'
 				),
-				'input' => $check_truncate_sales_input,
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'is_bool' => true,
+						'label' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
+						'name' => 'checkTruncateSales',
+						'values' => array(
+							array(
+								'id' => 'checkTruncateSales_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'checkTruncateSales_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						)
+					)
+				),
 				'submit' => array(
 					'title' => $this->l('Delete orders & customers'),
 					'class' => 'btn btn-default pull-right',
@@ -738,6 +688,7 @@ class PSCleaner extends Module
 		);
 		
 		$helper = new HelperForm();
+		$helper->module = $this;
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));

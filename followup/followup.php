@@ -479,6 +479,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_1',
 						'values' => array(
@@ -529,6 +530,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_2',
 						'values' => array(
@@ -579,6 +581,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_3',
 						'values' => array(
@@ -635,6 +638,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_4',
 						'values' => array(
@@ -690,6 +694,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Delete outdated discounts during each launch to clean database'),
 						'name' => 'PS_FOLLOW_UP_CLEAN_DB',
 						'values' => array(
