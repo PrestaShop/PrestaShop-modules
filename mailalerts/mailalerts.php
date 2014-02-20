@@ -696,6 +696,8 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'textarea',
+						'cols' => 36,
+						'rows' => 4,
 						'label' => $this->l('E-mail addresses:'),
 						'name' => 'MA_MERCHANT_MAILS',
 						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com)'),
