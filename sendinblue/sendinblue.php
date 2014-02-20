@@ -56,7 +56,7 @@ class Sendinblue extends Module {
 		$this->tab = 'advertising_marketing';
 		$this->author = 'SendinBlue';
 		$this->version = 1.4;
-		$pathconfig = new Pathfind();
+		$pathconfig = new Pathfindsendinblue();
 		$this->path = $pathconfig->pathdisp();
 		parent::__construct();
 
