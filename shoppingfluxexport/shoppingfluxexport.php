@@ -946,6 +946,14 @@ class ShoppingFluxExport extends Module
 			foreach ($ordersXML->Response->Orders->Order as $order)
 			{
 				try {
+                                        $orderExists = Db::getInstance()->getRow('SELECT m.id_message  FROM '._DB_PREFIX_.'message m
+                                            WHERE m.message LIKE "%'.  pSQL($order->IdOrder).'%"');
+
+                                        if (isset($orderExists['id_message'])){
+                                            $this->_validOrders((string)$order->IdOrder, (string)$order->Marketplace, $id_order);
+                                            continue;
+                                        }
+                                    
 					$mail = (string)$order->BillingAddress->Email;
 					$email = (empty($mail)) ? pSQL($order->IdOrder.'@'.$order->Marketplace.'.sf') : pSQL($mail);
 
@@ -1315,6 +1323,7 @@ class ShoppingFluxExport extends Module
 		$address->postcode = pSQL($addressNode->PostalCode);
 		$address->city = pSQL($addressNode->Town);
 		$address->phone = Tools::substr(pSQL($addressNode->Phone), 0, 16);
+                $address->phone_mobile = Tools::substr(pSQL($addressNode->PhoneMobile), 0, 16);
 
 		if ($id_address)
 			$address->update();
