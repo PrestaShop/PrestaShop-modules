@@ -409,7 +409,7 @@ class PayPal extends PaymentModule
 							login.render ({
 								"appid": "'.Configuration::get('PAYPAL_LOGIN_CLIENT_ID').'",
 								'.((int)Configuration::get('PAYPAL_SANDBOX') == 1 ? '"authend" : "sandbox",' : '').'
-								"scopes": "openid profile email address phone https://uri.paypal.com/services/paypalattributes",
+								"scopes": "openid profile email address phone https://uri.paypal.com/services/paypalattributes https://uri.paypal.com/services/expresscheckout",
 								"containerid": "buttonPaypalLogin1",
 								'.((int)Configuration::get('PAYPAL_LOGIN_TPL') == 2 ? '"theme" : "neutral",' : '').'
 								"returnurl": "'.PayPalLogin::getReturnLink().'"

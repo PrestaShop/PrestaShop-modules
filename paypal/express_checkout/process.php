@@ -131,7 +131,7 @@ class PaypalExpressCheckout extends Paypal
 		return (bool)count($this->product_list);
 	}
 
-	public function setExpressCheckout()
+	public function setExpressCheckout($access_token = false)
 	{
 		$this->method = 'SetExpressCheckout';
 		$this->setCancelUrl($fields);
@@ -149,6 +149,11 @@ class PaypalExpressCheckout extends Paypal
 		$fields['USER'] = Configuration::get('PAYPAL_API_USER');
 		$fields['PWD'] = Configuration::get('PAYPAL_API_PASSWORD');
 		$fields['SIGNATURE'] = Configuration::get('PAYPAL_API_SIGNATURE');
+
+		if ($access_token)
+		{
+			$fields['IDENTITYACCESSTOKEN'] = $access_token;
+		}
 
 		$this->callAPI($fields);
 		$this->_storeToken();
@@ -488,7 +493,7 @@ class PaypalExpressCheckout extends Paypal
 			$url = '/cgi-bin/webscr?cmd=_express-checkout-mobile';
 		else
 			$url = '/websc&cmd=_express-checkout';
-			
+
 		Tools::redirectLink('https://'.$this->getPayPalURL().$url.'&token='.urldecode($this->token));
 		exit(0);
 	}

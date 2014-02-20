@@ -27,6 +27,7 @@
 class PayPalLogin
 {
 	private	$_logs = array();
+	private $enable_log = true;
 	
 	private $paypal = null;
 	
@@ -55,7 +56,7 @@ class PayPalLogin
 	/************************************************************/
 	/********************** CONNECT METHODS *********************/
 	/************************************************************/
-	private function _connectByCURL($url, $body = false, $http_header = false, $post = true, $get = false)
+	private function _connectByCURL($url, $body = false, $http_header = false)
 	{
 		$ch = @curl_init();
 
@@ -70,10 +71,7 @@ class PayPalLogin
 
 			@curl_setopt($ch, CURLOPT_URL, 'https://'.$url);
 			@curl_setopt($ch, CURLOPT_USERPWD, Configuration::get('PAYPAL_LOGIN_CLIENT_ID').':'.Configuration::get('PAYPAL_LOGIN_SECRET'));
-			if ($post)
-				@curl_setopt($ch, CURLOPT_POST, true);
-			if ($get)
-				@curl_setopt($ch, CURLOPT_HTTPGET, true);
+			@curl_setopt($ch, CURLOPT_POST, true);
 			if ($body)
 			{
 				@curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
@@ -105,6 +103,7 @@ class PayPalLogin
 
 	public static function getReturnLink()
 	{
+		// return 'http://requestb.in/1jlaizq1';
 		return Context::getContext()->shop->getBaseUrl().'modules/paypal/paypal_login/paypal_login_token.php';
 	}
 
@@ -132,11 +131,18 @@ class PayPalLogin
 		$request = http_build_query($params, '', '&');
 		$result = $this->makeConnection($host, $request);
 
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, print_r($result, true) . "\r\n");
+			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
+
 		$result = json_decode($result);
 
 		if ($result)
 		{
-
 
 			$login = new PayPalLoginUser();
 
@@ -144,6 +150,11 @@ class PayPalLogin
 
 			if (!$customer)
 				return false;
+
+			$temp = PaypalLoginUser::getByIdCustomer((int)Context::getContext()->cookie->id_customer);
+
+			if ($temp)
+				$login = $temp;
 
 			$login->id_customer = $customer->id;
 			$login->token_type = $result->token_type;
@@ -179,12 +190,20 @@ class PayPalLogin
 		$request = http_build_query($params, '', '&');
 		$result = $this->makeConnection($host, $request);
 
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, print_r($result, true) . "\r\n");
+			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
+
 		$result = json_decode($result);
 
 		if ($result)
 		{
 			$login->access_token = $result->access_token;
-			$login->expires_in = $result->expires_in;
+			$login->expires_in = (string) (time() + $result->expires_in);
 			$login->save();
 			return $login;
 		}
@@ -211,7 +230,15 @@ class PayPalLogin
 		);
 
 		$request = http_build_query($params, '', '&');
-		$result = $this->makeConnection($host, $request, $headers, false, true);
+		$result = $this->makeConnection($host, $request, $headers);
+
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, print_r($result, true) . "\r\n");
+			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
 
 		$result = json_decode($result);
 
@@ -237,12 +264,64 @@ class PayPalLogin
 		return false;
 	}
 
+	public function getAuthorizeSemlessCheckout($client_id)
+	{
+
+		unset($this->_logs);
+		if ( Configuration::get('PAYPAL_SANDBOX') )
+			$host = 'sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize';
+		else
+			$host = 'paypal.com/webapps/auth/protocol/openidconnect/v1/authorize';
+
+		$params = array(
+			'client_id'     => $client_id,
+			'response_type' => 'code',
+			'redirect_url'  => 'http://requestb.in/1jlaizq1',
+			'scope'         => 'https://uri.paypal.com/services/expresscheckout',
+		);
+
+		$request = http_build_query($params, '', '&');
+		$result = $this->makeConnection($host, $request, $params);
+
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, print_r($result, true) . "\r\n");
+			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
+
+		$result = json_decode($result);
+
+		if ($result)
+		{
+			$customer = new Customer();
+			$customer = $customer->getByEmail($result->email);
+
+			if (!$customer)
+			{
+				$customer = $this->setCustomer($result);
+			}
+
+			$login->account_type = $result->account_type;
+			$login->user_id = $result->user_id;
+			$login->verified_account = $result->verified_account;
+			$login->zoneinfo = $result->zoneinfo;
+			$login->age_range = $result->age_range;
+
+			return $customer;
+		}
+
+		return false;
+
+	}
+
 	private function setCustomer($result)
 	{
 		$customer = new Customer();
 		$customer->firstname = $result->given_name;
 		$customer->lastname = $result->family_name;
-		$customer->id_lang = Language::getLanguageByIETFCode($result->language);
+		$customer->id_lang = Language::getIdByIso(strstr($result->language, '_', true));
 		$customer->birthday = $result->birthday;
 		$customer->email = $result->email;
 		$customer->passwd = Tools::encrypt(Tools::passwdGen());

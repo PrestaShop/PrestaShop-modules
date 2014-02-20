@@ -56,7 +56,7 @@ class PaypalLib
 			'USER' => Configuration::get('PAYPAL_API_USER'),
 			'SIGNATURE' => Configuration::get('PAYPAL_API_SIGNATURE')
 		);
-
+		
 		$request = http_build_query($params, '', '&');
 		$request .= '&'.(!is_array($data) ? $data : http_build_query($data, '', '&'));
 
