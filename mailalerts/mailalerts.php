@@ -404,7 +404,6 @@ class MailAlerts extends Module
 		$context = Context::getContext();
 		$id_shop = (int)$context->shop->id;
 		$id_lang = (int)$context->language->id;
-		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
 		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
 
