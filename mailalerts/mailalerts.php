@@ -46,7 +46,7 @@ class MailAlerts extends Module
 	{
 		$this->name = 'mailalerts';
 		$this->tab = 'administration';
-		$this->version = '3.2';
+		$this->version = '3.2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -397,14 +397,14 @@ class MailAlerts extends Module
 	public function hookActionUpdateQuantity($params)
 	{
 		$id_product = (int)$params['id_product'];
-		$product = new Product($id_product);
-		$product_has_attributes = $product->hasAttributes();
 		$id_product_attribute = (int)$params['id_product_attribute'];
+
 		$quantity = (int)$params['quantity'];
 		$context = Context::getContext();
 		$id_shop = (int)$context->shop->id;
 		$id_lang = (int)$context->language->id;
 		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
+		$product_has_attributes = $product->hasAttributes();
 		$configuration = Configuration::getMultiple(array('MA_LAST_QTIES', 'PS_STOCK_MANAGEMENT', 'PS_SHOP_EMAIL', 'PS_SHOP_NAME'), null, null, $id_shop);
 		$ma_last_qties = (int)$configuration['MA_LAST_QTIES'];
 
