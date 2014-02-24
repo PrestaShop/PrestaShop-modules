@@ -857,4 +857,9 @@ class ProductComments extends Module
 
 		return $this->display(__FILE__, '/products-comparison.tpl');
 	}
+
+	public function hookDisplayLeftColumnProduct($params)
+	{
+		return $this->hookDisplayRightColumnProduct($params);
+	}
 }
