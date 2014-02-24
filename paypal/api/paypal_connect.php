@@ -126,7 +126,7 @@ class PayPalConnect
 
 	private function _makeHeader($host, $script, $lenght)
 	{
-		return 'POST '.(string)$script.' HTTP/1.0'."\r\n".
+		return 'POST '.(string)$script.' HTTP/1.1'."\r\n".
 			'Host: '.(string)$host."\r\n".
 			'Content-Type: application/x-www-form-urlencoded'."\r\n".
 			'Content-Length: '.(int)$lenght."\r\n".

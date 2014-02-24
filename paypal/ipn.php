@@ -36,7 +36,7 @@ class PayPalIPN extends PayPal
 
 	public function getIPNTransactionDetails($result)
 	{
-		if (is_array($result) || (strcmp($result, "VERIFIED") === false))
+		if (is_array($result) || (strcmp(trim($result), "VERIFIED") === false))
 		{
 			$transaction_id = pSQL($result['txn_id']);
 			
@@ -92,7 +92,7 @@ class PayPalIPN extends PayPal
 		if (isset(Context::getContext()->cart->id_shop))
 			Context::getContext()->shop = new Shop(Context::getContext()->cart->id_shop);
 		
-		if (strcmp($result, "VERIFIED") === false)
+		if (strcmp(trim($result), "VERIFIED") === false)
 		{
 			$details = $this->getIPNTransactionDetails($result);
 			
@@ -108,7 +108,7 @@ class PayPalIPN extends PayPal
 				$history->save();
 			}
 		}
-		elseif (strcmp($result, "VERIFIED") === 0)
+		elseif (strcmp(trim($result), "VERIFIED") === 0)
 		{
 			$details = $this->getIPNTransactionDetails($result);
 			

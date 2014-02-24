@@ -52,7 +52,7 @@ class PayPalNotifier extends PayPal
 		
 		$result = $this->getResult();
 
-		if (strcmp($result, "VERIFIED") == 0)
+		if (strcmp(trim($result), "VERIFIED") == 0)
 		{
 			$currency_decimals = is_array($this->context->currency) ? (int)$this->context->currency['decimals'] : (int)$this->context->currency->decimals;
 			$this->decimals = $currency_decimals * _PS_PRICE_DISPLAY_PRECISION_;
