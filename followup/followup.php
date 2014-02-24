@@ -58,6 +58,10 @@ class Followup extends Module
 		$this->bootstrap = true;
 		parent::__construct();
 
+		$secure_key = Configuration::get('PS_FOLLOWUP_SECURE_KEY');
+		if($secure_key === false)
+			Configuration::updateValue('PS_FOLLOWUP_SECURE_KEY', Tools::strtoupper(Tools::passwdGen(16)));
+
 		$this->displayName = $this->l('Customer follow-up');
 		$this->description = $this->l('Follow-up with your customers with daily customized e-mails.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all settings and your logs?');
@@ -80,7 +84,6 @@ class Followup extends Module
 		foreach ($this->conf_keys as $key)
 			Configuration::updateValue($key, 0);
 
-		Configuration::updateValue('PS_FOLLOWUP_SECURE_KEY', Tools::strtoupper(Tools::passwdGen(16)));
 
 		return parent::install();
 	}
@@ -91,7 +94,7 @@ class Followup extends Module
 			Configuration::deleteByName($key);
 
 		Configuration::deleteByName('PS_FOLLOWUP_SECURE_KEY');
-
+		
 		Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'log_email');
 
 		return parent::uninstall();
@@ -105,7 +108,8 @@ class Followup extends Module
 		{
 			$ok = true;
 			foreach ($this->conf_keys as $c)
-				$ok &= Configuration::updateValue($c, (float)Tools::getValue($c));
+				if(Tools::getValue($c) !== false) // Prevent saving when URL is wrong
+					$ok &= Configuration::updateValue($c, (float)Tools::getValue($c));
 			if ($ok)
 				$html .= $this->displayConfirmation($this->l('Settings updated succesfully'));
 			else
@@ -457,15 +461,18 @@ class Followup extends Module
 		$n3 = $this->bestCustomer(true);
 		$n4 = $this->badCustomer(true);
 
+		$cron_info = '';
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$cron_info = $this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
+								<b>'.$this->context->shop->getBaseURL().'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>';
+
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Informations'),
 					'icon' => 'icon-cogs',
 				),
-				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.
-					$this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
-								<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>'
+				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.$cron_info,
 			)
 		);
 
