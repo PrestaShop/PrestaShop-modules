@@ -163,7 +163,7 @@ class PayPalIPN extends PayPal
 		
 		$total_price = Tools::ps_round($shipping + $subtotal + $tax, $this->decimals);
 	
-		if (($new_order == true) && (bccomp($mc_gross, $total_price, 2) !== 0))
+		if (($new_order == true) && ($this->Comp($mc_gross, $total_price, 2) !== 0))
 		{
 			$payment_type = (int)Configuration::get('PS_OS_ERROR');
 			$message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';

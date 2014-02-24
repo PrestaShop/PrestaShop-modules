@@ -68,7 +68,7 @@ class PayPalNotifier extends PayPal
 			
 			$total_price = Tools::ps_round($shipping + $subtotal + $tax, $this->decimals);
 		
-			if (bccomp($mc_gross, $total_price, 2) !== 0)
+			if ($this->Comp($mc_gross, $total_price, 2) !== 0)
 			{
 				$payment = (int)Configuration::get('PS_OS_ERROR');
 				$message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';

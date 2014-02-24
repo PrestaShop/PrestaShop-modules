@@ -1330,4 +1330,62 @@ class PayPal extends PaymentModule
 
 		return $protocol_link.Tools::getShopDomainSsl().$request.'?'.$params;
 	}
+
+	/**
+	 * Use $this->Comp instead of bccomp which is not added in all versions of PHP
+	 * @param float $Num1  number 1 to compare
+	 * @param float $Num2  number 2 to compare
+	 * @param [type] $Scale [description]
+	 */
+	public function Comp($Num1,$Num2,$Scale=null) {
+		// check if they're valid positive numbers, extract the whole numbers and decimals
+		if(!preg_match("/^\+?(\d+)(\.\d+)?$/",$Num1,$Tmp1)|| !preg_match("/^\+?(\d+)(\.\d+)?$/",$Num2,$Tmp2)) 
+			return('0');
+
+		// remove leading zeroes from whole numbers
+		$Num1=ltrim($Tmp1[1],'0');
+		$Num2=ltrim($Tmp2[1],'0');
+
+		// first, we can just check the lengths of the numbers, this can help save processing time
+		// if $Num1 is longer than $Num2, return 1.. vice versa with the next step.
+		if(strlen($Num1)>strlen($Num2)) return(1);
+		else {
+			if(strlen($Num1)<strlen($Num2)) 
+				return(-1);
+
+			// if the two numbers are of equal length, we check digit-by-digit
+			else {
+
+				// remove ending zeroes from decimals and remove point
+				$Dec1=isset($Tmp1[2])?rtrim(substr($Tmp1[2],1),'0'):'';
+				$Dec2=isset($Tmp2[2])?rtrim(substr($Tmp2[2],1),'0'):'';
+
+				// if the user defined $Scale, then make sure we use that only
+				if($Scale!=null) {
+					$Dec1=substr($Dec1,0,$Scale);
+					$Dec2=substr($Dec2,0,$Scale);
+				}
+
+				// calculate the longest length of decimals
+				$DLen=max(strlen($Dec1),strlen($Dec2));
+
+				// append the padded decimals onto the end of the whole numbers
+				$Num1.=str_pad($Dec1,$DLen,'0');
+				$Num2.=str_pad($Dec2,$DLen,'0');
+
+				// check digit-by-digit, if they have a difference, return 1 or -1 (greater/lower than)
+				for($i=0;$i<strlen($Num1);$i++) {
+					if((int)$Num1{$i}>(int)$Num2{$i}) 
+						return(1);
+					else
+				 	 	if((int)$Num1{$i}<(int)$Num2{$i}) 
+				 	 		return(-1);
+				}
+
+				// if the two numbers have no difference (they're the same).. return 0
+				return(0);
+			}
+		}
+	}
 }
+
