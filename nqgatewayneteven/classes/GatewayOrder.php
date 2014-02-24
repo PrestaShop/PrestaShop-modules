@@ -286,9 +286,15 @@ class GatewayOrder extends Gateway
 			$this->current_time_0 = time();
 			Toolbox::displayDebugMessage(self::getL('Start').' : '.((int)$this->current_time_0 - (int)$this->start_time).'s');
 		}
-		
+
+
+        $order_already_exist = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'orders_gateway` WHERE `id_order_neteven` = '.(int)$neteven_order->OrderID.' AND `id_order_detail_neteven` = 0');
+
 		/* Treatment of order */
 		$id_order_temp = $this->createOrder($neteven_order, $neteven_orders);
+
+
+
 
 		if ($this->time_analyse)
 			$this->current_time_2 = time();
@@ -296,7 +302,9 @@ class GatewayOrder extends Gateway
 		/* Treatment of order details */
 		if ($id_order_temp != 0){
 			$this->createOrderDetails($neteven_order, $id_order_temp);
-            $this->addStatusOnOrder($id_order_temp, $neteven_order);
+            if(!$order_already_exist) {
+                $this->addStatusOnOrder($id_order_temp, $neteven_order);
+            }
         }
 
 		if ($this->time_analyse)
