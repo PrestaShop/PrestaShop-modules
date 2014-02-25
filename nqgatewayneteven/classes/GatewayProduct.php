@@ -492,6 +492,7 @@ class GatewayProduct extends Gateway
 
 		if (!empty($images_attribute))
 			return $images_attribute;
+
 		return $images;
 	}
 
@@ -515,7 +516,7 @@ class GatewayProduct extends Gateway
 			$params = array('items' => $neteven_products);
 			
 			$response = $this->client->PostItems($params);
-			$itemsStatus = $response->PostItemsResult->InventoryItemStatusResponse;
+            $itemsStatus = '';
 
 			if ($this->getValue('debug'))
 				Toolbox::displayDebugMessage(self::getL('Sends data to NetEven'));
@@ -535,9 +536,9 @@ class GatewayProduct extends Gateway
 		if ($this->getValue('send_request_to_mail'))
 			$this->sendDebugMail($this->getValue('mail_list_alert'), self::getL('Debug - Control request').' addProductInNetEven', $this->client->__getLastRequest(), true );
 
-		if ($response != '' && $itemsStatus != '')
+		if ($response != '')
 		{
-			if (is_array($response->PostItemsResult->InventoryItemStatusResponse))
+			if (!empty($response->PostItemsResult) && !empty($response->PostItemsResult->InventoryItemStatusResponse) && is_array($response->PostItemsResult->InventoryItemStatusResponse))
 			{
 				foreach ($response->PostItemsResult->InventoryItemStatusResponse as $rep)
 				{
