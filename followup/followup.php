@@ -33,7 +33,7 @@ class Followup extends Module
 	{
 		$this->name = 'followup';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -141,12 +141,25 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(1);
 		$sql = '
-		SELECT c.id_cart, c.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT c.id_cart, c.id_lang, cu.id_customer, c.id_shop, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'cart c
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = c.id_cart)
 		RIGHT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = c.id_customer)
 		RIGHT JOIN '._DB_PREFIX_.'cart_product cp ON (cp.id_cart = c.id_cart)
 		WHERE DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= c.date_add AND o.id_order IS NULL';
+
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$sql .= ' AND c.id_shop = '.$this->context->shop->id;
+		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
+		{
+			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+			$ids = array();
+			foreach ($shop_ids as $key => $value) {
+				$ids[] = $value['id_shop'];
+			}
+			$ids = '(' . implode(", ", $ids) . ')';
+			$sql .= ' AND c.id_shop IN '.$ids;
+		}
 
 		if (!empty($email_logs))
 			$sql .= ' AND c.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -221,13 +234,26 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(2);
 		$sql = '
-		SELECT o.id_order, c.id_cart, o.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT o.id_order, c.id_cart, o.id_lang, o.id_shop, cu.id_customer, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = o.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 			WHERE o.valid = 1 
 			AND c.date_add >= DATE_SUB(CURDATE(),INTERVAL 7 DAY) 
-			AND cu.is_guest = 0 ';
+			AND cu.is_guest = 0';
+
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$sql .= ' AND o.id_shop = '. $this->context->shop->id;
+		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
+		{
+			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+			$ids = array();
+			foreach ($shop_ids as $key => $value) {
+				$ids[] = $value['id_shop'];
+			}
+			$ids = '(' . implode(", ", $ids) . ')';
+			$sql .= ' AND o.id_shop IN '.$ids;
+		}
 
 		if (!empty($email_logs))
 			$sql .= ' AND o.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -263,13 +289,26 @@ class Followup extends Module
 		$email_logs = $this->getLogsEmail(3);
 
 		$sql = '
-		SELECT SUM(o.total_paid) total, c.id_cart, o.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT SUM(o.total_paid) total, c.id_cart, o.id_lang, cu.id_customer, cu.id_shop, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = o.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 			WHERE o.valid = 1 
 			AND DATE_SUB(CURDATE(),INTERVAL 90 DAY) <= o.date_add 
 			AND cu.is_guest = 0 ';
+
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$sql .= ' AND cu.id_shop = '.$this->context->shop->id;
+		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
+		{
+			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+			$ids = array();
+			foreach ($shop_ids as $key => $value) {
+				$ids[] = $value['id_shop'];
+			}
+			$ids = '(' . implode(", ", $ids) . ')';
+			$sql .= ' AND cu.id_shop IN '.$ids;
+		}
 
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
@@ -317,17 +356,30 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(4);
 		$sql = '
-			SELECT o.id_lang, c.id_cart, cu.id_customer, cu.firstname, cu.lastname, cu.email, (SELECT COUNT(o.id_order) FROM '._DB_PREFIX_.'orders o WHERE o.id_customer = cu.id_customer and o.valid = 1) nb_orders
+			SELECT o.id_lang, c.id_cart, cu.id_customer, cu.id_shop, cu.firstname, cu.lastname, cu.email, (SELECT COUNT(o.id_order) FROM '._DB_PREFIX_.'orders o WHERE o.id_customer = cu.id_customer and o.valid = 1) nb_orders
 			FROM '._DB_PREFIX_.'customer cu
 			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_customer = cu.id_customer)
 			LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 				WHERE cu.id_customer NOT IN (SELECT o.id_customer FROM '._DB_PREFIX_.'orders o WHERE DATE_SUB(CURDATE(),INTERVAL '.(int)Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4').' DAY) <= o.date_add)
 				AND cu.is_guest = 0 ';
 
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$sql .= ' AND cu.id_shop = '.$this->context->shop->id;
+		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
+		{
+			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
+			$ids = array();
+			foreach ($shop_ids as $key => $value) {
+				$ids[] = $value['id_shop'];
+			}
+			$ids = '(' . implode(", ", $ids) . ')';
+			$sql .= ' AND cu.id_shop IN '.$ids;
+		}
+
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
 
-		$sql .= 'GROUP BY cu.id_customer HAVING nb_orders >= 1';
+		$sql .= ' GROUP BY cu.id_customer HAVING nb_orders >= 1';
 
 		$emails = Db::getInstance()->executeS($sql);
 
