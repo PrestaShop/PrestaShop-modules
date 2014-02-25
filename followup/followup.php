@@ -148,18 +148,7 @@ class Followup extends Module
 		RIGHT JOIN '._DB_PREFIX_.'cart_product cp ON (cp.id_cart = c.id_cart)
 		WHERE DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= c.date_add AND o.id_order IS NULL';
 
-		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$sql .= ' AND c.id_shop = '.$this->context->shop->id;
-		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
-		{
-			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-			$ids = array();
-			foreach ($shop_ids as $key => $value) {
-				$ids[] = $value['id_shop'];
-			}
-			$ids = '(' . implode(", ", $ids) . ')';
-			$sql .= ' AND c.id_shop IN '.$ids;
-		}
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 
 		if (!empty($email_logs))
 			$sql .= ' AND c.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -242,18 +231,7 @@ class Followup extends Module
 			AND c.date_add >= DATE_SUB(CURDATE(),INTERVAL 7 DAY) 
 			AND cu.is_guest = 0';
 
-		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$sql .= ' AND o.id_shop = '. $this->context->shop->id;
-		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
-		{
-			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-			$ids = array();
-			foreach ($shop_ids as $key => $value) {
-				$ids[] = $value['id_shop'];
-			}
-			$ids = '(' . implode(", ", $ids) . ')';
-			$sql .= ' AND o.id_shop IN '.$ids;
-		}
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'o');
 
 		if (!empty($email_logs))
 			$sql .= ' AND o.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -297,18 +275,7 @@ class Followup extends Module
 			AND DATE_SUB(CURDATE(),INTERVAL 90 DAY) <= o.date_add 
 			AND cu.is_guest = 0 ';
 
-		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$sql .= ' AND cu.id_shop = '.$this->context->shop->id;
-		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
-		{
-			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-			$ids = array();
-			foreach ($shop_ids as $key => $value) {
-				$ids[] = $value['id_shop'];
-			}
-			$ids = '(' . implode(", ", $ids) . ')';
-			$sql .= ' AND cu.id_shop IN '.$ids;
-		}
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'o');
 
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
@@ -363,18 +330,7 @@ class Followup extends Module
 				WHERE cu.id_customer NOT IN (SELECT o.id_customer FROM '._DB_PREFIX_.'orders o WHERE DATE_SUB(CURDATE(),INTERVAL '.(int)Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4').' DAY) <= o.date_add)
 				AND cu.is_guest = 0 ';
 
-		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$sql .= ' AND cu.id_shop = '.$this->context->shop->id;
-		elseif (Shop::getContext() === Shop::CONTEXT_GROUP)
-		{
-			$shop_ids = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-			$ids = array();
-			foreach ($shop_ids as $key => $value) {
-				$ids[] = $value['id_shop'];
-			}
-			$ids = '(' . implode(", ", $ids) . ')';
-			$sql .= ' AND cu.id_shop IN '.$ids;
-		}
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu');
 
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
