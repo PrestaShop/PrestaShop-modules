@@ -155,6 +155,7 @@ class PaypalExpressCheckout extends Paypal
 			$fields['IDENTITYACCESSTOKEN'] = $access_token;
 		}
 
+
 		$this->callAPI($fields);
 		$this->_storeToken();
 	}

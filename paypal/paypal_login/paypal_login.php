@@ -117,7 +117,7 @@ class PayPalLogin
 		}
 
 		if ( Configuration::get('PAYPAL_SANDBOX') )
-			$host = 'api.sandbox.paypal.com/v1/identity/openidconnect/tokenservice';
+			$host = 'www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice';
 		else
 			$host = 'api.paypal.com/v1/identity/openidconnect/tokenservice';
 
@@ -134,8 +134,9 @@ class PayPalLogin
 		if ($this->enable_log === true)
 		{
 			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, print_r($result, true) . "\r\n");
-			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
+			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -178,7 +179,7 @@ class PayPalLogin
 			return false;
 
 		if ( Configuration::get('PAYPAL_SANDBOX') )
-			$host = 'api.sandbox.paypal.com/v1/identity/openidconnect/tokenservice';
+			$host = 'www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/tokenservice';
 		else
 			$host = 'api.paypal.com/v1/identity/openidconnect/tokenservice';
 
@@ -193,8 +194,9 @@ class PayPalLogin
 		if ($this->enable_log === true)
 		{
 			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, print_r($result, true) . "\r\n");
-			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
+			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -235,8 +237,10 @@ class PayPalLogin
 		if ($this->enable_log === true)
 		{
 			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, print_r($result, true) . "\r\n");
-			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
+			fwrite($handle, "Headers => " . print_r($headers, true) . "\r\n");
+			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -286,8 +290,10 @@ class PayPalLogin
 		if ($this->enable_log === true)
 		{
 			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, print_r($result, true) . "\r\n");
-			fwrite($handle, print_r($this->_logs, true."\r\n"));
+			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
+			fwrite($handle, "Headers => " . print_r($params, true) . "\r\n");
+			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
