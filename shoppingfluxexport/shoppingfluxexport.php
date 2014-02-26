@@ -1493,14 +1493,14 @@ class ShoppingFluxExport extends Module
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$skus[0], (int)$skus[1]);
 
 				if ($quantity - $product->Quantity < 0)
-					$available = false;
+					StockAvailable::updateQuantity((int)$skus[0], (int)$skus[1], (int)$product->Quantity);
 			}
 			else
 			{
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 
 				if ($quantity - $product->Quantity < 0)
-					$available = false;
+					StockAvailable::updateQuantity((int)$skus[0], 0, (int)$product->Quantity);
 			}
 		}
 
