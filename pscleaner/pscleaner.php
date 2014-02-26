@@ -55,6 +55,7 @@ class PSCleaner extends Module
 		else
 		{
 			$shops = Shop::getShops(false, null, true);
+			$id_lang = (int) $this->context->language->id;
 			$resultsArray = array();
 			foreach ($shops as $id_shop)
 				$resultsArray[$id_shop] = Configuration::get($key, $id_lang, null, $id_shop);
