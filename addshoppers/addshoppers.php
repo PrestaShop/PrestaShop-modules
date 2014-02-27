@@ -38,7 +38,7 @@ class Addshoppers extends Module
 	{
 		$this->name = 'addshoppers';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1.3';
+		$this->version = '1.1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
