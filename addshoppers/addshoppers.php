@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__).'/AddshoppersClient.php');
+require_once(_PS_MODULE_DIR_.'addshoppers/AddshoppersClient.php');
 
 class Addshoppers extends Module
 {
