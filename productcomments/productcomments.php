@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.9.4';
+		$this->version = '2.9.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->ps_versions_compliancy = array(
@@ -56,18 +56,23 @@ class ProductComments extends Module
 		$this->description = $this->l('Allows users to post reviews.');
 	}
 
-	public function install()
+	public function install($keep = true)
 	{
-		if (!file_exists(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
-			return false;
-		else if (!$sql = file_get_contents(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
-			return false;
-		$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
-		$sql = preg_split("/;\s*[\r\n]+/", trim($sql));
-
-		foreach ($sql as $query)
-			if (!Db::getInstance()->execute(trim($query)))
+		if ($keep)
+		{
+			if (!file_exists(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
 				return false;
+			else if (!$sql = file_get_contents(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
+				return false;
+			$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
+			$sql = preg_split("/;\s*[\r\n]+/", trim($sql));
+
+			foreach ($sql as $query)
+				if (!Db::getInstance()->execute(trim($query)))
+					return false;
+
+		}
+
 		if (parent::install() == false ||
 			!$this->registerHook('productTab') ||
 			!$this->registerHook('extraProductComparison') ||
@@ -83,9 +88,9 @@ class ProductComments extends Module
 		return true;
 	}
 
-	public function uninstall()
+	public function uninstall($keep = true)
 	{
-		if (!parent::uninstall() || !$this->deleteTables() ||
+		if (!parent::uninstall() || ($keep && !$this->deleteTables()) ||
 			!Configuration::deleteByName('PRODUCT_COMMENTS_MODERATE') ||
 			!Configuration::deleteByName('PRODUCT_COMMENTS_ALLOW_GUESTS') ||
 			!Configuration::deleteByName('PRODUCT_COMMENTS_MINIMAL_TIME') ||
@@ -96,6 +101,15 @@ class ProductComments extends Module
 			!$this->unregisterHook('productTab') ||
 			!$this->unregisterHook('top') ||
 			!$this->unregisterHook('displayProductListReviews'))
+			return false;
+		return true;
+	}
+
+	public function reset()
+	{
+		if (!$this->uninstall(false))
+			return false;
+		if (!$this->install(false))
 			return false;
 		return true;
 	}
