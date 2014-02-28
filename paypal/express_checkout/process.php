@@ -31,7 +31,7 @@ class PaypalExpressCheckout extends Paypal
 {
 	public $logs = array();
 
-	public $method_version = '84';
+	public $method_version = '106';
 
 	public $method;
 
@@ -228,7 +228,7 @@ class PaypalExpressCheckout extends Paypal
 	{
 		// Required field
 		$fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
-		$fields['REQCONFIRMSHIPPING'] = '0';
+		// $fields['REQCONFIRMSHIPPING'] = '0';
 		$fields['NOSHIPPING'] = '1';
 		$fields['BUTTONSOURCE'] = $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD'));
 
