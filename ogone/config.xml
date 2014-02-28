@@ -2,7 +2,7 @@
 <module>
 	<name>ogone</name>
 	<displayName><![CDATA[Ogone]]></displayName>
-	<version><![CDATA[2.5]]></version>
+	<version><![CDATA[2.6]]></version>
 	<description><![CDATA[With over 80 different payment methods and 200+ acquirer connections, Ogone helps you manage, collect and secure your online or mobile payments, help prevent fraud and drive your business!]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
