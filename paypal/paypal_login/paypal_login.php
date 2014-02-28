@@ -27,7 +27,7 @@
 class PayPalLogin
 {
 	private	$_logs = array();
-	private $enable_log = true;
+	private $enable_log = false;
 	
 	private $paypal = null;
 	
