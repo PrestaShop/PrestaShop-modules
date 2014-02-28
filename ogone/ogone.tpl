@@ -23,10 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p class="payment_module clearfix">
-	<a onclick="document.forms['ogone_form'].submit();" href="#" title="{l s='Pay with Ogone' mod='ogone'}" style="height:48px">
-		<span style="float:left;"><img src="{$module_dir}ogone.gif" alt="{l s='Ogone logo' mod='ogone'}"/></span>
-		<span>{l s='Pay with Ogone' mod='ogone'}<br />{l s='Pay safely and quickly on the next page with IDEAL / Mastercard / Visa / Paypal / Mister Cash / Bancontact.' mod='ogone'}</span>
+<p class="payment_module">
+	<a onclick="document.forms['ogone_form'].submit();" href="#" title="{l s='Pay with Ogone' mod='ogone'}">
+		<span style="float:left;"><img src="{$module_dir}ogone.gif" alt="{l s='Ogone logo' mod='ogone'}" style="padding-right: 2px;"/></span>
+		{l s='Pay with Ogone' mod='ogone'}<br /><span>{l s='Pay safely and quickly on the next page with IDEAL / Mastercard / Visa / Paypal / Mister Cash / Bancontact.' mod='ogone'}</span>
 	</a>
 </p>
 <form name="ogone_form" action="https://secure.ogone.com/ncol/{if $OGONE_MODE}prod{else}test{/if}/orderstandard_utf8.asp" method="post">
