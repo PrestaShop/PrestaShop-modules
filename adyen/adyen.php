@@ -41,15 +41,15 @@ class Adyen extends PaymentModule
 		
 		// The need_instance flag indicates whether to load the module's class when displaying the "Modules" page in the back-office
 		$this->need_instance = 1;
-		
+
+		parent::__construct();
+
 		$this->ps_versions_compliancy = array (
 				'min' => '1.5',
 				'max' => '1.6'
 		);
 		$this->dependencies = array ();
-		
-		parent::__construct();
-		
+
 		$this->displayName = $this->l('Adyen');
 		$this->description = $this->l('Accepts payments by Adyen\'s Hosted Payment Page.');
 		
