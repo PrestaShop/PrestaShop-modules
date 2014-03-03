@@ -37,13 +37,13 @@ class Watermark extends Module
 	private $xAlign;
 	private $transparency;
 	private $imageTypes = array();
-	private	$watermarkTypes;
+	private $watermarkTypes;
 
 	public function __construct()
 	{
 		$this->name = 'watermark';
 		$this->tab = 'administration';
-		$this->version = '0.5';
+		$this->version = '0.6';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -53,7 +53,14 @@ class Watermark extends Module
 		$this->description = $this->l('Protect image by watermark.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
 
-		$config = Configuration::getMultiple(array('WATERMARK_TYPES', 'WATERMARK_Y_ALIGN', 'WATERMARK_X_ALIGN', 'WATERMARK_TRANSPARENCY'));
+		$config = Configuration::getMultiple(
+			array(
+				'WATERMARK_TYPES',
+				'WATERMARK_Y_ALIGN',
+				'WATERMARK_X_ALIGN',
+				'WATERMARK_TRANSPARENCY'
+			)
+		);
 		if (!isset($config['WATERMARK_TYPES']))
 			$config['WATERMARK_TYPES'] = '';
 		$tmp = explode(',', $config['WATERMARK_TYPES']);
@@ -77,12 +84,14 @@ class Watermark extends Module
 		Configuration::updateValue('WATERMARK_TRANSPARENCY', 60);
 		Configuration::updateValue('WATERMARK_Y_ALIGN', 'bottom');
 		Configuration::updateValue('WATERMARK_X_ALIGN', 'right');
+
 		return true;
 	}
 
 	public function uninstall()
 	{
 		$this->removeHtaccessSection();
+
 		return (parent::uninstall()
 			&& Configuration::deleteByName('WATERMARK_TYPES')
 			&& Configuration::deleteByName('WATERMARK_TRANSPARENCY')
@@ -160,7 +169,7 @@ class Watermark extends Module
 			foreach ($this->_errors as $error)
 				$this->_html .= $this->displayError($this->l($error));
 		else
-			$this->_html .= $this->displayConfirmation($this->l('Settings updated'));
+			Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&conf=6&token='.Tools::getAdminTokenLite('AdminModules'));
 	}
 
 	public function getAdminDir()
@@ -168,6 +177,7 @@ class Watermark extends Module
 		$admin_dir = str_replace('\\', '/', _PS_ADMIN_DIR_);
 		$admin_dir = explode('/', $admin_dir);
 		$len = count($admin_dir);
+
 		return $len > 1 ? $admin_dir[$len - 1] : _PS_ADMIN_DIR_;
 	}
 
@@ -175,15 +185,17 @@ class Watermark extends Module
 	{
 		$key1 = "\n# start ~ module watermark section";
 		$key2 = "# end ~ module watermark section\n";
-		$path = _PS_ROOT_DIR_ . '/.htaccess';
-		if (file_exists($path) && is_writable($path)) {
+		$path = _PS_ROOT_DIR_.'/.htaccess';
+		if (file_exists($path) && is_writable($path))
+		{
 			$s = file_get_contents($path);
 			$p1 = strpos($s, $key1);
 			$p2 = strpos($s, $key2, $p1);
 			if ($p1 === false || $p2 === false) return false;
-			$s = substr($s, 0, $p1) . substr($s, $p2 + strlen($key2));
+			$s = substr($s, 0, $p1).substr($s, $p2 + strlen($key2));
 			file_put_contents($path, $s);
 		}
+
 		return true;
 	}
 
@@ -197,7 +209,7 @@ RewriteCond expr \"! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}*/$admin_dir/*'\
 RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 # end ~ module watermark section\n";
 
-		$path = _PS_ROOT_DIR_ . '/.htaccess';
+		$path = _PS_ROOT_DIR_.'/.htaccess';
 		file_put_contents($path, $source, FILE_APPEND);
 	}
 
@@ -206,7 +218,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 		//Modify htaccess to prevent downlaod of original pictures
 		$this->removeHtaccessSection();
 		$this->writeHtaccessSection();
-		
+
 		$this->_html = '';
 
 		if (Tools::isSubmit('btnSubmit'))
@@ -250,6 +262,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 			if (!ImageManager::resize($file, $newFile, (int)$imageType['width'], (int)$imageType['height']))
 				$return = false;
 		}
+
 		return $return;
 	}
 
@@ -260,8 +273,8 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 			return false;
 		if (!$imagew = imagecreatefromgif($watermarkpath))
 			die ($this->l('The watermark image is not a real gif, please CONVERT the image.'));
-		list($watermarkWidth, $watermarkHeight) = getimagesize($watermarkpath); 
-		list($imageWidth, $imageHeight) = getimagesize($imagepath); 
+		list($watermarkWidth, $watermarkHeight) = getimagesize($watermarkpath);
+		list($imageWidth, $imageHeight) = getimagesize($imagepath);
 		if ($this->xAlign == 'middle')
 			$xpos = $imageWidth / 2 - $watermarkWidth / 2 + $Xoffset;
 		if ($this->xAlign == 'left')
@@ -276,14 +289,20 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 			$ypos = $imageHeight - $watermarkHeight - $Yoffset;
 		if (!imagecopymerge($image, $imagew, $xpos, $ypos, 0, 0, $watermarkWidth, $watermarkHeight, $this->transparency))
 			return false;
-		return imagejpeg($image, $outputpath, 100); 
+
+		return imagejpeg($image, $outputpath, 100);
 	}
 
 	public function renderForm()
 	{
 		$types = ImageType::getImagesTypes('products');
 		foreach ($types as $key => $type)
-			$types[$key]['label'] =  $type['name'].' ('.$type['width'].' x '.$type['height'].')';
+			$types[$key]['label'] = $type['name'].' ('.$type['width'].' x '.$type['height'].')';
+
+		if (Shop::getContext() == Shop::CONTEXT_SHOP)
+			$str_shop = '-'.(int)$this->context->shop->id;
+		else
+			$str_shop = '';
 
 		$fields_form = array(
 			'form' => array(
@@ -298,7 +317,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 						'label' => $this->l('Watermark file:'),
 						'name' => 'PS_WATERMARK',
 						'desc' => $this->l('Must be in GIF format'),
-						'thumb' => '../modules/'.$this->name.'/'.$this->name.'.gif?t='.rand(0, time()),
+						'thumb' => '../modules/'.$this->name.'/'.$this->name.$str_shop.'.gif?t='.rand(0, time()),
 					),
 					array(
 						'type' => 'text',
@@ -367,13 +386,14 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 				),
 				'submit' => array(
 					'title' => $this->l('Save'),
-					'class' => 'btn btn-default pull-right')
+					'class' => 'btn btn-default pull-right'
+				)
 			),
 		);
 
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
@@ -389,7 +409,7 @@ RewriteRule [0-9/]+/[0-9]+\\.jpg$ - [F]
 
 		return $helper->generateForm(array($fields_form));
 	}
-	
+
 	public function getConfigFieldsValues()
 	{
 		$config_fields = array(
