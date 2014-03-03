@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.4.1';
+		$this->version = '3.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -123,7 +123,10 @@ class ShoppingFluxExport extends Module
 	public function uninstall()
 	{
 		if (!Configuration::deleteByName('SHOPPING_FLUX_TOKEN') ||
-			!Configuration::deleteByName('SHOPPING_FLUX_TRACKING') ||
+                        !Configuration::deleteByName('SHOPPING_FLUX_CANCELED') ||
+                        !Configuration::deleteByName('SHOPPING_FLUX_SHIPPED') ||
+                        !Configuration::deleteByName('SHOPPING_FLUX_IMAGE') ||
+                        !Configuration::deleteByName('SHOPPING_FLUX_TRACKING') ||
 			!Configuration::deleteByName('SHOPPING_FLUX_BUYLINE') ||
 			!Configuration::deleteByName('SHOPPING_FLUX_ORDERS') ||
 			!Configuration::deleteByName('SHOPPING_FLUX_STATUS_SHIPPED') ||
@@ -131,7 +134,7 @@ class ShoppingFluxExport extends Module
 			!Configuration::deleteByName('SHOPPING_FLUX_LOGIN') ||
 			!Configuration::deleteByName('SHOPPING_FLUX_INDEX') ||
 			!Configuration::deleteByName('SHOPPING_FLUX_STOCKS') ||
-			!Configuration::deleteByName('SHOPPING_FLUX_STATUS') ||
+                        !Configuration::deleteByName('SHOPPING_FLUX_SHIPPING_MATCHING') ||
 			!parent::uninstall())
 			return false;
 
@@ -249,17 +252,16 @@ class ShoppingFluxExport extends Module
 	/* View when site is client */
 	private function _clientView()
 	{
-		$rec_config = Tools::getValue('rec_config');
-		if (isset($rec_config) && $rec_config != null)
-			$this->_treatForm();
-
+		$this->_treatForm();
+                
 		$configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TOKEN','SHOPPING_FLUX_TRACKING','SHOPPING_FLUX_BUYLINE',
 			'SHOPPING_FLUX_ORDERS', 'SHOPPING_FLUX_STATUS_SHIPPED', 'SHOPPING_FLUX_STATUS_CANCELED', 'SHOPPING_FLUX_LOGIN',
 						'SHOPPING_FLUX_STOCKS', 'SHOPPING_FLUX_INDEX','PS_LANG_DEFAULT', 'SHOPPING_FLUX_CARRIER', 'SHOPPING_FLUX_IMAGE',
-						'SHOPPING_FLUX_SHIPPED', 'SHOPPING_FLUX_CANCELED'));
+						'SHOPPING_FLUX_SHIPPED', 'SHOPPING_FLUX_CANCELED', 'SHOPPING_FLUX_SHIPPING_MATCHING'));
 
 		$html = $this->_getFeedContent();
 		$html .= $this->_getParametersContent($configuration);
+                $html .= $this->_getAdvancedParametersContent($configuration);
 
 		return $html;
 
@@ -279,7 +281,7 @@ class ShoppingFluxExport extends Module
 						<p><label>'.$this->l('Expédition des commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_SHIPPED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_SHIPPED']).'/> '.$this->l('les commandes seront expédiées sur les places de marché').'.</p>
 						<p><label>'.$this->l('Annulation des commandes').' : </label><input type="checkbox" name="SHOPPING_FLUX_STATUS_CANCELED" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STATUS_CANCELED']).'/> '.$this->l('les commandes seront annulées sur les places de marché').'.</p>
 						<p><label>'.$this->l('Synchronisation des stocks et des prix').' : </label><input type="checkbox" name="SHOPPING_FLUX_STOCKS" '.Tools::safeOutput($configuration['SHOPPING_FLUX_STOCKS']).'/> '.$this->l('chaque mouvement de stock ou de prix sera répercuté sur les places de marché').'.</p>
-						<p><label>'.$this->l('Transporteur par défaut').' : </label>'.$this->_getCarriersSelect($configuration).'</p>
+						<p><label>'.$this->l('Transporteur par défaut').' : </label>'.$this->_getCarriersSelect($configuration, $configuration['SHOPPING_FLUX_CARRIER']).'</p>
 						<p><label>'.$this->l('Image par défaut').' : </label>'.$this->_getImageTypeSelect($configuration).'</p>
 						<p><label>'.$this->l('Notifier les places de marché de l\'expédition lors du passe à l\'état').' : </label>'.$this->_getOrderStateShippedSelect($configuration).'</p>
 						<p style="margin-top:20px"><label>'.$this->l('Notifier les places de marché de l\'annulation lors du passe à l\'état').' : </label>'.$this->_getOrderStateCanceledSelect($configuration).'</p>
@@ -287,14 +289,54 @@ class ShoppingFluxExport extends Module
 					</fieldset>
 				</form>';
 	}
+        
+        private function _getAdvancedParametersContent($configuration)
+        {
+            if (!in_array('curl', get_loaded_extensions()))
+                return;
+            
+            $sf_carriers_xml = $this->_callWebService('GetCarriers');
+            
+            if (!isset($sf_carriers_xml->Response->Carriers->Carrier[0]))
+                return;
+            
+            $sf_carriers = array();
+            
+            foreach ($sf_carriers_xml->Response->Carriers->Carrier as $carrier){
+                $sf_carriers[] = (string)$carrier;
+            }
+            
+            $html = '<h3>'.$this->l('Paramètres avancés').'</h3>
+            <form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
+                <fieldset>
+                    <legend>'.$this->l('Matching transporteurs').'</legend>
+                    <p>'.$this->l('Nous récupérons ci-dessous tous les transporteurs fournis par les places de marché. Associez les à vos transporteurs Prestashop').'</p>';
+            
+            $actual_configuration = unserialize($configuration['SHOPPING_FLUX_SHIPPING_MATCHING']);
+            
+            
+            foreach ($sf_carriers as $sf_carrier){
+                
+                $actual_value = isset($actual_configuration[base64_encode(Tools::safeOutput($sf_carrier))]) ? $actual_configuration[base64_encode(Tools::safeOutput($sf_carrier))] : $configuration['SHOPPING_FLUX_CARRIER'];
+                
+                $html .= '<p><label>'.Tools::safeOutput($sf_carrier).' : </label>'.$this->_getCarriersSelect($configuration, $actual_value, 'MATCHING['.base64_encode(Tools::safeOutput($sf_carrier)).']').'</p>';
+                
+            }
+            
+            $html .= '<p style="margin-top:20px"><input type="submit" value="'.$this->l('Valider').'" name="rec_shipping_config" class="button"/></p>
+                </fieldset>
+            </form>';
+            
+            return $html;
+        }
 
-	private function _getCarriersSelect($configuration)
+	private function _getCarriersSelect($configuration, $actual_value, $name = 'SHOPPING_FLUX_CARRIER')
 	{
-		$html = '<select name="SHOPPING_FLUX_CARRIER">';
-
-		foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true) as $carrier)
+		$html = '<select name="'.Tools::safeOutput($name).'">';
+                
+		foreach (Carrier::getCarriers($configuration['PS_LANG_DEFAULT'], true, false, false, null, 5) as $carrier)
 		{
-			$selected = (int)$configuration['SHOPPING_FLUX_CARRIER'] === (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
+			$selected = (int)$actual_value === (int)$carrier['id_reference'] ? 'selected = "selected"' : '';
 			$html .= '<option value="'.(int)$carrier['id_reference'].'" '.$selected.'>'.Tools::safeOutput ($carrier['name']).'</option>';
 		}
 
@@ -380,16 +422,26 @@ class ShoppingFluxExport extends Module
 	/* Form record */
 	private function _treatForm()
 	{
-		$configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TRACKING','SHOPPING_FLUX_BUYLINE',
-			'SHOPPING_FLUX_ORDERS', 'SHOPPING_FLUX_STATUS_SHIPPED', 'SHOPPING_FLUX_STATUS_CANCELED',
-			'SHOPPING_FLUX_LOGIN', 'SHOPPING_FLUX_STOCKS', 'SHOPPING_FLUX_CARRIER', 'SHOPPING_FLUX_IMAGE',
-			'SHOPPING_FLUX_CANCELED', 'SHOPPING_FLUX_SHIPPED'));
+                $rec_config = Tools::getValue('rec_config');
+                $rec_shipping_config = Tools::getValue('rec_shipping_config');
+                
+		if ((isset($rec_config) && $rec_config != null)){
+            
+                    $configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TRACKING','SHOPPING_FLUX_BUYLINE',
+                            'SHOPPING_FLUX_ORDERS', 'SHOPPING_FLUX_STATUS_SHIPPED', 'SHOPPING_FLUX_STATUS_CANCELED',
+                            'SHOPPING_FLUX_LOGIN', 'SHOPPING_FLUX_STOCKS', 'SHOPPING_FLUX_CARRIER', 'SHOPPING_FLUX_IMAGE',
+                            'SHOPPING_FLUX_CANCELED', 'SHOPPING_FLUX_SHIPPED'));
 
-		foreach ($configuration as $key => $val)
-		{
-			$value = Tools::getValue($key, '');
-			Configuration::updateValue($key, $value == 'on' ? 'checked' :  $value);
-		}
+                    foreach ($configuration as $key => $val)
+                    {
+                            $value = Tools::getValue($key, '');
+                            Configuration::updateValue($key, $value == 'on' ? 'checked' :  $value);
+                    }
+                
+                }
+                elseif(isset($rec_shipping_config) && $rec_shipping_config != null){
+                    Configuration::updateValue('SHOPPING_FLUX_SHIPPING_MATCHING', serialize(Tools::getValue('MATCHING')));
+                }
 	}
 
 	/* Send mail to PS and Shopping Flux */
@@ -497,7 +549,7 @@ class ShoppingFluxExport extends Module
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<produits>';
+		echo '<produits version="'.$this->version.'">';
 
 		foreach ($products as $productArray)
 		{
@@ -536,7 +588,7 @@ class ShoppingFluxExport extends Module
 	public function initFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits>');
+		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits version="'.$this->version.'">');
 		fclose($file);
 
 		$totalProducts = $this->countProducts();
@@ -832,6 +884,7 @@ class ShoppingFluxExport extends Module
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
 			$ret .= '<upc><![CDATA['.$combination['upc'].']]></upc>';
 			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
+                        $ret .= '<weight><![CDATA['.$combination['weight'].']]></weight>';
 			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
 			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
 			$ret .= '<frais-de-port><![CDATA['.$this->_getShipping($product, $configuration, $carrier, $id, $combination['weight']).']]></frais-de-port>';
@@ -946,6 +999,15 @@ class ShoppingFluxExport extends Module
 			foreach ($ordersXML->Response->Orders->Order as $order)
 			{
 				try {
+				
+					$orderExists = Db::getInstance()->getRow('SELECT m.id_message  FROM '._DB_PREFIX_.'message m
+						WHERE m.message LIKE "%'.  pSQL($order->IdOrder).'%"');
+
+					if (isset($orderExists['id_message'])){
+						$this->_validOrders((string)$order->IdOrder, (string)$order->Marketplace);
+						continue;
+					}
+					
 					$mail = (string)$order->BillingAddress->Email;
 					$email = (empty($mail)) ? pSQL($order->IdOrder.'@'.$order->Marketplace.'.sf') : pSQL($mail);
 
@@ -958,7 +1020,7 @@ class ShoppingFluxExport extends Module
 					$current_customer = new Customer((int)$id_customer);
 					$last_cart = new Cart($current_customer->getLastCart());
 					$add = true;
-
+					
 					if ($last_cart->id)
 					{
 						$date_cart = date_create($last_cart->date_add);
@@ -968,10 +1030,10 @@ class ShoppingFluxExport extends Module
 						if ($date < $date_cart)
 							$add = false;
 					}
-
+					
 					if ($products_available && $id_address_shipping && $id_address_billing && $id_customer && $add)
 					{
-						$cart = $this->_getCart($id_customer, $id_address_billing, $id_address_shipping, $order->Products, $order->Currency);
+						$cart = $this->_getCart($id_customer, $id_address_billing, $id_address_shipping, $order->Products, (string)$order->Currency, (string)$order->ShippingMethod);
 
 						if ($cart)
 						{
@@ -1233,7 +1295,7 @@ class ShoppingFluxExport extends Module
 		if (empty($token))
 			return false;
 
-		$service_url = 'https://clients.shopping-flux.com/webservice/';
+		$service_url = 'https://ws.shopping-feed.com';
 
 		$curl_post_data = array(
 			'TOKEN' => Configuration::get('SHOPPING_FLUX_TOKEN'),
@@ -1315,6 +1377,7 @@ class ShoppingFluxExport extends Module
 		$address->postcode = pSQL($addressNode->PostalCode);
 		$address->city = pSQL($addressNode->Town);
 		$address->phone = Tools::substr(pSQL($addressNode->Phone), 0, 16);
+                $address->phone_mobile = Tools::substr(pSQL($addressNode->PhoneMobile), 0, 16);
 
 		if ($id_address)
 			$address->update();
@@ -1380,11 +1443,18 @@ class ShoppingFluxExport extends Module
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_detail_tax', $updateOrderDetailTax, 'UPDATE', '`id_order_detail` = '.(int)$id_order_detail);
 
 		}
-        $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
         
-        //manage case PS_CARRIER_DEFAULT is deleted
-        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-        
+                $actual_configuration = unserialize(Configuration::get('SHOPPING_FLUX_SHIPPING_MATCHING'));
+                
+                $carrier_to_load = isset($actual_configuration[base64_encode(Tools::safeOutput((string)$order->ShippingMethod))]) ? 
+                    (int)$actual_configuration[base64_encode(Tools::safeOutput((string)$order->ShippingMethod))] : 
+                    (int)Configuration::get('SHOPPING_FLUX_CARRIER');
+                
+                $carrier = Carrier::getCarrierByReference($carrier_to_load);
+
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier($carrier_to_load);
+                
 		$updateOrder = array(
 			'total_paid' => (float)($order->TotalAmount),
 			'total_paid_tax_incl' => (float)($order->TotalAmount),
@@ -1442,7 +1512,7 @@ class ShoppingFluxExport extends Module
 	* Fake cart creation
 	*/
 
-	private function _getCart($id_customer, $id_address_billing, $id_address_shipping, $productsNode, $currency)
+	private function _getCart($id_customer, $id_address_billing, $id_address_shipping, $productsNode, $currency, $shipping_method)
 	{
 		$cart = new Cart();
 		$cart->id_customer = $id_customer;
@@ -1453,17 +1523,25 @@ class ShoppingFluxExport extends Module
 		$cart->recyclable = 0;
 		$cart->secure_key = md5(uniqid(rand(), true));
 		
-        $carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-        
-        //manage case PS_CARRIER_DEFAULT is deleted
-        $carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
+                $actual_configuration = unserialize(Configuration::get('SHOPPING_FLUX_SHIPPING_MATCHING'));
+                
+                $carrier_to_load = isset($actual_configuration[base64_encode(Tools::safeOutput($shipping_method))]) ? 
+                    (int)$actual_configuration[base64_encode(Tools::safeOutput($shipping_method))] : 
+                    (int)Configuration::get('SHOPPING_FLUX_CARRIER');
+                
+                $carrier = Carrier::getCarrierByReference($carrier_to_load);
+
+                //manage case PS_CARRIER_DEFAULT is deleted
+                $carrier = is_object($carrier) ? $carrier : new Carrier($carrier_to_load);
+                       
 		$cart->id_carrier = $carrier->id;
 		$cart->add();
 
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
-			if (!$cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null)))
+                        $added = $cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null));
+			if ($added < 0 || $added === false)
 				return false;
 		}
 
@@ -1483,14 +1561,14 @@ class ShoppingFluxExport extends Module
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$skus[0], (int)$skus[1]);
 
 				if ($quantity - $product->Quantity < 0)
-					$available = false;
+					StockAvailable::updateQuantity((int)$skus[0], (int)$skus[1], (int)$product->Quantity);
 			}
 			else
 			{
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 
 				if ($quantity - $product->Quantity < 0)
-					$available = false;
+					StockAvailable::updateQuantity((int)$skus[0], 0, (int)$product->Quantity);
 			}
 		}
 
