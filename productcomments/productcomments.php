@@ -44,13 +44,14 @@ class ProductComments extends Module
 		$this->version = '2.9.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+
+		parent::__construct();
+
 		$this->ps_versions_compliancy = array(
 			'min' => '1.5.6.1',
 			'max' => '1.6'
 		);
 		$this->secure_key = Tools::encrypt($this->name);
-
-		parent::__construct();
 
 		$this->displayName = $this->l('Product Comments');
 		$this->description = $this->l('Allows users to post reviews.');
