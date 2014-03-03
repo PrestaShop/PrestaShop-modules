@@ -36,6 +36,7 @@ class Editorial extends Module
 		$this->version = '2.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
+		$this->bootstrap = true;
 
 		parent::__construct();
 
