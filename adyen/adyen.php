@@ -36,7 +36,7 @@ class Adyen extends PaymentModule
 	{
 		$this->name = 'adyen';
 		$this->tab = 'payments_gateways';
-		$this->version = 2.0;
+		$this->version = 2.2;
 		$this->author = 'Adyen';
 		
 		// The need_instance flag indicates whether to load the module's class when displaying the "Modules" page in the back-office
@@ -54,9 +54,6 @@ class Adyen extends PaymentModule
 		$this->description = $this->l('Accepts payments by Adyen\'s Hosted Payment Page.');
 		
 		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
-		
-		if (!Configuration::get('ADYEN'))
-			$this->warning = $this->l('No name provided');
 		
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5', '<')) {
@@ -264,64 +261,9 @@ class Adyen extends PaymentModule
 		}
 		return $output.$this->displayForm();
 	}
-	public function getHppTypes()
-	{
-		$filename = dirname(__FILE__).'/settings.xml';
-		if (file_exists($filename))
-		{
-			$xml = simplexml_load_file($filename);
-			$hpp_types_all = $xml->hpptypes;
-			return $hpp_types_all;
-		}
-		return null;
-	}
-	public function getBankList($live)
-	{
-		if ($live == true)
-			$bank_list = simplexml_load_file('https://live.adyen.com/hpp/idealbanklist.shtml');
-		else
-			$bank_list = simplexml_load_file('https://test.adyen.com/hpp/idealbanklist.shtml');
-		
-		return $bank_list;
-	}
 	public function displayForm()
 	{
-		$query_array = array ();
-		// read settings xml file
-		$hpp_types_all = $this->getHppTypes();
-		if ($hpp_types_all)
-		{
-			foreach ($hpp_types_all->children() as $hpp_type)
-				$query_array[] = array (
-						'id' => (string)$hpp_type->code,
-						'name' => $this->l($hpp_type->name),
-						'val' => (string)$hpp_type->code
-				);
-		}
 		
-		// get bank list from adyen live platform
-		$bank_list_live = $this->getBankList(true);
-		
-		$banks_live = array ();
-		foreach ($bank_list_live->children() as $bank)
-			if ($bank->bank_name != '' && $bank->bank_id)
-				$banks_live[] = array (
-						'id' => (string)$bank->bank_id,
-						'name' => $this->l($bank->bank_name),
-						'val' => (string)$bank->bank_id
-				);
-			
-			// get bank list from adyen test platform
-		$bank_list_test = $this->getBankList(false);
-		$banks_test = array ();
-		foreach ($bank_list_test->children() as $bank)
-			if ($bank->bank_name != '' && $bank->bank_id)
-				$banks_test[] = array (
-						'id' => (string)$bank->bank_id,
-						'name' => $this->l($bank->bank_name),
-						'val' => (string)$bank->bank_id
-				);
-			
 			// Get default Language
 		$default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		
@@ -470,12 +412,12 @@ class Adyen extends PaymentModule
 										array (
 												'id' => 'true',
 												'value' => 1,
-												'label' => $this->l('Production')
+												'label' => $this->l('Yes')
 										),
 										array (
 												'id' => 'false',
 												'value' => 0,
-												'label' => $this->l('Test')
+												'label' => $this->l('No')
 										)
 								),
 								'is_bool' => true,
@@ -526,19 +468,8 @@ class Adyen extends PaymentModule
 								'required' => true
 						),
 						array (
-								'type' => 'checkbox',
-								'label' => $this->l('HPP types'),
-								'name' => 'ADYEN_HPP_TYPES',
-								'required' => false,
-								'values' => array (
-										'query' => $query_array,
-										'id' => 'id',
-										'name' => 'name'
-								)
-						),
-						array (
 								'type' => 'radio',
-								'label' => $this->l('Disable HPP options'),
+								'label' => $this->l('Disable HPP payment methods'),
 								'name' => 'ADYEN_HPP_DISABLE',
 								'class' => 't',
 								'values' => array (
@@ -556,28 +487,6 @@ class Adyen extends PaymentModule
 								'is_bool' => true,
 								'required' => true
 						),
-						array (
-								'type' => 'checkbox',
-								'label' => $this->l('iDEAL Issuers'),
-								'name' => 'ADYEN_IDEAL_ISSUERS_LIVE',
-								'required' => false,
-								'values' => array (
-										'query' => $banks_live,
-										'id' => 'id',
-										'name' => 'name'
-								)
-						),
-						array (
-								'type' => 'checkbox',
-								'label' => $this->l('iDEAL Issuers(Test Mode)'),
-								'name' => 'ADYEN_IDEAL_ISSUERS_TEST',
-								'required' => false,
-								'values' => array (
-										'query' => $banks_test,
-										'id' => 'id',
-										'name' => 'name'
-								)
-						)
 				),
 				'submit' => array (
 						'title' => $this->l('Save'),
@@ -715,10 +624,123 @@ class Adyen extends PaymentModule
 			// HPP must be enabled to select
 		if (Configuration::get('ADYEN_HPP_ENABLED') == true)
 		{
+			$cart = $this->context->cart;
+			if (!$this->checkCurrency($cart))
+				Tools::redirect('index.php?controller=order');
+			
+			$hpp_options = array ();
+			if (Configuration::get('ADYEN_HPP_DISABLE') == false)
+			{
+				
+				// GET HPP options from Adyen
+				$result_array = array();
+					
+				// get the default config values
+				$config = Configuration::getMultiple(array (
+						'ADYEN_MERCHANT_ACCOUNT',
+						'ADYEN_MODE',
+						'ADYEN_SKIN_CODE',
+						'ADYEN_COUNTRY_CODE_ISO',
+							
+				));
+					
+				$currency = $this->context->currency;
+				$currency_code = (string)$currency->iso_code;
+				$skin_code = (string)$config['ADYEN_SKIN_CODE'];
+				$merchant_account = (string)$config['ADYEN_MERCHANT_ACCOUNT'];
+				$payment_amount = number_format($cart->getOrderTotal(true, 3), 2, '', '');
+				$session_validity = date(DATE_ATOM, mktime(date('H') + 1, date('i'), date('s'), date('m'), date('j'), date('Y')));
+					
+				if ($config['ADYEN_COUNTRY_CODE_ISO'] != '')
+					$country_code = (string)$config['ADYEN_COUNTRY_CODE_ISO'];
+				else
+					$country_code = (string)$country->iso_code;
+					
+				$request = array(
+						"paymentAmount" => $payment_amount,
+						"currencyCode" => $currency_code,
+						"merchantReference" => "Get Payment methods",
+						"skinCode" => $skin_code,
+						"merchantAccount" => $merchant_account,
+						"sessionValidity" => $session_validity,
+						"countryCode" => $country_code,
+						"merchantSig" => "",
+				);
+					
+				$hmac_data = $request['paymentAmount'] .
+				$request['currencyCode'] .
+				$request['merchantReference'] .
+				$request['skinCode'] .
+				$request['merchantAccount'] .
+				$request['sessionValidity'];
+					
+				//Generate HMAC encrypted merchant signature
+				$merchant_sig = base64_encode(pack('H*', $this->getHmacsha1($this->getHmac(), $hmac_data)));
+				$request['merchantSig'] = $merchant_sig;
+					
+					
+				$ch = curl_init();
+					
+				if ($config['ADYEN_MODE'] == 'live')
+					curl_setopt($ch, CURLOPT_URL, "https://live.adyen.com/hpp/directory.shtml");
+				else
+					curl_setopt($ch, CURLOPT_URL, "https://test.adyen.com/hpp/directory.shtml");
+				
+				
+				curl_setopt($ch, CURLOPT_HEADER, false);
+				curl_setopt($ch, CURLOPT_POST,count($request));
+				curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($request));
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); // do not print results if you do curl_exec
+					
+				$results = curl_exec($ch);
+					
+					
+				if($results === false)
+					echo "Error: " . curl_error($ch);
+				else{
+					/**
+					 * The $result contains a JSON array containing
+					 * the available payment methods for the merchant account.
+					 */
+					$results_json = json_decode($results);
+				
+					if($results_json == null) {
+						// no valid json so show the error
+						echo $results;
+					}
+				
+					$payment_methods = $results_json->paymentMethods;
+					 
+					foreach($payment_methods as $payment_method) {
+						$result_array[$payment_method->brandCode]['name'] = $payment_method->name;
+				
+						if(isset($payment_method->issuers)) {
+							// for ideal go through the issuers
+							if(count($payment_method->issuers) > 0)
+							{
+								foreach($payment_method->issuers as $issuer) {
+									$result_array[$payment_method->brandCode]['issuers'][$issuer->issuerId] = $issuer->name;
+								}
+							}
+							ksort($result_array[$payment_method->brandCode]['issuers']); // sort on key
+						}
+					}
+				}
+				// get list of hpp options this has only the value
+				$hpp_options = $result_array;
+			} 
+			
 			$this->context->smarty->assign(array (
-					'this_path' => $this->_path,
+					'hpp_options' => $hpp_options,
+					'ideal_options' => $ideal_issuers_key_value,
+					'nbProducts' => $cart->nbProducts(),
+					'cust_currency' => $cart->id_currency,
+					'currencies' => $this->getCurrency((int)$cart->id_currency),
+					'total' => $cart->getOrderTotal(true, Cart::BOTH),
+					'this_path' => $this->getPathUri(),
 					'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
 			));
+			
 			
 			return $this->display(__FILE__, '/views/templates/front/payment.tpl');
 		}
@@ -777,6 +799,7 @@ class Adyen extends PaymentModule
 		$history = new OrderHistory();
 		$history->id_order = (int)$order->id;
 		$history->changeIdOrderState((int)Configuration::get('ADYEN_STATUS_CANCELLED'), (int)($order->id));
+		$history->add();
 		Logger::addLog('Adyen module: order cancceled with id_order '.$order_id);
 	}
 	public function hookDisplayBackOfficeHeader()
