@@ -2,7 +2,7 @@
         <module>
             <name>bluepay</name>
             <displayName><![CDATA[BluePay]]></displayName>
-            <version><![CDATA[1.0]]></version>
+            <version><![CDATA[1.1]]></version>
             <description><![CDATA[Accept Credit card &amp; ACH payments today with BluePay]]></description>
             <author><![CDATA[BluePay Processing, LLC]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
