@@ -1620,6 +1620,7 @@ class ShoppingFluxExport extends Module
 			'PriceMinister',
 			'RueDuCommerce',
 			'Rueducommerceean',
+                        'Spartoo'
 			'ToutAPorter'
 		);
 	}
