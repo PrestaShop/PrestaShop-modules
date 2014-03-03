@@ -549,7 +549,7 @@ class ShoppingFluxExport extends Module
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<produits>';
+		echo '<produits version="'.$this->version.'">';
 
 		foreach ($products as $productArray)
 		{
@@ -588,7 +588,7 @@ class ShoppingFluxExport extends Module
 	public function initFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits>');
+		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits version="'.$this->version.'">');
 		fclose($file);
 
 		$totalProducts = $this->countProducts();
