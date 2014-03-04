@@ -32,8 +32,61 @@
 	color:red
 }
 
+p.realexredirect {
+	background-color:#53585a;
+	-webkit-border-top-left-radius:23px;
+	-moz-border-radius-topleft:23px;
+	border-top-left-radius:23px;
+	-webkit-border-top-right-radius:23px;
+	-moz-border-radius-topright:23px;
+	border-top-right-radius:23px;
+	-webkit-border-bottom-right-radius:23px;
+	-moz-border-radius-bottomright:23px;
+	border-bottom-right-radius:23px;
+	-webkit-border-bottom-left-radius:23px;
+	-moz-border-radius-bottomleft:23px;
+	border-bottom-left-radius:23px;
+	border:2px solid #53585a;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Lucida, Verdana, Arial;
+        font-weight: bold ; 
+	font-size:18px ;
+	text-shadow:1px 1px 0px #53585a;
+        padding: 33px 25px 34px 99px ;
+        background-image:url('../.../../img/creditcardo.png');
+        background-repeat:no-repeat ;
+        background-position: 15px  ;
+        width: 575px ;
+        max-width: 95%
+    
+}
+p.realexredirect:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eeaf41), color-stop(1, #ffce79) );
+	background:-moz-linear-gradient( center top, #eeaf41 5%, #ffce79 100% );
+	background-image:url('../.../../img/creditcardg.png');
+        background-repeat:no-repeat ;
+        background-position: 15px  ;
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeaf41', endColorstr='#ffce79');
+	background-color:#f79421;
+        border:2px solid #f79421;
+        text-shadow:1px 1px 0px #f79421;
+}
 
+p.realexredirect:active {
+	position:relative;
+	top:1px;
+}
+
+/*---------- BACK ----------------*/
+
+/* Modified for compatibility with 1.6 admin */
+
+table.realexredirect {
+    border:1px solid black;
+}
 
 .clear {clear:both}
 .fleft {float:left}
 
+    
