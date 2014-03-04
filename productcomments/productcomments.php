@@ -41,7 +41,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '2.9.6';
+		$this->version = '2.9.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -49,7 +49,7 @@ class ProductComments extends Module
 
 		$this->ps_versions_compliancy = array(
 			'min' => '1.5.6.1',
-			'max' => '1.6'
+			'max' => _PS_VERSION_
 		);
 		$this->secure_key = Tools::encrypt($this->name);
 
