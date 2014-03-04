@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2014 Coccinet
+*  @copyright  2007-2013 Coccinet
 */
 if (!defined('_PS_VERSION_'))
 	exit;
@@ -383,8 +383,8 @@ class RealexRedirect extends PaymentModule
 		$this->html .=	'<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
 		$this->html .=	'<fieldset>';
 		$this->html .=	'<legend><img src="../img/admin/contact.gif" />'.$this->l('Realex Payments information').'</legend>';
-		$this->html .=	'<table border="0" width="500" cellpadding="5" cellspacing="0" id="form">';
-		$this->html .=	'<tr><td colspan="2">'.$this->l('Please specify your realex account details.').'.<br /><br /></td></tr>';
+		$this->html .=	'<style> table.settings tr td{padding: 7px;}</style><table class="settings" border="0" width="500" cellpadding="5" cellspacing="0" id="form">';
+		$this->html .=	'<tr><td colspan="2">'.$this->l('Please specify your Realex Payments account details').'.<br /><br /></td></tr>';
 		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Merchant ID').'</td>';
 		$this->html .=	'<td style="vertical-align: top;">';
 		$this->html .=	'<input type="text" name="merchantId" value="'.htmlentities(Tools::getValue('merchantId', $this->merchant_id), ENT_COMPAT, 'UTF-8').'" style="width: 300px;" />';
@@ -424,7 +424,7 @@ class RealexRedirect extends PaymentModule
 				$this->html .= $this->getAccount();
 				$this->html .= '<br/><br/>';
 				$this->html .= '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
-				$this->html .= '<table border="0" cellpadding="5" cellspacing="0"';
+				$this->html .= '<style>table.subaccountadd tr td {padding: 10px;}</style><table class="subaccountadd" border="0" cellpadding="5" cellspacing="0"';
 				$this->html .= 'id="form" style="padding:10px; border: 1px solid #606062; background:#F4F6F9">';
 						$this->html .= '<tr><td style="height: 35px;vertical-align: top;" colspan="2"><strong><strong>'.$this->l('Add a sub-account').'</strong></strong></td></tr>';
 						$this->html .= '<tr><td style="height: 35px;vertical-align: top;"><strong>'.$this->l('Sub-account').':</strong></td>';
@@ -651,7 +651,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$sql = 'SELECT * FROM `'._DB_PREFIX_.'realex_subaccount`';
 
-		$liste = '<table border="1" cellpadding="5" cellspacing="5"><tr><td colspan="5"><strong>'.$this->l('My subaccounts').'</strong></td></tr>';
+		$liste = '<style> table.subdisplay {border-collapse:collapse ;}table.subdisplay tr td{border:1px solid grey ; border-width: 2px ; padding: 10px;}</style><table class="subdisplay"><tr><td colspan="5"><strong>'.$this->l('My subaccounts').'</strong></td></tr>';
 		if ($results = Db::getInstance()->ExecuteS($sql))
 		{
 			foreach ($results as $row)
@@ -670,7 +670,7 @@ class RealexRedirect extends PaymentModule
 					$dcc = $this->l('No');
 				else
 					$dcc = $this->l('Yes').' ('.$row['dcc_choice_realex_subaccount'].')';
-				$liste .= '<tr><td> <strong>'.$row['name_realex_subaccount'].'</strong></td><td>'.$card_list.'</td><td>3D Secure: '.$threeds.'</td><td>DCC: '.$dcc.'</td><td>';
+				$liste .= '<tr><td><strong>'.$row['name_realex_subaccount'].'</strong></td><td>'.$card_list.'</td><td>3D Secure: '.$threeds.'</td><td>DCC: '.$dcc.'</td><td>';
 					$liste .= "<form action='".Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI'])."' method='post'>
 					<input type='submit' name='edit_realex_account' value='".$this->l('Edit')."' />
 					<input type='submit' onclick='return(confirm(\"".$this->l('Do you want to delete your subaccount ?')."\"))' name='delete_realex_account' value='".$this->l('Delete')."' />
@@ -700,7 +700,7 @@ class RealexRedirect extends PaymentModule
 				foreach ($cards as $card)
 					$tab_card[] = $card['realex_card_name'];
 				$edit = '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
-				$edit .= '<table border="0" cellpadding="5" cellspacing="0" id="form" style="margin-top:10px; padding:10px; border: 1px solid #606062; background:#fff">';
+				$edit .= '<style> table.subaccountedit tr td{padding: 7px;}</style><table class="subaccountedit" order="0" cellpadding="5" cellspacing="0" id="form" style="margin-top:10px; padding:10px; border: 1px solid #606062; background:#fff">';
 						$edit .= '<tr><td style="height: 35px;vertical-align: top;" colspan="2"><strong><strong>'.$this->l('Edit a sub-account').'</strong></strong></td></tr>';
 						$edit .= '<tr><td style="height: 35px;vertical-align: top;"><strong>'.$this->l('Sub-account').':</strong></td>';
 						$edit .= '<td style="vertical-align: top;"><input type="text" name="subAccount"  style="width: 300px;" value="'.$results['name_realex_subaccount'].'"/></tr>';
