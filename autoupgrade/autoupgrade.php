@@ -30,6 +30,7 @@ class Autoupgrade extends Module
 	{
 		$this->name = 'autoupgrade';
 		$this->tab = 'administration';
+		$this->author = 'PrestaShop';
 		$this->version = '1.2.7';
 		
 		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
