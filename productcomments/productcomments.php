@@ -381,7 +381,7 @@ class ProductComments extends Module
 		if (Configuration::get('PRODUCT_COMMENTS_MODERATE'))
 		{
 			require_once(dirname(__FILE__).'/ProductComment.php');
-			$comments = ProductComment::getByValidate();
+			$comments = ProductComment::getByValidate(0);
 			if (count($comments))
 			{
 				$this->_html .= '
@@ -634,7 +634,7 @@ class ProductComments extends Module
 				<legend><img src="'.$this->_path.'img/comments_delete.png" alt="" title="" />'.$this->l('Manage Comments').'</legend>';
 
 		require_once(dirname(__FILE__).'/ProductComment.php');
-		$comments = ProductComment::getAll();
+		$comments = ProductComment::getByValidate(1);
 		if (count($comments))
 		{
 			$this->_html .= '

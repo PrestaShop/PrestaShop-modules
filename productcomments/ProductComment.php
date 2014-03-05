@@ -252,13 +252,21 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByValidate($validate = '0', $deleted = false)
 	{
-		return (Db::getInstance()->executeS('
-		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
-		FROM `'._DB_PREFIX_.'product_comment` pc
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
-		WHERE pc.`validate` = '.(int)$validate.'
-		ORDER BY pc.`date_add` DESC'));
+		$sql  = '
+			SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')';
+
+		if (Configuration::get('PRODUCT_COMMENTS_MODERATE'))
+			$sql .= ' WHERE pc.`validate` = '.(int)$validate;
+
+		if ($deleted === false)
+			$sql .= ' AND pc.`deleted` = 0 ';
+
+		$sql .= ' ORDER BY pc.`date_add` DESC';
+
+		return (Db::getInstance()->executeS($sql));
 	}
 
 	/**
