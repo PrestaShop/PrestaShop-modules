@@ -36,9 +36,9 @@ $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_4ccdb6de267067ae9de
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_3a160b703cd459d639246cd51dd4c5af'] = 'Order importation';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_289e4f18141759642d958fa71e1f19b5'] = 'orders coming from marketplaces will be imported';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_207af1af29b84d3804d5e41cc2b7f0f2'] = 'Orders shipment';
-$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_77b882eccd43e201ea994b696271d3b4'] = 'orders coming from marketplaces will be shipped';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_77b882eccd43e201ea994b696271d3b4'] = 'orders shipped on your Prestashop will be canceled on marketplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_83708457f35998b67bb983c3eac89699'] = 'Order cancellation';
-$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_63d7710f86845e8f16b57ac722e5814e'] = 'orders coming from marketplaces will be canceled';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_63d7710f86845e8f16b57ac722e5814e'] = 'orders canceled on your Prestashop will be canceled on marketplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_d4442cedc4e9af8b42f8de0c861a7da4'] = 'Sync stock and orders';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_45cd254b3389124d488a3e7c4f21685d'] = 'Every stock movement will be transfered to marletplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_c930364522c401516d1deb152d031b86'] = 'Default carrier';
