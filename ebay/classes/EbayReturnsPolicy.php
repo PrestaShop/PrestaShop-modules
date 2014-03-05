@@ -35,8 +35,11 @@ class EbayReturnsPolicy
 
 	public static function getTotal()
 	{
-		return Db::getInstance()->getValue('SELECT COUNT(*) AS nb
-			FROM '._DB_PREFIX_.'ebay_returns_policy');
+		$returnspolicy = Db::getInstance()->getValue('SELECT COUNT(*) AS nb	FROM '._DB_PREFIX_.'ebay_returns_policy');
+		$returnsWithin = Configuration::get('EBAY_RETURNS_WITHIN_VALUES');
+		$returnsWhoPays = Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES');
+		return $returnspolicy && $returnsWithin && $returnsWhoPays;
+
 	}
 
 	public static function insert($data)
