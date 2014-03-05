@@ -22,13 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $smarty.const._PS_VERSION_ < 1.5 && isset($use_mobile) && $use_mobile}
 	{include file="$tpl_dir./modules/paypal/views/templates/front/order-summary.tpl"}
 {else}
 	{capture name=path}<a href="order.php">{l s='Your shopping cart' mod='paypal'}</a><span class="navigation-pipe"> {$navigationPipe|escape:'htmlall':'UTF-8'} </span> {l s='PayPal' mod='paypal'}{/capture}
+	{if $smarty.const._PS_VERSION_ < 1.6}
 	{include file="$tpl_dir./breadcrumb.tpl"}
-
+	{/if}
 	<h1>{l s='Order summary' mod='paypal'}</h1>
 
 	{assign var='current_step' value='payment'}

@@ -28,11 +28,8 @@
 {if $payment_hss_solution == $smarty.const.PAYPAL_HSS_REDIRECTION}
 <p class="payment_module">
 	<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice}">
-		{if isset($logos.LocalPayPalHorizontalSolutionPP) && $PayPal_payment_method == $PayPal_integral}
-				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />
-			{else}
-				<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice}" />
-			{/if}
+		
+				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />		
 			{$PayPal_content.payment_choice}
 	</a>
 </p>
