@@ -393,7 +393,7 @@ class ProductComments extends Module
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 					<tr>
-						<th><input class="noborder" type="checkbox" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
+						<th><input class="noborder" type="checkbox" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked);" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
 						<th style="width:150px;">'.$this->l('Product name').'</th>
@@ -414,7 +414,7 @@ class ProductComments extends Module
 						<tr>
 							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
 							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
-							<a href="javascript:;" onclick="deleteComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+							</td>
 						</tr>
 						</tbody>
 					</table>
@@ -442,7 +442,7 @@ class ProductComments extends Module
 					<br /><table class="table" border="0" cellspacing="0" cellpadding="0">
 					<thead>
 					<tr>
-						<th><input class="noborder" type="checkbox" name="id_product_comment[]" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
+						<th><input class="noborder" type="checkbox" onclick="checkDelBoxes(this.form, \'id_product_comment[]\', this.checked)" /></th>
 						<th style="width:150px;">'.$this->l('Author').'</th>
 						<th style="width:550px;">'.$this->l('Comment').'</th>
 						<th style="width:150px;">'.$this->l('Product name').'</th>
@@ -460,11 +460,6 @@ class ProductComments extends Module
 							<a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 			$this->_html .= '
-						<tr>
-							<td colspan="4" style="font-weight:bold;text-align:right">'.$this->l('Selection:').'</td>
-							<td><a href="javascript:;" onclick="acceptComment(0);"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
-							<a href="javascript:;" onclick="deleteComment(0);"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
-						</tr>
 						</tbody>
 					</table>
 					</form>';

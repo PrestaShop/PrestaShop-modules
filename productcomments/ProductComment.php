@@ -88,7 +88,7 @@ class ProductComment extends ObjectModel
 	public static function getByProduct($id_product, $p = 1, $n = null, $id_customer = null)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 		$p = (int)$p;
 		$n = (int)$n;
@@ -153,7 +153,7 @@ class ProductComment extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
-			die(Tools::displayError());
+			return false;
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
 
@@ -212,7 +212,7 @@ class ProductComment extends ObjectModel
 	public static function getCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
 		$cache_id = 'ProductComment::getCommentNumber_'.(int)$id_product.'-'.$validate;
 		if (!Cache::isStored($cache_id))
@@ -234,7 +234,7 @@ class ProductComment extends ObjectModel
 	public static function getGradedCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -292,7 +292,7 @@ class ProductComment extends ObjectModel
 	public function validate($validate = '1')
 	{
 		if (!Validate::isUnsignedId($this->id))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product_comment` SET
 		`validate` = '.(int)$validate.'
@@ -307,7 +307,7 @@ class ProductComment extends ObjectModel
 	public static function deleteGrades($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
@@ -321,7 +321,7 @@ class ProductComment extends ObjectModel
 	public static function deleteReports($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_report`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
@@ -335,7 +335,7 @@ class ProductComment extends ObjectModel
 	public static function deleteUsefulness($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_usefulness`
