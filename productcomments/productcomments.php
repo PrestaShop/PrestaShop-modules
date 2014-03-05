@@ -81,7 +81,6 @@ class ProductComments extends Module
 			!$this->registerHook('header') ||
 			!$this->registerHook('displayRightColumnProduct') ||
 			!$this->registerHook('displayProductListReviews') ||
-			!$this->registerHook('top') ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MINIMAL_TIME', 30) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_ALLOW_GUESTS', 0) ||
 			!Configuration::updateValue('PRODUCT_COMMENTS_MODERATE', 1))
@@ -717,20 +716,6 @@ class ProductComments extends Module
 		return ($this->display(__FILE__, '/tab.tpl'));
 	}
 
-	public function hookTop($params)
-	{
-		$this->page_name = Dispatcher::getInstance()->getController();
-		if (in_array($this->page_name, array('product', 'productscomparison')))
-		{
-			$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
-			if (in_array($this->page_name, array('productscomparison')))
-			{
-				$this->context->controller->addjqueryPlugin('cluetip');
-				$this->context->controller->addJS($this->_path.'js/products-comparison.js');
-			}
-		}
-	}
-
 	public function hookDisplayProductListReviews($params)
 	{
 		require_once(dirname(__FILE__).'/ProductComment.php');
@@ -826,6 +811,16 @@ class ProductComments extends Module
 	public function hookHeader()
 	{
 		$this->context->controller->addCSS($this->_path.'productcomments.css', 'all');
+		$this->page_name = Dispatcher::getInstance()->getController();
+		if (in_array($this->page_name, array('product', 'productscomparison')))
+		{
+			$this->context->controller->addJS($this->_path.'js/jquery.rating.pack.js');
+			if (in_array($this->page_name, array('productscomparison')))
+			{
+				$this->context->controller->addjqueryPlugin('cluetip');
+				$this->context->controller->addJS($this->_path.'js/products-comparison.js');
+			}
+		}
 	}
 
 	public function hookExtraProductComparison($params)
