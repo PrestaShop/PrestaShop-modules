@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.8.1';
+		$this->version = '1.8.2';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -312,19 +312,13 @@ class Gamification extends Module
 				}
 					
 				$cond->hydrate((array)$condition, (int)$id_lang);
-				$time = 86400;
-				if ($cond->calculation_type == 'time')
-					$time = 86400 * (int)$cond->calculation_detail;
 				
-				$cond->date_upd = date('Y-m-d H:i:s', time() - $time);
+				$cond->date_upd = date('Y-m-d H:i:s', strtotime('-'.(int)$cond->calculation_detail.'DAY'));
 				$cond->date_add = date('Y-m-d H:i:s');
 				$condition->calculation_detail = trim($condition->calculation_detail);
-				$cond->save(false);
-				
+				$cond->save(false, false);
 				if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
 					$this->registerHook($condition->calculation_detail);
-					
-			
 				unset($cond);
 			} catch (Exception $e) {
 					continue;
