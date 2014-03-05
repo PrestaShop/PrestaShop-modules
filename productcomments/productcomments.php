@@ -202,6 +202,8 @@ class ProductComments extends Module
 							$comment = new ProductComment((int)$id_product_comment);
 							$comment->delete();
 							ProductComment::deleteGrades((int)$id_product_comment);
+							ProductComment::deleteReports((int)$id_product_comment);
+							ProductComment::deleteUsefulness((int)$id_product_comment);
 						}
 						break;
 
@@ -406,7 +408,7 @@ class ProductComments extends Module
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
-							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+							<a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 				$this->_html .= '
 						<tr>
@@ -455,7 +457,7 @@ class ProductComments extends Module
 						<td>'.htmlspecialchars($comment['content'], ENT_COMPAT, 'UTF-8').'</td>
 						<td>'.$comment['id_product'].' - '.htmlspecialchars($comment['name'], ENT_COMPAT, 'UTF-8').'</td>
 						<td><a href="javascript:;" onclick="acceptComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/accept.png" alt="'.$this->l('Accept').'" title="'.$this->l('Accept').'" /></a>
-							<a href="javascript:;" onclick="deleteComment(\''.(int)($comment['id_product_comment']).'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
+							<a href="javascript:;" onclick="delComment(\''.(int)($comment['id_product_comment']).'\',\''.$this->l('Are you sure?').'\');"><img src="'.$this->_path.'img/delete.png" alt="'.$this->l('Delete').'" title="'.$this->l('Delete').'" /></a></td>
 						</tr>';
 			$this->_html .= '
 						<tr>
@@ -692,6 +694,8 @@ class ProductComments extends Module
 						$comment = new ProductComment((int)$id_product_comment);
 						$comment->delete();
 						ProductComment::deleteGrades((int)$id_product_comment);
+						ProductComment::deleteReports((int)$id_product_comment);
+						ProductComment::deleteUsefulness((int)$id_product_comment);
 					}
 				}
 			}
