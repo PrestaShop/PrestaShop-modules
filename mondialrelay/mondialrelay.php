@@ -687,12 +687,12 @@ class MondialRelay extends Module
 		if (Tools::isSubmit('submit_account_detail'))
 		{
 			$this->account_shop = array(
-				'MR_ENSEIGNE_WEBSERVICE' => Tools::getValue('MR_enseigne_webservice'),
-				'MR_CODE_MARQUE' => Tools::getValue('MR_code_marque'),
-				'MR_KEY_WEBSERVICE' => Tools::getValue('MR_webservice_key'),
-				'MR_LANGUAGE' => Tools::getValue('MR_language'),
-				'MR_ORDER_STATE' => $this->account_shop['MR_ORDER_STATE'],
-				'MR_WEIGHT_COEFFICIENT' => Tools::getValue('MR_weight_coefficient'),
+				'MR_ENSEIGNE_WEBSERVICE' => Tools::safeOutput(Tools::getValue('MR_enseigne_webservice')),
+				'MR_CODE_MARQUE' =>			Tools::safeOutput(Tools::getValue('MR_code_marque')),
+				'MR_KEY_WEBSERVICE' =>		Tools::safeOutput(Tools::getValue('MR_webservice_key')),
+				'MR_LANGUAGE' =>			Tools::safeOutput(Tools::getValue('MR_language')),
+				'MR_ORDER_STATE' =>			Tools::safeOutput($this->account_shop['MR_ORDER_STATE']),
+				'MR_WEIGHT_COEFFICIENT' =>	Tools::safeOutput(Tools::getValue('MR_weight_coefficient')),
 				'id_shop' => $this->context->shop->id
 			);
 
