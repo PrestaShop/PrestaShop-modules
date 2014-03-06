@@ -531,13 +531,21 @@ class PSCleaner extends Module
 					'order_slip',
 					'order_slip_detail',
 					'page',
-					'pagenotfound',
 					'page_type',
 					'page_viewed',
 					'product_sale',
 					'referrer_cache',
-					'sekeyword',
 				);
+
+				$modules_tables = array(
+					'sekeywords' => array('sekeyword'),
+					'pagesnotfound' => array('pagenotfound')
+				);
+
+				foreach ($modules_tables as $name => $module_tables)
+					if (Module::isInstalled($name))
+						$tables = array_merge($tables, $module_tables);
+
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
