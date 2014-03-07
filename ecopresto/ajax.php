@@ -254,6 +254,14 @@ switch ((int)Tools::getValue('majsel'))
 		$import->deleteProductShop();
 		break;
 	
+	case 14:
+        Configuration::updateValue('ECOPRESTO_DEMO',Tools::getValue('lic'));
+        if (Tools::getValue('lic') == 1)
+            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration`
+										SET `value` = "demo123456789demo123456789demo12"
+										WHERE `name` = "ID_ECOPRESTO"');
+        break;
+	
 	default:
 		break;
 }

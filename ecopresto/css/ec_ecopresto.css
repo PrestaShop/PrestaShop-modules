@@ -229,3 +229,71 @@ margin-top: -100px;
 .pull-right {
   float: right;
 }
+
+.picto_preac{
+    float:left;
+    width:27%;
+    margin:3%;
+}
+
+.text_preac p{
+    float:left;
+}
+
+.okpreac{
+    float: left;
+    margin-left: 25px;
+    margin-top: 5px;
+}
+
+.footermodeco{
+    background-color: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    clear:both; 
+    height: 200px;
+}
+
+#actSpeFoo{
+    float:right;
+    margin-right:5px;
+}
+#infoSpe{
+    float:left;
+}
+#actSpeFoo .picfo img{
+    height:100px
+}
+
+.actlic, .demopreac, .acthome{
+    cursor:pointer;
+}
+
+#menuTab1 .picto_ac{
+    float:left;
+    margin:20px;
+    text-align:center;
+    cursor: pointer;
+}
+
+#actSpeFoo .picfo{
+    float:left;
+    margin: 0 25px;
+    text-align:center;
+}
+
+.opac{
+    opacity: 0.4
+}
+
+.opac:hover{
+    opacity: 1
+}
+
+.fooCop{
+    clear:both;
+    margin-top: 180px;
+    text-align:center;
+}

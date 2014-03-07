@@ -47,6 +47,21 @@ if (Tools::getValue('ec_token') != $catalog->getInfoEco('ECO_TOKEN'))
 $stockD = $catalog->getInfoEco('ECO_URL_STOCK').$catalog->tabConfig['ID_ECOPRESTO'];
 $stockL = 'files/stock.xml';
 
+$lstTax = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `rate`, `id_tax_rules_group`
+													FROM `'._DB_PREFIX_.'ec_ecopresto_tax_shop` ts, `'._DB_PREFIX_.'ec_ecopresto_tax` t
+													WHERE ts.id_tax_eco = t.id_tax_eco
+													AND `id_shop`='.(int)$id_shop);
+                                                    
+foreach ($lstTax as $tax)
+{
+	$tabTax['id_tax'][$tax['rate']] = $tax['id_tax_rules_group'];
+	$tabTax['rate'][$tax['rate']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `rate` 
+                                            FROM `'._DB_PREFIX_.'tax` t, `'._DB_PREFIX_.'tax_rule` tr
+                                            WHERE `id_tax_rules_group` ='.(int)$tax['id_tax_rules_group'].'
+                                            AND `id_country` = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').'
+                                            AND t.`id_tax` = tr.`id_tax`');
+}
+
 if ($download->load($stockD) == true)
 {
 	$download->saveTo($stockL);
@@ -57,6 +72,8 @@ if ($download->load($stockD) == true)
 		{
 			$ref = $data[0];
 			$qty = $data[1];
+			$pri = $data[2];
+			$tva = $data[3];
 			$reference = new importerReference($ref);
 
 			if (isset($reference->id_product) && $reference->id_product > 0)
@@ -68,16 +85,39 @@ if ($download->load($stockD) == true)
 						if (count($allAT)<1)
 							$allAT[] = 0;
 						foreach ($allAT as $att)
+						{
 							StockAvailable::setQuantity((int)$reference->id_product, (int)$att, (int)$qty, (int)getShopForRef($att, 1));
+							updatePrice((int)$reference->id_product, (int)$att, (float)$pri, (float)$tva, (int)getShopForRef($att, 1));
+						}
 					}
 					else
+					{
 						StockAvailable::setQuantity((int)$reference->id_product, 0, (int)$qty, (int)getShopForRef($ref, 2));
+						updatePrice((int)$reference->id_product, 0, (float)$pri, (float)$tva, (int)getShopForRef($att, 1));
+					}
 				}
-			else
-				updateProductQuantity($reference->id_product, $reference->id_product_attribute, $qty);
+				else
+				{
+					updateProductQuantity($reference->id_product, $reference->id_product_attribute, $qty);
+					updatePrice((int)$reference->id_product, $reference->id_product_attribute, (float)$pri, (float)$tva, (int)getShopForRef($att, 1));
+				}
 		}
 		$catalog->updateMAJStock($etat);
 	}
+}
+
+function updatePrice($idP, $att=0, $pri, $tva, $idS)
+{
+    $id_tax = (isset($tabTax['id_tax'][$idS][(string)$tempRate])?(int)$tabTax['id_tax'][$idS][(string)$tempRate]:0);  
+    $tempRate = $tva/1; 
+    $wholesale_price = (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$pri*(1+($tabTax['rate'][$idS][(string)$tempRate]/100)):$pri), 6);
+    if ($att != 0)
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_attribute` SET wholesale_price = '.(float)$wholesale_price.' WHERE `id_product_attribute` = '.(int)$att);
+    else
+    {
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET wholesale_price = '.(float)$wholesale_price.' WHERE `id_product` = '.(int)$idP);
+        Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_shop` SET wholesale_price = '.(float)$wholesale_price.' WHERE `id_product` = '.(int)$idP);
+    }        
 }
 
 function getShopForRef($id, $typ)
