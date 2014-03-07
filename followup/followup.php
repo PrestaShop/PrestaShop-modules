@@ -472,7 +472,7 @@ class Followup extends Module
 
 		$cron_info = '';
 		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$cron_info = $this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
+			$cron_info = $this->l('Define the settings and place the following URL in the crontab, or call it manually on a daily basis:').'<br />
 								<b>'.$this->context->shop->getBaseURL().'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>';
 
 		$fields_form_1 = array(
