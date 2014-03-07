@@ -95,3 +95,33 @@ function deleteCriterion(id)
 	form.elements['criterion_action'].value = 'delete';
 	form.submit();
 }
+
+$( document ).ready(function() {
+	$('select#id_product_comment_criterion_type').change(function() {
+		// PS 1.6
+		$('#categoryBox').closest('div.form-group').hide();
+		$('#ids_product').closest('div.form-group').hide();
+		// PS 1.5
+		$('#categories-treeview').closest('div.margin-form').hide();
+		$('#categories-treeview').closest('div.margin-form').prev().hide();
+		$('#ids_product').closest('div.margin-form').hide();
+		$('#ids_product').closest('div.margin-form').prev().hide();
+
+		if (this.value == 2)
+		{
+			$('#categoryBox').closest('div.form-group').show();
+			// PS 1.5
+			$('#categories-treeview').closest('div.margin-form').show();
+			$('#categories-treeview').closest('div.margin-form').prev().show();
+		}
+		else if (this.value == 3)
+		{
+			$('#ids_product').closest('div.form-group').show();
+			// PS 1.5
+			$('#ids_product').closest('div.margin-form').show();
+			$('#ids_product').closest('div.margin-form').prev().show();
+		}
+	});
+
+	$('select#id_product_comment_criterion_type').trigger( "change" );
+});

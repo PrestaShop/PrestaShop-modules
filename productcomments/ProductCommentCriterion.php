@@ -26,11 +26,10 @@
 
 class ProductCommentCriterion extends ObjectModel
 {
-	public		$id;
-	public		$id_product_comment_criterion_type;
-
-	public		$name;
-	public		$active = true;
+	public	$id;
+	public	$id_product_comment_criterion_type;
+	public	$name;
+	public	$active = true;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -197,13 +196,20 @@ class ProductCommentCriterion extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_lang))
 			die(Tools::displayError());
-		return Db::getInstance()->executeS('
+		
+		$sql = '
 			SELECT pcc.`id_product_comment_criterion`, pcc.id_product_comment_criterion_type, pccl.`name`, pcc.active
 			FROM `'._DB_PREFIX_.'product_comment_criterion` pcc
 			JOIN `'._DB_PREFIX_.'product_comment_criterion_lang` pccl ON (pcc.id_product_comment_criterion = pccl.id_product_comment_criterion)
 			WHERE pccl.`id_lang` = '.(int)$id_lang.($active ? ' AND active = 1' : '').($type ? ' AND id_product_comment_criterion_type = '.(int)$type : '').'
-			ORDER BY pccl.`name` ASC
-		');
+			ORDER BY pccl.`name` ASC';
+		$criterions = Db::getInstance()->executeS($sql);
+
+		$types = self::getTypes();
+		foreach ($criterions as $key => $data)
+			$criterions[$key]['type_name'] = $types[$data['id_product_comment_criterion_type']];
+
+		return $criterions;
 	}
 
 	public function getProducts()
