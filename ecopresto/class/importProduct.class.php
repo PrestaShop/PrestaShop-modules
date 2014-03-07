@@ -297,7 +297,7 @@ class importerProduct
 		if (version_compare(_PS_VERSION_, '1.5', '>='))
 			$product->id_shop_list[] = $pdt->shop;
 		
-		if (isset($pdt->categories)
+		if (isset($pdt->categories))
 		{
 			$product->id_category[] = $pdt->categories;
 			$product->id_category[] = $pdt->sscategories;
