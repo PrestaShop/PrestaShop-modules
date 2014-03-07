@@ -170,6 +170,8 @@ class ProductComments extends Module
 			}
 			$criterion->name = $name;
 
+			$criterion->save();
+
 			// Clear before reinserting data
 			$criterion->deleteCategories();
 			$criterion->deleteProducts();
@@ -906,7 +908,10 @@ class ProductComments extends Module
 			$id_root = Configuration::get('PS_ROOT_CATEGORY');
 		$id_shop = (int)Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);
-		$selected_cat = (new ProductCommentCriterion($id_criterion))->getCategories();
+		if ($id_criterion == 0)
+			$selected_cat = array();
+		else
+			$selected_cat = (new ProductCommentCriterion($id_criterion))->getCategories();
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
