@@ -453,6 +453,7 @@ class Followup extends Module
 				$stats_array[$date_stat][$i]['nb_used'] = isset($stats_array[$date_stat][$i]['nb_used']) ? (int)$stats_array[$date_stat][$i]['nb_used'] : 0;
 				$stats_array[$date_stat][$i]['rate'] = isset($rates[$i]) ? '<b>'.$rates[$i].'</b>' : '0.00';
 			}
+			ksort($stats_array[$date_stat]);
 		}
 
 		$this->context->smarty->assign(array('stats_array' => $stats_array));
