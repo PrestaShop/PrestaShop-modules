@@ -41,7 +41,6 @@ class ProductComments extends Module
 	public function __construct()
 	{
 		$this->name = 'productcomments';
-		$this->table = 'product_comment';
 		$this->tab = 'front_office_features';
 		$this->version = '3.0';
 		$this->author = 'PrestaShop';
@@ -320,7 +319,7 @@ class ProductComments extends Module
 
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table =  $this->name;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->module = $this;
@@ -654,7 +653,7 @@ class ProductComments extends Module
 
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table =  $this->name;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->module = $this;
