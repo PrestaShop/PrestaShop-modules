@@ -42,7 +42,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '3.2';
+		$this->version = '3.3';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -758,7 +758,7 @@ class ProductComments extends Module
 								   'averageTotal' => round($average['grade']),
 								   'nbComments' => (int)(ProductComment::getCommentNumber((int)$params['product']['id_product']))
 							  ));
-		return $this->display(__FILE__, 'productcomments_reviews.tpl');
+		return $this->display(__FILE__, 'productcomments_reviews.tpl', $this->getCacheId((int)$params['product']['id_product']));
 	}
 
 	public function hookDisplayRightColumnProduct($params)
