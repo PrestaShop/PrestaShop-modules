@@ -33,7 +33,7 @@ class ReferralProgram extends Module
 	{
 		$this->name = 'referralprogram';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.5.4';
+		$this->version = '1.5.5';
 		$this->author = 'PrestaShop';
 
 		$this->bootstrap = true;
@@ -295,7 +295,7 @@ class ReferralProgram extends Module
 			$cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
 		else
 			$cipherTool = new Blowfish(_COOKIE_KEY_, _COOKIE_IV_);
-		$explodeResult = explode('|', $cipherTool->decrypt(urldecode(Tools::getValue('sponsor'))));
+		$explodeResult = explode('|', $cipherTool->decrypt(Tools::getValue('sponsor')));
 		if ($explodeResult AND count($explodeResult) > 1 AND list($id_referralprogram, $email) = $explodeResult AND (int)($id_referralprogram) AND !empty($email) AND Validate::isEmail($email) AND $id_referralprogram == ReferralProgramModule::isEmailExists($email))
 		{
 			$referralprogram = new ReferralProgramModule($id_referralprogram);
@@ -524,7 +524,7 @@ class ReferralProgram extends Module
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Minimum number of orders a sponsored friend must place to get their voucher'),
+						'label' => $this->l('Minimum number of orders a customer must place to become a sponsor'),
 						'name' => 'order_quantity',
 					),
 					array(

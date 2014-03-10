@@ -116,7 +116,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 									'{email_friend}' => $friendEmail,
 									'{lastname_friend}' => $friendLastName,
 									'{firstname_friend}' => $friendFirstName,
-									'{link}' => Context::getContext()->link->getPageLink('authentication', true, Context::getContext()->language->id, 'create_account=1&sponsor='.urlencode($cipherTool->encrypt($referralprogram->id.'|'.$referralprogram->email.'|')), false),
+									'{link}' => Context::getContext()->link->getPageLink('authentication', true, Context::getContext()->language->id, 'create_account=1&sponsor='.urlencode($cipherTool->encrypt($referralprogram->id.'|'.$referralprogram->email.'|')).'&back=my-account', false),
 									'{discount}' => $discount);
 								Mail::Send((int)$this->context->language->id, 'referralprogram-invitation', Mail::l('Referral Program', (int)$this->context->language->id), $vars, $friendEmail, $friendFirstName.' '.$friendLastName, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/../../mails/');
 								$invitation_sent = true;
