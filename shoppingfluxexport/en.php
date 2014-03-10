@@ -36,9 +36,9 @@ $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_4ccdb6de267067ae9de
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_3a160b703cd459d639246cd51dd4c5af'] = 'Order importation';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_289e4f18141759642d958fa71e1f19b5'] = 'orders coming from marketplaces will be imported';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_207af1af29b84d3804d5e41cc2b7f0f2'] = 'Orders shipment';
-$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_77b882eccd43e201ea994b696271d3b4'] = 'orders coming from marketplaces will be shipped';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_77b882eccd43e201ea994b696271d3b4'] = 'orders shipped on your Prestashop will be canceled on marketplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_83708457f35998b67bb983c3eac89699'] = 'Order cancellation';
-$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_63d7710f86845e8f16b57ac722e5814e'] = 'orders coming from marketplaces will be canceled';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_63d7710f86845e8f16b57ac722e5814e'] = 'orders canceled on your Prestashop will be canceled on marketplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_d4442cedc4e9af8b42f8de0c861a7da4'] = 'Sync stock and orders';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_45cd254b3389124d488a3e7c4f21685d'] = 'Every stock movement will be transfered to marletplaces';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_c930364522c401516d1deb152d031b86'] = 'Default carrier';
@@ -46,5 +46,8 @@ $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_158fe915b90cf5d96bd
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_717c9ffb4924ef00166e08cbf229297b'] = 'Call marketplace for shipping when order state become';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_27a9b1f928f67ea0622ebfc2e065720f'] = 'Call marketplace for cancellation when order state become';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_7494b947fb8d75b27f502865f1c0a45d'] = 'Update';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_80060fc0fdced27c94ed4ffca584283c'] = 'Advanced Parameters';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_1b84791b463ba9fe25f1de22b6d3e17f'] = 'Carriers Matching';
+$_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_5e88bec1822ef1a1f2c3051b7ada1787'] = 'Please see below carriers coming from your markeplaces managed on Shopping Feed. You can match them to your Prestashop carriers';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_36e924d45e5a553c5ea959b942c8473a'] = 'Your feeds';
 $_MODULE['<{shoppingfluxexport}prestashop>shoppingfluxexport_a940319b6f9700a0cfc711238d31a956'] = 'Buyline';
