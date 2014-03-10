@@ -119,12 +119,15 @@ class serviceCache
 				}
 			else
 			{
-				if ($val->Service->saturdayDelivery == '0')
-					$serviceCode = $val->Service->serviceCode;
-				else
-					$serviceCode = $val->Service->serviceCode.'S';
-				Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'tnt_carrier_cache_service` (`id_card`, `code`, `date`, `zipcode`, `city`, `company`, `company_city`, `ship_zip_code`, `due_date`)
-					VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'", "'.$this->_shipZipCode.'", "'.$val->Service->dueDate.'")');
+				if (isset($val->Service))
+				{
+					if ($val->Service->saturdayDelivery == '0')
+						$serviceCode = $val->Service->serviceCode;
+					else
+						$serviceCode = $val->Service->serviceCode.'S';
+					Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'tnt_carrier_cache_service` (`id_card`, `code`, `date`, `zipcode`, `city`, `company`, `company_city`, `ship_zip_code`, `due_date`)
+						VALUES ("'.(int)($this->_idCard).'", "'.pSQL($serviceCode).'","'.$this->_dateNow.'", "'.$this->_zipCode.'", "'.$this->_city.'", "'.$this->_company.'", "'.$this->_companyCity.'", "'.$this->_shipZipCode.'", "'.$val->Service->dueDate.'")');
+				}
 			}
 		}
 	}
