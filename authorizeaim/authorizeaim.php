@@ -80,7 +80,8 @@ class authorizeAIM extends PaymentModule
 			$this->registerHook('orderConfirmation') &&
 			$this->registerHook('payment') &&
 			$this->registerHook('header') &&
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0) &&
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1) &&
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', _PS_OS_ERROR_);
 	}
 
@@ -88,7 +89,8 @@ class authorizeAIM extends PaymentModule
 	{
 		Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID');
 		Configuration::deleteByName('AUTHORIZE_AIM_KEY');
-		Configuration::deleteByName('AUTHORIZE_AIM_DEMO');
+		Configuration::deleteByName('AUTHORIZE_AIM_SANDBOX');
+		Configuration::deleteByName('AUTHORIZE_AIM_TEST_MODE');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_VISA');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_MASTERCARD');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
@@ -118,7 +120,8 @@ class authorizeAIM extends PaymentModule
 		{
 			Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID', Tools::getvalue('authorizeaim_login_id'));
 			Configuration::updateValue('AUTHORIZE_AIM_KEY', Tools::getvalue('authorizeaim_key'));
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', Tools::getvalue('authorizeaim_demo_mode'));
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', Tools::getvalue('authorizeaim_test_mode'));
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', Tools::getvalue('authorizeaim_sandbox'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
@@ -147,11 +150,18 @@ class authorizeAIM extends PaymentModule
 				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_login_id" value="'.Configuration::get('AUTHORIZE_AIM_LOGIN_ID').'" /></div>
 				<label for="authorizeaim_key">'.$this->l('Key').'</label>
 				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_key" value="'.Configuration::get('AUTHORIZE_AIM_KEY').'" /></div>
-				<label for="authorizeaim_demo_mode">'.$this->l('Mode:').'</label>
-				<div class="margin-form" id="authorizeaim_demo">
-					<input type="radio" name="authorizeaim_demo_mode" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
+				<label for="authorizeaim_sandbox">'.$this->l('Environment:').'</label>
+				<div class="margin-form" id="authorizeaim_sandbox">
+					<input type="radio" name="authorizeaim_sandbox" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_sandbox', Configuration::get('AUTHORIZE_AIM_SANDBOX')) ? 'checked="checked"' : '').' />
 					<span style="color: #080;">'.$this->l('Production').'</span>
-					<input type="radio" name="authorizeaim_demo_mode" value="1" style="vertical-align: middle;" '.(Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
+					<input type="radio" name="authorizeaim_sandbox" value="1" style="vertical-align: middle;" '.(Tools::getValue('authorizeaim_sandbox', Configuration::get('AUTHORIZE_AIM_SANDBOX')) ? 'checked="checked"' : '').' />
+					<span style="color: #900;">'.$this->l('Sandbox').'</span>
+				</div>
+				<label for="authorizeaim_test_mode">'.$this->l('Live or Test Mode:').'</label>
+				<div class="margin-form" id="authorizeaim_test_mode">
+					<input type="radio" name="authorizeaim_test_mode" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_test_mode', Configuration::get('AUTHORIZE_AIM_TEST_MODE')) ? 'checked="checked"' : '').' />
+					<span style="color: #080;">'.$this->l('Live').'</span>
+					<input type="radio" name="authorizeaim_test_mode" value="1" style="vertical-align: middle;" '.(Tools::getValue('authorizeaim_test_mode', Configuration::get('AUTHORIZE_AIM_TEST_MODE')) ? 'checked="checked"' : '').' />
 					<span style="color: #900;">'.$this->l('Test').'</span>
 				</div>
 				<label for="authorizeaim_cards">'.$this->l('Cards:').'</label>
