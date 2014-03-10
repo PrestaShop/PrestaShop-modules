@@ -42,7 +42,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '3.1';
+		$this->version = '3.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -910,7 +910,10 @@ class ProductComments extends Module
 		if ($id_criterion == 0)
 			$selected_cat = array();
 		else
-			$selected_cat = (new ProductCommentCriterion($id_criterion))->getCategories();
+		{
+			$pdc_object = new ProductCommentCriterion($id_criterion);
+			$selected_cat = $pdc_object->getCategories();
+		}
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP && Tools::isSubmit('id_shop'))
 			$root_category = new Category($shop->id_category);
