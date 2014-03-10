@@ -697,13 +697,7 @@ class PayPal extends PaymentModule
 			elseif (_PS_MOBILE_PHONE_)
 				return SMARTPHONE_TRACKING_CODE;
 		}
-		if (isset($this->context->mobile_detect))
-		{
-			if ($this->context->mobile_detect->isTablet())
-				return TABLET_TRACKING_CODE;
-			elseif ($this->context->mobile_detect->isMobile())
-				return SMARTPHONE_TRACKING_CODE;
-		}
+		
 		if($method == WPS)
 			return TRACKING_INTEGRAL;
 		if($method == HSS)
