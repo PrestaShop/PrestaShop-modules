@@ -481,7 +481,7 @@ class Followup extends Module
 					'title' => $this->l('Informations'),
 					'icon' => 'icon-cogs',
 				),
-				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.$cron_info,
+				'description' => $this->l('Four kinds of e-mail alerts are available in order to stay in touch with your customers!').'<br />'.$cron_info,
 			)
 		);
 
