@@ -437,6 +437,8 @@ class BlockWishList extends Module
 		{
 			$image = Image::getCover($val['id_product']);
 			$products[$key]['image'] = $this->context->link->getImageLink($val['link_rewrite'], $image['id_image'], ImageType::getFormatedName('small'));
+			$products[$key]['front_link'] = $this->context->link->getProductLink($val['id_product']);
+			$products[$key]['back_link'] = $this->context->link->getAdminLink('AdminProducts').'&id_product='.$val['id_product'];
 		}
 
 		$fields_list = array(
@@ -460,6 +462,16 @@ class BlockWishList extends Module
 				'title' => $this->l('Priority'),
 				'type' => 'priority',
 				'values' => array($this->l('High'), $this->l('Medium'), $this->l('Low')),
+			),
+			'front_link' => array(
+				'title' => $this->l('View'),
+				'type' => 'link',
+				'icon' => 'icon-eye-open'
+			),
+			'back_link' => array(
+				'title' => $this->l('Edit'),
+				'type' => 'link',
+				'icon' => 'icon-pencil'
 			)
 		);
 

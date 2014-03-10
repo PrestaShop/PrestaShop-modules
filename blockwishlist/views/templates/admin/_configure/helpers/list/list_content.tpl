@@ -30,8 +30,14 @@
 		<span class="label label-default">{$priority[$tr.$key]}</span>
 	{elseif isset($params.type) && $params.type == 'image'}
 		<img src="{$tr.$key}"/>
+	{elseif isset($params.type) && $params.type == 'link'}
+		<a href="{$tr.$key}">
+			<button class="btn btn-default">
+				<i class="{$params.icon}"></i>
+				{$params.title}
+			</button>
+		</a>
 	{else}
 		{$smarty.block.parent}
 	{/if}
-	
 {/block}
