@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,21 +49,21 @@ if (!Validate::isLoadedObject($cart))
 
 if ($cart->id != $_POST['x_invoice_num'])
 {
-	Logger::addLog('Conflit between cart id order and customer cart id');
+	Logger::addLog('Conflict between cart id order and customer cart id');
 	die('An unrecoverable conflict error occured with the cart '.(int)$_POST['x_invoice_num']);
 }
 
 $customer = new Customer((int)$cart->id_customer);
 $invoiceAddress = new Address((int)$cart->id_address_invoice);
+$currency = new Currency((int)$cart->id_currency);
 
-if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($invoiceAddress))
+if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($invoiceAddress) && !Validate::isLoadedObject($currency))
 {
-	Logger::addLog('Issue loading customer and/or address data');
+	Logger::addLog('Issue loading customer, address and/or currency data');
 	die('An unrecoverable error occured while retrieving you data');
 }
 
 $params = array(
-	'x_test_request' => (bool)Configuration::get('AUTHORIZE_AIM_DEMO'),
 	'x_invoice_num' => (int)$_POST['x_invoice_num'],
 	'x_amount' => number_format((float)$cart->getOrderTotal(true, 3), 2, '.', ''),
 	'x_exp_date' => Tools::safeOutput($_POST['x_exp_date_m'].$_POST['x_exp_date_y']),
@@ -76,10 +76,11 @@ $params = array(
 	'x_delim_char' => '|',
 	'x_relay_response' => false,
 	'x_type' => 'AUTH_CAPTURE',
+	'x_currency_code' => $currency->iso_code,
 	'x_method' => 'CC',
 	'x_solution_id' => 'A1000006',
-	'x_login' => Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_LOGIN_ID')),
-	'x_tran_key' => Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_KEY')),
+	'x_login' => Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_LOGIN_ID_'.$currency->iso_code)),
+	'x_tran_key' => Tools::safeOutput(Configuration::get('AUTHORIZE_AIM_KEY_'.$currency->iso_code)),
 	'x_card_num' => Tools::safeOutput($_POST['x_card_num']),
 	'x_card_code' => Tools::safeOutput($_POST['x_card_code']),
 );
@@ -88,20 +89,15 @@ $postString = '';
 foreach ($params as $key => $value)
 	$postString .= $key.'='.urlencode($value).'&';
 $postString = trim($postString, '&');
-
-$url = 'https://secure.authorize.net/gateway/transact.dll';
-if (Configuration::get('AUTHORIZE_AIM_DEMO'))
-{
-	$postString .= '&x_test_request=TRUE';
-	$url = 'https://test.authorize.net/gateway/transact.dll';
-}
+$url = 'https://'.(Configuration::get('AUTHORIZE_AIM_DEMO') ? 'test' : 'secure').'.authorize.net/gateway/transact.dll';
 
 /* Do the CURL request ro Authorize.net */
 $request = curl_init($url);
 curl_setopt($request, CURLOPT_HEADER, 0);
 curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($request, CURLOPT_POSTFIELDS, $postString);
-curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);
+curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
 $postResponse = curl_exec($request);
 curl_close($request);
 
@@ -116,7 +112,7 @@ if (!isset($response[7]) || !isset($response[3]) || !isset($response[9]))
 }
 
 $message = $response[3];
-$payment_method = $authorizeaim->displayName;
+$payment_method = 'Authorize.net AIM';
 
 switch ($response[0]) // Response code
 {

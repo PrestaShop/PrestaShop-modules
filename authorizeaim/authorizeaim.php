@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,11 +35,11 @@ class authorizeAIM extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '1.4.7';
 		$this->author = 'PrestaShop';
-		$this->need_instance = 0;
+		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
 		parent::__construct();
 
-		$this->displayName = 'Authorize.net AIM';
+		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
 		$this->description = $this->l('Receive payment with Authorize.net');
 
 		/* For 1.4.3 and less compatibility */
@@ -86,14 +86,21 @@ class authorizeAIM extends PaymentModule
 
 	public function uninstall()
 	{
-		Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID');
-		Configuration::deleteByName('AUTHORIZE_AIM_KEY');
 		Configuration::deleteByName('AUTHORIZE_AIM_DEMO');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_VISA');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_MASTERCARD');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_AX');
 		Configuration::deleteByName('AUTHORIZE_AIM_HOLD_REVIEW_OS');
+		
+		/* Removing credentials configuration variables */
+		$currencies = Currency::getCurrencies(false, true);
+		foreach ($currencies as $currency)
+			if (in_array($currency['iso_code'], $this->aim_available_currencies))
+			{
+				Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code']);
+				Configuration::deleteByName('AUTHORIZE_AIM_KEY'.$currency['iso_code']);
+			}
 
 		return parent::uninstall();
 	}
@@ -116,45 +123,125 @@ class authorizeAIM extends PaymentModule
 		$html = '';
 		if (Tools::isSubmit('submitModule'))
 		{
-			Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID', Tools::getvalue('authorizeaim_login_id'));
-			Configuration::updateValue('AUTHORIZE_AIM_KEY', Tools::getvalue('authorizeaim_key'));
 			Configuration::updateValue('AUTHORIZE_AIM_DEMO', Tools::getvalue('authorizeaim_demo_mode'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_AX', Tools::getvalue('authorizeaim_card_ax'));
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', Tools::getvalue('authorizeaim_hold_review_os'));
+			
+			/* Updating credentials for each active currency */
+			foreach ($_POST as $key => $value)
+			{
+				if (strstr($key, 'authorizeaim_login_id_'))
+					Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID_'.str_replace('authorizeaim_login_id_', '', $key), $value);
+				elseif (strstr($key, 'authorizeaim_key_'))
+					Configuration::updateValue('AUTHORIZE_AIM_KEY_'.str_replace('authorizeaim_key_', '', $key), $value);		
+			}
 
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
-		// For Hold for Review
+		// For "Hold for Review" order status
 		$orderStates = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
-		$html .= '<h2>'.$this->displayName.'</h2>
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Help').'</legend>
-			<a href="http://api.prestashop.com/partner/authorize.net/" target="_blank" style="float: right;"><img src="../modules/'.$this->name.'/logo_authorize.png" alt="" /></a>
-			<h3>'.$this->l('In your PrestaShop admin panel').'</h3>
-			- '.$this->l('Fill the  Login ID  provided by Authorize.net').'<br />
-			- '.$this->l('Fill the key field with the transaction key provided by Authorize.net').'<br />
-			<span style="color: red;" >- '.$this->l('Warning: Your website must possess a SSL certificate to use the Authorize.net AIM payment system. You are responsible for the safety of your customers\' bank information. PrestaShop cannot be blamed for any security issue on your website.').'</span><br />
-			<br />
-		</fieldset><br />
-		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">
-				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Settings').'</legend>
-				<label for="authorizeaim_login_id">'.$this->l('Login ID').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_login_id" value="'.Configuration::get('AUTHORIZE_AIM_LOGIN_ID').'" /></div>
-				<label for="authorizeaim_key">'.$this->l('Key').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_key" value="'.Configuration::get('AUTHORIZE_AIM_KEY').'" /></div>
+		$this->context->controller->addCSS($this->_path.'css/authorizeaim.css');
+		
+		$html .= '
+		<script type="text/javascript">
+			/* Fancybox */
+			$(document).ready(function(){
+				$("a.authorizeaim-video-btn").live("click", function(){
+				$.fancybox({
+					"type" : "iframe",
+					"href" : "//www.youtube.com/embed/8SQ3qst0_Pk?&rel=0&autoplay=1&origin=http://'.Configuration::get('PS_SHOP_DOMAIN').'",
+					"swf": {"allowfullscreen":"true", "wmode":"transparent"},
+					"overlayShow" : true,
+					"centerOnScroll" : true,
+					"speedIn" : 100,
+					"speedOut" : 50,
+					"width" : 853,
+					"height" : 480
+					});
+				return false;
+				});
+			})
+		</script>
+
+		<div class="authorizeaim-wrapper">
+			<a href="http://reseller.authorize.net/application/prestashop/" class="authorizeaim-logo" target="_blank"><img src="../modules/'.$this->name.'/img/logo_authorize.png" alt="Authorize.net" border="0" /></a>
+			<p class="authorizeaim-intro">'.$this->l('Start accepting payments through your PrestaShop store with Authorize.Net, the pioneering provider of ecommerce payment services.  Authorize.Net makes accepting payments safe, easy and affordable.').'</p>
+			<p class="authorizeaim-sign-up">'.$this->l('Do you require a payment gateway account? ').'<a href="http://reseller.authorize.net/application/prestashop/" target="_blank">'.$this->l('Sign Up Now').'</a></p>
+			<div class="authorizeaim-content">
+				<div class="authorizeaim-leftCol">
+					<h3>'.$this->l('Why Choose Authorize.Net?').'</h3>
+					<ul>
+						<li>'.$this->l('Leading payment gateway since 1996 with 400,000+ active merchants').'</li>
+						<li>'.$this->l('Multiple currency acceptance').'</li>
+						<li>'.$this->l('FREE award-winning customer support via telephone, email and online chat').'</li>
+						<li>'.$this->l('FREE Virtual Terminal for mail order/telephone order transactions').'</li>
+						<li>'.$this->l('No Contracts or long term commitments ').'</li>
+						<li>'.$this->l('Additional services include: ').'
+							<ul class="none">
+								<li>'.$this->l('- Advanced Fraud Detection Suite™').'</li>
+								<li>'.$this->l('- Automated Recurring Billing ™').'</li>
+								<li>'.$this->l('- Customer Information Manager').'</li>
+							</ul>
+						</li>
+						<li>'.$this->l('Gateway and merchant account set up available').'</li>
+						<li>'.$this->l('Simple setup process').'
+					</li>
+					</ul>
+					<ul class="none" style = "display: inline; font-size: 13px;">
+						<li><a href="http://reseller.authorize.net/application/prestashop/" target="_blank" class="authorizeaim-link">'.$this->l('Sign up Now').'</a></li>
+					</ul>		
+				</div>
+				<div class="authorizeaim-video">
+					<p>'.$this->l('Have you ever wondered how credit card payments work? Connecting a payment application to the credit card processing networks is difficult, expensive and beyond the resources of most businesses. Authorize.Net provides the complex infrastructure and security necessary to ensure secure, fast and reliable transactions. See How:').'</p>
+					<a href="http://www.youtube.com/watch?v=8SQ3qst0_Pk" class="authorizeaim-video-btn">
+						<img src="../modules/'.$this->name.'/img/video-screen.jpg" alt="Merchant Warehouse screencast" />
+						<img src="../modules/'.$this->name.'/img/btn-video.png" alt="" class="video-icon" />
+					</a>
+				</div>
+			</div>';
+		
+		
+		$html .= '<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
+			<fieldset>
+				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Configure your existing Authorize.Net Accounts').'</legend>';
+				
+		/* Determine which currencies are enabled on the store and supported by Authorize.net & list one credentials section per available currency */
+		$currencies = Currency::getCurrencies(false, true);
+		foreach ($currencies as $currency)
+			if (in_array($currency['iso_code'], $this->aim_available_currencies))
+			{
+				$configuration_id_name = 'AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code'];
+				$configuration_key_name = 'AUTHORIZE_AIM_KEY_'.$currency['iso_code'];
+				
+				$html .= '
+				<table>
+					<tr>
+						<td>
+							<p>'.$this->l('Credentials for').' <b>'.$currency['iso_code'].'</b> '.$this->l('currency').'</p>
+							<label for="authorizeaim_login_id">'.$this->l('Login ID:').'</label>
+							<div class="margin-form" style="margin-bottom: 0px;"><input type="text" size="20" id="authorizeaim_login_id_'.$currency['iso_code'].'" name="authorizeaim_login_id_'.$currency['iso_code'].'" value="'.Configuration::get($configuration_id_name).'" /></div>
+							<label for="authorizeaim_key">'.$this->l('Key:').'</label>
+							<div class="margin-form" style="margin-bottom: 0px;"><input type="text" size="20" id="authorizeaim_key_'.$currency['iso_code'].'" name="authorizeaim_key_'.$currency['iso_code'].'" value="'.Configuration::get($configuration_key_name).'" /></div>
+						</td>
+					</tr>
+				<table><br />
+				<hr size="1" style="background: #BBB; margin: 0; height: 1px;" noshade /><br />';
+			}
+		
+			$html .= '				
 				<label for="authorizeaim_demo_mode">'.$this->l('Mode:').'</label>
 				<div class="margin-form" id="authorizeaim_demo">
 					<input type="radio" name="authorizeaim_demo_mode" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
 					<span style="color: #080;">'.$this->l('Production').'</span>
 					<input type="radio" name="authorizeaim_demo_mode" value="1" style="vertical-align: middle;" '.(Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
-					<span style="color: #900;">'.$this->l('Test').'</span>
+					<span style="color: #900;">'.$this->l('Sandbox').'</span>
 				</div>
-				<label for="authorizeaim_cards">'.$this->l('Cards:').'</label>
+				<label for="authorizeaim_cards">'.$this->l('Cards* :').'</label>
 				<div class="margin-form" id="authorizeaim_cards">
 					<input type="checkbox" name="authorizeaim_card_visa" '.(Configuration::get('AUTHORIZE_AIM_CARD_VISA') ? 'checked="checked"' : '').' />
 						<img src="../modules/'.$this->name.'/cards/visa.gif" alt="visa" />
@@ -177,16 +264,18 @@ class authorizeAIM extends PaymentModule
 			'</option>'."\n";
 		return $html.'</select></div>
 				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
+				<sub>*Subject to region</sub>
 			</fieldset>
-		</form>';
+		</form>
+		</div>';
 	}
 
 	public function hookPayment($params)
 	{
 		$currency = Currency::getCurrencyInstance($this->context->cookie->id_currency);
-		if (!Validate::isLoadedObject($currency) || $currency->iso_code != 'USD')
+		if (!Validate::isLoadedObject($currency))
 			return false;
-
+		
 		if (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$isFailed = Tools::getValue('aimerror');
@@ -206,7 +295,7 @@ class authorizeAIM extends PaymentModule
 			$this->context->smarty->assign('cards', $cards);
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
-
+			
 			return $this->display(__FILE__, 'authorizeaim.tpl');
 		}
 	}
