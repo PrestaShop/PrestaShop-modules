@@ -64,6 +64,7 @@ class AdyenNotificationModuleFrontController extends ModuleFrontController
 				{
 					// failed if post value success is false or not filled in
 					$history->changeIdOrderState((int)Configuration::get('ADYEN_STATUS_CANCELLED'), (int)($order->id));
+					$history->add();
 					Logger::addLog('Adyen module: status for id_order '.$order->id.' is changed to cancelled');
 				} else
 				{
@@ -71,6 +72,7 @@ class AdyenNotificationModuleFrontController extends ModuleFrontController
 					if ($event_code == 'AUTHORISATION')
 					{
 						$history->changeIdOrderState((int)Configuration::get('ADYEN_STATUS_AUTHORIZED'), (int)($order->id));
+						$history->add();
 						Logger::addLog('Adyen module: status for id_order '.$order->id.' is changed to authorized');
 					} else
 						Logger::addLog('Adyen module: status for id_order '.$order->id.' is '.$event_code.' and is ignored');
@@ -91,7 +93,7 @@ class AdyenNotificationModuleFrontController extends ModuleFrontController
 		$sql = 'SELECT * FROM '._DB_PREFIX_.'adyen_event_data
 			    WHERE psp_reference = \''.pSQL($psp_reference).'\' AND adyen_event_code = \''.pSQL($event_code).'\' ';
 		
-		if ($row = Db::getInstance()->getRow($sql))
+		if (Db::getInstance()->getRow($sql))
 			return true;
 		
 		return false;
