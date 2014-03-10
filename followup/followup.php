@@ -33,7 +33,7 @@ class Followup extends Module
 	{
 		$this->name = 'followup';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -472,7 +472,7 @@ class Followup extends Module
 
 		$cron_info = '';
 		if (Shop::getContext() === Shop::CONTEXT_SHOP)
-			$cron_info = $this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
+			$cron_info = $this->l('Define the settings and place the following URL in the crontab, or call it manually on a daily basis:').'<br />
 								<b>'.$this->context->shop->getBaseURL().'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>';
 
 		$fields_form_1 = array(
@@ -481,7 +481,7 @@ class Followup extends Module
 					'title' => $this->l('Informations'),
 					'icon' => 'icon-cogs',
 				),
-				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.$cron_info,
+				'description' => $this->l('Four kinds of e-mail alerts are available in order to stay in touch with your customers!').'<br />'.$cron_info,
 			)
 		);
 
