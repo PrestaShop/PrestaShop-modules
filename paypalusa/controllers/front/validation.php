@@ -69,36 +69,27 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'cmd=_notify-validate&'.http_build_query($_POST));
 		$response = curl_exec($ch);
 		curl_close($ch);
-		$context = Context::getContext();
 
 		if ($response == 'VERIFIED')
-		{				
+		{
 			/* Step 2 - Check the "custom" field returned by PayPal (it should contain both the Cart ID and the Shop ID, e.g. "42;1") */
 			$errors = array();
 			$custom = explode(';', Tools::getValue('custom'));
-			$shop = new Shop((int)$custom[1]);
-			$context = Context::getContext();
-			$context->shop = $shop;
 			if (count($custom) != 2)
 				$errors[] = $this->paypal_usa->l('Invalid value for the "custom" field');
 			else
-			{						
+			{
 				/* Step 3 - Check the shopping cart, the currency used to place the order and the amount really paid by the customer */
-				$cart = new Cart((int)$custom[0]);
-				$context->cart = $cart;
+				$cart = new Cart((int)$custom[0]);		
 				if (!Validate::isLoadedObject($cart))
 					$errors[] = $this->paypal_usa->l('Invalid Cart ID');
 				else
 				{
-					$currency = new Currency((int)Currency::getIdByIsoCode(Tools::getValue('mc_currency')));										
+					$currency = new Currency((int)Currency::getIdByIsoCode(Tools::getValue('mc_currency')));
 					if (!Validate::isLoadedObject($currency) || $currency->id != $cart->id_currency)
 						$errors[] = $this->paypal_usa->l('Invalid Currency ID').' '.($currency->id.'|'.$cart->id_currency);
 					else
 					{
-						/* Forcing the context currency to the order currency */
-						
-						$context->currency = $currency;
-												
 						if (Tools::getValue('mc_gross') != $cart->getOrderTotal(true))
 							$errors[] = $this->paypal_usa->l('Invalid Amount paid');
 						else
@@ -112,7 +103,7 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 								$order_status = (int)Configuration::get('PS_OS_REFUND');
 							else
 								$order_status = (int)Configuration::get('PS_OS_ERROR');
-							
+
 							/* Step 5a - If the order already exists, it may be an update sent by PayPal - we need to update the order status */
 							if ($cart->OrderExists())
 							{
@@ -127,13 +118,10 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 							else
 							{
 								$customer = new Customer((int)$cart->id_customer);
-								$context->customer = $customer;
 								$paypal_products = array('express' => 'PayPal Express Checkout', 'standard' => 'PayPal Standard', 'advanced' => 'PayPal Payments Advanced',  'payflow_pro' => 'PayPal PayFlow Pro');
-								$payment_type = isset($paypal_products[Tools::getValue('payment_type')]) ? $paypal_products[Tools::getValue('payment_type')] : $paypal_products['standard'];
-								
 								$message =
 								'Transaction ID: '.Tools::getValue('txn_id').'
-								Payment Type: '.$payment_type.'
+								Payment Type: '.$paypal_products[Tools::getValue('payment_type')].'
 								Order time: '.Tools::getValue('payment_date').'
 								Final amount charged: '.Tools::getValue('mc_gross').'
 								Currency code: '.Tools::getValue('mc_currency').'
@@ -146,9 +134,9 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 								receipt_id: '.Tools::getValue('receipt_id').'
 								ipn_track_id: '.Tools::getValue('ipn_track_id').'
 								verify_sign: '.Tools::getValue('verify_sign').'
-								Mode: '.(Tools::getValue('test_ipn') ? 'Test (Sandbox)' : 'Live');								
+								Mode: '.(Tools::getValue('mode') ? 'Test (Sandbox)' : 'Live');
 
-								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, $customer->secure_key, $shop))
+								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, $customer->secure_key, new Shop((int)$custom[1])))
 								{
 									/* Store transaction ID and details */
 									$this->paypal_usa->addTransactionId((int)$this->paypal_usa->currentOrder, Tools::getValue('txn_id'));

@@ -1,6 +1,6 @@
 {*
 ** @author PrestaShop SA <contact@prestashop.com>
-** @copyright  2007-2014 PrestaShop SA
+** @copyright  2007-2013 PrestaShop SA
 ** @version  Release: $Revision: 1.2.0 $
 **
 ** International Registered Trademark & Property of PrestaShop SA
@@ -11,19 +11,6 @@
 ** It allows you to enable PayPal on your store and to configure your credentials and preferences
 **
 *}
-
-{if $paypal_usa_ps_14}
-<script type="text/javascript">
-		{literal}
-		$(document).ready(function() {
-			var scripts = [{/literal}{$paypal_usa_js_files}{literal}];
-			for(var i = 0; i < scripts.length; i++) {
-				$.getScript(scripts[i], function() {paypal_usa_init()});
-			}
-		});
-		{/literal}
-</script>
-{/if}
 <div class="paypal_usa-module-wrapper">
 	<div class="paypal_usa-module-header">
 		<img src="{$paypal_usa_tracking|escape:'htmlall':'UTF-8'}" alt="" style="display: none;" />
@@ -33,7 +20,7 @@
 	</div>
 	<div class="paypal_usa-module-wrap">
 		<div class="paypal_usa-module-col2">
-			<div class="paypal_usa-module-col1inner" style="width: {$paypal_usa_b1width|escape:'htmlall':'UTF-8'}px;">
+			<div class="paypal_usa-module-col1inner" style="width: 350px;">
 				<h3>{l s='Benefits of using PayPal' mod='paypalusa'}</h3>
 				<ul>
 					<li><b>{l s='It\'s Fast and Easy:' mod='paypalusa'}</b> {l s='PayPal is pre-integrated with Prestashop, so you can configure it with a few clicks.' mod='paypalusa'}</li>
@@ -58,10 +45,10 @@
 			<div class="paypal_usa-module-col1inner" style="width: 307px; margin-left: 30px;">
 				<h3>{l s='Unique Features' mod='paypalusa'}</h3>
 				<ul>
-					<li>{l s='Accept all major' mod='paypalusa'} <b>{l s='credit cards' mod='paypalusa'}</b>, <b>{l s='PayPal' mod='paypalusa'}</b>{l s=', and' mod='paypalusa'} <b>{l s='Bill Me Later®' mod='paypalusa'}</b></li>
-					<li>{l s='Tap into millions of active' mod='paypalusa'} <b>{l s='PayPal buyers' mod='paypalusa'}</b> {l s='around the globe' mod='paypalusa'}</li>
+					<li>{l s='Accept all major <b>credit cards</b>, <b>PayPal</b>, and <b>Bill Me Later®</b>' mod='paypalusa'}</li>
+					<li>{l s='Tap into millions of active <b>PayPal buyers</b> around the globe' mod='paypalusa'}</li>
 					<li>{l s='Get paid within minutes of making a sale' mod='paypalusa'}</li>
-					<li>{l s='Process' mod='paypalusa'} <b>{l s='full or partial refunds' mod='paypalusa'}</b></li>
+					<li>{l s='Process <b>full or partial refunds</b>' mod='paypalusa'}</li>
 					<li>{l s='Get easy-to-understand reporting' mod='paypalusa'}</li>
 				</ul>
 			</div>
@@ -97,13 +84,6 @@
 		<div class="error">
 			{foreach from=$paypal_usa_error item=error}
 				{$error|escape:'htmlall':'UTF-8'}<br />
-			{/foreach}
-		</div>
-	{/if}
-	{if $paypal_usa_warning}
-		<div class="info">
-			{foreach from=$paypal_usa_warning item=warning}
-				{$warning|escape:'htmlall':'UTF-8'}<br />
 			{/foreach}
 		</div>
 	{/if}
@@ -145,6 +125,17 @@
 					<center><input type="checkbox" id="paypal_usa_express_checkout" name="paypal_usa_express_checkout" {if $paypal_usa_configuration.PAYPAL_USA_EXPRESS_CHECKOUT} checked="checked"{/if} /> <label for="paypal_usa_express_checkout"> {l s='Enabled' mod='paypalusa'}</label></center>
 				</div>
 			</div>
+			
+			<div class="paypal-usa-onecol">
+				<div class="paypal-usa-product_eco fixCol{if $paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML} paypal-usa-product-active{/if}">
+					<h4>{l s='PayPal Bill Me Later' mod='paypalusa'}</h4>
+					<a class="paypal_usa-module-btn" href="https://www.paypal.com/us/webapps/mpp/referral/paypal-express-checkout?partner_id=XYAYGKRUJMJTG" target="_blank">{l s='Sign Up' mod='paypalusa'}</a><br />
+					<p>{l s='If you accept credit cards online, you can also accept PayPal payments by adding an Bill Me Later button. It\'s a proven way to grow your business. No setup or monthly charges.' mod='paypalusa'}</p>
+					<center><input type="checkbox" id="paypal_usa_billmelater" name="paypal_usa_billmelater" {if $paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML} checked="checked"{/if} /> <label for="paypal_usa_billmelater"> {l s='Enabled' mod='paypalusa'}</label></center>
+				</div>
+			</div>
+			
+			
 			<div class="clear centerText">
 				<input type="submit" name="SubmitPayPalProducts" class="button MB15" value="{l s='Enable selected product(s)' mod='paypalusa'}" />
 			</div>
@@ -194,6 +185,22 @@
 					<input class="colorSelector" type="text" id="paypal_usa_checkbox_border_color" name="paypal_usa_checkbox_border_color" value="{$paypal_usa_configuration.PAYPAL_USA_EXP_CHK_BORDER_COLOR|escape:'htmlall':'UTF-8'}" />
 				</div>
 			</div>
+			
+			
+			<div id="paypal_usa_express_checkout_config" {if !$paypal_usa_configuration.PAYPAL_USA_PAYMENT_BML}style="display:none;"{/if}>
+				<h4 class="sep-title">{l s='PayPal Bill Me Later settings:' mod='paypalusa'}</h4>
+				<label for="paypal_usa_billmelater_checkbox_product">{l s='Show BillMeLater Checkout on' mod='paypalusa'}</label>
+				<div class="margin-form PT3">
+					<input type="checkbox" name="paypal_usa_billmelater_checkbox_product"{if $paypal_usa_configuration.PAYPAL_USA_BML_CHK_PRODUCT} checked="checked"{/if} /> <label for="paypal_usa_billmelater_checkbox_product" class="resetLabel">{l s='Product page' mod='paypalusa'}</label> 
+					<input type="checkbox" name="paypal_usa_billmelater_checkbox_shopping_cart"{if $paypal_usa_configuration.PAYPAL_USA_BML_CHK_SHOPPING_CART} checked="checked"{/if} /> <label for="paypal_usa_billmelater_checkbox_shopping_cart}" class="resetLabel">{l s='Shopping Cart' mod='paypalusa'}</label>
+				</div>
+				<label for="paypal_usa_billmelater_checkbox_border_color">{l s='Express Checkout border color' mod='paypalusa'}</label></td>
+				<div class="margin-form">
+					<input class="colorSelector" type="text" id="paypal_usa_billmelater_checkbox_border_color" name="paypal_usa_billmelater_checkbox_border_color" value="{$paypal_usa_configuration.PAYPAL_USA_BML_CHK_BORDER_COLOR|escape:'htmlall':'UTF-8'}" />
+				</div>
+			</div>
+			
+			
 			<div class="margin-form">
 				<input type="submit" name="SubmitBasicSettings" class="button" value="{l s='Save settings' mod='paypalusa'}" />
 			</div>
