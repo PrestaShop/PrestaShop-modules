@@ -1844,6 +1844,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$modules_to_delete['trustedshops'] = 'Trustedshops';
 				$modules_to_delete['dejala'] = 'Dejala';
 				$modules_to_delete['stripejs'] = 'Stripejs';
+				$modules_to_delete['blockvariouslinks'] = 'Block Various Links';
 
 				foreach($modules_to_delete as $key => $module)
 				{
@@ -1864,12 +1865,20 @@ class AdminSelfUpgrade extends AdminSelfTab
 					}
 				}
 			}
+
 			if (version_compare($this->install_version, '1.5.5.0', '='))
 			{
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 0 WHERE `name` LIKE \'PS_LEGACY_IMAGES\' AND `value` = 1');
 				if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
+			}
+
+			if (version_compare($this->install_version, '1.6.0.2', '>'))
+			{
+				$path = $this->adminDir.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'default'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'header.tpl';
+				if (file_exists($path))
+					unlink($path);
 			}
 			
 			$this->stepDone = true;
