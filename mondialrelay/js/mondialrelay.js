@@ -1,4 +1,4 @@
-var PS_MRObject = (function($, undifened) {
+var PS_MRObject = (function($, undefined) {
 
 	var selected_id_carrier = 0;
 	var selected_relay_point = 0;
