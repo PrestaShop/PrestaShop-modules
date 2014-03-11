@@ -444,7 +444,7 @@ class MailAlerts extends Module
 		$context = Context::getContext();
 		$id_shop = (int)$context->shop->id;
 		$id_lang = (int)$context->language->id;
-		$product = new Product($id_product, true, $id_lang, $id_shop, $context);
+		$product = new Product($id_product, false, $id_lang, $id_shop, $context);
 		$product_has_attributes = $product->hasAttributes();
 		$configuration = Configuration::getMultiple(
 			array(
