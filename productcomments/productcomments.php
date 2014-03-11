@@ -561,9 +561,9 @@ class ProductComments extends Module
 		else
 			$field_category_tree = array(
 							'type' => 'categories',
-							'label' => $this->l('Criterion will be restricted to the following categories :'),
+							'label' => $this->l('Criterion will be restricted to the following categories:'),
 							'name' => 'categoryBox',
-							'desc' => $this->l('Mark the box(es) of categories in which this criterion apply.'),
+							'desc' => $this->l('Mark the box(es) of categories to which this criterion applies.'),
 							'tree' => array(
 								'use_search' => false,
 								'id' => 'categoryBox',
