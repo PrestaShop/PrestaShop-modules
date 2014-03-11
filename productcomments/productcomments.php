@@ -42,7 +42,7 @@ class ProductComments extends Module
 	{
 		$this->name = 'productcomments';
 		$this->tab = 'front_office_features';
-		$this->version = '3.3';
+		$this->version = '3.3.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -215,6 +215,8 @@ class ProductComments extends Module
 		{
 			ProductComment::deleteReports($id_product_comment);
 		}
+
+		$this->_clearcache('productcomments_reviews.tpl');
 	}
 
 	public function getContent()
