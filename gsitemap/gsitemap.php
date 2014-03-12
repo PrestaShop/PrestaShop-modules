@@ -36,7 +36,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.3.4';
+		$this->version = '2.3.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -88,7 +88,7 @@ class Gsitemap extends Module
 			mkdir(dirname(__FILE__).'/../../override/classes/', 0777, true);
 		if (file_exists(dirname(__FILE__).'/../../override/classes/Shop.php'))
 			rename(dirname(__FILE__).'/../../override/classes/Shop.php', dirname(__FILE__).'/../../override/classes/Shop.origin.php');
-		if (!copy(dirname(__FILE__).'/override/classes/Shop.php', dirname(__FILE__).'/../../override/classes/Shop.php'))
+		if (!copy(dirname(__FILE__).'/override14/classes/Shop.php', dirname(__FILE__).'/../../override/classes/Shop.php'))
 			return false;
 
 		return true;
