@@ -391,32 +391,13 @@ class PayPal extends PaymentModule
 			$smarty = $this->context->smarty;
 		}
 
-		if ($smarty->getTemplateVars('page_name') == 'authentication' && (int)Configuration::get('PAYPAL_LOGIN') == 1)
+		if (($smarty->getTemplateVars('page_name') == 'authentication' || 
+				$smarty->getTemplateVars('page_name') == 'order-opc' ) && 
+			(int)Configuration::get('PAYPAL_LOGIN') == 1)
 		{
 			$process .= '
 				<script src="https://www.paypalobjects.com/js/external/api.js"></script>
-				<script>
-					$(function(){
-						$("#login_form").after(\'<div id="buttonPaypalLogin1"></div>\');
-
-						$("#buttonPaypalLogin1").css({
-							"clear"       : "both",
-							"text-align"  : "right",
-							"padding-top" : "13px"
-						});
-
-						paypal.use( ["login"], function(login) {
-							login.render ({
-								"appid": "'.Configuration::get('PAYPAL_LOGIN_CLIENT_ID').'",
-								'.((int)Configuration::get('PAYPAL_SANDBOX') == 1 ? '"authend" : "sandbox",' : '').'
-								"scopes": "openid profile email address phone https://uri.paypal.com/services/paypalattributes https://uri.paypal.com/services/expresscheckout",
-								"containerid": "buttonPaypalLogin1",
-								'.((int)Configuration::get('PAYPAL_LOGIN_TPL') == 2 ? '"theme" : "neutral",' : '').'
-								"returnurl": "'.PayPalLogin::getReturnLink().'"
-							});
-						});
-					});
-				</script>';
+				<script>'.$this->fetchTemplate('js/paypal_login.js').'</script>';
 		}
 
 		return $process;
