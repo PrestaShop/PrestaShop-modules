@@ -1151,7 +1151,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$link = $this->context->link;
 		$result						= $xm->result;
-		$pasref						= (int)$xm->pasref;
+		$pasref						= (string)$xm->pasref;
 		$tss						= (int)$xm->tss->result;
 		$orderid					= (string)$xm->orderid;
 		$merchantid					= (string)$this->merchant_id;
