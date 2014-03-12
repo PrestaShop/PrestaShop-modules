@@ -33,7 +33,7 @@ class Editorial extends Module
 	{
 		$this->name = 'editorial';
 		$this->tab = 'front_office_features';
-		$this->version = '2.1';
+		$this->version = '2.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -53,17 +53,18 @@ class Editorial extends Module
 		if (!parent::install() || !$this->registerHook('displayHome') || !$this->registerHook('displayHeader'))
 			return false;
 
-		$res = Db::getInstance()->execute('
-			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial` (
+		$res = Db::getInstance()->execute(
+			'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial` (
 			`id_editorial` int(10) unsigned NOT NULL auto_increment,
 			`id_shop` int(10) unsigned NOT NULL ,
 			`body_home_logo_link` varchar(255) NOT NULL,
 			PRIMARY KEY (`id_editorial`))
-			ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+			ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'
+		);
 
 		if ($res)
-			$res &= Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial_lang` (
+			$res &= Db::getInstance()->execute(
+				'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'editorial_lang` (
 				`id_editorial` int(10) unsigned NOT NULL,
 				`id_lang` int(10) unsigned NOT NULL,
 				`body_title` varchar(255) NOT NULL,
@@ -71,7 +72,8 @@ class Editorial extends Module
 				`body_paragraph` text NOT NULL,
 				`body_logo_subheading` varchar(255) NOT NULL,
 				PRIMARY KEY (`id_editorial`, `id_lang`))
-				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
+				ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'
+			);
 
 		if ($res)
 			foreach (Shop::getShops(false) as $shop)
@@ -114,7 +116,7 @@ class Editorial extends Module
 	{
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $k => $language)
-			$languages[$k]['is_default'] = (int)($language['id_lang'] == Configuration::get('PS_LANG_DEFAULT'));
+			$languages[$k]['is_default'] = (int)$language['id_lang'] == Configuration::get('PS_LANG_DEFAULT');
 
 		$helper = new HelperForm();
 		$helper->module = $this;
@@ -129,6 +131,9 @@ class Editorial extends Module
 		$helper->toolbar_btn = $this->initToolbar();
 		$helper->title = $this->displayName;
 		$helper->submit_action = 'submitUpdateEditorial';
+
+		$file = dirname(__FILE__).'/homepage_logo_'.(int)$this->context->shop->id.'.jpg';
+		$logo = (file_exists($file) ? '<img src="'.$this->_path.'homepage_logo_'.(int)$this->context->shop->id.'.jpg">' : '');
 
 		$this->fields_form[0]['form'] = array(
 			'tinymce' => true,
@@ -171,7 +176,9 @@ class Editorial extends Module
 					'type' => 'file',
 					'label' => $this->l('Homepage logo'),
 					'name' => 'body_homepage_logo',
-					'display_image' => true
+					'display_image' => true,
+					'image' => $logo,
+					'delete_url' => 'index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&deleteLogoImage=1'
 				),
 				array(
 					'type' => 'text',
@@ -235,8 +242,8 @@ class Editorial extends Module
 	{
 		$errors = '';
 		$id_shop = (int)$this->context->shop->id;
-		// Delete logo image
-		if (Tools::isSubmit('deleteImage'))
+		// Delete logo image retrocompat 1.5
+		if (Tools::isSubmit('deleteLogoImage') || Tools::isSubmit('deleteImage'))
 		{
 			if (!file_exists(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg'))
 				$errors .= $this->displayError($this->l('This action cannot be made.'));
@@ -245,7 +252,7 @@ class Editorial extends Module
 				unlink(dirname(__FILE__).'/homepage_logo_'.(int)$id_shop.'.jpg');
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 1);
 				$this->_clearCache('editorial.tpl');
-				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)(Tab::getIdFromClassName('AdminModules')).(int)$this->context->employee->id));
+				Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id));
 			}
 			$this->_html .= $errors;
 		}
@@ -283,7 +290,10 @@ class Editorial extends Module
 				Configuration::updateValue('EDITORIAL_IMAGE_DISABLE', 0);
 			}
 			$this->_clearCache('editorial.tpl');
+			Tools::redirectAdmin('index.php?tab=AdminModules&configure='.$this->name.'&token='.Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id));
 		}
+
+		return true;
 	}
 
 	public function hookDisplayHome($params)
@@ -297,15 +307,17 @@ class Editorial extends Module
 			$editorial = new EditorialClass((int)$editorial->id, $this->context->language->id);
 			if (!$editorial)
 				return;
-			$this->smarty->assign(array(
-				'editorial' => $editorial,
-				'default_lang' => (int)$this->context->language->id,
-				'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
-				'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
-				'id_lang' => $this->context->language->id,
-				'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
-				'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
-			));
+			$this->smarty->assign(
+				array(
+					'editorial' => $editorial,
+					'default_lang' => (int)$this->context->language->id,
+					'image_width' => Configuration::get('EDITORIAL_IMAGE_WIDTH'),
+					'image_height' => Configuration::get('EDITORIAL_IMAGE_HEIGHT'),
+					'id_lang' => $this->context->language->id,
+					'homepage_logo' => !Configuration::get('EDITORIAL_IMAGE_DISABLE') && file_exists('modules/editorial/homepage_logo_'.(int)$id_shop.'.jpg'),
+					'image_path' => $this->_path.'homepage_logo_'.(int)$id_shop.'.jpg'
+				)
+			);
 		}
 
 		return $this->display(__FILE__, 'editorial.tpl', $this->getCacheId());
