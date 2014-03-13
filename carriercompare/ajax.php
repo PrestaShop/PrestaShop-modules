@@ -43,9 +43,9 @@ switch (Tools::getValue('method'))
 	case 'getCarriers':
 		die(Tools::jsonEncode($carrierCompare->getCarriersListByIdZone((int)Tools::getValue('id_country'), (int)Tools::getValue('id_state', 0), Tools::safeOutput(Tools::getValue('zipcode', 0)))));
 		break;
-	case 'saveSelection':
-		$errors = $carrierCompare->saveSelection((int)Tools::getValue('id_country'), (int)Tools::getValue('id_state', 0), Tools::getValue('zipcode', 0), (int)Tools::getValue('id_carrier', 0));
-		die(Tools::jsonEncode($errors));
+	case 'simulateSelection':
+		$cart_data = $carrierCompare->simulateSelection(Tools::getValue('carrier_price_value'), Tools::getValue('params'));
+		die(Tools::jsonEncode($cart_data));
 		break;
 	default:
 		exit;
