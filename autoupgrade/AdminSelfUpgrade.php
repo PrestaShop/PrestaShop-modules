@@ -1992,21 +1992,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		global $warningExists;
 
-		$queries = array('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE (`value` IS NULL AND `date_upd` IS NULL) OR `value` LIKE ""');
+		/* Clean tabs order */
+		foreach ($this->db->ExecuteS('SELECT DISTINCT id_parent FROM '._DB_PREFIX_.'tab') as $parent)
+		{
+			$i = 1;
+			foreach ($this->db->ExecuteS('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE id_parent = '.(int)$parent['id_parent'].' ORDER BY IF(class_name IN ("AdminHome", "AdminDashboard"), 1, 2), position ASC') as $child)
+				$this->db->Execute('UPDATE '._DB_PREFIX_.'tab SET position = '.(int)($i++).' WHERE id_tab = '.(int)$child['id_tab'].' AND id_parent = '.(int)$parent['id_parent']);
+		}
 
-		$warningExist = false;
-		foreach ($queries as $query)
-			if (!$this->db->Execute($query, false))
-			{
-				$this->nextQuickInfo[] = '
-						<div class="upgradeDbError">
-						[ERROR] SQL Cleaning database'.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError().'</div>';
-				$this->nextErrors[] = '[ERROR] SQL Cleaning database '.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError();
-				$warningExist = true;
-			}
+		/* Clean configuration integrity */
+		$this->db->Execute('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE (`value` IS NULL AND `date_upd` IS NULL) OR `value` LIKE ""', false);
 
-		if (!$warningExist)
-			$this->status = 'ok';
+		$this->status = 'ok';
 		$this->next = 'upgradeComplete';
 		$this->next_desc = $this->l('The database has been cleaned.');
 		$this->nextQuickInfo[] = $this->l('The database has been cleaned.');
