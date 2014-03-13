@@ -2955,8 +2955,20 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$file = rtrim($this->prodRootDir, DIRECTORY_SEPARATOR).$filename;
 					if (file_exists($file))
 					{
-						if (is_file($file) && unlink($file))
-							$this->nextQuickInfo[] = sprintf('%s removed', $filename);
+						if (is_file($file))
+						{
+							@chmod($file, 0777); // NT ?
+							if (@unlink($file))
+								$this->nextQuickInfo[] = sprintf('%s removed', $filename);
+							else
+							{
+								$this->next = 'error';
+								$this->next_desc = sprintf($this->l('error when removing %1$s'), $filename);
+								$this->nextQuickInfo[] = sprintf($this->l('%s not removed'), $filename);
+								$this->nextErrors[] = sprintf($this->l('%s not removed'), $filename);
+								return false;
+							}	
+						}
 						elseif (is_dir($file))
 						{
 							if ($this->isDirEmpty($file))
@@ -2966,14 +2978,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 							}
 							else
 								$this->nextQuickInfo[] = sprintf('[NOTICE] %s directory skipped (directory not empty)', $filename);
-						}
-						else
-						{
-							$this->next = 'error';
-							$this->next_desc = sprintf($this->l('error when removing %1$s'), $filename);
-							$this->nextQuickInfo[] = sprintf($this->l('%s not removed'), $filename);
-							$this->nextErrors[] = sprintf($this->l('%s not removed'), $filename);
-							return false;
 						}
 					}
 					else
