@@ -207,6 +207,7 @@ function simulateSelection()
 				var total = formatCurrency(json.order_total, currencyFormat, currencySign, currencyBlank);
 				$('#total_price').html(total);
 			}
+			$('tr.cart_total_delivery').show();
 		}
 	});
 	ajaxQueries.push(query);
