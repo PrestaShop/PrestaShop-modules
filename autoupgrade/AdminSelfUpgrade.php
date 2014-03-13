@@ -2216,6 +2216,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		{
 			require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
 			deactivate_custom_modules();
+			Configuration::updateValue('PS_DISABLE_OVERRIDES', 1);
 		}
 
 		if (version_compare(INSTALL_VERSION, '1.5.6.1', '='))
