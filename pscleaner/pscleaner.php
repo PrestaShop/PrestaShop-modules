@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.4.2';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
@@ -567,6 +567,21 @@ class PSCleaner extends Module
 		if (Db::getInstance()->Execute($query))
 			if ($affected_rows = Db::getInstance()->Affected_Rows())
 				$logs[$query] = $affected_rows;
+
+		$parents = Db::getInstance()->ExecuteS('SELECT DISTINCT id_parent FROM '._DB_PREFIX_.'tab');
+		foreach ($parents as $parent)
+		{
+			$children = Db::getInstance()->ExecuteS('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE id_parent = '.(int)$parent['id_parent'].' ORDER BY IF(class_name IN ("AdminHome", "AdminDashboard"), 1, 2), position ASC');
+			$i = 1;
+			foreach ($children as $child)
+			{
+				$query = 'UPDATE '._DB_PREFIX_.'tab SET position = '.(int)($i++).' WHERE id_tab = '.(int)$child['id_tab'].' AND id_parent = '.(int)$parent['id_parent'];
+				if (Db::getInstance()->Execute($query))
+					if ($affected_rows = Db::getInstance()->Affected_Rows())
+						$logs[$query] = $affected_rows;
+			}
+		}
+
 		return $logs;
 	}
 	
