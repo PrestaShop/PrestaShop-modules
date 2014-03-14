@@ -33,12 +33,12 @@ include_once dirname(__FILE__).'/classes/Condition.php';
 include_once dirname(__FILE__).'/classes/GamificationTools.php';
 
 class Gamification extends Module
-{
+{	
 	public function __construct()
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.8.2';
+		$this->version = '1.8.4';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -156,11 +156,14 @@ class Gamification extends Module
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
 			
 			//add css for advices
-			$advices = Advice::getValidatedByIdTab($this->context->controller->id);
-			$css_str = '';
+			$advices = Advice::getValidatedByIdTab($this->context->controller->id, true);
+			$css_str = $js_str = '';
 			foreach ($advices as $advice)
-				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
-			
+			{
+				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
+				$js_str .= '"'.(int)$advice['id_ps_advice'].'",';
+			}
+
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
 				$this->context->controller->addJs($this->_path.'views/js/gamification_bt.js');
 			else
@@ -169,6 +172,7 @@ class Gamification extends Module
 			$this->context->controller->addJqueryPlugin('fancybox');
 		
 			return $css_str.'<script>
+				var ids_ps_advice = new Array('.rtrim($js_str, ',').');
 				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
 				var current_id_tab = '.(int)$this->context->controller->id.';
 			</script>';
@@ -302,6 +306,8 @@ class Gamification extends Module
 		
 		foreach ($conditions as $condition)
 		{
+			if (isset($condition->id))
+				unset($condition->id);
 			try 
 			{
 				$cond = new Condition();
@@ -310,21 +316,23 @@ class Gamification extends Module
 					$cond = new Condition(Condition::getIdByIdPs($condition->id_ps_condition));
 					unset($current_conditions[$condition->id_ps_condition]);
 				}
-					
+
 				$cond->hydrate((array)$condition, (int)$id_lang);
 				
 				$cond->date_upd = date('Y-m-d H:i:s', strtotime('-'.(int)$cond->calculation_detail.'DAY'));
 				$cond->date_add = date('Y-m-d H:i:s');
 				$condition->calculation_detail = trim($condition->calculation_detail);
 				$cond->save(false, false);
+				
 				if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
 					$this->registerHook($condition->calculation_detail);
 				unset($cond);
+				
 			} catch (Exception $e) {
 					continue;
 			}
 		}
-		
+
 		// Delete conditions that are not in the file anymore
 		foreach ($current_conditions as $id_ps_condition)
 		{
