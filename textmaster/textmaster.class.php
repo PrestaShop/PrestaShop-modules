@@ -34,6 +34,8 @@ class TextMasterAPI
 	private $connection = true;
 
 	private $data = array(); // cached data
+	
+	public static $instance = null;
 
 	/*
 	 * Module class object, needed for translations
@@ -51,6 +53,14 @@ class TextMasterAPI
 		$this->module_instance  = (!$module_instance or !is_object($module_instance)) ? Module::getInstanceByName('textmaster') : $module_instance; // initiates module instance
 		$this->getAuthors();
     }
+	
+	public static function getInstance($module_instance = null, $api_key = null, $api_secret = null)
+	{
+		if (!self::$instance)
+			self::$instance = new TextMasterAPI($module_instance, $api_key, $api_secret);
+			
+		return self::$instance;
+	}
 
 	/* caches data */
 	function __set($name, $value)

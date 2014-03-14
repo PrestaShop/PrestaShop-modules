@@ -83,7 +83,7 @@ class TextMasterProject extends InvObjectModel
 		
 		if ($id_project && $api_data)
 		{
-			$textMasterAPI = new TextMasterAPI;
+			$textMasterAPI = TextMasterAPI::getInstance();
 			$this->api_data = $textMasterAPI->getProject($this->id_project_api);
 		}
 	}
@@ -105,7 +105,7 @@ class TextMasterProject extends InvObjectModel
 	
 	public function add($autodate = true, $null_values = false)
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->addProject($this->api_data);
 		if (is_array($result))
 		{
@@ -125,7 +125,7 @@ class TextMasterProject extends InvObjectModel
 	
 	public function update($null_values = false)
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->updateProject($this->api_data);
 		
 		if (!is_array($result))
@@ -136,7 +136,7 @@ class TextMasterProject extends InvObjectModel
 	
 	public function delete()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->deleteProject($this->id_project_api);
 		
 		if (!is_array($result))
@@ -149,7 +149,7 @@ class TextMasterProject extends InvObjectModel
 	
 	public function launch()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->launchProject($this->id_project_api);
 		if (!is_array($result))
 			return $result; // error
@@ -159,7 +159,7 @@ class TextMasterProject extends InvObjectModel
 	
 	public function quote()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		
 		$result = $textMasterAPI->addProject($this->api_data, true);
 

@@ -48,7 +48,7 @@ class TextMasterView
         $this->module_instance = $module_instance;
         $this->context = Context::getContext();
 		$this->settings_obj = new TextMasterConfiguration();
-        $this->textmasterAPI = new TextMasterAPI($module_instance, $this->settings_obj->api_key, $this->settings_obj->api_secret);
+        $this->textmasterAPI = TextMasterAPI::getInstance($module_instance, $this->settings_obj->api_key, $this->settings_obj->api_secret);
 		$this->tpl_dir = TEXTMASTER_TPL_DIR .'admin/';
     }
 	
