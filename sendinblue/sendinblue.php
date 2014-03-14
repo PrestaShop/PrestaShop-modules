@@ -181,7 +181,8 @@ class Sendinblue extends Module {
 				}
 			}
 		}
-		else{
+		else
+		{
 		$this->newsletter = Tools::getValue('newsletter');
 		$this->email = Tools::getValue('email');
 		$id_country = Tools::getValue('id_country');
@@ -533,9 +534,11 @@ class Sendinblue extends Module {
 				{
 					$start_loop = $no_of_paginations - 6;
 					$end_loop = $no_of_paginations;
-				} else
+				}
+					else
 					$end_loop = $no_of_paginations;
-			} else
+			}
+			else
 			{
 				$start_loop = 1;
 				if ($no_of_paginations > 7)
@@ -1364,7 +1367,8 @@ class Sendinblue extends Module {
 					$this->redirectPage($this->l('Successfully updated'), 'SUCCESS');
 				}
 			}
-		} else
+		}
+		else
 		{
 			$err_msg = '';
 
