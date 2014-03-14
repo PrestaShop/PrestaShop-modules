@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>desjardins</name>
+	<displayName><![CDATA[Desjardins]]></displayName>
+	<version><![CDATA[0.3.6]]></version>
+	<description><![CDATA[Accept payments by Credit Card with Desjardins (Visa, Mastercard, Amex, Discover and Diners Club)]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries>ca</limited_countries>
+</module>
