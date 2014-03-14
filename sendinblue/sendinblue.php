@@ -2781,7 +2781,7 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 	}
 	public function checkOlderVesion()
 	{
-		if (_PS_VERSION_ <= '1.4.1.0')
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '<='))
 		{
 			$module_status = Db::getInstance()->getRow('select COUNT(*) totalvalue FROM `'._DB_PREFIX_.'module`  WHERE name ="mailin" || name ="mailinblue"');
 			if ($module_status['totalvalue'] > 0)

@@ -1,26 +1,22 @@
-/**
-* 2007-2014 PrestaShop
+/** jshint forin:true, noarg:true, noempty:true, eqeqeq:true, boss:true, undef:true, curly:true, browser:true, jquery:true */
+/*
+* jQuery MultiSelect UI Widget 1.13
+* Copyright (c) 2012 Eric Hynds
 *
-* NOTICE OF LICENSE
+* http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
 *
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
+* Depends:
+* - jQuery 1.4.2+
+* - jQuery UI 1.8 widget factory
 *
-* DISCLAIMER
+* Optional:
+* - jQuery UI effects
+* - jQuery UI position utility
 *
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
+* Dual licensed under the MIT and GPL licenses:
+* http://www.opensource.org/licenses/mit-license.php
+* http://www.gnu.org/licenses/gpl.html
 *
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2014 PrestaShop SA
-* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* International Registered Trademark & Property of PrestaShop SA
 */
 
 (function($, undefined){
