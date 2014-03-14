@@ -57,7 +57,7 @@ $_MODULE['<{sendinblue}prestashop>sendinblue_ddf7d91d563667f08f1d467bc4a0d55a'] 
 $_MODULE['<{sendinblue}prestashop>sendinblue_21812af50835ec5a8df4087771efabc1'] = 'Tél: 0899 25 30 61';
 $_MODULE['<{sendinblue}prestashop>sendinblue_f3584450e166f3865a67926c324fea3e'] = 'Pour plus d\'informations, merci de visiter notre site internet :';
 $_MODULE['<{sendinblue}prestashop>sendinblue_8de8413647876f0cf564bd944bf8abe9'] = 'https://www.sendinblue.com';
-$_MODULE['<{sendinblue}prestashop>sendinblue_9d5f20669bbba264561cc9398305e7f1'] = 'Avec le module SendinBlue, retrouvez tout ce dont vous avez besoin pour envoyer simplement et efficacement vos campagnes emailing & SMS à vos prospects et clients :';
+$_MODULE['<{sendinblue}prestashop>sendinblue_ce4865fb138906005ba265ae1b9668a2'] = ' Avec le module SendinBlue, retrouvez tout ce dont vous avez besoin pour envoyer simplement et efficacement vos campagnes emailing & SMS à vos prospects et clients :';
 $_MODULE['<{sendinblue}prestashop>sendinblue_736ec036fd014803f34612d305aa361c'] = 'Synchronisation automatique de vos contacts avec SendinBlue (inscrits et désinscrits)';
 $_MODULE['<{sendinblue}prestashop>sendinblue_c654d0fa7acdb7f92aae327ba4215372'] = ' Outils d\'aide à la création d\'emailings';
 $_MODULE['<{sendinblue}prestashop>sendinblue_8d9bada9313183af0911611bf454d4da'] = ' Programmation des campagnes';

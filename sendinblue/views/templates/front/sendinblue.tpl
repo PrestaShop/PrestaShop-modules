@@ -34,7 +34,7 @@
 			<p class="{if $nw_error}warning_inline{else}success_inline{/if}" {if $nw_error} style="padding-top: 10px; font-size:10px;color:#DA0F00" {else} style="padding-top: 10px; font-size:10px;color:#008000" {/if} style="padding-top: 10px; font-size:10px;color:#DA0F00">{$msg}</p>
 		{/if}
 	
-		<form action="{$link->getPageLink('index.php')}" method="post">
+		<form action="{$link->getPageLink('index.php')|escape:'htmlall':'UTF-8'}" method="post">
 			<p style="padding-top:10px;">
 				<input type="text" name="email" style="width: 170px;" value="{if isset($value) && $value}{$value}{else}{l s='your e-mail' mod='sendinblue'}{/if}" onfocus="javascript:if(this.value=='{l s='your e-mail' mod='sendinblue'}')this.value='';" onblur="javascript:if(this.value=='')this.value='{l s='your e-mail' mod='sendinblue'}';" />
 			</p>
@@ -49,6 +49,7 @@
 			{/if}
 			
 			<p style="padding-top:10px;">
+                                <input type="hidden" value="0" name="action">
 				<input type="submit" value="ok" class="button_mini" name="submitNewsletter" />
 			</p>
 		</form>
