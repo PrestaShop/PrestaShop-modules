@@ -318,7 +318,7 @@ class TextMaster extends Module
 
     private function displayInfoBlock()
     {
-        $textmaster_api_obj = new TextMasterAPI($this);
+        $textmaster_api_obj = TextMasterAPI::getInstance($this);
         $user_info = $textmaster_api_obj->getUserInfo();
         if (!isset($user_info['wallet']['current_money']) || !isset($user_info['wallet']['currency_code']))
             return;
@@ -599,13 +599,13 @@ class TextMaster extends Module
     {
         if (!$registration)
         {
-            $textmaster_api_obj = new TextMasterAPI($this);
+            $textmaster_api_obj = TextMasterAPI::getInstance($this);
             $user_info = $textmaster_api_obj->getUserInfo();
             return $user_info['locale'];
         }
         
         $locales_from_api = array();
-        $textmaster_api_obj = new TextMasterAPI();
+        $textmaster_api_obj = TextMasterAPI::getInstance();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
             $locales_from_api[] = $locale_info['code'];
 
@@ -739,7 +739,7 @@ class TextMaster extends Module
         /* checks connection to API if at least one of API codes is set */
         if ($api_key or $api_secret)
         {
-            $textmasterAPI = new TextMasterAPI($this, $api_key, $api_secret);
+            $textmasterAPI = TextMasterAPI::getInstance($this, $api_key, $api_secret);
             if (!$textmasterAPI->isConnected())
             {
                 $this->_html .= $this->displayWarnings(array($this->l('Please login / register')));
@@ -1381,7 +1381,7 @@ class TextMaster extends Module
                 $view->getProjectSummary();
                 break;
         }
-        $textmasterAPI = new TextMasterAPI($this);
+        $textmasterAPI = TextMasterAPI::getInstance($this);
         $this->context->smarty->assign(array('textmaster_token' => sha1(_COOKIE_KEY_.$this->name),
             'view' => $view,
             'module_link' => self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu=create_project&token='.Tools::getValue('token') . (($id_project) ? "&id_project=$id_project" : ''),
