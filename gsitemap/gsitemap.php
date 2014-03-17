@@ -36,7 +36,7 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.3.5';
+		$this->version = '2.3.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -353,12 +353,11 @@ class Gsitemap extends Module
 	 */
 	private function _getProductLink(&$link_sitemap, $lang, &$index, &$i, $id_product = 0)
 	{
-
 		$link = new Link();
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
 
-		$products_id = Db::getInstance()->ExecuteS('SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product WHERE p.`active` = 1 AND p.`id_product` > '.(int)$id_product.(($this->tableColumnExists(_DB_PREFIX_.'product_lang', 'id_shop')) ? ' AND pl.`id_shop` = '.(int)$this->context->shop->id : '').' AND pl.`id_lang` = '.(int)$lang['id_lang'].' ORDER BY `id_product` ASC');
+		$products_id = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product_shop` WHERE `active` = 1 AND `id_shop`='.$this->context->shop->id);
 
 		foreach ($products_id as $product_id)
 		{
