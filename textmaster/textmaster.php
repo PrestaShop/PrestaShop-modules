@@ -748,6 +748,7 @@ class TextMaster extends Module
         }
         else
         {
+			$this->_html .= $this->displayWarnings(array($this->l('Please login / register')));
             return false;
         }
         $this->api_instance = $textmasterAPI;
