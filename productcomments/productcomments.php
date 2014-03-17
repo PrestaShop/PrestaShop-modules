@@ -205,6 +205,7 @@ class ProductComments extends Module
 				$criterion->active = (int)(!$criterion->active);
 				$criterion->save();
 			}
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules').'&configure='.$this->name.'&tab_module='.$this->tab.'&conf=4&module_name='.$this->name);
 		}
 		elseif ($id_product_comment = (int)Tools::getValue('approveComment'))
 		{
