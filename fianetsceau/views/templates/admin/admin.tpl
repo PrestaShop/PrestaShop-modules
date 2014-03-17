@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$head_message}
+{$head_message|strval}
 <fieldset>
-	<legend><img src="{$image_path}" />FIA-NET - Sceau de Confiance</legend>
+	<legend><img src="{$image_path|escape:'htmlall'}" />FIA-NET - Sceau de Confiance</legend>
 
 	<b>Le Sceau de Confiance FIA-NET, leader de la confiance sur le web, influence la d&eacute;cision de r&eacute;achat de 83 % des internautes.</b>
 
@@ -41,22 +41,22 @@
 
 <form action="" method="post">
 	<fieldset>
-		<legend><img src="{$logo_account_path}" />{l s='Account settings' mod='fianetsceau'}</legend>
+		<legend><img src="{$logo_account_path|escape:'htmlall'}" />{l s='Account settings' mod='fianetsceau'}</legend>
 		<label>{l s='Login' mod='fianetsceau'}</label>
 		<div class="margin-form">
-			<input type="text" name="fianetsceau_login" value="{$fianetsceau_login}"/>
+			<input type="text" name="fianetsceau_login" value="{$fianetsceau_login|escape:'htmlall'}"/>
 		</div>
 		<label>{l s='Password' mod='fianetsceau'}</label>
 		<div class="margin-form">
-			<input type="text" name="fianetsceau_password" value="{$fianetsceau_password}"/>
+			<input type="text" name="fianetsceau_password" value="{$fianetsceau_password|escape:'htmlall'}"/>
 		</div>
 		<label>{l s='Site ID' mod='fianetsceau'}</label>
 		<div class="margin-form">
-			<input type="text" name="fianetsceau_siteid" value="{$fianetsceau_siteid}"/>
+			<input type="text" name="fianetsceau_siteid" value="{$fianetsceau_siteid|intval}"/>
 		</div>
 		<label>{l s='Authkey' mod='fianetsceau'}</label>
 		<div class="margin-form">
-			<input type="text" name="fianetsceau_authkey" value="{$fianetsceau_authkey}"/>
+			<input type="text" name="fianetsceau_authkey" value="{$fianetsceau_authkey|escape:'htmlall'}"/>
 		</div>
 		<label>{l s='Production mode' mod='fianetsceau'}</label>
 		<div class="margin-form">
@@ -75,13 +75,13 @@
 	<br />
 
 	<fieldset>
-		<legend><img src="{$logo_categories_path}"/>{l s='Category settings' mod='fianetsceau'}</legend>
+		<legend><img src="{$logo_categories_path|escape:'htmlall'}"/>{l s='Category settings' mod='fianetsceau'}</legend>
 		<label>{l s='Default Product Type' mod='fianetsceau'}</label>
 		<div class="margin-form">
 			<select id="fianetsceau_0_category" name="fianetsceau_0_category" onChange="loadSubCategories(0);">
 				<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 				{foreach from=$fianetsceau_categories item=category_name key=id_category name=categories_name}
-					<option value="{$id_category}" {if $fianetsceau_default_category eq $id_category}Selected{/if}>{$category_name}</option>
+					<option value="{$id_category|intval}" {if $fianetsceau_default_category eq $id_category}Selected{/if}>{$category_name|strval}</option>
 				{/foreach}
 			</select>
 			<span id="subcategory_0">
@@ -89,7 +89,7 @@
 					<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 					{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
 						{if $fianetsceau_default_category eq $subcategory_name['parent_id']}
-							<option value="{$subcategory_id}" {if $fianetsceau_default_subcategory eq $subcategory_id}Selected{/if}>{$subcategory_name['label']}</option>
+							<option value="{$subcategory_id|intval}" {if $fianetsceau_default_subcategory eq $subcategory_id}Selected{/if}>{$subcategory_name['label']|strval}</option>
 						{/if}
 					{/foreach}
 				</select>
@@ -104,22 +104,22 @@
 				<tbody>
 					{foreach from=$shop_categories key=id item=shop_category name=shop_categories}
 						<tr>
-							<td>{$shop_category.name}</td>
+							<td>{$shop_category.name|escape:'htmlall'}</td>
 							<td>
-								<select id="fianetsceau_{$id}_category" name="fianetsceau_{$id}_category" onChange="loadSubCategories({$id});">
+								<select id="fianetsceau_{$id|intval}_category" name="fianetsceau_{$id|intval}_category" onChange="loadSubCategories({$id|intval});">
 									<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 									{foreach from=$fianetsceau_categories item=category_name key=category_id name=categories_name}
-										<option value="{$category_id}" {if $shop_category.parent_id eq $category_id}Selected{/if}>{$category_name}</option>
+										<option value="{$category_id|intval}" {if $shop_category.parent_id eq $category_id}Selected{/if}>{$category_name|strval}</option>
 									{/foreach}
 								</select>
 							</td>
 							<td>
-								<span id="subcategory_{$id}">
-									<select id="fianetsceau_{$id}_subcategory" name="fianetsceau_{$id}_subcategory">
+								<span id="subcategory_{$id|intval}">
+									<select id="fianetsceau_{$id}_subcategory" name="fianetsceau_{$id|intval}_subcategory">
 										<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 										{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
 											{if $shop_category.parent_id eq $subcategory_name['parent_id']}
-												<option value="{$subcategory_id}" {if $shop_category.fianetsceau_type eq $subcategory_id}Selected{/if}>{$subcategory_name['label']}</option>
+												<option value="{$subcategory_id|intval}" {if $shop_category.fianetsceau_type eq $subcategory_id}Selected{/if}>{$subcategory_name['label']|strval}</option>
 											{/if}
 										{/foreach}
 									</select>
@@ -135,7 +135,7 @@
 	<br />
 
 	<fieldset>
-		<legend><img src="{$logo_payments_path}" />{l s='Payment modules settings' mod='fianetsceau'}</legend>
+		<legend><img src="{$logo_payments_path|escape:'htmlall'}" />{l s='Payment modules settings' mod='fianetsceau'}</legend>
 		<div class="margin-form">
 			<table cellspacing="0" cellpadding="0" class="table">
 				<thead>
@@ -149,7 +149,7 @@
 						<tr>
 							<td>{$payment_module.name|escape:'htmlall'}</td>
 							<td>
-								<select name="fianetsceau_{$id_payment_module}_payment_type">
+								<select name="fianetsceau_{$id_payment_module|intval}_payment_type">
 									{foreach from=$fianetsceau_payment_types key=id_fianetsceau_payment_type item=fianetsceau_payment_type name=fianetsceau_payment_types}
 										<option value="{$id_fianetsceau_payment_type|escape:'htmlall'}" {if $payment_module.fianetsceau_type eq $id_fianetsceau_payment_type}Selected{/if}>{$fianetsceau_payment_type|escape:'htmlall'}</option>
 									{/foreach}
@@ -165,7 +165,7 @@
 	<br />
 
 	<fieldset>
-		<legend><img src="{$logo_account_path}" />{l s='Logo settings' mod='fianetsceau'}</legend>
+		<legend><img src="{$logo_account_path|escape:'htmlall'}" />{l s='Logo settings' mod='fianetsceau'}</legend>
 		<label>{l s='Logo position' mod='fianetsceau'}</label>
 		<div class="margin-form">
 			<select name="fianetsceau_logo_position">
@@ -180,7 +180,7 @@
 				</tr>
 				{foreach from=$fianetsceau_logo_sizes key=fianetsceau_logo_size item=fianetsceau_logo_img}
 					<tr>
-						<td><input type="radio" name=fianetsceau_logo_sizes value="{$fianetsceau_logo_size|escape:'htmlall'}" {if $fianetsceau_logo_size eq $fianetsceau_logo}Checked{/if}></td><td><img src="{$fianetsceau_logo_img}" /></td>
+						<td><input type="radio" name=fianetsceau_logo_sizes value="{$fianetsceau_logo_size|escape:'htmlall'}" {if $fianetsceau_logo_size eq $fianetsceau_logo}Checked{/if}></td><td><img src="{$fianetsceau_logo_img|escape:'htmlall'}" /></td>
 						{/foreach}
 				</tr>
 			</table>
@@ -190,15 +190,16 @@
 	<br/>
 
 	<fieldset>
-		<legend><img src="{$logo_account_path}" />{l s='Widget settings' mod='fianetsceau'}</legend>
+		<legend><img src="{$logo_account_path|escape:'htmlall'}" />{l s='Widget settings' mod='fianetsceau'}</legend>
 		<label>{l s='Widget position' mod='fianetsceau'}</label>
 		<div class="margin-form">
 			<select name="fianetsceau_widget_position">
+				{$i = 1}
 				{foreach from=$fianetsceau_widget_positions key=fianetsceau_widget_position_key item=fianetsceau_widget_position_name name=fianetsceau_widget_positions}
 				{if $i % 2 eq 1}{/if}
-				{$i % 2}
+				{$i|intval % 2}
 				<option value="{$fianetsceau_widget_position_key|escape:'htmlall'}" {if $fianetsceau_widget_position_key eq $fianetsceau_widget_position}Selected{/if}>{l s=$fianetsceau_widget_position_name|escape:'htmlall' mod='fianetsceau'}</option>
-				{$i++}
+				{$i = $i + 1}
 			{/foreach}
 			</table>
 		</select><br /><br />
@@ -214,7 +215,7 @@
 			{$i = 1}
 			{foreach from=$fianetsceau_widget_numbers item=fianetsceau_widget_number}
 			{if $i mod 2 eq 1}<tr>{/if}
-				<td><input type="radio" name=fianetsceau_widget_number value="{$fianetsceau_widget_number|escape:'htmlall'}" {if $fianetsceau_widget_number eq $widget_number}Checked{/if} /></td><td><p><img src="{$path_prefix}/{$fianetsceau_widget_number}.png" /></p></td>
+				<td><input type="radio" name=fianetsceau_widget_number value="{$fianetsceau_widget_number|escape:'htmlall'}" {if $fianetsceau_widget_number eq $widget_number}Checked{/if} /></td><td><p><img src="{$path_prefix|escape:'htmlall'}/{$fianetsceau_widget_number|escape:'htmlall'}.png" /></p></td>
 			{if $i mod 2 eq 0}</tr>{/if}
 			{$i = $i + 1}
 		{/foreach}
@@ -223,15 +224,15 @@
 </fieldset>
 <br/>
 <center><input type="submit" name="submitSettings" value="{l s='Save' mod='fianetsceau'}" class="button" /></center>
-<input id="token_fianetsceau" name="token_fianetsceau" type="hidden" value="{$token}" />
-<input id="id_shop_fianetsceau" name="id_shop_fianetsceau" type="hidden" value="{$id_shop}" />
+<input id="token_fianetsceau" name="token_fianetsceau" type="hidden" value="{$token|escape:'htmlall'}" />
+<input id="id_shop_fianetsceau" name="id_shop_fianetsceau" type="hidden" value="{$id_shop|intval}" />
 </form>
 <br/>
 <center><input type="button" name="submitLog" onclick="ShowHideSceauLog();" value="{l s='Show/Hide FIA-NET Sceau log file' mod='fianetsceau'}" class="button" /></center>
 <br/>
 <center>
 	<fieldset id="sceau_log" style="display:none;">
-		<textarea cols="150" rows="10" readonly="readonly">{$log_content}</textarea>
+		<textarea cols="150" rows="10" readonly="readonly">{$log_content|strval}</textarea>
 		<br/>
 	</fieldset>
 </center>
