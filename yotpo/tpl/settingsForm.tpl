@@ -74,6 +74,20 @@
 			<div class="y-label">{l s='Enable bottom line' mod='yotpo'}
             	<input type="checkbox" name="yotpo_bottom_line_enabled" value="1" {if $yotpo_bottomLineEnabled}checked="checked"{/if} />
         	</div> 
+        	
+        	<div class="y-label">{l s='Select the status that will trigger the Mail After Purchase e-mail:' mod='yotpo'} </br>
+        	<div class="y-label y-multiselect">
+        		{foreach from=$yotpo_all_statuses item='order_state'}
+					<label><input type="checkbox" 
+						  name="yotpo_map_status[]"										  
+						  value="{$order_state.id_order_state}"
+						  {if $order_state.selected == '1'} checked {/if}
+						  />
+						  {$order_state.name}									  
+					</label>
+				{/foreach}
+        	</div>
+        	</div> 
 	        <div class="y-label">{l s='Select bottom Line location' mod='yotpo'}
 	          <select name="yotpo_bottom_line_location">
 	            <option value="right_column" {if $yotpo_bottomLineLocation == "right_column"}selected{/if}>{l s='Right column' mod='yotpo'}</option>
