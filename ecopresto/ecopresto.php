@@ -244,8 +244,8 @@ class ecopresto extends Module{
         if(Configuration::get('ECOPRESTO_DEMO') == 0)
         {
             
-            $html .= '<h2>'.$this->l('Bienvenue sur le module de dropshipping Ecopresto ! <br /><br />Choisissez une parmi les 3 options ci-dessous et entrez dans l\'univers Ecopresto. N’oubliez pas de prendre le temps de lire attentivement la documentation du module ! Merci. <br /><br />
-									L\'équipe d\'Ecopresto.').'</h2>';
+            $html .= '<h2>'.$this->l('Bienvenue sur le module de dropshipping Ecopresto !.').'<br /><br />'.$this->l('Choisissez une parmi les 3 options ci-dessous et entrez dans l\'univers Ecopresto. N\'oubliez pas de prendre le temps de lire attentivement la documentation du module ! Merci.').'<br /><br />'.
+									$this->l('L\'équipe d\'Ecopresto.').'</h2>';
 
             
             $html .= '<div id="menuTab1" class="selected">';
