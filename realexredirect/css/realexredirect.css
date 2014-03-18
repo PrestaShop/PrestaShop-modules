@@ -1,19 +1,19 @@
 /*---------- FRONT ----------------*/
-#module-realexredirect-payment #center_column {
-	width: 757px;
+#module-realexredirect-payment #right_column {
+	padding-left: 22.7%;
 }
 #module-realexredirect-payment #center_column h4 {
 	font-size:15px; margin-bottom:15px
 }
 
 #module-realexredirect-payment #center_column .bloc_new_card{
-	width:40%;float:left; border:1px solid #FAC132;padding:2%
+	width:45%;min-width:295px;float:left;border:1px solid #FAC132;padding:2%
 }
 #module-realexredirect-payment #center_column .bloc_new_card select{
-	margin-top:10px
+	margin-top:10px;
 }
 #module-realexredirect-payment #center_column .bloc_new_card .cart_navigation {
-	float:right;margin:0px;padding: 0px
+	padding-top:10px;float:right;
 }
 #module-realexredirect-payment #center_column .bloc_registered_card{
 	width:40%;float:right;border:1px solid #FAC132;padding:2%
@@ -57,8 +57,9 @@ p.realexredirect {
         background-image:url('../.../../img/creditcardo.png');
         background-repeat:no-repeat ;
         background-position: 15px  ;
-        width: 575px ;
-        max-width: 95%
+        width: 570px ;
+        max-width: 95% ;
+        text-decoration: none ;
     
 }
 p.realexredirect:hover {
@@ -88,5 +89,3 @@ table.realexredirect {
 
 .clear {clear:both}
 .fleft {float:left}
-
-    

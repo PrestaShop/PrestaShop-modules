@@ -31,7 +31,7 @@ class RealexRedirect extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '1.4';
 		$this->author = 'Coccinet';
-		$this->bout_valide = $this->l('Validate');
+		$this->bout_valide = $this->l('Pay Now');
 		$this->bout_suppr = $this->l('Do you want to delete your stored card ?');
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';

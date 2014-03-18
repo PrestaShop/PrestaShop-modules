@@ -1,9 +1,8 @@
 {*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2014 Coccinet
+*  @copyright  2007-2013 Coccinet
 *}
 {capture name=path}{l s='Realex Payments' mod='realexredirect'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='realexredirect'}</h2>
 
