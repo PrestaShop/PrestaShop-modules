@@ -135,7 +135,7 @@ foreach ($lstPdt as $pdt)
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported`=2 WHERE `reference`= "'.pSQL($pdt['thereference']).'" AND `id_shop`='.(int)$pdt['id_shop']);
 			$etp++;
 		}
-		elseif ($reference->id_product && $catalog->tabConfig['PARAM_MAJ_NEWPRODUCT'] == 1 && !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+		elseif ($reference->id_product && $catalog->tabConfig['PARAM_MAJ_NEWPRODUCT'] == 1 && $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == true)
 		{
 			$etp++;
 		}
@@ -150,7 +150,7 @@ foreach ($lstPdt as $pdt)
 			$pdt_final['id_shop_default'] = (int)$pdt['id_shop'];
 			$pdt_final['shop'] = (int)$pdt['id_shop'];
 			
-			if (!$reference->id_product || !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+			if (!$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
 			{
 				$idC = (int)$import->getCategory($pdt['category_1'], 0, $pdt['id_shop'], 0);
 				$idSSC = (int)$import->getCategory($pdt['ss_category_1'], $idC, $pdt['id_shop'], 1);
@@ -185,34 +185,27 @@ foreach ($lstPdt as $pdt)
 					$pdt_final['images']['url'][] = (string)$pdt['image_6'];
 			}
 
-			foreach
-			($tabLang as $langPS => $langEco)
-				if ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] > 0 || !$reference->id_product || !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+			foreach	($tabLang as $langPS => $langEco)
+				if ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] > 0 || !$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
 				{
-				    if (!$reference->id_product || !$reference->getShopProduct($pdt['id_shop'], $reference->id_product) || $catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 3)
-                    {
+				    if (!$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false || $catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 3)
+		                    {
     					$pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
     					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
     					$pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
     					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
-                    }
-                    elseif ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 1)
-                    {
-                        $pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
-    					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
-                    }
-                    else
-                    {
-                        $pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
-    					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
-                    }
+		                    }
+		                    elseif ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 1)
+		                    {
+		                        $pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
+		    					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
+		                    }
+		                    else
+		                    {
+		                        $pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
+		    					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
+		                    }
 				}
-			else
-			{
-				$resPS = Db::getInstance()->getRow('SELECT `name`, `link_rewrite` FROM `'._DB_PREFIX_.'product_lang` WHERE `id_product` = '.(int)$pdt_final['id_product'].' AND `id_lang` = '.(int)$langPS);
-				$pdt_final['link_rewrite'][$langPS] = (isset($resPS['link_rewrite']) && $resPS['link_rewrite'] != ''?$resPS['link_rewrite']:Tools::link_rewrite($pdt['name_'.$langEco]));
-				$pdt_final['name'][$langPS] = (isset($resPS['name']) && $resPS['name'] != ''?$resPS['name']:$pdt['name_'.$langEco]);
-			}
 
 
 			$pdt_final['majName'] = $catalog->tabConfig['UPDATE_NAME_DESCRIPTION'];
@@ -276,7 +269,7 @@ foreach ($lstPdt as $pdt)
 					}
 				}
 
-				if ($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product || !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+				if ($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
 					$pdt_final_att[] = array('reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
 						'ean13' => (string)$att['ean13'],
