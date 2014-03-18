@@ -5,8 +5,17 @@
 	var gamification_level = '{l s='Level' js=1}';
 	var advice_hide_url = '{$advice_hide_url}';
 	var hide_advice = '{l s='Do you really want to hide this advice?' js=1}';
-
-	$('#dropdown_gamification').click(function () {
+	
+	$('#dropdown_gamification .notifs_panel_header, #dropdown_gamification .tab-content').click(function () {
+		return false;
+	});
+	
+	$('#dropdown_gamification .panel-footer').click(function (elt) {
+		window.location.href = '{$link->getAdminLink('AdminGamification')}';
+	});
+	
+	$('#gamification_tab li').click(function () {
+		gamificationDisplayTab($(this).children('a'));
 		return false;
 	});
 	

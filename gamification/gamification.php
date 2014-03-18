@@ -38,7 +38,7 @@ class Gamification extends Module
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.8.4';
+		$this->version = '1.8.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -160,7 +160,7 @@ class Gamification extends Module
 			$css_str = $js_str = '';
 			foreach ($advices as $advice)
 			{
-				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
+				$css_str .= '<link href="'.Tools::getShopProtocol().'gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
 				$js_str .= '"'.(int)$advice['id_ps_advice'].'",';
 			}
 
