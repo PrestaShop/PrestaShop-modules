@@ -642,9 +642,9 @@ class MailAlerts extends Module
 					array(
 						'type' => 'switch',
 						'is_bool' => true, //retro compat 1.5
-						'label' => $this->l('Product availability:'),
+						'label' => $this->l('Product availability'),
 						'name' => 'MA_CUSTOMER_QTY',
-						'desc' => $this->l('Gives the customer the option of receiving a notification for an available product if this one is out of stock.'),
+						'desc' => $this->l('Gives the customer the option of receiving a notification when an out-of-stock product is available again.'),
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -677,9 +677,9 @@ class MailAlerts extends Module
 					array(
 						'type' => 'switch',
 						'is_bool' => true, //retro compat 1.5
-						'label' => $this->l('New order:'),
+						'label' => $this->l('New order'),
 						'name' => 'MA_MERCHANT_ORDER',
-						'desc' => $this->l('Receive a notification when an order is placed'),
+						'desc' => $this->l('Receive a notification when an order is placed.'),
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -696,9 +696,9 @@ class MailAlerts extends Module
 					array(
 						'type' => 'switch',
 						'is_bool' => true, //retro compat 1.5
-						'label' => $this->l('Out of stock:'),
+						'label' => $this->l('Out of stock'),
 						'name' => 'MA_MERCHANT_OOS',
-						'desc' => $this->l('Receive a notification if the available quantity of a product is below the following threshold'),
+						'desc' => $this->l('Receive a notification if the available quantity of a product is below the following threshold.'),
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -714,17 +714,17 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Threshold:'),
+						'label' => $this->l('Threshold'),
 						'name' => 'MA_LAST_QTIES',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Quantity for which a product is considered out of stock'),
+						'desc' => $this->l('Quantity for which a product is considered out of stock.'),
 					),
 					array(
 						'type' => 'switch',
 						'is_bool' => true, //retro compat 1.5
-						'label' => $this->l('Coverage warning:'),
+						'label' => $this->l('Coverage warning'),
 						'name' => 'MA_MERCHANT_COVERAGE',
-						'desc' => $this->l('Receive a notification when an order is placed'),
+						'desc' => $this->l('Receive a notification when an order is placed.'),
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -740,18 +740,18 @@ class MailAlerts extends Module
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Coverage:'),
+						'label' => $this->l('Coverage'),
 						'name' => 'MA_PRODUCT_COVERAGE',
 						'class' => 'fixed-width-xs',
-						'desc' => $this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number'),
+						'desc' => $this->l('Stock coverage, in days. Also, the stock coverage of a given product will be calculated based on this number.'),
 					),
 					array(
 						'type' => 'textarea',
 						'cols' => 36,
 						'rows' => 4,
-						'label' => $this->l('E-mail addresses:'),
+						'label' => $this->l('E-mail addresses'),
 						'name' => 'MA_MERCHANT_MAILS',
-						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com)'),
+						'desc' => $this->l('One e-mail address per line (e.g. bob@example.com).'),
 					),
 				),
 				'submit' => array(
