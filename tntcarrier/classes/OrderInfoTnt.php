@@ -96,6 +96,7 @@ class OrderInfoTnt
 		$info[2] = array('delivery_date' => ($newDate != '' ? $newDate : $next_day));
 
 
+		$info[3]['option'] = '';
 		if ($option)
 		{
 			if (strpos($option['option'], 'S') !== false)

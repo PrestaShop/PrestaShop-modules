@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.2';
+		$this->version = '3.4.3';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -48,9 +48,6 @@ class AvalaraTax extends Module
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-		
-		if (!extension_loaded('soap') || !class_exists('SoapClient'))
-			$this->warning = $this->l('SOAP extension should be enabled on your server to use this module.');
 	}
 
 	/**
@@ -58,6 +55,12 @@ class AvalaraTax extends Module
 	 */
 	public function install()
 	{
+		if (!extension_loaded('soap') || !class_exists('SoapClient'))
+		{
+			$this->_errors[] = $this->l('SOAP extension should be enabled on your server to use this module.');
+			return false;
+		}
+		
 		Configuration::updateValue('AVALARATAX_URL', 'https://avatax.avalara.net');
 		Configuration::updateValue('AVALARATAX_ADDRESS_VALIDATION', 1);
 		Configuration::updateValue('AVALARATAX_TAX_CALCULATION', 1);
@@ -498,6 +501,9 @@ class AvalaraTax extends Module
 	/******************************************************************/
 	public function getContent()
 	{
+		if (!extension_loaded('soap') || !class_exists('SoapClient'))
+			return '<div class="error">'.$this->l('SOAP extension should be enabled on your server to use this module.').'</div>';
+
 		$buffer = '';
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))

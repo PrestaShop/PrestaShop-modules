@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-require_once(dirname(__FILE__).'/AddshoppersClient.php');
+require_once(_PS_MODULE_DIR_.'addshoppers/AddshoppersClient.php');
 
 class Addshoppers extends Module
 {
@@ -38,7 +38,7 @@ class Addshoppers extends Module
 	{
 		$this->name = 'addshoppers';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1.3';
+		$this->version = '1.1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 

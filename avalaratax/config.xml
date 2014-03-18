@@ -2,7 +2,7 @@
 <module>
 	<name>avalaratax</name>
 	<displayName><![CDATA[Avalara - AvaTax]]></displayName>
-	<version><![CDATA[3.4.2]]></version>
+	<version><![CDATA[3.4.3]]></version>
 	<description><![CDATA[Sales Tax is complicated. AvaTax makes it easy.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[billing_invoicing]]></tab>

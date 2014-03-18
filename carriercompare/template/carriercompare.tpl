@@ -39,7 +39,6 @@ var SE_RefreshStateTS = "{l s='Checking available states...' mod='carriercompare
 var SE_RetrievingInfoTS = "{l s='Retrieving information...' mod='carriercompare'}";
 var SE_RefreshMethod = {$refresh_method};
 var txtFree = "{l s='Free!' mod='carriercompare'}";
-PS_SE_HandleEvent();
 //]]>
 </script>
 <form class="std" id="compare_shipping_form" method="post" action="#" >
@@ -87,7 +86,7 @@ PS_SE_HandleEvent();
 		</div>
 		<p class="warning center" id="noCarrier" style="display: none;">{l s='No carrier has been made available for this selection.' mod='carriercompare'}</p>
 		<p class="SE_SubmitRefreshCard">
-			<input class="exclusive_large" id="carriercompare_submit" type="submit" name="carriercompare_submit" value="{l s='Update cart' mod='carriercompare'}"/>
+			<input class="exclusive_large" id="carriercompare_submit" type="button" name="carriercompare_submit" value="{l s='Update cart' mod='carriercompare'}"/>
 			<input id="update_carriers_list" type="button" class="exclusive_large" value="{l s='Estimate Shipping Cost' mod='carriercompare'}" />
 		</p>
 	</fieldset>

@@ -19,11 +19,24 @@ function gamificationTasks()
 		success: function(jsonData)
 		{
 			for (var i in jsonData.advices_to_display.advices)
-				if (jsonData.advices_to_display.advices[i].location == 'after')
-					$(jsonData.advices_to_display.advices[i].selector).after(jsonData.advices_to_display.advices[i].html);
-				else
-					$(jsonData.advices_to_display.advices[i].selector).before(jsonData.advices_to_display.advices[i].html);
-			
+			{
+				ok = false;
+				selector = jsonData.advices_to_display.advices[i].selector.split(',');
+				for (var j in selector)
+				{
+					if (!ok)
+					{
+						if (jsonData.advices_to_display.advices[i].location == 'after')
+							$(selector[j]).after(jsonData.advices_to_display.advices[i].html);
+						else
+							$(selector[j]).before(jsonData.advices_to_display.advices[i].html);
+						
+						if ($(selector[j]).length)
+							ok = true;
+					}
+				}
+			}
+
 			initHeaderNotification(jsonData.header_notification);
 			
 			$('.gamification_fancybox').fancybox();

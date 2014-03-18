@@ -32,12 +32,13 @@ class BluePay extends PaymentModule
 	{
 		$this->name = 'bluepay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.0';
+		$this->version = '1.1';
 		$this->author = 'BluePay Processing, LLC';
 		$this->need_instance = 0;
-		$this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.6');
+
 		parent::__construct();
 
+		$this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.6');
 		$this->displayName = $this->l('BluePay');
 		$this->description = $this->l('Accept Credit card & ACH payments today with BluePay');
 

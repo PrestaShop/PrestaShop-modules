@@ -2,7 +2,7 @@
 <module>
 	<name>klarnaprestashop</name>
 	<displayName><![CDATA[Klarna Payment]]></displayName>
-	<version><![CDATA[1.7.4]]></version>
+	<version><![CDATA[1.7.5]]></version>
 	<description><![CDATA[Klarna provides a revolutionary payment solution for online merchants.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

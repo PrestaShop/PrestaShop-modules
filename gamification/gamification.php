@@ -33,12 +33,12 @@ include_once dirname(__FILE__).'/classes/Condition.php';
 include_once dirname(__FILE__).'/classes/GamificationTools.php';
 
 class Gamification extends Module
-{
+{	
 	public function __construct()
 	{
 		$this->name = 'gamification';
 		$this->tab = 'administration';
-		$this->version = '1.8.0';
+		$this->version = '1.8.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -156,11 +156,14 @@ class Gamification extends Module
 			$this->context->controller->addCss($this->_path.'views/css/gamification.css');
 			
 			//add css for advices
-			$advices = Advice::getValidatedByIdTab($this->context->controller->id);
-			$css_str = '';
+			$advices = Advice::getValidatedByIdTab($this->context->controller->id, true);
+			$css_str = $js_str = '';
 			foreach ($advices as $advice)
-				$css_str .= '<link href="http://gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
-			
+			{
+				$css_str .= '<link href="'.Tools::getShopProtocol().'gamification.prestashop.com/css/advices/advice-'._PS_VERSION_.'_'.(int)$advice['id_ps_advice'].'.css" rel="stylesheet" type="text/css" media="all" />';
+				$js_str .= '"'.(int)$advice['id_ps_advice'].'",';
+			}
+
 			if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
 				$this->context->controller->addJs($this->_path.'views/js/gamification_bt.js');
 			else
@@ -169,6 +172,7 @@ class Gamification extends Module
 			$this->context->controller->addJqueryPlugin('fancybox');
 		
 			return $css_str.'<script>
+				var ids_ps_advice = new Array('.rtrim($js_str, ',').');
 				var admin_gamification_ajax_url = \''.$this->context->link->getAdminLink('AdminGamification').'\';
 				var current_id_tab = '.(int)$this->context->controller->id.';
 			</script>';
@@ -184,12 +188,14 @@ class Gamification extends Module
 		$current_level = (int)Configuration::get('GF_CURRENT_LEVEL');
 		$current_level_percent = (int)Configuration::get('GF_CURRENT_LEVEL_PERCENT');
 		
-		$badges_to_display = array();
+		$badges_to_display = array();//retro compat
+		$unlock_badges = array();
+		$next_badges = array();
 		$not_viewed_badge = explode('|', Configuration::get('GF_NOT_VIEWED_BADGE', ''));
 		foreach ($not_viewed_badge as $id)
 		{
-			$badges_to_display[] = new Badge((int)$id, (int)$this->context->language->id);
-			$badges_to_display[] = new Badge(end($badges_to_display)->getNextBadgeId(), (int)$this->context->language->id);
+			$unlock_badges[] = $badges_to_display[] = new Badge((int)$id, (int)$this->context->language->id);
+			$next_badges[] = $badges_to_display[] = new Badge(end($badges_to_display)->getNextBadgeId(), (int)$this->context->language->id);
 		}
 						
 		$this->context->smarty->assign(array(
@@ -197,6 +203,8 @@ class Gamification extends Module
 			'current_level_percent' => $current_level_percent,
 			'current_level' => $current_level,
 			'badges_to_display' => $badges_to_display,
+			'unlock_badges' => $unlock_badges,
+			'next_badges' => $next_badges,
 			'current_id_tab' => (int)$this->context->controller->id,
 			'notification' => (int)Configuration::get('GF_NOTIFICATION'),
 			'advice_hide_url' => 'http://gamification.prestashop.com/api/AdviceHide/',
@@ -291,29 +299,45 @@ class Gamification extends Module
 	
 	public function processImportConditions($conditions, $id_lang)
 	{
+		$current_conditions = array();
+		$result = Db::getInstance()->ExecuteS('SELECT `id_ps_condition` FROM '._DB_PREFIX_.'condition');
+		foreach ($result as $row)
+			$current_conditions[] = (int)$row['id_ps_condition'];
+		
 		foreach ($conditions as $condition)
 		{
+			if (isset($condition->id))
+				unset($condition->id);
 			try 
 			{
-				if (Condition::getIdByIdPs($condition->id_ps_condition))
-					continue;//only add new condition, if already exist we continue
-				
 				$cond = new Condition();
+				if (in_array($condition->id_ps_condition, $current_conditions))
+				{
+					$cond = new Condition(Condition::getIdByIdPs($condition->id_ps_condition));
+					unset($current_conditions[$condition->id_ps_condition]);
+				}
+
 				$cond->hydrate((array)$condition, (int)$id_lang);
-				$time = 86400;
-				if ($cond->calculation_type == 'time')
-					$time = 86400 * (int)$cond->calculation_detail;
 				
-				$cond->date_upd = date('Y-m-d H:i:s', time() - $time);
+				$cond->date_upd = date('Y-m-d H:i:s', strtotime('-'.(int)$cond->calculation_detail.'DAY'));
 				$cond->date_add = date('Y-m-d H:i:s');
 				$condition->calculation_detail = trim($condition->calculation_detail);
-				$cond->add(false);
+				$cond->save(false, false);
+				
 				if ($condition->calculation_type == 'hook' && !$this->isRegisteredInHook($condition->calculation_detail) && Validate::isHookName($condition->calculation_detail))
 					$this->registerHook($condition->calculation_detail);
 				unset($cond);
+				
 			} catch (Exception $e) {
 					continue;
 			}
+		}
+
+		// Delete conditions that are not in the file anymore
+		foreach ($current_conditions as $id_ps_condition)
+		{
+			$cond = new Condition(Condition::getIdByIdPs((int)$id_ps_condition));
+			$cond->delete();
 		}
 	}
 	
@@ -327,9 +351,9 @@ class Gamification extends Module
 				'group_name' => array($id_lang => $lang->group_name));
 
 		$current_badges = array();
-		$result = Db::getInstance()->ExecuteS('SELECT id_badge FROM '._DB_PREFIX_.'badge');
+		$result = Db::getInstance()->ExecuteS('SELECT id_ps_badge FROM '._DB_PREFIX_.'badge');
 		foreach ($result as $row)
-			$current_badges[] = (int)$row['id_badge'];
+			$current_badges[] = (int)$row['id_ps_badge'];
 
 		$cond_ids = $this->getFormatedConditionsIds();
 		foreach ($badges as $badge)
@@ -339,7 +363,7 @@ class Gamification extends Module
 				//if badge already exist we update language data
 				if (in_array($badge->id_ps_badge, $current_badges))
 				{
-					$bdg = new Badge($badge->id_ps_badge);
+					$bdg = new Badge(Badge::getIdByIdPs((int)$badge->id_ps_badge));
 					$bdg->name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['name'][$id_lang];
 					$bdg->description[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['description'][$id_lang];
 					$bdg->group_name[$id_lang] = $formated_badges_lang[$badge->id_ps_badge]['group_name'][$id_lang];
@@ -363,9 +387,9 @@ class Gamification extends Module
 		}
 		
 		// Delete badges that are not in the file anymore
-		foreach ($current_badges as $id_badge)
+		foreach ($current_badges as $id_ps_badge)
 		{
-			$bdg = new Badge($id_badge);
+			$bdg = new Badge(Badge::getIdByIdPs((int)$id_ps_badge));
 			$bdg->delete();
 		}
 	}

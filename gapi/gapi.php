@@ -33,7 +33,7 @@ class Gapi extends Module
 	{
 		$this->name = 'gapi';
 		$this->tab = 'administration';
-		$this->version = 0.9;
+		$this->version = 0.11;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -71,8 +71,8 @@ class Gapi extends Module
 				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('You are not allowed to open external URLs').'</li>').'
 				'.(($curl && $allow_url_fopen) ? '' : '<li>'.$this->l('cURL is not enabled').'</li>').'
 				'.($openssl ? '' : '<li>'.$this->l('OpenSSL is not enabled').'</li>').'
-				'.(($allow_url_fopen && $openssl && !$ping) ? '<li>'.$this->l('Google is unreachable').' ('.$this->l('check your firewall').')</li>' : '').'
-				'.($online ? '' : '<li>'.$this->l('Your store is not online').'</li>').'
+				'.(($allow_url_fopen && $openssl && !$ping) ? '<li>'.$this->l('Google is unreachable (check your firewall)').'</li>' : '').'
+				'.($online ? '' : '<li>'.$this->l('You are currently testing your shop on a local server. In order to enjoy the full features, you need to put your shop on an online server.').'</li>').'
 			</ul>');
 		}
 		
@@ -439,7 +439,11 @@ class Gapi extends Module
 					'PS_GAPI_PROFILE' => array(
 						'title' => $this->l('Profile'),
 						'type' => 'text',
-						'desc' => $this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report.')
+						'desc' => $this->l('You can find your profile ID in the address bar of your browser while accessing Analytics report.').'<br />'.
+							$this->l('For the OLD VERSION analytics page the ID=xxxxxxxx is the following:').'<br />'.
+							'https://www.google.com/analytics/reporting/?reset=1&id=XXXXXXXX&pdr=20110702-20110801'.'<br />'.
+							$this->l('For the NEW VERSION analytic page it is the number at the end of the URL starting with p:').'<br />'.
+							'https://www.google.com/analytics/web/#home/a11345062w43527078pXXXXXXXX/'
 					)
 				),
 				'submit' => array('title' => $this->l('Save and Authenticate')),

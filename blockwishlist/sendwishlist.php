@@ -64,7 +64,7 @@ if ($context->customer->isLogged())
 					'{lastname}' => $customer->lastname,
 					'{firstname}' => $customer->firstname,
 					'{wishlist}' => $wishlist['name'],
-					'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'module/blockwishlist/view?token='.$wishlist['token']
+					'{message}' => $context->link->getModuleLink('blockwishlist', 'view', array('token' => $wishlist['token']))
 				),
 				$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, dirname(__FILE__).'/mails/'
 			);

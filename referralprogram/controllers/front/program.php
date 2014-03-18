@@ -43,7 +43,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->context->controller->addJS(Tools::str_replace_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR, __PS_BASE_URI__, _PS_MODULE_DIR_).'referralprogram/js/referralprogram.js');
+		$this->context->controller->addJS(_MODULE_DIR_.$this->module->name.'/js/'.$this->module->name.'.js');
 		$this->addJqueryPlugin(array('thickbox', 'idTabs'));
 	}
 
@@ -116,7 +116,7 @@ class ReferralprogramProgramModuleFrontController extends ModuleFrontController
 									'{email_friend}' => $friendEmail,
 									'{lastname_friend}' => $friendLastName,
 									'{firstname_friend}' => $friendFirstName,
-									'{link}' => Context::getContext()->link->getPageLink('authentication', true, Context::getContext()->language->id, 'create_account=1&sponsor='.urlencode($cipherTool->encrypt($referralprogram->id.'|'.$referralprogram->email.'|')), false),
+									'{link}' => Context::getContext()->link->getPageLink('authentication', true, Context::getContext()->language->id, 'create_account=1&sponsor='.urlencode($cipherTool->encrypt($referralprogram->id.'|'.$referralprogram->email.'|')).'&back=my-account', false),
 									'{discount}' => $discount);
 								Mail::Send((int)$this->context->language->id, 'referralprogram-invitation', Mail::l('Referral Program', (int)$this->context->language->id), $vars, $friendEmail, $friendFirstName.' '.$friendLastName, strval(Configuration::get('PS_SHOP_EMAIL')), strval(Configuration::get('PS_SHOP_NAME')), NULL, NULL, dirname(__FILE__).'/../../mails/');
 								$invitation_sent = true;

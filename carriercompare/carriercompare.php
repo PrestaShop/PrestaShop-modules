@@ -36,7 +36,7 @@ class CarrierCompare extends Module
 	{
 		$this->name = 'carriercompare';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.2';
+		$this->version = '2.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -81,8 +81,12 @@ class CarrierCompare extends Module
 	{
 		if (!$this->isModuleAvailable() || !isset($this->context->controller->php_self) || $this->context->controller->php_self != 'order')
 			return;
-		$this->context->controller->addCSS(($this->_path).'style.css', 'all');
-		$this->context->controller->addJS(($this->_path).'carriercompare.js');
+
+		if (isset($this->context->controller->step) && $this->context->controller->step == 0)
+		{
+			$this->context->controller->addCSS(($this->_path).'style.css', 'all');
+			$this->context->controller->addJS(($this->_path).'carriercompare.js');
+		}
 	}
 
 	/*
@@ -175,59 +179,60 @@ class CarrierCompare extends Module
 		if (!$id_zone)
 			$id_zone = Country::getIdZone($id_country);
 
-		// Need to set the infos for carrier module !
-		$this->context->cookie->id_country = $id_country;
-		$this->context->cookie->id_state = $id_state;
-		$this->context->cookie->postcode = $zipcode;
-
-		$carriers = Carrier::getCarriersForOrder((int)$id_zone);
+		$carriers = CarrierCompare::getCarriersByCountry($id_country, $id_state, $zipcode, $this->context->cart, $this->context->customer->id);
 
 		return (sizeof($carriers) ? $carriers : array());
 	}
 
-	public function saveSelection($id_country, $id_state, $zipcode, $id_carrier)
+	/*
+	 * Get all carriers available for this zon
+	 */
+	public static function getCarriersByCountry($id_country, $id_state, $zipcode, $exiting_cart, $id_customer)
 	{
-		$errors = array();
+		// Create temporary Address
+		$addr_temp = new Address();
+		$addr_temp->id_customer = $id_customer;
+		$addr_temp->id_country = $id_country;
+		$addr_temp->id_state = $id_state;
+		$addr_temp->postcode = $zipcode;
 
-		if (!Validate::isInt($id_state))
-			$errors[] = $this->l('Invalid State ID');
-		if ($id_state != 0 && !Validate::isLoadedObject(new State($id_state)))
-			$errors[] = $this->l('Please select a state');
-		if (!Validate::isInt($id_country) || !Validate::isLoadedObject(new Country($id_country)))
-			$errors[] = $this->l('Please select a country');
-		if (!$this->checkZipcode($zipcode, $id_country))
-			$errors[] = $this->l('Depending on your country selection, please use a valid zip/postal code.');
-		if (!Validate::isInt($id_carrier) || !Validate::isLoadedObject(new Carrier($id_carrier)))
-			$errors[] = $this->l('Please select a carrier');
+		// Populate required attributes
+		// Note: Some carrier needs the whole address
+		// the '.' will do the job
+		$addr_temp->firstname = ".";
+		$addr_temp->lastname = ".";
+		$addr_temp->address1 = ".";
+		$addr_temp->city = ".";
+		$addr_temp->alias = "TEMPORARY_ADDRESS_TO_DELETE";
+		$addr_temp->save();
 
-		if (sizeof($errors))
-			return $errors;
+		$cart = new Cart();
+		$cart->id_currency = $exiting_cart->id_currency;
+		$cart->id_lang = $exiting_cart->id_lang;
+		$cart->id_address_delivery = $addr_temp->id;
+		$cart->add();
 
-		$ids_carrier = array();
-		foreach (self::getCarriersListByIdZone($id_country, $id_state, $zipcode) as $carrier)
-			$ids_carrier[] = $carrier['id_carrier'];
-		if (!in_array($id_carrier, $ids_carrier))
-			$errors[] = $this->l('The carrier ID isn\'t available for your selection');
+		$products = $exiting_cart->getProducts();
+		foreach ($products as $key => $product) {
+			$cart->updateQty($product['quantity'], $product['id_product']);	
+		}
 
-		if (sizeof($errors))
-			return $errors;
+		$carriers = $cart->simulateCarriersOutput(null, true);
 
-		$this->context->cookie->id_country = $id_country;
-		$this->context->cookie->id_state = $id_state;
-		$this->context->cookie->postcode = $zipcode;
-		$this->context->cart->id_carrier = $id_carrier;
-		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
+		//delete temporary Address
+		$addr_temp->delete();
 
-		$delivery_option = reset($delivery_option_list);
-		$id_carrier = (string)$id_carrier;
-		$id_carrier .= ',';
-		foreach ($delivery_option_list as $id_address => $options)
-			if (isset($options[$id_carrier]))
-				$this->context->cart->setDeliveryOption(array($id_address => $id_carrier));	
-				
-		if (!$this->context->cart->update())
-			return array($this->l('Cannot update the shopping cart.'));				
-		return array();
+		return $carriers;
+	}
+
+	public function simulateSelection($price, $params)
+	{
+		$cart_data = array();
+		$cart_data['price'] = (float)$price;
+		$cart_data['order_total'] = (float)$this->context->cart->getOrderTotal() - (float)$this->context->cart->getTotalShippingCost();
+		$cart_data['params'] = $params;
+
+		return $cart_data;
 	}
 
 	/*
@@ -307,8 +312,7 @@ class CarrierCompare extends Module
 					),
 				),
 			'submit' => array(
-				'title' => $this->l('Save'),
-				'class' => 'btn btn-default')
+				'title' => $this->l('Save'))
 			),
 		);
 		
@@ -337,5 +341,6 @@ class CarrierCompare extends Module
 			'SE_RERESH_METHOD' => Tools::getValue('SE_RERESH_METHOD', Configuration::get('SE_RERESH_METHOD')),
 		);
 	}
+
 }
 

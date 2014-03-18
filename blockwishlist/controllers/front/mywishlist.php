@@ -91,7 +91,8 @@ class BlockWishListMyWishListModuleFrontController extends ModuleFrontController
 							Mail::l('Your wishlist\'s link', $this->context->language->id),
 							array(
 							'{wishlist}' => $wishlist->name,
-							'{message}' => Tools::getProtocol().htmlentities($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'module/blockwishlist/view?token='.$wishlist->token),
+							'{message}' => $this->context->link->getModuleLink('blockwishlist', 'view', array('token' => $wishlist->token))
+							),
 							$this->context->customer->email,
 							$this->context->customer->firstname.' '.$this->context->customer->lastname,
 							null,

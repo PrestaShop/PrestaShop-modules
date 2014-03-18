@@ -1844,6 +1844,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 				$modules_to_delete['trustedshops'] = 'Trustedshops';
 				$modules_to_delete['dejala'] = 'Dejala';
 				$modules_to_delete['stripejs'] = 'Stripejs';
+				$modules_to_delete['blockvariouslinks'] = 'Block Various Links';
 
 				foreach($modules_to_delete as $key => $module)
 				{
@@ -1864,6 +1865,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 					}
 				}
 			}
+
 			if (version_compare($this->install_version, '1.5.5.0', '='))
 			{
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `name` = \'PS_LEGACY_IMAGES\' WHERE name LIKE \'0\' AND `value` = 1');
@@ -1871,6 +1873,16 @@ class AdminSelfUpgrade extends AdminSelfTab
 				if (Db::getInstance()->getValue('SELECT COUNT(id_product_download) FROM `'._DB_PREFIX_.'product_download` WHERE `active` = 1') > 0)
 					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = 1 WHERE `name` LIKE \'PS_VIRTUAL_PROD_FEATURE_ACTIVE\'');
 			}
+
+			if (version_compare($this->install_version, '1.6.0.2', '>'))
+			{
+				$path = $this->adminDir.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'default'.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'header.tpl';
+				if (file_exists($path))
+					unlink($path);
+			}
+			
+			if ($this->deactivateCustomModule)
+				Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'configuration` (name, value, date_add, date_upd) VALUES ("PS_DISABLE_OVERRIDES", 1, NOW(), NOW())');
 			
 			$this->stepDone = true;
 			$this->status = 'ok';
@@ -1983,21 +1995,18 @@ class AdminSelfUpgrade extends AdminSelfTab
 	{
 		global $warningExists;
 
-		$queries = array('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE (`value` IS NULL AND `date_upd` IS NULL) OR `value` LIKE ""');
+		/* Clean tabs order */
+		foreach ($this->db->ExecuteS('SELECT DISTINCT id_parent FROM '._DB_PREFIX_.'tab') as $parent)
+		{
+			$i = 1;
+			foreach ($this->db->ExecuteS('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE id_parent = '.(int)$parent['id_parent'].' ORDER BY IF(class_name IN ("AdminHome", "AdminDashboard"), 1, 2), position ASC') as $child)
+				$this->db->Execute('UPDATE '._DB_PREFIX_.'tab SET position = '.(int)($i++).' WHERE id_tab = '.(int)$child['id_tab'].' AND id_parent = '.(int)$parent['id_parent']);
+		}
 
-		$warningExist = false;
-		foreach ($queries as $query)
-			if (!$this->db->Execute($query, false))
-			{
-				$this->nextQuickInfo[] = '
-						<div class="upgradeDbError">
-						[ERROR] SQL Cleaning database'.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError().'</div>';
-				$this->nextErrors[] = '[ERROR] SQL Cleaning database '.$this->db->getNumberError().' in '.$query.': '.$this->db->getMsgError();
-				$warningExist = true;
-			}
+		/* Clean configuration integrity */
+		$this->db->Execute('DELETE FROM `'._DB_PREFIX_.'configuration_lang` WHERE (`value` IS NULL AND `date_upd` IS NULL) OR `value` LIKE ""', false);
 
-		if (!$warningExist)
-			$this->status = 'ok';
+		$this->status = 'ok';
 		$this->next = 'upgradeComplete';
 		$this->next_desc = $this->l('The database has been cleaned.');
 		$this->nextQuickInfo[] = $this->l('The database has been cleaned.');
@@ -2206,7 +2215,7 @@ class AdminSelfUpgrade extends AdminSelfTab
 		}
 
 		$sqlContentVersion = array();
-		if($this->deactivateCustomModule)
+		if ($this->deactivateCustomModule)
 		{
 			require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.'deactivate_custom_modules.php');
 			deactivate_custom_modules();
@@ -2946,8 +2955,20 @@ class AdminSelfUpgrade extends AdminSelfTab
 					$file = rtrim($this->prodRootDir, DIRECTORY_SEPARATOR).$filename;
 					if (file_exists($file))
 					{
-						if (is_file($file) && unlink($file))
-							$this->nextQuickInfo[] = sprintf('%s removed', $filename);
+						if (is_file($file))
+						{
+							@chmod($file, 0777); // NT ?
+							if (@unlink($file))
+								$this->nextQuickInfo[] = sprintf('%s removed', $filename);
+							else
+							{
+								$this->next = 'error';
+								$this->next_desc = sprintf($this->l('error when removing %1$s'), $filename);
+								$this->nextQuickInfo[] = sprintf($this->l('%s not removed'), $filename);
+								$this->nextErrors[] = sprintf($this->l('%s not removed'), $filename);
+								return false;
+							}	
+						}
 						elseif (is_dir($file))
 						{
 							if ($this->isDirEmpty($file))
@@ -2957,14 +2978,6 @@ class AdminSelfUpgrade extends AdminSelfTab
 							}
 							else
 								$this->nextQuickInfo[] = sprintf('[NOTICE] %s directory skipped (directory not empty)', $filename);
-						}
-						else
-						{
-							$this->next = 'error';
-							$this->next_desc = sprintf($this->l('error when removing %1$s'), $filename);
-							$this->nextQuickInfo[] = sprintf($this->l('%s not removed'), $filename);
-							$this->nextErrors[] = sprintf($this->l('%s not removed'), $filename);
-							return false;
 						}
 					}
 					else

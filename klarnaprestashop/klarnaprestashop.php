@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.4';
+		$this->version = '1.7.5';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');

@@ -17,15 +17,15 @@ class AdminGamificationController extends ModuleAdminController
 	public function setMedia()
 	{
 		$this->addJqueryUI('ui.progressbar');
-		$this->addJS('/modules/gamification/views/js/bubble-popup.js');
+		$this->addJS(_MODULE_DIR_.$this->module->name.'/views/js/bubble-popup.js');
 
-		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === TRUE)
-			$this->addJs('/modules/gamification/views/js/gamification_bt.js');
+		if (version_compare(_PS_VERSION_, '1.6.0', '>=') === true)
+			$this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/gamification_bt.js');
 		else
-			$this->addJs('/modules/gamification/views/js/gamification.js');
+			$this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/gamification.js');
 
-		$this->addJs('/modules/gamification/views/js/jquery.isotope.js');
-		$this->addCSS(array('/modules/gamification/views/css/bubble-popup.css', '/modules/gamification/views/css/isotope.css'));
+		$this->addJs(_MODULE_DIR_.$this->module->name.'/views/js/jquery.isotope.js');
+		$this->addCSS(array(_MODULE_DIR_.$this->module->name.'/views/css/bubble-popup.css', _MODULE_DIR_.$this->module->name.'/views/css/isotope.css'));
 		
 		return parent::setMedia();
 	}
@@ -115,29 +115,69 @@ class AdminGamificationController extends ModuleAdminController
 			Configuration::updateGlobalValue('GF_INSTALL_CALC', 1);
 		}
 			
-		die(Tools::jsonEncode(array(
+		$return = array(
 			'refresh_data' => $this->processRefreshData(),
 			'daily_calculation' => $this->processMakeDailyCalculation(),
-			'advice_validation' => $this->processAdviceValidation(),
-			'advices_to_display' => $this->processGetAdvicesToDisplay(),
-			'level_badge_validation' => $this->processLevelAndBadgeValidation(Badge::getIdsBadgesToValidate()),
-			'header_notification' => $this->module->renderHeaderNotification(),
-		)));
+			'advice_validation' => $this->processAdviceValidation()
+			);
+		
+		$return['advices_to_display'] = $this->processGetAdvicesToDisplay();
+		//get only one random advice by tab
+		if (count($return['advices_to_display']['advices']) > 1)
+		{
+			$rand = rand(0, count($return['advices_to_display']['advices'])-1);
+			$return['advices_to_display']['advices'] = array($return['advices_to_display']['advices'][$rand]);
+		}
+		
+		if (Tab::getIdFromClassName('AdminDashboard') == Tools::getValue('id_tab'))
+		{
+			$return['advices_premium_to_display'] = $this->processGetAdvicesToDisplay(true);
+			if (count($return['advices_premium_to_display']['advices']) >= 2)
+			{
+				$rand = rand(0, count($return['advices_premium_to_display']['advices'])-1);
+				do
+				{
+					$rand2 = rand(0, count($return['advices_premium_to_display']['advices'])-1);
+				}while ($rand == $rand2);
+	
+				$return['advices_premium_to_display']['advices'] = array($return['advices_premium_to_display']['advices'][$rand], $return['advices_premium_to_display']['advices'][$rand2]);
+			}
+			else if (count($return['advices_premium_to_display']['advices']) > 0)
+			{
+				$addons = Advice::getAddonsAdviceByIdTab((int)Tools::getValue('id_tab'));
+				$return['advices_premium_to_display']['advices'][] = $addons[0];
+			}
+		}
+		
+		
+		$return['level_badge_validation'] = $this->processLevelAndBadgeValidation(Badge::getIdsBadgesToValidate());
+		$return['header_notification'] = $this->module->renderHeaderNotification();
+		
+		die(Tools::jsonEncode($return));
 	}
 	
 	public function processRefreshData()
 	{
 		return $this->module->refreshDatas();
 	}
-	
-	public function processGetAdvicesToDisplay()
+		
+	public function processGetAdvicesToDisplay($only_premium = false)
 	{
 		$return = array('advices' => array());
 		$id_tab = (int)Tools::getValue('id_tab');
-		$advices = Advice::getValidatedByIdTab($id_tab);
-
+		
+		if ($only_premium)
+			$advices = Advice::getValidatedPremiumByIdTab($id_tab);
+		else
+			$advices = Advice::getValidatedByIdTab($id_tab);
+			
 		foreach ($advices as $advice)
-			$return['advices'][] = array('selector' => $advice['selector'], 'html' => GamificationTools::parseMetaData($advice['html']), 'location' => $advice['location']);
+			if (in_array($advice['id_ps_advice'], Tools::getValue('ids_ps_advice')))
+				$return['advices'][] = array(
+					'selector' => $advice['selector'], 
+					'html' => GamificationTools::parseMetaData($advice['html']), 
+					'location' => $advice['location']
+				);
 
 		return $return;
 	}

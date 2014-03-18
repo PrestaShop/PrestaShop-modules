@@ -363,9 +363,9 @@ class PaypalExpressCheckout extends Paypal
 		}
 		else
 		{
-			$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
+			$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = sprintf('%.2f', $shipping_cost_wt);
 			$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);
-			$fields['PAYMENTREQUEST_0_AMT'] = $total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT'];
+			$fields['PAYMENTREQUEST_0_AMT'] = sprintf('%.2f', ($total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT']));
 		}
 	}
 

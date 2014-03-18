@@ -77,7 +77,7 @@ class Advice extends ObjectModel
 		return (int)Db::getInstance()->getValue($query);
 	}
 
-	public static function getValidatedByIdTab($id_tab)
+	public static function getValidatedByIdTab($id_tab, $premium = false, $addons = false)
 	{
 		$query = new DbQuery();
 		$query->select('a.`id_ps_advice`, a.`selector`, a.`location`, al.`html`');
@@ -94,7 +94,6 @@ class Advice extends ObjectModel
 			((a.`start_day` = 0 AND a.`stop_day` = 0) OR ('.date('d').' >= a.`start_day` AND '.date('d').' <= a.`stop_day`))');
 		
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-		
 		$advices = array();
 		if (is_array($result))
 			foreach ($result as $res)
@@ -104,6 +103,35 @@ class Advice extends ObjectModel
 					'html' => $res['html'],
 					'id_ps_advice' => $res['id_ps_advice'],
 					);
+		if (!$premium)
+			foreach ($advices as $k => $a)
+				if ($a['selector'] == '#dashtrends')
+					unset($advices[$k]);
+		if (!$addons)
+			foreach ($advices as $k => $a)
+				if ($a['selector'] == 'addons')
+					unset($advices[$k]);
+		
+		return $advices;
+	}
+	
+	public static function getValidatedPremiumByIdTab($id_tab)
+	{
+		$advices = self::getValidatedByIdTab($id_tab, true);
+
+		foreach ($advices as $k => $a)
+			if ($a['selector'] != '#dashtrends')
+				unset($advices[$k]);
+		
+		return $advices;
+	}
+	
+	public static function getAddonsAdviceByIdTab($id_tab)
+	{
+		$advices = self::getValidatedByIdTab($id_tab, false, true);
+		foreach ($advices as $k => $a)
+			if ($a['selector'] != 'addons')
+				unset($advices[$k]);
 		
 		return $advices;
 	}

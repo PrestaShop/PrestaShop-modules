@@ -34,7 +34,7 @@ class PSCleaner extends Module
 	{
 		$this->name = 'pscleaner';
 		$this->tab = 'administration';
-		$this->version = '1.2';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		if (version_compare(_PS_VERSION_, '1.5.0.0 ', '>='))
@@ -55,6 +55,7 @@ class PSCleaner extends Module
 		else
 		{
 			$shops = Shop::getShops(false, null, true);
+			$id_lang = (int) $this->context->language->id;
 			$resultsArray = array();
 			foreach ($shops as $id_shop)
 				$resultsArray[$id_shop] = Configuration::get($key, $id_lang, null, $id_shop);
@@ -103,12 +104,14 @@ class PSCleaner extends Module
 			self::truncate('sales');
 			$html .= $this->displayConfirmation($this->l('Orders and customers truncated'));
 		}
+		
+		// d($_POST);
 
 		$html .= '
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#submitTruncateCatalog").click(function(){
-					if ($(\'#submitTruncateCatalog_on\').attr(\'checked\') != "checked")
+					if ($(\'#checkTruncateCatalog_on\').attr(\'checked\') != "checked")
 					{
 						alert(\''.addslashes(html_entity_decode($this->l('Please read the disclaimer and click "Yes" above'))).'\');
 						return false;
@@ -528,12 +531,21 @@ class PSCleaner extends Module
 					'order_slip',
 					'order_slip_detail',
 					'page',
-					'pagenotfound',
 					'page_type',
 					'page_viewed',
+					'product_sale',
 					'referrer_cache',
-					'sekeyword',
 				);
+
+				$modules_tables = array(
+					'sekeywords' => array('sekeyword'),
+					'pagesnotfound' => array('pagenotfound')
+				);
+
+				foreach ($modules_tables as $name => $module_tables)
+					if (Module::isInstalled($name))
+						$tables = array_merge($tables, $module_tables);
+
 				foreach ($tables as $table)
 					$db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
 				$db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
@@ -555,6 +567,21 @@ class PSCleaner extends Module
 		if (Db::getInstance()->Execute($query))
 			if ($affected_rows = Db::getInstance()->Affected_Rows())
 				$logs[$query] = $affected_rows;
+
+		$parents = Db::getInstance()->ExecuteS('SELECT DISTINCT id_parent FROM '._DB_PREFIX_.'tab');
+		foreach ($parents as $parent)
+		{
+			$children = Db::getInstance()->ExecuteS('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE id_parent = '.(int)$parent['id_parent'].' ORDER BY IF(class_name IN ("AdminHome", "AdminDashboard"), 1, 2), position ASC');
+			$i = 1;
+			foreach ($children as $child)
+			{
+				$query = 'UPDATE '._DB_PREFIX_.'tab SET position = '.(int)($i++).' WHERE id_tab = '.(int)$child['id_tab'].' AND id_parent = '.(int)$parent['id_parent'];
+				if (Db::getInstance()->Execute($query))
+					if ($affected_rows = Db::getInstance()->Affected_Rows())
+						$logs[$query] = $affected_rows;
+			}
+		}
+
 		return $logs;
 	}
 	
@@ -597,25 +624,26 @@ class PSCleaner extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true,
 						'label' => $this->l('I understand that all the catalog data will be removed without possible rollback: products, features, categories, tags, images, prices, attachments, scenes, stocks, attribute groups and values, manufacturers, suppliers...'),
-						'name' => 'submitTruncateCatalog',
+						'name' => 'checkTruncateCatalog',
 						'values' => array(
 							array(
-								'id' => 'submitTruncateCatalog_on',
+								'id' => 'checkTruncateCatalog_on',
 								'value' => 1,
-								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
+								'label' => $this->l('Enabled')
 							),
 							array(
-								'id' => 'submitTruncateCatalog_off',
+								'id' => 'checkTruncateCatalog_off',
 								'value' => 0,
-								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+								'label' => $this->l('Disabled')
 							)
 						)
 					)
 				),
 				'submit' => array(
 					'title' => $this->l('Delete catalog'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitTruncateCatalog',
 					'id' => 'submitTruncateCatalog',
 				)
@@ -631,25 +659,26 @@ class PSCleaner extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true,
 						'label' => $this->l('I understand that all the orders and customers will be removed without possible rollback: customers, carts, orders, connections, guests, messages, stats...'),
 						'name' => 'checkTruncateSales',
 						'values' => array(
 							array(
-								'id' => 'submitTruncateSales_on',
+								'id' => 'checkTruncateSales_on',
 								'value' => 1,
-								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
+								'label' => $this->l('Enabled')
 							),
 							array(
-								'id' => 'submitTruncateSales_off',
+								'id' => 'checkTruncateSales_off',
 								'value' => 0,
-								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+								'label' => $this->l('Disabled')
 							)
 						)
 					)
 				),
 				'submit' => array(
 					'title' => $this->l('Delete orders & customers'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitTruncateSales',
 					'id' => 'submitTruncateSales',
 				)
@@ -664,7 +693,7 @@ class PSCleaner extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Check & fix'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitCheckAndFix',
 				)
 			)
@@ -677,13 +706,14 @@ class PSCleaner extends Module
 				),
 				'submit' => array(
 					'title' => $this->l('Clean & Optimize'),
-					'class' => 'btn btn-default',
+					'class' => 'btn btn-default pull-right',
 					'name' => 'submitCleanAndOptimize',
 				)
 			)
 		);
 		
 		$helper = new HelperForm();
+		$helper->module = $this;
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -706,6 +736,6 @@ class PSCleaner extends Module
 	
 	public function getConfigFieldsValues()
 	{
-		return array('checkTruncateSales' => '0', 'submitTruncateCatalog' => 0);
+		return array('checkTruncateSales' => 0, 'checkTruncateCatalog' => 0);
 	}
 }

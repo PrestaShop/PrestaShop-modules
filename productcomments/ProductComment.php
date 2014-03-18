@@ -88,7 +88,7 @@ class ProductComment extends ObjectModel
 	public static function getByProduct($id_product, $p = 1, $n = null, $id_customer = null)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 		$p = (int)$p;
 		$n = (int)$n;
@@ -153,7 +153,7 @@ class ProductComment extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($id_product) ||
 			!Validate::isUnsignedId($id_lang))
-			die(Tools::displayError());
+			return false;
 		$validate = Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
 
@@ -212,7 +212,7 @@ class ProductComment extends ObjectModel
 	public static function getCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
 		$cache_id = 'ProductComment::getCommentNumber_'.(int)$id_product.'-'.$validate;
 		if (!Cache::isStored($cache_id))
@@ -234,7 +234,7 @@ class ProductComment extends ObjectModel
 	public static function getGradedCommentNumber($id_product)
 	{
 		if (!Validate::isUnsignedId($id_product))
-			die(Tools::displayError());
+			return false;
 		$validate = (int)Configuration::get('PRODUCT_COMMENTS_MODERATE');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -252,13 +252,16 @@ class ProductComment extends ObjectModel
 	 */
 	public static function getByValidate($validate = '0', $deleted = false)
 	{
-		return (Db::getInstance()->executeS('
-		SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
-		FROM `'._DB_PREFIX_.'product_comment` pc
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
-		WHERE pc.`validate` = '.(int)$validate.'
-		ORDER BY pc.`date_add` DESC'));
+		$sql  = '
+			SELECT pc.`id_product_comment`, pc.`id_product`, IF(c.id_customer, CONCAT(c.`firstname`, \' \',  c.`lastname`), pc.customer_name) customer_name, pc.`content`, pc.`grade`, pc.`date_add`, pl.`name`
+			FROM `'._DB_PREFIX_.'product_comment` pc
+			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = pc.`id_customer`)
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = pc.`id_product` AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
+			WHERE pc.`validate` = '.(int)$validate;
+
+		$sql .= ' ORDER BY pc.`date_add` DESC';
+
+		return (Db::getInstance()->executeS($sql));
 	}
 
 	/**
@@ -284,11 +287,24 @@ class ProductComment extends ObjectModel
 	public function validate($validate = '1')
 	{
 		if (!Validate::isUnsignedId($this->id))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'product_comment` SET
 		`validate` = '.(int)$validate.'
 		WHERE `id_product_comment` = '.(int)$this->id));
+	}
+
+	/**
+	 * Delete a comment, grade and report data
+	 *
+	 * @return boolean succeed
+	 */
+	public function delete()
+	{
+		parent::delete();
+		ProductComment::deleteGrades($this->id);
+		ProductComment::deleteReports($this->id);
+		ProductComment::deleteUsefulness($this->id);
 	}
 
 	/**
@@ -299,7 +315,7 @@ class ProductComment extends ObjectModel
 	public static function deleteGrades($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_grade`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
@@ -313,7 +329,7 @@ class ProductComment extends ObjectModel
 	public static function deleteReports($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_report`
 		WHERE `id_product_comment` = '.(int)$id_product_comment));
@@ -327,7 +343,7 @@ class ProductComment extends ObjectModel
 	public static function deleteUsefulness($id_product_comment)
 	{
 		if (!Validate::isUnsignedId($id_product_comment))
-			die(Tools::displayError());
+			return false;
 
 		return (Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'product_comment_usefulness`

@@ -33,7 +33,7 @@ class Followup extends Module
 	{
 		$this->name = 'followup';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -58,6 +58,10 @@ class Followup extends Module
 		$this->bootstrap = true;
 		parent::__construct();
 
+		$secure_key = Configuration::get('PS_FOLLOWUP_SECURE_KEY');
+		if($secure_key === false)
+			Configuration::updateValue('PS_FOLLOWUP_SECURE_KEY', Tools::strtoupper(Tools::passwdGen(16)));
+
 		$this->displayName = $this->l('Customer follow-up');
 		$this->description = $this->l('Follow-up with your customers with daily customized e-mails.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all settings and your logs?');
@@ -80,7 +84,6 @@ class Followup extends Module
 		foreach ($this->conf_keys as $key)
 			Configuration::updateValue($key, 0);
 
-		Configuration::updateValue('PS_FOLLOWUP_SECURE_KEY', Tools::strtoupper(Tools::passwdGen(16)));
 
 		return parent::install();
 	}
@@ -91,7 +94,7 @@ class Followup extends Module
 			Configuration::deleteByName($key);
 
 		Configuration::deleteByName('PS_FOLLOWUP_SECURE_KEY');
-
+		
 		Db::getInstance()->execute('DROP TABLE '._DB_PREFIX_.'log_email');
 
 		return parent::uninstall();
@@ -105,7 +108,8 @@ class Followup extends Module
 		{
 			$ok = true;
 			foreach ($this->conf_keys as $c)
-				$ok &= Configuration::updateValue($c, (float)Tools::getValue($c));
+				if(Tools::getValue($c) !== false) // Prevent saving when URL is wrong
+					$ok &= Configuration::updateValue($c, (float)Tools::getValue($c));
 			if ($ok)
 				$html .= $this->displayConfirmation($this->l('Settings updated succesfully'));
 			else
@@ -137,12 +141,14 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(1);
 		$sql = '
-		SELECT c.id_cart, c.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT c.id_cart, c.id_lang, cu.id_customer, c.id_shop, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'cart c
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = c.id_cart)
 		RIGHT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = c.id_customer)
 		RIGHT JOIN '._DB_PREFIX_.'cart_product cp ON (cp.id_cart = c.id_cart)
 		WHERE DATE_SUB(CURDATE(),INTERVAL 7 DAY) <= c.date_add AND o.id_order IS NULL';
+
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 
 		if (!empty($email_logs))
 			$sql .= ' AND c.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -217,13 +223,15 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(2);
 		$sql = '
-		SELECT o.id_order, c.id_cart, o.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT o.id_order, c.id_cart, o.id_lang, o.id_shop, cu.id_customer, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = o.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 			WHERE o.valid = 1 
 			AND c.date_add >= DATE_SUB(CURDATE(),INTERVAL 7 DAY) 
-			AND cu.is_guest = 0 ';
+			AND cu.is_guest = 0';
+
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'o');
 
 		if (!empty($email_logs))
 			$sql .= ' AND o.id_cart NOT IN ('.join(',', $email_logs).')';
@@ -259,13 +267,15 @@ class Followup extends Module
 		$email_logs = $this->getLogsEmail(3);
 
 		$sql = '
-		SELECT SUM(o.total_paid) total, c.id_cart, o.id_lang, cu.id_customer, cu.firstname, cu.lastname, cu.email
+		SELECT SUM(o.total_paid) total, c.id_cart, o.id_lang, cu.id_customer, cu.id_shop, cu.firstname, cu.lastname, cu.email
 		FROM '._DB_PREFIX_.'orders o
 		LEFT JOIN '._DB_PREFIX_.'customer cu ON (cu.id_customer = o.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 			WHERE o.valid = 1 
 			AND DATE_SUB(CURDATE(),INTERVAL 90 DAY) <= o.date_add 
 			AND cu.is_guest = 0 ';
+
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'o');
 
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
@@ -313,17 +323,19 @@ class Followup extends Module
 	{
 		$email_logs = $this->getLogsEmail(4);
 		$sql = '
-			SELECT o.id_lang, c.id_cart, cu.id_customer, cu.firstname, cu.lastname, cu.email, (SELECT COUNT(o.id_order) FROM '._DB_PREFIX_.'orders o WHERE o.id_customer = cu.id_customer and o.valid = 1) nb_orders
+			SELECT o.id_lang, c.id_cart, cu.id_customer, cu.id_shop, cu.firstname, cu.lastname, cu.email, (SELECT COUNT(o.id_order) FROM '._DB_PREFIX_.'orders o WHERE o.id_customer = cu.id_customer and o.valid = 1) nb_orders
 			FROM '._DB_PREFIX_.'customer cu
 			LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_customer = cu.id_customer)
 			LEFT JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = o.id_cart)
 				WHERE cu.id_customer NOT IN (SELECT o.id_customer FROM '._DB_PREFIX_.'orders o WHERE DATE_SUB(CURDATE(),INTERVAL '.(int)Configuration::get('PS_FOLLOW_UP_DAYS_THRESHOLD_4').' DAY) <= o.date_add)
 				AND cu.is_guest = 0 ';
 
+		$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu');
+
 		if (!empty($email_logs))
 			$sql .= ' AND cu.id_customer NOT IN ('.join(',', $email_logs).') ';
 
-		$sql .= 'GROUP BY cu.id_customer HAVING nb_orders >= 1';
+		$sql .= ' GROUP BY cu.id_customer HAVING nb_orders >= 1';
 
 		$emails = Db::getInstance()->executeS($sql);
 
@@ -441,6 +453,7 @@ class Followup extends Module
 				$stats_array[$date_stat][$i]['nb_used'] = isset($stats_array[$date_stat][$i]['nb_used']) ? (int)$stats_array[$date_stat][$i]['nb_used'] : 0;
 				$stats_array[$date_stat][$i]['rate'] = isset($rates[$i]) ? '<b>'.$rates[$i].'</b>' : '0.00';
 			}
+			ksort($stats_array[$date_stat]);
 		}
 
 		$this->context->smarty->assign(array('stats_array' => $stats_array));
@@ -457,15 +470,18 @@ class Followup extends Module
 		$n3 = $this->bestCustomer(true);
 		$n4 = $this->badCustomer(true);
 
+		$cron_info = '';
+		if (Shop::getContext() === Shop::CONTEXT_SHOP)
+			$cron_info = $this->l('Define the settings and place the following URL in the crontab, or call it manually on a daily basis:').'<br />
+								<b>'.$this->context->shop->getBaseURL().'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>';
+
 		$fields_form_1 = array(
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Informations'),
 					'icon' => 'icon-cogs',
 				),
-				'description' => $this->l('Four kinds of e-mail alerts available in order to stay in touch with your customers!').'<br />'.
-					$this->l('Define settings and place this URL in crontab or call it manually daily:').'<br />
-								<b>'.Tools::getShopDomain(true, true).__PS_BASE_URI__.'modules/followup/cron.php?secure_key='.Configuration::get('PS_FOLLOWUP_SECURE_KEY').'</b></p>'
+				'description' => $this->l('Four kinds of e-mail alerts are available in order to stay in touch with your customers!').'<br />'.$cron_info,
 			)
 		);
 
@@ -479,6 +495,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_1',
 						'values' => array(
@@ -529,6 +546,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_2',
 						'values' => array(
@@ -579,6 +597,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_3',
 						'values' => array(
@@ -635,6 +654,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Enable'),
 						'name' => 'PS_FOLLOW_UP_ENABLE_4',
 						'values' => array(
@@ -690,6 +710,7 @@ class Followup extends Module
 				'input' => array(
 					array(
 						'type' => 'switch',
+						'is_bool' => true, //retro-compat
 						'label' => $this->l('Delete outdated discounts during each launch to clean database'),
 						'name' => 'PS_FOLLOW_UP_CLEAN_DB',
 						'values' => array(

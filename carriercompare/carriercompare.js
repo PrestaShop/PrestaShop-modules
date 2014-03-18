@@ -23,8 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function PS_SE_HandleEvent()
-{
+$(document).ready(function(){	
 	$(document).ready(function() {		
 		$('#id_country').change(function() {
 			resetAjaxQueries();
@@ -53,18 +52,41 @@ function PS_SE_HandleEvent()
 
 		$('#carriercompare_submit').click(function() {
 			resetAjaxQueries();
-			saveSelection();
+			simulateSelection();
 			return false;
 		});
 
+		$("input[name='carrier_price_value']").live('change', function() {
+			disableUpdateCart();
+		});
+
 		updateStateByIdCountry();
+		disableUpdateCart();
 	});
-}
+});
+
+var ajaxQueries = new Array();
 
 function displayWaitingAjax(type, message)
 {
 	$('#SE_AjaxDisplay').find('p').html(message);
 	$('#SE_AjaxDisplay').css('display', type);
+	
+	if(type == "block")
+		$('#update_carriers_list').attr("disabled", "disabled");
+	else if(type == "none")
+		$('#update_carriers_list').removeAttr("disabled");
+	
+	disableUpdateCart();
+}
+
+function disableUpdateCart()
+{
+	var checked = $('input[name="carrier_price_value"]:checked').val()
+	if(typeof checked == "undefined")
+		$('#carriercompare_submit').attr("disabled", "disabled");
+	else
+		$('#carriercompare_submit').removeAttr("disabled");
 }
 
 function updateStateByIdCountry()
@@ -73,7 +95,7 @@ function updateStateByIdCountry()
 	$('#availableCarriers').slideUp('fast');
 	$('#states').slideUp('fast');
 	displayWaitingAjax('block', SE_RefreshStateTS);
-	
+
 	var query = $.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -104,7 +126,7 @@ function updateCarriersList()
 		$(this).find(('tbody')).children().remove();				
 		$('#noCarrier').slideUp('fast');
 		displayWaitingAjax('block', SE_RetrievingInfoTS);
-		
+
 		var query = $.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -114,32 +136,37 @@ function updateCarriersList()
 			success: function(json) {
 				if (json.length)
 				{
-					for (carrier in json)
+					var html  = '';
+					$.each(json, function(index, carrier)
 					{
-						var html = '<tr class="'+(carrier % 2 ? 'alternate_' : '')+'item">'+
-								'<td class="carrier_action radio">'+
-								'<input type="radio" name="id_carrier" value="'+json[carrier].id_carrier+'" id="id_carrier'+json[carrier].id_carrier+'" '+(id_carrier == json[carrier].id_carrier ? 'checked="checked"' : '')+'/>'+
-								'</td>'+
-								'<td class="carrier_name">'+
-								'<label for="id_carrier'+json[carrier].id_carrier+'">'+
-								(json[carrier].img ? '<img src="'+json[carrier].img+'" alt="'+json[carrier].name+'" />' : json[carrier].name)+
-								'</label>'+
-							'</td>'+
-							'<td class="carrier_infos">'+((json[carrier].delay != null) ? json[carrier].delay : '') +'</td>'+
-							'<td class="carrier_price">';
-						
-						if (json[carrier].price)
-						{
-							html += '<span class="price">'+(displayPrice == 1 ? formatCurrency(json[carrier].price_tax_exc, currencyFormat, currencySign, currencyBlank) : formatCurrency(json[carrier].price, currencyFormat, currencySign, currencyBlank))+'</span>';
-						}
-						else
-						{
-							html += txtFree;
-						}
-						html += '</td>'+
+						html += '<tr class="'+(index % 2 ? 'alternate_' : '')+'item">'+
+									'<td class="" width="64px">'+
+										'&nbsp; <input type="radio" name="carrier_price_value" value="'+ ((displayPrice == 1) ? carrier.price_tax_exc : carrier.price) +'" id="id_carrier'+carrier.id_carrier+'" '+(id_carrier == carrier.id_carrier ? 'checked="checked"' : '')+'/>'+
+									'</td>'+
+									'<td class="carrier_name">'+
+										'<label for="id_carrier'+carrier.id_carrier+'">'+
+										(carrier.img ? '<img src="'+carrier.img+'" alt="'+carrier.name+'" />' : carrier.name)+
+										'</label>'+
+									'</td>'+
+									'<td class="carrier_infos">'+
+										((carrier.delay != null) ? carrier.delay : '') +
+									'</td>'+
+									'<td class="carrier_price">';
+
+										if (carrier.price)
+										{
+											html += '<span class="price">'+(displayPrice == 1 ? formatCurrency(carrier.price_tax_exc, currencyFormat, currencySign, currencyBlank) : formatCurrency(carrier.price, currencyFormat, currencySign, currencyBlank))+'</span>';
+										}
+										else
+										{
+											html += txtFree;
+										}
+
+						html += 	'</td>'+
 								'</tr>';
-						$('#carriers_list').append(html);
-					}
+					});
+					$('#carriers_list').append(html);
+
 					displayWaitingAjax('none', '');
 					$('#availableCarriers').slideDown();
 				}
@@ -152,40 +179,40 @@ function updateCarriersList()
 		});
 		ajaxQueries.push(query);
 	});
+
 }
                                
-function saveSelection()
+function simulateSelection()
 {
 	$('#carriercompare_errors').slideUp();
 	$('#carriercompare_errors_list').children().remove();
-	displayWaitingAjax('block', SE_RedirectTS);
 
 	var query = $.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
 		url: baseDir + 'modules/carriercompare/ajax.php' + '?rand=' + new Date().getTime(),
-		data: 'method=saveSelection&' + $('#compare_shipping_form').serialize(),
+		data: 'method=simulateSelection&' + $('#compare_shipping_form').serialize(),
 		dataType: 'json',
 		success: function(json) {
-			if (json.length)
+			if (json.price != 0)
 			{
-				for (error in json)
-					$('#carriercompare_errors_list').append('<li>'+json[error]+'</li>');
-				$('#carriercompare_errors').slideDown();
-				displayWaitingAjax('none', '');
+				var price = formatCurrency(json.price, currencyFormat, currencySign, currencyBlank);
+				$('#total_shipping').html(price);
+				var total = formatCurrency(json.order_total + json.price, currencyFormat, currencySign, currencyBlank);
+				$('#total_price').html(total);
 			}
 			else
 			{
-				$('.SE_SubmitRefreshCard').fadeOut('fast');
-				location.reload(true);
+				$('#total_shipping').html(txtFree);
+				var total = formatCurrency(json.order_total, currencyFormat, currencySign, currencyBlank);
+				$('#total_price').html(total);
 			}
+			$('tr.cart_total_delivery').show();
 		}
 	});
 	ajaxQueries.push(query);
-	return false;
 }
 
-var ajaxQueries = new Array();
 function resetAjaxQueries()
 {
 	for (i = 0; i < ajaxQueries.length; ++i)

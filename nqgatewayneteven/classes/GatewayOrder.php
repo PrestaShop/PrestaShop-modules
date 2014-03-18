@@ -84,6 +84,7 @@ class GatewayOrder extends Gateway
 		$order_prev = $this->getOrderNetEvenInPresta();
 
 		$t_order_real = array();
+		
 		foreach ($neteven_orders as $key => &$neteven_order)
 		{
 			$neteven_order = (object)$neteven_order;
@@ -287,7 +288,9 @@ class GatewayOrder extends Gateway
 			$this->current_time_0 = time();
 			Toolbox::displayDebugMessage(self::getL('Start').' : '.((int)$this->current_time_0 - (int)$this->start_time).'s');
 		}
-		
+
+        $order_already_exist = Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'orders_gateway` WHERE `id_order_neteven` = '.(int)$neteven_order->OrderID.' AND `id_order_detail_neteven` = 0');
+
 		/* Treatment of order */
 		$id_order_temp = $this->createOrder($neteven_order, $neteven_orders);
 
@@ -295,10 +298,13 @@ class GatewayOrder extends Gateway
 			$this->current_time_2 = time();
 
 		/* Treatment of order details */
-		if ($id_order_temp != 0){
+		if ($id_order_temp != 0)
+		{
 			$this->createOrderDetails($neteven_order, $id_order_temp);
-			$this->addStatusOnOrder($id_order_temp, $neteven_order);
-		}
+
+            if(!$order_already_exist)
+                $this->addStatusOnOrder($id_order_temp, $neteven_order);
+        }
 
 		if ($this->time_analyse)
 		{ 
@@ -525,7 +531,8 @@ class GatewayOrder extends Gateway
 		return $id_order_temp;
 	}
 
-	private function addStatusOnOrder($id_order, $neteven_order){
+	private function addStatusOnOrder($id_order, $neteven_order)
+	{
 		/* Update order state in order */
 		$order_state = array_merge($this->getValue('order_state_before'), array($this->getValue('id_order_state_neteven')), $this->getValue('order_state_after'));
 
@@ -679,16 +686,16 @@ class GatewayOrder extends Gateway
 					Toolbox::addLogLine(self::getL('Creation of order detail for NetEven order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.(int)$neteven_order->OrderLineID);
 
 					/* Update quantity of product */
-					if (class_exists('StockAvailable')){
+					if (class_exists('StockAvailable'))
+					{
 						/* Update quantity of product */
 						if ($control_attribute_product)
 							StockAvailable::setQuantity($res_product['id_product'], $id_product_attribute, StockAvailable::getQuantityAvailableByProduct($res_product['id_product'], $id_product_attribute) - $neteven_order->Quantity);
 						else
 							StockAvailable::setQuantity($res_product['id_product'], 0, StockAvailable::getQuantityAvailableByProduct($res_product['id_product']) - $neteven_order->Quantity);
-
-					}else{
-
-
+					}
+					else
+					{
 						$t_info_product = array();
 
 						$t_info_product['id_product'] = $res_product["id_product"];
@@ -712,7 +719,6 @@ class GatewayOrder extends Gateway
 						Toolbox::addLogLine(self::getL('Failed for save export NetEven order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.(int)$neteven_order->OrderLineID);
 					else
 						Toolbox::addLogLine(self::getL('Save export NetEven order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.(int)$neteven_order->OrderLineID);
-					
 				}
 			}
 		}
@@ -826,8 +832,7 @@ class GatewayOrder extends Gateway
 			$new_address->date_upd = $date_now;
 
 			if (!empty($neteven_address->Company))
-				$new_address->company		= $neteven_address->Company;
-
+				$new_address->company = $neteven_address->Company;
 
 			if (!$new_address->add())
 				Toolbox::addLogLine(self::getL('Failed for creation of address of NetEven order Id').' '.$order_id);
@@ -847,6 +852,7 @@ class GatewayOrder extends Gateway
 	{
 		$orders = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'orders_gateway` WHERE `id_order_detail_neteven` <> 0 AND `id_order` <> 0');
 		$orders_temp = array();
+
 		foreach ($orders as $order)
 			$orders_temp[$order['id_order_detail_neteven']] = $order;
 		
@@ -902,6 +908,7 @@ class GatewayOrder extends Gateway
 					$order1['TrackingNumber'] = $track;
 				
 				$params_web = array('orders' => array ($order1));
+
 				try
 				{
 					$response = $this->client->PostOrders($params_web);
