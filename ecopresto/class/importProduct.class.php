@@ -296,19 +296,22 @@ class importerProduct
 
 		if (version_compare(_PS_VERSION_, '1.5', '>='))
 			$product->id_shop_list[] = $pdt->shop;
-
-		$product->id_category[] = $pdt->categories;
-		$product->id_category[] = $pdt->sscategories;
-
-		if ($pdt->id_product)
+		
+		if (isset($pdt->categories))
 		{
-			$category_data = Product::getProductCategories((int)$product->id);
-			foreach ($category_data as $tmp)
-				$product->id_category[] = $tmp;
+			$product->id_category[] = $pdt->categories;
+			$product->id_category[] = $pdt->sscategories;
+
+			if ($pdt->id_product)
+			{
+				$category_data = Product::getProductCategories((int)$product->id);
+				foreach ($category_data as $tmp)
+					$product->id_category[] = $tmp;
+			}
+			
+			$product->id_category = array_unique($product->id_category);
 		}
 		
-		$product->id_category = array_unique($product->id_category);
-
 		$product->save();
 
 		if ($pdt->upd_img == 1 || !$pdt->id_product)

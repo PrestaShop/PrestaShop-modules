@@ -181,6 +181,19 @@ resultat_CatalogPS = function (obj)
     maj = obj.responseText;
 	a=maj.split(',');
     var n = parseInt(a[0]);
+	if(isNaN(a[0])){
+       if(isNaN(a[2]) == false)
+            if(a[2]!=0)
+                a[0] = parseInt(parseInt($('#etat'+a[2]).val()) + 1);
+            else
+                a[0] = parseInt(parseInt($('#etatSup').val()) + 1);
+        else
+            a[0] = parseInt($('#etat1').val());
+       a[0] += 1;
+       n = a[0];
+       a[1] = parseInt($('#etat0_0').val());
+       a[2] = 1;
+    }
     if(isNaN(a[1]) == false && isNaN(a[0]) == false && isNaN(a[2]) == false){
         if(a[2]!=0)
             $('#etat'+a[2]).val(a[0]-($('#etat0_0').val()*(a[2]-1)));
@@ -260,7 +273,7 @@ function supCatalogPS(etp,tot,typ)
     {
         var XHR = new XHRConnection();        
         var ec_token = $('#ec_token').val();        
-        XHR.sendAndLoad('../modules/ecopresto/import.php?etp='+etp+'&total='+tot+'&typ='+typ+'ec_token='+ec_token,'GET',resultat_CatalogPS);
+        XHR.sendAndLoad('../modules/ecopresto/supp.php?etp='+etp+'&total='+tot+'&typ='+typ+'ec_token='+ec_token,'GET',resultat_CatalogPS);
         return true;
     }
 }
@@ -286,6 +299,7 @@ function fenetreModalshow(progressbar, text)
     $('#titreModal').html(text);
     
     $("#loading-div-background").show();
+    $(".menuTabButton").removeClass('opac');
 }
 
 function fenetreModalhide(erreur,refresh,closing,text)
@@ -347,7 +361,7 @@ resultat_selected_null = function (obj)
     var actu2 = parseInt(actu);
     var charge = (actu*100)/tot;
     loaderEtat2(charge);
-    fenetreModalhide('1','2','0',textMAJProduitsTermine);
+    fenetreModalhide('1', '1', '0', textMAJProduitsTermine);
 }
 
 resultat_selected = function (obj)
@@ -382,7 +396,7 @@ resultat_prodDelete = function (obj)
     var charge = (parseInt(actu)*100)/parseInt(tot);
     loaderEtat2(charge);
     if(tot==actu){
-        fenetreModalhide('1','2','0',textMAJProduitsTermine);
+        fenetreModalhide('1', '1', '0', textMAJProduitsTermine);
     }
 }
   
@@ -473,7 +487,9 @@ $(document).ready(function()
 	  $(".menuTabButton.selected").removeClass("selected");
 	  $(this).addClass("selected");
 	  $(".tabItem.selected").removeClass("selected");
+	  $('.menuTabButton').addClass('opac');
 	  $("#" + this.id + "Sheet").addClass("selected");
+	  $(this).removeClass("opac");
 	}); 
 
     if($('#table1').length>0)
@@ -504,8 +520,7 @@ $(document).ready(function()
     showHide_cols_tick_to_hide: false,
     showHide_enable_tick_all: true,
     btn_showHide_cols_target_id: 'spnColMng',  
-    showHide_cols_container_target_id: 'colsMng',  
-    showHide_cols_at_start: [3,6,9],  
+    showHide_cols_container_target_id: 'colsMng',
     btn_showHide_cols_html: '<button>INFO</button>',  
     btn_showHide_cols_close_html: '<button>Close</button>',  
     showHide_cols_text: '',  
@@ -659,5 +674,41 @@ setFilterGrid("table1",props2);
                 }
             });
         }         
-    } 
+    }
+	resultat_majDemo = function (obj){
+        location.reload();
+    }
+    
+    $('.demopreac').click(function(){
+        var ec_token = $('#ec_token').val();
+        var XHR = new XHRConnection();
+        XHR.sendAndLoad('../modules/ecopresto/ajax.php?ec_token='+ec_token+'&majsel=14&lic=1','GET',resultat_majDemo);
+        return true;
+    });
+    
+    $('.actlic').click(function(){
+        var ec_token = $('#ec_token').val();
+        var XHR = new XHRConnection();
+        XHR.sendAndLoad('../modules/ecopresto/ajax.php?ec_token='+ec_token+'&majsel=14&lic=0','GET',resultat_majDemo);
+        return true;
+    });
+    
+    $(document).on("click", ".checBB, .cbImporterAll", function () {
+        $('.totAuth').html($('#table1 input:checked.pdtI').length);
+        if($('#table1 input:checked.pdtI').length > parseInt($('.totAuthMax').html()))
+        {
+            $('.spealer').css('color','red');
+            $('#validSelect').hide();
+        }
+        else
+        {
+            $('.spealer').css('color','inherit');
+            $('#validSelect').show();
+        }
+    });
+    $('.totAuth').html($('#table1 input:checked.pdtI').length);
+    if($('#table1 input:checked.pdtI').length == 0)
+    {
+        $('.speSync').hide();
+    }
 });
