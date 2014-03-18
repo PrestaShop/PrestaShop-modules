@@ -1388,11 +1388,8 @@ class Sendinblue extends Module {
 		$this->context->cookie->display_message_type = $type;
 		$this->context->cookie->write();
 
-		$s = empty($_SERVER['HTTPS']) ? '' : ($_SERVER['HTTPS'] == 'on') ? 's' : '';
-		$sp = Tools::strtolower($_SERVER['SERVER_PROTOCOL']);
-		$protocol = Tools::substr($sp, 0, strpos($sp, '/')).$s;
 		$port = ($_SERVER['SERVER_PORT'] == '80') ? '' : (':'.$_SERVER['SERVER_PORT']);
-		header('Location: '.$protocol.'://'.$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI']);
+		header('Location: '.Tools::getShopDomainSsl(true).$port.$_SERVER['REQUEST_URI']);
 		exit;
 	}
 
