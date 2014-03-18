@@ -173,7 +173,7 @@ class Addshoppers extends Module
 		$prod->name = $product->name[$lang_id];
 		$prod->description = $product->description[$lang_id];
 		$prod->link_rewrite = $product->link_rewrite[$lang_id];
-		$prod->price = $product->price;
+		$prod->price = $product->getPrice();
 
 		$this->context->smarty->assign(array('product' => $prod, 'cover' => $cover['id_image']));
 
