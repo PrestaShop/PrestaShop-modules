@@ -257,25 +257,19 @@ function loaderEtat(totActu)
 }
 
 function insertCatalogPS(etp,tot,typ)
-{
-    if(isNaN($('#txcharg2').html()) == false)
-    {        
-        var ec_token = $('#ec_token').val();        
-        var XHR = new XHRConnection();
-        XHR.sendAndLoad('../modules/ecopresto/import.php?etp='+etp+'&total='+tot+'&typ='+typ+'&ec_token='+ec_token,'GET',resultat_CatalogPS);
-        return true;
-    }
+{  
+	var ec_token = $('#ec_token').val();        
+	var XHR = new XHRConnection();
+	XHR.sendAndLoad('../modules/ecopresto/import.php?etp='+etp+'&total='+tot+'&typ='+typ+'&ec_token='+ec_token,'GET',resultat_CatalogPS);
+	return true;
 }
 
 function supCatalogPS(etp,tot,typ)
 {
-    if(isNaN($('#txcharg2').html()) == false)
-    {
         var XHR = new XHRConnection();        
         var ec_token = $('#ec_token').val();        
         XHR.sendAndLoad('../modules/ecopresto/supp.php?etp='+etp+'&total='+tot+'&typ='+typ+'ec_token='+ec_token,'GET',resultat_CatalogPS);
         return true;
-    }
 }
 
 resultat_recupInfoMajPS = function (obj)
