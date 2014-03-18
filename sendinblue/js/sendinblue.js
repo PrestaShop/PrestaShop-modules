@@ -1,4 +1,4 @@
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -17,9 +17,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-* @author PrestaShop SA <contact@prestashop.com>
-* @copyright  2007-2014 PrestaShop SA
-* @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -465,7 +465,7 @@ $(document).ready(
 			type : "POST",
 			async : false,
 			url : base_url + "modules/sendinblue/ajax.php",
-			data : "script=" + script + "&token=" + token,
+			data : {"script":script,"token":token} ,
 			beforeSend : function() {
 			$('#ajax-busy').show();
 			},
@@ -489,7 +489,7 @@ $(document).ready(
 			type : "POST",
 			async : false,
 			url : base_url+"modules/sendinblue/ajaxsmtpconfig.php",
-			data : "smtptest=" + smtptest + "&token=" + token,
+			data : {"smtptest":smtptest,"token":token} ,
 			beforeSend : function() {
 			$('#ajax-busy').show();
 			},
@@ -523,7 +523,7 @@ $(document).ready(
 			type : "POST",
 			async : false,
 			url : base_url + "modules/sendinblue/ajaxsubscribeconfig.php",
-			data : "managesubscribe=" + managesubscribe + "&token=" + token,
+			data : {"managesubscribe":managesubscribe,"token":token} ,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -561,7 +561,7 @@ $(document).ready(
 			type : "POST",
 			async : false,
 			url : base_url + "modules/sendinblue/ajaxcall.php",
-			data : "email=" + email + "&newsletter=" + status + "&token=" + token,
+			data : {"email":email,"newsletter":status,"token":token} ,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -580,7 +580,7 @@ $(document).ready(
 			async : false,
 			url : base_url
 				+ "modules/sendinblue/ajaxemailresult.php",
-			data : "page=" + page + "&token=" + token,
+			data : {"page":page,"token":token},
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -644,7 +644,7 @@ function testsmssend() {
 			async : false,
 			url : base_url
 				+ "modules/sendinblue/ajaxtestsms.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
+			data : {"sender":sender,"message":message,"number":number,"langvalue":langvalue,"token":token} ,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -669,7 +669,7 @@ function testSmsShipped() {
 			async : false,
 			url : base_url
 				+ "modules/sendinblue/ajaxTestSmsShipped.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
+			data : {"sender":sender,"message":message,"number":number,"langvalue":langvalue,"token":token} ,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},
@@ -706,7 +706,7 @@ function testSmsShipped() {
 			async : false,
 			url : base_url
 				+ "modules/sendinblue/ajaxCampaignSmsTest.php",
-			data : "sender=" + sender + "&message=" + message + "&number=" + number + "&langvalue=" + langvalue + "&token=" + token,
+			data : {"sender":sender,"message":message,"number":number,"langvalue":langvalue,"token":token} ,
 			beforeSend : function() {
 				$('#ajax-busy').show();
 			},

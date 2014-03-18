@@ -1,23 +1,24 @@
-/* jshint forin:true, noarg:true, noempty:true, eqeqeq:true, boss:true, undef:true, curly:true, browser:true, jquery:true */
+/** jshint forin:true, noarg:true, noempty:true, eqeqeq:true, boss:true, undef:true, curly:true, browser:true, jquery:true */
 /*
- * jQuery MultiSelect UI Widget 1.13
- * Copyright (c) 2012 Eric Hynds
- *
- * http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
- *
- * Depends:
- *   - jQuery 1.4.2+
- *   - jQuery UI 1.8 widget factory
- *
- * Optional:
- *   - jQuery UI effects
- *   - jQuery UI position utility
- *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
- *
+* jQuery MultiSelect UI Widget 1.13
+* Copyright (c) 2012 Eric Hynds
+*
+* http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
+*
+* Depends:
+* - jQuery 1.4.2+
+* - jQuery UI 1.8 widget factory
+*
+* Optional:
+* - jQuery UI effects
+* - jQuery UI position utility
+*
+* Dual licensed under the MIT and GPL licenses:
+* http://www.opensource.org/licenses/mit-license.php
+* http://www.gnu.org/licenses/gpl.html
+*
 */
+
 (function($, undefined){
 
 var multiselectID = 0;
