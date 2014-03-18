@@ -77,7 +77,6 @@ if ($etp == 0)
 		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_product_imported` SELECT * FROM `'._DB_PREFIX_.'ec_ecopresto_product_shop` WHERE `id_shop`='.(int)$id_shop.' AND `reference` NOT IN ('.$supp.')');
 }
 
-
 $maxR = (($total-$etp)>20?40:$total-$etp);
 
 $lstPdt = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT *, c.`reference` AS thereference
@@ -94,7 +93,11 @@ $lstTax = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `rate`, `id_tax_
 foreach ($lstTax as $tax)
 {
 	$tabTax['id_tax'][$tax['rate']] = $tax['id_tax_rules_group'];
-	$tabTax['rate'][$tax['rate']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `rate` FROM `'._DB_PREFIX_.'tax` WHERE id_tax='.(int)$tax['id_tax_rules_group']);
+	$tabTax['rate'][$tax['rate']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `rate` 
+                                            FROM `'._DB_PREFIX_.'tax` t, `'._DB_PREFIX_.'tax_rule` tr
+                                            WHERE `id_tax_rules_group` ='.(int)$tax['id_tax_rules_group'].'
+                                            AND `id_country` = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').'
+                                            AND t.`id_tax` = tr.`id_tax`');
 }
 
 $lstLang = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_lang_eco`, `id_lang`
@@ -132,7 +135,7 @@ foreach ($lstPdt as $pdt)
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported`=2 WHERE `reference`= "'.pSQL($pdt['thereference']).'" AND `id_shop`='.(int)$pdt['id_shop']);
 			$etp++;
 		}
-		elseif ($reference->id_product && $catalog->tabConfig['PARAM_MAJ_NEWPRODUCT'] == 1 && !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+		elseif ($reference->id_product && $catalog->tabConfig['PARAM_MAJ_NEWPRODUCT'] == 1 && $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == true)
 		{
 			$etp++;
 		}
@@ -146,20 +149,25 @@ foreach ($lstPdt as $pdt)
 			$pdt_final['id_manufacturer'] = (int)$import->getManufacturer($pdt['manufacturer']);
 			$pdt_final['id_shop_default'] = (int)$pdt['id_shop'];
 			$pdt_final['shop'] = (int)$pdt['id_shop'];
-			$idC = (int)$import->getCategory($pdt['category_1'], 0, $pdt['id_shop'], 0);
-			$idSSC = (int)$import->getCategory($pdt['ss_category_1'], $idC, $pdt['id_shop'], 1);
-			$pdt_final['categories'] = (int)$idC;
-			$pdt_final['sscategories'] = (int)$idSSC;
-			$pdt_final['id_category_default'] = (int)$idSSC;
+			
+			if (!$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
+			{
+				$idC = (int)$import->getCategory($pdt['category_1'], 0, $pdt['id_shop'], 0);
+				$idSSC = (int)$import->getCategory($pdt['ss_category_1'], $idC, $pdt['id_shop'], 1);
+				$pdt_final['categories'] = (int)$idC;
+				$pdt_final['sscategories'] = (int)$idSSC;
+				$pdt_final['id_category_default'] = (int)$idSSC;
+			}
+			
 			$pdt_final['id_supplier'] = (int)$catalog->tabConfig['PARAM_SUPPLIER'];
 
 			$pdt_final['supplier_reference'] = (string)$pdt['thereference'];
 			$pdt_final['date_upd'] = date('Y-m-d h:m:s');
 
-			if ($catalog->tabConfig['UPDATE_EAN'] == 1)
-				$pdt_final['ean13'] = (isset($pdt['ean13'])?(int)$pdt['ean13']:0);
+			if ($catalog->tabConfig['UPDATE_EAN'] == 1 || !$reference->id_product)
+				$pdt_final['ean13'] = (isset($pdt['ean13'])?(string)$pdt['ean13']:0);
 
-			$pdt_final['weight'] = (isset($pdt['weight'])?(int)$pdt['weight']:0);
+			$pdt_final['weight'] = (isset($pdt['weight'])?(float)$pdt['weight']:0);
 
 			if ($catalog->tabConfig['UPDATE_IMAGE'] || !$reference->id_product )
 			{
@@ -177,21 +185,27 @@ foreach ($lstPdt as $pdt)
 					$pdt_final['images']['url'][] = (string)$pdt['image_6'];
 			}
 
-			foreach
-			($tabLang as $langPS => $langEco)
-				if ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 1 || !$reference->id_product || !$reference->getShopProduct($pdt['id_shop'], $reference->id_product))
+			foreach	($tabLang as $langPS => $langEco)
+				if ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] > 0 || !$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
 				{
-					$pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
-					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
-					$pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
-					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
+				    if (!$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false || $catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 3)
+		                    {
+    					$pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
+    					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
+    					$pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
+    					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
+		                    }
+		                    elseif ($catalog->tabConfig['UPDATE_NAME_DESCRIPTION'] == 1)
+		                    {
+		                        $pdt_final['name'][$langPS] = $pdt['name_'.$langEco];
+		    					$pdt_final['link_rewrite'][$langPS] = Tools::link_rewrite($pdt['name_'.$langEco]);
+		                    }
+		                    else
+		                    {
+		                        $pdt_final['description'][$langPS] = $pdt['description_'.$langEco];
+		    					$pdt_final['description_short'][$langPS] = $import->tronkCar($pdt['description_short_'.$langEco]);
+		                    }
 				}
-			else
-			{
-				$resPS = Db::getInstance()->getRow('SELECT `name`, `link_rewrite` FROM `'._DB_PREFIX_.'product_lang` WHERE `id_product` = '.(int)$pdt_final['id_product'].' AND `id_lang` = '.(int)$langPS);
-				$pdt_final['link_rewrite'][$langPS] = (isset($resPS['link_rewrite']) && $resPS['link_rewrite'] != ''?$resPS['link_rewrite']:Tools::link_rewrite($pdt['name_'.$langEco]));
-				$pdt_final['name'][$langPS] = (isset($resPS['name']) && $resPS['name'] != ''?$resPS['name']:$pdt['name_'.$langEco]);
-			}
 
 
 			$pdt_final['majName'] = $catalog->tabConfig['UPDATE_NAME_DESCRIPTION'];
@@ -202,7 +216,6 @@ foreach ($lstPdt as $pdt)
 				$pdt_final['indexed'] = (int)$catalog->tabConfig['PARAM_INDEX']; //moteur de recherche oui ou non
 				$pdt_final['date_add'] = date('Y-m-d h:m:s');
 				$pdt_final['price'] = (float)$pdt['pmvc'];
-				$pdt_final['wholesale_price'] = (float)round(($catalog->tabConfig['PA_TAX'] == 0 && $id_tax != 0?$pdt['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$pdt['price']), 6);
 				$pdt_final['reference'] = (string)$pdt['thereference'];
 
 				if ($catalog->tabConfig['PMVC_TAX'] == 0)
@@ -216,7 +229,6 @@ foreach ($lstPdt as $pdt)
 			{
 				if ($catalog->tabConfig['UPDATE_PRICE'] == 1)
 				{
-					$pdt_final['wholesale_price'] = (float)round(($catalog->tabConfig['PA_TAX'] == 0 && $id_tax != 0?$pdt['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$pdt['price']), 6);
 					$pdt_final['price'] = (float)$pdt['pmvc'];
 
 					if ($catalog->tabConfig['PMVC_TAX'] == 0)
@@ -257,11 +269,10 @@ foreach ($lstPdt as $pdt)
 					}
 				}
 
-				if (($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product) && ($reference->getShopProduct($pdt['id_shop'], $reference->id_product) == TRUE))
-					$pdt_final_att[] = array('wholesale_price' => (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$att['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$att['price']), 6),
-						'reference' => (string)$att['reference_attribute'],
+				if ($catalog->tabConfig['UPDATE_PRICE']==1 || !$reference->id_product || $reference->getShopProduct($pdt['id_shop'], $reference->id_product) == false)
+					$pdt_final_att[] = array('reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
-						'ean13' => (int)$att['ean13'],
+						'ean13' => (string)$att['ean13'],
 						'price' => (float)($att['pmvc']- $pdt['pmvc']),
 						'weight' => (float)($att['weight']-$pdt['weight']),
 						'default_on' => ($tem==0?1:0),
@@ -269,10 +280,9 @@ foreach ($lstPdt as $pdt)
 						'id_shop' => (int)$pdt['id_shop'],
 						'id_attribute' => $pdt_final_att2);
 				else
-					$pdt_final_att[] = array('wholesale_price' => (float)round(($catalog->tabConfig['PMVC_TAX']==0&&$id_tax!=0?$att['price']*(1+($tabTax['rate'][(string)$tempRate]/100)):$att['price']), 6),
-						'reference' => (string)$att['reference_attribute'],
+					$pdt_final_att[] = array('reference' => (string)$att['reference_attribute'],
 						'supplier_reference' => (string)$att['reference_attribute'],
-						'ean13' => (int)$att['ean13'],
+						'ean13' => (string)$att['ean13'],
 						'weight' => (float)($att['weight']-$pdt['weight']),
 						'default_on' => ($tem==0?1:0),
 						'id_supplier' => (int)$catalog->tabConfig['PARAM_SUPPLIER'],

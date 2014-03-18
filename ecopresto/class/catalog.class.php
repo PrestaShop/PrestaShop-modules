@@ -204,18 +204,12 @@ class Catalog
 											AND `id_order`='.(int)$com['id_order'].'
                                             GROUP BY od.`product_supplier_reference`');
 
-			if ($ok == 0)
-			{
-				unset($lstC[$i]);
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
-			}
-            
-            	$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
+			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
                                             FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca 
                                             WHERE od.`product_supplier_reference` = ca.`reference_attribute`
 											AND `id_order`='.(int)$com['id_order'].'
                                             GROUP BY od.`product_supplier_reference`');
-            	if ($ok == 0)
+            if (($ok == 0 || $ok == '') && ($ok2 == 0 || $ok2 == ''))
 			{
 				unset($lstC[$i]);
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
@@ -393,7 +387,7 @@ class Catalog
 		$all_tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_tax_eco`, `rate`
 																	FROM  `'._DB_PREFIX_.'ec_ecopresto_tax`');
 		$response = '';
-		$tax_PS = Tax::getTaxes(self::getInfoEco('ID_LANG'));
+		$tax_PS = TaxRulesGroup::getTaxRulesGroups();
 		foreach ($all_tax as $tax)
 		{
 			$tax_eco = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT id_tax_rules_group FROM `'._DB_PREFIX_.'ec_ecopresto_tax_shop` WHERE `id_tax_eco`='.(int)$tax['id_tax_eco'].' AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
@@ -401,7 +395,7 @@ class Catalog
 			$response .= ' <select name="tax_ps[]">
 							<option value="'.$tax['id_tax_eco'].'_0"> 0 </option>';
 			foreach ($tax_PS as $taxPS)
-				$response .= '<option value="'.$tax['id_tax_eco'].'_'.$taxPS['id_tax'].'" '.($tax_eco==$taxPS['id_tax']?'selected="selected"':'').'>'.$taxPS['rate'].'</option>';
+				$response .= '<option value="'.$tax['id_tax_eco'].'_'.$taxPS['id_tax_rules_group'].'" '.($tax_eco==$taxPS['id_tax_rules_group']?'selected="selected"':'').'>'.$taxPS['name'].'</option>';
 			$response .= '</select>';
 		}
 		return $response;
@@ -508,10 +502,15 @@ class Catalog
 	public function updateConfig()
 	{
 		foreach ($_POST['CONFIG_ECO'] as $key => $val)
+		{
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration`
 										SET `value`="'.pSQL($val).'"
 										WHERE `name`="'.pSQL($key).'"
 										'.($key != 'ID_ECOPRESTO'?'AND `id_shop` = '.(int)self::getInfoEco('ID_SHOP'):''));
+		
+			if($key == 'ID_ECOPRESTO')
+                Configuration::updateValue('ECOPRESTO_DEMO',2);		
+		}
 	}
 
 
@@ -594,6 +593,8 @@ class Catalog
 
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_configuration` (`value`,`name`,`id_shop`) VALUES ('.(int)$idSupplier.',"PARAM_SUPPLIER",'.(int)$shop['id_shop'].')');
 			}
+			else
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_configuration` (`value`,`name`,`id_shop`) VALUES ('.(int)$idSupplier.',"PARAM_SUPPLIER",1)');
 		}
 		else
 			return false;
@@ -719,8 +720,16 @@ class Catalog
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax` (`rate`) VALUES ("'.(float)$tax.'")');
 				$idtaxeco = Db::getInstance()->Insert_ID();
 
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax_shop` (`id_tax_eco`,`id_tax_rules_group`,`id_shop`) VALUES ('.(int)$idtaxeco.',0,'.(int)self::getInfoEco('ID_SHOP').')');
-
+				$idTaxR = Db::getInstance()->getValue('SELECT `id_tax_rules_group` 
+                                            FROM `'._DB_PREFIX_.'tax` t, `'._DB_PREFIX_.'tax_rule` tr
+                                            WHERE `rate` ='.(float)round($tax,3).'
+                                            AND `id_country` = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').'
+                                            AND t.`id_tax` = tr.`id_tax`');
+                                    
+                if(!isset($idTaxR) || $idTaxR == '')
+                    $idTaxR = 0;
+                
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax_shop` (`id_tax_eco`,`id_tax_rules_group`,`id_shop`) VALUES ('.(int)$idtaxeco.','.(int)$idTaxR.','.(int)self::getInfoEco('ID_SHOP').')');                
 			}
 		}
 	}
