@@ -35,7 +35,7 @@ class Desjardins extends PaymentModule
 	{
 		$this->name = 'desjardins';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.3.6';
+		$this->version = '0.3.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -219,7 +219,9 @@ class Desjardins extends PaymentModule
 
 		$this->smarty->assign('desjardins_params', $params);
 
-		return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+		if (version_compare(_PS_VERSION_, '1.6', '<'))
+			return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/payment_16.tpl');
 	}
 
 	public function displayAdminHomeQuickLinks()
