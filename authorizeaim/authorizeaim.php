@@ -184,7 +184,7 @@ class authorizeAIM extends PaymentModule
 			}
 		}
 		
-		return $this->context->smarty->fetch($this->local_path.'views/templates/admin/configuration.tpl');
+		return $this->context->smarty->fetch(dirname(__FILE__).'/views/templates/admin/configuration.tpl');
 	}
 
 	public function hookPayment($params)
