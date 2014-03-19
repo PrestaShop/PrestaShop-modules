@@ -121,6 +121,9 @@ class authorizeAIM extends PaymentModule
 
 	public function hookBackOfficeHeader()
 	{
+		$this->context->controller->addJQuery();
+		$this->context->controller->addJqueryPlugin('fancybox');
+
 		$this->context->controller->addJS($this->_path.'js/authorizeaim.js');
 		$this->context->controller->addCSS($this->_path.'css/authorizeaim.css');
 	}
