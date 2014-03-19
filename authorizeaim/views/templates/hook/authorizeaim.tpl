@@ -53,7 +53,7 @@
 			<img src="{$module_dir}img/logoa.gif" alt="secure payment" />
 		</div>				
 		<input type="hidden" name="x_solution_ID" value="A1000006" />				
-		<input type="hidden" name="x_invoice_num" value="{$x_invoice_num|escape:'htmlall'|'UTF-8'}" />
+		<input type="hidden" name="x_invoice_num" value="{$x_invoice_num|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="x_currency_code" value="{$currency->iso_code|escape:'htmlall':'UTF-8'}" />
 		<label style="margin-top: 4px; margin-left: 35px;display: block;width: 90px;float: left;">{l s='Full name' mod='authorizeaim'}</label> 
 		<input type="text" name="name" id="fullname" size="30" maxlength="25S" /><img src="{$module_dir}img/secure.png" alt="" style="margin-left: 5px;" /><br /><br />
