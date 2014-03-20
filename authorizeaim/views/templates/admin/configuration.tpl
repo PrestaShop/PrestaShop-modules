@@ -59,12 +59,19 @@
 			{/if}
 		{/foreach}
 
-		<label for="authorizeaim_demo_mode">{l s='Mode:' mod='authorizeaim'}</label>
-		<div class="margin-form" id="authorizeaim_demo">
-			<input type="radio" name="authorizeaim_demo_mode" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_DEMO}checked="checked"{/if} />
+		<label for="authorizeaim_sandbox">{l s='Environment:' mod='authorizeaim'}</label>
+		<div class="margin-form" id="authorizeaim_sandbox">
+			<input type="radio" name="authorizeaim_sandbox" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
 			<span style="color: #080;">{l s='Production' mod='authorizeaim'}</span>
-			<input type="radio" name="authorizeaim_demo_mode" value="1" style="vertical-align: middle;" {if $AUTHORIZE_AIM_DEMO}checked="checked"{/if} />
+			<input type="radio" name="authorizeaim_sandbox" value="1" style="vertical-align: middle;" {if $AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
 			<span style="color: #900;">{l s='Sandbox' mod='authorizeaim'}</span>
+		</div>
+		<label for="authorizeaim_test_mode">{l s='Live or Test Mode:' mod='authorizeaim'}</label>
+		<div class="margin-form" id="authorizeaim_test_mode">
+			<input type="radio" name="authorizeaim_test_mode" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
+			<span style="color: #080;">{l s='Live' mod='authorizeaim'}</span>
+			<input type="radio" name="authorizeaim_test_mode" value="1" style="vertical-align: middle;" {if $AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
+			<span style="color: #900;">{l s='Test' mod='authorizeaim'}</span>
 		</div>
 		<label for="authorizeaim_cards">{l s='Cards* :' mod='authorizeaim'}</label>
 		<div class="margin-form" id="authorizeaim_cards">

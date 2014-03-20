@@ -81,13 +81,15 @@ class authorizeAIM extends PaymentModule
 			$this->registerHook('payment') &&
 			$this->registerHook('header') &&
 			$this->registerHook('backOfficeHeader') &&
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0) &&
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1) &&
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', _PS_OS_ERROR_);
 	}
 
 	public function uninstall()
 	{
-		Configuration::deleteByName('AUTHORIZE_AIM_DEMO');
+		Configuration::deleteByName('AUTHORIZE_AIM_SANDBOX');
+		Configuration::deleteByName('AUTHORIZE_AIM_TEST_MODE');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_VISA');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_MASTERCARD');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
@@ -134,7 +136,8 @@ class authorizeAIM extends PaymentModule
 
 		if (Tools::isSubmit('submitModule'))
 		{
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', Tools::getvalue('authorizeaim_demo_mode'));
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', Tools::getvalue('authorizeaim_test_mode'));
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', Tools::getvalue('authorizeaim_sandbox'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
@@ -163,7 +166,8 @@ class authorizeAIM extends PaymentModule
 			'module_dir' => $this->_path,
 			'order_states' => $order_states,
 
-			'AUTHORIZE_AIM_DEMO' => (bool)Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')),
+			'AUTHORIZE_AIM_TEST_MODE' => (bool)Tools::getValue('authorizeaim_test_mode', Configuration::get('AUTHORIZE_AIM_TEST_MODE')),
+			'AUTHORIZE_AIM_SANDBOX' => (bool)Tools::getValue('authorizeaim_sandbox', Configuration::get('AUTHORIZE_AIM_SANDBOX')),
 
 			'AUTHORIZE_AIM_CARD_VISA' => Configuration::get('AUTHORIZE_AIM_CARD_VISA'),
 			'AUTHORIZE_AIM_CARD_MASTERCARD' => Configuration::get('AUTHORIZE_AIM_CARD_MASTERCARD'),
@@ -213,6 +217,7 @@ class authorizeAIM extends PaymentModule
 			$this->context->smarty->assign('cards', $cards);
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
+			$this->context->smarty->assign('currency', $currency);
 			
 			return $this->display(__FILE__, 'views/templates/hook/authorizeaim.tpl');
 		}
