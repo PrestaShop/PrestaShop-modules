@@ -121,7 +121,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.9';
+	 	$this->version = '1.10';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
@@ -161,6 +161,9 @@ class Twenga extends PaymentModule
 		if (self::$obj_ps_stats === NULL)
 			self::$obj_ps_stats = new PrestashopStats($this->site_url);
 		$this->_initCurrentIsoCodeCountry();
+
+		if (!extension_loaded('openssl'))
+			$this->warning = $this->l('OpenSSL should be activated on your PHP configuration to use all functionalities of Twenga.');
 	}
 	
 	public function install()
@@ -627,7 +630,7 @@ class Twenga extends PaymentModule
 			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 		
 		$tarif_arr = array(950, 565);
-		if (file_exists($tarifs_link))
+		if (extension_loaded('openssl') && file_exists($tarifs_link))
 			$tarif_arr = @getimagesize($tarifs_link);
 
 		$str_return = '
