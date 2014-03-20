@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class authorizeAIM extends PaymentModule
+class AuthorizeAIM extends PaymentModule
 {
 	public function __construct()
 	{

@@ -30,7 +30,7 @@ include(dirname(__FILE__). '/../../init.php');
 /* will include backward file */
 include(dirname(__FILE__). '/authorizeaim.php');
 
-$authorizeaim = new authorizeAIM();
+$authorizeaim = new AuthorizeAIM();
 
 /* Does the cart exist and is valid? */
 $cart = Context::getContext()->cart;
