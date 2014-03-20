@@ -59,19 +59,14 @@
 			{/if}
 		{/foreach}
 
-		<label for="authorizeaim_sandbox">{l s='Environment:' mod='authorizeaim'}</label>
-		<div class="margin-form" id="authorizeaim_sandbox">
-			<input type="radio" name="authorizeaim_sandbox" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
-			<span style="color: #080;">{l s='Production' mod='authorizeaim'}</span>
-			<input type="radio" name="authorizeaim_sandbox" value="1" style="vertical-align: middle;" {if $AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
-			<span style="color: #900;">{l s='Sandbox' mod='authorizeaim'}</span>
-		</div>
-		<label for="authorizeaim_test_mode">{l s='Live or Test Mode:' mod='authorizeaim'}</label>
-		<div class="margin-form" id="authorizeaim_test_mode">
-			<input type="radio" name="authorizeaim_test_mode" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
-			<span style="color: #080;">{l s='Live' mod='authorizeaim'}</span>
-			<input type="radio" name="authorizeaim_test_mode" value="1" style="vertical-align: middle;" {if $AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
-			<span style="color: #900;">{l s='Test' mod='authorizeaim'}</span>
+		<label for="authorizeaim_mode"><a class="authorizeaim-sign-up" target="_blank" href="https://developer.authorize.net/guides/AIM/wwhelp/wwhimpl/js/html/wwhelp.htm"><img src="{$module_dir}img/help.png" alt="" /></a> {l s='Environment:' mod='authorizeaim'}</label>
+		<div class="margin-form" id="authorizeaim_mode">
+			<input type="radio" name="authorizeaim_mode" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX && !$AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
+			<span style="color: #080;">{l s='Production environment' mod='authorizeaim'}</span><br/>
+			<input type="radio" name="authorizeaim_mode" value="1" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX && $AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
+			<span style="color: #080;">{l s='Production environment with Test Mode' mod='authorizeaim'}</span><br/>
+			<input type="radio" name="authorizeaim_mode" value="2" style="vertical-align: middle;" {if $AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
+			<span style="color: #900;">{l s='Sandbox' mod='authorizeaim'}</span><br/>
 		</div>
 		<label for="authorizeaim_cards">{l s='Cards* :' mod='authorizeaim'}</label>
 		<div class="margin-form" id="authorizeaim_cards">

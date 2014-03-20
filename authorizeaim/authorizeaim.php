@@ -33,7 +33,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.10';
+		$this->version = '1.4.11';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -136,8 +136,26 @@ class authorizeAIM extends PaymentModule
 
 		if (Tools::isSubmit('submitModule'))
 		{
-			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', Tools::getvalue('authorizeaim_test_mode'));
-			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', Tools::getvalue('authorizeaim_sandbox'));
+			$authorizeaim_mode = (int)Tools::getvalue('authorizeaim_mode');
+			// Sandbox environment
+			if ($authorizeaim_mode == 2)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1);
+			}
+			// Production environment + test mode
+			else if ($authorizeaim_mode == 1)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+			// Production environment
+			else
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
@@ -166,8 +184,8 @@ class authorizeAIM extends PaymentModule
 			'module_dir' => $this->_path,
 			'order_states' => $order_states,
 
-			'AUTHORIZE_AIM_TEST_MODE' => (bool)Tools::getValue('authorizeaim_test_mode', Configuration::get('AUTHORIZE_AIM_TEST_MODE')),
-			'AUTHORIZE_AIM_SANDBOX' => (bool)Tools::getValue('authorizeaim_sandbox', Configuration::get('AUTHORIZE_AIM_SANDBOX')),
+			'AUTHORIZE_AIM_TEST_MODE' => (bool)Configuration::get('AUTHORIZE_AIM_TEST_MODE'),
+			'AUTHORIZE_AIM_SANDBOX' => (bool)Configuration::get('AUTHORIZE_AIM_SANDBOX'),
 
 			'AUTHORIZE_AIM_CARD_VISA' => Configuration::get('AUTHORIZE_AIM_CARD_VISA'),
 			'AUTHORIZE_AIM_CARD_MASTERCARD' => Configuration::get('AUTHORIZE_AIM_CARD_MASTERCARD'),
