@@ -2,7 +2,7 @@
 <module>
 	<name>carriercompare</name>
 	<displayName><![CDATA[Shipping Estimate]]></displayName>
-	<version><![CDATA[2.0]]></version>
+	<version><![CDATA[2.1.0]]></version>
 	<description><![CDATA[Compares carrier choices before checkout.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

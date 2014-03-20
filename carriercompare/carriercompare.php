@@ -36,7 +36,7 @@ class CarrierCompare extends Module
 	{
 		$this->name = 'carriercompare';
 		$this->tab = 'shipping_logistics';
-		$this->version = '2.0';
+		$this->version = '2.1.0';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
@@ -219,8 +219,9 @@ class CarrierCompare extends Module
 
 		$carriers = $cart->simulateCarriersOutput(null, true);
 
-		//delete temporary Address
+		//delete temporary objects
 		$addr_temp->delete();
+		$cart->delete();
 
 		return $carriers;
 	}
