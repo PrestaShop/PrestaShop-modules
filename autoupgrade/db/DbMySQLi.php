@@ -82,6 +82,8 @@ class DbMySQLiCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+		if (!is_object($result))
+			return false;
 		return $result->fetch_assoc();
 	}
 
