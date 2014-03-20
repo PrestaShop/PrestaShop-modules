@@ -627,7 +627,7 @@ class Twenga extends PaymentModule
 			$tarifs_link = 'https://rts.twenga.fr/ratecard';
 		
 		$tarif_arr = array(950, 565);
-		if (file_exists($tarifs_link))
+		if (extension_loaded('openssl') && file_exists($tarifs_link))
 			$tarif_arr = @getimagesize($tarifs_link);
 
 		$str_return = '
