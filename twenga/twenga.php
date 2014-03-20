@@ -161,6 +161,9 @@ class Twenga extends PaymentModule
 		if (self::$obj_ps_stats === NULL)
 			self::$obj_ps_stats = new PrestashopStats($this->site_url);
 		$this->_initCurrentIsoCodeCountry();
+
+		if (!extension_loaded('openssl'))
+			$this->warning = $this->l('OpenSSL should be activated on your PHP configuration to use all functionalities of Twenga.');
 	}
 	
 	public function install()

@@ -178,7 +178,7 @@ abstract class TwengaFields
 		$fieldValidate = $this->getField($key);
 		$str_return = '';
 		// check the length
-		if ($fieldValidate[0] !== 0 && strlen((string)$value) > $fieldValidate[0])
+		if ($fieldValidate[0] !== 0 && (Tools::strlen((string)$value) > $fieldValidate[0]))
 			return Tools::displayError('Wrong length of the value. Must be set between 1 and ').$fieldValidate[0].'<br />'."\n";
 		
 		// check each validators.
