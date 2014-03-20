@@ -33,7 +33,7 @@ class authorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.9';
+		$this->version = '1.4.10';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -121,6 +121,9 @@ class authorizeAIM extends PaymentModule
 
 	public function hookBackOfficeHeader()
 	{
+		$this->context->controller->addJQuery();
+		$this->context->controller->addJqueryPlugin('fancybox');
+
 		$this->context->controller->addJS($this->_path.'js/authorizeaim.js');
 		$this->context->controller->addCSS($this->_path.'css/authorizeaim.css');
 	}
@@ -181,7 +184,7 @@ class authorizeAIM extends PaymentModule
 			}
 		}
 		
-		return $this->context->smarty->fetch($this->local_path.'views/templates/admin/configuration.tpl');
+		return $this->context->smarty->fetch(dirname(__FILE__).'/views/templates/admin/configuration.tpl');
 	}
 
 	public function hookPayment($params)
