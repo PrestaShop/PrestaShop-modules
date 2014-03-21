@@ -19,7 +19,7 @@ class PayPalUSA extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.1';
+		$this->version = '1.3.2';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
 		$this->tab = 'payments_gateways';
@@ -30,6 +30,7 @@ class PayPalUSA extends PaymentModule
 		$this->displayName = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'PayPal Mexico' : 'PayPal USA, Canada');
 		$this->description = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard.' : 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard, Advanced, Pro, or Payflow.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.'paypalusa/backward_compatibility/backward.php');
 		$this->context->smarty->assign('base_dir', __PS_BASE_URI__);
