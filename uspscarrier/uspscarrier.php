@@ -52,7 +52,7 @@ class UspsCarrier extends CarrierModule
 	{
 		$this->name = 'uspscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3.2';
+		$this->version = '1.3.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = '9ac173da9614868dbd15c56cf8ad008a';
@@ -61,6 +61,7 @@ class UspsCarrier extends CarrierModule
 
 		$this->displayName = $this->l('U.S.P.S. Rate Calulator');
 		$this->description = $this->l('Calculates shipping rates for United States Postal Service for Domestic shipping within the USA.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility 1.4 / 1.5 */
 		require(dirname(__FILE__).'/backward_compatibility/backward.php');
