@@ -147,13 +147,14 @@ class Kwixo extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'kwixo';
-		$this->version = '6.4';
+		$this->version = '6.5';
 		$this->tab = 'payments_gateways';
 
 		parent::__construct();
 
 		$this->displayName = $this->l('Kwixo');
 		$this->description = $this->l('Accepts payments by "Kwixo"');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/* Backward compatibility */
 
