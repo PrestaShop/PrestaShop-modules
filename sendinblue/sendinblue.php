@@ -52,7 +52,7 @@ class Sendinblue extends Module {
 		$this->name = 'sendinblue';
 		$this->tab = 'advertising_marketing';
 		$this->author = 'SendinBlue';
-		$this->version = 1.4;
+		$this->version = 1.5;
 		$pathconfig = new Pathfind();
 		$this->path = $pathconfig->pathdisp();
 		parent::__construct();
@@ -61,6 +61,7 @@ class Sendinblue extends Module {
 		$this->displayName = $this->l('SendinBlue');
 		$this->description = $this->l('Synchronize your PrestaShop contacts with SendinBlue platform, track customer\'s orders and send transactional emails easily to your customers.');
 		$this->confirmUninstall = $this->l('Are you sure you want to remove the SendinBlue module? N.B: we will enable php mail() send function (If you were using SMTP info before using SendinBlue SMTP, please update your configuration for the emails)');
+		$this->ps_versions_compliancy = array('min' => '1.4.2.5', 'max' => _PS_VERSION_);
 		$this->langCookie = $cookie;
 		// Checking Extension
 
