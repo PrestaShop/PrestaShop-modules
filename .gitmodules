@@ -358,3 +358,54 @@
 [submodule "vatnumber"]
 	path = vatnumber
 	url = https://github.com/PrestaShop/vatnumber.git
+[submodule "blockwishlist"]
+	path = blockwishlist
+	url = https://github.com/PrestaShop/blockwishlist.git
+[submodule "carriercompare"]
+	path = carriercompare
+	url = https://github.com/PrestaShop/carriercompare.git
+[submodule "cashondelivery"]
+	path = cashondelivery
+	url = https://github.com/PrestaShop/cashondelivery.git
+[submodule "dateofdelivery"]
+	path = dateofdelivery
+	url = https://github.com/PrestaShop/dateofdelivery.git
+[submodule "editorial"]
+	path = editorial
+	url = https://github.com/PrestaShop/editorial.git
+[submodule "favoriteproducts"]
+	path = favoriteproducts
+	url = https://github.com/PrestaShop/favoriteproducts.git
+[submodule "feeder"]
+	path = feeder
+	url = https://github.com/PrestaShop/feeder.git
+[submodule "followup"]
+	path = followup
+	url = https://github.com/PrestaShop/followup.git
+[submodule "gamification"]
+	path = gamification
+	url = https://github.com/PrestaShop/gamification.git
+[submodule "gapi"]
+	path = gapi
+	url = https://github.com/PrestaShop/gapi.git
+[submodule "loyalty"]
+	path = loyalty
+	url = https://github.com/PrestaShop/loyalty.git
+[submodule "mailalerts"]
+	path = mailalerts
+	url = https://github.com/PrestaShop/mailalerts.git
+[submodule "newsletter"]
+	path = newsletter
+	url = https://github.com/PrestaShop/newsletter.git
+[submodule "productcomments"]
+	path = productcomments
+	url = https://github.com/PrestaShop/productcomments.git
+[submodule "pscleaner"]
+	path = pscleaner
+	url = https://github.com/PrestaShop/pscleaner.git
+[submodule "referralprogram"]
+	path = referralprogram
+	url = https://github.com/PrestaShop/referralprogram.git
+[submodule "sendtoafriend"]
+	path = sendtoafriend
+	url = https://github.com/PrestaShop/sendtoafriend.git
