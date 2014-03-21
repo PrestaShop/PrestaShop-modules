@@ -76,7 +76,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$('a[rel^=ajax_id_favoriteproduct_]').click(function()
+	$('[rel^=ajax_id_favoriteproduct_]').click(function()
 	{
 		var idFavoriteProduct =  $(this).attr('rel').replace('ajax_id_favoriteproduct_', '');
 		var parent = $(this).parent().parent();
