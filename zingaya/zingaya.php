@@ -20,13 +20,14 @@ class Zingaya extends Module
 	{
 		$this->name = 'zingaya';
 		$this->tab = 'administration';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
 		$this->displayName = $this->l('Zingaya - Click-to-call');
 		$this->description = $this->l('Zingaya enables voice calls through any computer, right from a webpage. No download or phone is required!');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 	}
 
 	public function install()
