@@ -31,7 +31,7 @@
  * Please do not change any of these values unless you know what you do!
  **/
 
-define('PS_ITEMBASE_PLUGIN_VERSION', '2.1');
+define('PS_ITEMBASE_PLUGIN_VERSION', '2.2');
 define('PS_ITEMBASE_SERVER_OAUTH', 'https://auth-m2.itembase.com/oauth/v2/token');
 define('PS_ITEMBASE_SERVER_EMBED', 'https://deliver-static-d1.itembase.com');
 define('PS_ITEMBASE_SERVER_HOST', 'https://www.itembase.com');
