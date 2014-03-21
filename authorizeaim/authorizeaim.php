@@ -72,6 +72,8 @@ class AuthorizeAIM extends PaymentModule
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+
+		$this->checkForUpdates();
 	}
 
 	public function install()
@@ -81,8 +83,8 @@ class AuthorizeAIM extends PaymentModule
 			$this->registerHook('payment') &&
 			$this->registerHook('header') &&
 			$this->registerHook('backOfficeHeader') &&
-			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0) &&
-			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0) &&
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', _PS_OS_ERROR_);
 	}
 
@@ -274,5 +276,20 @@ class AuthorizeAIM extends PaymentModule
 			// 68 => Owner name
 			$this->pcc->card_holder = (string)$response[68];
 		}
+	}
+
+	private function checkForUpdates()
+	{
+		// Used by PrestaShop 1.3 & 1.4
+		if (version_compare(_PS_VERSION_, '1.5', '<') && self::isInstalled($this->name))
+			foreach (array('1.4.8', '1.4.11') as $version)
+			{
+				$file = dirname(__FILE__).'/upgrade/install-'.$version.'.php';
+				if (Configuration::get('AUTHORIZE_AIM') < $version && file_exists($file))
+				{
+					include_once($file);
+					call_user_func('upgrade_module_'.str_replace('.', '_', $version), $this);
+				}
+			}
 	}
 }
