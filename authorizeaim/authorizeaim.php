@@ -41,6 +41,7 @@ class authorizeAIM extends PaymentModule
 
 		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
 		$this->description = $this->l('Receive payment with Authorize.net');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array(

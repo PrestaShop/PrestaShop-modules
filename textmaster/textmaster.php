@@ -56,7 +56,7 @@ class TextMaster extends Module
     {
         $this->name = 'textmaster';
         $this->tab = 'i18n_localization';
-        $this->version = '1.0.2';
+        $this->version = '1.0.3';
         $this->author = 'TextMaster';
         $this->need_instance = 1;
 
@@ -64,6 +64,7 @@ class TextMaster extends Module
 
         $this->displayName = $this->l('TextMaster');
         $this->description = $this->l('Your ultimate one-stop-shop for online professional translation and proofreading');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
         if (!function_exists('curl_init'))
             $this->warning = $this->l('CURL should be installed');

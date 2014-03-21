@@ -54,7 +54,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3.1';
+		$this->version = '1.3.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'b7e680a4290c977bb35e3b28817b8348';
@@ -63,6 +63,7 @@ class UpsCarrier extends CarrierModule
 
 		$this->displayName = $this->l('UPS Carrier');
 		$this->description = $this->l('Offer your customers, different delivery methods with UPS');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility 1.4 / 1.5 */
 		require(dirname(__FILE__).'/backward_compatibility/backward.php');

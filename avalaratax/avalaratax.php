@@ -39,12 +39,13 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.3';
+		$this->version = '3.4.4';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
 		$this->displayName = $this->l('Avalara - AvaTax');
 		$this->description = $this->l('Sales Tax is complicated. AvaTax makes it easy.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');

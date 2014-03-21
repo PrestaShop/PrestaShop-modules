@@ -2,7 +2,7 @@
 <module>
 	<name>globkurier</name>
 	<displayName><![CDATA[GlobKurier.pl]]></displayName>
-	<version><![CDATA[1.1]]></version>
+	<version><![CDATA[1.2]]></version>
 	<description><![CDATA[Save up to 80% off on UPS, DPD, K-EX, DHL with GlobKurier module!]]></description>
 	<author><![CDATA[GlobKurier | Solik Tomasz &lt;info[at]tomaszsolik.pl&gt;]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

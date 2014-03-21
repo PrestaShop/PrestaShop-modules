@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.5';
+		$this->version = '1.3.6';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -32,6 +32,7 @@ class Yotpo extends Module
 		 
 		$this->displayName = $this->l('Yotpo - Social Reviews and Testimonials');
 		$this->description = $this->l('The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		$this->_yotpo_module_path = _PS_MODULE_DIR_.$this->name;
 
 		if (!Configuration::get('yotpo_app_key'))

@@ -23,13 +23,14 @@ class GoInterpay extends PaymentModule
 	{	
 		$this->name = 'gointerpay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.6';
+		$this->version = '1.7.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
 
 		$this->displayName = $this->l('GoInterpay');
 		$this->description = $this->l('GoInterpay is the easiest way for merchants to sell and ship globally.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5', '<'))

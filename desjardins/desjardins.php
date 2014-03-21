@@ -35,7 +35,7 @@ class Desjardins extends PaymentModule
 	{
 		$this->name = 'desjardins';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.3.7';
+		$this->version = '0.3.8';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -46,6 +46,7 @@ class Desjardins extends PaymentModule
 
 		$this->displayName = $this->l('Desjardins');
 		$this->description = $this->l('Accept payments by Credit Card with Desjardins (Visa, Mastercard, Amex, Discover and Diners Club)');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 	}
 
 	public function install()

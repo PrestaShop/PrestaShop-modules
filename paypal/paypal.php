@@ -80,7 +80,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.6.6';
+		$this->version = '3.6.7';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -91,6 +91,7 @@ class PayPal extends PaymentModule
 		$this->displayName = $this->l('PayPal');
 		$this->description = $this->l('Accepts payments by credit cards (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) with PayPal.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		$this->page = basename(__FILE__, '.php');
 

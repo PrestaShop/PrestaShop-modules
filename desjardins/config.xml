@@ -2,7 +2,7 @@
 <module>
 	<name>desjardins</name>
 	<displayName><![CDATA[Desjardins]]></displayName>
-	<version><![CDATA[0.3.7]]></version>
+	<version><![CDATA[0.3.8]]></version>
 	<description><![CDATA[Accept payments by Credit Card with Desjardins (Visa, Mastercard, Amex, Discover and Diners Club)]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
