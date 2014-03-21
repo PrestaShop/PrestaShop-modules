@@ -34,7 +34,7 @@ class GAnalytics extends Module
 	{
 		$this->name = 'ganalytics';
 		$this->tab = 'analytics_stats';
-		$this->version = '1.6';
+		$this->version = '1.7';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
@@ -45,6 +45,7 @@ class GAnalytics extends Module
 			$this->warning = $this->l('You have not yet set your Google Analytics ID');
 		$this->description = $this->l('Integrate Google Analytics script into your shop');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
+		$this->ps_versions_compliancy = array('min' => '1.5.6.1', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
