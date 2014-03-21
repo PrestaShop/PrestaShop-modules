@@ -412,3 +412,6 @@
 [submodule "autoupgrade"]
 	path = autoupgrade
 	url = https://github.com/PrestaShop/autoupgrade.git
+[submodule "watermark"]
+	path = watermark
+	url = https://github.com/PrestaShop/watermark.git
