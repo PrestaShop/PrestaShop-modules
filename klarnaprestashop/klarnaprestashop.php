@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.5';
+		$this->version = '1.7.6';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -73,6 +73,7 @@ class KlarnaPrestaShop extends PaymentModule
 
 		$this->displayName = $this->l('Klarna Payment');
 		$this->description = $this->l('Klarna provides a revolutionary payment solution for online merchants.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->moduleName.'/backward_compatibility/backward.php');
