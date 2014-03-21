@@ -41,7 +41,7 @@ class MerchantWare extends PaymentModule
 	{
 		$this->name = 'merchantware';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.3';
+		$this->version = '1.2.4';
 		$this->author = 'PrestaShop';
 		$this->className = 'Merchantware';
 
@@ -51,6 +51,7 @@ class MerchantWare extends PaymentModule
 		$this->description = $this->l('Eliminate expensive and unnecessary gateway fees by partnering with Merchant Warehouse for your payment processing needs!');
 
 		$this->confirmUninstall =	$this->l('Are you sure you want to delete your details?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		if (!extension_loaded('soap'))
 			$this->_warnings[] = $this->l('In order to use your module, please activate Soap (PHP extension)');
 		if (!extension_loaded('openssl'))
