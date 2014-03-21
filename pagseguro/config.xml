@@ -2,7 +2,7 @@
 <module>
 	<name>pagseguro</name>
 	<displayName><![CDATA[PagSeguro]]></displayName>
-	<version><![CDATA[1.3]]></version>
+	<version><![CDATA[1.5]]></version>
 	<description><![CDATA[Receba pagamentos por cart&atilde;o de cr&eacute;dito, transfer&ecirc;ncia banc&aacute;ria e boleto.]]></description>
 	<author><![CDATA[PagSeguro Internet LTDA.]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
