@@ -7,9 +7,6 @@
 [submodule "avalaratax/backward_compatibility"]
 	path = avalaratax/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "backwardcompatibility/backward_compatibility"]
-	path = backwardcompatibility/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "buyster/backward_compatibility"]
 	path = buyster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -70,9 +67,6 @@
 [submodule "uspscarrier/backward_compatibility"]
 	path = uspscarrier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "themeinstallator/backward_compatibility"]
-	path = themeinstallator/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
 [submodule "ebay/backward_compatibility"]
 	path = ebay/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
