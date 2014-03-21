@@ -102,7 +102,7 @@ class AuthorizeAIM extends PaymentModule
 			if (in_array($currency['iso_code'], $this->aim_available_currencies))
 			{
 				Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code']);
-				Configuration::deleteByName('AUTHORIZE_AIM_KEY'.$currency['iso_code']);
+				Configuration::deleteByName('AUTHORIZE_AIM_KEY_'.$currency['iso_code']);
 			}
 
 		return parent::uninstall();
