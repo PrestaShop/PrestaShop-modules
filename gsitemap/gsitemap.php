@@ -36,14 +36,14 @@ class Gsitemap extends Module
 	{
 		$this->name = 'gsitemap';
 		$this->tab = 'seo';
-		$this->version = '2.3.6';
+		$this->version = '2.3.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 
 		parent::__construct();
 
 		$this->ps_versions_compliancy = array(
-			'min' => '1.5.0.0',
+			'min' => '1.5.6.1',
 			'max' => _PS_VERSION_
 		);
 
