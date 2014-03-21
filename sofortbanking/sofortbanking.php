@@ -51,7 +51,7 @@ class Sofortbanking extends PaymentModule
 	{
 		$this->name = 'sofortbanking';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$this->author = 'touchdesign';
 		$this->module_key = '65af9f83d2ae6fbe6dbdaa91d21f952a';
 		$this->currencies = true;
@@ -61,6 +61,7 @@ class Sofortbanking extends PaymentModule
 		$this->displayName = $this->l('sofortbanking');
 		$this->description = $this->l('Accepts payments by sofortbanking');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
