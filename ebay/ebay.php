@@ -208,9 +208,12 @@ class Ebay extends Module
 
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', ''); // fix to work around the PrestaShop bug when saving html for a configuration key that doesn't exist yet
 		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
+		$this->setConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE', '{TITLE}');
 		$this->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
 		$this->setConfiguration('EBAY_DELIVERY_TIME', 2);
+		$this->setConfiguration('EBAY_ACTIVATE_LOGS', '0');
+		$this->setConfiguration('EBAY_ACTIVATE_MAILS', '0');
 		// Picture size
 		self::installPicturesSettings($this);
 
@@ -486,12 +489,16 @@ class Ebay extends Module
 
 	public function importOrders($orders)
 	{
+		$errors_email = array();
 		foreach ($orders as $order)
 		{
+			$errors = array();
 
 			if (!$order->isCompleted())
 			{
-				$order->addErrorMessage($this->l('Status not complete, amount less than 0.1 or no matching product'));
+				$message = $this->l('Status not complete, amount less than 0.1 or no matching product');
+				$errors[] = $message;
+				$order->addErrorMessage($message);
 				continue;
 			}
 
@@ -504,7 +511,9 @@ class Ebay extends Module
 			// no order in ebay order table with this order_ref
 			if (!$order->hasValidContact())
 			{
-				$order->addErrorMessage($this->l('Invalid e-mail'));
+				$message = $this->l('Invalid e-mail');
+				$errors[] = $message;
+				$order->addErrorMessage($message);
 				continue;
 			}
 
@@ -513,7 +522,9 @@ class Ebay extends Module
 
 			if (!$order->hasAllProductsWithAttributes())
 			{
-				$order->addErrorMessage($this->l('Could not find the products in database'));
+				$message = $this->l('Could not find the products in database');
+				$errors[] = $message;
+				$order->addErrorMessage($message);
 				continue;
 			}
 
@@ -521,8 +532,10 @@ class Ebay extends Module
 
 			if (!$order->updateCartQuantities()) // if products in the cart
 			{
+				$message = $this->l('Could not add product to cart (maybe your stock quantity is 0)');
+				$errors[] = $message;
 				$order->deleteCart();
-				$order->addErrorMessage($this->l('Could not add product to cart (maybe your stock quantity is 0)'));
+				$order->addErrorMessage($message);
 				continue;
 			}
 
@@ -561,6 +574,9 @@ class Ebay extends Module
 			if (!version_compare(_PS_VERSION_, '1.5', '>'))
 				foreach ($order->getProducts() as $product)
 					$this->hookAddProduct(array('product' => new Product((int)$product['id_product'])));
+
+			if ($errors)
+				$errors_email[] = array('id_order_seller' => $order->getIdOrderSeller(), 'messages' => $errors);
 		}
 
 		$orders_ar = array();
@@ -580,6 +596,33 @@ class Ebay extends Module
 		}
 
 		file_put_contents(dirname(__FILE__).'/log/orders.php', "<?php\n\n".'$dateLastImport = '.'\''.date('d/m/Y H:i:s')."';\n\n".'$orders = '.var_export($orders_ar, true).";\n\n");
+
+		if (Configuration::get('EBAY_ACTIVATE_MAILS') && $errors_email)
+		{
+			$data = '';
+			foreach($errors_email as $e)
+			{
+				$data .= '<p>Id order : <strong>'.$e['id_order_seller'].'</strong></p><ul>';
+				foreach($e['messages'] as $m)
+				{
+					$data .= '<li>'.$m.'</li>';
+				}
+				$data .= '</ul><br/>';
+			}
+			Mail::Send(
+				(int)Configuration::get('PS_LANG_DEFAULT'),
+				'errorsImportEbay',
+				Mail::l('Errors import', (int)Configuration::get('PS_LANG_DEFAULT')),
+				array('{errors_email}' => $data),
+				strval(Configuration::get('PS_SHOP_EMAIL')),
+				null,
+				strval(Configuration::get('PS_SHOP_EMAIL')),
+				strval(Configuration::get('PS_SHOP_NAME')),
+				null,
+				null,
+				dirname(__FILE__).'/views/templates/mails/'
+			);
+		}
 	}
 
 
@@ -716,6 +759,12 @@ class Ebay extends Module
 				return $this->html.$this->displayError($this->l('You must enable cURL extension on your server if you want to use this module.'));
 			elseif (!ini_get('allow_url_fopen'))
 				return $this->html.$this->displayError($this->l('You must enable allow_url_fopen option on your server if you want to use this module.'));
+		}
+
+		// if isset download_log
+		if (Tools::getIsset('download_log') && Tools::getValue('download_log') == 1)
+		{
+			$this->__postProcessDownloadLog();
 		}
 
 		// If isset Post Var, post process else display form
@@ -936,7 +985,8 @@ class Ebay extends Module
 			'form_ebay_sync' => $this->_displayFormEbaySync(),
 			'orders_history' => $this->_displayOrdersHistory(),
 			'help' => $this->_displayHelp(),
-			'id_tab' => Tools::safeOutput(Tools::getValue('id_tab'))
+			'id_tab' => Tools::safeOutput(Tools::getValue('id_tab')),
+			'ebay_listings' => $this->_displayEbayListings()
 		);
 
 		$this->smarty->assign($smarty_vars);
@@ -994,7 +1044,10 @@ class Ebay extends Module
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
-			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
+			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS'),
+			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
+			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
+			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
 		);
 
 		if (Tools::getValue('relogin'))
@@ -1059,6 +1112,8 @@ class Ebay extends Module
 			&& $this->setConfiguration('EBAY_AUTOMATICALLY_RELIST', Tools::getValue('automaticallyrelist'))
 			&& $this->setConfiguration('EBAY_RETURNS_WITHIN', pSQL(Tools::getValue('returnswithin')))
 			&& $this->setConfiguration('EBAY_RETURNS_WHO_PAYS', pSQL(Tools::getValue('returnswhopays')))
+			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
+			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 		)
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
@@ -1364,7 +1419,10 @@ class Ebay extends Module
 			$extra_fees = Tools::getValue('extrafee');
 
 			foreach ($ebay_carriers as $key => $ebay_carrier)
-				EbayShipping::insert($ebay_carrier, $ps_carriers[$key], $extra_fees[$key]);
+			{
+				if (!empty($ebay_carrier) && !empty($ps_carriers[$key]))
+					EbayShipping::insert($ebay_carrier, $ps_carriers[$key], $extra_fees[$key]);
+			}
 		}
 
 		Db::getInstance()->Execute('TRUNCATE '._DB_PREFIX_.'ebay_shipping_international_zone');
@@ -1378,12 +1436,15 @@ class Ebay extends Module
 
 			foreach ($ebay_carriers_international as $key => $ebay_carrier_international)
 			{
-				EbayShipping::insert($ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
-				$last_id = EbayShipping::getLastShippingId();
+				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]))
+				{
+					EbayShipping::insert($ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
+					$last_id = EbayShipping::getLastShippingId();
 
-				if (isset($international_shipping_locations[$key]))
-					foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
-						EbayShippingInternationalZone::insert($last_id, $id_ebay_zone);
+					if (isset($international_shipping_locations[$key]))
+						foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
+							EbayShippingInternationalZone::insert($last_id, $id_ebay_zone);
+				}
 			}
 		}
 	}
@@ -1429,6 +1490,10 @@ class Ebay extends Module
 		else
 			$url_vars['tab'] = Tools::safeOutput(Tools::getValue('tab'));
 
+		$zones = Zone::getZones(true);
+		foreach ($zones as &$zone)
+			$zone['carriers'] = Carrier::getCarriers($this->context->language->id, true, false, $zone['id_zone']);
+
 		$this->smarty->assign(array(
 			'eBayCarrier' => $this->_getCarriers(),
 			'psCarrier' => Carrier::getCarriers($configs['PS_LANG_DEFAULT']),
@@ -1443,7 +1508,8 @@ class Ebay extends Module
 			'formUrl' => $this->_getUrl($url_vars),
 			'ebayZoneNational' => (isset($configs['EBAY_ZONE_NATIONAL']) ? $configs['EBAY_ZONE_NATIONAL'] : false),
 			'ebayZoneInternational' => (isset($configs['EBAY_ZONE_INTERNATIONAL']) ? $configs['EBAY_ZONE_INTERNATIONAL'] : false),
-			'ebay_token' => $configs['EBAY_SECURITY_TOKEN']			
+			'ebay_token' => $configs['EBAY_SECURITY_TOKEN'],
+			'newPrestashopZone' => $zones
 		));
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
@@ -1480,6 +1546,8 @@ class Ebay extends Module
 		$smarty_vars = array(
 			'action_url' => $action_url,
 			'ebay_product_template' => $ebay_product_template,
+			'ebay_product_template_title' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE'),
+			'features_product' => Feature::getFeatures($this->context->language->id),
 			'ad' => dirname($_SERVER['PHP_SELF']),
 			'base_uri' => __PS_BASE_URI__,
 			'is_one_dot_three' => (substr(_PS_VERSION_, 0, 3) == '1.3'),
@@ -1508,13 +1576,16 @@ class Ebay extends Module
 	private function _postProcessTemplateManager()
 	{
 		$ebay_product_template = Tools::getValue('ebay_product_template');
+		$ebay_product_template_title = Tools::getValue('ebay_product_template_title');
+		if (empty($ebay_product_template_title))
+			$ebay_product_template_title = '{TITLE}';
 
 		// work around for the tinyMCE bug deleting the css line
 		$css_line = '<link rel="stylesheet" type="text/css" href="'.$this->_getModuleUrl().'views/css/ebay.css" />';
 		$ebay_product_template = $css_line.$ebay_product_template;
 
 			// Saving new configurations
-		if ($this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $ebay_product_template, true))
+		if ($this->setConfiguration('EBAY_PRODUCT_TEMPLATE', $ebay_product_template, true) && $this->setConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE', $ebay_product_template_title))
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
@@ -2078,6 +2149,141 @@ class Ebay extends Module
 	public function getContext()
 	{
 		return $this->context;
+	}
+
+	public function ajaxPreviewTemplate($content, $id_lang)
+	{
+		// work around for the tinyMCE bug deleting the css line
+		$css_line = '<link rel="stylesheet" type="text/css" href="'.$this->_getModuleUrl().'views/css/ebay.css" />';
+		$content = $css_line.$content;
+
+		// random product
+		$category = Category::getRootCategory($id_lang);
+		$product = $category->getProducts($id_lang, 0, 1, null, null, false, true, true, 1, false);
+		$product = $product[0];
+
+		// data
+		$data = array(
+			'price' => $product['price'],
+			'price_without_reduction' => '',
+			'reduction' => $product['reduction'],
+			'name' => $product['name'],
+			'description' => $product['description'],
+			'description_short' => $product['description_short']
+			);
+		if ($data['reduction'] > 0)
+			$data['price_without_reduction'] = $product['price_without_reduction'];
+
+		// pictures product
+		$product = new Product($product['id_product'], false, $id_lang);
+		$pictures = EbaySynchronizer::_getPictures($product, $id_lang, $this->context, array());
+		$data['large_pictures'] = $pictures['large'];
+		$data['medium_pictures'] = $pictures['medium'];
+
+		// features product
+		$features_html = '';
+		foreach ($product->getFrontFeatures($id_lang) as $feature)
+			$features_html .= '<b>'.$feature['name'].'</b> : '.$feature['value'].'<br/>';
+		$data['features'] = $features_html;
+
+		$content = EbaySynchronizer::fillAllTemplate($data, $content);
+
+		echo $content;
+	}
+
+	private function _displayEbayListings()
+	{
+		$this->smarty->assign('id_employee', $this->context->employee->id);
+		return $this->display(__FILE__, 'views/templates/hook/ebay_listings.tpl');
+	}
+
+	public function displayEbayListingsAjax($id_employee = null)
+	{
+		$ebay = new EbayRequest();
+		$employee = new Employee($id_employee);
+		$this->context->employee = $employee;
+		$link = $this->context->link;
+		$id_lang = $this->context->language->id;
+		$products_ebay_listings = array();
+		$products = EbayProduct::getProductsWithoutBlacklisted($id_lang);
+		$data = array(
+			'id_lang' => $id_lang,
+			'titleTemplate' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE')
+			);
+
+		foreach ($products as $p)
+		{
+			$data['real_id_product'] = (int)$p['id_product'];
+			$data['name'] = $p['name'];
+			$data['manufacturer_name'] = $p['manufacturer_name'];
+			$data['reference'] = $p['reference'];
+			$data['ean13'] = $p['ean13'];
+			$reference_ebay = $p['id_product_ref'];
+			$product = new Product((int)$p['id_product'], true, $id_lang);
+
+			if((int)$p['id_attribute'] > 0)
+			{
+				// No Multi Sku case so we do multiple products from a multivariation product
+				$combinaison = $product->getAttributeCombinationsById((int)$p['id_attribute'], $id_lang);
+				$combinaison = $combinaison[0];
+
+				$data['reference'] = $combinaison['reference'];
+				$data['ean13'] = $combinaison['ean13'];
+				$variation_specifics = EbaySynchronizer::_getVariationSpecifics($combinaison['id_product'], $combinaison['id_product_attribute'], $id_lang);
+				foreach ($variation_specifics as $variation_specific)
+					$data['name'] .= ' '.$variation_specific;
+
+				$products_ebay_listings[] = array(
+					'id_product' => $combinaison['id_product'].'-'.$combinaison['id_product_attribute'],
+					'quantity' => $combinaison['quantity'],
+					'prestashop_title' => $data['name'],
+					'ebay_title' => EbayRequest::prepareTitle($data),
+					'reference_ebay' => $reference_ebay,
+					'link' => $link->getAdminLink('AdminProducts').'&id_product='.(int)$combinaison['id_product'].'&updateproduct',
+					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
+					);
+			}
+			else
+			{
+				$products_ebay_listings[] = array(
+					'id_product' => $data['real_id_product'],
+					'quantity' => $product->quantity,
+					'prestashop_title' => $data['name'],
+					'ebay_title' => EbayRequest::prepareTitle($data),
+					'reference_ebay' => $reference_ebay,
+					'link' => $link->getAdminLink('AdminProducts').'&id_product='.$data['real_id_product'].'&updateproduct',
+					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
+					);
+			}
+		}
+
+		$this->smarty->assign('products_ebay_listings', $products_ebay_listings);
+
+		echo $this->display(__FILE__, 'views/templates/hook/ebay_listings_ajax.tpl');
+	}
+
+	private function __postProcessDownloadLog()
+	{
+		$full_path = _PS_MODULE_DIR_.'ebay/log/request.php';
+		$file_name = basename($full_path);
+
+		$date = gmdate(DATE_RFC1123);
+
+		header('Pragma: public');
+		header('Cache-Control: must-revalidate, pre-check=0, post-check=0, max-age=0');
+
+		header('Content-Tranfer-Encoding: none');
+		header('Content-Length: '.filesize($full_path));
+		header('Content-MD5: '.base64_encode(md5_file($full_path)));
+		header('Content-Type: application/octetstream; name="'.$file_name.'"');
+		header('Content-Disposition: attachment; filename="'.$file_name.'"');
+
+		header('Date: '.$date);
+		header('Expires: '.gmdate(DATE_RFC1123, time()+1));
+		header('Last-Modified: '.gmdate(DATE_RFC1123, filemtime($full_path)));
+
+		readfile($full_path);
+		exit;
 	}
 }
 
