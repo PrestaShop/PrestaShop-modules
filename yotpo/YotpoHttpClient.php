@@ -11,7 +11,7 @@ class YotpoHttpClient
   	{
 		$this->name = $name;
   	}
-  	
+  	  		
     public function check_if_b2c_user($email) {
         return $this->makeGetRequest(self::YOTPO_API_URL . '/users/find_by_type_and_email.json', array('type' => 'b2c', 'email' => $email));
     }
@@ -65,7 +65,7 @@ class YotpoHttpClient
 		}
 	}
 	
-	public function makeRichSnippetRequest($app_key, $secret_token, $product_sku)
+	public function makeRichSnippetRequest($app_key, $product_sku)
 	{
 	    return $this->makeGetRequest(self::YOTPO_API_URL_NO_SSL.'/products/'.$app_key.'/richsnippet/'.$product_sku, array(), 2);
 	}
@@ -79,7 +79,7 @@ class YotpoHttpClient
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $parsed_data);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,$timeout);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Content-length: '.strlen($parsed_data)));                                                                                                                   
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: '.$content_type, 'Content-length: '.Tools::strlen($parsed_data)));                                                                                                                   
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); /* Added by PrestaShop */
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); /* Added by PrestaShop */		
 		$result = curl_exec($ch);
@@ -165,7 +165,7 @@ class YotpoHttpClient
 			$result = preg_match('/response[\W]*({)/', $data, $matches, PREG_OFFSET_CAPTURE);
 			$response = '';
 			if ($result == 1 && isset($matches[1][1]))
-				$response = YotpoHttpClient::getStringBetweenBrackets(substr($data, $matches[1][1]));
+				$response = YotpoHttpClient::getStringBetweenBrackets(Tools::substr($data, $matches[1][1]));
 
 			return array('json' => false, 'status_code' => $status_code, 'status_message' => $status_message, 'response' => $response);
 		}
@@ -176,7 +176,7 @@ class YotpoHttpClient
 		$count = 0;
 		if($data[0] != '{')
 			return '';
-		for ($position = 0; $position < strlen($data); $position++)
+		for ($position = 0; $position < Tools::strlen($data); $position++)
 		{
 			switch ($data[$position])
 			{
@@ -189,7 +189,7 @@ class YotpoHttpClient
 					
 			}
 			if(!$count)
-				return substr($data, 0, $position);	
+				return Tools::substr($data, 0, $position);	
 		}
 		return '';
 	}

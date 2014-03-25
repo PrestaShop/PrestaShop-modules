@@ -32,7 +32,7 @@
 	
 }
 
-.y-href {
+.y-settings-white-box .y-href {
 	color: #3293D6;
 	text-decoration: underline;
 	font-size: 17px;
@@ -124,7 +124,7 @@
 	font-weight: bold;
 	float: none;	
 }
-.y-submit-btn {
+.y-footer .y-submit-btn {
 	margin-left: 5px;
 	padding: 4px 12px;
 	border-radius: 4px;
@@ -198,3 +198,12 @@
 .analytics { background: url('../img/spriteSheet.png') no-repeat  -189px -154px; }
 .seo { background: url('../img/spriteSheet.png') no-repeat  -189px -293px; }
 .yotpo_language_code_text {text-transform: lowercase;}
+.alert{
+	width: 100%;
+	text-align: center;
+	margin: 0 0 15px 0;
+	padding: 10px 15px;
+	border-top: 1px solid #DF7B7B;
+	border-bottom: 1px solid #DF7B7B;
+	background-color: #FFE6E6;
+}
