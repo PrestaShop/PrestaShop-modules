@@ -2,7 +2,7 @@
 <module>
 	<name>mondialrelay</name>
 	<displayName><![CDATA[Mondial Relay]]></displayName>
-	<version><![CDATA[1.8.11]]></version>
+	<version><![CDATA[1.8.12]]></version>
 	<description><![CDATA[Deliver in Relay points]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[shipping_logistics]]></tab>

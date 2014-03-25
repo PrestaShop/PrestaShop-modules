@@ -1,4 +1,4 @@
-var PS_MRObject = (function($, undifened) {
+var PS_MRObject = (function($, undefined) {
 
 	var selected_id_carrier = 0;
 	var selected_relay_point = 0;
@@ -506,7 +506,7 @@ var PS_MRObject = (function($, undifened) {
 			value = $('.id_carrier:checked').val();
 		else if (PS_MRData.PS_VERSION >= '1.5')
 			value = $('.delivery_option_radio:checked').val().replace(',', '');
-		
+
 		if (value != selected_id_carrier) {
 			selected_id_carrier = value;
 			$('.PS_MRSelectedCarrier').fadeOut('fast');
@@ -656,7 +656,8 @@ var PS_MRObject = (function($, undifened) {
 		carrier_id = carrierSelected.val();
 
 		// Block is an input, we need the 'tr' element
-		blockTR = carrierSelected.parent().parent();
+		blockTR = carrierSelected.closest('tr');
+
 		// Add a new line to the table after the clicked parent element
 		blockTR.after(' \
 		<tr class="PS_MRSelectedCarrier" id="PS_MRSelectedCarrier_' + carrier_id + '"> \
@@ -1036,10 +1037,13 @@ var PS_MRObject = (function($, undifened) {
 			else if (PS_MRData.PS_VERSION >= '1.5' && PS_MRData.carrier)
 			{ // 1.5 way
 				selected_id_carrier = $('input[class=delivery_option_radio]:checked').val().replace(',', '');
-				var carrier_block = $('input[class=delivery_option_radio]:checked').parent('div.delivery_option');
+				if (PS_MRData.PS_VERSION < '1.6')
+					var carrier_block = $('input[class=delivery_option_radio]:checked').parent('div.delivery_option');
+				else var carrier_block = $('input[class=delivery_option_radio]:checked').closest('div.delivery_option').children('div');
 				
 				PS_MRCarrierMethodList[PS_MRData.carrier.id] = PS_MRData.carrier.id_mr_method;	
 				PS_MRSelectedRelayPoint['carrier_id'] = PS_MRData.carrier.id;
+
 				// Simulate 1.4 table to store the relay point fetched
 				$(carrier_block).append(
 					'<div>'
