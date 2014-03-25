@@ -195,8 +195,8 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		}
 		else if($customer->id)
 		{//If address exists, we update it with new informations
-			$address = setCustomerAddress($ppec, $customer, $address->id);
-			$address->save();
+			// $address = setCustomerAddress($ppec, $customer, $address->id);
+			// $address->save();
 		}
 
 		if ($customer->id && !$address->id)
