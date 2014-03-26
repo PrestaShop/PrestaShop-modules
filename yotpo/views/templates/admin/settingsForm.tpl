@@ -73,6 +73,20 @@
 			<div class="y-input"><input type="text" name="yotpo_oauth_token" value="{$yotpo_oauthToken|escape:'htmlall':'UTF-8'}"/></div>
 			<div class="y-label">{l s='Enable bottom line' mod='yotpo'}
             	<input type="checkbox" name="yotpo_bottom_line_enabled" value="1" {if $yotpo_bottomLineEnabled}checked="checked"{/if} />
+        	</div>
+        	
+        	<div class="y-label">{l s='Select the status that will trigger the Mail After Purchase e-mail:' mod='yotpo'} </br>
+        	<div class="y-label y-multiselect">
+        		{foreach from=$yotpo_all_statuses item='order_state'}
+					<label><input type="checkbox" 
+						  name="yotpo_map_status[]"										  
+						  value="{$order_state.id_order_state|intval}"
+						  {if $order_state.selected == '1'} checked {/if}
+						  />
+						  {$order_state.name|escape:'htmlall':'UTF-8'}									  
+					</label>
+				{/foreach}
+        	</div>
         	</div> 
 	        <div class="y-label">{l s='Select bottom Line location' mod='yotpo'}
 	          <select name="yotpo_bottom_line_location">
@@ -94,7 +108,7 @@
 	               data-url="{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:'htmlall':'UTF-8'}" <br>
 	               data-image-url="{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}" <br>
 	               data-description="{$yotpoProductDescription|escape:'htmlall':'UTF-8'}" <br>
-	               data-bread-crumbs="{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}"&gt;<br>
+	               data-bread-crumbs="{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}"<br>
 	               data-lang="{$yotpoLanguage|escape:'htmlall':'UTF-8'}"&gt; <br>
 	              &lt;/div&gt;
 	           {/literal}
