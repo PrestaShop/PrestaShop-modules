@@ -30,7 +30,7 @@ include(dirname(__FILE__). '/../../init.php');
 /* will include backward file */
 include(dirname(__FILE__). '/authorizeaim.php');
 
-$authorizeaim = new authorizeAIM();
+$authorizeaim = new AuthorizeAIM();
 
 /* Does the cart exist and is valid? */
 $cart = Context::getContext()->cart;
@@ -64,6 +64,7 @@ if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($invoiceAd
 }
 
 $params = array(
+	'x_test_request' => (bool)Configuration::get('AUTHORIZE_AIM_TEST_MODE'),
 	'x_invoice_num' => (int)$_POST['x_invoice_num'],
 	'x_amount' => number_format((float)$cart->getOrderTotal(true, 3), 2, '.', ''),
 	'x_exp_date' => Tools::safeOutput($_POST['x_exp_date_m'].$_POST['x_exp_date_y']),
@@ -89,7 +90,7 @@ $postString = '';
 foreach ($params as $key => $value)
 	$postString .= $key.'='.urlencode($value).'&';
 $postString = trim($postString, '&');
-$url = 'https://'.(Configuration::get('AUTHORIZE_AIM_DEMO') ? 'test' : 'secure').'.authorize.net/gateway/transact.dll';
+$url = 'https://'.(Configuration::get('AUTHORIZE_AIM_SANDBOX') ? 'test' : 'secure').'.authorize.net/gateway/transact.dll';
 
 /* Do the CURL request ro Authorize.net */
 $request = curl_init($url);

@@ -27,13 +27,13 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class authorizeAIM extends PaymentModule
+class AuthorizeAIM extends PaymentModule
 {
 	public function __construct()
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.10';
+		$this->version = '1.4.11';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -73,6 +73,8 @@ class authorizeAIM extends PaymentModule
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+
+		$this->checkForUpdates();
 	}
 
 	public function install()
@@ -82,13 +84,15 @@ class authorizeAIM extends PaymentModule
 			$this->registerHook('payment') &&
 			$this->registerHook('header') &&
 			$this->registerHook('backOfficeHeader') &&
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0) &&
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', _PS_OS_ERROR_);
 	}
 
 	public function uninstall()
 	{
-		Configuration::deleteByName('AUTHORIZE_AIM_DEMO');
+		Configuration::deleteByName('AUTHORIZE_AIM_SANDBOX');
+		Configuration::deleteByName('AUTHORIZE_AIM_TEST_MODE');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_VISA');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_MASTERCARD');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
@@ -101,7 +105,7 @@ class authorizeAIM extends PaymentModule
 			if (in_array($currency['iso_code'], $this->aim_available_currencies))
 			{
 				Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code']);
-				Configuration::deleteByName('AUTHORIZE_AIM_KEY'.$currency['iso_code']);
+				Configuration::deleteByName('AUTHORIZE_AIM_KEY_'.$currency['iso_code']);
 			}
 
 		return parent::uninstall();
@@ -123,7 +127,8 @@ class authorizeAIM extends PaymentModule
 	public function hookBackOfficeHeader()
 	{
 		$this->context->controller->addJQuery();
-		$this->context->controller->addJqueryPlugin('fancybox');
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
+			$this->context->controller->addJqueryPlugin('fancybox');
 
 		$this->context->controller->addJS($this->_path.'js/authorizeaim.js');
 		$this->context->controller->addCSS($this->_path.'css/authorizeaim.css');
@@ -135,7 +140,26 @@ class authorizeAIM extends PaymentModule
 
 		if (Tools::isSubmit('submitModule'))
 		{
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', Tools::getvalue('authorizeaim_demo_mode'));
+			$authorizeaim_mode = (int)Tools::getvalue('authorizeaim_mode');
+			// Sandbox environment
+			if ($authorizeaim_mode == 2)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1);
+			}
+			// Production environment + test mode
+			else if ($authorizeaim_mode == 1)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+			// Production environment
+			else
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
@@ -164,7 +188,8 @@ class authorizeAIM extends PaymentModule
 			'module_dir' => $this->_path,
 			'order_states' => $order_states,
 
-			'AUTHORIZE_AIM_DEMO' => (bool)Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')),
+			'AUTHORIZE_AIM_TEST_MODE' => (bool)Configuration::get('AUTHORIZE_AIM_TEST_MODE'),
+			'AUTHORIZE_AIM_SANDBOX' => (bool)Configuration::get('AUTHORIZE_AIM_SANDBOX'),
 
 			'AUTHORIZE_AIM_CARD_VISA' => Configuration::get('AUTHORIZE_AIM_CARD_VISA'),
 			'AUTHORIZE_AIM_CARD_MASTERCARD' => Configuration::get('AUTHORIZE_AIM_CARD_MASTERCARD'),
@@ -214,6 +239,7 @@ class authorizeAIM extends PaymentModule
 			$this->context->smarty->assign('cards', $cards);
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
+			$this->context->smarty->assign('currency', $currency);
 			
 			return $this->display(__FILE__, 'views/templates/hook/authorizeaim.tpl');
 		}
@@ -251,5 +277,20 @@ class authorizeAIM extends PaymentModule
 			// 68 => Owner name
 			$this->pcc->card_holder = (string)$response[68];
 		}
+	}
+
+	private function checkForUpdates()
+	{
+		// Used by PrestaShop 1.3 & 1.4
+		if (version_compare(_PS_VERSION_, '1.5', '<') && self::isInstalled($this->name))
+			foreach (array('1.4.8', '1.4.11') as $version)
+			{
+				$file = dirname(__FILE__).'/upgrade/install-'.$version.'.php';
+				if (Configuration::get('AUTHORIZE_AIM') < $version && file_exists($file))
+				{
+					include_once($file);
+					call_user_func('upgrade_module_'.str_replace('.', '_', $version), $this);
+				}
+			}
 	}
 }
