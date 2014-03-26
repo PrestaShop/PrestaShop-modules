@@ -38,15 +38,15 @@
                      
                      {if isset($prs_version) && $prs_version >= 1.5}
                      {if $current_credits_sms >= 10}
-                        <span style="margin-bottom:10px; color:#000; font-weight:bold;color: #585A69;">{l s='Currently you have ' mod='sendinblue'}<strong style="color: #000000;"> {$current_credits_sms}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}">{l s=' here' mod='sendinblue'}</a>.</span>
+                        <span style="margin-bottom:10px; color:#000; font-weight:bold;color: #585A69;">{l s='Currently you have ' mod='sendinblue'}<strong style="color: #000000;"> {$current_credits_sms|floatval}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}">{l s=' here' mod='sendinblue'}</a>.</span>
                         {else}
-                        <span style="margin-bottom:10px; font-weight:bold; color: #585A69;">{l s='Currently you have ' mod='sendinblue'} <strong  style="color:#F00; ">{$current_credits_sms}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}" >{l s=' here' mod='sendinblue'}</a>.</span>
+                        <span style="margin-bottom:10px; font-weight:bold; color: #585A69;">{l s='Currently you have ' mod='sendinblue'} <strong  style="color:#F00; ">{$current_credits_sms|floatval}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}" >{l s=' here' mod='sendinblue'}</a>.</span>
                         {/if}
                      {else}
                      		{if $current_credits_sms >= 10}
-                            <span style="margin-bottom:10px; color:#000; font-weight:bold;color: #996633;">{l s='Currently you have ' mod='sendinblue'}<strong style="color: #000000;"> {$current_credits_sms}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}">{l s=' here' mod='sendinblue'}</a>.</span>
+                            <span style="margin-bottom:10px; color:#000; font-weight:bold;color: #996633;">{l s='Currently you have ' mod='sendinblue'}<strong style="color: #000000;"> {$current_credits_sms|floatval}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}">{l s=' here' mod='sendinblue'}</a>.</span>
                             {else}
-                            <span style="margin-bottom:10px; font-weight:bold; color: #996633;">{l s='Currently you have ' mod='sendinblue'} <strong  style="color:#F00; ">{$current_credits_sms}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}" >{l s=' here' mod='sendinblue'}</a>.</span>
+                            <span style="margin-bottom:10px; font-weight:bold; color: #996633;">{l s='Currently you have ' mod='sendinblue'} <strong  style="color:#F00; ">{$current_credits_sms|floatval}</strong> {l s=' credits sms. To buy more credits, please click' mod='sendinblue'}<a target="_blank" href ="{l s='https://www.sendinblue.com/pricing' mod='sendinblue'}" >{l s=' here' mod='sendinblue'}</a>.</span>
                             {/if}
                      {/if}   
                         <br/><br/>
@@ -58,17 +58,17 @@
                            {l s='No' mod='sendinblue'}
                   
                         <div class="hideCredit" id="div_email_test" style="padding-top:20px;">
-                         <form action="{$form_url}" method="POST" name="notify_sms_mail_form" >
+                         <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="notify_sms_mail_form" >
                    
                            <div id="errmsg" style="color:#F00"></div>
                            <p  class="form-data"><label>{l s='Email' mod='sendinblue'}</label>
-                            <input name="sendin_notify_email" id="sendin_notify_email" type="text" value="{$Sendin_Notify_Email}" size="40" /></p>
+                            <input name="sendin_notify_email" id="sendin_notify_email" type="text" value="{$Sendin_Notify_Email|escape:'htmlall':'UTF-8'}" size="40" /></p>
 							<p  class="form-data"> <label>{l s='Limit' mod='sendinblue'}</label>
                            <input name="sendin_notify_value" id="sendin_notify_value" type="text" value="{$Sendin_Notify_Value}" size="40" /><span style="position:absolute;" class="toolTip" title="{l s='Alert threshold for remaining credits' mod='sendinblue'}"></span></p>
 							<p  class="form-data"><input name="notify_sms_mail" type="submit"  onClick="return validate('{l s='Please provide valid Email!' mod='sendinblue'}','{l s='Please provide a limit greater than 0' mod='sendinblue'}');" value="{l s='Save' mod='sendinblue'}" class="button" style=" margin-left: 658px;" /></p>
 							<p  class="mrgin-left">{l s='To get the email notification, you should run ' mod='sendinblue'}{$link}{l s=' atleast one time per day. ' mod='sendinblue'}
 							<span class="toolTip" title="{l s='Note that if you change the name of your Shop (currently ' mod='sendinblue'}
-			        {$site_name}{l s=') the token value changes.' mod='sendinblue'}">&nbsp;</span></p>
+			        {$site_name|escape:'htmlall':'UTF-8'}{l s=') the token value changes.' mod='sendinblue'}">&nbsp;</span></p>
                           
                           </form>
                         </div>
@@ -107,7 +107,7 @@
                                        <tr>
                                        <td style="padding:0">
 										 
-										 <form action="{$form_url}" method="POST" name="sender_order_form">
+										 <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_order_form">
 
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr><td valign="top" style="padding-left:0; width:250px"><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
@@ -115,7 +115,7 @@
                                           <td valign="top">
                                           <label>{l s='Sender' mod='sendinblue'}</label></td>
                                           <td>
-                                             <input name="sender_order"  id="sender_order" type="text" value="{$Sendin_Sender_Order}" class="input_bx" />
+                                             <input name="sender_order"  id="sender_order" type="text" value="{$Sendin_Sender_Order|escape:'htmlall':'UTF-8'}" class="input_bx" />
                                              <span class="toolTip" title="{l s='This field allows you to personalize the SMS sender. Attention, there is a limited number of characters.If you enter a name, it is limited to 11 characters, and special characters (é, à ...) are not accepted. If you enter a phone number, it is limited to 17 characters; the number should be preceded by 00 and the country code (for instance, for France mobile 06 12 34 56 78 use 0033612345678 with 0033 is France prefix ).' mod='sendinblue'}">&nbsp;</span>
                                              <div class="hintmsg"><em>{l s='Number of characters left: ' mod='sendinblue'}<span id="sender_order_text">17	</span></em>
                                              </div>
@@ -125,7 +125,7 @@
                                        <tr>
                                           <td valign="top"><label>{l s='Message' mod='sendinblue'}</label></td>
                                           <td>
-                                             <textarea name="sender_order_message" id="sender_order_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Order_Message}</textarea>
+                                             <textarea name="sender_order_message" id="sender_order_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Order_Message|escape:'htmlall':'UTF-8'}</textarea>
                                              <span class="toolTip" style="margin-top:35px;" title="{l s=' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write  SMS of 240 characters, it will be recorded using two SMS.' mod='sendinblue'}">&nbsp;</span>
                                              <div class="clear"></div>
                                               <span style="line-height:16px; margin-bottom:15px; width:333px;">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_order_message_text_count">0</span>
@@ -195,13 +195,13 @@
                                        <tr>
                                        <td >
 										 
-										 <form action="{$form_url}" method="POST" name="sender_shipment_form">
+										 <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_shipment_form">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr><td valign="top"  style="padding-left:0" ><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
                                        <tr>
                                           <td style="width:250px"  valign="top"><label>{l s='Sender' mod='sendinblue'}</label></td>
                                           <td >
-                                             <input name="sender_shipment" maxlength="17" id="sender_shipment" type="text" value="{$Sendin_Sender_Shipment}" class="input_bx" />
+                                             <input name="sender_shipment" maxlength="17" id="sender_shipment" type="text" value="{$Sendin_Sender_Shipment|escape:'htmlall':'UTF-8'}" class="input_bx" />
                                              <span class="toolTip" title="{l s='This field allows you to personalize the SMS sender. Attention, there is a limited number of characters.If you enter a name, it is limited to 11 characters, and special characters (é, à ...) are not accepted. If you enter a phone number, it is limited to 17 characters; the number should be preceded by 00 and the country code (for instance, for France mobile 06 12 34 56 78 use 0033612345678 with 0033 is France prefix ).' mod='sendinblue'}">&nbsp;</span>
                                              <div class="hintmsg"><em>{l s='Number of characters left: ' mod='sendinblue'}<span id="sender_shipment_text">17</span></em>
                                              </div>
@@ -211,7 +211,7 @@
                                        <tr>
                                           <td valign="top"><label>{l s='Message' mod='sendinblue'}</label></td>
                                           <td>
-                                             <textarea name="sender_shipment_message" id="sender_shipment_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Shipment_Message}</textarea>
+                                             <textarea name="sender_shipment_message" id="sender_shipment_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Shipment_Message|escape:'htmlall':'UTF-8'}</textarea>
                                              <span class="toolTip" style="margin-top:35px;" title="{l s=' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write  SMS of 240 characters, it will be recorded using two SMS.' mod='sendinblue'}">&nbsp;</span>
                                                 <div class="clear"></div>                                        
                                              <span style="line-height:16px; margin-bottom:15px; width:333px;">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_shipment_message_text_count">0</span>
@@ -235,7 +235,7 @@
                                        
                                         <tr>
                                        <td colspan="2" valign="top" border="0">
-										<form action="{$form_url}" method="POST" name="sender_order_testForm">
+										<form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_order_testForm">
 
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
                                        <tr>
@@ -281,7 +281,7 @@
 									<tr>
                                        <td>
 										 
-										 <form action="{$form_url}" method="POST" name="sender_order_form">
+										 <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_order_form">
 
 										<table width="100%" border="0" cellspacing="0" cellpadding="0" class="form-data no-padding">
 

@@ -32,7 +32,7 @@
 	<tbody>
 	
 		<tr>
-			<td style="border-bottom:none;">{$middlelable}
+			<td style="border-bottom:none;">{$middlelable|escape:"htmlentity"}
 			</td>
 		</tr>
 		<tr id="userDetails" style="display:none;">
