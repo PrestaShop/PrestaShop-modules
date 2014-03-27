@@ -111,11 +111,18 @@ class ProductExtractorToXML extends DataExtractorToXML
 			$this->nbEntities--;
 			return ' ';
 		}
+		
+		// Force the shop of the context regarding the shop of the product for the getParentsCategories function
+		if((int)Context::getContext()->shop->id != (int)$aEntity['id_shop'])
+			Context::getContext()->shop = $oPrediggoConfig->getContext();
 
 		$ps_tax = (int)Configuration::get('PS_TAX');
 
 		foreach($this->aLanguages as $aLanguage)
 		{
+			if(!isset($aLanguage['shops'][(int)$aEntity['id_shop']]))
+				continue;
+			
 			$id_lang = (int)$aLanguage['id_lang'];
 
 			// Set the root of the XML
