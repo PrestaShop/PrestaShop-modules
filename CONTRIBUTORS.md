@@ -53,6 +53,7 @@
 - jeromenadaud 
 - Jerome Nadaud 
 - Jonadabe 
+- Jonathan Wohl 
 - joseantgv 
 - Julien 
 - Julien Bijoux 
