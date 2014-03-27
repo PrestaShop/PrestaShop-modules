@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,6 @@ class EbayRequest
 	private $compatibility_level;
 	private $debug = false;
 	private $dev = false;
-	private $country;
 	private $ebay_country;
 
 	private $smarty_data;
@@ -56,8 +55,7 @@ class EbayRequest
 		/** Backward compatibility */
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 
-		$this->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
-		$this->ebay_country = new EbayCountrySpec($this->country);
+		$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
 		$this->itemConditionError = false;
 
 		/**
@@ -73,7 +71,7 @@ class EbayRequest
 			$this->apiUrl = 'https://api.sandbox.ebay.com/ws/api.dll';
 			$this->compatibility_level = 719;
 			$this->runame = 'Prestashop-Prestash-2629-4-hpehxegu';
-			$this->loginURL = 'https://signin.sandbox.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
+			$this->loginURL = $this->ebay_country->getSiteSignin();
 		}
 		else
 		{
@@ -82,7 +80,7 @@ class EbayRequest
 			$this->apiUrl = 'https://api.ebay.com/ws/api.dll';
 			$this->compatibility_level = 741;
 			$this->runame = 'Prestashop-Prestash-70a5-4-pepwa';
-			$this->loginURL = 'https://signin.ebay.'.$this->ebay_country->getSiteExtension().'/ws/eBayISAPI.dll';
+			$this->loginURL = $this->ebay_country->getSiteSignin();
 		}
 
 	}
@@ -246,14 +244,23 @@ class EbayRequest
 		if ($response === false)
 			return false;
 
-		$returns_policies = array();
+		$returns_policies = $returns_within = array();
 
 		foreach ($response->ReturnPolicyDetails as $return_policy_details)
-			foreach ($return_policy_details as $key => $returns)
+			foreach ($return_policy_details as $key => $returns) {
 				if ($key == 'ReturnsAccepted')
 					$returns_policies[] = array('value' => (string)$returns->ReturnsAcceptedOption, 'description' => (string)$returns->Description);
+				else if ($key == 'ReturnsWithin') 
+					$returns_within[] = array('value' => (string)$returns->ReturnsWithinOption, 'description' => (string)$returns->Description);
+				else if ($key == 'ShippingCostPaidBy')
+					$returns_whopays[] = array('value' => (string)$returns->ShippingCostPaidByOption, 'description' => (string)$returns->Description);
+			}
 
-		return $returns_policies;
+		return array(
+			'ReturnsAccepted' => $returns_policies,
+			'ReturnsWithin' => $returns_within, 
+			'ReturnsWhoPays' => $returns_whopays
+		);
 	}
 
 	public function getInternationalShippingLocations()
@@ -365,7 +372,7 @@ class EbayRequest
 			'condition_id' => $data['condition'],
 			'price_update' => !isset($data['noPriceUpdate']),
 			'start_price' => $data['price'],
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
 			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
@@ -446,7 +453,7 @@ class EbayRequest
 
 		// Build the request Xml string
 		$vars = array(
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'description' => $data['description'],
 			'condition_id' => $data['condition'],
@@ -502,7 +509,7 @@ class EbayRequest
 
 		$vars = array(
 			'item_id' => $data['itemID'],
-			'country' => $this->country->iso_code,
+			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'condition_id' => $data['condition'],
 			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
@@ -619,6 +626,8 @@ class EbayRequest
 		$vars = array(
 			'returns_accepted_option' => Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'),
 			'description' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
+			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
+			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
 		);
 
 		$this->smarty->assign($vars);
@@ -802,6 +811,10 @@ class EbayRequest
 			$this->error = 'Sorry, technical problem, try again later.';
 
 		return empty($this->error);
+	}
+
+	public function getDev() {
+		return $this->dev;
 	}
 
 }

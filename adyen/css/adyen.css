@@ -1,0 +1,16 @@
+/* #module-adyen-payment #center_column { width:757px;} */
+
+.adyen-logo-link { margin-top: 10px;}
+.adyen-logo { margin-top: -13px;} 
+
+.payment_module input { border:0; background:none; }
+	.payment_module input:hover { text-decoration:unerline; }
+
+ul.adyen-hpp-options { list-style-type:none; margin-left:10px;}
+	ul.adyen-hpp-options label { cursor:pointer; }
+	ul.adyen-hpp-options li { margin:10px 0; clear:both; overflow:hidden;}
+		ul.adyen-hpp-options li input {  float:left; display:block; margin:12px 20px 0 0;}
+		ul.adyen-hpp-options li img {  float:left; display:block; margin-right:20px;} 
+		ul.adyen-hpp-options li span,ul.adyen-hpp-options li ul li label { float:left; display:block; margin:12px 0 0 0;}
+			ul.adyen-hpp-options li ul.payment_form_ideal { margin-left:35px;}
+				ul.adyen-hpp-options li ul.payment_form_ideal input { margin-top:25px;}

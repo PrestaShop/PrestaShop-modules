@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -35,8 +35,52 @@
 	{/if}
 	<u><a href="{l s="http://pages.ebay.fr/professionnels/index.html" mod='ebay'}" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></u>
 </fieldset>
-<br />  
-	
+<br />
+
+<link rel="stylesheet" href="{$css_file}" />
+<script>
+	var $j = $;
+</script>
+{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4"}
+	<link rel="stylesheet" href="{$fancyboxCss}" />
+	<script src="{$ebayjquery}"></script>
+	<script src="{$noConflicts}"></script>
+	<script>
+		if(typeof($j172) != 'undefined')
+			$j = $j172;
+		else 
+			$j = $;
+	</script>
+	<script src="{$fancybox}"></script>
+{/if}
+<script src="{$tooltip}" type="text/javascript"></script>
+<script src="{$tips202}" type="text/javascript"></script>
+
+{literal}
+<style type="text/css">
+	#fancybox-loading {
+		display: none;
+	}
+
+	input.primary {
+		text-shadow: none;
+		background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+		background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
+		color: white;
+	}
+
+	.tooltip {
+		vertical-align: middle;
+		display: inline-block;
+		margin-left: 3px;
+	}
+
+	textarea + .tooltip {
+		vertical-align: top;
+	}
+
+</style>
+{/literal}
 <fieldset>
 	<legend><img src="{$path}logo.gif" alt="" />{l s='eBay Module Status' mod='ebay'}</legend>
 	<div style="float: left; width: 45%">
@@ -58,5 +102,5 @@
 		<br />{if in_array('SellerBusinessType', $alert)}<img src="../modules/ebay/views/img/warn.png" />{else}<img src="../modules/ebay/views/img/valid.png" />{/if} 4) {l s='Please register an eBay business seller account to configure the application' mod='ebay'}
 	{/if}
 
-	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}</div>
+	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}<br/><a href="http://www.202-ecommerce.com/ebay/doc_{$documentation_lang}.pdf" target="_blank">{l s='Download documentation' mod='ebay'}</a></div>
 </fieldset><div class="clear">&nbsp;</div>

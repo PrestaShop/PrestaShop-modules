@@ -1,0 +1,17 @@
+###############################################################################
+# .htacces Security File
+# Author: Martin Weber
+# Shopgate GmbH
+# website: http://www.shopgate.com
+###############################################################################
+
+#AddType x-mapp-php5 .php
+#AddHandler x-mapp-php5 .php
+
+Order deny,allow
+Deny from all
+Options -Indexes
+
+<Files api.php>
+	Allow from all
+</Files>

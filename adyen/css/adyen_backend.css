@@ -1,0 +1,71 @@
+
+ul.adyen-list { 
+	list-style-type:square; 
+	padding:0 25px; 
+}
+
+.adyen-info { 
+	margin:0 0 0 10px; 
+	font-familly: Open Sans,Arial,sans-serif; 
+}
+
+	.adyen-info img { 
+		display:block; 
+		margin: 0 10px 5px 18px; 
+	}
+	
+	.adyen-info a {
+		color:#3C8A2E
+	}
+	
+	.adyen-info a:hover {
+		color:#4D4D4D
+	}
+	
+.adyen-payement-info { 
+	width:400px; 
+	margin-bottom:20px; 
+	background: none repeat scroll 0 0 #E3E0D2; 
+	padding: 0 20px 20px; 
+	font-size: 15px;
+}
+	.adyen-payement-info h1, .adyen-payement-info h2,.adyen-payement-info h3 { 
+		font-familly: Open Sans,Arial,sans-serif; 
+		color:#4D4D4F; 
+	}
+
+.adyen-payement-info.left { 
+	float:left; 
+	margin-right:20px; 
+}
+
+.adyen-payement-info.right { 
+	float:left; 
+	margin-right:20px; 
+	text-align:left; 
+	min-height:182px;
+}
+
+.adyen-payement-info.right-full {
+	width:860px;
+	float:left;
+	min-height:266px;
+}
+
+.adyen-green-button {
+    background: none repeat scroll 0 0 #3C8A2E;
+    -moz-box-sizing: border-box;
+    border-radius: 3em 3em 3em 3em;
+    color: #FFFFFF !important;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.25em;
+    height: 2em;
+    line-height: 2em;
+    padding: 0 1em;
+}
+
+.adyen-green-button:hover {
+	 color: #FFFFFF;
+	 background: none repeat scroll 0 0 #296D1D;
+}

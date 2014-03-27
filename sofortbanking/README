@@ -1,0 +1,68 @@
+README
+======
+
+Download
+----------------------
+
+Das Modul wird Open Source unter der Open Software License (OSL 3.0) angeboten und kann unter folgender URL kostenlos heruntergeladen werden:
+
+http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm
+
+Autor & Copyright
+------------------
+
+Copyright by: touchdesign
+Chief developer: Christin Gruber
+
+Licenses
+--------
+
+Released under Open Software License (OSL 3.0).
+
+Installation
+-------------------------------------
+
+A) Upload
+
+Wechseln Sie in Ihrem Shopsystem über den "Adminbereich" in den Tab "Module" und klicken Sie auf den
+Link "Ein neues Modul hinzufügen". Klicken Sie auf den Button "Durchsuchen" und wählen Sie nun das 
+zuvor heruntergeladene Modularchiv "sofortbanking-vX.tar" von Ihrer lokalen Festplatte.
+Nach dem Sie das Modularchiv angewählt haben bestätigen Sie bitte die Installation des Modules durch einen 
+Klick auf den Button "Dieses Modul hochladen". Nach erfolgreicher Installation des Modules erscheint die 
+Meldung "Modul wurde erfolgreich installiert".
+
+B) Modul Konfiguration
+
+Nach erfolgreicher Installation des Modules wechseln Sie bitte in die Modul-Konfiguration durch Anwahl 
+des soeben installierten Modules "sofortueberweisung.de" in der Modulliste unter der Kategorie "Payment" durch einen Klick 
+auf den Link "Einstellungen". Die Paramater "User ID", "Projekt ID", "Projekt Passwort" und "Benachrichtigungs-Passwort" sind 
+durch die von der Payment Network AG zugeteilten Kunden- sowie Projektdaten zu befüllen.
+
+C) Schnittstellen und Projektkonfiguration
+
+Bitte führen Sie folgende Schritte in Ihrem Kundenlogin auf sofortueberweisung.de durch um die 
+Konfiguration der Schnittstelle zu vervollständigen:
+
+  1) Sofern Sie noch kein Projekt für Ihren Onlineshop eingerichtet haben, legen Sie dieses bitte zuvor an.
+  
+  2) Bitte wählen Sie im Kundenlogin auf sofortueberweisung.de bei der Projektkonfiguration unter "Allgemeine Einstellungen" das Shopsystem "PrestaShop" aus der Dropdownliste. 
+
+  3) Hinterlegen Sie bitte die im Modul generierte "Erfolgs-URL (Weiterleitung zur Bestätigung)" für Ihren Shop in der Projektkonfiguration unter "Schnittstelle > Erfolgslink".
+
+  4) Hinterlegen Sie bitte die im Modul generierte "Abbruchs-URL (Rückkehr zum Shop)" für Ihren Shop in der Projektkonfiguration unter "Schnittstelle > Abbruch-Link".
+
+  5) Richten Sie die HTTP Benachrichtigung (!nicht HTTP-alt) unter dem Tab "Erweiterte Einstellungen > Benachrichtgungen" ein und übernehmen Sie die "Bestätigungs-URL (Http-Benachrichtigung)" welche unter den Moduleinstellungen generiert wird. In der Auswahl für die Request "Methode" wählen Sie bitte "POST".
+
+  6) Vervollständigen Sie die weiteren Angaben wie Adresse, Shopname und Bankdaten um die Konfiguration abzuschliessen.
+
+Nach erfolgreichem Anlegen Ihres Projektes finden Sie weitere detaillierte Informationen zur Konfiguration 
+der Schnittstelle unter dem Karteireiter "Hilfe zum Shopsystem" in Ihrem Kundenlogin auf sofortueberweisung.de.
+
+D) Shopkonfiguration
+
+Bitte geben Sie die Zahlschnittstelle für die gewünschten Währungen in Ihrem Shopbackend unter "Module > Zahlung" frei um die Zahlung im Bestellvorgang zu aktivieren.
+
+Ressourcen
+-------------------------------------
+
+[1]: http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm

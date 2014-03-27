@@ -1,54 +1,110 @@
+- Adyen 
 - Agustin 
 - Albin Kerouanton 
+- Aleksander Palyan 
+- Alexander Wesselburg 
 - Alexandre Segura 
+- Alon Braitstein 
 - antoniofr 
+- arossetti 
 - Axome 
+- baptgauthier 
 - Baptiste GAUTHIER 
 - bellini13 
+- BrandonTaylor 
 - Bruno Leveque 
 - Ceboweb 
 - cedricfontaine 
+- CINS 
 - clément hollander 
 - Claude Traglia 
+- Claudio Mulas 
+- clement-hollander 
 - cmouleyre 
 - Damien Metzger 
+- darko 
 - DevNet 
 - Dh42 
 - djfm 
 - doekia 
+- Dvir Julius 
+- edamart 
 - e.lito 
+- elmahdi 
+- emilien-puget 
 - ESPIAU Nicolas 
+- ethercreation 
 - fram 
 - François Gaillard 
 - François-Marie de Jouvencel 
 - Francois Gaillard 
+- Gordon Coubrough 
 - Gregory Roussac 
 - gRoussac 
 - GuigZ 
+- Guillaume DELOINCE 
+- Guillaume Illien 
 - hadjedjvincent 
+- Ibrahim Ibn Dawood 
+- IceEyz 
+- indesign47 
+- IsabelleCoccinet 
 - J. Danse 
+- jeromenadaud 
+- Jerome Nadaud 
+- Jonadabe 
+- Jonathan Wohl 
+- joseantgv 
+- Julien 
 - Julien Bijoux 
+- julienbourdeau 
+- Julien Bourdeau 
+- kazeno 
 - Ken Mendes 
+- khokha elmahdi 
+- Krystian Podemski 
+- Lesley Paone 
 - lsparer 
+- Luigi Massa 
+- luisalb 
 - Mathieu 
 - MatthieuB 
+- m-hume 
 - modem 
 - Obvious1809 
+- OliverMuellerShopgate 
+- PaymentSense-Developer 
+- Peter Schaeffer 
 - PrestaEdit 
+- PrestanceDesign 
 - quadrateam 
 - Quadra Team 
+- Quetzacoalt91 
 - Rémi Gaillard 
 - RaphArbuz 
+- rimas 
+- Rinku Kazeno 
 - Robert 
 - samy-r 
+- sjousse 
 - Sparer lilian 
+- Talha Umer Syed 
 - Thoma 
 - thoma202 
+- Thoma Biguères 
+- Thoma Bigueres 
+- Thomas 
+- tNabord 
+- Toto 
 - Tredez Guillaume 
+- tucoinfo 
 - vAugagneur 
 - Vincent Augagneur 
 - Vincent Terenti 
 - Wanted85 
 - Xavier 
+- Yann 
 - Yann CYRILLE 
 - Youness ZIOUANE 
+- ZiZuu 
+- zuzul 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,16 +51,17 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 
 		$customer = new Customer((int) $cart->id_customer);
-
+		$module = new Kwixo();
 		//For multishop
 		if (_PS_VERSION_ < '1.5')
 		{
 			$kwixo = new KwixoPayment();
+
+
 			$customer_gender = $customer->id_gender;
 			$male_gender = 1;
 			$carrier_id = $cart->id_carrier;
-		}
-		else
+		} else
 		{
 			$kwixo = new KwixoPayment($cart->id_shop);
 			$gender = new Gender($customer->id_gender);
@@ -94,16 +95,13 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		$control->createInvoiceCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $invoice_address->lastname, $invoice_address->firstname, $customer->email, $invoice_company, $invoice_address->phone_mobile, $invoice_address->phone);
 		$control->createInvoiceAddress($invoice_address->address1, $invoice_address->postcode, $invoice_address->city, $invoice_country->iso_code, $invoice_address->address2);
 
-		//filter on carrier which have not address and customer delivery
-		$types = array("1", "2", "3", "5");
 
 		//gets the carrier kwixo type
 		if (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
 		{
 			$carrier_type = Configuration::get('KWIXO_CARRIER_TYPE_'.(string) ($carrier->id), null, null, $cart->id_shop);
 			$carrier_speed = Configuration::get('KWIXO_CARRIER_SPEED_'.(string) ($carrier->id), null, null, $cart->id_shop);
-		}
-		else
+		} else
 		{
 			$carrier_type = Configuration::get('KWIXO_CARRIER_TYPE_'.(string) ($carrier->id));
 			$carrier_speed = Configuration::get('KWIXO_CARRIER_SPEED_'.(string) ($carrier->id));
@@ -119,60 +117,136 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		else
 			$carrier_name = $carrier->name;
 
-		//if carrier type = 4, xml order have delivery address and customer
-		if ($carrier_type == 4)
-		{
-			$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $delivery_address->lastname, $delivery_address->firstname, $customer->email, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
-			$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $delivery_country->iso_code, $delivery_address->address2);
 
-			//xml <infocommande>
-			$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
-			$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
-		}
-		elseif (in_array($carrier_type, $types))
+		switch ($carrier_type)
 		{
-			//xml <infocommande>
-			$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
-			$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
+			//if the order is to be delivered at home: element <utilisateur type="livraison"...> has to be added
+			case '4':
 
-			if ($carrier_type == 1)
-			{
-				$payment = new Kwixo();
-				if ($payment->checkShopAddress() == true)
+				$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $delivery_address->lastname, $delivery_address->firstname, $customer->email, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
+				$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $delivery_country->iso_code, $delivery_address->address2);
+
+				//xml <infocommande>
+				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
+
+				break;
+
+			case '5':
+
+				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
+
+				break;
+
+			case '6':
+
+				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+
+				$socolissimoinfo = $module->getSoColissimoInfo($cart->id);
+
+				$socolissimo_installed_module = Module::getInstanceByName('socolissimo');
+
+				if ($socolissimoinfo != false)
 				{
-					//xml <pointrelais>
-					$drop_off_point = $kwixo_carrier->createDropOffPoint(Configuration::get('PS_SHOP_NAME'), Configuration::get('PS_SHOP_NAME'));
-					$drop_off_point->createAddress(Configuration::get('PS_SHOP_ADDR1'), Configuration::get('PS_SHOP_CODE'), Configuration::get('PS_SHOP_CITY'), Configuration::get('PS_SHOP_COUNTRY'), Configuration::get('PS_SHOP_ADDR2'));
+					foreach ($socolissimoinfo as $info)
+					{
+						//get socolissimo informations
+						$delivery_mode = $info['delivery_mode'];
+						$firstname = $info['prfirstname'];
+						$name = $info['prname'];
+						$mobile_phone = $info['cephonenumber'];
+						$company_name = $info['cecompanyname'];
+						$email = $info['ceemail'];
+						$address1 = $info['pradress1'];
+						$address2 = $info['pradress2'];
+						$address3 = $info['pradress3'];
+						$address4 = $info['pradress4'];
+						$zipcode = $info['przipcode'];
+						$city = $info['prtown'];
+
+						//data is retrieved differently and depending on the version of the module
+						if ($socolissimo_installed_module->version < '2.8')
+						{
+							$address2 = $address1;
+							$address1 = $name;
+							$country = 'FR';
+							KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Module So Colissimo ".$socolissimo_installed_module->version." détecté");
+						} else
+							$country = $info['cecountry'];
+					}
+
+					//if delivery mode is DOM or RDV, <adresse type="livraison" ...> and <utilisateur type="livraison" ...> added
+					if ($delivery_mode == 'DOM' || $delivery_mode == 'RDV')
+					{
+						$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $name, $firstname, $email, $company_name, $mobile_phone, null);
+						$control->createDeliveryAddress($address3, $zipcode, $city, $country, $address4);
+
+						$kwixo_carrier = $order_details->createCarrier($carrier_name, '4', $carrier_speed);
+					} else
+					{
+						//<pointrelais> added if delivery mode is not BPR, A2P or CIT
+						$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
+						$drop_off_point = $kwixo_carrier->createDropOffPoint($address1, null);
+						$drop_off_point->createAddress($address2, $zipcode, $city, $country, null);
+					}
+				} else
+				{
+					KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Flux incorrect : Module SoColissimo non installé ou non activé");
 				}
-				else
+
+
+				break;
+
+			default:
+
+				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string) $cart->getOrderTotal(true), $currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
+
+				if ($carrier_type == 1)
+				{
+					if ($module->checkShopAddress() == true)
+					{
+						//xml <pointrelais>
+						$drop_off_point = $kwixo_carrier->createDropOffPoint(Configuration::get('PS_SHOP_NAME'), Configuration::get('PS_SHOP_NAME'));
+						$drop_off_point->createAddress(Configuration::get('PS_SHOP_ADDR1'), Configuration::get('PS_SHOP_CODE'), Configuration::get('PS_SHOP_CITY'), Configuration::get('PS_SHOP_COUNTRY'), Configuration::get('PS_SHOP_ADDR2'));
+					} else
+					{
+						//xml <pointrelais>
+						$drop_off_point = $kwixo_carrier->createDropOffPoint($carrier_name, $carrier_name);
+						$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->iso_code, $delivery_address->address2);
+					}
+				} else
 				{
 					//xml <pointrelais>
 					$drop_off_point = $kwixo_carrier->createDropOffPoint($carrier_name, $carrier_name);
 					$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->iso_code, $delivery_address->address2);
 				}
-			}
-			else
-			{
-				//xml <pointrelais>
-				$drop_off_point = $kwixo_carrier->createDropOffPoint($carrier_name, $carrier_name);
-				$drop_off_point->createAddress($delivery_address->address1, $delivery_address->postcode, $delivery_address->city, $invoice_country->iso_code, $delivery_address->address2);
-			}
+
+				break;
 		}
 
 		//xml <list>
 		$product_list = $order_details->createProductList();
 
+		$product_deliveries = array();
+
 		foreach ($products as $product)
 		{
 			$kwixo_categorie_id = (Configuration::get('KWIXO_PRODUCT_TYPE_'.(int) $product['id_category_default']) == 0 ? Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE') : Configuration::get('KWIXO_PRODUCT_TYPE_'.(int) $product['id_category_default']));
 			$product_reference = ((isset($product['reference']) AND !empty($product['reference'])) ? $product['reference'] : ((isset($product['ean13']) AND !empty($product['ean13'])) ? $product['ean13'] : $product['name']));
-			$product_list->createProduct($product['name'], $product_reference, $kwixo_categorie_id, $product['price'], $product['cart_quantity']);
+			$product_list->createProduct($product['name'], str_replace("'", "", $product_reference), $kwixo_categorie_id, $product['price'], $product['cart_quantity']);
+
+			$product_deliveries[] = Configuration::get('KWIXO_PRODUCT_TYPE_DELIVERY_'.(int) $product['id_category_default']);
 		}
+
+
+		$kwixo_delivery = $module->getKwixoDelivery($product_deliveries, $carrier->id);
 
 		//xml <wallet>
 		$date_order = date('Y-m-d H:i:s');
-		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, Configuration::get('KWIXO_DELIVERY')));
-		$wallet->addCrypt($kwixo->generateCrypt($control), $kwixo->getCryptversion());
+		$wallet = $control->createWallet($date_order, $kwixo->generateDatelivr($date_order, $kwixo_delivery));
+		$wallet->addCrypt($kwixo->generateCrypt($control), '2.0');
 
 		//kwixo payment options   
 		//standard kwixo 
@@ -192,8 +266,6 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 			$control->createPaymentOptions('comptant', 1, 0);
 
 		$xml_params = new KwixoXMLParams();
-		$module = new Kwixo();
-
 		$xml_params->addParam('custom', $cart->id);
 		$xml_params->addParam('amount', $cart->getOrderTotal(true));
 		$xml_params->addParam('secure_key', $customer->secure_key);
@@ -208,8 +280,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 			//returns kwixo form with auto submit
 			return $kwixo->getTransactionForm($control, $xml_params, $link_urlsys, $link_urlcall, $mobile, KwixoForm::SUBMIT_AUTO, null);
-		}
-		else
+		} else
 		{
 			$link_urlcall = Context::getContext()->link->getModuleLink('kwixo', 'urlcall');
 			$link_urlsys = Context::getContext()->link->getModuleLink('kwixo', 'urlsys');

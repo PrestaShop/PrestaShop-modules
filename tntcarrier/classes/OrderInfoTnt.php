@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -96,6 +96,7 @@ class OrderInfoTnt
 		$info[2] = array('delivery_date' => ($newDate != '' ? $newDate : $next_day));
 
 
+		$info[3]['option'] = '';
 		if ($option)
 		{
 			if (strpos($option['option'], 'S') !== false)

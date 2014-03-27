@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision: 17142 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +34,7 @@ class GAdwords extends Module
 	{
 		$this->name = 'gadwords';
 		$this->tab = 'advertising_marketing';
-		$this->version = 1;
+		$this->version = 1.1;
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
@@ -42,6 +42,7 @@ class GAdwords extends Module
 
 		$this->displayName = $this->l('Google Adwords');
 		$this->description = $this->l('Vous souhaitez être plus visible sur Google et attirer de nouveaux clients ? 75€ offerts sur Google AdWords !');
+		$this->ps_versions_compliancy = array('min' => '1.5.6.1', 'max' => _PS_VERSION_);
 	}
 
 	public function install()

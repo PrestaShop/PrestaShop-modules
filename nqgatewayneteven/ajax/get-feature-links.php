@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,7 +30,7 @@ include(dirname(__FILE__).'/../classes/Gateway.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die(Tools::displayError());
-	
+
 $action = Tools::getValue('action');
 $id = Tools::getValue('id');
 $id_order_gateway_feature = Tools::getValue('id_order_gateway_feature');
@@ -46,20 +46,31 @@ if ($action == 'add')
 				WHERE '.($data['type'] == 'A' ? '`id_attribute_group`' : '`id_feature`').' = '.(int)$data['id'].'
 				AND `id_order_gateway_feature` = '.(int)$id_order_gateway_feature
 			);
-	
+
 	if (!$result)
-		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_feature_link` ( `id_order_gateway_feature`, '.($data['type'] == 'A' ? '`id_attribute_group`' : '`id_feature`').' ) VALUES ('.(int)$id_order_gateway_feature.', '.(int)$data['id'].')');
-	
+		Db::getInstance()->Execute('
+		    INSERT INTO `'._DB_PREFIX_.'orders_gateway_feature_link`
+		    ( `id_order_gateway_feature`, '.($data['type'] == 'A' ? '`id_attribute_group`' : '`id_feature`').' )
+		    VALUES
+		    ('.(int)$id_order_gateway_feature.', '.(int)$data['id'].')
+		');
 }
 elseif ($action == 'delete')
-	Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'orders_gateway_feature_link` WHERE `id_order_gateway_feature` = '.(int)$id_order_gateway_feature.' AND '.($data['type'] == 'A' ? '`id_attribute_group`' : '`id_feature`').' = '.(int)$data['id']);
+	Db::getInstance()->Execute('
+	    DELETE FROM `'._DB_PREFIX_.'orders_gateway_feature_link`
+	    WHERE `id_order_gateway_feature` = '.(int)$id_order_gateway_feature.'
+	        AND '.($data['type'] == 'A' ? '`id_attribute_group`' : '`id_feature`').' = '.(int)$data['id']
+    );
 
 $feature_links = Db::getInstance()->ExecuteS('
 		SELECT ogfl.*, agl.`name` as attribute_name, fl.`name` as feature_name, ogf.`name`
 		FROM `'._DB_PREFIX_.'orders_gateway_feature_link` ogfl
-		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (agl.`id_attribute_group` = ogfl.`id_attribute_group` AND agl.`id_lang` = '.(int)$cookie->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (fl.`id_feature` = ogfl.`id_feature` AND fl.`id_lang` = '.(int)$cookie->id_lang.')
-		LEFT JOIN `'._DB_PREFIX_.'orders_gateway_feature` ogf ON (ogf.`id_order_gateway_feature` = ogfl.`id_order_gateway_feature`)'
+		LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+		    ON (agl.`id_attribute_group` = ogfl.`id_attribute_group` AND agl.`id_lang` = '.(int)$cookie->id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
+		    ON (fl.`id_feature` = ogfl.`id_feature` AND fl.`id_lang` = '.(int)$cookie->id_lang.')
+		LEFT JOIN `'._DB_PREFIX_.'orders_gateway_feature` ogf
+		    ON (ogf.`id_order_gateway_feature` = ogfl.`id_order_gateway_feature`)'
 	);
 
 $response = '';
@@ -78,7 +89,14 @@ foreach ($feature_links as $feature_link)
 		$element_netven_name = $feature_link['name'];
 	}
 	
-	$response .= '<li id="'.$element_id.'" ><span class="delete_link" style="cursor:pointer;"><img src="../img/admin/disabled.gif" alt="X" /></span><span class="prestashop_name">'.$element_prestashop_name.'</span>/<span class="netven_name">'.$element_netven_name.'</span></li>';
+	$response .= '  <li id="'.$element_id.'" >
+                        <span class="delete_link" style="cursor:pointer;">
+                            <img src="../img/admin/disabled.gif" alt="X" />
+                        </span>
+                        <span class="prestashop_name">'.$element_prestashop_name.'</span>
+                        /
+                        <span class="netven_name">'.$element_netven_name.'</span>
+                    </li>';
 
 }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,12 +20,13 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
 include_once dirname(__FILE__).'/../../../config/config.inc.php';
+include_once dirname(__FILE__).'/../../../init.php';
 include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
@@ -96,8 +97,20 @@ foreach (Db::getInstance()->executeS($sql) as $category)
 	}
 }
 
-foreach ($category_config_list as &$category)
+foreach ($category_config_list as &$category) {
 	$category['var'] = getSelectors($ref_categories, $category['id_category_ref'], $category['id_category'], $category['level'], $ebay).'<input type="hidden" name="category['.(int)$category['id_category'].']" value="'.(int)$category['id_ebay_category'].'" />';
+	if ($category['percent']) {
+		preg_match("#^([-|+]{0,1})([0-9]{0,3})([\%]{0,1})$#is", $category['percent'], $temp);
+		$category['percent'] = array('sign' => $temp[1], 'value' => $temp[2], 'type' => $temp[3]);
+	} else {
+		$category['percent'] = array('sign' => '', 'value' => '', 'type' => '');
+	}
+}
+
+$smarty =  Context::getContext()->smarty;
+$id_currency = Context::getContext()->cookie->id_currency;
+$currency = new Currency((int) $id_currency);
+
 
 /* Smarty datas */
 $template_vars = array(
@@ -109,13 +122,9 @@ $template_vars = array(
 	'categoryConfigList' => $category_config_list,
 	'request_uri' => $_SERVER['REQUEST_URI'],
 	'noCatSelected' => Tools::getValue('ch_cat_str'),
-	'noCatFound' => Tools::getValue('ch_no_cat_str')
+	'noCatFound' => Tools::getValue('ch_no_cat_str'),
+	'currencySign' => $currency->sign
 );
-
-if (version_compare(_PS_VERSION_, '1.5', '>'))
-	$smarty = $ebay->getContext()->smarty;
-else
-	global $smarty;
 
 $smarty->assign($template_vars);
 echo $ebay->display(realpath(dirname(__FILE__).'/../'), '/views/templates/hook/table_categories.tpl');

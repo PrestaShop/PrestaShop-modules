@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,7 +55,7 @@ class TrustedShops extends Module
 
 		$this->name = 'trustedshops';
 		$this->tab = 'payment_security';
-		$this->version = '1.3.7';
+		$this->version = '1.3.8';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -91,6 +91,7 @@ class TrustedShops extends Module
 		$this->displayName = $this->l('Trusted Shops trust solutions');
 		$this->description = $this->l('Build confidence in your online shop with the Trusted Shops quality seal, buyer protection and customer rating.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete all your settings?');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 	}
 
 	public function install()

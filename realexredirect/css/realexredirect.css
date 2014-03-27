@@ -1,0 +1,39 @@
+/*---------- FRONT ----------------*/
+#module-realexredirect-payment #center_column {
+	width: 757px;
+}
+#module-realexredirect-payment #center_column h4 {
+	font-size:15px; margin-bottom:15px
+}
+
+#module-realexredirect-payment #center_column .bloc_new_card{
+	width:40%;float:left; border:1px solid #FAC132;padding:2%
+}
+#module-realexredirect-payment #center_column .bloc_new_card select{
+	margin-top:10px
+}
+#module-realexredirect-payment #center_column .bloc_new_card .cart_navigation {
+	float:right;margin:0px;padding: 0px
+}
+#module-realexredirect-payment #center_column .bloc_registered_card{
+	width:40%;float:right;border:1px solid #FAC132;padding:2%
+}
+#module-realexredirect-payment #center_column .bloc_registered_card .error{
+	padding:5px; font-size:12px;margin:0px
+}
+#module-realexredirect-payment #center_column .bloc_registered_card form{
+	border-bottom:1px solid #FAC132;
+}
+#module-realexredirect-payment #center_column .bloc_registered_card form:last-child{
+	border-bottom:none;
+}
+
+#module-realexredirect-payment #center_column .bloc_registered_card a.delete{
+	color:red
+}
+
+
+
+.clear {clear:both}
+.fleft {float:left}
+

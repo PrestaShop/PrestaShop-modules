@@ -1,0 +1,69 @@
+COPYRIGHT/LICENSE NOTICE
+------------------------
+
+All directories and files listed below are published under the terms of the Academic Free License, version 3.0
+and later. Instead of listing individual years within the copyright notice of every
+file, all are dated from 2008 to the current year.
+The license text is shipped with this program as "AFL_license.txt" (from now on: "see AFL").
+For more information visit http://opensource.org/licenses/AFL-3.0 .
+This license applies to:
+
+The directories
+/classes/ and all its contents
+/img/ and all its contents excluding the file "logo_web.png" (see above)
+/override/ and all its sub-directories and files
+/views/ and all its sub-directories and files
+
+The files:
+/api.php
+/changelog.txt
+/config.xml
+/de.php
+/en.php
+/shopgate.php
+
+All files inside the directory /backward_compatibility/ are subject to the Open Software License (OSL 3.0) that is bundled with this package in the file "/backward_compatibility/OSL_license.txt".
+It is also avbailable through the world-wide-web at this URL: http://opensource.org/licenses/osl-3.0.php
+This license applies to:
+
+/backward_compatibility/backward.php
+/backward_compatibility/Context.php
+/backward_compatibility/Display.php
+
+========================
+
+COPYRIGHT NOTICE
+----------------
+
+Subject to copyright of the Shopgate GmbH and protected are:
+
+The directory
+
+/vendors/shopgate_library/
+
+and its complete content, including all sub-directories and all files excluding the file /vendors/shopgate_library/vendors/JSON.php (see below).
+
+The files
+
+/logo.gif 
+/logo.png 
+/img/logo_web.png 
+
+are also subject to copyright of the Shopgate GmbH and protected. For details please refer to the "/vendors/shopgate_library/shopgate_license.txt".
+
+========================
+
+LICENSE NOTICE
+--------------
+
+The file
+
+/vendors/shopgate_library/vendors/JSON.php
+
+is derived from http://pear.php.net/pepr/pepr-proposal-show.php?id=198 version 1.3.1 which is
+licensed under the terms of the BSD 2-Clause License, version 2 or later.
+The license text is shipped with this program as "/vendors/shopgate_library/vendors/BSD_license.txt"
+For more information visit http://opensource.org/licenses/bsd-license.php
+
+For further information visit  http://www.shopgate.com
+or contact us by sending a mail to interfaces@shopgate.com .

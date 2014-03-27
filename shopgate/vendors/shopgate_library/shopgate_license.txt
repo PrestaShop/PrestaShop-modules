@@ -1,0 +1,91 @@
+Shopgate GmbH
+
+URHEBERRECHTSHINWEIS
+--------------------
+
+Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+
+Dieses Copyright erstreckt sich insbesondere auf:
+
+Die Verzeichnisse
+/assets/ und seinen kompletten Inhalt, einschließlich aller Unterordner und aller Dateien
+/classes/ und seinen kompletten Inhalt, einschließlich aller Unterordner und aller Dateien
+/config/ und seinen kompletten Inhalt, einschließlich aller Unterordner und aller Dateien
+/temp/ und seinen kompletten Inhalt, einschließlich aller Unterordner und aller Dateien
+
+Die Dateien
+/vendors/2d_is.php
+/vendors/mobile_redirect.class.php
+/shopgate.php
+fallen ebenfalls unter das Copyright der Shopgate GmbH und sind entsprechend geschützt.
+
+========================
+
+LIZENZHINWEIS
+-------------
+
+Die Datei
+
+/vendors/JSON.php
+
+basiert auf http://pear.php.net/pepr/pepr-proposal-show.php?id=198 , Version 1.3.1, die unter den Bedingungen der BSD 2-CLause License, Version 2 oder höher, lizenziert wurde.
+Die Lizenz liegt diesem Programm als "/vendors/BSD_license.txt" bei.
+Für weitere Informationen besuchen Sie http://opensource.org/licenses/bsd-license.php
+
+========================
+
+Für evtl. auftretenden Datenverlust, insbesondere durch unsachgemäße Handhabung, übernimmt Shopgate
+keine Haftung.
+
+Alle genannten Produkte, Abbildungen und Bezeichnungen sind Warenzeichen und/oder eingetragene Warenzeichen der
+jeweiligen Hersteller und werden als geschützt anerkannt.
+
+========================
+
+COPYRIGHT NOTICE
+----------------
+
+This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+for the purpose of facilitating communication between the IT system of the customer and the IT system
+of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+
+This copyright especially applies to:
+The directories
+/assets/ and its complete content, including all sub-directories and all files
+/classes/ and its complete content, including all sub-directories and all files
+/config/ and its complete content, including all sub-directories and all files
+/temp/ and its complete content, including all sub-directories and all files
+
+The files
+/vendors/2d_is.php
+/vendors/mobile_redirect.class.php
+/shopgate.php
+are also subject to copyright of the Shopgate GmbH and protected.
+
+========================
+
+LICENSE NOTICE
+--------------
+
+The file
+
+/vendors/JSON.php
+
+is derived from http://pear.php.net/pepr/pepr-proposal-show.php?id=198 version 1.3.1 which is
+licensed under the terms of the BSD 2-Clause License, version 2 or later.
+The license text is shipped with this program as "/vendors/BSD_license.txt"
+For more information visit http://opensource.org/licenses/bsd-license.php
+
+========================
+
+For potential loss of data, especially due to inappropriate handling, Shopgate assumes no liability.
+
+All named products, images and descriptions are trademarks and/or registered trademarks of the respective manufacturers and are accepted as protected.
+
+

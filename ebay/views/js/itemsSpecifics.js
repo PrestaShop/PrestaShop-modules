@@ -1,5 +1,5 @@
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2013 PrestaShop SA
+*	@copyright	2007-2014 PrestaShop SA
 *	@license	http://opensource.org/licenses/afl-3.0.php	Academic Free License (AFL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 */
@@ -122,7 +122,7 @@ function insertCategoryRow(category_id, data)
 		trs += '<tr id="switch-optionals-' + category_id + '"><td><a href="#" onclick="return showOptionals(' + category_id + ')">See optional items</a></td><td></td></tr>';
 
 	var row = $('#specifics-' + category_id);
-	row.children('td::nth-child(1)').attr('rowspan', $(trs).length + 1);
+	row.children('td:nth-child(1)').attr('rowspan', $(trs).length + 1);
 	$(trs + trs_optionals).insertAfter(row);
 	
 }

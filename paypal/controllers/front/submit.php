@@ -1,6 +1,6 @@
 <?php
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @version  Release: $Revision: 13573 $
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -45,7 +45,7 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 		$order = new Order($this->id_order);
 		$order_state = new OrderState($order->current_state);
 		$paypal_order = PayPalOrder::getOrderById($this->id_order);
-		
+
 		if ($order_state->template[$this->context->language->id] == 'payment_error')
 		{
 			$this->context->smarty->assign(
@@ -58,15 +58,15 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
 					'price' => Tools::displayPrice($paypal_order['total_paid'], $this->context->currency),
 				)
 			);
-			
+
 			return $this->setTemplate('error.tpl');
 		}
-		
+
 		$order_currency = new Currency((int)$order->id_currency);
 		$display_currency = new Currency((int)$this->context->currency->id);
 
 		$price = Tools::convertPriceFull($paypal_order['total_paid'], $order_currency, $display_currency);
-		
+
 		$this->context->smarty->assign(
 			array(
 				'is_guest' => (($this->context->customer->is_guest) || $this->context->customer->id == false),

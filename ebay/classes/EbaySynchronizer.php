@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,6 +52,11 @@ class EbaySynchronizer
 		$product_ids = array_map(array('EbaySynchronizer', 'getIdProduct'), $products);
 		$products_configuration = EbayProductConfiguration::getByProductIds($product_ids);
 
+		if(method_exists('Cache', 'clean'))
+		{
+			 Cache::clean('StockAvailable::getQuantityAvailableByProduct_*');
+		}
+		
 		foreach ($products as $p)
 		{
 			$product = new Product((int)$p['id_product'], true, $id_lang);
@@ -315,17 +320,20 @@ class EbaySynchronizer
 		$pictures_large = array();
 		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_images'] : 0);
 
+		$large = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_BIG'));
+		$small = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_SMALL'));
+		$default = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT'));
+
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image)
 		{
-			$large_pict = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
-
+			$pictures_default = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $default->name);
 			if ((count($pictures) == 0) && ($nb_pictures == 1)) // no extra picture, we don't upload the image
-				$pictures[] = $large_pict;
+				$pictures[] = $pictures_default;
 			elseif (count($pictures) < $nb_pictures) // we upload every image if there are extra pictures
-				$pictures[] = EbayProductImage::getEbayUrl($large_pict, $product->name.'_'.(count($pictures) + 1));
+				$pictures[] = EbayProductImage::getEbayUrl($pictures_default, $product->name.'_'.(count($pictures) + 1));
 
-			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'medium');
-			$pictures_large[] = $large_pict;
+			$pictures_medium[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $small->name);
+			$pictures_large[] = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $large->name);
 		}
 
 		return array(
@@ -408,12 +416,14 @@ class EbaySynchronizer
 		// Load Variations Pictures
 		$combination_images = $product->getCombinationImages($context->cookie->id_lang);
 
+		$large = new ImageType((int)Configuration::get('EBAY_PICTURE_SIZE_BIG'));
+
 		if (!empty($combination_images))
 			foreach ($combination_images as $combination_image)
 				foreach ($combination_image as $image)
 				{
 					// If issue, it's because of https/http in the url
-					$link = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, 'large');
+					$link = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $large->name);
 					$variations[$product->id.'-'.$image['id_product_attribute']]['pictures'][] = $link;
 				}
 
@@ -662,7 +672,7 @@ class EbaySynchronizer
 		$link = is_object($context_link) ? $context_link : new Link();
 		$prefix = (substr(_PS_VERSION_, 0, 3) == '1.3' ? Tools::getShopDomain(true).'/' : '');
 
-		return str_replace('https://', 'http://', $prefix.$link->getImageLink('ebay', $id_product.'-'.$id_image, $size.(version_compare(_PS_VERSION_, '1.5.1', '>=') ? '_default' : '')));
+		return str_replace('https://', 'http://', $prefix.$link->getImageLink('ebay', $id_product.'-'.$id_image, $size));
 	}
 
 	private static function _getShippingPriceForProduct($product, $zone, $carrier_id)
@@ -676,9 +686,6 @@ class EbaySynchronizer
 				$price = $carrier->getDeliveryPriceByWeight($product->weight, $zone);
 			else // Shipping by price
 				$price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
-
-			if ($carrier->shipping_handling) //Add shipping handling fee
-				$price += Configuration::get('PS_SHIPPING_HANDLING');
 
 		}
 		else if ($carrier->shipping_method == 1)
@@ -694,6 +701,9 @@ class EbaySynchronizer
 			// return 0 if is an other shipping method
 			return 0;
 		}
+
+		if ($carrier->shipping_handling) //Add shipping handling fee
+				$price += Configuration::get('PS_SHIPPING_HANDLING');
 
 		$price += $price * Tax::getCarrierTaxRate($carrier_id) / 100;
 
@@ -717,7 +727,7 @@ class EbaySynchronizer
 							FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 							WHERE  `id_ebay_category` > 0
 							AND `id_ebay_category` > 0'.
-							(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+							(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 						')
 						AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')'.
 							EbaySynchronizer::_addSqlRestrictionOnLang('s').'
@@ -736,7 +746,7 @@ class EbaySynchronizer
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
 		}
@@ -759,7 +769,7 @@ class EbaySynchronizer
 						FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 						WHERE  `id_category` > 0
 						AND  `id_ebay_category` > 0'.
-						(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+						(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 					')
 				'.($option == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 					AND p.`id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT').'
@@ -771,14 +781,14 @@ class EbaySynchronizer
 		{
 			$sql = '
 				SELECT `id_product`
-				FROM `'._DB_PREFIX_.'product`
+				FROM `'._DB_PREFIX_.'product` AS p
 				WHERE `quantity` > 0
 				AND `id_category_default` IN (
 					SELECT `id_category`
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.($option == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 				AND `id_product` > '.(int)Configuration::get('EBAY_SYNC_LAST_PRODUCT').'
@@ -806,7 +816,7 @@ class EbaySynchronizer
 							FROM  `'._DB_PREFIX_.'ebay_category_configuration`
 							WHERE  `id_category` >0
 							AND  `id_ebay_category` >0'.
-							(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').
+							(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 						')
 						'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 						AND p.`id_product` >'.$ebay_sync_last_product.'
@@ -827,7 +837,7 @@ class EbaySynchronizer
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
 					WHERE `id_category` > 0
 					AND `id_ebay_category` > 0'.
-					(Configuration::get('EBAY_SYNC_MODE') != 'A' ? ' AND `sync` = 1' : '').'
+					(Configuration::get('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
 				AND p.`id_product` > '.$ebay_sync_last_product.'

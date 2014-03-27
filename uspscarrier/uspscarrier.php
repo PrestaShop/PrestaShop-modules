@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,7 +52,7 @@ class UspsCarrier extends CarrierModule
 	{
 		$this->name = 'uspscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3.1';
+		$this->version = '1.3.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = '9ac173da9614868dbd15c56cf8ad008a';
@@ -61,6 +61,7 @@ class UspsCarrier extends CarrierModule
 
 		$this->displayName = $this->l('U.S.P.S. Rate Calulator');
 		$this->description = $this->l('Calculates shipping rates for United States Postal Service for Domestic shipping within the USA.');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility 1.4 / 1.5 */
 		require(dirname(__FILE__).'/backward_compatibility/backward.php');
@@ -1553,7 +1554,7 @@ class UspsCarrier extends CarrierModule
 				{
 					$conversionRate = 1;
 					$conversionRate = $this->getCartCurrencyRate((int)($config['id_currency']), (int)$wsParams['id_cart']);
-					$cost += ($config['additional_charges'] * $conversionRate);
+					$cost += ($config['additional_charges'] * $product['quantity']  * $conversionRate);
 				}
 			}
 		}

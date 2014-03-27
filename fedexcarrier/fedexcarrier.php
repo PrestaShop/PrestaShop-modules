@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,7 +55,7 @@ class FedexCarrier extends CarrierModule
 	{
 		$this->name = 'fedexcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'e690479f7f292afefbef7e55f884527d';
@@ -64,6 +64,7 @@ class FedexCarrier extends CarrierModule
 
 		$this->displayName = $this->l('Fedex Carrier');
 		$this->description = $this->l('Offer your customers, different delivery methods with Fedex');
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
 
 		/** Backward compatibility 1.4 / 1.5 */
 		require(dirname(__FILE__).'/backward_compatibility/backward.php');

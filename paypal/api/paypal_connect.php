@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,7 +50,7 @@ class PayPalConnect
 		if (!$simple_mode || !preg_match('/[A-Z]+=/', $tmp, $result))
 			return $tmp;
 
-		return substr($tmp, strpos($tmp, $result[0]));
+		return Tools::substr($tmp, strpos($tmp, $result[0]));
 	}
 
 	public function getLogs()
@@ -104,7 +104,7 @@ class PayPalConnect
 			$this->_logs[] = $this->paypal->l('Connect failed with fsockopen method');
 		else
 		{
-			$header = $this->_makeHeader($host, $script, strlen($body));
+			$header = $this->_makeHeader($host, $script, Tools::strlen($body));
 			$this->_logs[] = $this->paypal->l('Connect with fsockopen method successful');
 			$this->_logs[] = $this->paypal->l('Sending this params:').' '.$header.$body;
 
@@ -126,7 +126,7 @@ class PayPalConnect
 
 	private function _makeHeader($host, $script, $lenght)
 	{
-		return 'POST '.(string)$script.' HTTP/1.0'."\r\n".
+		return 'POST '.(string)$script.' HTTP/1.1'."\r\n".
 			'Host: '.(string)$host."\r\n".
 			'Content-Type: application/x-www-form-urlencoded'."\r\n".
 			'Content-Length: '.(int)$lenght."\r\n".

@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,18 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <form action="{$action_url}" method="post" class="form" id="configForm3">
 	<fieldset style="border: 0">
-		<h4>{l s='You can customise the template for your products page on eBay' mod='ebay'} :</h4>
-		<p>{l s='On eBay, your products are presented in templates which you can design. A good template should:' mod='ebay'}</p>
+		<h4><span data-dialoghelp="#tagsTemplate" data-inlinehelp="{l s='View the list of tags.' mod='ebay'}">{l s='Design an eye-catching template to attract buyers.' mod='ebay'} :</span></h4>
+		<p>{l s='Use this template to choose how you’d like your products to appear on eBay.' mod='ebay'}</p>
 		<ul style="padding-left:15px;">
-			<li>{l s='Look more professional to consumers helping to differentiate from other merchants' mod='ebay'}</li>
-			<li>{l s='Give customers all needed information' mod='ebay'}</li>
+			<li>{l s='Stand out from the crowd' mod='ebay'}</li>
+			<li>{l s='Make sure your description includes all the information the buyer needs to know.' mod='ebay'}</li>
+			<li>{l s='Use the same words that the buyer would use to search' mod='ebay'}</li>
 		</ul>
 		<br/>		
 		<textarea class="rte" cols="100" rows="50" name="ebay_product_template">{$ebay_product_template}</textarea><br />
@@ -94,6 +95,7 @@
 			<script type="text/javascript" src="{$ps_js_dir}/tiny_mce/tiny_mce.js"></script>
 			<script type="text/javascript" src="{$ps_js_dir}/tinymce.inc.js"></script>
 			<script>
+				tinyMCE.settings.selector = '.rte';
 				tinyMCE.settings.width = 850;
 				tinyMCE.settings.height = 800;
 				tinyMCE.settings.extended_valid_elements = "iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
@@ -101,5 +103,7 @@
 			</script>			
 		{/if}
 	</fieldset>
-	<div class="margin-form"><input class="button" name="submitSave" value="{l s='Save' mod='ebay'}" type="submit"></div>
+	<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+		<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
+	</div>
 </form>		

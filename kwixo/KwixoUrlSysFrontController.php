@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,11 +49,12 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 	public static function ManageUrlSys()
 	{
 		$payment = new Kwixo();
-		
-		if(!$payment->isInstalled('kwixo')){
-			 KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module Kwixo non installé, retour UrlSys échoué');
-			 return false;
-		 }
+
+		if (!$payment->isInstalled('kwixo'))
+		{
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module Kwixo non installé, retour UrlSys échoué');
+			return false;
+		}
 
 		$transactionID = Tools::getValue('TransactionID');
 		$refID = Tools::getValue('RefID');
@@ -69,13 +70,12 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 		else
 			$kwixo = new KwixoPayment($cart->id_shop);
 
-		
 		if ($kwixo->getAuthKey() == '')
 		{
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Clé privée Kwixo vide, retour UrlSys échoué');
 			return false;
 		}
-		
+
 		$md5 = new KwixoMD5();
 
 		$waitedhash = $md5->hash($kwixo->getAuthKey().$refID.$transactionID);
@@ -132,7 +132,8 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 
 				//Payment refused
 				case 2:
-					$psosstatus = (int) _PS_OS_CANCELED_;
+					if (!in_array($order->getCurrentState(), array((int) Configuration::get('KW_OS_PAYMENT_GREEN'), (int) Configuration::get('KW_OS_PAYMENT_RED'), (int) Configuration::get('KW_OS_CONTROL'), (int) Configuration::get('KW_OS_CREDIT'))))
+						$psosstatus = (int) _PS_OS_CANCELED_;
 					break;
 
 				//order under control
@@ -195,7 +196,7 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 			else
 			{
 				//update order history
-				$payment->updateOrderHistory($id_order, $psosstatus);
+				$order->setCurrentState($psosstatus);
 			}
 		}
 	}

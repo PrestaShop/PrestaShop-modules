@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <!-- ebay -->
-<div class="error">
-	<b>{l s='You have to configure "General Settings" tab before using this tab.' mod='ebay'}</b>
+<div class="error" onClick="$('#menuTab1').click();" style="cursor:pointer;">
+	<b>{l s='You have to configure "Account settings" tab before using this tab.' mod='ebay'}</b>
 </div>
 <!-- /ebay -->

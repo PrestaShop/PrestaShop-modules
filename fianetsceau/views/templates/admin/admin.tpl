@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -69,6 +69,66 @@
 		<label>{l s='FIA-NET status on order detail' mod='fianetsceau'}</label>
 		<div class="margin-form">
 			<input name="fianetsceau_showstatus" type="checkbox" value="1" {if $fianetsceaushow_status eq '1'}Checked{/if} /> 
+		</div>
+	</fieldset>
+
+	<br />
+
+	<fieldset>
+		<legend><img src="{$logo_categories_path}"/>{l s='Category settings' mod='fianetsceau'}</legend>
+		<label>{l s='Default Product Type' mod='fianetsceau'}</label>
+		<div class="margin-form">
+			<select id="fianetsceau_0_category" name="fianetsceau_0_category" onChange="loadSubCategories(0);">
+				<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
+				{foreach from=$fianetsceau_categories item=category_name key=id_category name=categories_name}
+					<option value="{$id_category}" {if $fianetsceau_default_category eq $id_category}Selected{/if}>{$category_name}</option>
+				{/foreach}
+			</select>
+			<span id="subcategory_0">
+				<select id="fianetsceau_0_subcategory" name="fianetsceau_0_subcategory">
+					<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
+					{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
+						{if $fianetsceau_default_category eq $subcategory_name['parent_id']}
+							<option value="{$subcategory_id}" {if $fianetsceau_default_subcategory eq $subcategory_id}Selected{/if}>{$subcategory_name['label']}</option>
+						{/if}
+					{/foreach}
+				</select>
+			</span>
+		</div>
+
+		<div class="margin-form">
+			<table class="table">
+				<thead>
+					<tr><th>{l s='Shop category' mod='fianetsceau'}</th><th colspan="2">{l s='FIA-NET category' mod='fianetsceau'}</th></tr>
+				</thead>
+				<tbody>
+					{foreach from=$shop_categories key=id item=shop_category name=shop_categories}
+						<tr>
+							<td>{$shop_category.name}</td>
+							<td>
+								<select id="fianetsceau_{$id}_category" name="fianetsceau_{$id}_category" onChange="loadSubCategories({$id});">
+									<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
+									{foreach from=$fianetsceau_categories item=category_name key=category_id name=categories_name}
+										<option value="{$category_id}" {if $shop_category.parent_id eq $category_id}Selected{/if}>{$category_name}</option>
+									{/foreach}
+								</select>
+							</td>
+							<td>
+								<span id="subcategory_{$id}">
+									<select id="fianetsceau_{$id}_subcategory" name="fianetsceau_{$id}_subcategory">
+										<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
+										{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
+											{if $shop_category.parent_id eq $subcategory_name['parent_id']}
+												<option value="{$subcategory_id}" {if $shop_category.fianetsceau_type eq $subcategory_id}Selected{/if}>{$subcategory_name['label']}</option>
+											{/if}
+										{/foreach}
+									</select>
+								</span>
+							</td>
+						</tr>
+					{/foreach}
+				</tbody>
+			</table>
 		</div>
 	</fieldset>
 
@@ -163,6 +223,8 @@
 </fieldset>
 <br/>
 <center><input type="submit" name="submitSettings" value="{l s='Save' mod='fianetsceau'}" class="button" /></center>
+<input id="token_fianetsceau" name="token_fianetsceau" type="hidden" value="{$token}" />
+<input id="id_shop_fianetsceau" name="id_shop_fianetsceau" type="hidden" value="{$id_shop}" />
 </form>
 <br/>
 <center><input type="button" name="submitLog" onclick="ShowHideSceauLog();" value="{l s='Show/Hide FIA-NET Sceau log file' mod='fianetsceau'}" class="button" /></center>

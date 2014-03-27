@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,7 +30,7 @@ include_once(dirname(__FILE__).'/../../../init.php');
 include_once(_PS_MODULE_DIR_.'paypal/express_checkout/process.php');
 include_once(_PS_MODULE_DIR_.'paypal/express_checkout/submit.php');
 
-// Normal payment process
+/* Normal payment process */
 $id_cart = Tools::getValue('id_cart');
 $id_order = Tools::getValue('id_order');
 $id_module = Tools::getValue('id_module');
@@ -38,7 +38,7 @@ $paypal_key = Tools::getValue('key');
 
 if ($id_cart && $id_order && $id_module && $paypal_key)
 {
-	if (_PS_VERSION_ < '1.5')
+	if (version_compare(_PS_VERSION_, '1.5', '<'))
 		new PayPalExpressCheckoutSubmit();
 	return;
 }
@@ -79,13 +79,14 @@ function setCustomerInformation($ppec, $email)
 	return $customer;
 }
 
+
 /**
  * Set customer address (when not logged in)
  * Used to create user address with PayPal account information
  */
-function setCustomerAddress($ppec, $customer)
+function setCustomerAddress($ppec, $customer, $id = null)
 {
-	$address = new Address();
+	$address = new Address($id);
 	$address->id_country = Country::getByIso($ppec->result['COUNTRYCODE']);
 	$address->alias = 'Paypal_Address';
 	$address->lastname = $customer->lastname;
@@ -118,7 +119,7 @@ if ($request_type && $ppec->type)
 			$ppec->context->smarty->assign(array(
 					'logs' => $ppec->logs,
 					'message' => $ppec->l('Error occurred:'),
-					'use_mobile' => (bool) $ppec->useMobile()
+					'use_mobile' => (bool)$ppec->useMobile()
 					));
 			
 			$template = 'error.tpl';
@@ -130,19 +131,19 @@ if ($request_type && $ppec->type)
 		$ppec->context->cart->update();
 	}
 
-	// Set details for a payment
+	/* Set details for a payment */
 	$ppec->setExpressCheckout();
 
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token))
 		$ppec->redirectToAPI();
-	// Display Error and die with this method
+	/* Display Error and die with this method */
 	else
 		$ppec->displayPayPalAPIError($ppec->l('Error during the preparation of the Express Checkout payment'), $ppec->logs);
 }
 // If a token exist with payer_id, then we are back from the PayPal API
 elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $payer_id))
 {
-	// Get payment infos from paypal
+	/* Get payment infos from paypal */
 	$ppec->getExpressCheckout();
 
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token))
@@ -150,7 +151,7 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		$address = $customer = null;
 		$email = $ppec->result['EMAIL'];
 
-		// Create Customer if not exist with address etc
+		/* Create Customer if not exist with address etc */
 		if ($ppec->context->cookie->logged)
 		{
 			$id_customer = Paypal::getPayPalCustomerIdByEmail($email);
@@ -178,25 +179,30 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		$addresses = $customer->getAddresses($ppec->context->language->id);
 		foreach ($addresses as $address)
 			if ($address['alias'] == 'Paypal_Address')
-			{
+			{//If address has already been created
 				$address = new Address($address['id_address']);
 				break;
 			}
 
-		// Create address
+		/* Create address */
 		if (is_array($address) && isset($address['id_address']))
 			$address = new Address($address['id_address']);
 
 		if ((!$address || !$address->id) && $customer->id)
-		{
+		{//If address does not exists, we create it
 			$address = setCustomerAddress($ppec, $customer);
 			$address->add();
+		}
+		else if($customer->id)
+		{//If address exists, we update it with new informations
+			$address = setCustomerAddress($ppec, $customer, $address->id);
+			$address->save();
 		}
 
 		if ($customer->id && !$address->id)
 			$ppec->logs[] = $ppec->l('Cannot create Address');
 
-		// Create Order
+		/* Create Order */
 		if ($customer->id && $address->id)
 		{
 			$ppec->context->cart->id_customer = $customer->id;
@@ -251,6 +257,13 @@ function validateOrder($customer, $cart, $ppec)
 	// Payment error
 	else
 	{
+		//Check if error is 10486, if it is redirect user to paypal
+		if($ppec->result['L_ERRORCODE0'] == 10486)
+		{
+			$ppec->redirectToAPI();
+		}
+
+		
 		$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
 		$payment_type = (int)Configuration::get('PS_OS_ERROR');
 
@@ -267,10 +280,10 @@ function validateOrder($customer, $cart, $ppec)
 		(int)$cart->id_currency, false, $customer->secure_key, $ppec->context->shop);
 }
 
-// If Previous steps succeed, ready (means 'ready to pay') will be set to true
+/* If Previous steps succeed, ready (means 'ready to pay') will be set to true */
 if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || $ppec->type == 'payment_cart'))
 {
-	// Check modification on the product cart / quantity
+	/* Check modification on the product cart / quantity */
 	if ($ppec->isProductsListStillRight())
 	{
 		$cart = $ppec->context->cart;
@@ -282,7 +295,7 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 
 		validateOrder($customer, $cart, $ppec);
 
-		unset($ppec->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME});
+		unset($ppec->context->cookie->{PaypalExpressCheckout::$cookie_name});
 
 		if (!$ppec->currentOrder)
 			$ppec->logs[] = $ppec->l('Cannot create order');
@@ -292,7 +305,7 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 			$order = new Order($id_order);
 		}
 
-		// Check payment details to display the appropriate content
+		/* Check payment details to display the appropriate content */
 		if (isset($order) && ($ppec->result['ACK'] != "Failure"))
 		{
 			$values = array(
@@ -302,10 +315,10 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 				'id_order'  => (int)$ppec->currentOrder
 			);
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 			{
 				$query = http_build_query($values, '', '&');
-				Tools::redirectLink(_MODULE_DIR_.$ppec->name.'/express_checkout/payment.php?' . $query);
+				Tools::redirectLink(_MODULE_DIR_.$ppec->name.'/express_checkout/payment.php?'.$query);
 			}
 			else
 			{
@@ -313,7 +326,7 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 				Tools::redirect($link);
 			}
 		}
-		elseif ($ppec->result['ACK'] != "Failure")
+		elseif ($ppec->result['ACK'] != 'Failure')
 		{
 			$ppec->context->smarty->assign(array(
 				'logs' => $ppec->logs,
@@ -325,8 +338,8 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 	}
 	else
 	{
-		// If Cart changed, no need to keep the paypal data
-		unset($ppec->context->cookie->{PaypalExpressCheckout::$COOKIE_NAME});
+		/* If Cart changed, no need to keep the paypal data */
+		unset($ppec->context->cookie->{PaypalExpressCheckout::$cookie_name});
 		$ppec->logs[] = $ppec->l('Cart changed since the last checkout express, please make a new Paypal checkout payment');
 	}
 }
@@ -334,7 +347,7 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 $display = (_PS_VERSION_ < '1.5') ? new BWDisplay() : new FrontController();
 $payment_confirmation = Tools::getValue('get_confirmation');
 
-// Display payment confirmation
+/* Display payment confirmation */
 if ($ppec->ready && $payment_confirmation && (_PS_VERSION_ < '1.5'))
 {
 	$shop_domain = PayPal::getShopDomainSsl(true, true);
@@ -350,7 +363,7 @@ if ($ppec->ready && $payment_confirmation && (_PS_VERSION_ < '1.5'))
 	
 	$template = 'order-summary.tpl';
 }
-// Display result if error occurred
+/* Display result if error occurred */
 else
 {
 	if (!$ppec->context->cart->id)
@@ -370,7 +383,7 @@ else
  * Detect if we are using mobile or not
  * Check the 'ps_mobile_site' parameter.
  */
-$ppec->context->smarty->assign('use_mobile', (bool) $ppec->useMobile());
+$ppec->context->smarty->assign('use_mobile', (bool)$ppec->useMobile());
 
 $display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/'.$template);
 $display->run();

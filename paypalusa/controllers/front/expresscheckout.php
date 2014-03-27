@@ -2,8 +2,7 @@
 
 /*
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
- *  @version  Release: $Revision: 1.2.5 $
+ *  @copyright  2007-2014 PrestaShop SA
  *
  *  International Registered Trademark & Property of PrestaShop SA
  *
@@ -87,40 +86,41 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$totalToPayWithoutTaxes = (float)$this->context->cart->getOrderTotal(false);
 		$total_price = 0;
 
+		$total = 0;
+
 		foreach ($this->context->cart->getProducts() as $product)
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($product['name']).
 					'&L_PAYMENTREQUEST_0_NUMBER'.$i.'='.urlencode((int)$product['id_product']).
 					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($product['description_short'], 80))).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price']).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$product['price_wt']).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'='.urlencode((int)$product['cart_quantity']);
-			$total_product += (float)$product['price'] * (int)$product['cart_quantity'];
+					
+			$total += ((float)$product['price_wt'] * (int)$product['cart_quantity']);
+			
 			$i++;
 		}
 
-		$cart_discount = current($this->context->cart->getCartRules(CartRule::FILTER_ACTION_REDUCTION));
-
-		if (($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes))) != 0)
+		if ($cart_discount = $this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS))
 		{
 			$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Coupon')).
-					'&L_PAYMENTREQUEST_0_DESC'.$i.'='.urlencode(strip_tags(Tools::truncate($cart_discount['description'], 80))).
-					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($totalToPay - ($total_product + $this->context->cart->getTotalShippingCost()+ ($totalToPay - $totalToPayWithoutTaxes)),2)).
+					'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode(number_format($cart_discount,2)).
 					'&L_PAYMENTREQUEST_0_QTY'.$i.'=1';
 			$i++;
 		}
-		$nvp_request .= '&L_PAYMENTREQUEST_0_NAME'.$i.'='.urlencode($this->paypal_usa->l('Shipping fees')).
-				'&L_PAYMENTREQUEST_0_AMT'.$i.'='.urlencode((float)$this->context->cart->getTotalShippingCost()).
-				'&L_PAYMENTREQUEST_0_QTY'.$i.'=1'.
-				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$totalToPayWithoutTaxes.
-				'&PAYMENTREQUEST_0_TAXAMT='.(float)($totalToPay - $totalToPayWithoutTaxes);
+		
+		$shipping = (float)$this->context->cart->getTotalShippingCost();
+		
+		$nvp_request .= '&PAYMENTREQUEST_0_SHIPPINGAMT='.urlencode($shipping).
+				'&PAYMENTREQUEST_0_ITEMAMT='.(float)$total;
 
 		/* Create a PayPal payment request and redirect the customer to PayPal (to log-in or to fill his/her credit card info) */
 		$currency = new Currency((int)$this->context->cart->id_currency);
 
-		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,))).'&CANCELURL='.urlencode($this->context->link->getPageLink('order.php')).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
-		if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+		$result = $this->paypal_usa->postToPayPal('SetExpressCheckout', (Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR') != '' ? '&CARTBORDERCOLOR='.Tools::substr(str_replace('#', '', Configuration::get('PAYPAL_USA_EXP_CHK_BORDER_COLOR')), 0, 6) : '').'&PAYMENTREQUEST_0_AMT='.$totalToPay.'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&RETURNURL='.urlencode($this->context->link->getModuleLink('paypalusa', 'expresscheckout', array('pp_exp_checkout' => 1,))).'&CANCELURL='.urlencode($this->context->link->getPageLink('order.php')).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).$nvp_request);
+		if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 		{
-			header('Location: https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
+			Tools::redirect('https://www.'.(Configuration::get('PAYPAL_USA_SANDBOX') ? 'sandbox.' : '').'paypal.com/'.(Configuration::get('PAYPAL_USA_SANDBOX') ? '' : 'cgi-bin/').'webscr?cmd=_express-checkout&token='.urldecode($result['TOKEN']));
 			exit;
 		}
 		else
@@ -143,7 +143,7 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 	{
 		/* We need to double-check that the token provided by PayPal is the one expected */
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
-		if ((strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
+		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
 			/* Checks if a customer already exists for this e-mail address */
 			if (Validate::isEmail($result['EMAIL']))
@@ -178,19 +178,14 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			$address->id_country = (int)Country::getByIso($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
 			$address->id_state = (int)State::getIdByIso($result['PAYMENTREQUEST_0_SHIPTOSTATE'], (int)$address->id_country);
 			$address->alias = 'PayPal';
-			$address->lastname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
-			$address->firstname = substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - strlen($address->lastname));
+			$address->lastname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
+			$address->firstname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname));
 			$address->address1 = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
 			if ($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] != '')
 				$address->address2 = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 			$address->city = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
 			$address->postcode = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
 			$address->save();
-
-			/* Update the cart billing and delivery addresses */
-			$this->context->cart->id_address_delivery = (int)$address->id;
-			$this->context->cart->id_address_invoice = (int)$address->id;
-			$this->context->cart->update();
 
 			/* Update the customer cookie to simulate a logged-in session */
 			$this->context->cookie->id_customer = (int)$customer->id;
@@ -200,12 +195,18 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			$this->context->cookie->email = $customer->email;
 			$this->context->cookie->is_guest = $customer->isGuest();
 			$this->context->cookie->logged = 1;
-
+			
+			/* Update the cart billing and delivery addresses */
+			$this->context->cart->id_address_delivery = (int)$address->id;
+			$this->context->cart->id_address_invoice = (int)$address->id;
+			$this->context->cart->secure_key = $customer->secure_key;
+			$this->context->cart->update();
+			
 			/* Save the Payer ID and Checkout token for later use (during the payment step/page) */
 			$this->context->cookie->paypal_express_checkout_token = $result['TOKEN'];
 			$this->context->cookie->paypal_express_checkout_payer_id = $result['PAYERID'];
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				Module::hookExec('authentication');
 			else
 				Hook::exec('authentication');
@@ -237,13 +238,12 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			/* Confirm the payment to PayPal */
 			$currency = new Currency((int)$this->context->cart->id_currency);
 			$result = $this->paypal_usa->postToPayPal('DoExpressCheckoutPayment', '&TOKEN='.urlencode($this->context->cookie->paypal_express_checkout_token).'&PAYERID='.urlencode($this->context->cookie->paypal_express_checkout_payer_id).'&PAYMENTREQUEST_0_PAYMENTACTION=Sale&PAYMENTREQUEST_0_AMT='.$this->context->cart->getOrderTotal(true).'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($currency->iso_code).'&IPADDRESS='.urlencode($_SERVER['SERVER_NAME']));
-
-			if (strtoupper($result['ACK']) == 'SUCCESS' || strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
+			if (Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING')
 			{
 				/* Prepare the order status, in accordance with the response from PayPal */
-				if (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
+				if (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'COMPLETED')
 					$order_status = (int)Configuration::get('PS_OS_PAYMENT');
-				elseif (strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
+				elseif (Tools::strtoupper($result['PAYMENTINFO_0_PAYMENTSTATUS']) == 'PENDING')
 					$order_status = (int)Configuration::get('PS_OS_PAYPAL');
 				else
 					$order_status = (int)Configuration::get('PS_OS_ERROR');
@@ -275,6 +275,7 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 
 				/* Creating the order */
 				$customer = new Customer((int)$this->context->cart->id_customer);
+
 				if ($this->paypal_usa->validateOrder((int)$this->context->cart->id, (int)$order_status, (float)$result['PAYMENTINFO_0_AMT'], $this->paypal_usa->displayName, $message, array(), null, false, $customer->secure_key))
 				{
 					/* Store transaction ID and details */
@@ -287,9 +288,11 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 					/* Reset the PayPal's token so the customer will be able to place a new order in the future */
 					unset($this->context->cookie->paypal_express_checkout_token, $this->context->cookie->paypal_express_checkout_payer_id);
 				}
+				else
+					throw new Exception();
 
 				/* Redirect the customer to the Order confirmation page */
-				if (_PS_VERSION_ < 1.4)
+				if (version_compare(_PS_VERSION_, '1.4', '<'))
 					Tools::redirect('order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key);
 				else
 					Tools::redirect('index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->paypal_usa->id.'&id_order='.(int)$this->paypal_usa->currentOrder.'&key='.$customer->secure_key);
@@ -321,5 +324,4 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			}
 		}
 	}
-
 }

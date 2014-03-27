@@ -1,0 +1,28 @@
+.bp-wrapper { clear: both; margin: 0px auto; max-width: 1024px; min-width: 930px; overflow: hidden; }
+a.bp-logo { display: inline-block; float: left; margin: 0px 90px 0px 0px; }
+a.help span { display: none; position: relative; text-align:left; border: 1px solid #00529B; color:#000; padding:4px; -moz-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); -o-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2); filter: progid:DXImageTransform.Microsoft.Shadow( Strength=5, Direction=135, Color='#999999' ); overflow: hidden; }
+a.help:hover { position: relative; }
+a.help:hover span { display: block; position: relative; margin-top: 10px; border: 1px solid #00529B; padding:15px 5px 15px 40px; color: #00529B; background: #BDE5F8 url(../../../img/admin/icon-info.png) no-repeat 6px 5px; border-radius:3px; min-height:15px; z-index:10; }
+a.help p{ color: #00529B; }
+.test p { white-space: pre-line; }
+p.bp-intro { color: #1F7EC9; font-size: 18px; line-height: 22px; margin: 7px 20px 0px 0px; overflow: hidden; }
+p.bp-intro a { font-size: 11.5px; font-weight: bold; text-decoration: none; text-transform: uppercase; }
+p.bp-intro a:hover { color: #181407; text-decoration: none; }
+.bp-content { border-bottom: #808080 solid 0px; border-top: #808080 solid 1px; clear: both; margin: 15px 0px; padding: 15px 0px; position: relative; overflow: hidden;  }
+.bp-content p { color: #808080; font-size: 13px; line-height: 18px; margin-bottom: 15px; }
+.bp-content p.H3 { color: #1F7EC9; font-size: 18px; }
+.bp-content h3 { color: #1F7EC9; font-size: 18px; font-weight: normal; line-height: 20px; letter-spacing: 2px; margin: 0px 0px 15px 0px; text-transform: uppercase; }
+.bp-content ul { list-style: none; margin: 0px 0px 15px 0px; padding: 0px; }
+.bp-content table { padding-left:25px; empty-cells: hide; }
+.bp-content th { background: url(../img/bullet.gif) left 4px no-repeat; border: 0; width: 900px; font-size:12pt; padding-left:25px; padding-bottom:5px }
+.bp-content td { background: url(../img/bullet_small.gif) 25px 5px no-repeat; border: 0; width: 900px; padding-left:50px; padding-bottom:10px }
+.bp-content .lower { background: url(../img/bullet_small.gif) 25px 13px no-repeat; }
+.title-center { padding:0px 220px; }
+.bluepay-logos { padding: 0px 30px; }
+p.bp-footer {text-align: center; color: #1F7EC9; font-size: 18px; line-height: 18px; margin-bottom: 15px; overflow: fixed; }
+a.bp-link { background: url(../img/btn-submit-165.png) left bottom repeat-x; transparent; color: #FFF; display: inline-block; font-size: 11.5px; font-weight: bold; height: 25px; line-height: 25px; margin: 0px 0px 20px 0px; padding: 0px 10px; text-transform: uppercase; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; text-shadow: 1px 1px 0px rgb(190, 190, 190);
+}
+.defaultForm { width:750px; margin-right:auto; margin-left:auto; }
+fieldset label { clear: left; }
+legend {text-align: center; margin-bottom: 10px; overflow: hidden;}
+.margin-form { margin-bottom: 5px; }

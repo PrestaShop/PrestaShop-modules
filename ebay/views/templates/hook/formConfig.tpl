@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 <ul id="menuTab">
-	<li id="menuTab1" class="menuTabButton selected">1. {l s='Parameters' mod='ebay'}</li>
-	<li id="menuTab2" class="menuTabButton">2. {l s='Categories settings' mod='ebay'}</li>
-	<li id="menuTab8" class="menuTabButton">3. {l s='Items Specifics' mod='ebay'}</li>
-	<li id="menuTab3" class="menuTabButton">4. {l s='Shipping' mod='ebay'}</li>
+	<li id="menuTab1" class="menuTabButton selected">1. {l s='Account settings' mod='ebay'}</li>
+	<li id="menuTab2" class="menuTabButton">2. {l s='Categories and pricing' mod='ebay'}</li>
+	<li id="menuTab8" class="menuTabButton">3. {l s='Item specifics' mod='ebay'}</li>
+	<li id="menuTab3" class="menuTabButton">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
 	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
-	<li id="menuTab5" class="menuTabButton">6. {l s='eBay Sync' mod='ebay'}</li>
-	<li id="menuTab6" class="menuTabButton">7. {l s='Orders history' mod='ebay'}</li>
+	<li id="menuTab5" class="menuTabButton">6. {l s='List products' mod='ebay'}</li>
+	<li id="menuTab6" class="menuTabButton">7. {l s='Order history' mod='ebay'}</li>
 	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
@@ -72,3 +72,33 @@
 		$("#menuTab{$id_tab}Sheet").addClass("selected");
 	</script>
 {/if}
+
+
+<div id="helpertexts" style="display:none;">
+	<div id="returnsAccepted" style="width:300px">
+		{l s='All sellers on eBay must specify a returns policy for their items, whether your policy is to accept returns or not. If you don\'t specify a returns policy, eBay will select a default returns policy for you.' mod='ebay'}
+	</div>
+	<div id="dispatchTime" style="width:300px">
+		{l s='The dispatch time is the time between the buyer’s payment clearing and you sending the item. Buyers are increasingly expecting short dispatch times, ideally next day, but preferably within 3 working days. ' mod='ebay'}
+	</div>
+	<div id="DomShipp" style="width:300px">
+		{l s='To add a shipping method, map your PrestaShop options with one offered by eBay.' mod='ebay'}
+	</div>
+	<div id="tagsTemplate" style="width:300px">
+		{ldelim}MAIN_IMAGE{rdelim}<br/>
+		{ldelim}MEDIUM_IMAGE_1{rdelim}<br/>
+		{ldelim}MEDIUM_IMAGE_2{rdelim}<br/>
+		{ldelim}MEDIUM_IMAGE_3{rdelim}<br/>
+		{ldelim}PRODUCT_PRICE{rdelim}<br/>
+		{ldelim}PRODUCT_PRICE_DISCOUNT{rdelim}<br/>
+		{ldelim}DESCRIPTION_SHORT{rdelim}<br/>
+		{ldelim}DESCRIPTION{rdelim}<br/>
+		{ldelim}FEATURES{rdelim}<br/>
+		{ldelim}EBAY_IDENTIFIER{rdelim}<br/>
+		{ldelim}EBAY_SHOP{rdelim}<br/>
+		{ldelim}SLOGAN{rdelim}<br/>
+		{ldelim}PRODUCT_NAME{rdelim}
+	</div>
+	<div id="categoriesProgression" style="overflow: auto;width: 200px;height: 100px;text-align: center;font-size: 16px;padding-top: 30px;"></div>
+</div>
+

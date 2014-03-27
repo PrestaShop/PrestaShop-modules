@@ -1,0 +1,321 @@
+.hide_replace{
+  display: block;
+  background-color: transparent;
+  background-position: top left;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  text-indent: -9999px;
+  text-align: left;
+  font-size: 0px;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.center {
+  text-align:center;
+}
+
+.right {
+  float:right;
+}
+
+.left {
+  float:left;
+}
+
+.cb {
+  clear:both;
+}
+
+.action-log {
+  position:relative;
+  font-family:'Helevetica Neue', 'Helevetica', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size:14px;
+  display:block;
+  padding:40px 0 0;
+  background-color:#fff;
+  border-bottom:1px solid #dedede;
+  border-top:3px solid #ccc;
+  -webkit-box-shadow:0px 3px 0px rgba(0,0,0,0.08);
+  -moz-box-shadow:0px 3px 0px rgba(0,0,0,0.08);
+  -o-box-shadow:0px 3px 0px rgba(0,0,0,0.08);
+  -ms-box-shadow:0px 3px 0px rgba(0,0,0,0.08);
+  box-shadow:0px 3px 0px rgba(0,0,0,0.08);
+}
+
+.action-log .wrap {
+  position:relative;
+  display:block;
+  width:1000px;
+  margin:0 auto;
+}
+
+.action-log .wrap.ps14
+{
+  width: 100%;
+}
+
+.action-log .logo {
+  position:relative;
+  display:block;
+  margin:0 auto 10px;
+  width:160px;
+  height:32px;
+  background:url(../img/logo.png) no-repeat 50% 0;
+}
+
+.action-log .baseline {
+  position:relative;
+  text-align:center;
+  display:block;
+  color:#bbb;
+  margin-bottom:40px;
+}
+
+.action-log .get-started {
+  position:relative;
+  display:block;
+  padding:20px 0 40px 0;
+}
+
+.action-log .get-started .title {
+  font-size:18px;
+  line-height:18px;
+  color:#444;
+  text-transform:uppercase;
+  text-align:center;
+}
+
+.action-log .get-started h2 {
+  font-size:14px;
+  line-height:14px;
+  color:#444;
+  text-align:center;
+  margin:60px 0 20px;
+}
+
+.action-log .get-started ul {
+  margin-bottom:20px;
+}
+
+.action-log .get-started li {
+  position:relative;
+  display:block;
+  width:250px;
+  float:left;
+  text-align:center;
+}
+
+.action-log .get-started p {
+  padding:0 10px;
+  color:#888;
+  font-weight:bold;
+  font-size:13px;
+  line-height:17px;
+  text-align:center;
+}
+
+.action-log .get-started .process {
+  position:relative;
+  display:block;
+  margin:40px auto 10px;
+  width:1000px;
+  height:76px;
+  background:url(../img/process.png) no-repeat 50% 0;
+}
+
+.action-log .get-started .process.ps14
+{
+  width: 100%;
+}
+
+.action-log .reassurance {
+  position:relative;
+  display:block;
+  padding:40px 0;
+  background-color:#f3f3f3;
+  border-top:1px solid #dedede;
+}
+
+.action-log .reassurance h3 {
+  position:relative;
+  text-align:center;
+  font-size:12px;
+  text-transform:uppercase;
+  font-weight:bold;
+  color:#aaa;
+  display:block;
+  margin-bottom:40px;
+}
+
+.action-log .reassurance li {
+  position:relative;
+  display:block;
+  float:left;
+  width:200px;
+  text-align:center;
+}
+
+.action-log .reassurance li i {
+  position:relative;
+  display:block;
+  width:50px;
+  height:50px;
+  margin:0 auto;
+  background:url(../img/sprite.png) no-repeat 50% 0;
+}
+
+.action-log .reassurance li p {
+  padding:0 10px;
+  color:#888;
+  font-size:12px;
+  line-height:16px;
+}
+
+.ctas {
+  font-size:0px;
+}
+
+.ctas .btn {
+  margin:0 5px;
+  padding:0;
+  width:200px;
+}
+
+.action-log .reassurance li.available i {background-position:50% -50px;}
+.action-log .reassurance li.store i {background-position:50% -100px;}
+.action-log .reassurance li.proof i {background-position:50% -150px;}
+.action-log .reassurance li.money i {background-position:50% -200px;}
+
+.btn {
+  position:relative;
+  display:inline-block;
+  *display:inline;*zoom:1;
+  width:auto;
+  text-align:center;
+  height:45px;
+  line-height:45px;
+  padding:0 20px;
+  font-size:13px;
+  text-transform:uppercase;
+  font-weight:bold;
+  -webkit-border-radius:3px;
+  -moz-border-radius:3px;
+  -ms-border-radius:3px;
+  border-radius:3px;
+  -webkit-font-smoothing: antialiased;
+  -webkit-transition:all 0.23s;-moz-transition:all 0.23s;-o-transition:all 0.23s;-ms-transition:all 0.23s;transition:all 0.23s;
+}
+
+.btn.blue-bg {
+  background-color:#3ab5cf;
+  color:#fff;
+}
+
+.btn.blue-bg:hover,
+.btn.blue-bg:focus {
+  background-color:#2f95ab;
+}
+
+.btn.red-bg {
+  background-color:#c74228;
+  color:#fff;
+}
+
+.btn.red-bg:hover,
+.btn.red-bg:focus {
+  background-color:#9b3622;
+}
+
+#textmaster_login_form fieldset,
+#textmaster_register_form fieldset
+{
+  border: solid 1px #CDCDCD;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  background: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#textmaster_login_form fieldset label,
+#textmaster_register_form fieldset label
+{
+  width: 200px;
+}
+
+#textmaster_login_form fieldset .margin-form,
+#textmaster_register_form fieldset .margin-form
+{
+  padding: 0 100px 10px 210px;
+}
+
+#textmaster_login_form fieldset legend,
+#textmaster_register_form fieldset legend
+{
+  background: #FFFFFF;
+  margin-left: 10px;
+  padding: 5px;
+  border: solid 1px #CDCDCD;
+  color: #585A69;
+}
+
+#textmaster_login_form fieldset .margin-form:last-child
+{
+  padding: 0 100px 10px 170px;
+}
+
+#textmaster_register_form fieldset .margin-form:last-child
+{
+  padding: 0 170px 10px 100px;
+}
+
+ul.ps14
+{
+  padding: 0;
+}
+
+ul.ps14 li
+{
+  width: 190px !important;
+  margin-right: 56px !important;
+}
+
+ul.ps14 li.last
+{
+  margin-right: 0 !important;
+}
+
+ul.ps14_
+{
+  padding: 0;
+}
+
+ul.ps14_ li
+{
+  width: 185px !important;
+}
+
+.action-log .reassurance fieldset label
+{
+  color: #585A69;
+}
+
+#textmaster_login_form_submit_btn, #textmaster_register_form_submit_btn
+{
+  background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+  border-color: #CCCCCC #BBBBBB #A0A0A0;
+  border-radius: 3px 3px 3px 3px;
+  border-style: solid;
+  border-width: 1px;
+  color: #000000;
+  cursor: pointer;
+  margin: 0;
+  outline: medium none;
+  padding: 3px 8px;
+  text-align: center;
+  text-shadow: 0 1px 0 #FFFFFF;
+  vertical-align: middle;
+  white-space: nowrap;
+}

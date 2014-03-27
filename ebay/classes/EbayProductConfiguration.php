@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -72,8 +72,8 @@ class EbayProductConfiguration
 		$to_insert = array();
 		$fields_strs = array();
 		foreach($data as $key => $value) {
-			$to_insert[bqSQL($key)] = pSQL($value);
-			$fields_strs[] = '`'.bqSQL($key).'` = '.pSQL($value);
+			$to_insert[bqSQL($key)] = '"'.pSQL($value).'"';
+			$fields_strs[] = '`'.bqSQL($key).'` = "'.pSQL($value).'"';
 		}
 
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_product_configuration` (`id_product`, `'.implode('`,`', array_keys($to_insert)).'`)

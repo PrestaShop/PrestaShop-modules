@@ -1,0 +1,47 @@
+/* module CSS compatibility layer */
+
+.table_grid .datepicker
+{
+    margin:1px 0;
+}
+
+.action-log .reassurance li {
+    width:185px !important;
+}
+
+.action-log .get-started li {
+    width:232px !important;
+}
+
+.action-log .get-started .process {
+    width:928px !important;
+}
+
+.action-log .wrap {
+  width:928px !important;
+}
+
+div#tab_products .margin-form
+{
+    padding: 0 0 1em 130px;
+}
+
+div#tab_products label
+{
+    width: 120px;
+}
+
+div#tab_properties label
+{
+}
+
+div#tab_products ul, div#tab_properties ul
+{
+    list-style: none;
+}
+
+.authors_selection_container .my_authors_container
+{
+    text-align: left;
+    margin-bottom: 15px;
+}

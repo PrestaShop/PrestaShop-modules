@@ -73,4 +73,21 @@
 2012-09-03
 ----
 1) Fixed bug: when trying to get the product url. 
-   
+
+2012-11-21
+----
+
+1) Load yQuery asynchronously
+
+2014-01-09
+----
+1) Added b2c2b registarion support.
+
+
+2014-02-17
+----
+1) Add option to choose status which will trigger the MAP.    
+
+2014-02-17
+----
+1) Change module according to new prestashop code validator.    

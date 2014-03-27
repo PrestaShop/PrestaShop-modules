@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if $MR_overload_current_jquery}
-	<script type="text/javascript">
-		var currentJquery = jQuery.noConflict(true);
-	</script>
-	<script type="text/javascript" src="{$new_base_dir}js/jquery-1.6.4.min.js"></script>
-{else}
 	<script type="text/javascript" src="{$new_base_dir}js/jquery-1.6.4.min.js"></script>
 	<script type="text/javascript">
 		var MRjQuery = jQuery.noConflict(true);
+	</script>
+{else}
+	<script>
+		var MRjQuery = jQuery;
 	</script>
 {/if}
