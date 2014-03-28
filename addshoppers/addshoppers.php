@@ -38,7 +38,7 @@ class Addshoppers extends Module
 	{
 		$this->name = 'addshoppers';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1.5';
+		$this->version = '1.1.6';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
@@ -52,7 +52,7 @@ class Addshoppers extends Module
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
 		$this->displayName = $this->l('AddShoppers Social Sharing Buttons');
 		$this->description = $this->l('FREE - Adds sharing buttons from Facebook, Twitter, Pinterest, and many more to increase sales from customer referrals. Tracks ROI.');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	public function install()
