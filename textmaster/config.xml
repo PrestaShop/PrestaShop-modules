@@ -2,7 +2,7 @@
 <module>
 	<name>textmaster</name>
 	<displayName><![CDATA[TextMaster]]></displayName>
-	<version><![CDATA[1.0.3]]></version>
+	<version><![CDATA[1.0.4]]></version>
 	<description><![CDATA[Your ultimate one-stop-shop for online professional translation and proofreading]]></description>
 	<author><![CDATA[TextMaster]]></author>
 	<tab><![CDATA[i18n_localization]]></tab>
