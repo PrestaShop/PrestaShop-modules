@@ -27,7 +27,7 @@ class Zingaya extends Module
 		$this->displayName = $this->l('Zingaya - Click-to-call');
 		$this->description = $this->l('Zingaya enables voice calls through any computer, right from a webpage. No download or phone is required!');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	public function install()
