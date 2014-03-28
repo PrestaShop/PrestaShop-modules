@@ -92,7 +92,7 @@ class GiveItAPI
 		// first, set the product details.
 		$this->give_it_product->setProductDetails(array(
 														'code' => $product->id.'_'.$combination['id_product_attribute'],
-														'price' => (int)Product::getPriceStatic((int)$product->id, $usetax, $combination['id_product_attribute']) * 100,
+														'price' => (int) (Product::getPriceStatic((int)$product->id, $usetax, $combination['id_product_attribute']) * 100),
 														'name' => $product->name.($combination['attributes'] ? ' : '.$combination['attributes'] : ''),
 														'image' => $image));
 
