@@ -51,7 +51,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.9.8';
+		$this->version = '1.9.9';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -60,7 +60,7 @@ class TntCarrier extends CarrierModule
 
 		$this->displayName = $this->l('TNT Express');
 		$this->description = $this->l('Offer your customers, different delivery methods with TNT');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		if (self::isInstalled($this->name))
 		{
