@@ -174,8 +174,8 @@ class GiveItAPI
 												'id' => $rule['id_giveit_shipping'].'_',
 												'name' => $rule['title'],
 												'iso_code' => $rule['iso_code'],
-												'price' => (int)Tools::convertPrice($rule['price']) * 100,
-												'free_above' => (int)Tools::convertPrice($rule['free_above']) * 100,
+												'price' => (int) (Tools::convertPrice($rule['price']) * 100),
+												'free_above' => (int) (Tools::convertPrice($rule['free_above']) * 100),
 												'tax_percent' => $rule['tax_percent']);
 	}
 
