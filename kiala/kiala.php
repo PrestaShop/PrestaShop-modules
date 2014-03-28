@@ -66,7 +66,7 @@ class Kiala extends Module
 		$this->name		= 'kiala';
 		$this->author = 'PrestaShop';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '1.3.5';
+		$this->version	= '1.3.6';
 		$this->module_key = '9d77262bd27f8a9340855def9c137832';
 		$this->compatibility_mode = version_compare(_PS_VERSION_, '1.5.0.0', '<');
 		$this->limited_countries = array('es', 'fr');
@@ -76,7 +76,7 @@ class Kiala extends Module
 		$this->page = basename(__FILE__, '.php');
 		$this->displayName = $this->l('Kiala Comprehensive datafile integration - Kiala contract holders only');
 		$this->description = $this->l('Have your parcels delivered in Kiala points and save money !');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 		$this->register_link = 'http://www.kiala.com';
 	}
 
