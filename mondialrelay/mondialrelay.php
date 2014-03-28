@@ -70,7 +70,7 @@ class MondialRelay extends Module
 	{
 		$this->name = 'mondialrelay';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.12';
+		$this->version = '1.8.13';
 		$this->installed_version = '';
 		$this->module_key = '366584e511d311cfaa899fc2d9ec1bd0';
 		$this->author = 'PrestaShop';
@@ -79,7 +79,7 @@ class MondialRelay extends Module
 
 		$this->displayName = $this->l('Mondial Relay');
 		$this->description = $this->l('Deliver in Relay points');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.'/mondialrelay/backward_compatibility/backward.php');
