@@ -38,7 +38,7 @@ class ecopresto extends Module{
 	{
 		$this->name = 'ecopresto';
 		$this->tab = 'Tools';
-		$this->version = 2.5;
+		$this->version = '2.6';
 		$this->need_instance = 0;
 		$this->author = 'Ether Création';
 		$this->displayName = $this->l('Drop shipping - Ecopresto');
@@ -46,7 +46,7 @@ class ecopresto extends Module{
 		$this->confirmUninstall = $this->l('Etes vous sur de vouloir désinstaller le module ?');
 
 		parent::__construct();
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	public function install()
