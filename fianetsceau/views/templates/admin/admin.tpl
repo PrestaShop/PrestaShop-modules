@@ -88,8 +88,8 @@
 				<select id="fianetsceau_0_subcategory" name="fianetsceau_0_subcategory">
 					<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 					{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
-						{if $fianetsceau_default_category eq $subcategory_name['parent_id']}
-							<option value="{$subcategory_id|intval}" {if $fianetsceau_default_subcategory eq $subcategory_id}Selected{/if}>{$subcategory_name['label']|strval}</option>
+						{if $fianetsceau_default_category eq $subcategory_name.parent_id}
+							<option value="{$subcategory_id|intval}" {if $fianetsceau_default_subcategory eq $subcategory_id}Selected{/if}>{$subcategory_name.label|strval}</option>
 						{/if}
 					{/foreach}
 				</select>
@@ -118,8 +118,8 @@
 									<select id="fianetsceau_{$id}_subcategory" name="fianetsceau_{$id|intval}_subcategory">
 										<option value="0">-- {l s='Choose' mod='fianetsceau'} --</option>
 										{foreach from=$fianetsceau_subcategories item=subcategory_name key=subcategory_id name=subcategories_name}
-											{if $shop_category.parent_id eq $subcategory_name['parent_id']}
-												<option value="{$subcategory_id|intval}" {if $shop_category.fianetsceau_type eq $subcategory_id}Selected{/if}>{$subcategory_name['label']|strval}</option>
+											{if $shop_category.parent_id eq $subcategory_name.parent_id}
+												<option value="{$subcategory_id|intval}" {if $shop_category.fianetsceau_type eq $subcategory_id}Selected{/if}>{$subcategory_name.label|strval}</option>
 											{/if}
 										{/foreach}
 									</select>
