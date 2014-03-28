@@ -2,7 +2,7 @@
 <module>
 	<name>alliance processing</name>
 	<displayName><![CDATA[Alliance Processing]]></displayName>
-	<version><![CDATA[1.2.4]]></version>
+	<version><![CDATA[1.2.5]]></version>
 	<description><![CDATA[Experienced leader in High Risk ecommerce merchants with both  onshore and offshore solutions.]]></description>
 	<author><![CDATA[go4.fi]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
