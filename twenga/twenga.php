@@ -121,14 +121,14 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.11';
+	 	$this->version = '1.12';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
 	
 		$this->displayName = $this->l('Twenga Module');
 		$this->description = $this->l('Export your products to Twenga Shopping Search Engine and get new online buyers immediately.');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		// For Twenga subscription
 		$protocol = 'http://';
