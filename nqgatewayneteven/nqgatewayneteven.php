@@ -46,14 +46,14 @@ class NqGatewayNeteven extends Module
 
         $this->tab = $tab_name;
 		
-		$this->version = '2.8';
+		$this->version = '2.9';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
 
 		$this->displayName = $this->l('NetEven');
 		$this->description = $this->l('Vendez sur toutes les marketplaces depuis votre PrestaShop');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		$this->feature_url = '/script/set-neteven-categories.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME'));
 		$this->order_url = '/script/import-order.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
