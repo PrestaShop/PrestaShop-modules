@@ -33,7 +33,7 @@ class AuthorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.11';
+		$this->version = '1.4.12';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -41,7 +41,7 @@ class AuthorizeAIM extends PaymentModule
 
 		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
 		$this->description = $this->l('Receive payment with Authorize.net');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array(
