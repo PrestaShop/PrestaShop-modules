@@ -39,7 +39,7 @@ class PayULatam extends PaymentModule
 	{
 		$this->name = 'payulatam';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.2';
+		$this->version = '1.2.3';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -48,7 +48,7 @@ class PayULatam extends PaymentModule
 		$this->description = $this->l('Module for accepting payments in Latin American countries from local credit cards, local bank transfers and cash deposits.');
 
 		$this->confirmUninstall =	$this->l('Are you sure you want to delete your details?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.'payulatam/backward_compatibility/backward.php');
