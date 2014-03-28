@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.6';
+		$this->version = '3.7';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -42,7 +42,7 @@ class ShoppingFluxExport extends Module
 		$this->displayName = $this->l('Export Shopping Flux');
 		$this->description = $this->l('Exportez vos produits vers plus de 100 comparateurs de prix et places de marché');
 		$this->confirmUninstall = $this->l('Êtes-vous sûr de vouloir supprimer ce module ?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	public function install()
