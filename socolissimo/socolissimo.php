@@ -64,7 +64,7 @@ class Socolissimo extends CarrierModule
     {
         $this->name = 'socolissimo';
         $this->tab = 'shipping_logistics';
-        $this->version = '2.8.8';
+        $this->version = '2.8.9';
         $this->author = 'Quadra Informatique';
         $this->limited_countries = array('fr');
         $this->module_key = 'faa857ecf7579947c8eee2d9b3d1fb04';
@@ -76,7 +76,7 @@ class Socolissimo extends CarrierModule
         $this->description = $this->l('Offer your customer 5 different delivery methods with LaPoste.');
         $this->url = Tools::getProtocol().htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').
                 __PS_BASE_URI__.'modules/'.$this->name.'/validation.php';
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
         /** Backward compatibility */
         require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
