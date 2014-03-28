@@ -62,7 +62,7 @@ class Prediggo extends Module
 	{
 		$this->name = 'prediggo';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->_html = '';
@@ -72,7 +72,7 @@ class Prediggo extends Module
 
 		$this->displayName = $this->l('Prediggo');
 		$this->description = $this->l('Offers interactive products recommendations in the front office');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		$this->_warnings = array();
 		$this->_confirmations = array();
