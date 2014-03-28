@@ -45,7 +45,7 @@ class Mailjet extends Module
 	{
 		// Default module variable
 		$this->name = 'mailjet';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->displayName = 'Mailjet';
 		$this->module_key = '59cce32ad9a4b86c46e41ac95f298076';
 
@@ -60,7 +60,7 @@ class Mailjet extends Module
 
 		// Module description
 		$this->description = $this->l('This modules sends through Mailjet all email coming from your Prestashop installation');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		// Detecting warnings
 		if (Configuration::get('MAILJET_ACTIVATE') == 1 && (strlen(Configuration::get('MAILJET_API_KEY')) < 3 || strlen(Configuration::get('MAILJET_SECRET_KEY')) < 3))
