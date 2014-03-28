@@ -37,7 +37,7 @@ class MoneyBookers extends PaymentModule
 	{
 		$this->name = 'moneybookers';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.5';
+		$this->version = '1.6.6';
 		$this->module_key = '1d4c89650f76d274a85e5407cffe8403';
 
 		parent::__construct();
@@ -46,7 +46,7 @@ class MoneyBookers extends PaymentModule
 		$this->displayName = $this->l('Moneybookers');
 		$this->description = $this->l('Accepts payments by Moneybookers.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details ?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 		if (Configuration::get('MB_PAY_TO_EMAIL') == 'testmerchant@moneybookers.com')
 			$this->warning = $this->l('You are currently using the default Moneybookers e-mail address, please use your own e-mail address.');
 

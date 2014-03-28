@@ -2,7 +2,7 @@
         <module>
             <name>trustpilot</name>
             <displayName><![CDATA[Trustpilot : Avis clients]]></displayName>
-            <version><![CDATA[1.1]]></version>
+            <version><![CDATA[1.2]]></version>
             <description><![CDATA[Increase your visibility and sales with customer reviews]]></description>
             <author><![CDATA[Profileo Labs]]></author>
             <tab><![CDATA[advertising_marketing]]></tab>

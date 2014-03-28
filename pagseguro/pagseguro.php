@@ -50,7 +50,7 @@ class PagSeguro extends PaymentModule
 	{
 		$this->name = 'pagseguro';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.6';
 		$this->author = 'PagSeguro Internet LTDA.';
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
@@ -58,7 +58,7 @@ class PagSeguro extends PaymentModule
 		$this->displayName = $this->l('PagSeguro');
 		$this->description = $this->l('Receba pagamentos por cartão de crédito, transferência bancária e boleto.');
 		$this->confirmUninstall = $this->l('Tem certeza que deseja remover este módulo ?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	/**

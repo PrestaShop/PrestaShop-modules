@@ -116,7 +116,7 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.5';
+		$this->version = '2.6';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -139,7 +139,7 @@ class FianetSceau extends Module
 			$this->backward = true;
 
 		parent::__construct();
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		//check Sceau update
 		$this->checkSceauUpdate();

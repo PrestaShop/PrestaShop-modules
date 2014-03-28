@@ -44,7 +44,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.2';
+		$this->version = '1.6.3';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -55,7 +55,7 @@ class Hipay extends PaymentModule
 		
 		$this->displayName = $this->l('Hipay');
 		$this->description = $this->l('Secure payement with Visa, Mastercard and European solutions.');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		$request = '
 			SELECT iso_code

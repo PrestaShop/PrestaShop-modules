@@ -48,7 +48,7 @@ if ( !defined( '_PS_VERSION_' ) )
 
 		$this->displayName = $this->l('itembase');
 		$this->description = $this->l('itembase - Personal Shopping Manager and Inventory (SEO links, Brand Booster, Traffic Source, Affiliate Channel)');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 		
 		if (self::isInstalled($this->name)){
 			$warnings = array();

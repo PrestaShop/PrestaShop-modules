@@ -94,7 +94,7 @@ class fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.8';
+		$this->version = '3.9';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -102,7 +102,7 @@ class fianetfraud extends Module
 
 		$this->displayName = $this->l('Fia-Net - Certissim');
 		$this->description = $this->l('Protect your shop against payment frauds.');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		/* Backward compatibility */
 		if (_PS_VERSION_ < '1.5')

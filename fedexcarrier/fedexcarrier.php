@@ -55,7 +55,7 @@ class FedexCarrier extends CarrierModule
 	{
 		$this->name = 'fedexcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'e690479f7f292afefbef7e55f884527d';
@@ -64,7 +64,7 @@ class FedexCarrier extends CarrierModule
 
 		$this->displayName = $this->l('Fedex Carrier');
 		$this->description = $this->l('Offer your customers, different delivery methods with Fedex');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 
 		/** Backward compatibility 1.4 / 1.5 */
 		require(dirname(__FILE__).'/backward_compatibility/backward.php');

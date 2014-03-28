@@ -34,7 +34,7 @@ class TrustPilot extends Module
 	{
 		$this->name = 'trustpilot';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'Profileo Labs';
 		$this->need_instance = 0;
 		$this->module_key = '';
@@ -44,7 +44,7 @@ class TrustPilot extends Module
 		$this->displayName = $this->l('Trustpilot : Customer reviews');
 		$this->description = $this->l('Increase your visibility and sales with customer reviews');
 		$this->secure_key = Tools::encrypt($this->name);
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
