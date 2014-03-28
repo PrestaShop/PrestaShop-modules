@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.8';
+		$this->version = '1.9.9';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
@@ -51,7 +51,7 @@ class PaymentSense extends PaymentModule
 		$this->displayName = $this->l('PaymentSense');
 		$this->description = $this->l('Process transactions through the PaymentSense gateway.');
 		$this->confirmUninstall = $this->l('Are you sure?');
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => _PS_VERSION_);
+
 	}
 
 	public function install()
