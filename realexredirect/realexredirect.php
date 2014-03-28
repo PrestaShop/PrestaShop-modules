@@ -29,7 +29,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$this->name = 'realexredirect';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'Coccinet';
 		$this->bout_valide = $this->l('Validate');
 		$this->bout_suppr = $this->l('Do you want to delete your stored card ?');
@@ -65,7 +65,7 @@ class RealexRedirect extends PaymentModule
 		$this->displayName = $this->l('Realex Payments');
 		$this->description = $this->l('Use Realex Payments as your payments service provider.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete this information?');
-		$this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
+
 		if (!function_exists('curl_version'))
 			$this->warning = $this->l('cURL librairy is not available.');
 		elseif (!Configuration::get('PS_REWRITING_SETTINGS'))
