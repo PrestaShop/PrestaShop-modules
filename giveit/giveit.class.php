@@ -86,7 +86,7 @@ class GiveItAPI
 
 		$image['id_product'] = $product->id;
 		$image['id_image'] = Product::defineProductImage($image, Context::getContext()->language->id);
-		$img_profile = (version_compare(_PS_VERSION_, '1.5', '<')) ? 'home' : 'home_default';
+		$img_profile = (version_compare(_PS_VERSION_, '1.5', '<')) ? 'home' : ImageType::getFormatedName('medium');
 		$image = ($image) ? $context->link->getImageLink($product->link_rewrite, $image['id_image'], $img_profile) : '';
 
 		// first, set the product details.
