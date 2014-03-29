@@ -37,7 +37,7 @@
 		if(regenerate_token_show)
 		{ldelim}
 			$('.regenerate_token_button').show();
-			$('.regenerate_token_button label').css('color', 'red').html('{l s='You must regenerate your authentication token' mod='ebay'}');
+			$('.regenerate_token_button label').css('color', 'red').html("{l s='You must regenerate your authentication token' mod='ebay'}");
 			$('.regenerate_token_click').hide();
 		{rdelim}
 		$('.regenerate_token_click span').click(function()
@@ -204,6 +204,17 @@
 		<div style="clear:both;"></div>
 
 	</fieldset>
+    
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Sync Orders' mod='ebay'}</legend>
+		
+		<label>
+			{l s='Manually Sync Orders' mod='ebay'}
+		</label>
+		<a href="{$url}&EBAY_SYNC_ORDERS=1">
+			<input type="button" class="button" value="{l s='Sync Orders from eBay' mod='ebay'}" />
+		</a>
+	</fieldset>    
 		
 
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
