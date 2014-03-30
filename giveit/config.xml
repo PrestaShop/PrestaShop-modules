@@ -2,7 +2,7 @@
 <module>
 	<name>giveit</name>
 	<displayName><![CDATA[Give.it]]></displayName>
-	<version><![CDATA[1.0]]></version>
+	<version><![CDATA[1.1]]></version>
 	<description><![CDATA[The gifting add-on for web stores.]]></description>
 	<author><![CDATA[Give.it]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>
