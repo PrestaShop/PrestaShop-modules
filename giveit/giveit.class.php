@@ -86,13 +86,13 @@ class GiveItAPI
 
 		$image['id_product'] = $product->id;
 		$image['id_image'] = Product::defineProductImage($image, Context::getContext()->language->id);
-		$img_profile = (version_compare(_PS_VERSION_, '1.5', '<')) ? 'home' : 'home_default';
+		$img_profile = (version_compare(_PS_VERSION_, '1.5', '<')) ? 'home' : ImageType::getFormatedName('medium');
 		$image = ($image) ? $context->link->getImageLink($product->link_rewrite, $image['id_image'], $img_profile) : '';
 
 		// first, set the product details.
 		$this->give_it_product->setProductDetails(array(
 														'code' => $product->id.'_'.$combination['id_product_attribute'],
-														'price' => (int)Product::getPriceStatic((int)$product->id, $usetax, $combination['id_product_attribute']) * 100,
+														'price' => (int) (Product::getPriceStatic((int)$product->id, $usetax, $combination['id_product_attribute']) * 100),
 														'name' => $product->name.($combination['attributes'] ? ' : '.$combination['attributes'] : ''),
 														'image' => $image));
 
@@ -174,8 +174,8 @@ class GiveItAPI
 												'id' => $rule['id_giveit_shipping'].'_',
 												'name' => $rule['title'],
 												'iso_code' => $rule['iso_code'],
-												'price' => (int)Tools::convertPrice($rule['price']) * 100,
-												'free_above' => (int)Tools::convertPrice($rule['free_above']) * 100,
+												'price' => (int) (Tools::convertPrice($rule['price']) * 100),
+												'free_above' => (int) (Tools::convertPrice($rule['free_above']) * 100),
 												'tax_percent' => $rule['tax_percent']);
 	}
 
