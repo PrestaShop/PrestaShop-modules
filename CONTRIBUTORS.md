@@ -13,6 +13,7 @@
 - bellini13 
 - BrandonTaylor 
 - Bruno Leveque 
+- bunsenstraat 
 - Ceboweb 
 - cedricfontaine 
 - CINS 
@@ -23,6 +24,7 @@
 - cmouleyre 
 - Damien Metzger 
 - darko 
+- David Kelly 
 - DevNet 
 - Dh42 
 - djfm 
