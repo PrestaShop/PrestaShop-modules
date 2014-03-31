@@ -127,112 +127,14 @@
 			<hr />
 		</div>
 
-		{* USE PAYPAL LOGIN *}
-		<div class="box active" id="paypal_login">
-			<span class="paypal-section">2</span> <h3 class="inline">{l s='Use PayPal Login' mod='paypal'}</h3>
-			
-			<div id="paypal_login_yes_or_no" class="">
-				<p class="description">{l s='Description of PayPal Login' mod='paypal'}</p>
-				<input type="radio" name="paypal_login" id="paypal_login_yes" value="1" {if $PayPal_login == 1}checked="checked"{/if} /> <label for="paypal_login_yes">{l s='Yes' mod='paypal'} </label>{if $PayPal_login == 1}({l s='Configure' mod='paypal'}){/if}<br />
-				<input type="radio" name="paypal_login" id="paypal_login_no" value="0" {if $PayPal_login == 0}checked="checked"{/if} /> <label for="paypal_login_no">{l s='No' mod='paypal'}</label>
-			</div>
-			<div id="paypal_login_configuration"{if $PayPal_login == 0} style="display: none;"{/if}>
-				<dl>
-					<dt>
-						{$PayPal_content.client_id}
-					</dt>
-					<dd>
-						<input type="text" name="paypal_login_client_id" value="{$PayPal_login_client_id}" autocomplete="off">
-					</dd>
-				</dl>
-				<div class="clear"></div>
-				<dl>
-					<dt>
-						{$PayPal_content.secret}
-					</dt>
-					<dd>
-						<input type="text" name="paypal_login_client_secret" value="{$PayPal_login_secret}" autocomplete="off">
-					</dd>
-				</dl>
-				<div class="clear"></div>
-				<dl>
-					<dt>
-						{$PayPal_content.template_to_choose}
-					</dt>
-					<dd>
-						<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_paypal_blue" value="1"{if $PayPal_login_tpl == 1} checked{/if} />
-						<label for="paypal_login_client_template_paypal_blue">
-							{$PayPal_content.tpl_paypal_blue}
-						</label>
-						<br />
-						<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_neutral" value="2"{if $PayPal_login_tpl == 2} checked{/if} />
-						<label for="paypal_login_client_template_neutral">
-							{$PayPal_content.tpl_neutral}
-						</label>
-					</dd>
-				</dl>
-				<div class="clear"></div>
-			</div>
-			<hr />
-		</div>
-		<script type="text/javascript">
-			$(function(){
-				$("input[name='paypal_payment_method']").change(function(){
-					var val = $(this).val();
-					var element = $("#paypal_login");
-					var go = false;
-					if (val == 1 || val == 4)
-					{
-						if (!element.hasClass('active'))
-						{
-							element.slideDown().addClass('active');
-							go = true;
-						}
-					}
-					else if (val == 2)
-					{
-						if (element.hasClass('active'))
-						{
-							element.slideUp().removeClass('active');
-							go = true;
-						}
-					}
-
-					$(".box .paypal-section").each(function(){
-						var number = parseInt($(this).html());
-						if (element.hasClass('active') && go === true)
-						{
-							$(this).html(number + 1);
-						}
-						else if (!element.hasClass('active') && go === true)
-						{
-							$(this).html(number - 1);
-						}
-					});
-				});
-
-				$("#paypal_login_yes_or_no input[name='paypal_login']").change(function(){
-					var val = parseInt($(this).val());
-
-					if (val === 1)
-					{
-						$("#paypal_login_configuration").slideDown();
-					}
-					else
-					{
-						$("#paypal_login_configuration").slideUp();
-					}
-
-				});
-			});
-		</script>
+		
 		
 		{* END OF USE PAYPAL LOGIN *}
 
 		{* SUBSCRIBE OR OPEN YOUR PAYPAL BUSINESS ACCOUNT *}
 		<div class="box" id="account">
 
-			<span class="paypal-section">3</span> <h3 class="inline">{$PayPal_content.account_section_title}</h3>
+			<span class="paypal-section">2</span> <h3 class="inline">{$PayPal_content.account_section_title}</h3>
 
 			<br /><br />
 
@@ -267,7 +169,7 @@
 
 		{* ENABLE YOUR ONLINE SHOP TO PROCESS PAYMENT *}
 		<div class="box disabled" id="credentials">
-			<span class="paypal-section">4</span> <h3 class="inline">{$PayPal_content.credentials_section_title}</h3>
+			<span class="paypal-section">3</span> <h3 class="inline">{$PayPal_content.credentials_section_title}</h3>
 
 			<br /><br />
 
@@ -289,11 +191,11 @@
 
 					<dl>
 						<dt><label for="api_username">{$PayPal_content.credentials_username} : </label></dt>
-						<dd><input type='text' name="api_username" id="api_username" value="{$PayPal_api_username|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
+						<dd><input type='text' name="api_username" id="api_username" value="{$PayPal_api_username|escape:'html':'UTF-8'}" autocomplete="off" size="85"/></dd>
 						<dt><label for="api_password">{$PayPal_content.credentials_password} : </label></dt>
-						<dd><input type='password' name="api_password" id="api_password" value="{$PayPal_api_password|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
+						<dd><input type='password' size="85" name="api_password" id="api_password" value="{$PayPal_api_password|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
 						<dt><label for="api_signature">{$PayPal_content.credentials_signature} : </label></dt>
-						<dd><input type='text' name="api_signature" id="api_signature" value="{$PayPal_api_signature|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
+						<dd><input type='text' size="85" name="api_signature" id="api_signature" value="{$PayPal_api_signature|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
 					</dl>
 					<div class="clear"></div>
 					<span class="description">{$PayPal_content.credentials_fields_disclaimer}</span>
@@ -343,6 +245,56 @@
 					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_no_shortcut" value="1" {if $PayPal_express_checkout_shortcut == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_shortcut">{$PayPal_content.yes} {$PayPal_content.sandbox_recommended}</label><br />
 					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_shortcut" value="0" {if $PayPal_express_checkout_shortcut == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_shortcut">{$PayPal_content.no}</label>
 				</div>
+
+				<div>
+					<p>{l s='Use the PayPal Login functionnality (*see the ' mod='paypal'} <a href="http://www.202-ecommerce.com/paypal/paypal-doc-{$default_lang_iso}.pdf"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'})</p>
+					<p class="description">
+						{l s='This function allows to your clients to connect with their PayPal credentials to shorten the check out' mod='paypal'}
+					</p>
+					<div id="paypal_login_yes_or_no" class="">
+						<p class="description"></p>
+						<input type="radio" name="paypal_login" id="paypal_login_yes" value="1" {if $PayPal_login == 1}checked="checked"{/if} /> <label for="paypal_login_yes">{l s='Yes' mod='paypal'} </label><br />
+						<input type="radio" name="paypal_login" id="paypal_login_no" value="0" {if $PayPal_login == 0}checked="checked"{/if} /> <label for="paypal_login_no">{l s='No' mod='paypal'}</label>
+					</div>
+					<div id="paypal_login_configuration"{if $PayPal_login == 0} style="display: none;"{/if}>
+						<p>
+							{l s='Fill in the informations of your PayPal account' mod='paypal'}.(* {l s='See' mod='paypal'} <a href="http://www.202-ecommerce.com/paypal/paypal-doc-{$default_lang_iso}.pdf">{l s='Integration Guide' mod='paypal'}</a>).
+						</p>
+						<dl>
+							<dt>
+								{$PayPal_content.client_id}
+							</dt>
+							<dd>
+								<input type="text" name="paypal_login_client_id" value="{$PayPal_login_client_id}" autocomplete="off" size="85">
+							</dd>
+							<dt>
+								{$PayPal_content.secret}
+							</dt>
+							<dd>
+								<input type="text" name="paypal_login_client_secret" value="{$PayPal_login_secret}" autocomplete="off" size="85">
+							</dd>
+							
+							<dt>
+								{$PayPal_content.template_to_choose}
+							</dt>
+							<dd>
+								<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_paypal_blue" value="1"{if $PayPal_login_tpl == 1} checked{/if} />
+								<label for="paypal_login_client_template_paypal_blue">
+									<img src="../modules/paypal/img/paypal_login_blue.png" alt=""> {$PayPal_content.tpl_paypal_blue} 
+								</label>
+								<br />
+								<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_neutral" value="2"{if $PayPal_login_tpl == 2} checked{/if} />
+								<label for="paypal_login_client_template_neutral">
+									<img src="../modules/paypal/img/paypal_login_grey.png" alt=""> {$PayPal_content.tpl_neutral}
+								</label>
+							</dd>
+						</dl>
+						
+						
+						<div class="clear"></div>
+					</div>
+				</div>
+
 
 				<p>{$PayPal_content.sandbox_title}</p>
 				<p class="description">{$PayPal_content.sandbox_tagline} <a href="{$PayPal_content.sandbox_learn_more_link}" target="_blank">{$PayPal_content.sandbox_learn_more}</a></p>

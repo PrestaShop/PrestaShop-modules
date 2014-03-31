@@ -343,6 +343,7 @@ class PayPal extends PaymentModule
 			'PayPal_login_client_id' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
 			'PayPal_login_secret' => Configuration::get('PAYPAL_LOGIN_SECRET'),
 			'PayPal_login_tpl' => (int)Configuration::get('PAYPAL_LOGIN_TPL'),
+			'default_lang_iso' => Language::getIsoById($this->context->employee->id_lang),
 		));
 
 		$this->getTranslations();
@@ -395,12 +396,66 @@ class PayPal extends PaymentModule
 				$smarty->getTemplateVars('page_name') == 'order-opc' ) && 
 			(int)Configuration::get('PAYPAL_LOGIN') == 1)
 		{
+			$this->context->smarty->assign(array(
+				'paypal_locale' => $this->getLocale(),
+			));
 			$process .= '
 				<script src="https://www.paypalobjects.com/js/external/api.js"></script>
 				<script>'.$this->fetchTemplate('js/paypal_login.js').'</script>';
 		}
 
 		return $process;
+	}
+
+	public function getLocale()
+	{
+		switch(Language::getIsoById($this->context->cookie->id_lang))
+		{
+			case 'fr':
+				return 'fr-fr';
+			case 'hk':
+				return 'zh-hk';
+			case 'cn':
+				return 'zh-cn';
+			case 'tw':
+				return 'zh-tw';	
+			case 'xc':
+				return 'zh-xc';
+			case 'dk':
+				return 'da-dk';
+			case 'nl':
+				return 'nl-nl';
+			case 'gb':
+				return 'en-gb';
+			case 'de':
+				return 'de-de';
+			case 'il':
+				return 'he-il';
+			case 'id':
+				return 'id-id';
+			case 'il':
+				return 'it-il';
+			case 'jp':
+				return 'ja-jp';
+			case 'no':
+				return 'no-no';
+			case 'pt':
+				return 'pt-pt';
+			case 'pl':
+				return 'pl-pl';
+			case 'ru':
+				return 'ru-ru';
+			case 'es':
+				return 'es-es';
+			case 'se':
+				return 'sv-se';
+			case 'th':
+				return 'th-th';
+			case 'tr':
+				return 'tr-tr';
+			default :
+				return 'en-gb';
+		}		
 	}
 
 	public function hookDisplayMobileHeader()
