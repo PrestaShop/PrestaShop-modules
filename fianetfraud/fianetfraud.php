@@ -1590,23 +1590,9 @@ class Fianetfraud extends Module
 	 */
 	public static function getIpByOrder($id_order)
 	{
-		$sql = 'SELECT c.`ip_address` FROM `'._DB_PREFIX_.'connections` c 
-			LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
-			LEFT JOIN `'._DB_PREFIX_.'customer` cu ON cu.id_customer = g.id_customer
-			LEFT JOIN `'._DB_PREFIX_."orders` o ON o.id_customer = cu.id_customer
-			WHERE o.`id_order` = '".(int)$id_order."'";
-
+		$sql = 'SELECT `customer_ip_address` FROM `'._DB_PREFIX_.self::CERTISSIM_ORDER_TABLE_NAME."` WHERE `id_order` = '".(int)$id_order."'";
 		$query_result = Db::getInstance()->getRow($sql);
-		if ($query_result)
-		{
-			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' : ip = '.long2ip($query_result['ip_address']));
-			return (long2ip($query_result['ip_address']));
-		}
-		else
-		{
-			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' : ip missing');
-			return false;
-		}
+		return ($query_result['customer_ip_address']);
 	}
 
 	/**
