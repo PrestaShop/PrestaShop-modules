@@ -111,6 +111,10 @@
 		<congratulation_title>Congratulation !</congratulation_title>
 		<congratulation_live_mode>You can now start accepting Payment  with PayPal.</congratulation_live_mode>
 		<congratulation_test_mode>You can now start testing PayPal solutions. Don’t forget to comeback to this page and activate the live mode in order to start accepting payements.</congratulation_test_mode>
+		<client_id>Client ID</client_id>
+		<secret>Secret</secret>
+		<tpl_paypal_blue>PayPal Blue</tpl_paypal_blue>
+		<tpl_neutral>Neutral</tpl_neutral>
 
 		<u1>
 			<signUpCallButton>Sign Up</signUpCallButton>

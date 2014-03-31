@@ -61,6 +61,26 @@ class PayPalInstall
 			PRIMARY KEY (`id_paypal_customer`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 AUTO_INCREMENT=1'))
 			return false;
+
+
+		if (!Db::getInstance()->Execute('
+			CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'paypal_login_user`  (
+				`id_paypal_login_user` INT(11) AUTO_INCREMENT,
+				`id_customer` INT(11) NOT NULL,
+				`token_type` VARCHAR(255) NOT NULL,
+				`expires_in` VARCHAR(255) NOT NULL,
+				`refresh_token` VARCHAR(255) NOT NULL,
+				`id_token` VARCHAR(255) NOT NULL,
+				`access_token` VARCHAR(255) NOT NULL,
+				`account_type` VARCHAR(255) NOT NULL,
+				`user_id` VARCHAR(255) NOT NULL,
+				`verified_account` VARCHAR(255) NOT NULL,
+				`zoneinfo` VARCHAR(255) NOT NULL,
+				`age_range` VARCHAR(255) NOT NULL,
+				PRIMARY KEY (`id_paypal_login_user`)
+			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
+			return false;
+
 	}
 	
 	/**
@@ -106,6 +126,13 @@ class PayPalInstall
 		Configuration::deleteByName('PAYPAL_CAPTURE');
 		Configuration::deleteByName('PAYPAL_DEBUG_MODE');
 		Configuration::deleteByName('PAYPAL_COUNTRY_DEFAULT');
+		
+		/* USE PAYPAL LOGIN */
+		Configuration::deleteByName('PAYPAL_LOGIN');
+		Configuration::deleteByName('PAYPAL_LOGIN_CLIENT_ID');
+		Configuration::deleteByName('PAYPAL_LOGIN_SECRET');
+		Configuration::deleteByName('PAYPAL_LOGIN_TPL');
+		/* /USE PAYPAL LOGIN */
 
 		// PayPal v3 configuration
 		Configuration::deleteByName('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT');

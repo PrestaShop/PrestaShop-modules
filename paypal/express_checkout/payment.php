@@ -29,6 +29,7 @@ include_once(dirname(__FILE__).'/../../../init.php');
 
 include_once(_PS_MODULE_DIR_.'paypal/express_checkout/process.php');
 include_once(_PS_MODULE_DIR_.'paypal/express_checkout/submit.php');
+include_once(_PS_MODULE_DIR_.'paypal/paypal_login/PayPalLoginUser.php');
 
 /* Normal payment process */
 $id_cart = Tools::getValue('id_cart');
@@ -131,8 +132,16 @@ if ($request_type && $ppec->type)
 		$ppec->context->cart->update();
 	}
 
+	$LoginUser = PaypalLoginUser::getByIdCustomer((int)$ppec->context->cookie->id_customer);
+
+	if ($LoginUser && $LoginUser->expires_in <= time())
+	{
+		$obj = new PayPalLogin();
+		$LoginUser = $obj->getRefreshToken();
+	}
+
 	/* Set details for a payment */
-	$ppec->setExpressCheckout();
+	$ppec->setExpressCheckout(($LoginUser ? $LoginUser->access_token : false));
 
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token))
 		$ppec->redirectToAPI();

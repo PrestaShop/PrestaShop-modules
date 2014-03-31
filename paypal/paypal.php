@@ -31,6 +31,7 @@ include_once(_PS_MODULE_DIR_.'/paypal/api/paypal_lib.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_logos.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_orders.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_tools.php');
+include_once(_PS_MODULE_DIR_.'/paypal/paypal_login/paypal_login.php');
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -338,6 +339,10 @@ class PayPal extends PaymentModule
 			'One_Page_Checkout'	=> (int)Configuration::get('PS_ORDER_PROCESS_TYPE'),
 			'PayPal_integral_evolution_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
 			'PayPal_integral_evolution_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+			'PayPal_login' => (int)Configuration::get('PAYPAL_LOGIN'),
+			'PayPal_login_client_id' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
+			'PayPal_login_secret' => Configuration::get('PAYPAL_LOGIN_SECRET'),
+			'PayPal_login_tpl' => (int)Configuration::get('PAYPAL_LOGIN_TPL'),
 		));
 
 		$this->getTranslations();
@@ -375,7 +380,27 @@ class PayPal extends PaymentModule
 		else
 			Tools::addCSS(_MODULE_DIR_.$this->name.'/css/paypal.css');
 
-		return '<script type="text/javascript">'.$this->fetchTemplate('js/paypal.js').'</script>';
+		$process = '<script type="text/javascript">'.$this->fetchTemplate('js/paypal.js').'</script>';
+
+		if (version_compare(_PS_VERSION_, '1.5'))
+		{
+			global $smarty;
+		}
+		else
+		{
+			$smarty = $this->context->smarty;
+		}
+
+		if (($smarty->getTemplateVars('page_name') == 'authentication' || 
+				$smarty->getTemplateVars('page_name') == 'order-opc' ) && 
+			(int)Configuration::get('PAYPAL_LOGIN') == 1)
+		{
+			$process .= '
+				<script src="https://www.paypalobjects.com/js/external/api.js"></script>
+				<script>'.$this->fetchTemplate('js/paypal_login.js').'</script>';
+		}
+
+		return $process;
 	}
 
 	public function hookDisplayMobileHeader()
@@ -934,6 +959,12 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', (int)Tools::getValue('express_checkout_shortcut'));
 				Configuration::updateValue('PAYPAL_SANDBOX', (int)Tools::getValue('sandbox_mode'));
 				Configuration::updateValue('PAYPAL_CAPTURE', (int)Tools::getValue('payment_capture'));
+				/* USE PAYPAL LOGIN */
+				Configuration::updateValue('PAYPAL_LOGIN',           (int)Tools::getValue('paypal_login'));
+				Configuration::updateValue('PAYPAL_LOGIN_CLIENT_ID', Tools::getValue('paypal_login_client_id'));
+				Configuration::updateValue('PAYPAL_LOGIN_SECRET',    Tools::getValue('paypal_login_client_secret'));
+				Configuration::updateValue('PAYPAL_LOGIN_TPL',       (int)Tools::getValue('paypal_login_client_template'));
+				/* /USE PAYPAL LOGIN */
 
 				//EXPRESS CHECKOUT TEMPLATE
 				Configuration::updateValue('PAYPAL_HSS_SOLUTION', (int)Tools::getValue('integral_evolution_solution'));
