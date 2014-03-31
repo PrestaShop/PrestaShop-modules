@@ -209,11 +209,11 @@ class Catalog
                                             WHERE od.`product_supplier_reference` = ca.`reference_attribute`
 											AND `id_order`='.(int)$com['id_order'].'
                                             GROUP BY od.`product_supplier_reference`');
-            if (($ok == 0 || $ok == '') && ($ok2 == 0 || $ok2 == ''))
-			{
-				unset($lstC[$i]);
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
-			}
+            	if (($ok == 0 || $ok == '') && ($ok2 == 0 || $ok2 == ''))
+		{
+			unset($lstC[$i]);
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
+		}
             
 			$i++;
 		}
@@ -313,12 +313,17 @@ class Catalog
 
 	public function updateCategory($rel, $cat)
 	{
-		$id_category = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_category` FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
-
-		if ($id_category)
-			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_category_shop` SET id_category='.(int)$cat.' WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
-		else
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_category_shop` (`name`,`id_category`,`id_shop`) VALUES ("'.pSQL($rel).'",'.(int)$cat.','.(int)self::getInfoEco('ID_SHOP').')');
+		if($cat != 0)
+       		{
+			$id_category = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_category` FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
+	
+			if ($id_category)
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_category_shop` SET id_category='.(int)$cat.' WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
+			else
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_category_shop` (`name`,`id_category`,`id_shop`) VALUES ("'.pSQL($rel).'",'.(int)$cat.','.(int)self::getInfoEco('ID_SHOP').')');
+       		}
+       		else
+       			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'"');
 	}
 
 
