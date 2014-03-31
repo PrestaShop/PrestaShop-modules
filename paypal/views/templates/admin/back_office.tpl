@@ -40,6 +40,11 @@
 	</div>
 
 	<div class="clear"></div><hr />
+	<div class="box">
+	{l s='Download the ' mod='paypal'}<a href="http://www.202-ecommerce.com/paypal/paypal-doc-{$default_lang_iso}.pdf"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
+		
+	</div>
+	<div class="clear"></div><hr>
 
 	<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" id="paypal_configuration">
 		{* PayPal configuration blocks *}
