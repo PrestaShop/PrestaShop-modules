@@ -32,6 +32,7 @@ include_once(_PS_MODULE_DIR_.'/paypal/paypal_logos.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_orders.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_tools.php');
 include_once(_PS_MODULE_DIR_.'/paypal/paypal_login/paypal_login.php');
+include_once(_PS_MODULE_DIR_.'/paypal/paypal_login/PayPalLoginUser.php');
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -42,6 +43,7 @@ define('TRACKING_INTEGRAL', 'PRESTASHOP_EC');
 define('TRACKING_OPTION_PLUS', 'PRESTASHOP_ECM');
 define('PAYPAL_HSS_REDIRECTION', 0);
 define('PAYPAL_HSS_IFRAME', 1);
+define('TRACKING_EXPRESS_CHECKOUT_SEAMLESS', 'PrestaShopCEMEA_Cart_LIPP');
 
 
 define('TRACKING_CODE', 'FR_PRESTASHOP_H3S');
@@ -777,13 +779,33 @@ class PayPal extends PaymentModule
 			elseif (_PS_MOBILE_PHONE_)
 				return SMARTPHONE_TRACKING_CODE;
 		}
+
+
+		//Get Seamless checkout
+		$LoginUser = PaypalLoginUser::getByIdCustomer((int)$this->context->cookie->id_customer);
+		if ($LoginUser && $LoginUser->expires_in <= time())
+		{
+			$obj = new PayPalLogin();
+			$LoginUser = $obj->getRefreshToken();
+		}
+
 		
 		if($method == WPS)
-			return TRACKING_INTEGRAL;
+		{
+			if($LoginUser)
+				return TRACKING_EXPRESS_CHECKOUT_SEAMLESS;
+			else
+				return TRACKING_INTEGRAL;
+		}
 		if($method == HSS)
 			return TRACKING_INTEGRAL_EVOLUTION;
 		if($method == ECS)
-			return TRACKING_OPTION_PLUS;
+		{
+			if($LoginUser)
+				return TRACKING_EXPRESS_CHECKOUT_SEAMLESS;
+			else
+				return TRACKING_OPTION_PLUS;
+		}
 
 		return TRACKING_CODE;
 	}
