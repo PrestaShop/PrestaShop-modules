@@ -1,3 +1,8 @@
+{if $smarty.const._PS_VERSION_ > 1.6}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel">
+{/if}
 <br />
 <fieldset {if isset($ps_version) && ($ps_version < '1.5')}style="width: 400px"{/if}>
 	<legend><img src="{$base_url}modules/{$module_name}/logo.gif" alt="" />{l s='PayPal Refund' mod='paypal'}</legend>
@@ -10,3 +15,9 @@
 		</p>
 	</form>
 </fieldset>
+{if $smarty.const._PS_VERSION_ > 1.6}
+		</div>
+	</div>
+</div>
+{/if}
+
