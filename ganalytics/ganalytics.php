@@ -34,7 +34,7 @@ class GAnalytics extends Module
 	{
 		$this->name = 'ganalytics';
 		$this->tab = 'analytics_stats';
-		$this->version = '1.7';
+		$this->version = '1.8';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
