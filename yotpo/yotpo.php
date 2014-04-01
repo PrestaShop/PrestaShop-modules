@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.7';
+		$this->version = '1.3.9';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -43,7 +43,7 @@ class Yotpo extends Module
 			include_once($this->_yotpo_module_path.'/YotpoSnippetCache.php');	
 		}	
 			    /* Backward compatibility */
-    	if (_PS_VERSION_ < '1.5') {
+		if (version_compare(_PS_VERSION_, '1.5') < 0) {
     		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
     	}				
 	}
@@ -80,8 +80,8 @@ class Yotpo extends Module
 		if (!function_exists('curl_init'))
 			$this->setError($this->l('Yotpo needs the PHP Curl extension, please ask your hosting provider to enable it prior to install this module.'));
 
-		$version_mask = explode('.', _PS_VERSION_, 3);
-		if($version_mask[0] == 0 || $version_mask[1] < 3)
+		
+		if(version_compare(_PS_VERSION_, '1.3') < 0)
 			$this->setError($this->l('Minimum version required for Yotpo module is Prestashop 1.3'));
 
 		foreach ($this->_required_files as $file)
@@ -147,7 +147,7 @@ class Yotpo extends Module
 	public function hookProductTab()
 	{
 		if ($this->parseProductId() != null && Configuration::get('yotpo_widget_location') == 'tab') {
-			if (_PS_VERSION_ > '1.5') {
+			if (version_compare(_PS_VERSION_, '1.6') >= 0) {
 				return '<h3 class="page-product-heading"><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></h3>';	
 			}
 			return '<li><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></li>';
@@ -610,7 +610,7 @@ class Yotpo extends Module
 
 	private function prepareError($message = '')
 	{
-		$this->_html .= sprintf('<div class="alert">%s</div>', $message == '' ? $this->l('Error occured') : $message);
+		$this->_html .= sprintf('<div class="bootstrap"><div class="alert">%s</div></div>', $message == '' ? $this->l('Error occured') : $message);
 	}
 
 	private function prepareSuccess($message = '')
@@ -745,7 +745,7 @@ class Yotpo extends Module
 				if($result == false || $should_update_row) {			
 					$result = '';
 					$expiration_time = null;
-					$request_result = $this->httpClient()->makeRichSnippetRequest(Configuration::get('yotpo_app_key'), $product_id);
+					$request_result = $this->httpClient()->makeRichSnippetRequest(Configuration::get('yotpo_app_key'),$product_id);
 					if($request_result['status_code'] == 200) {
 						if ($request_result['json'] == true) {
 							$result .= $request_result['response']['rich_snippet']['html_code'];
