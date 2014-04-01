@@ -591,8 +591,10 @@ class PrediggoCall
 			$oRecoParam->setShopId($this->sShopId);
 			$oRecoParam->setSessionId(md5(session_id()));
 			$oRecoParam->addCondition('genre', 'Home');
-			if(call_user_func(array('PrediggoService', 'getCategoryRecommendation'), $oRecoParam))
-				return true;
+			$oCallResult = call_user_func(array('PrediggoService', 'getCategoryRecommendation'), $oRecoParam);
+			if($oCallResult === false)
+				return false;
+			return true;
 		}
 		catch(PrediggoException $ex)
 		{
