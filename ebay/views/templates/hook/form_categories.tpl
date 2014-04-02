@@ -109,6 +109,7 @@
 	var module_time = '{$date}';
 	var module_path = '{$_path}';
 	var id_lang = '{$id_lang}';
+	var id_ebay_profile = '{$id_ebay_profile}';
 	var ebay_l = {ldelim}
 		'thank you for waiting': "{l s='Thank you for waiting while creating suggestions' mod='ebay'}",
 		'no category selected' : "{l s='No category selected' mod='ebay'}",

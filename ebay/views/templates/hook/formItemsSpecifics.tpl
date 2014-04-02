@@ -72,6 +72,7 @@
 <script type="text/javascript">
 	var module_dir = "{$_module_dir_}";
 	var id_lang = "{$id_lang}";
+    var id_ebay_profile = "{$id_ebay_profile}";
 	var ebay_token = "{$ebay_token}";
 	
 	var l = {ldelim}
