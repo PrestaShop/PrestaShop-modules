@@ -44,7 +44,7 @@ function loadCategoryItemsSpecifics(category_position)
 		async: true,
 		cache: false,
 		dataType: 'json',
-		url: module_dir + "ebay/ajax/loadItemsSpecificsAndConditions.php?token=" + ebay_token + "&ebay_category=" + category_id + "&id_lang=" + id_lang,
+		url: module_dir + "ebay/ajax/loadItemsSpecificsAndConditions.php?token=" + ebay_token + "&profile=" + id_ebay_profile + "&ebay_category=" + category_id + "&id_lang=" + id_lang,
 		success: function(data) {
 			$('#specifics-' + category_id + '-loader').hide();
 			insertCategoryRow(category_id, data);
