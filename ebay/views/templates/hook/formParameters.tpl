@@ -206,7 +206,7 @@
 	</fieldset>
     
 	<fieldset style="margin-top:10px;">
-		<legend>{l s='Sync Orders' mod='ebay'}</legend>
+		<legend>{l s='Sync' mod='ebay'}</legend>
 		
 		<label>
 			{l s='Manually Sync Orders' mod='ebay'}
@@ -214,8 +214,21 @@
 		<a href="{$url}&EBAY_SYNC_ORDERS=1">
 			<input type="button" class="button" value="{l s='Sync Orders from eBay' mod='ebay'}" />
 		</a>
+        <br>
+        {if $is_multishop }
+            {l s='in Multishop mode, you need to run the following CRON task to sync orders' mod='ebay'}
+            <a href="{$sync_orders_by_cron_url}" target="_blank">{$sync_products_by_cron_url}</a>
+        {/if}
+        <br><br>
+		<label>
+			{l s='Sync Products' mod='ebay'}
+		</label>
+		<input type="radio" size="20" name="sync_products_mode" class="sync_products_mode" value="save" {if $sync_products_by_cron == false}checked="checked"{/if}/> {l s='on save' mod='ebay'}
+		<input type="radio" size="20" name="sync_products_mode" class="sync_products_mode" value="cron" {if $sync_products_by_cron == true}checked="checked"{/if}/> {l s='by CRON task' mod='ebay'}<br>
+        <a id="sync_products_by_cron_url" href="{$sync_products_by_cron_url}" target="_blank" style="{if $sync_products_by_cron == false};display:none{/if}">{$sync_products_by_cron_url}</a>
+		<div class="clear both"></div>
+        
 	</fieldset>    
-		
 
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
 		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
@@ -237,6 +250,14 @@
 			$('#token-btn').click(function() {
 					window.open(module_dir + 'ebay/pages/getSession.php?token={/literal}{$ebay_token}{literal}');			
 			});
+            
+            $('.sync_products_mode').change(function() {
+                if ($(this).val() == 'cron') {
+                    $('#sync_products_by_cron_url').show();
+                } else {
+                    $('#sync_products_by_cron_url').hide();
+                }
+            });
 		</script>
 	{/literal}
 </form>
