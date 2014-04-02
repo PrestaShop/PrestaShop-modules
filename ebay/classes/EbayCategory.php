@@ -141,13 +141,14 @@ class EbayCategory
 	 * Returns the category conditions with the corresponding types on PrestaShop if set
 	 *
 	 */
-	public function getConditionsWithConfiguration()
+	public function getConditionsWithConfiguration($id_ebay_profile)
 	{
 		$sql = 'SELECT e.`id_condition_ref` AS id, e.`name`, ec.`condition_type` as type
 			FROM `'._DB_PREFIX_.'ebay_category_condition` e
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category_condition_configuration` ec
 			ON e.`id_category_ref` = ec.`id_category_ref`
 			AND e.`id_condition_ref` = ec.`id_condition_ref`
+			AND ec.`id_ebay_profile` = '.(int)$id_ebay_profile.'            
 			WHERE e.`id_category_ref` = '.(int)$this->id_category_ref;
 
 		$res = Db::getInstance()->executeS($sql);
@@ -175,13 +176,14 @@ class EbayCategory
 	 * Returns an array with the condition_type and corresponding ConditionID on eBay
 	 *
 	 */
-	public function getConditionsValues()
+	public function getConditionsValues($id_ebay_profile)
 	{
-		if (!$this->conditions_values)
+		if (!isset($this->conditions_values[$id_ebay_profile]))
 		{
 			$sql = 'SELECT e.condition_type, e.id_condition_ref as condition_id
 				FROM '._DB_PREFIX_.'ebay_category_condition_configuration e
-				WHERE e.id_category_ref = '.(int)$this->id_category_ref;
+				WHERE e.`id_ebay_profile` = '.(int)$id_ebay_profile.' 
+				AND e.id_category_ref = '.(int)$this->id_category_ref;
 
 			$res = Db::getInstance()->executeS($sql);
 
@@ -194,10 +196,10 @@ class EbayCategory
 			foreach ($res as $row)
 				$ret[EbayCategoryConditionConfiguration::getPSConditions($row['condition_type'])] = $row['condition_id'];
 
-			$this->conditions_values = $ret;
+			$this->conditions_values[$id_ebay_profile] = $ret;
 		}
 
-		return $this->conditions_values;
+		return $this->conditions_values[$id_ebay_profile];
 	}
 
 	public static function getEbayCategoryByCategoryId($id_category)

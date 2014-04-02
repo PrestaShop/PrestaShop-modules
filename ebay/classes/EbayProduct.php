@@ -39,6 +39,13 @@ class EbayProduct
 		return Db::getInstance()->getValue($query);
 	}
 	
+	public static function getNbProducts($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM `'._DB_PREFIX_.'ebay_product`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}
+
 	public static function getProducts($not_update_for_days, $limit)
 	{
 		return Db::getInstance()->ExecuteS('SELECT ep.id_product_ref, ep.id_product

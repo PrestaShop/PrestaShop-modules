@@ -28,29 +28,35 @@
 class EbayShipping
 {
 
-	public static function getPsCarrierByEbayCarrier($ebay_carrier)
+	public static function getPsCarrierByEbayCarrier($id_ebay_profile, $ebay_carrier)
 	{
-		return Db::getInstance()->getValue('SELECT ps_carrier
+		return Db::getInstance()->getValue('SELECT `ps_carrier`
 			FROM `'._DB_PREFIX_.'ebay_shipping`
-			WHERE `ebay_carrier` = \''.pSQL($ebay_carrier).'\'');
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
+			AND `ebay_carrier` = \''.pSQL($ebay_carrier).'\'');
 	}
 
-	public static function getNationalShippings()
+	public static function getNationalShippings($id_ebay_profile)
 	{
 		return Db::getInstance()->ExecuteS('SELECT *
-			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 0');
+			FROM '._DB_PREFIX_.'ebay_shipping 
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
+			AND international = 0');
 	}
 
-	public static function getInternationalShippings()
+	public static function getInternationalShippings($id_ebay_profile)
 	{
 		return Db::getInstance()->ExecuteS('SELECT *
-			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 1');
+			FROM '._DB_PREFIX_.'ebay_shipping 
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
+			AND international = 1');
 	}
 
-	public static function insert($ebay_carrier, $ps_carrier, $extra_fee, $international = false)
+	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $international = false)
 	{
-		$sql = 'INSERT INTO '._DB_PREFIX_.'ebay_shipping
+		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_shipping`
 			VALUES(\'\',
+			\''.(int)$id_ebay_profile.'\',
 			\''.pSQL($ebay_carrier).'\',
 			\''.(int)$ps_carrier.'\',
 			\''.(float)$extra_fee.'\',
@@ -59,15 +65,17 @@ class EbayShipping
 		DB::getInstance()->Execute($sql);
 	}
 
-	public static function truncate()
+	public static function truncate($id_ebay_profile)
 	{
-		return Db::getInstance()->Execute('TRUNCATE '._DB_PREFIX_.'ebay_shipping');
+		return Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'ebay_shipping
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function getLastShippingId()
+	public static function getLastShippingId($id_ebay_profile)
 	{
 		return Db::getInstance()->getValue('SELECT id_ebay_shipping
 			FROM '._DB_PREFIX_.'ebay_shipping
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.'
 			ORDER BY id_ebay_shipping DESC');
 	}
 }

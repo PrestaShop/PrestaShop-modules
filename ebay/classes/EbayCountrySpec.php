@@ -240,7 +240,8 @@ class EbayCountrySpec
 	**/
 	private function _getCountry()
 	{
-		$ebayCountry = self::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'));
+		$ebay_profile = EbayProfile::getCurrent();		
+		$ebayCountry = self::getInstanceByKey($ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'));
 
 		$this->country = $ebayCountry->country;
 
