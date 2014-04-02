@@ -33,11 +33,14 @@ if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get(
 /* Fix for limit db sql request in time */
 sleep(1);
 
+$id_ebay_profile = (int)Tools::getValue('profile');
+
 $current_path = Db::getInstance()->getRow('
 	SELECT ecc.`id_ebay_category`, ec.`id_category_ref`, ec.`id_category_ref_parent`, ec.`level`
 	FROM `'._DB_PREFIX_.'ebay_category_configuration` ecc
 	LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec ON (ec.`id_ebay_category` = ecc.`id_ebay_category`)
-	WHERE ecc.`id_category` = '.(int)Tools::getValue('id_category'));
+	WHERE ecc.`id_ebay_profile` = '.(int)$id_ebay_profile.' 
+    AND ecc.`id_category` = '.(int)Tools::getValue('id_category'));
 
 for ($levelStart = $current_path['level']; $levelStart > 1; $levelStart--)
 {
@@ -45,7 +48,8 @@ for ($levelStart = $current_path['level']; $levelStart > 1; $levelStart--)
 		SELECT ec.`id_ebay_category`, ec.`id_category_ref`, ec.`id_category_ref_parent`, ec.`level`
 		FROM `'._DB_PREFIX_.'ebay_category` ec
 		LEFT JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc ON (ecc.`id_ebay_category` = ec.`id_ebay_category`)
-		WHERE ec.`id_category_ref` = '.(int)$current_path['id_category_ref_parent']);
+        WHERE ecc.`id_ebay_profile` = '.(int)$id_ebay_profile.' 
+        AND ec.`id_category_ref` = '.(int)$current_path['id_category_ref_parent']);
 }
 
 $level_exists = array();
