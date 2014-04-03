@@ -64,7 +64,7 @@ class GiveIt extends Module {
 	{
 		$this->name = 'giveit';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->author = 'Give.it';
 
 		parent::__construct();
@@ -799,6 +799,8 @@ class GiveIt extends Module {
 			$this->html .= $this->displayError($this->l('Data is successfully saved, but your API keys appear to be invalid. Please check your keys.'));
 			return;
 		}
+		else
+			Configuration::updateValue('GIVEIT_CONFIGURATION_OK', true);
 
 		$this->addFlashMessage($this->l('Settings were successfully saved'));
 	}
