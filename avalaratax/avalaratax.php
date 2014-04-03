@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.5';
+		$this->version = '3.4.6';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -515,12 +515,18 @@ class AvalaraTax extends Module
 
 		if (Tools::isSubmit('SubmitAvalaraTaxSettings'))
 		{
-			Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
-			Configuration::updateValue('AVALARATAX_LICENSE_KEY', Tools::getValue('avalaratax_license_key'));
-			Configuration::updateValue('AVALARATAX_URL', Tools::getValue('avalaratax_url'));
-			Configuration::updateValue('AVALARATAX_COMPANY_CODE', Tools::getValue('avalaratax_company_code'));
-
-			$buffer .= $this->_displayConfirmation();
+			$connectionTestResult = $this->_testConnection();
+			
+			if (strpos($connectionTestResult[0], 'Error') === false)
+			{
+				Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
+				Configuration::updateValue('AVALARATAX_LICENSE_KEY', Tools::getValue('avalaratax_license_key'));
+				Configuration::updateValue('AVALARATAX_URL', Tools::getValue('avalaratax_url'));
+				Configuration::updateValue('AVALARATAX_COMPANY_CODE', Tools::getValue('avalaratax_company_code'));
+				Configuration::updateValue('AVALARATAX_CONFIGURATION_OK', true);
+				
+				$buffer .= $this->_displayConfirmation();
+			}
 		}
 		elseif (Tools::isSubmit('SubmitAvalaraTaxOptions'))
 		{
@@ -530,7 +536,6 @@ class AvalaraTax extends Module
 			Configuration::updateValue('AVALARATAX_ADDRESS_NORMALIZATION', Tools::getValue('avalaratax_address_normalization'));
 			Configuration::updateValue('AVALARATAX_TAX_OUTSIDE', Tools::getValue('avalaratax_tax_outside'));
 			Configuration::updateValue('AVALARA_CACHE_MAX_LIMIT', Tools::getValue('avalara_cache_max_limit') < 1 ? 1 : Tools::getValue('avalara_cache_max_limit') > 23 ? 23 : Tools::getValue('avalara_cache_max_limit'));
-
 			$buffer .= $this->_displayConfirmation();
 		}
 		elseif (Tools::isSubmit('SubmitAvalaraTestConnection'))
