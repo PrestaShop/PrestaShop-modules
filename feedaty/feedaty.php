@@ -497,7 +497,7 @@ class Feedaty extends Module
 			$toview['count_review'] = Configuration::get('feedaty_count_review');
 
 			/* Create html of link */
-			$toview['link'] = '<a href="'.$toview['data_review']['Product']['Url'].'">'.$this->l('Read all reviews').'</a>';
+			$toview['link'] = '<a href="'.$toview['data_review']['Product']['Url'].'" target="_blank">'.$this->l('Read all reviews').'</a>';
 
 			/* Generate stars img */
 			if (is_array($toview['data_review']['Feedbacks']))
