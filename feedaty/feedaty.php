@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.5';
+		$this->version = '1.1.6';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
@@ -391,6 +391,10 @@ class Feedaty extends Module
 			curl_setopt($ch, CURLOPT_TIMEOUT, '60');
 			$content = trim(curl_exec($ch));
 			curl_close($ch);
+			
+			json_decode($content);
+			if (json_last_error() == JSON_ERROR_NONE)
+				Configuration::updateValue('FEEDATY_CONFIGURATION_OK', true);
 
 			/* If everything is gone fine we can save it on cache */
 			if (Tools::strlen($content) > 50)
