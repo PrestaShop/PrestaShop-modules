@@ -38,7 +38,7 @@ class Addshoppers extends Module
 	{
 		$this->name = 'addshoppers';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.1.6';
+		$this->version = '1.1.7';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
@@ -303,6 +303,7 @@ class Addshoppers extends Module
 				Configuration::updateValue('ADDSHOPPERS_SHOP_ID', $response['shopid']);
 				Configuration::updateValue('ADDSHOPPERS_API_KEY', $response['api_key']);
 				Configuration::updateValue('ADDSHOPPERS_EMAIL', $email);
+				Configuration::updateValue('ADDSHOPPERS_CONFIGURATION_OK', true);
 
 				$this->_updateConfiguration();
 
@@ -336,6 +337,7 @@ class Addshoppers extends Module
 				Configuration::updateValue('ADDSHOPPERS_SHOP_ID', $response['shopid']);
 				Configuration::updateValue('ADDSHOPPERS_API_KEY', $response['api_key']);
 				Configuration::updateValue('ADDSHOPPERS_EMAIL', $email);
+				Configuration::updateValue('ADDSHOPPERS_CONFIGURATION_OK', true);
 
 				$this->_updateConfiguration();
 
