@@ -21,7 +21,7 @@
 * @author    Feedaty <info@feedaty.com>
 * @copyright 2012-2014 Feedaty
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* @version   Release: 1.1.135 $
+* @version   Release: 1.1.7 $
 */
 
 if (!defined('_PS_VERSION_'))
@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.6';
+		$this->version = '1.1.7';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
@@ -335,37 +335,44 @@ class Feedaty extends Module
 			$html .= $this->fetchTemplate('/views/templates/admin/landing.tpl');
 		/* ... otherwise standard page with all settings for widget */
 		else {
-			/* Vars used on template */
-			$feedaty['data']['merchant'] = $this->fdGetTemplate('merchant');
-			$feedaty['data']['product'] = $this->fdGetTemplate('product');
-			$feedaty['data']['product_template'] = Configuration::get('feedaty_product_template');
-			$feedaty['data']['merchant_template'] = Configuration::get('feedaty_store_template');
-			foreach (array('header','top','leftColumn','rightColumn','footer','home') as $v)
-				$feedaty['data']['merchant_position'][$v] = $this->l('Position '.$v);
-			foreach (array('extraLeft','extraRight','productActions','productOutOfStock','productfooter') as $v)
-				$feedaty['data']['product_position'][$v] = $this->l('Position '.$v);
-			$feedaty['data']['merchant_default_position'] = Configuration::get('feedaty_store_position');
-			$feedaty['data']['product_default_position'] = Configuration::get('feedaty_product_position');
-
-			$feedaty['data']['widget_product_enabled'] = Configuration::get('feedaty_widget_product_enabled');
-			$feedaty['data']['widget_store_enabled'] = Configuration::get('feedaty_widget_store_enabled');
-			$feedaty['data']['status_list'] = OrderState::getOrderStates($this->context->language->id);
-	        $feedaty['data']['status'] = Configuration::get('feedaty_status_request');
-	        if (Tools::strlen($feedaty['data']['status']) == 0)
-	            $feedaty['data']['status'] = 5;
-			$feedaty['data']['product_review_enabled'] = Configuration::get('feedaty_product_review_enabled');
-			$feedaty['data']['count_review'] = (Tools::safeOutput(Configuration::get('feedaty_count_review')) != '') ? Configuration::get('feedaty_count_review') : '10';
-			if (version_compare(_PS_VERSION_, 1.4, '<'))
-				$feedaty['data']['old_version'] = 1;
+			if (!$this->fdGetData()) {
+				Configuration::updateValue('feedaty_code', '');
+				Tools::redirectAdmin('index.php?controller=AdminModules&configure=feedaty&tab_module=front_office_features&module_name=feedaty&msg=1&token='.Tools::getValue('token'));
+			}
 			else
-				$feedaty['data']['old_version'] = 0;
+			{
+				/* Vars used on template */
+				$feedaty['data']['merchant'] = $this->fdGetTemplate('merchant');
+				$feedaty['data']['product'] = $this->fdGetTemplate('product');
+				$feedaty['data']['product_template'] = Configuration::get('feedaty_product_template');
+				$feedaty['data']['merchant_template'] = Configuration::get('feedaty_store_template');
+				foreach (array('header','top','leftColumn','rightColumn','footer','home') as $v)
+					$feedaty['data']['merchant_position'][$v] = $this->l('Position '.$v);
+				foreach (array('extraLeft','extraRight','productActions','productOutOfStock','productfooter') as $v)
+					$feedaty['data']['product_position'][$v] = $this->l('Position '.$v);
+				$feedaty['data']['merchant_default_position'] = Configuration::get('feedaty_store_position');
+				$feedaty['data']['product_default_position'] = Configuration::get('feedaty_product_position');
 
-			$this->smarty->assign(
-				$feedaty
-			);
+				$feedaty['data']['widget_product_enabled'] = Configuration::get('feedaty_widget_product_enabled');
+				$feedaty['data']['widget_store_enabled'] = Configuration::get('feedaty_widget_store_enabled');
+				$feedaty['data']['status_list'] = OrderState::getOrderStates($this->context->language->id);
+	        		$feedaty['data']['status'] = Configuration::get('feedaty_status_request');
+	        		if (Tools::strlen($feedaty['data']['status']) == 0)
+					$feedaty['data']['status'] = 5;
+				$feedaty['data']['product_review_enabled'] = Configuration::get('feedaty_product_review_enabled');
+				$feedaty['data']['count_review'] = (Tools::safeOutput(Configuration::get('feedaty_count_review')) != '') ? Configuration::get('feedaty_count_review') : '10';
+				if (version_compare(_PS_VERSION_, 1.4, '<'))
+					$feedaty['data']['old_version'] = 1;
+				else
+					$feedaty['data']['old_version'] = 0;
 
-			/* Call template backoffice.tpl */
-			$html .= $this->fetchTemplate('/views/templates/admin/backoffice.tpl');
+				$this->smarty->assign(
+					$feedaty
+				);
+
+				/* Call template backoffice.tpl */
+				$html .= $this->fetchTemplate('/views/templates/admin/backoffice.tpl');
+			}
 		}
 		/* Div added to add some css rules on old prestashop versions is now closed */
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
@@ -403,7 +410,10 @@ class Feedaty extends Module
 		}
 		/* No matter if it's retrieved by cache or by curl, we need to decode json */
 		$data = Tools::jsonDecode($content, true);
-		return $data;
+		if (is_null($data))
+			return false;
+		else
+			return $data;
 	}
 
 	/* fdGetTemplate is used to get data of a kind of widget only */
