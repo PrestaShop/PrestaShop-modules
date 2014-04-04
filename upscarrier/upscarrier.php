@@ -54,7 +54,7 @@ class UpsCarrier extends CarrierModule
 	{
 		$this->name = 'upscarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3.3';
+		$this->version = '1.3.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('us');
 		$this->module_key = 'b7e680a4290c977bb35e3b28817b8348';
@@ -714,6 +714,8 @@ class UpsCarrier extends CarrierModule
 				$this->_dimensionUnit = $this->_dimensionUnitList[strtoupper(Tools::getValue('ps_dimension_unit'))];
 			if (!$this->webserviceTest())
 				$this->_postErrors[]  = $this->l('Prestashop could not connect to UPS webservices').' :<br />'.($this->_webserviceError ? $this->_webserviceError : $this->l('No error description found'));
+			else
+				Configuration::updateValue('UPSCARRIER_CONFIGURATION_OK', true);
 		}
 	}
 
