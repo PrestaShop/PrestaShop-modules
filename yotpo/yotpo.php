@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.3.8';
+		$this->version = '1.3.9';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -487,6 +487,7 @@ class Yotpo extends Module
 				if ($is_success)
 				{
 					Configuration::updateValue('yotpo_past_orders', 1, false);
+					Configuration::updateValue('YOTPO_CONFIGURATION_OK', true);
 					$this->prepareSuccess('Past orders sent successfully');
 				}	
 			}

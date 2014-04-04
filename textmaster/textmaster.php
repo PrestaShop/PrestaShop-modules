@@ -56,7 +56,7 @@ class TextMaster extends Module
     {
         $this->name = 'textmaster';
         $this->tab = 'i18n_localization';
-        $this->version = '1.0.4';
+        $this->version = '1.0.5';
         $this->author = 'TextMaster';
         $this->need_instance = 1;
 
@@ -473,7 +473,10 @@ class TextMaster extends Module
             $textmaster_settings_obj->api_secret = $result['api_info']['api_secret'];
 
             if ($textmaster_settings_obj->updateConfiguration())
+            {
                 Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules'));
+                Configuration::updateValue('TEXTMASTER_CONFIGURATION_OK', true);
+            }
             else
                 return $this->_html .= $this->displayErrors(array($this->l('Could not save API key / secret')));
         }

@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.7';
+		$this->version = '3.8';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -165,7 +165,9 @@ class ShoppingFluxExport extends Module
 		if (!in_array('curl', get_loaded_extensions()))
 			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL
 				pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
-
+		else
+			Configuration::updateValue('SHOPPINGFLUX_CONFIGURATION_OK', true);
+		
 		return $this->_html;
 	}
 
