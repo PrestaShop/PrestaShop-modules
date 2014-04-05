@@ -33,7 +33,7 @@ class AuthorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.5.1';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
