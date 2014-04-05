@@ -56,7 +56,7 @@ class TextMaster extends Module
     {
         $this->name = 'textmaster';
         $this->tab = 'i18n_localization';
-        $this->version = '1.0.5';
+        $this->version = '1.0.6';
         $this->author = 'TextMaster';
         $this->need_instance = 1;
 
@@ -319,7 +319,7 @@ class TextMaster extends Module
 
     private function displayInfoBlock()
     {
-        $textmaster_api_obj = new TextMasterAPI($this);
+        $textmaster_api_obj = TextMasterAPI::getInstance($this);
         $user_info = $textmaster_api_obj->getUserInfo();
         if (!isset($user_info['wallet']['current_money']) || !isset($user_info['wallet']['currency_code']))
             return;
@@ -603,13 +603,13 @@ class TextMaster extends Module
     {
         if (!$registration)
         {
-            $textmaster_api_obj = new TextMasterAPI($this);
+            $textmaster_api_obj = TextMasterAPI::getInstance($this);
             $user_info = $textmaster_api_obj->getUserInfo();
             return $user_info['locale'];
         }
         
         $locales_from_api = array();
-        $textmaster_api_obj = new TextMasterAPI();
+        $textmaster_api_obj = TextMasterAPI::getInstance();
         foreach ($textmaster_api_obj->getLocales() AS $row => $locale_info)
             $locales_from_api[] = $locale_info['code'];
 
@@ -743,7 +743,7 @@ class TextMaster extends Module
         /* checks connection to API if at least one of API codes is set */
         if ($api_key or $api_secret)
         {
-            $textmasterAPI = new TextMasterAPI($this, $api_key, $api_secret);
+            $textmasterAPI = TextMasterAPI::getInstance($this, $api_key, $api_secret);
             if (!$textmasterAPI->isConnected())
             {
                 $this->_html .= $this->displayWarnings(array($this->l('Please login / register')));
@@ -752,6 +752,7 @@ class TextMaster extends Module
         }
         else
         {
+			$this->_html .= $this->displayWarnings(array($this->l('Please login / register')));
             return false;
         }
         $this->api_instance = $textmasterAPI;
@@ -1385,7 +1386,7 @@ class TextMaster extends Module
                 $view->getProjectSummary();
                 break;
         }
-        $textmasterAPI = new TextMasterAPI($this);
+        $textmasterAPI = TextMasterAPI::getInstance($this);
         $this->context->smarty->assign(array('textmaster_token' => sha1(_COOKIE_KEY_.$this->name),
             'view' => $view,
             'module_link' => self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu=create_project&token='.Tools::getValue('token') . (($id_project) ? "&id_project=$id_project" : ''),
@@ -1695,7 +1696,7 @@ class TextMaster extends Module
             }
         }
 
-        if (!$count && (!$orderBy && !$orderWay))
+        if (!$count)
         {
             $keys_array = array('id_product', 'reference', 'price', 'category', 'quantity', 'active', 'name', 'final_price');
             foreach ($keys_array AS $key => $value)
@@ -1722,8 +1723,7 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."image` i ON (i.`id_product` = cp.`id_product` AND i.`cover` = '1')
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."')
-
-				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)."
+				WHERE cp.`id_category` = '".(int)$id_category."' ".$filtering."
                 ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );
@@ -1748,7 +1748,7 @@ class TextMaster extends Module
 				LEFT JOIN `"._DB_PREFIX_."category_lang` cl ON (cl.`id_category` = cp.`id_category` AND cl.`id_lang` = '".(int) $this->context->language->id."' AND cl.`id_shop` = '".(int) $this->context->shop->id."')
 				LEFT JOIN `"._DB_PREFIX_."product_lang` pl ON (pl.`id_product` = cp.`id_product` AND pl.`id_lang` = '".(int) $this->context->language->id."' AND pl.`id_shop` = '".(int) $this->context->shop->id."')
 				LEFT JOIN `"._DB_PREFIX_."stock_available` sav ON (sav.`id_product` = cp.`id_product` AND sav.`id_product_attribute` = 0 ".StockAvailable::addSqlShopRestriction(null, null, "sav").")
-				WHERE cp.`id_category` = '".(int)$id_category."' ".pSQL($filtering)." AND psh.`id_shop` = " .(int)$id_shop . "
+				WHERE cp.`id_category` = '".(int)$id_category."' ".$filtering." AND psh.`id_shop` = " .(int)$id_shop . "
 				ORDER BY `".pSQL($orderBy)."` ".pSQL($orderWay).
                 (($start && $pagination) ? " LIMIT ".(int)$start.", ".(int)$pagination : '')
             );

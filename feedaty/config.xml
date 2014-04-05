@@ -2,7 +2,7 @@
 <module>
 	<name>feedaty</name>
 	<displayName><![CDATA[Feedaty]]></displayName>
-	<version><![CDATA[1.1.6]]></version>
+	<version><![CDATA[1.1.7]]></version>
 	<description><![CDATA[Add the Feedaty review system into your PrestaShop]]></description>
 	<author><![CDATA[Feedaty.com]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

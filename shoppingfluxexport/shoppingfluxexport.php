@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.8';
+		$this->version = '3.8.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -1573,7 +1573,7 @@ class ShoppingFluxExport extends Module
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 
 				if ($quantity - $product->Quantity < 0)
-					StockAvailable::updateQuantity((int)$skus[0], 0, (int)$product->Quantity);
+					StockAvailable::updateQuantity((int)$product->SKU, 0, (int)$product->Quantity);
 			}
 		}
 

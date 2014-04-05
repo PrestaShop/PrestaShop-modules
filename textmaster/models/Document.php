@@ -64,7 +64,7 @@ class TextMasterDocument extends InvObjectModel
 
 		if ($id_document)
 		{
-			$textMasterAPI = new TextMasterAPI;
+			$textMasterAPI = TextMasterAPI::getInstance();
 			$id_project_api = TextMasterProject::getProjectApiId($this->id_project);
 			$this->api_data = $textMasterAPI->getDocument($id_project_api, $this->id_document_api);
 			$this->id_project_api = $id_project_api;
@@ -114,7 +114,7 @@ class TextMasterDocument extends InvObjectModel
 	{
 		if ($send_to_api)
 		{
-			$textMasterAPI = new TextMasterAPI;
+			$textMasterAPI = TextMasterAPI::getInstance();
 			$result = $textMasterAPI->addDocument($this->id_project_api, $this->api_data);
 
 			if (is_array($result))
@@ -145,7 +145,7 @@ class TextMasterDocument extends InvObjectModel
 
 	public function update($null_values = false)
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->updateDocument($this->api_data['id_project_api'], $this->api_data);
 
 		if (!is_array($result))
@@ -156,7 +156,7 @@ class TextMasterDocument extends InvObjectModel
 	
 	public function delete()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->deleteDocument($this->api_data['id_project_api'], $this->id_document_api);
 		if ($result) return false;
 
@@ -166,7 +166,7 @@ class TextMasterDocument extends InvObjectModel
 	
 	public function approve()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->approveDocument($this->api_data['id_project_api'], $this->id_document_api);
 
 		if (!is_array($result))
@@ -177,7 +177,7 @@ class TextMasterDocument extends InvObjectModel
 	
 	public function comment($message)
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$result = $textMasterAPI->commentDocument($this->api_data['id_project_api'], $this->id_document_api, $message);
 
 		if (!is_array($result))
@@ -187,7 +187,7 @@ class TextMasterDocument extends InvObjectModel
 	
 	public function getComments()
 	{
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		return $textMasterAPI->getDocumentComments($this->api_data['id_project_api'], $this->id_document_api);
 	}
 	
@@ -199,7 +199,7 @@ class TextMasterDocument extends InvObjectModel
 													 WHERE `id_project`="'.(int)$id_project.'"
 													 GROUP BY `id_product`');
 
-		$textMasterAPI = new TextMasterAPI;
+		$textMasterAPI = TextMasterAPI::getInstance();
 		$documents_api = $textMasterAPI->getDocuments($id_project_api);
 
 		if ($documents_db)
