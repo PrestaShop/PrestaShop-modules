@@ -36,6 +36,13 @@ if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Co
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
 
+$offset = 3;
+$p = (int)Tools::getValue('p', 0);
+if ($p < 2)
+	$p = 1;
+$limit = $offset * ($p - 1);
+$category_list = array_slice($category_list, $limit, $offset);
+
 $ebay_category_list = Db::getInstance()->executeS('SELECT *
 	FROM `'._DB_PREFIX_.'ebay_category`
 	WHERE `id_category_ref` = `id_category_ref_parent`');
@@ -123,7 +130,8 @@ $template_vars = array(
 	'request_uri' => $_SERVER['REQUEST_URI'],
 	'noCatSelected' => Tools::getValue('ch_cat_str'),
 	'noCatFound' => Tools::getValue('ch_no_cat_str'),
-	'currencySign' => $currency->sign
+	'currencySign' => $currency->sign,
+	'p' => $p
 );
 
 $smarty->assign($template_vars);

@@ -277,3 +277,75 @@ html {
 	-ms-transform: scale(1.1, 1.1);
 	transform: scale(1.1, 1.1);
 }
+
+.warning
+{
+	background : url('../img/warning.png') no-repeat 2px 12px;
+}
+#content .warning.big.tips {
+	background : url('../img/tips.png') no-repeat 2px 5px #fff;
+}
+#content .warning.big {
+	padding: 10px 20px 10px 40px;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	background : url('../img/big-warning.png') no-repeat 2px 5px #fff;
+}
+
+#menuTab li.success
+{
+	background : url('../img/success.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab li.wrong
+{
+	background : url('../img/error.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab li.mind
+{
+	background : url('../img/warning.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab2Sheet #pagination
+{
+	overflow: hidden;
+	margin-bottom: 5px;
+	list-style: none;
+}
+
+#menuTab2Sheet #pagination li
+{
+	width: 15px;
+	height: 15px;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+	margin-left: 5px;
+}
+
+#menuTab2Sheet #pagination li:hover
+{
+	color: #0055FF;
+}
+
+#menuTab2Sheet #pagination li:first-child
+{
+	margin-left: 0;
+}
+
+#menuTab2Sheet #pagination li.prev,
+#menuTab2Sheet #pagination li.next
+{
+	background: #ffffff;
+	border: 1px solid #585A69;
+}
+
+#menuTab2Sheet #pagination li.current
+{
+	border: 1px solid #585A69;
+	color: #0055FF;
+}

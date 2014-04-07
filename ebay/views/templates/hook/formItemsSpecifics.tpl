@@ -23,10 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if isset($alerts) && !empty($alerts)}
-	{$alerts}
-{/if}
 <div>
+	{if isset($alerts) && !empty($alerts)}
+	<div class="warning big">
+		{$alerts}
+	</div>
+	{/if}
+	<!---------------------------->
 	<p>
 		{l s='Item specifics are the details that buyers use to search for products, such as brand, size, colour and are category specific. The more item specifics you add, the easier it is for buyers to find your products. Please also specify the item condition from the options.' mod='ebay'}
 	</p>
@@ -64,7 +67,7 @@
 			{/foreach}
 		</tbody>
 	</table>
-	<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+	<div id="buttonEbayShipping" style="margin-top:5px;">
 		<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
 	</div>
 </form>
@@ -101,6 +104,16 @@
 	{foreach from=$possible_features item=feature}
 		possible_features[{$feature.id_feature}] = "{$feature.name}";
 	{/foreach}
+
+	var form_items_specifics = parseInt("{$form_items_specifics}");
+	var form_items_specifics_mixed = parseInt("{$form_items_specifics_mixed}");
+	
+	if (form_items_specifics_mixed >= 1)
+		$("#menuTab8").addClass('success');
+	else if (form_items_specifics >= 1)
+		$("#menuTab8").addClass('mind');
+	else
+		$("#menuTab8").addClass('wrong');
 
 	{literal}			
 	$('#menuTab8').click(function() {

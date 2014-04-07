@@ -146,7 +146,8 @@
 			</script>			
 		{/if}
 	</fieldset>
-	<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+	<div id="buttonEbayShipping" style="margin-top:5px;">
+		<a href="{$action_url}&reset_template=1" class="button" onclick="return confirm('{l s='Are you sure?' mod='ebay'}');">{l s='Reset template' mod='ebay'}</a>
 		<a id="previewButton" class="button">{l s='Preview' mod='ebay'}</a>
 		<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
 	</div>
@@ -170,4 +171,9 @@
 	$('#selectTagTemplateTitle').on('change', function(){
 		$('#ebay_product_template_title').val($('#ebay_product_template_title').val()+$(this).val())
 	});
+	var form_template_manager = parseInt("{$form_template_manager}");
+	if (form_template_manager == 1)
+		$("#menuTab4").addClass('success');
+	else
+		$("#menuTab4").addClass('mind');
 </script>	
