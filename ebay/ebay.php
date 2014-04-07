@@ -781,6 +781,9 @@ class Ebay extends Module
 			'fancybox' => $this->_path . 'views/js/jquery.fancybox.min.js',
 			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css'
 		));
+        
+        if (Configuration::get('EBAY_SEND_STATS') === false)
+    		return $this->display(__FILE__, 'views/templates/hook/form.tpl').$this->_displayFormStats();
 
 		return $this->display(__FILE__, 'views/templates/hook/form.tpl').
 			(Configuration::get('EBAY_API_TOKEN') ? $this->_displayFormConfig() : $this->_displayFormRegister());
@@ -820,6 +823,20 @@ class Ebay extends Module
 		elseif (Tools::getValue('section') == 'sync')
 			$this->_postProcessEbaySync();
 	}
+    
+	/**
+	 * Form Config Methods
+	 *
+	 **/
+	private function _displayFormStats()
+	{
+		$smarty_vars = array(
+		);
+
+		$this->smarty->assign($smarty_vars);
+
+		return $this->display(__FILE__, 'views/templates/hook/formStats.tpl');
+	}    
 
 	/**
 	 * Register Form Config Methods
