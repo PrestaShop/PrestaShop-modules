@@ -18,5 +18,10 @@
 			}
 		});
 	})
+	var ebay_listings = parseInt("{$ebay_listings}");
+	if (ebay_listings >= 1)
+		$("#menuTab9").addClass('success');
+	else
+		$("#menuTab9").addClass('wrong');
 	//]]>
 </script>

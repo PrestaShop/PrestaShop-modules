@@ -28,7 +28,7 @@
 	regenerate_token_show = true;
 	{/if}
 </script>
-
+{*
 <fieldset>
 	{if $img_stats}
 		<center><img src="{$path}{$img_stats}" alt="eBay stats"/></center><br />
@@ -36,7 +36,7 @@
 	<u><a href="{l s="http://pages.ebay.fr/professionnels/index.html" mod='ebay'}" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></u>
 </fieldset>
 <br />
-
+*}
 <link rel="stylesheet" href="{$css_file}" />
 <script>
 	var $j = $;
@@ -103,4 +103,6 @@
 	{/if}
 
 	</div><div style="float: right; width: 45%">{$prestashop_content}<br>{l s='Connection to eBay.' mod='ebay'}{$site_extension}<br/><a href="http://www.202-ecommerce.com/ebay/doc_{$documentation_lang}.pdf" target="_blank">{l s='Download documentation' mod='ebay'}</a></div>
+	<div class="clear"></div>
+	<div><a href="{l s="http://pages.ebay.fr/professionnels/index.html" mod='ebay'}" target="_blank">{l s='Click here to learn more about business selling on eBay' mod='ebay'}</a></div>
 </fieldset><div class="clear">&nbsp;</div>
