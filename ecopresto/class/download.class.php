@@ -1,5 +1,6 @@
 <?php
-/* NOTICE OF LICENSE
+/**
+* NOTICE OF LICENSE
 *
 * This source file is subject to a commercial license from SARL Ether Création
 * Use, copy, modification or distribution of this source file without written
@@ -15,17 +16,18 @@
 * expressement interdite.
 * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
-* @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
-* @license Commercial license
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
 
 class DownloadBinaryFile
 {
 
-	private $UA = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0";
-	private $REFERER = "http://www.google.fr";
+	private $UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0';
+	private $REFERER = 'http://www.google.fr';
 
 	private $rawdata = '';
 
@@ -39,7 +41,7 @@ class DownloadBinaryFile
 	{
 		$file = $url;
 		$file_headers = @get_headers($file);
-		
+
 		if ($file_headers[0] == 'HTTP/1.1 404 Not Found')
 			return false;
 		else
@@ -58,15 +60,13 @@ class DownloadBinaryFile
 		if (file_exists($filename))
 			@unlink($filename);
 
-		$fhandle=fopen($filename, 'x');
-		
+		$fhandle = fopen($filename, 'x');
+
 		if ($fhandle)
 		{
 			fwrite($fhandle, $this->rawdata);
 			fclose($fhandle);
 		}
-		elseif (isset($error))
-			throw new Exception('File reading denied to '.$filename.' !');
 	}
 
 	/**
@@ -75,7 +75,7 @@ class DownloadBinaryFile
 	 */
 	public function setUseragent($ua)
 	{
-		$this->UA=$ua;
+		$this->UA = $ua;
 	}
 
 	/**
@@ -84,6 +84,6 @@ class DownloadBinaryFile
 	 */
 	public function setReferer($referer)
 	{
-		$this->REFERER=$referer;
+		$this->REFERER = $referer;
 	}
 }

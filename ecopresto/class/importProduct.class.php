@@ -1,25 +1,27 @@
 <?php
-/** NOTICE OF LICENSE
- *
- * This source file is subject to a commercial license from SARL Ether Création
- * Use, copy, modification or distribution of this source file without written
- * license agreement from the SARL Ether Création is strictly forbidden.
- * In order to obtain a license, please contact us: contact@ethercreation.com
- * ...........................................................................
- * INFORMATION SUR LA LICENCE D'UTILISATION
- *
- * L'utilisation de ce fichier source est soumise a une licence commerciale
- * concedee par la societe Ether Création
- * Toute utilisation, reproduction, modification ou distribution du present
- * fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
- * expressement interdite.
- * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
- * ...........................................................................
- * @package ec_ecopresto
- * @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
- * @author Arthur R.
- * @license Commercial license
- */
+/**
+* NOTICE OF LICENSE
+*
+* This source file is subject to a commercial license from SARL Ether Création
+* Use, copy, modification or distribution of this source file without written
+* license agreement from the SARL Ether Création is strictly forbidden.
+* In order to obtain a license, please contact us: contact@ethercreation.com
+* ...........................................................................
+* INFORMATION SUR LA LICENCE D'UTILISATION
+*
+* L'utilisation de ce fichier source est soumise a une licence commerciale
+* concedee par la societe Ether Création
+* Toute utilisation, reproduction, modification ou distribution du present
+* fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
+* expressement interdite.
+* Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
+* ...........................................................................
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
+*/
 
 if (!defined('_PS_VERSION_'))
 	exit;
@@ -29,7 +31,7 @@ class importerProduct
 	public static function getManufacturer($manufacturer)
 	{
 		$idManufacturer = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT id_manufacturer FROM `'._DB_PREFIX_.'manufacturer` WHERE `name`="'.pSQL($manufacturer).'"');
-		
+
 		if ($idManufacturer)
 			return $idManufacturer;
 		else
@@ -62,7 +64,7 @@ class importerProduct
 		$product->delete();
 		self::deleteAttributePdt($ref);
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported`=2 WHERE `reference`="'.pSQL($ref).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
-		
+
 		if (Db::getInstance()->execute('SELECT `reference` FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted` WHERE `reference`="'.pSQL($ref).'"'))
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_deleted` SET status=1 WHERE `reference`="'.pSQL($ref).'"');
 	}
@@ -85,18 +87,18 @@ class importerProduct
 											AND `id_lang` = '.(int)$id_lang);
 		if (!isset($id_lang_eco) || $id_lang_eco == '')
 			$id_lang_eco = 1;
-		
+
 		if ($type == 1)
 			$champ = 'ss_category_';
 		else
 			$champ = 'category_';
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `'.$champ.$id_lang_eco.'`
-																FROM `'. _DB_PREFIX_.'ec_ecopresto_catalog`
+																FROM `'._DB_PREFIX_.'ec_ecopresto_catalog`
 																WHERE `'.$champ.'1` = "'.pSQL($name).'"');
 	}
 
-	public static function getCategory($categ, $categParent=0, $idShop, $type)
+	public static function getCategory($categ, $categParent = 0, $idShop, $type)
 	{
 		$idCategory = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_category`
 																FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop`
@@ -131,7 +133,7 @@ class importerProduct
 
 			if (version_compare(_PS_VERSION_, '1.4', '>=') && version_compare(_PS_VERSION_, '1.5', '<'))
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'category` (`id_parent`,`active`,`level_depth`,`date_add`,`date_upd`,`position`)
-					VALUES ('.(int)$categParent.',1,'.(int)$level.',"'.pSQL(date("Y-m-d H:i:s")).'","'.pSQL(date("Y-m-d H:i:s")).'",'.(int)($posCateg+1).')');
+					VALUES ('.(int)$categParent.',1,'.(int)$level.',"'.pSQL(date('Y-m-d H:i:s')).'","'.pSQL(date('Y-m-d H:i:s')).'",'.(int)($posCateg + 1).')');
 			else
 				Db::getInstance()->insert('category', array(
 					'id_parent' => (int)$categParent,
@@ -140,7 +142,7 @@ class importerProduct
 					'level_depth'=>(int)$level,
 					'date_add'=>pSQL(date('Y-m-d H:i:s')),
 					'date_upd'=>pSQL(date('Y-m-d H:i:s')),
-					'position'=>(int)$posCateg+1));
+					'position'=>(int)$posCateg + 1));
 
 			$idCategory = Db::getInstance()->Insert_ID();
 			$all_lang = Language::getLanguages(true);
@@ -157,7 +159,6 @@ class importerProduct
 					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'category_lang` (`id_category`,`id_lang`,`name`,`link_rewrite`)
 									VALUES ('.(int)$idCategory.','.(int)$lang['id_lang'].',"'.pSQL(self::getIdLangEcoCateg($categ, $lang['id_lang'], $idShop, $type)).'","'.Tools::str2url(self::getIdLangEcoCateg($categ, $lang['id_lang'], $idShop, $type)).'")');
 
-
 				if (version_compare(_PS_VERSION_, '1.5', '>='))
 				{
 					$posCategShop = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT max(`position`)
@@ -167,11 +168,11 @@ class importerProduct
 					Db::getInstance()->insert('category_shop', array(
 						'id_category' => (int)$idCategory,
 						'id_shop'=>(int)$idShop,
-						'position'=>(int)$posCategShop+1));
+						'position'=>(int)$posCategShop + 1));
 				}
 
 			$all_group = Group::getGroups(self::getInfoEco('ID_LANG'));
-			
+
 			foreach ($all_group as $group)
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'category_group` (`id_category`,`id_group`) VALUES ('.(int)$idCategory.','.(int)$group['id_group'].')');
 
@@ -190,14 +191,13 @@ class importerProduct
 		return $idCategory;
 	}
 
-
 	public static function tronkCar($string)
 	{
 		$lg_max = Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
 		if (isset($lg_max) && Tools::strlen($string) > $lg_max && $lg_max > 0)
 		{
 			$chaine = Tools::substr($string, 0, $lg_max);
-			$last_space = strrpos($chaine, " ");
+			$last_space = strrpos($chaine, ' ');
 			return Tools::substr($chaine, 0, $last_space).'...';
 		}
 		else
@@ -215,13 +215,13 @@ class importerProduct
 			else
 				$object->$key = $value;
 		}
-		
+
 		return $object;
 	}
 
 	public static function execImport($pdt)
 	{
-		if ($pdt->id_product>0)
+		if ($pdt->id_product > 0)
 			$product = new Product($pdt->id_product);
 		else
 			$product = new Product();
@@ -308,10 +308,10 @@ class importerProduct
 				foreach ($category_data as $tmp)
 					$product->id_category[] = $tmp;
 			}
-			
+
 			$product->id_category = array_unique($product->id_category);
 		}
-		
+
 		$product->save();
 
 		if ($pdt->upd_img == 1 || !$pdt->id_product)
@@ -326,8 +326,11 @@ class importerProduct
 
 		if ($pdt->upd_index == 1)
 			Search::indexation(false, $pdt->id_product);
-
-		$product->updateCategories(array_map('intval', $product->id_category));
+        
+        if (isset($pdt->categories))
+		{
+		      $product->updateCategories(array_map('intval', $product->id_category));
+        }
 
 		return $product->id;
 	}
@@ -373,7 +376,7 @@ class importerProduct
 
 		$explodeAtt = explode('|', $resATT['attribute_1']);
 		$i = 0;
-		
+
 		foreach ($explodeAtt as $lstExpAtt)
 		{
 			if ($lstExpAtt)
@@ -398,7 +401,7 @@ class importerProduct
 				$i++;
 			}
 		}
-		
+
 		return $name;
 	}
 
@@ -422,7 +425,7 @@ class importerProduct
 			if (version_compare(_PS_VERSION_, '1.5', '>='))
 			{
 				$maxAttrGroup = Db::getInstance()->getValue('SELECT MAX(`position`) FROM `'._DB_PREFIX_.'attribute_group`');
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'attribute_group` (`position`) VALUES ('.(int)($maxAttrGroup+1).')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'attribute_group` (`position`) VALUES ('.(int)($maxAttrGroup + 1).')');
 			}
 			else
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'attribute_group` (`id_attribute_group`) VALUES ("")');
@@ -452,7 +455,6 @@ class importerProduct
 
 	public static function getIdLangEcoAttrValue($name, $id_lang, $id_shop, $value, $ref)
 	{
-
 		$id_lang_eco = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_lang_eco`
 			FROM `'._DB_PREFIX_.'ec_ecopresto_lang_shop`
 			WHERE `id_shop` = '.(int)$id_shop.'
@@ -467,7 +469,7 @@ class importerProduct
 
 		$explodeAtt = explode('|', $resATT['attribute_1']);
 		$i = 0;
-		
+
 		foreach ($explodeAtt as $lstExpAtt)
 		{
 			if ($lstExpAtt)
@@ -540,7 +542,7 @@ class importerProduct
 	public function deleteAttributePdt($ref)
 	{
 		$lst_ref = Db::getInstance()->ExecuteS('SELECT `reference_attribute` FROM `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` WHERE `reference`="'.pSQL($ref).'"');
-		
+
 		if (isset($lst_ref) && count($lst_ref) > 0)
 			foreach ($lst_ref as $theref)
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ec_ecopresto_product_attribute` WHERE `reference` = "'.pSQL($theref['reference_attribute']).'"');
@@ -558,8 +560,8 @@ class importerProduct
 
 			if (!$idPA)
 			{
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_attribute` (`id_product`,`reference`,`supplier_reference`,`ean13`,`wholesale_price`,`price`,`weight`,`default_on`)
-										VALUES ('.(int)$idP.',"'.pSQL($attributes->reference).'","'.pSQL($attributes->supplier_reference).'",'.(int)$attributes->ean13.',"'.pSQL($attributes->wholesale_price).'","'.pSQL($attributes->price).'","'.pSQL($attributes->weight).'",'.(int)$attributes->default_on.')');
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_attribute` (`id_product`,`reference`,`supplier_reference`,`ean13`,`price`,`weight`,`default_on`)
+										VALUES ('.(int)$idP.',"'.pSQL($attributes->reference).'","'.pSQL($attributes->supplier_reference).'","'.pSQL($attributes->ean13).'","'.pSQL($attributes->price).'","'.pSQL($attributes->weight).'",'.(int)$attributes->default_on.')');
 
 				$idPA = Db::getInstance()->Insert_ID();
 
@@ -568,7 +570,6 @@ class importerProduct
 					Db::getInstance()->insert('product_attribute_shop', array(
 						'id_product_attribute'=>(int)$idPA,
 						'id_shop'=>(int)$attributes->id_shop,
-						'wholesale_price'=>pSQL($attributes->wholesale_price),
 						'price'=>pSQL($attributes->price),
 						'weight'=>pSQL($attributes->weight),
 						'default_on'=>(int)$attributes->default_on));
@@ -612,7 +613,7 @@ class importerProduct
 	public static function cleanUploadedImages($pdt, $product)
 	{
 		$images = array();
-		
+
 		if (isset($pdt->images))
 			$images = (array)$pdt->images->url;
 		else
@@ -622,7 +623,7 @@ class importerProduct
 		{
 			if (preg_match('/:\/\//', $img))
 				continue;
-			
+
 			$img = _PS_ROOT_DIR_.$img;
 			
 			if (!file_exists($img))
@@ -639,17 +640,16 @@ class importerProduct
 				}
 				catch(Exception $e)
 				{
-					Log::notice($pdt->supplier_reference, 'Cannot remove img $url. Please check the right on directory ' . dirname($url));
+					Log::notice($pdt->supplier_reference, 'Cannot remove img $url. Please check the right on directory '.dirname($url));
 				}
 			}
 		}
 	}
 
-
 	public static function execImages($pdt, $product)
 	{
 		$images = array();
-		
+
 		if (isset($pdt->images))
 			$images = (array)$pdt->images->url;
 		else
@@ -659,9 +659,9 @@ class importerProduct
 		{
 			if (preg_match('/:\/\//', $img))
 				continue;
-				
-			$img = _PS_ROOT_DIR_ . $img;
-			
+
+			$img = _PS_ROOT_DIR_.$img;
+
 			if (!file_exists($img))
 				Log::notice($pdt->supplier_reference, 'File $img not found.');
 		}
@@ -689,7 +689,6 @@ class importerProduct
 		}
 	}
 
-
 	/**
 	 * From AdminImportController
 	 */
@@ -710,7 +709,7 @@ class importerProduct
 			default:
 				break;
 		}
-		
+
 		$url = str_replace(' ', '%20', trim($url));
 
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
@@ -731,7 +730,7 @@ class importerProduct
 			}
 			elseif ($content = Tools::file_get_contents($url))
 			{
-				$fp = fopen($tmpfile, "w");
+				$fp = fopen($tmpfile, 'w');
 				fwrite($fp, $content);
 				fclose($fp); 
 				$imgSg->resize($tmpfile, $path.'.jpg');
@@ -762,10 +761,10 @@ class importerProduct
 			}
 			elseif ($content = Tools::file_get_contents($url))
 			{
-			    	$fp = fopen($tmpfile, "w");
-                		fwrite($fp, $content);
-		                fclose($fp); 
-		                ImageManager::resize($tmpfile, $path.'.jpg');
+					$fp = fopen($tmpfile, 'w');
+						fwrite($fp, $content);
+						fclose($fp); 
+						ImageManager::resize($tmpfile, $path.'.jpg');
 				$images_types = ImageType::getImagesTypes($entity);
 				foreach ($images_types as $image_type)
 					ImageManager::resize($tmpfile, $path.'-'.Tools::stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);

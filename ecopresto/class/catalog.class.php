@@ -1,26 +1,27 @@
 <?php
-/** NOTICE OF LICENSE
- *
- * This source file is subject to a commercial license from SARL Ether Création
- * Use, copy, modification or distribution of this source file without written
- * license agreement from the SARL Ether Création is strictly forbidden.
- * In order to obtain a license, please contact us: contact@ethercreation.com
- * ...........................................................................
- * INFORMATION SUR LA LICENCE D'UTILISATION
- *
- * L'utilisation de ce fichier source est soumise a une licence commerciale
- * concedee par la societe Ether Création
- * Toute utilisation, reproduction, modification ou distribution du present
- * fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
- * expressement interdite.
- * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
- * ...........................................................................
- * @package ec_ecopresto
- * @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
- * @author Arthur R.
- * @license Commercial license
- */
-
+/**
+* NOTICE OF LICENSE
+*
+* This source file is subject to a commercial license from SARL Ether Création
+* Use, copy, modification or distribution of this source file without written
+* license agreement from the SARL Ether Création is strictly forbidden.
+* In order to obtain a license, please contact us: contact@ethercreation.com
+* ...........................................................................
+* INFORMATION SUR LA LICENCE D'UTILISATION
+*
+* L'utilisation de ce fichier source est soumise a une licence commerciale
+* concedee par la societe Ether Création
+* Toute utilisation, reproduction, modification ou distribution du present
+* fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
+* expressement interdite.
+* Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
+* ...........................................................................
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
+*/
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -190,8 +191,8 @@ class Catalog
 	{
 		$lstC = Db::getInstance()->ExecuteS('SELECT o.`id_order`, `id_address_delivery`, DATE_FORMAT(`invoice_date`, "%d/%m/%Y") AS DatI
 									FROM `'._DB_PREFIX_.'orders` o
-                                    LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_export_com` ec ON (o.`id_order` = ec.`id_order`)
-                                    WHERE `valid`=1
+									LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_export_com` ec ON (o.`id_order` = ec.`id_order`)
+									WHERE `valid`=1
 									'.($idc != 0?' AND o.`id_order`='.(int)$idc:'').'
 									AND ec.`id_order` IS NULL');
 		$i = 0;
@@ -199,22 +200,22 @@ class Catalog
 		foreach ($lstC as $com)
 		{
 			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
-                                            FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog` c
-                                            WHERE od.`product_supplier_reference` = c.`reference`
+											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog` c
+											WHERE od.`product_supplier_reference` = c.`reference`
 											AND `id_order`='.(int)$com['id_order'].'
-                                            GROUP BY od.`product_supplier_reference`');
+											GROUP BY od.`product_supplier_reference`');
 
-			$ok = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
-                                            FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca 
-                                            WHERE od.`product_supplier_reference` = ca.`reference_attribute`
+			$ok2 = Db::getInstance()->getValue('SELECT count(`id_order_detail`)
+											FROM `'._DB_PREFIX_.'order_detail` od, `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca 
+											WHERE od.`product_supplier_reference` = ca.`reference_attribute`
 											AND `id_order`='.(int)$com['id_order'].'
-                                            GROUP BY od.`product_supplier_reference`');
-            	if (($ok == 0 || $ok == '') && ($ok2 == 0 || $ok2 == ''))
-		{
-			unset($lstC[$i]);
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
-		}
-            
+											GROUP BY od.`product_supplier_reference`');
+			if (($ok == 0 || $ok == '') && ($ok2 == 0 || $ok2 == ''))
+			{
+				unset($lstC[$i]);
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')');
+			}
+
 			$i++;
 		}
 		return array_values($lstC);
@@ -232,17 +233,16 @@ class Catalog
 	{
 		foreach ($this->tabSelectProduct as $key => $value)
 		{
-			switch
-			($value)
+			switch ($value)
 			{
-			case '0' :
-				break;
-			case '1' :
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_product_shop` (`reference`,`id_shop`,`imported`) VALUES ("'.pSQL($key).'",'.(int)self::getInfoEco('ID_SHOP').',0)');
-				break;
-			case '2' :
-				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported` = 1 WHERE `id_shop`='.(int)self::getInfoEco('ID_SHOP').' AND `reference`="'.pSQL($key).'"');
-				break;
+				case '0' :
+					break;
+				case '1' :
+					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_product_shop` (`reference`,`id_shop`,`imported`) VALUES ("'.pSQL($key).'",'.(int)self::getInfoEco('ID_SHOP').',0)');
+					break;
+				case '2' :
+					Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported` = 1 WHERE `id_shop`='.(int)self::getInfoEco('ID_SHOP').' AND `reference`="'.pSQL($key).'"');
+					break;
 			}
 		}
 	}
@@ -266,6 +266,7 @@ class Catalog
 		{
 			$istring = $i;
 			$partstring = 'category_1;category_2;category_3;category_4;category_5;ss_category_1;ss_category_2;ss_category_3;ss_category_4;ss_category_5;reference;reference_attribute;manufacturer;attribute_1;attribute_2;attribute_3;attribute_4;attribute_5;name_1;name_2;name_3;name_4;name_5;description_short_1;description_short_2;description_short_3;description_short_4;description_short_5;description_1;description_2;description_3;description_4;description_5;price;image_1;image_2;image_3;image_4;image_5;image_6;rate;ean13;weight;pmvc';
+			$retempol = Tools::strlen($istring);
 			while (Tools::strlen($istring) < 3)
 				$istring = '0'.$istring;
 
@@ -313,17 +314,17 @@ class Catalog
 
 	public function updateCategory($rel, $cat)
 	{
-		if($cat != 0)
-       		{
+		if ($cat != 0)
+		{
 			$id_category = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_category` FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
-	
+
 			if ($id_category)
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_category_shop` SET id_category='.(int)$cat.' WHERE `name`="'.pSQL($rel).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
 			else
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_category_shop` (`name`,`id_category`,`id_shop`) VALUES ("'.pSQL($rel).'",'.(int)$cat.','.(int)self::getInfoEco('ID_SHOP').')');
-       		}
-       		else
-       			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'"');
+		}
+			else
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ec_ecopresto_category_shop` WHERE `name`="'.pSQL($rel).'"');
 	}
 
 
@@ -374,10 +375,10 @@ class Catalog
 		else
 		{
 			$v = array();
-			
+
 			foreach ($info as $val)
 				$v[] = '"'.pSQL($val).'"';
-			
+
 			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'module` VALUES ('.implode(',', $v).')');
 		}
 	}
@@ -400,7 +401,7 @@ class Catalog
 			$response .= ' <select name="tax_ps[]">
 							<option value="'.$tax['id_tax_eco'].'_0"> 0 </option>';
 			foreach ($tax_PS as $taxPS)
-				$response .= '<option value="'.$tax['id_tax_eco'].'_'.$taxPS['id_tax_rules_group'].'" '.($tax_eco==$taxPS['id_tax_rules_group']?'selected="selected"':'').'>'.$taxPS['name'].'</option>';
+				$response .= '<option value="'.$tax['id_tax_eco'].'_'.$taxPS['id_tax_rules_group'].'" '.($tax_eco == $taxPS['id_tax_rules_group']?'selected="selected"':'').'>'.$taxPS['name'].'</option>';
 			$response .= '</select>';
 		}
 		return $response;
@@ -427,7 +428,6 @@ class Catalog
 
 	public function getAllLang()
 	{
-
 		$all_lang = Language::getLanguages(true);
 
 		$response = '';
@@ -490,7 +490,7 @@ class Catalog
 
 	public function updateLang()
 	{
-		foreach ($_POST['langECO'] as $key => $val)
+		foreach (Tools::getValue('langECO') as $key => $val)
 		{
 			$value = explode('_', $val);
 			$id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'ec_ecopresto_lang_shop` WHERE `id_shop`='.(int)self::getInfoEco('ID_SHOP').' AND `id_lang`='.(int)$value[0]);
@@ -506,15 +506,15 @@ class Catalog
 
 	public function updateConfig()
 	{
-		foreach ($_POST['CONFIG_ECO'] as $key => $val)
+		foreach (Tools::getValue('CONFIG_ECO') as $key => $val)
 		{
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration`
 										SET `value`="'.pSQL($val).'"
 										WHERE `name`="'.pSQL($key).'"
 										'.($key != 'ID_ECOPRESTO'?'AND `id_shop` = '.(int)self::getInfoEco('ID_SHOP'):''));
-		
-			if($key == 'ID_ECOPRESTO')
-                Configuration::updateValue('ECOPRESTO_DEMO',2);		
+
+			if ($key == 'ID_ECOPRESTO')
+				Configuration::updateValue('ECOPRESTO_DEMO', 2);
 		}
 	}
 
@@ -523,11 +523,11 @@ class Catalog
 	{
 		$output = '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>';
 		$output .= str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).Tools::stripslashes($current['infos']['name']).'</option>';
-		
+
 		if (isset($categories[$id_category]))
 			foreach ($categories[$id_category] as $key => $row)
 				$output .= self::getCategory($categories, $categories[$id_category][$key], $key, $id_selected);
-		
+
 		return $output;
 	}
 
@@ -548,12 +548,12 @@ class Catalog
 			$resu = '<export_info>';
 			$resu .= '<password>'.$this->tabConfig['ID_ECOPRESTO'].'</password>';
 			$resu .= '<info_pdt>';
-			
+
 			$lst_pdt = Db::getInstance()->executeS('SELECT `price`, `date_add`, `date_upd`, `active`, `supplier_reference`
 				FROM  `'._DB_PREFIX_.'product` p, `'._DB_PREFIX_.'ec_ecopresto_product_shop` ps
 				WHERE p.`supplier_reference` = ps.`reference`'
 			);
-			
+
 			foreach ($lst_pdt as $pdt)
 			{
 				$resu .= '<sku>'.(isset($pdt['supplier_reference'])?$pdt['supplier_reference']:'').'</sku>';
@@ -578,10 +578,10 @@ class Catalog
 
 	public function SetSupplier()
 	{
-		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'supplier` (`name`,`date_add`,`date_upd`,`active`) VALUES ("'.pSQL($this->supplier).'","'.pSQL(date("Y-m-d H:i:s")).'","'.pSQL(date("Y-m-d H:i:s")).'",1)');
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'supplier` (`name`,`date_add`,`date_upd`,`active`) VALUES ("'.pSQL($this->supplier).'","'.pSQL(date('Y-m-d H:i:s')).'","'.pSQL(date('Y-m-d H:i:s')).'",1)');
 
 		$idSupplier = Db::getInstance()->Insert_ID();
-		
+
 		if (($idSupplier) && ($idSupplier != 0))
 		{
 			$all_lang = Language::getLanguages(true);
@@ -592,7 +592,7 @@ class Catalog
 			if (version_compare(_PS_VERSION_, '1.5', '>='))
 			{
 				$all_shop = Shop::getShops(false);
-				
+
 				foreach ($all_shop as $shop)
 					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'supplier_shop` (`id_supplier`,`id_shop`) VALUES ('.(int)$idSupplier.','.(int)$shop['id_shop'].')');
 
@@ -622,7 +622,7 @@ class Catalog
 			else
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax_shop` (`id_tax_eco`,`id_tax_rules_group`,`id_shop`) VALUES ('.(int)$tax['id_tax_eco'].','.(int)$default_tax.',1)');
 		}
-		
+
 		return true;
 	}
 
@@ -642,7 +642,7 @@ class Catalog
 			else
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_lang_shop` (`id_lang_eco`,`id_lang`,`id_shop`) VALUES ('.(int)$default_lang.','.(int)$lang['id_lang'].',1)');
 		}
-		
+
 		return true;
 	}
 
@@ -662,7 +662,7 @@ class Catalog
 	public function matchAttributes()
 	{
 		$all_attributs = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_attribute_eco` FROM `'._DB_PREFIX_.'ec_ecopresto_attribute`');
-		
+
 		foreach ($all_attributs as $attribut)
 		{
 			$id_attribut = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_attribute` FROM `'._DB_PREFIX_.'ec_ecopresto_attribute_shop` WHERE `id_attribute_eco`='.(int)$attribut.' AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
@@ -679,11 +679,11 @@ class Catalog
 				FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted`
 				WHERE status=0'
 			);
-			
+
 			if (isset($lst_Sup) && $lst_Sup[0])
 			{
 				$supp = array();
-			
+
 				foreach ($lst_Sup as $tab_Sup)
 					$supp[] = '"'.pSQL($tab_Sup).'"';
 
@@ -700,11 +700,11 @@ class Catalog
 											AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
 
 		$totalPdtSup = Db::getInstance()->getValue('SELECT count(`reference`)
-											FROM `'. _DB_PREFIX_.'ec_ecopresto_product_deleted`
+											FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted`
 											WHERE `status`=0');
 
 		$pdtnotsup = $totalPdt - $totalPdtSup;
-		
+
 		if ($this->tabConfig['UPDATE_PRODUCT'] == 0)
 			return $pdtnotsup.','.$totalPdtSup;
 		else
@@ -719,22 +719,22 @@ class Catalog
 		foreach ($this->tabTVA as $tax)
 		{
 			$id_tax_eco = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_tax_eco` FROM `'._DB_PREFIX_.'ec_ecopresto_tax` WHERE `rate`="'.(float)$tax.'"');
-			
+
 			if (!$id_tax_eco)
 			{
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax` (`rate`) VALUES ("'.(float)$tax.'")');
 				$idtaxeco = Db::getInstance()->Insert_ID();
 
 				$idTaxR = Db::getInstance()->getValue('SELECT `id_tax_rules_group` 
-                                            FROM `'._DB_PREFIX_.'tax` t, `'._DB_PREFIX_.'tax_rule` tr
-                                            WHERE `rate` ='.(float)round($tax,3).'
-                                            AND `id_country` = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').'
-                                            AND t.`id_tax` = tr.`id_tax`');
-                                    
-                if(!isset($idTaxR) || $idTaxR == '')
-                    $idTaxR = 0;
-                
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax_shop` (`id_tax_eco`,`id_tax_rules_group`,`id_shop`) VALUES ('.(int)$idtaxeco.','.(int)$idTaxR.','.(int)self::getInfoEco('ID_SHOP').')');                
+											FROM `'._DB_PREFIX_.'tax` t, `'._DB_PREFIX_.'tax_rule` tr
+											WHERE `rate` ='.(float)round($tax, 3).'
+											AND `id_country` = '.(int)Configuration::get('PS_COUNTRY_DEFAULT').'
+											AND t.`id_tax` = tr.`id_tax`');
+
+				if (!isset($idTaxR) || $idTaxR == '')
+					$idTaxR = 0;
+
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_tax_shop` (`id_tax_eco`,`id_tax_rules_group`,`id_shop`) VALUES ('.(int)$idtaxeco.','.(int)$idTaxR.','.(int)self::getInfoEco('ID_SHOP').')');
 			}
 		}
 	}
@@ -743,18 +743,17 @@ class Catalog
 	{
 		$all_date = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `action`, `dateupdate` FROM `'._DB_PREFIX_.'ec_ecopresto_update_date` WHERE `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
 		$response = '';
-		
+
 		foreach ($all_date as $date_update)
-		{
 			$response .= '<p>'.$date_update['action'].' => '.$date_update['dateupdate'].'</p>';
-		}
+
 		return $response;
 	}
 
 	public function UpdateUpdateDate($action)
 	{
 		$today = date('Y-m-d H:i:s');
-		
+
 		if ($action == 'DATE_UPDATE_SELECT_ECO' || $action == 'DATE_IMPORT_PS')
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration` SET `value`="'.pSQL($today).'" WHERE `name`="'.pSQL($action).'" AND `id_shop` = '.(int)self::getInfoEco('ID_SHOP'));
 		else
@@ -788,7 +787,7 @@ class Catalog
 						Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_configuration` (`name`,`value`,`id_shop`) VALUES ("'.pSQL($key).'","'.pSQL($result).'",'.(int)$shop_ps['id_shop'].')');
 					}
 				}
-				
+
 				$idS = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'ec_ecopresto_configuration` WHERE `name` = "PARAM_SUPPLIER" AND `id_shop` = 1');
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'supplier_shop` (`id_supplier`,`id_shop`) VALUES ('.(int)$idS.','.(int)$shop_ps['id_shop'].')');
 				$result_att = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT `id_attribute_eco`, `id_attribute` FROM `'._DB_PREFIX_.'ec_ecopresto_attribute_shop` WHERE `id_shop`=1');
@@ -824,7 +823,7 @@ class Catalog
 			$download->saveTo('files/'.$this->fichierImport);
 			$contenu_fichier = Tools::file_get_contents('files/'.$this->fichierImport);
 			$lignesTot = substr_count($contenu_fichier, "\n");
-			
+
 			if ($lignesTot > 1)
 			{
 				$nbFichier = $this->cutFile();
@@ -867,7 +866,7 @@ class Catalog
 	public function SetDerefencement()
 	{
 		include 'class/reference.class.php';
-		
+
 		if (($handle = fopen('files/'.$this->fichierDeref, 'r')) !== false)
 		{
 			while (($data = fgetcsv($handle, 10000, ';')) !== false)

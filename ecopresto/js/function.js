@@ -12,11 +12,11 @@
 * Toute utilisation, reproduction, modification ou distribution du present
 * fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
 * expressement interdite.
-* Pour obtenir une licence, veuillez contacter la SARL SMC a l'adresse: contact@ethercreation.com
+* Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
 * @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
+* @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+* @author Arthur Revenaz
 * @license Commercial license
 */
 
@@ -670,7 +670,7 @@ setFilterGrid("table1",props2);
         }         
     }
 	resultat_majDemo = function (obj){
-        location.reload();
+        $(location).attr('href',location.href);
     }
     
     $('.demopreac').click(function(){

@@ -1,5 +1,6 @@
 <?php
-/* NOTICE OF LICENSE
+/**
+* NOTICE OF LICENSE
 *
 * This source file is subject to a commercial license from SARL Ether Création
 * Use, copy, modification or distribution of this source file without written
@@ -15,18 +16,17 @@
 * expressement interdite.
 * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
-* @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
-* @license Commercial license
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
-						
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-						
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-						
-header("Location: ../");
+
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+header('Location: ../');
 exit;

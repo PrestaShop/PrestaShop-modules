@@ -1,26 +1,27 @@
 <?php
 /**
- *  NOTICE OF LICENSE
- *
- * This source file is subject to a commercial license from SARL Ether Création
- * Use, copy, modification or distribution of this source file without written
- * license agreement from the SARL Ether Création is strictly forbidden.
- * In order to obtain a license, please contact us: contact@ethercreation.com
- * ...........................................................................
- * INFORMATION SUR LA LICENCE D'UTILISATION
- *
- * L'utilisation de ce fichier source est soumise a une licence commerciale
- * concedee par la societe Ether Création
- * Toute utilisation, reproduction, modification ou distribution du present
- * fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
- * expressement interdite.
- * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
- * ...........................................................................
- * @package ec_ecopresto
- * @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
- * @author Arthur R.
- * @license Commercial license
- */
+* NOTICE OF LICENSE
+*
+* This source file is subject to a commercial license from SARL Ether Création
+* Use, copy, modification or distribution of this source file without written
+* license agreement from the SARL Ether Création is strictly forbidden.
+* In order to obtain a license, please contact us: contact@ethercreation.com
+* ...........................................................................
+* INFORMATION SUR LA LICENCE D'UTILISATION
+*
+* L'utilisation de ce fichier source est soumise a une licence commerciale
+* concedee par la societe Ether Création
+* Toute utilisation, reproduction, modification ou distribution du present
+* fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
+* expressement interdite.
+* Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
+* ...........................................................................
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
+*/
 
 require dirname(__FILE__).'/../../config/config.inc.php';
 require dirname(__FILE__).'/../../init.php';
@@ -30,14 +31,13 @@ $catalog = new Catalog();
 
 if (Tools::getValue('ec_token') != $catalog->getInfoEco('ECO_TOKEN'))
 {
-	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-store, no-cache, must-revalidate');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
 
-	header("Cache-Control: no-store, no-cache, must-revalidate");
-	header("Cache-Control: post-check=0, pre-check=0", false);
-	header("Pragma: no-cache");
-
-	header("Location: ../");
+	header('Location: ../');
 	exit;
 }
 
@@ -47,11 +47,11 @@ switch ((int)Tools::getValue('majsel'))
 		$catalog->setSelectProduct(Tools::getValue('ref'), Tools::getValue('etp'));
 		echo Tools::safeOutput(Tools::getValue('tot')).','.Tools::safeOutput(Tools::getValue('actu')).','.Tools::safeOutput(count($catalog->tabSelectProduct));
 		break;
-	
+
 	case 2:
 		$catalog->updateCategory(Tools::getValue('rel'), Tools::getValue('cat'));
 		break;
-	
+
 	case 3:
 		$row_etp = Tools::getValue('etp');
 		$row_ref = Tools::getValue('ref');
@@ -59,12 +59,12 @@ switch ((int)Tools::getValue('majsel'))
 		$fichier_Actu = (int)Tools::getValue('fichierActu');
 		$nb_Fichier = (int)Tools::getValue('nbFichier');
 		$lignes_Tot = Tools::getValue('lignesTot');
-	
+
 		if ($fichier_Actu == 0 && $row_etp == 0)
 			$catalog->deleteData();
-	
+
 		$fichier = 'files/csv/'.$catalog->fichierImport.'.00'.$fichier_Actu;
-	
+
 		$time = time();
 		$row = 0;
 		$row_Max = 0;
@@ -72,17 +72,17 @@ switch ((int)Tools::getValue('majsel'))
 		$flag_Attr = false;
 		$flaf_Cat = 0;
 		$flag_Fin = 0;
-	
+
 		$requete_cata = 'INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_catalog` (';
 		foreach ($catalog->tabInsert as $key => $value)
 			$requete_cata .= '`'.$key.'`'.',';
 		$requete_cata = Tools::substr($requete_cata, 0, -1).') VALUES ';
-	
+
 		$requete_attr = 'INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` (';
 		foreach ($catalog->tabInsert_attribute as $key => $value)
 			$requete_attr .= '`'.$key.'`'.',';
 		$requete_attr .= '`reference`) VALUES ';
-	
+
 		if (($handle = fopen($fichier, 'r')) !== false)
 		{
 			$tab_Attributes = array();
@@ -101,11 +101,12 @@ switch ((int)Tools::getValue('majsel'))
 							$requete_C = array();
 							$requete_A = array();
 							$flag_Fin++;
-	
+
 							if ($data[13] != '')
 							{
 								$att = $data[13];
 								$explode_Att = explode('|', $att);
+								$name = array();
 								foreach ($explode_Att as $lst_Att)
 								{
 									list($name_, $val_) = explode(':', $lst_Att);
@@ -113,24 +114,24 @@ switch ((int)Tools::getValue('majsel'))
 								}
 								$catalog->tabAttributes = array_unique($name);
 							}
-	
+
 							if ($data[40] != '')
 								array_push($catalog->tabTVA, $data[40]);
-	
+
 							foreach ($catalog->tabInsert as $key => $value)
 								$requete_C[] = '"'.pSQL((isset($data[$value])?ltrim(trim($data[$value])):'')).'"';
-	
+
 							foreach ($catalog->tabInsert_attribute as $key => $value)
 								if ($data[11] != '' && $data[10] != $data[11])
 									$requete_A[] = '"'.pSQL((isset($data[$value])?ltrim(trim($data[$value])):'')).'"';
-	
+
 								if (str_replace('"', '', $requete_C[15]) != $row_ref)
 								{
 									$requete_cata .= '('.implode(',', $requete_C).'), ';
 									$insert_C++;
 									$row_ref = str_replace('"', '', $requete_C[15]);
 								}
-	
+
 							if ($data[11] != '' && $data[10] != $data[11])
 							{
 								$requete_attr .= '('.implode(',', $requete_A).', '.$requete_C[15].'), ';
@@ -160,14 +161,14 @@ switch ((int)Tools::getValue('majsel'))
 				if ($insert_C > 0)
 					$requete_cata = Tools::substr($requete_cata, 0, -2).'; ';
 				$requete_attr = Tools::substr($requete_attr, 0, -2).';';
-	
+
 				$catalog->insertAttributes();
 				$catalog->matchAttributes();
-	
+
 				$tabtva = $catalog->tabTVA;
 				$catalog->tabTVA = array_unique($tabtva);
 				$catalog->matchTax();
-	
+
 				if ($flaf_Cat == 1)
 				{
 					if (!$flag_Attr)
@@ -198,45 +199,45 @@ switch ((int)Tools::getValue('majsel'))
 			echo Tools::safeOutput($row).','.Tools::safeOutput($row_ref).','.Tools::safeOutput($tentative).','.Tools::safeOutput($fichier_Actu).','.Tools::safeOutput($nb_Fichier).','.Tools::safeOutput($lignes_Tot);
 		}
 		break;
-	
+
 	case 4:
 		$catalog->UpdateUpdateDate('DATE_IMPORT_PS');
 		echo Tools::safeOutput(Tools::getValue('nb')).','.Tools::safeOutput($catalog->getTotalMAJ());
 		break;
-	
+
 	case 5:
 		$catalog->updateCatalog(Tools::getValue('ref'));
 		echo Tools::safeOutput(Tools::getValue('actu')).','.Tools::safeOutput(Tools::getValue('tot'));
 		break;
-	
+
 	case 6:
 		$catalog->getProdDelete();
 		echo Tools::safeOutput(Tools::getValue('actu')).','.Tools::safeOutput(Tools::getValue('tot'));
 		break;
-	
+
 	case 7 :
 		$catalog->updateCatalogAll();
 		echo '1,1';
 		break;
-	
+
 	case 8 :
 		$return = $catalog->GetFilecsv();
 		echo $return;
 		break;
-	
+
 	case 9:
 		$return = $catalog->GetDereferencement();
 		echo $return;
 		break;
-	
+
 	case 10:
 		$catalog->synchroManuelOrder(Tools::getValue('idc'), Tools::getValue('typ'));
 		break;
-	
+
 	case 11:
 		echo $catalog->SetDerefencement();
 		break;
-	
+
 	case 12:
 		include dirname(__FILE__).'/class/importProduct.class.php';
 		include dirname(__FILE__).'/class/reference.class.php';
@@ -247,23 +248,22 @@ switch ((int)Tools::getValue('majsel'))
 		$import->deleteProductShop();
 		echo Tools::safeOutput(Tools::getValue('actu')).','.Tools::safeOutput(Tools::getValue('tot'));
 		break;
-	
+
 	case 13:
 		include dirname(__FILE__).'/class/importProduct.class.php';
 		$import = new importerProduct();
 		$import->deleteProductShop();
 		break;
-	
+
 	case 14:
-        Configuration::updateValue('ECOPRESTO_DEMO',Tools::getValue('lic'));
-        if (Tools::getValue('lic') == 1)
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration`
+		Configuration::updateValue('ECOPRESTO_DEMO', Tools::getValue('lic'));
+		if (Tools::getValue('lic') == 1)
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_configuration`
 										SET `value` = "demo123456789demo123456789demo12"
 										WHERE `name` = "ID_ECOPRESTO"');
-        break;
-	
+		break;
+
 	default:
 		break;
 }
-
 ?>
