@@ -1364,8 +1364,8 @@ class Ebay extends Module
 			)
             && $this->ebay_profile->setConfiguration('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
 			&& $this->ebay_profile->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier')))
-			&& $this->ebay_profile->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
-			&& $this->ebay_profile->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
+			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
+			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 		)
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
