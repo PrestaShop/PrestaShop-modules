@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Abstract class that represents a Fia-Net Service
@@ -8,7 +32,7 @@
 abstract class CertissimService extends CertissimMother
 {
 
-	private $_url = array(
+	private $url = array(
 		'redirect' => array(
 			'prod' => 'https://secure.FIA-NET.com/fscreener/engine/redirect.cgi',
 			'test' => 'https://secure.FIA-NET.com/pprod/engine/redirect.cgi',
@@ -58,14 +82,14 @@ abstract class CertissimService extends CertissimMother
 			'test' => 'https://secure.FIA-NET.com/pprod/BO/visucheck_detail.php'
 		)
 	);
-	private $_param_names = array(
+	private $param_names = array(
 		'siteid',
 		'login',
 		'password',
 		'passwordurlencoded',
 		'status',
 	);
-	private $_available_statuses = array(
+	private $available_statuses = array(
 		'test',
 		'prod',
 	);
@@ -75,8 +99,8 @@ abstract class CertissimService extends CertissimMother
 	protected $passwordurlencoded;
 	protected $authkey;
 	protected $status;
-	protected $url = array();
-	protected $idshop = null; //for PS >= 1.5
+	protected $url_script = array();
+	protected $idshop = null; /*for PS >= 1.5*/
 
 	public function __construct($id_shop = null)
 	{
@@ -94,13 +118,13 @@ abstract class CertissimService extends CertissimMother
 	 */
 	public function loadParams()
 	{
-		foreach ($this->_param_names as $param_name)
+		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'set'.$param_name;
 			if (_PS_VERSION_ < '1.5')
-				$this->$funcname(Configuration::get('CERTISSIM_'.strtoupper($param_name)));
+				$this->$funcname(Configuration::get('CERTISSIM_'.Tools::strtoupper($param_name)));
 			else
-				$this->$funcname(Configuration::get('CERTISSIM_'.strtoupper($param_name), null, null, $this->getIdshop()));
+				$this->$funcname(Configuration::get('CERTISSIM_'.Tools::strtoupper($param_name), null, null, $this->getIdshop()));
 		}
 	}
 
@@ -111,10 +135,8 @@ abstract class CertissimService extends CertissimMother
 	{
 		$status = $this->statusIsAvailable($this->getStatus()) ? $this->getStatus() : 'test';
 
-		foreach ($this->_url as $scriptname => $modes)
-		{
-			$this->url[$scriptname] = $modes[$status];
-		}
+		foreach ($this->url as $scriptname => $modes)
+			$this->url_script[$scriptname] = $modes[$status];
 	}
 
 	/**
@@ -125,14 +147,14 @@ abstract class CertissimService extends CertissimMother
 	 */
 	public function getUrl($script)
 	{
-		if (!array_key_exists($script, $this->url))
+		if (!array_key_exists($script, $this->url_script))
 		{
 			$msg = "L'url pour le script $script n'existe pas ou n'est pas chargée. Vérifiez le paramétrage.";
 			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, $msg);
 			return false;
 		}
 
-		return $this->url[$script];
+		return $this->url_script[$script];
 	}
 
 	/**
@@ -162,27 +184,25 @@ abstract class CertissimService extends CertissimMother
 	 */
 	public function saveParams()
 	{
-		foreach ($this->_param_names as $param_name)
+		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'get'.$param_name;
 			if (_PS_VERSION_ < '1.5')
-				Configuration::updateValue('CERTISSIM_'.strtoupper($param_name), $this->$funcname());
+				Configuration::updateValue('CERTISSIM_'.Tools::strtoupper($param_name), $this->$funcname());
 			else
-				Configuration::updateValue('CERTISSIM_'.strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
+				Configuration::updateValue('CERTISSIM_'.Tools::strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
 		}
 	}
 
 	public function statusIsAvailable($status)
 	{
-		return in_array($status, $this->_available_statuses);
+		return in_array($status, $this->available_statuses);
 	}
 
 	public function __call($name, array $params)
 	{
 		if (preg_match('#^getUrl.+$#', $name) > 0)
-		{
 			return $this->getUrl(preg_replace('#^getUrl(.+)$#', '$1', $name));
-		}
 
 		return parent::__call($name, $params);
 	}
