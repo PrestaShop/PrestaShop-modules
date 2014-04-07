@@ -1,0 +1,7 @@
+Bonjour,
+
+Un problème lors de l'importation a eu lieu. Voici les messages relevés :
+
+{errors_email}
+
+{shop_name}

@@ -31,6 +31,7 @@
 
 function upgrade_module_1_7($module)
 {
+	
 	include(dirname(__FILE__).'/sql/sql-upgrade-1-7.php');
 
 	if (!empty($sql) && is_array($sql))
@@ -118,6 +119,7 @@ function upgrade_module_1_7($module)
 		'ebay_category_condition',
 		'ebay_category_condition_configuration',
 		'ebay_shipping',
+
 	);
 	foreach ($tables as $table)
 		Db::getInstance()->update($table, array('id_ebay_profile' => $id_default_ebay_profile));
@@ -133,6 +135,8 @@ function upgrade_module_1_7($module)
 		);
 		Db::getInstance()->insert('ebay_order_order', $data, false, true, Db::REPLACE);
 	}
+
+	$module->setConfiguration('EBAY_VERSION', $module->version);
 	
 	// TODO: at some point we need to remove the id_order column of ebay_order which becomes useless
 	// but we cannot do it before the data have moved

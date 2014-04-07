@@ -57,8 +57,8 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_returns_policy_configu
 $sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` 
 	ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_category_configuration`';
 // TODO: that would be better to remove the previous indexes if possible
-$sql[] = 'ALTER TABLE `'._DB_INDEX_.'ebay_category_configuration` ADD INDEX `ebay_category` (`id_ebay_profile` ,  `id_ebay_category`)';
-$sql[] = 'ALTER TABLE `'._DB_INDEX_.'ebay_category_configuration` ADD INDEX `category` (`id_ebay_profile` ,  `id_category`)';
+$sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` ADD INDEX `ebay_category` (`id_ebay_profile` ,  `id_ebay_category`)';
+$sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` ADD INDEX `category` (`id_ebay_profile` ,  `id_category`)';
 
 $sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping_zone_excluded` 
 	ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_zone_excluded`';
@@ -90,7 +90,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_order_order` (
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_modified` (
 	`id_ebay_product_modified` int(16) unsigned NOT NULL AUTO_INCREMENT,
 	`id_ebay_profile` int(16) NOT NULL,
-    `id_product` int(16) NOT NULL
+    `id_product` int(16) NOT NULL,
 	PRIMARY KEY  (`id_ebay_product_modified`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
@@ -98,6 +98,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_log` (
 	`id_ebay_log` int(16) NOT NULL,
 	`text` text NOT NULL,
 	`type` varchar(40) NOT NULL,
-    `date_add` datetime NOT NULL
+    `date_add` datetime NOT NULL,
 	PRIMARY KEY  (`id_ebay_log`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';

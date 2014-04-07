@@ -74,4 +74,24 @@ class EbayProduct
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_product`
 			WHERE `id_product_ref` = \''.pSQL($id_product_ref).'\'');
 	}
+
+	public static function getProductsWithoutBlacklisted($id_lang)
+	{
+		return Db::getInstance()->ExecuteS('
+			SELECT ep.`id_product`, ep.`id_attribute`, ep.`id_product_ref`,
+			p.`id_category_default`, p.`reference`, p.`ean13`,
+			pl.`name`, m.`name` as manufacturer_name
+			FROM `'._DB_PREFIX_.'ebay_product` ep
+			LEFT JOIN `'._DB_PREFIX_.'ebay_product_configuration` epc ON (epc.`id_product` = ep.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = epc.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
+			WHERE epc.`blacklisted` = 0
+			');
+	}
+
+	public static function getEbayUrl($reference, $mode_dev = false)
+	{
+		return 'http://cgi'.($mode_dev ? '.sandbox' : '').'.ebay.fr/ws/eBayISAPI.dll?ViewItem&item='.$reference.'&ssPageName=STRK:MESELX:IT&_trksid=p3984.m1555.l2649#ht_632wt_902';
+	}
 }
