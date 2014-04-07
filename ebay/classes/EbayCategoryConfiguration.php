@@ -164,4 +164,19 @@ class EbayCategoryConfiguration
 			FROM `'._DB_PREFIX_.'ebay_category_configuration`
 			WHERE `id_category` = '.(int)$id_category);
 	}
+    
+	public static function getNbPrestashopCategories($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}    
+
+	public static function getNbEbayCategories($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count( DISTINCT(`id_ebay_category`))
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}    
+
 }

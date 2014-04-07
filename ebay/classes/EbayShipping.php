@@ -47,6 +47,22 @@ class EbayShipping
 			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 1');
 	}
 
+	public static function getNbNationalShippings($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM '._DB_PREFIX_.'ebay_shipping 
+            WHERE `international` = 0
+            AND `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}
+
+	public static function getNbInternationalShippings($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM '._DB_PREFIX_.'ebay_shipping 
+            WHERE international = 1
+            AND `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}
+
 	public static function insert($ebay_carrier, $ps_carrier, $extra_fee, $international = false)
 	{
 		$sql = 'INSERT INTO '._DB_PREFIX_.'ebay_shipping

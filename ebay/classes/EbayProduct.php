@@ -39,6 +39,31 @@ class EbayProduct
 		return Db::getInstance()->getValue($query);
 	}
 
+	public static function getNbProducts($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM '._DB_PREFIX_.'ebay_product AS ep
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}
+    
+    public static function getPercentOfCatalog($ebay_profile)
+    {
+        $id_shop = $ebay_profile->id_shop;
+        $sql = 'SELECT `id_product` 
+            FROM `'._DB_PREFIX.'product_shop`
+            WHERE `id_shop` = '.(int)$id_shop;    
+        $results = Db::getInstance()->executeS($sql);
+        $id_shop_products = array_map(function($a) {return (int)$a['id_product']; });
+
+        $nb_shop_products = count($id_shop_products);
+        
+        $sql2 = 'SELECT count(*)
+            FROM '._DB_PREFIX_.'ebay_product`
+            WHERE `id_product` IN ('.implode(',', $id_shop_products)')';
+        $nb_synchronized_products = Db::getInstance()->getValue($sql2);
+        
+        return number_format($nb_synchronized_products / $nb_shop_products, 2);
+    }
 
 	public static function getProducts($not_update_for_days, $limit)
 	{
@@ -47,7 +72,7 @@ class EbayProduct
 			WHERE NOW() > DATE_ADD(ep.date_upd, INTERVAL '.(int)$not_update_for_days.' DAY)
 			LIMIT '.$limit);
 	}
-
+    
 	public static function insert($data)
 	{
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', $data, 'INSERT');
