@@ -421,8 +421,8 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.6';
-		$this->tab = 'front_office_features';
+		$this->version = '2.7';
+		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
 		$this->description = $this->l('Turn your visitors into buyers by creating confidence in your site.');
