@@ -39,13 +39,6 @@ class EbayProduct
 		return Db::getInstance()->getValue($query);
 	}
 
-	public static function getNbProducts($id_ebay_profile)
-	{
-		return Db::getInstance()->getValue('SELECT count(*)
-			FROM '._DB_PREFIX_.'ebay_product AS ep
-			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
-	}
-    
     public static function getPercentOfCatalog($ebay_profile)
     {
         $id_shop = $ebay_profile->id_shop;
@@ -65,6 +58,13 @@ class EbayProduct
         return number_format($nb_synchronized_products / $nb_shop_products, 2);
     }
 
+	public static function getNbProducts($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM `'._DB_PREFIX_.'ebay_product`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}
+
 	public static function getProducts($not_update_for_days, $limit)
 	{
 		return Db::getInstance()->ExecuteS('SELECT ep.id_product_ref, ep.id_product
@@ -78,11 +78,11 @@ class EbayProduct
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', $data, 'INSERT');
 	}
 
-	public static function updateByIdProductRef($id_product_ref, $data)
+	public static function updateByIdProductRef($id_product_ref, $datas)
 	{
 		$to_insert = array();
-		if(is_array($all_data) && count($all_data))
-			foreach($all_data as $key => $data)
+		if(is_array($datas) && count($datas))
+			foreach($datas as $key => $data)
 				$to_insert[pSQL($key)] = $data;
 
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', $to_insert, 'UPDATE', '`id_product_ref` = '.pSQL($id_product_ref));

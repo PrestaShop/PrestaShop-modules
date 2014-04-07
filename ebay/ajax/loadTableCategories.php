@@ -30,6 +30,8 @@ include_once dirname(__FILE__).'/../../../init.php';
 include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
+echo 'ID '.Tools::getValue('profile');
+$ebay_profile = new EbayProfile((int)Tools::getValue('profile'));
 
 if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	return Tools::safeOutput(Tools::getValue('not_logged_str'));
@@ -74,6 +76,7 @@ $sql = '
 	FROM `'._DB_PREFIX_.'ebay_category` AS ec
 	LEFT OUTER JOIN `'._DB_PREFIX_.'ebay_category_configuration` AS ecc
 	ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+    AND ecc.`id_ebay_profile` = '.(int)$ebay_profile->id.'
 	ORDER BY `level`';
 
 foreach (Db::getInstance()->executeS($sql) as $category)

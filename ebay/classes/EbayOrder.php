@@ -53,10 +53,10 @@ class EbayOrder
 	private $error_messages = array();
 
 	/* PS variables */
-	private $id_customer;
+	private $id_customers;
 	private $id_address;
-	private $id_order;
-	private $cart;
+	private $id_orders;
+	private $carts;
 
 	public function __construct(SimpleXMLElement $order_xml = null)
 	{
@@ -122,13 +122,16 @@ class EbayOrder
 			&& $this->familyname;
 	}
 
-	public function getOrAddCustomer()
+	public function getOrAddCustomer($ebay_profile)
 	{
 		$id_customer = (int)Db::getInstance()->getValue('SELECT `id_customer`
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `active` = 1
 			AND `email` = \''.pSQL($this->email).'\'
+            AND `id_shop` = '.(int)$ebay_profile->id_shop.'
 			AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
+
+        $format = new TotFormat();
 
 		// Add customer if he doesn't exist
 		//if ($id_customer < 1) RAPH
@@ -138,28 +141,29 @@ class EbayOrder
 			$customer->id_gender = 0;
 			$customer->id_default_group = 1;
 			$customer->secure_key = md5(uniqid(rand(), true));
-			$customer->email = $this->email;
+			$customer->email = $format->formatEmail($this->email);
 			$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
 			$customer->last_passwd_gen = pSQL(date('Y-m-d H:i:s'));
 			$customer->newsletter = 0;
-			$customer->lastname = EbayOrder::_formatFamilyName($this->familyname);
-			$customer->firstname = pSQL($this->firstname);
+			$customer->lastname = $format->formatName(EbayOrder::_formatFamilyName($this->familyname));
+			$customer->firstname = $format->formatName(pSQL($this->firstname));
 			$customer->active = 1;
+            $customer->id_shop = (int)$ebay_profile->id_shop;
 			$customer->add();
 			$id_customer = $customer->id;
 		}
 
-		$this->id_customer = $id_customer;
+		$this->id_customers[$ebay_profile->id_shop] = $id_customer;
 
 		return $id_customer;
 	}
 
-	public function updateOrAddAddress()
+	public function updateOrAddAddress($ebay_profile)
 	{
 		// Search if address exists
 		$id_address = (int)Db::getInstance()->getValue('SELECT `id_address`
 			FROM `'._DB_PREFIX_.'address`
-			WHERE `id_customer` = '.(int)$this->id_customer.'
+			WHERE `id_customer` = '.(int)$this->id_customers[$ebay_profile->id_shop].'
 			AND `alias` = \'eBay\'');
 
 		if ($id_address)
@@ -167,18 +171,20 @@ class EbayOrder
 		else
 		{
 			$address = new Address();
-			$address->id_customer = (int)$this->id_customer;
+			$address->id_customer = (int)$this->id_customers[$ebay_profile->id_shop];
 		}
+
+        $format = new TotFormat();
 
 		$address->id_country = (int)Country::getByIso($this->country_iso_code);
 		$address->alias = 'eBay';
-		$address->lastname = EbayOrder::_formatFamilyName($this->familyname);
-		$address->firstname = pSQL($this->firstname);
-		$address->address1 = pSQL($this->address1);
-		$address->address2 = pSQL($this->address2);
-		$address->postcode = pSQL(str_replace('.', '', $this->postalcode));
-		$address->city = pSQL($this->city);
-		$address->phone = pSQL($this->phone);
+		$address->lastname = $format->formatName(EbayOrder::_formatFamilyName($this->familyname));
+		$address->firstname = $format->formatName(pSQL($this->firstname));
+		$address->address1 = $format->formatAddress(pSQL($this->address1));
+		$address->address2 = $format->formatAddress(pSQL($this->address2));
+		$address->postcode = $format->formatPostCode(pSQL(str_replace('.', '', $this->postalcode)));
+		$address->city = $format->formatCityName(pSQL($this->city));
+		$address->phone = $format->formatPhoneNumber(pSQL($this->phone));
 		$address->active = 1;
 
 		if ($id_address > 0 && Validate::isLoadedObject($address))
@@ -204,6 +210,38 @@ class EbayOrder
 	{
 		return str_replace(array('(', ')'), '', substr(pSQL($family_name), 0, 32));
 	}
+    
+    public function getProductIds()
+    {
+		return array_map(create_function('$product', 'return (int)$product[\'id_product\'];'), $this->product_list);
+    }
+	
+	public function getProductsAndProfileByShop()
+	{
+        $id_products = $this->getProductIds();
+        
+		// group products by shop
+        /*
+		$sql = 'SELECT ps.`id_product`, ps.`id_shop`, ep.`id_ebay_profile`
+		FROM `'._DB_PREFIX_.'product_shop` ps
+		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
+		ON ps.`id_shop` = ep.`id_shop`
+		WHERE ps.`id_product` IN ('.implode(',', $id_products).')';
+        */
+		$sql = 'SELECT epr.`id_product`, ep.`id_shop`, epr.`id_ebay_profile`
+		FROM `'._DB_PREFIX_.'ebay_product` epr
+		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
+		ON epr.`id_ebay_profile` = ep.`id_ebay_profile`
+		WHERE epr.`id_product` IN ('.implode(',', $id_products).')';
+
+		$res = array();
+		foreach(Db::getInstance()->executeS($sql) as $row) {
+			$res[$row['id_shop']]['id_ebay_profiles'][] = $row['id_ebay_profile'];
+			$res[$row['id_shop']]['id_products'][] = $row['id_product'];			
+		}
+		
+		return $res;
+	}
 
 	public function hasAllProductsWithAttributes()
 	{
@@ -226,13 +264,15 @@ class EbayOrder
 		return true;
 	}
 
-	public function addCart($ebay_country)
+	public function addCart($ebay_profile, $ebay_country)
 	{
-		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
+		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($ebay_profile->id, $this->shippingService);
 		$cart = new Cart();
 
-		$this->context->customer = new Customer($this->id_customer);
-		$cart->id_customer = $this->id_customer;
+		$this->context->customer = new Customer($this->id_customers[$ebay_profile->id_shop]);
+		
+		$cart->id_shop = $ebay_profile->id_shop;
+		$cart->id_customer = $this->id_customers[$ebay_profile->id_shop];
 		$cart->id_address_invoice = $this->id_address;
 		$cart->id_address_delivery = $this->id_address;
 		$cart->id_carrier = $id_carrier;
@@ -243,24 +283,35 @@ class EbayOrder
 		$cart->gift = 0;
 		$cart->add();
 
-		$this->cart = $cart;
+		$this->carts[$ebay_profile->id_shop] = $cart;
 
 		return $cart;
 	}
 
-	public function deleteCart()
+	public function deleteCart($id_shop)
 	{
-		return $this->cart->delete();
+		return $this->carts[$id_shop]->delete();
 	}
 
 	/* returns true is still products in the cart, false otherwise */
-	public function updateCartQuantities()
+	public function updateCartQuantities($ebay_profile)
 	{
 		$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		$cart_nb_products = 0;
 
-		foreach ($this->product_list as $product)
+        $products_by_shop = $this->getProductsAndProfileByShop();
+        $product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
+		
+		foreach ($product_list as $id_product)
 		{
+            foreach($this->product_list as $product)
+                if ($id_product == $product['id_product'])
+                    break;
+            
+			// check if product is in this cart
+//			if (!count($this->carts[$ebay_profile->id_shop]->getProducts(false, $product['id_product'])))
+//				continue;
+			
 			$prod = new Product($product['id_product'], false, $id_lang);
 			$minimal_quantity = empty($product['id_product_attribute']) ? $prod->minimal_quantity : (int)Attribute::getAttributeMinimalQty($product['id_product_attribute']);
 
@@ -270,70 +321,72 @@ class EbayOrder
 
 				if (version_compare(_PS_VERSION_, '1.5', '>'))
 				{
-					$update = $this->cart->updateQty(
+					$update = $this->carts[$ebay_profile->id_shop]->updateQty(
 						(int)$product['quantity'],
 						(int)$product['id_product'],
 						$id_product_attribute,
 						false,
 						'up',
 						0,
-						new Shop(Configuration::get('PS_SHOP_DEFAULT')));
+						new Shop($ebay_profile->id_shop));
 
 					if ($update === true)
 						$cart_nb_products++;
 				}
-				elseif ($this->cart->updateQty((int)$product['quantity'], (int)$product['id_product'], $id_product_attribute))
+				elseif ($this->carts[$ebay_profile->id_shop]->updateQty((int)$product['quantity'], (int)$product['id_product'], $id_product_attribute))
 						$cart_nb_products++;
 			}
 			else // minimal quantity for purchase not met
 				$this->_sendMinimalQtyAlertEmail($prod->name, $minimal_quantity, $product['quantity']);
 		}
 
-		$this->cart->update();
+		$this->carts[$ebay_profile->id_shop]->update();
 
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
-			$this->cart->getProducts(true);
-			$this->cart->getPackageList(true);
-			$this->cart->getDeliveryOptionList(null, true);
+			$this->carts[$ebay_profile->id_shop]->getProducts(true);
+			$this->carts[$ebay_profile->id_shop]->getPackageList(true);
+			$this->carts[$ebay_profile->id_shop]->getDeliveryOptionList(null, true);
 		}
 
 		return (boolean)$cart_nb_products;
 	}
 
-	public function validate()
+	public function validate($id_shop)
 	{
-		$customer = new Customer($this->id_customer);
+		$customer = new Customer($this->id_customers[$id_shop]);
 		$paiement = new EbayPayment();
 
+        var_dump($this->carts[$id_shop]);
+        var_dump($this->id_orders[$id_shop]);
+
 		$paiement->validateOrder(
-			(int)$this->cart->id,
+			(int)$this->carts[$id_shop]->id,
 			Configuration::get('PS_OS_PAYMENT'),
-			(float)$this->cart->getOrderTotal(true, 3),
+			(float)$this->carts[$id_shop]->getOrderTotal(true, 3),
 			'eBay '.$this->payment_method.' '.$this->id_order_seller,
 			null,
 			array(),
-			(int)$this->cart->id_currency,
+			(int)$this->carts[$id_shop]->id_currency,
 			false,
 			$customer->secure_key,
-			version_compare(_PS_VERSION_, '1.5', '>') ? new Shop((int)Configuration::get('PS_SHOP_DEFAULT')) : null
+			version_compare(_PS_VERSION_, '1.5', '>') ? new Shop((int)$id_shop) : null
 		);
-
-		$this->id_order = $paiement->currentOrder;
+        
+		$this->id_orders[$id_shop] = $paiement->currentOrder;
 
 		// Fix on date
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', array('date_add' => pSQL($this->date_add)), 'UPDATE', '`id_order` = '.(int)$this->id_order);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', array('date_add' => pSQL($this->date_add)), 'UPDATE', '`id_order` = '.(int)$this->id_orders[$id_shop]);
 
 		return $paiement->currentOrder;
 	}
 
-	public function updatePrice()
+	public function updatePrice($ebay_profile)
 	{
-
 		$total_price_tax_excl = 0;
 		$total_shipping_tax_incl = 0;
 		$total_shipping_tax_excl = 0;
-		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($this->shippingService);
+		$id_carrier = (int)EbayShipping::getPsCarrierByEbayCarrier($ebay_profile->id, $this->shippingService);
 		
 		if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
 			$carrier_tax_rate = (float)$this->_getTaxByCarrier((int)$id_carrier);
@@ -342,6 +395,10 @@ class EbayOrder
 
 		foreach ($this->product_list as $product)
 		{
+			// check if product is in this cart
+			if (!count($this->carts[$ebay_profile->id_shop]->getProducts(false, $product['id_product'])))
+				continue;			
+			
 			if(version_compare(_PS_VERSION_, '1.4.0.5', '<'))
 				$tax_rate = (float)$this->_getTaxByProduct((int)$product['id_product']);
 			else 
@@ -369,7 +426,7 @@ class EbayOrder
 				_DB_PREFIX_.'order_detail', 
 				$detail_data, 
 				'UPDATE', 
-				'`id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']
+				'`id_order` = '.(int)$this->id_orders[$ebay_profile->id_shop].' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute']
 			);
 
 			if(version_compare(_PS_VERSION_, '1.5', '>')) 
@@ -379,15 +436,14 @@ class EbayOrder
 					'total_amount' => ((float)($product['price']-($product['price'] / $coef_rate )) * $product['quantity'])
 				);
 
-				DB::getInstance()->autoExecute(_DB_PREFIX_ .'order_detail_tax', $detail_tax_data, 'UPDATE', '`id_order_detail` = (SELECT `id_order_detail` FROM `'. _DB_PREFIX_ .'order_detail` WHERE `id_order` = '.(int)$this->id_order.' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute'] .') ');
+				DB::getInstance()->autoExecute(_DB_PREFIX_ .'order_detail_tax', $detail_tax_data, 'UPDATE', '`id_order_detail` = (SELECT `id_order_detail` FROM `'. _DB_PREFIX_ .'order_detail` WHERE `id_order` = '.(int)$this->id_orders[$ebay_profile->id_shop].' AND `product_id` = '.(int)$product['id_product'].' AND `product_attribute_id` = '.(int)$product['id_product_attribute'] .') ');
 			} 
 			
 			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
-			// ebay get one shipping cost by product
-			$total_shipping_tax_incl += $this->shippingServiceCost;
-			$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
-
 		}
+		
+		$total_shipping_tax_incl += $this->shippingServiceCost;
+		$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));		
 
 		$data = array(
 			'total_paid'              => (float)$this->amount,
@@ -398,13 +454,9 @@ class EbayOrder
 			
 		);
 
-
-		
-
-
 		if(version_compare(_PS_VERSION_, '1.5', '>')) 
 		{
-			$order = new Order((int)$this->id_order);
+			$order = new Order((int)$this->id_orders[$ebay_profile->id_shop]);
 			$data_old = $data;
 			$data = array_merge(
 				$data, 
@@ -429,18 +481,18 @@ class EbayOrder
 			// Update Incoice
 			$invoice_data = $data;
 			unset($invoice_data['total_paid'], $invoice_data['total_paid_real'], $invoice_data['total_shipping']);
-			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $invoice_data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_invoice', $invoice_data, 'UPDATE', '`id_order` = '.(int)$this->id_orders[$ebay_profile->id_shop]);
 
 
 			// Update payment
 			$payment_data = array(
-				'amount' => (float)$this->amount
+				'amount' => (float)$this->amount // RAPH TODO, fix this value amount
 			);
 			Db::getInstance()->autoExecute(_DB_PREFIX_.'order_payment', $payment_data, 'UPDATE', '`order_reference` = "'.pSQL($order->reference).'" ');
 			
 		}
 
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $data, 'UPDATE', '`id_order` = '.(int)$this->id_order);
+		return Db::getInstance()->autoExecute(_DB_PREFIX_.'orders', $data, 'UPDATE', '`id_order` = '.(int)$this->id_orders[$ebay_profile->id_shop]);
 	}
 
 	public function _getTaxByProduct($id_product) 
@@ -471,10 +523,18 @@ class EbayOrder
 
 	public function add()
 	{
-		EbayOrder::insert(array(
+		$id_ebay_order = EbayOrder::insert(array(
 			'id_order_ref' => pSQL($this->id_order_ref),
-			'id_order' => (int)$this->id_order
-		));
+		));		
+		
+		foreach ($this->id_orders as $id_shop => $id_order)
+		{
+			Db::getInstance()->insert('ebay_order_order', array(
+				'id_ebay_order' => $id_ebay_order,
+				'id_order' 			=> $id_order,
+				'id_shop'				=> $id_shop
+			));
+		}
 	}
 
 	public function addErrorMessage($message)

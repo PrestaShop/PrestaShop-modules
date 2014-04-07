@@ -27,16 +27,20 @@
 
 class EbayShippingZoneExcluded
 {
-	public static function getAll()
+	public static function getAll($id_ebay_profile)
 	{
-		return Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_shipping_zone_excluded`
+		return Db::getInstance()->ExecuteS('SELECT * 
+			FROM `'._DB_PREFIX_.'ebay_shipping_zone_excluded`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.'
 			ORDER BY region, description');
 	}
 
-	public static function getExcluded()
+	public static function getExcluded($id_ebay_profile)
 	{
-		return Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'ebay_shipping_zone_excluded`
-			WHERE excluded = 1');
+		return Db::getInstance()->ExecuteS('SELECT * 
+			FROM `'._DB_PREFIX_.'ebay_shipping_zone_excluded`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.'
+			AND excluded = 1');
 	}
 
 	public static function insert($data)

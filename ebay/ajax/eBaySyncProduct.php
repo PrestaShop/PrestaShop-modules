@@ -35,7 +35,7 @@ if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get(
 global $cookie;
 $cookie = new Cookie('psEbay', '', 3600);
 
-$ebay = new eBay();
+$ebay = new eBay((int)Tools::getValue('profile'));
 $ebay->ajaxProductSync();
 
 unset($cookie);

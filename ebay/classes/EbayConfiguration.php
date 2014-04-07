@@ -30,6 +30,9 @@ if (file_exists(dirname(__FILE__).'/EbayRequest.php'))
 
 class EbayConfiguration
 {
+	
+	
+	
 	/**
 	 * Updates Ebay API Token and stores it
 	 *
@@ -37,22 +40,39 @@ class EbayConfiguration
 	 *
 	 * @return boolean
 	 */
-
 	public static function updateAPIToken()
 	{
 		$request = new EbayRequest();
+		$ebay_profile = EbayProfile::getCurrent();
 
-		if ($token = $request->fetchToken(Configuration::get('EBAY_API_USERNAME'), Configuration::get('EBAY_API_SESSION')))
+		if ($token = $request->fetchToken(Configuration::getGlobalValue('EBAY_API_USERNAME'), Configuration::getGlobalValue('EBAY_API_SESSION')))
 		{
-			Configuration::updateValue('EBAY_API_TOKEN', $token, false, 0, 0);
-			Configuration::updateValue('EBAY_TOKEN_REGENERATE', false);
+			Configuration::updateGlobalValue('EBAY_API_TOKEN', $token);
+			Configuration::updateGlobalValue('EBAY_TOKEN_REGENERATE', false);
 
 			return true;
 		}
 
 		return false;
 	}
-    
+	
+	public static function get($id_ebay_profile, $name)
+	{
+		return Db::getInstance()->getValue('SELECT `value` 
+			FROM `'._DB_PREFIX_.'ebay_configuration` 
+			WHERE `id_ebay_profile` = '.$id_ebay_profile.'
+			AND `name` = "'.pSQL($name).'"');
+	}
+	
+	public static function set($id_ebay_profile, $name, $value)
+	{
+		return Db::getInstance()->insert('ebay_configuration', array(
+			'id_ebay_profile' => $id_ebay_profile,
+			'name'						=> pSQL($name),
+			'value'						=> pSQL($value)
+		), false, true, Db::REPLACE);
+	}	
+	
     public static function getJson($id_ebay_profile)
     {
         $sql = 'SELECT `name`, `value`
@@ -60,5 +80,24 @@ class EbayConfiguration
             WHERE `id_ebay_profile` = '.(int)$id_ebay_profile;
         $results = Db::getInstance()->executeS($sql);
         return json_encode($results);
-    }
+    }    
+    
+	/**
+	 * For upgrade: takes the values in PS Configurations and stores them in Ebay Configurations
+	 *
+	 * Returns true is sucessful, false otherwise
+	 *
+	 * @return boolean
+	 */	
+	public static function PSConfigurationsToEbayConfigurations($id_ebay_profile, $attributes)
+	{
+		foreach($attributes as $name)
+		{
+			$ps_value = Configuration::get($name);
+			$ebay_value = EbayConfiguration::get($id_ebay_profile, $name);
+			if ($ps_value && !$ebay_value)
+				EbayConfiguration::set($id_ebay_profile, $name, $ps_value);
+		}
+	}
+
 }

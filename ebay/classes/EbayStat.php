@@ -45,7 +45,7 @@ class EbayStat
           'nb_international_shipping_services' => EbayShipping::getNbInternationalShippings($ebay_profile->id),
           'date_add' => date('Y-m-d H:i:s'),
           'Configuration' => EbayConfiguration::getJson($id_ebay_profile),
-          
+          'return_policy' => $ebay_profile->
         );
     }
     

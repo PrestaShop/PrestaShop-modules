@@ -34,10 +34,10 @@ class EbayCategoryCondition
 	 *
 	 * Parse the data returned by the API for the eBay Category Conditions
 	 **/
-	public static function loadCategoryConditions()
+	public static function loadCategoryConditions($id_ebay_profile)
 	{
 		$request = new EbayRequest();
-		$ebay_category_ids = EbayCategoryConfiguration::getEbayCategoryIds();
+		$ebay_category_ids = EbayCategoryConfiguration::getEbayCategoryIds((int)$id_ebay_profile);
 		$conditions = array();
 		
 		foreach ($ebay_category_ids as $category_id)
@@ -59,6 +59,7 @@ class EbayCategoryCondition
 
 			foreach ($xml_conditions as $xml_condition)
 				$conditions[] = array(
+                    'id_ebay_profile'  => (int)$id_ebay_profile,
 					'id_category_ref' => (int)$category_id,
 					'id_condition_ref' => (int)$xml_condition->ID,
 					'name' => pSQL((string)$xml_condition->DisplayName)
@@ -71,7 +72,8 @@ class EbayCategoryCondition
 		if ($conditions) // security to make sure there are values to enter befor truncating the table
 		{
 			$db = Db::getInstance();
-			$db->Execute('TRUNCATE '._DB_PREFIX_.'ebay_category_condition');
+			$db->Execute('DELETE FROM '._DB_PREFIX_.'ebay_category_condition 
+                WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
 
 			if (version_compare(_PS_VERSION_, '1.5', '>'))
 				$db->insert('ebay_category_condition', $conditions);

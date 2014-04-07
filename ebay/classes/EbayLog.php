@@ -25,21 +25,30 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class EbayShippingInternationalZone
+class EbayLog extends ObjectModel
 {
-	public static function getIdEbayZonesByIdEbayShipping($id_ebay_profile, $id_ebay_shipping)
+	public $type;
+	public $text;
+	
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'ebay_log',
+		'primary' => 'id_ebay_log',
+		'fields' => array(
+			'text' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+			'type' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+		),
+	);
+	
+	public static function write($text, $type)
 	{
-		return Db::getInstance()->ExecuteS('SELECT id_ebay_zone
-			FROM '._DB_PREFIX_.'ebay_shipping_international_zone
-			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
-            AND id_ebay_shipping = "'.(int)$id_ebay_shipping.'"');
+        $ebay_log = new EbayLog();
+        $ebay_log->text = $text;
+        $ebay_log->type = $type;
+        
+        return $ebay_log->save();
 	}
 
-	public static function insert($id_ebay_profile, $id_ebay_shipping, $id_ebay_zone)
-	{
-		$sql = 'INSERT INTO '._DB_PREFIX_.'ebay_shipping_international_zone(`id_ebay_shipping`, `id_ebay_zone`, `id_ebay_profile`)
-			VALUES(\''.(int)$id_ebay_shipping.'\', \''.pSQL($id_ebay_zone).'\', \''.pSQL($id_ebay_profile).'\')';
-			
-		DB::getInstance()->Execute($sql);
-	}
 }

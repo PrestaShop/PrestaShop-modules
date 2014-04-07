@@ -53,10 +53,10 @@ class EbayCategorySpecific
 	 * Parse the data returned by the API and enter them in the table
 	 *
 	 **/
-	public static function loadCategorySpecifics()
+	public static function loadCategorySpecifics($id_ebay_profile)
 	{
 		$request = new EbayRequest();
-		$ebay_category_ids = EbayCategoryConfiguration::getEbayCategoryIds();
+		$ebay_category_ids = EbayCategoryConfiguration::getEbayCategoryIds($id_ebay_profile);
 
 		foreach ($ebay_category_ids as $ebay_category_id)
 		{

@@ -44,18 +44,24 @@ class EbayRequest
 	private $apiCall;
 	private $loginUrl;
 	private $compatibility_level;
-	private $debug = false;
-	private $dev = false;
+	private $debug = true;
+	private $dev = true;
 	private $ebay_country;
 
 	private $smarty_data;
+	
+	private $ebay_profile;
 
-	public function __construct()
+	public function __construct($id_ebay_profile = null)
 	{
 		/** Backward compatibility */
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 
-		$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
+        if ($id_ebay_profile)
+            $this->ebay_profile = new EbayProfile($id_ebay_profile);
+        else
+            $this->ebay_profile = EbayProfile::getCurrent();
+		$this->ebay_country = EbayCountrySpec::getInstanceByKey($this->ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'), $this->dev);
 		$this->itemConditionError = false;
 
 		/**
@@ -374,10 +380,10 @@ class EbayRequest
 			'start_price' => $data['price'],
 			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'quantity' => $data['quantity'],
 			'item_specifics' => $data['item_specifics'],
 			'return_policy' => $this->_getReturnPolicy(),
@@ -405,12 +411,12 @@ class EbayRequest
 			'condition_id' => $data['condition'],
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'sku' => 'prestashop-'.$data['id_product'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'quantity' => $data['quantity'],
 			'price_update' => !isset($data['noPriceUpdate']),
 			'start_price' => $data['price'],
-			'resynchronize' => (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1),
+			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
 			'title' => substr($data['name'], 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
@@ -457,10 +463,10 @@ class EbayRequest
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'description' => $data['description'],
 			'condition_id' => $data['condition'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
 			'title' => substr($data['name'], 0, 80),
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
@@ -512,17 +518,17 @@ class EbayRequest
 			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'condition_id' => $data['condition'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'listing_type' => 'FixedPriceItem',
 			'payment_method' => 'PayPal',
 			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'value' => htmlentities($data['brand']),
 			'return_policy' => $this->_getReturnPolicy(),
-			'resynchronize' => (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1),
+			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
 			'title' => substr($data['name'], 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
@@ -566,7 +572,7 @@ class EbayRequest
 				if ($this->error != '')
 					$this->error .= '<br />';
 				if ($e->ErrorCode == 932 || $e->ErrorCode == 931)
-					Configuration::updateValue('EBAY_TOKEN_REGENERATE', true);
+					Configuration::updateGlobalValue('EBAY_TOKEN_REGENERATE', true);
 				$this->error .= (string)$e->LongMessage;
 			}
 
@@ -623,11 +629,12 @@ class EbayRequest
 
 	private function _getReturnPolicy()
 	{
+		$returns_policy_configuration = $this->ebay_profile->getReturnsPolicyConfiguration();
 		$vars = array(
-			'returns_accepted_option' => Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'),
-			'description' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
-			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
-			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
+			'returns_accepted_option' => $returns_policy_configuration->ebay_returns_accepted_option,
+			'description' => preg_replace('#<br\s*?/?>#i', "\n", $returns_policy_configuration->ebay_returns_description),
+			'within' => $returns_policy_configuration->ebay_returns_within,
+			'whopays' => $returns_policy_configuration->ebay_returns_who_pays
 		);
 
 		$this->smarty->assign($vars);
@@ -725,7 +732,7 @@ class EbayRequest
 	private function _makeRequest($api_call, $vars, $shoppingEndPoint = false)
 	{
 		$vars = array_merge($vars, array(
-			'ebay_auth_token' => Configuration::get('EBAY_API_TOKEN'),
+			'ebay_auth_token' => Configuration::getGlobalValue('EBAY_API_TOKEN'),
 			'error_language' => $this->ebay_country->getLanguage(),
 		));
 
