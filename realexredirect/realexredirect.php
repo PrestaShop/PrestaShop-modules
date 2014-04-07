@@ -382,9 +382,9 @@ class RealexRedirect extends PaymentModule
 		$link_response = $this->url_validation;
 		$this->html .=	'<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
 		$this->html .=	'<fieldset>';
-		$this->html .=	'<legend><img src="../img/admin/contact.gif" />'.$this->l('Realex Payments information').'</legend>';
-		$this->html .=	'<style> table.settings tr td{padding: 7px;}</style><table class="settings" border="0" width="500" cellpadding="5" cellspacing="0" id="form">';
-		$this->html .=	'<tr><td colspan="2">'.$this->l('Please specify your Realex Payments account details').'.<br /><br /></td></tr>';
+		$this->html .=	'<legend><img src="../img/admin/contact.gif" />'.$this->l('Realex Payments Information').'</legend>';
+		$this->html .=	'<table style="border:0px" id="form">';
+		$this->html .=	'<tr><td style="padding-top:5px;" colspan="2">'.$this->l('Please specify your Realex Payments account details').'.<br /><br /></td></tr>';
 		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Merchant ID').'</td>';
 		$this->html .=	'<td style="vertical-align: top;">';
 		$this->html .=	'<input type="text" name="merchantId" value="'.htmlentities(Tools::getValue('merchantId', $this->merchant_id), ENT_COMPAT, 'UTF-8').'" style="width: 300px;" />';
@@ -397,13 +397,13 @@ class RealexRedirect extends PaymentModule
 		$this->html .=	'<td><input type="radio" name="settlement" '.$checked_auto.' value="auto" /> Auto';
 		$this->html .=	'<br/><input type="radio" name="settlement" '.$checked_delayed.' value="delayed" />';
 		$this->html .=	'Delayed<br/><em>'.$this->l('If you are using DCC the settlement type will be automatically set to "Auto"').'</em></td></tr>';
-		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('RealVault').'</td>';
+		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top; padding-top:25px;">'.$this->l('RealVault').'</td>';
 		$this->html .=	'<td><input type="radio" name="realvault" '.$checked_realvault_yes.' value="1" /> Yes <br/>';
 		$this->html .=	'<input type="radio" name="realvault" '.$checked_realvault_no.' value="0" /> No</td></tr>';
-		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Request Security Code on tokenised transactions: ').'</td>';
-		$this->html .=	'<td><input type="radio" name="cvn" '.$checked_cvn_yes.' value="1" /> Yes ';
+		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top; style="padding-top:5px;>'.$this->l('Request Security Code on tokenised transactions: ').'</td>';
+		$this->html .=	'<td style="padding-top:5px;"><input type="radio" name="cvn" '.$checked_cvn_yes.' value="1" /> Yes ';
 		$this->html .=	'<br/><input type="radio" name="cvn" '.$checked_cvn_no.' value="0" /> No</td></tr>';
-		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top;">'.$this->l('Require Liability Shift on 3DSecure transactions').'</td>';
+		$this->html .=	'<tr><td width="130" style="height: 35px;vertical-align: top; padding-top:15px;">'.$this->l('Require Liability Shift on 3DSecure transactions').'</td>';
 		$this->html .=	'<td><input type="radio" name="liability" '.$checked_liability_yes.' value="1" /> Yes <br/>';
 		$this->html .=	'<input type="radio" name="liability" '.$checked_liability_no.' value="0" /> No</td></tr>';
 		$this->html .=	'<tr><td colspan="2" align="center">';
@@ -417,19 +417,19 @@ class RealexRedirect extends PaymentModule
 		$this->html .=	'</table>';
 		$this->html .=	'</fieldset></form>';
 		$this->html .= '<br/><br/>';
-		$this->html .= '<fieldset><legend><img src="../img/admin/contact.gif" />'.$this->l('Realex Payments subaccounts').'</legend>';
+		$this->html .= '<fieldset><legend><img src="../img/admin/contact.gif" />'.$this->l('Realex Payments Subaccounts').'</legend>';
 			if (!empty($this->edit_account))
 				$this->html .= $this->edit_account;
 			else {
 				$this->html .= $this->getAccount();
 				$this->html .= '<br/><br/>';
 				$this->html .= '<form action="'.Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']).'" method="post">';
-				$this->html .= '<style>table.subaccountadd tr td {padding: 10px;}</style><table class="subaccountadd" border="0" cellpadding="5" cellspacing="0"';
-				$this->html .= 'id="form" style="padding:10px; border: 1px solid #606062; background:#F4F6F9">';
-						$this->html .= '<tr><td style="height: 35px;vertical-align: top;" colspan="2"><strong><strong>'.$this->l('Add a sub-account').'</strong></strong></td></tr>';
-						$this->html .= '<tr><td style="height: 35px;vertical-align: top;"><strong>'.$this->l('Sub-account').':</strong></td>';
+				$this->html .= '<table border="0" cellpadding="5" cellspacing="0"';
+				$this->html .= 'id="form" style="border: 1px solid #606062; background:#F4F6F9">';
+						$this->html .= '<tr><td style="height: 35px;vertical-align: top; padding:5px;" colspan="2"><strong><strong>'.$this->l('Add a Subaccount').'</strong></strong></td></tr>';
+						$this->html .= '<tr><td style="height: 35px;vertical-align: top; padding:5px;"><strong>'.$this->l('Subaccount').':</strong></td>';
 						$this->html .= '<td style="vertical-align: top;"><input type="text" name="subAccount"  style="width: 300px;" /></tr>';
-						$this->html .= '<tr><td><strong>'.$this->l('Cards').':</strong></td><td>';
+						$this->html .= '<tr><td style="padding:5px;"><strong>'.$this->l('Cards').':</strong></td><td>';
 						$this->html .= '<input type="checkbox" value="VISA" name="type_card[]" /> Visa - ';
 						$this->html .= '<input type="checkbox" value="MC" name="type_card[]"/> MasterCard - ';
 						$this->html .= '<input type="checkbox" value="LASER" name="type_card[]"/> Laser - ';
@@ -439,13 +439,13 @@ class RealexRedirect extends PaymentModule
 						$this->html .= '<input type="checkbox" value="DINERS" name="type_card[]"/> Diners - ';
 						$this->html .= '<input type="checkbox" value="SOLO" name="type_card[]"/> Solo ';
 						$this->html .= '&nbsp;  &nbsp;  &nbsp; </td></tr>';
-						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top;">';
+						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top; padding:5px;">';
 						$this->html .= '<strong>'.$this->l('3D secure').':</strong></td>';
 						$this->html .= '<td><input type="radio" name="threeds" value="0" checked="checked" /> '.$this->l('No').'<br/>';
 						$this->html .= '<input type="radio" name="threeds" value="1" /> '.$this->l('Yes').' </td></tr>';
-						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top;">';
+						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top; padding:5px;">';
 						$this->html .= '<strong>'.$this->l('Dynamic Currency Conversion (DCC)').':</strong></td>';
-						$this->html .= '<td><input type="radio" name="dcc" value="0" checked="checked" /> '.$this->l('No').'<br/>';
+						$this->html .= '<td style="padding-top:5px;"><input type="radio" name="dcc" value="0" checked="checked" /> '.$this->l('No').'<br/>';
 						$this->html .= '<input type="radio" name="dcc" value="1" /> '.$this->l('Yes').' <br/><br/>';
 						$this->html .= '<input type="radio" name="dcc_choice" value="fexco" checked="checked" /> '.$this->l('fexco').'<br/>';
 						$this->html .= '<input type="radio" name="dcc_choice" value="euroconex" /> '.$this->l('euroconex').'</td></tr>';
@@ -651,7 +651,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$sql = 'SELECT * FROM `'._DB_PREFIX_.'realex_subaccount`';
 
-		$liste = '<style> table.subdisplay {border-collapse:collapse ;}table.subdisplay tr td{border:1px solid grey ; border-width: 2px ; padding: 10px;}</style><table class="subdisplay"><tr><td colspan="5"><strong>'.$this->l('My subaccounts').'</strong></td></tr>';
+		$liste = '<table><tr><td colspan="5" style="padding:5px; border: 1px solid grey;"><strong>'.$this->l('My subaccounts').'</strong></td></tr>';
 		if ($results = Db::getInstance()->ExecuteS($sql))
 		{
 			foreach ($results as $row)
@@ -660,7 +660,7 @@ class RealexRedirect extends PaymentModule
 				$cards = Db::getInstance()->ExecuteS($sql2);
 				$card_list = '';
 				foreach ($cards as $card)
-					$card_list .= $card['realex_card_name'].',';
+					$card_list .= $card['realex_card_name'].', ';
 				$card_list = rtrim($card_list, ',');
 				if (!$row['threeds_realex_subaccount'])
 					$threeds = $this->l('No');
@@ -670,7 +670,7 @@ class RealexRedirect extends PaymentModule
 					$dcc = $this->l('No');
 				else
 					$dcc = $this->l('Yes').' ('.$row['dcc_choice_realex_subaccount'].')';
-				$liste .= '<tr><td><strong>'.$row['name_realex_subaccount'].'</strong></td><td>'.$card_list.'</td><td>3D Secure: '.$threeds.'</td><td>DCC: '.$dcc.'</td><td>';
+				$liste .= '<tr><td style="padding:5px; border: 1px solid grey;"><strong>'.$row['name_realex_subaccount'].'</strong></td><td style="padding:5px; border: 1px solid grey;">'.$card_list.'</td><td style="padding:5px; border: 1px solid grey;">3D Secure: '.$threeds.'</td><td style="padding:5px; border: 1px solid grey;">DCC: '.$dcc.'</td><td style="padding:5px; border: 1px solid grey;">';
 					$liste .= "<form action='".Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI'])."' method='post'>
 					<input type='submit' name='edit_realex_account' value='".$this->l('Edit')."' />
 					<input type='submit' onclick='return(confirm(\"".$this->l('Do you want to delete your subaccount ?')."\"))' name='delete_realex_account' value='".$this->l('Delete')."' />
@@ -680,7 +680,7 @@ class RealexRedirect extends PaymentModule
 			}
 		}
 		else
-			$liste .= '<tr><td colspan="5">'.$this->l('No account defined').'</td></tr>';
+			$liste .= '<tr><td colspan="5" style="padding:5px; border: 1px solid grey;">'.$this->l('No account defined').'</td></tr>';
 		$liste .= '</table>';
 		return $liste;
 	}

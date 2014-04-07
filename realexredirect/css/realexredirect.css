@@ -32,7 +32,7 @@
 	color:red
 }
 
-p.realexredirect {
+p.payment_module.realexredirect {
 	background-color:#53585a;
 	-webkit-border-top-left-radius:23px;
 	-moz-border-radius-topleft:23px;
@@ -60,9 +60,9 @@ p.realexredirect {
         width: 570px ;
         max-width: 95% ;
         text-decoration: none ;
-    
+        text-transform:capitalize;
 }
-p.realexredirect:hover {
+p.payment_module.realexredirect:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eeaf41), color-stop(1, #ffce79) );
 	background:-moz-linear-gradient( center top, #eeaf41 5%, #ffce79 100% );
 	background-image:url('../.../../img/creditcardg.png');
@@ -74,18 +74,7 @@ p.realexredirect:hover {
         text-shadow:1px 1px 0px #f79421;
 }
 
-p.realexredirect:active {
+p.payment_module.realexredirect:active {
 	position:relative;
 	top:1px;
 }
-
-/*---------- BACK ----------------*/
-
-/* Modified for compatibility with 1.6 admin */
-
-table.realexredirect {
-    border:1px solid black;
-}
-
-.clear {clear:both}
-.fleft {float:left}
