@@ -333,7 +333,7 @@ class EbaySynchronizer
 		$pictures = array();
 		$pictures_medium = array();
 		$pictures_large = array();
-		$nb_pictures = 1 + (isset($products_configuration[$product->id]['extra_images']) ? $products_configuration[$product->id]['extra_images'] : 0);
+		$nb_pictures = 1 + (int)Configuration::get('EBAY_PICTURE_PER_LISTING');
 
 		$large = new ImageType((int)$ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG'));
 		$small = new ImageType((int)$ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL'));
@@ -1093,6 +1093,49 @@ class EbaySynchronizer
 	public static function fillTemplateTitle($tags, $values, $description)
 	{
 		return str_replace($tags, $values, $description);
+	}
+
+	public static function getNbSynchronizableEbayCategorie()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM  `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE  `id_ebay_category` > 0
+			AND `id_ebay_category` > 0'
+		);
+	}
+
+	public static function getNbSynchronizableEbayShipping()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM  `'._DB_PREFIX_.'ebay_shipping`'
+		);
+	}
+
+	public static function getNbSynchronizableEbayShippingInternational()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM  `'._DB_PREFIX_.'ebay_shipping_international_zone`'
+		);
+	}
+
+	public static function getNbSynchronizableEbayCategoryCondition()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM  `'._DB_PREFIX_.'ebay_category_condition_configuration`'
+		);
+	}
+
+	public static function getNbSynchronizableEbayCategoryConditionMixed()
+	{
+		return Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM  `'._DB_PREFIX_.'ebay_category_condition_configuration`
+			WHERE `id_condition_ref` != 1000'
+		);
 	}
 
 }
