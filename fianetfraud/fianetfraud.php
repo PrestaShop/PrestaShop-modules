@@ -1411,17 +1411,14 @@ class Fianetfraud extends Module
 				break;
 
 			default:
-
+				$delivery_address = array();
 				//if delivery mode is store pick up
 				if ($real_carrier_type == 1)
 				{
 					//get shop information
-					$address1 = Configuration::get('PS_SHOP_ADDR1');
-					$address2 = Configuration::get('PS_SHOP_ADDR2');
-					$zipcode = Configuration::get('PS_SHOP_CODE');
-					$city = Configuration::get('PS_SHOP_CITY');
-					$country = Configuration::get('PS_SHOP_COUNTRY');
-					$shop_name = Configuration::get('PS_SHOP_NAME');
+					$delivery_address = $this->getDefautAddress(Configuration::get('PS_SHOP_ADDR1'), Configuration::get('PS_SHOP_ADDR2'),
+						Configuration::get('PS_SHOP_CODE'), Configuration::get('PS_SHOP_CITY'),
+						Configuration::get('PS_SHOP_COUNTRY'), Configuration::get('PS_SHOP_NAME'));
 					$xml_element_delivery_customer = new CertissimUtilisateur(
 						'livraison',
 						$customer->id_gender == 2 ? $this->l('Miss') : $this->l('Mister'),
@@ -1435,13 +1432,9 @@ class Fianetfraud extends Module
 				}
 				else
 				{
-					//gt delivery information
-					$address1 = $address_delivery->address1;
-					$address2 = $address_delivery->address2;
-					$zipcode = $address_delivery->postcode;
-					$city = $address_delivery->city;
-					$country = $country->name[$id_lang];
-					$shop_name = null;
+					//get delivery information
+					$delivery_address = $this->getDefautAddress($address_delivery->address1, $address_delivery->address2,
+						$address_delivery->postcode, $address_delivery->city, $country->name[$id_lang], null);
 				}
 
 				$adressepointrelais = new CertissimXMLElement('<adresse></adresse>');
@@ -1450,7 +1443,7 @@ class Fianetfraud extends Module
 				$adressepointrelais->childCpostal($zipcode);
 				$adressepointrelais->childVille($city);
 				$adressepointrelais->childPays($country);
-				$xml_pointrelais = new CertissimPointrelais(null, $shop_name, $adressepointrelais);
+				$xml_pointrelais = new CertissimPointrelais(null, $delivery_address['shop_name'], $adressepointrelais);
 
 				break;
 		}
@@ -2009,5 +2002,22 @@ class Fianetfraud extends Module
 			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'id_cart not found, id_cart added :'.$id_cart);
 			return false;
 		}
+	}
+	/**
+	 * Return shop address or defaut delivery address
+	 * 
+	 * @param $address1, $address2, $zipcode, $city, $country, $shop_name
+	 * @return array 
+	 */
+	private function getDefautAddress($address1, $address2, $zipcode, $city, $country, $shop_name)
+	{
+		$address_info = array();
+		$address_info['address1'] = $address1;
+		$address_info['address2'] = $address2;
+		$address_info['zipcode'] = $zipcode;
+		$address_info['city'] = $city;
+		$address_info['country'] = $country;
+		$address_info['shop_name'] = $shop_name;
+		return $address_info;
 	}
 }
