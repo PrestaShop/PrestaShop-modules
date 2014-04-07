@@ -1,3 +1,4 @@
+body{ font-family:Arial, Helvetica, sans-serif;}
 .pagination ul li.inactive, .pagination ul li.inactive:hover {
 	background-color:#ededed;
 	color:#bababa;
@@ -165,6 +166,7 @@ ul.listt li {
 	border-bottom: none;
 	outline: none;
 	font-size:12px;
+	color:#000000;
 	border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-top-left-radius: 5px;
@@ -204,9 +206,12 @@ ul.listt li {
 	width:820px;
 	margin:0px auto;
 }*/
+.tableblock tr td {
+    border-bottom: 0 none!important;
+}
 .wrapper .row1 {
 	padding:/*10px 12px*/0px;
-	border:none;
+	border:none!important;
 }
 .wrapper h4 {
 	line-height:24px;
@@ -247,7 +252,7 @@ ul.listt li {
 	clear: both;
 }
 .form_table table tr td {
-	border-bottom:none;
+	border-bottom:none!important;
 }
 .form_table label {
 	width:189px;
@@ -262,6 +267,7 @@ ul.listt li {
 }
 .textarea_bx {
 	margin:5px 0px;
+	vertical-align:bottom;
 	width:288px!important;
 }
 .btn_bx {
@@ -297,14 +303,18 @@ ul.listt li {
 color: #268CCD;}
 
 /*Form*/
+h4, h5, h6{ font-weight:bold;}
 .table tr td {
     color: #996633;
     font-size:12px;
+	vertical-align:top;
+}
+.table tr th {font-weight:bold;
 }
 .form-data label{ width:450px; padding-right:20px; padding-top:0px;}
 .form-data2 label{ width:385px; padding-right:20px; padding-top:0px;}
 
-.mrgin-left{ margin-left:466px;}
+.mrgin-left{ margin-left:466px!important;}
 .label-small{ width:30px!important; text-align:left!important;}
 .no-padding td{ padding:0px;}
 .clear{ clear:both;}
@@ -313,17 +323,23 @@ color: #268CCD;}
 #content .alert{ width:auto!important;}
 
 .radio_nospaceing{
-	margin:0px 10px 0px 0px;}
+	margin:0px 10px 0px 0px!important;}
 .radio_spaceing {
 	margin:0 10px!important;
 	vertical-align:top;
 }
 .radio_spaceing2 {
-	margin-left: 20px;
-	margin-right: 10px;
+	margin-left: 20px!important;
+	margin-right: 10px!important;
 }
 .form-display label{  float: left;
     font-weight: bold;
     padding: 0.2em 0.5em 0 0;
     text-align: right;
     width: 250px;}
+	
+/*For theme width occuring horizontal scroll bar*/
+nobootstrap {
+    min-width: 1180px!important;
+}
+.form-data em{ font-style:italic;}

@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{sendinblue}prestashop>sendinblue_d76cde0c0d0b06e776e5dad8642d49c4'] = 'SendinBlue';
-$_MODULE['<{sendinblue}prestashop>sendinblue_07fe9b4d9b8113ee6f9699cd51fec2d7'] = 'Synchronisez les contacts de votre site PrestaShop avec SendinBlue & envoyez facilement tous vos emails marketing et transactionnels.';
+$_MODULE['<{sendinblue}prestashop>sendinblue_9dc5a45df8c44d057122221c8e550f55'] = 'Synchronisez les contacts de votre site PrestaShop avec SendinBlue & envoyez facilement tous vos emails & SMS marketing et transactionnels.';
 $_MODULE['<{sendinblue}prestashop>sendinblue_84abe627e684234933d2a134cdd921ed'] = 'Êtes-vous sûr de vouloir supprimer le module SendinBlue ? Si vous utilisez SendinBlue SMTP et que vous supprimez le module, nous activerons par défaut la fonction mail() de PHP (vous pouvez changer les paramètres de vos envois d\'emails dans l\'onglet: Paramètres avancès > Emails).';
 $_MODULE['<{sendinblue}prestashop>sendinblue_8acabcc788c316f92b7850c76265b49b'] = 'Vous devez activer CURL ainsi que l\'option allow_url_fopen sur votre serveur si vous voulez utiliser ce module.';
 $_MODULE['<{sendinblue}prestashop>sendinblue_d591cbc447d01e5a6165096ebfdf804e'] = 'Vous devez activer CURL sur votre serveur si vous voulez utiliser ce module.';
@@ -49,14 +49,15 @@ $_MODULE['<{sendinblue}prestashop>sendinblue_40be97420d49acc09e8ec2dc60e02533'] 
 $_MODULE['<{sendinblue}prestashop>sendinblue_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
 $_MODULE['<{sendinblue}prestashop>sendinblue_dd28538b67e7c720f37d3260c10d2747'] = 'sendinblue.png';
 $_MODULE['<{sendinblue}prestashop>sendinblue_5621ebf12c5f61b885a23ed959688e44'] = 'SendinBlue : LE plugin tout-en-un pour vos emails marketing et transactionnels.';
+$_MODULE['<{sendinblue}prestashop>sendinblue_3db63d5a4b855aec504d07307463133b'] = 'Nous avons remarqué que vous utilisez les versions précédentes de notre plugin, veuillez les désinstaller / supprimer et garder que la dernière version de SendinBlue';
 $_MODULE['<{sendinblue}prestashop>sendinblue_eb7a298d7741cef1a61147ab07237235'] = 'Contactez l\'équipe SendinBlue';
 $_MODULE['<{sendinblue}prestashop>sendinblue_e876af202306229a04cc9cf14aba0ff0'] = 'Contactez-nous';
 $_MODULE['<{sendinblue}prestashop>sendinblue_44a87f7752c32d2d4dba5b25cb2a966f'] = 'Email : ';
 $_MODULE['<{sendinblue}prestashop>sendinblue_ddf7d91d563667f08f1d467bc4a0d55a'] = 'contact@sendinblue.com';
 $_MODULE['<{sendinblue}prestashop>sendinblue_21812af50835ec5a8df4087771efabc1'] = 'Tél: 0899 25 30 61';
 $_MODULE['<{sendinblue}prestashop>sendinblue_f3584450e166f3865a67926c324fea3e'] = 'Pour plus d\'informations, merci de visiter notre site internet :';
-$_MODULE['<{sendinblue}prestashop>sendinblue_3ad08512deb56bd432978a1d0f040629'] = 'https://www.sendinblue.com/';
-$_MODULE['<{sendinblue}prestashop>sendinblue_25e4fbd2ba9320969647bf5cdf72ad74'] = 'Avec le module SendinBlue, retrouvez tout ce dont vous avez besoin pour envoyer simplement et efficacement vos campagnes emailing à vos prospects et clients :';
+$_MODULE['<{sendinblue}prestashop>sendinblue_8de8413647876f0cf564bd944bf8abe9'] = 'https://www.sendinblue.com';
+$_MODULE['<{sendinblue}prestashop>sendinblue_ce4865fb138906005ba265ae1b9668a2'] = ' Avec le module SendinBlue, retrouvez tout ce dont vous avez besoin pour envoyer simplement et efficacement vos campagnes emailing & SMS à vos prospects et clients :';
 $_MODULE['<{sendinblue}prestashop>sendinblue_736ec036fd014803f34612d305aa361c'] = 'Synchronisation automatique de vos contacts avec SendinBlue (inscrits et désinscrits)';
 $_MODULE['<{sendinblue}prestashop>sendinblue_c654d0fa7acdb7f92aae327ba4215372'] = ' Outils d\'aide à la création d\'emailings';
 $_MODULE['<{sendinblue}prestashop>sendinblue_8d9bada9313183af0911611bf454d4da'] = ' Programmation des campagnes';

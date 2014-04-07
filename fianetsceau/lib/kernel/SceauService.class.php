@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Implement a Fia-Net's service (Certissim, Kwixo or Sceau) *
@@ -29,8 +53,7 @@
 abstract class SceauService extends SceauMother
 {
 	/* site params */
-
-	protected $name; //product name
+	protected $name;
 	protected $siteid;
 	protected $login;
 	protected $password;
@@ -38,20 +61,20 @@ abstract class SceauService extends SceauMother
 	protected $authkey;
 	protected $status;
 	protected $url = array();
-	private $_url = array(
+	private $url_script = array(
 		'sendrating' => array(
 			'prod' => 'https://www.fia-net.com/engine/sendrating.cgi',
 			'test' => 'https://www.fia-net.com/engine/preprod/sendrating.cgi',
 		)
 	);
-	private $_param_names = array(
+	private $param_names = array(
 		'siteid',
 		'login',
 		'password',
 		'authkey',
 		'status',
 	);
-	private $_available_statuses = array(
+	private $available_statuses = array(
 		'test',
 		'prod',
 	);
@@ -71,7 +94,7 @@ abstract class SceauService extends SceauMother
 	{
 		$name = $this->getName();
 		if (empty($name))
-			$this->setName(strtolower(get_class($this)));
+			$this->setName(Tools::strtolower(get_class($this)));
 
 		return $this->getName();
 	}
@@ -83,14 +106,13 @@ abstract class SceauService extends SceauMother
 	 */
 	private function loadParams()
 	{
-
-		foreach ($this->_param_names as $param_name)
+		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'set'.$param_name;
 			if (_PS_VERSION_ < '1.5')
-				$this->$funcname(Configuration::get('FIANETSCEAU_'.strtoupper($param_name)));
+				$this->$funcname(Configuration::get('FIANETSCEAU_'.Tools::strtoupper($param_name)));
 			else
-				$this->$funcname(Configuration::get('FIANETSCEAU_'.strtoupper($param_name), null, null, $this->getIdshop()));
+				$this->$funcname(Configuration::get('FIANETSCEAU_'.Tools::strtoupper($param_name), null, null, $this->getIdshop()));
 		}
 	}
 
@@ -99,13 +121,10 @@ abstract class SceauService extends SceauMother
 	 */
 	private function loadURLs()
 	{
-
 		$status = $this->statusIsAvailable($this->getStatus()) ? $this->getStatus() : 'test';
 
-		foreach ($this->_url as $scriptname => $modes)
-		{
+		foreach ($this->url_script as $scriptname => $modes)
 			$this->url[$scriptname] = $modes[$status];
-		}
 	}
 
 	/**
@@ -154,28 +173,25 @@ abstract class SceauService extends SceauMother
 	 */
 	public function saveParamInFile()
 	{
-		foreach ($this->_param_names as $param_name)
+		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'get'.$param_name;
 			if (_PS_VERSION_ < '1.5')
-				Configuration::updateValue('FIANETSCEAU_'.strtoupper($param_name), $this->$funcname());
+				Configuration::updateValue('FIANETSCEAU_'.Tools::strtoupper($param_name), $this->$funcname());
 			else
-				Configuration::updateValue('FIANETSCEAU_'.strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
+				Configuration::updateValue('FIANETSCEAU_'.Tools::strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
 		}
 	}
 
 	public function statusIsAvailable($status)
 	{
-		return in_array($status, $this->_available_statuses);
+		return in_array($status, $this->available_statuses);
 	}
 
 	public function __call($name, array $params)
 	{
 		if (preg_match('#^getUrl.+$#', $name) > 0)
-		{
 			return $this->getUrl(preg_replace('#^getUrl(.+)$#', '$1', $name));
-		}
-
 		return parent::__call($name, $params);
 	}
 

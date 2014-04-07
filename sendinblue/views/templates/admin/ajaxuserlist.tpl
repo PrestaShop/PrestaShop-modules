@@ -29,7 +29,7 @@
 	{assign var=counter value=$counter+1}
 	<tr>
 		<td>
-			<div style="word-wrap:break-word; width:350px">{$sourceInfo.email}</div>
+			<div style="word-wrap:break-word; width:350px">{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}</div>
 		</td>
 		{assign var="emailtest" value=$sourceInfo.email}
 		<td>
@@ -44,7 +44,7 @@
 			
             {foreach from=$smsdata key=jk item=smsInfo}
             	{if $jk == $sourceInfo.phone_mobile}
-                	{$smsInfo}
+                	{$smsInfo|escape:'htmlall':'UTF-8'|stripslashes}
                 {/if}
             {/foreach}
 			
@@ -61,11 +61,11 @@
 				{assign var=pstatus value=1}
 			{/if}
 			
-			<a href="javascript:void(0)" class="ajax_contacts_href" email="{$sourceInfo.email}" status="{$pstatus}">
+			<a href="javascript:void(0)" class="ajax_contacts_href" email="{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}" status="{$pstatus|intval}">
 			{if $pstatus==1}
-			<img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/disabled.gif" />
+			<img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter|intval}" src="../img/admin/disabled.gif" />
 			{else}
-			<img class="toolTip1 imgstatus" title="{l s='Unsubscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter}" src="../img/admin/enabled.gif" />
+			<img class="toolTip1 imgstatus" title="{l s='Unsubscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter|intval}" src="../img/admin/enabled.gif" />
 			{/if}
 			</a>
 		</td>
@@ -91,16 +91,16 @@
 	
 				{if $previous_btn && $cur_page > 1}
 					{assign var=pre value=$cur_page-1}
-					<li p='{$pre}' class='active'>{l s='Previous' mod='sendinblue'}</li>
+					<li p='{$pre|escape:'htmlall':'UTF-8'|stripslashes}' class='active'>{l s='Previous' mod='sendinblue'}</li>
 				{elseif $previous_btn}
 					<li class='inactive'>{l s='Previous' mod='sendinblue'}</li>
 				{/if}
 	
 				{section name=cu start=$start_loop loop=$end_loop+1 step=1}
 					{if $cur_page == $smarty.section.cu.index}
-						<li p='{$smarty.section.cu.index}' style='color:#fff;background-color:#000;' class='active'>{$smarty.section.cu.index}</li>
+						<li p='{$smarty.section.cu.index|escape:'htmlall':'UTF-8'|stripslashes}' style='color:#fff;background-color:#000;' class='active'>{$smarty.section.cu.index|escape:'htmlall':'UTF-8'|stripslashes}</li>
 					{else}
-						<li p='{$smarty.section.cu.index}' class='active'>{$smarty.section.cu.index}</li>
+						<li p='{$smarty.section.cu.index|escape:'htmlall':'UTF-8'|stripslashes}' class='active'>{$smarty.section.cu.index|escape:'htmlall':'UTF-8'|stripslashes}</li>
 					{/if}
 					
 				{/section}
@@ -108,15 +108,15 @@
 	
 				{if $last_btn && $cur_page < $no_of_paginations}
 					{assign var=nex value=$cur_page+1}
-					<li p='{$nex}' class='active'>{l s='Next' mod='sendinblue'}</li>
+					<li p='{$nex|escape:'htmlall':'UTF-8'|stripslashes}' class='active'>{l s='Next' mod='sendinblue'}</li>
 				{elseif $next_btn}
 					<li class='inactive'>{l s='Next' mod='sendinblue'}</li>
 				{/if}
 				
 				{if $last_btn && $cur_page < $no_of_paginations}
-					<li p='{$no_of_paginations}' class='active'>{l s='Last' mod='sendinblue'}</li>
+					<li p='{$no_of_paginations|escape:'htmlall':'UTF-8'|stripslashes}' class='active'>{l s='Last' mod='sendinblue'}</li>
 				{elseif $last_btn}
-					<li p='{$no_of_paginations}' class='inactive'>{l s='Last' mod='sendinblue'}</li>
+					<li p='{$no_of_paginations|escape:'htmlall':'UTF-8'|stripslashes}' class='inactive'>{l s='Last' mod='sendinblue'}</li>
 				{/if}
 			</ul>
 		</div>

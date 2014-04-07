@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.5';
+		$this->version = '3.8.1';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -42,6 +42,7 @@ class ShoppingFluxExport extends Module
 		$this->displayName = $this->l('Export Shopping Flux');
 		$this->description = $this->l('Exportez vos produits vers plus de 100 comparateurs de prix et places de marché');
 		$this->confirmUninstall = $this->l('Êtes-vous sûr de vouloir supprimer ce module ?');
+
 	}
 
 	public function install()
@@ -164,7 +165,9 @@ class ShoppingFluxExport extends Module
 		if (!in_array('curl', get_loaded_extensions()))
 			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL
 				pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
-
+		else
+			Configuration::updateValue('SHOPPINGFLUX_CONFIGURATION_OK', true);
+		
 		return $this->_html;
 	}
 
@@ -1570,7 +1573,7 @@ class ShoppingFluxExport extends Module
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 
 				if ($quantity - $product->Quantity < 0)
-					StockAvailable::updateQuantity((int)$skus[0], 0, (int)$product->Quantity);
+					StockAvailable::updateQuantity((int)$product->SKU, 0, (int)$product->Quantity);
 			}
 		}
 

@@ -54,7 +54,7 @@ class GlobKurier extends Module {
 	{
 		$this->name = 'globkurier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.1';
+		$this->version = '1.5';
 		$this->author = 'GlobKurier | Solik Tomasz <info[at]tomaszsolik.pl>';
 		$this->need_instance = 0;
 
@@ -63,6 +63,7 @@ class GlobKurier extends Module {
 		$this->displayName = $this->l('GlobKurier.pl');
 		$this->description = $this->l('Save up to 80% off on UPS, DPD, K-EX, DHL with GlobKurier module!');
 		$this->confirmUninstall = $this->l('Warning: all the data saved in your database will be deleted. Are you sure you want uninstall this module?');
+
 
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '<'))
@@ -429,6 +430,7 @@ class GlobKurier extends Module {
 				Configuration::updateValue($this->name.'_AD_INSURANCE', GlobKurierConfig::PS_GK_AD_INSURANCE);
 				Configuration::updateValue($this->name.'_AD_COD', GlobKurierConfig::PS_GK_AD_COD);
 				Configuration::updateValue($this->name.'_AD_COD3', GlobKurierConfig::PS_GK_AD_COD3);
+				Configuration::updateValue('GLOBKURIER_CONFIGURATION_OK', true);
 			}
 		}
 		if ($login && $password && $apikey)

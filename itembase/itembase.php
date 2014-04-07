@@ -48,6 +48,7 @@ if ( !defined( '_PS_VERSION_' ) )
 
 		$this->displayName = $this->l('itembase');
 		$this->description = $this->l('itembase - Personal Shopping Manager and Inventory (SEO links, Brand Booster, Traffic Source, Affiliate Channel)');
+
 		
 		if (self::isInstalled($this->name)){
 			$warnings = array();

@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -19,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -34,7 +33,7 @@ class FianetSceau extends Module
 	 * Table of differents order statuses 
 	 * @var Array 
 	 */
-	private $_fianetsceau_order_statuses = array(
+	private $fianetsceau_order_statuses = array(
 		1 => 'waiting payment',
 		2 => 'sent',
 		3 => 'error'
@@ -44,7 +43,7 @@ class FianetSceau extends Module
 	 * Table of differents status 
 	 * @var Array 
 	 */
-	private $_fianetsceau_statuses = array(
+	private $fianetsceau_statuses = array(
 		'test',
 		'prod',
 	);
@@ -53,7 +52,7 @@ class FianetSceau extends Module
 	 * Table of differents payment type 
 	 * @var Array 
 	 */
-	private $_payment_types = array(
+	private $payment_types = array(
 		1 => 'Carte',
 		2 => 'Chèque',
 		3 => 'Contre remboursement',
@@ -68,7 +67,7 @@ class FianetSceau extends Module
 	 * Table of differents logo and widget position 
 	 * @var Array 
 	 */
-	private $_fianetsceau_positions = array('en' =>
+	private $fianetsceau_positions = array('en' =>
 		array(
 			'nothing' => 'Select a position',
 			'top' => 'Top of page',
@@ -89,7 +88,7 @@ class FianetSceau extends Module
 	 * Table of differents logo size 
 	 * @var Array 
 	 */
-	private $_fianetsceau_logo_sizes = array(
+	private $fianetsceau_logo_sizes = array(
 		'120' => 'logo_120.png',
 		'150' => 'logo_150.png',
 		'170' => 'logo_170.png',
@@ -100,7 +99,7 @@ class FianetSceau extends Module
 	 * Table of differents widgets type 
 	 * @var Array 
 	 */
-	private $_fianetsceau_widgets = array(
+	private $fianetsceau_widgets = array(
 		1 => array('background' => 'blanc', 'shape' => 'squared'),
 		2 => array('background' => 'transparent', 'shape' => 'squared'),
 		3 => array('background' => 'blanc', 'shape' => 'circle'),
@@ -108,6 +107,312 @@ class FianetSceau extends Module
 		5 => array('background' => 'blanc', 'shape' => 'comment'),
 		6 => array('background' => 'transparent', 'shape' => 'comment'),
 	);
+	private $fianetsceau_categories = array(
+		1 => 'Alimentation & Gastronomie',
+		2 => 'Animaux',
+		3 => 'Armurerie',
+		4 => 'Auto & Moto',
+		5 => 'B&eacute;b&eacute;s et Enfants',
+		6 => 'Culture & Divertissements',
+		7 => 'Electrom&eacute;nager',
+		8 => 'Ench&egrave;res & Achats group&eacute;s',
+		9 => 'Finance aux particuliers',
+		10 => 'Fleurs & Cadeaux',
+		11 => 'Hifi, Photos & Vid&eacute;os',
+		12 => 'Informatique & Logiciels',
+		13 => 'Maison & Jardin',
+		14 => 'Optique',
+		15 => 'Sant&eacute; & Beaut&eacute',
+		16 => 'Services aux professionnels',
+		17 => 'Sport',
+		18 => 'T&eacute;l&eacute;phonie & Communication',
+		19 => 'Ventes priv&eacute;es',
+		20 => 'V&ecirc;tements & Accessoires',
+		21 => 'Vie pratique',
+		22 => 'Voyage & Tourisme',
+	);
+	private $fianetsceau_subcategories = array(
+		2 => array('parent_id' => 1, 'label' => 'Chocolats & Confiseries'),
+		3 => array('parent_id' => 1, 'label' => 'Alimentation g&eacute;n&eacute;rale'),
+		4 => array('parent_id' => 1, 'label' => 'Produits du terroir'),
+		5 => array('parent_id' => 1, 'label' => 'Vins & Spiritueux'),
+		6 => array('parent_id' => 1, 'label' => 'Aliments pour animaux'),
+		78 => array('parent_id' => 1, 'label' => 'Chocolats & Confiseries'),
+		79 => array('parent_id' => 1, 'label' => 'Alimentation g&eacute;n&eacute;rale'),
+		248 => array('parent_id' => 1, 'label' => 'Produits du terroir'),
+		249 => array('parent_id' => 1, 'label' => 'Vins & Spiritueux'),
+		264 => array('parent_id' => 2, 'label' => 'Animaux'),
+		265 => array('parent_id' => 2, 'label' => 'Aliments pour animaux'),
+		266 => array('parent_id' => 2, 'label' => 'Pharmacie pour animaux'),
+		253 => array('parent_id' => 3, 'label' => 'Armes'),
+		7 => array('parent_id' => 4, 'label' => 'Accessoires'),
+		8 => array('parent_id' => 4, 'label' => 'Autre'),
+		9 => array('parent_id' => 4, 'label' => 'Pneumatiques'),
+		80 => array('parent_id' => 4, 'label' => 'Autoradios'),
+		82 => array('parent_id' => 4, 'label' => 'Antivols'),
+		84 => array('parent_id' => 4, 'label' => 'Produits d\'entretien'),
+		86 => array('parent_id' => 4, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es'),
+		166 => array('parent_id' => 4, 'label' => 'Autos'),
+		167 => array('parent_id' => 4, 'label' => '2 roues'),
+		175 => array('parent_id' => 4, 'label' => 'Sport automobile'),
+		186 => array('parent_id' => 4, 'label' => 'GPS'),
+		231 => array('parent_id' => 4, 'label' => 'Casques & Combinaison moto'),
+		232 => array('parent_id' => 4, 'label' => 'Caravanes & Camping-cars'),
+		233 => array('parent_id' => 4, 'label' => 'Scooters'),
+		234 => array('parent_id' => 4, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es & Tuning'),
+		235 => array('parent_id' => 4, 'label' => 'Voitures neuves & Occasions'),
+		236 => array('parent_id' => 4, 'label' => 'Motos neuves & occasions'),
+		237 => array('parent_id' => 4, 'label' => 'Autoradios & vid&eacute;o embarqu&eacute;e'),
+		281 => array('parent_id' => 4, 'label' => 'Code de la route'),
+		257 => array('parent_id' => 5, 'label' => 'Jeux & Jouets d\'&eacute;veil'),
+		258 => array('parent_id' => 5, 'label' => 'Pu&eacute;riculture'),
+		259 => array('parent_id' => 5, 'label' => 'Mobilier b&eacute;b&eacute;s'),
+		260 => array('parent_id' => 5, 'label' => 'Faire-part & Cartes de voeux'),
+		261 => array('parent_id' => 5, 'label' => 'Poussettes & Voyages'),
+		262 => array('parent_id' => 5, 'label' => 'Hygi&egrave;ne'),
+		263 => array('parent_id' => 5, 'label' => 'S&eacute;curit&eacute;'),
+		272 => array('parent_id' => 5, 'label' => 'Mode b&eacute;b&eacute;s & Enfants'),
+		10 => array('parent_id' => 6, 'label' => 'Arts graphiques'),
+		11 => array('parent_id' => 6, 'label' => 'Autres'),
+		12 => array('parent_id' => 6, 'label' => 'DVD'),
+		13 => array('parent_id' => 6, 'label' => 'Jeux & Jouets'),
+		14 => array('parent_id' => 6, 'label' => 'Jeux vid&eacute;os'),
+		15 => array('parent_id' => 6, 'label' => 'Livres'),
+		16 => array('parent_id' => 6, 'label' => 'Musique'),
+		17 => array('parent_id' => 6, 'label' => 'Spectacles & &eacutes;v&egrave;nements'),
+		87 => array('parent_id' => 6, 'label' => 'Art'),
+		88 => array('parent_id' => 6, 'label' => 'Bande dessin&eacute;es'),
+		90 => array('parent_id' => 6, 'label' => 'Collections et miniatures'),
+		91 => array('parent_id' => 6, 'label' => 'Magazines'),
+		92 => array('parent_id' => 6, 'label' => 'Cd-rom'),
+		93 => array('parent_id' => 6, 'label' => 'Vid&eacute;os'),
+		173 => array('parent_id' => 6, 'label' => 'Philat&eacute;lie'),
+		185 => array('parent_id' => 6, 'label' => 'Consoles Vid&eacute;os'),
+		244 => array('parent_id' => 6, 'label' => 'Instruments de musique'),
+		245 => array('parent_id' => 6, 'label' => 'Livres & magazines'),
+		246 => array('parent_id' => 6, 'label' => 'Vid&eacute;o DVD et Blu Ray'),
+		271 => array('parent_id' => 6, 'label' => 'Consoles & Jeux vid&eacute;os'),
+		273 => array('parent_id' => 6, 'label' => 'Mod&eacute;lisme'),
+		280 => array('parent_id' => 6, 'label' => 'D&eacute;guisement'),
+		283 => array('parent_id' => 6, 'label' => 'Enseignement'),
+		286 => array('parent_id' => 6, 'label' => 'Vente de produits d&eacute;riv&eacute;s d\'artistes'),
+		23 => array('parent_id' => 7, 'label' => 'R&eacute;frig&eacute;rateurs'),
+		24 => array('parent_id' => 7, 'label' => 'Cong&eacute;lateurs'),
+		25 => array('parent_id' => 7, 'label' => 'Lave-vaisselles'),
+		26 => array('parent_id' => 7, 'label' => 'Micro-ondes'),
+		27 => array('parent_id' => 7, 'label' => 'Fours'),
+		28 => array('parent_id' => 7, 'label' => 'Cuisini&egrave;res'),
+		100 => array('parent_id' => 7, 'label' => 'Hottes aspirantes'),
+		101 => array('parent_id' => 7, 'label' => 'Tables de cuisson'),
+		102 => array('parent_id' => 7, 'label' => 'Appareils culinaires'),
+		103 => array('parent_id' => 7, 'label' => 'Laves-linge'),
+		104 => array('parent_id' => 7, 'label' => 'S&egrave;ches-linge'),
+		105 => array('parent_id' => 7, 'label' => 'Aspirateurs'),
+		106 => array('parent_id' => 7, 'label' => 'S&egrave;ches-cheveux'),
+		108 => array('parent_id' => 7, 'label' => 'Rasoirs'),
+		109 => array('parent_id' => 7, 'label' => 'Epilateurs'),
+		110 => array('parent_id' => 7, 'label' => 'P&egrave;ses-personne'),
+		111 => array('parent_id' => 7, 'label' => 'Fers &agrave;  repasser'),
+		169 => array('parent_id' => 7, 'label' => 'Produits d\'entretien'),
+		183 => array('parent_id' => 7, 'label' => 'Accessoires'),
+		188 => array('parent_id' => 7, 'label' => 'Climatisation'),
+		200 => array('parent_id' => 7, 'label' => 'Machines &agrave;  coudre'),
+		201 => array('parent_id' => 7, 'label' => 'Cafeti&egrave;res & Expresso'),
+		202 => array('parent_id' => 7, 'label' => 'Caves &agrave;  vin'),
+		203 => array('parent_id' => 7, 'label' => 'Petit &eacute;lectrom&eacute;nager'),
+		204 => array('parent_id' => 7, 'label' => 'Centrales vapeurs & Fers &agrave;  repasser'),
+		205 => array('parent_id' => 7, 'label' => 'M&eacute;nage & Produits d\'entretien'),
+		206 => array('parent_id' => 7, 'label' => 'Chauffage, Climatisation & Energies renouvelables'),
+		29 => array('parent_id' => 8, 'label' => 'Achats group&eacute;s'),
+		30 => array('parent_id' => 8, 'label' => 'Clubs de consommateurs'),
+		31 => array('parent_id' => 8, 'label' => 'Ench&egrave;res'),
+		32 => array('parent_id' => 8, 'label' => 'Ench&egrave;res invers&eacute;es'),
+		254 => array('parent_id' => 9, 'label' => 'Assurance'),
+		255 => array('parent_id' => 9, 'label' => 'Informations juridiques'),
+		256 => array('parent_id' => 9, 'label' => 'Banque & Finance'),
+		290 => array('parent_id' => 9, 'label' => 'Rachat d\'or'),
+		33 => array('parent_id' => 10, 'label' => 'Service d\'aide pour les cadeaux'),
+		34 => array('parent_id' => 10, 'label' => 'Cartes'),
+		35 => array('parent_id' => 10, 'label' => 'Fleurs'),
+		36 => array('parent_id' => 10, 'label' => 'Souvenirs'),
+		112 => array('parent_id' => 10, 'label' => 'Chocolats & Confiseries'),
+		267 => array('parent_id' => 10, 'label' => 'Cartes & Papeterie'),
+		268 => array('parent_id' => 10, 'label' => 'Bons d\'achats & Ch&egrave;ques cadeaux'),
+		269 => array('parent_id' => 10, 'label' => 'Gadgets & Cadeaux personnalis&eacute;s'),
+		270 => array('parent_id' => 10, 'label' => 'Escapades & Coffrets cadeaux'),
+		278 => array('parent_id' => 10, 'label' => 'Accessoires fumeurs'),
+		142 => array('parent_id' => 11, 'label' => 'Radios cassettes'),
+		143 => array('parent_id' => 11, 'label' => 'Autoradios'),
+		145 => array('parent_id' => 11, 'label' => 'Vid&eacute;oprojecteurs'),
+		146 => array('parent_id' => 11, 'label' => 'Appareils photo'),
+		147 => array('parent_id' => 11, 'label' => 'Lecteur mp3'),
+		148 => array('parent_id' => 11, 'label' => 'T&eacute;l&eacute;viseurs'),
+		149 => array('parent_id' => 11, 'label' => 'Camescopes'),
+		150 => array('parent_id' => 11, 'label' => 'Chaines hifi'),
+		152 => array('parent_id' => 11, 'label' => 'Baladeurs'),
+		153 => array('parent_id' => 11, 'label' => 'Amplificateurs'),
+		154 => array('parent_id' => 11, 'label' => 'Enceintes'),
+		155 => array('parent_id' => 11, 'label' => 'Tables de mixage'),
+		156 => array('parent_id' => 11, 'label' => 'Lecteurs DVD'),
+		158 => array('parent_id' => 11, 'label' => 'Magn&eacute;toscopes'),
+		161 => array('parent_id' => 11, 'label' => 'Tirages photos'),
+		177 => array('parent_id' => 11, 'label' => 'Accessoires'),
+		179 => array('parent_id' => 11, 'label' => 'Home cin&eacute;ma'),
+		196 => array('parent_id' => 11, 'label' => 'Enregistreurs'),
+		197 => array('parent_id' => 11, 'label' => 'D&eacute;veloppement photos'),
+		198 => array('parent_id' => 11, 'label' => 'Lecteur DVD & Blu Ray'),
+		199 => array('parent_id' => 11, 'label' => 'Lecteur MP3 & Baladeurs'),
+		37 => array('parent_id' => 12, 'label' => 'Consommables'),
+		38 => array('parent_id' => 12, 'label' => 'Logiciels'),
+		39 => array('parent_id' => 12, 'label' => 'Ordinateurs'),
+		40 => array('parent_id' => 12, 'label' => 'P&eacute;riph&eacute;riques'),
+		41 => array('parent_id' => 12, 'label' => 'Pi&egrave;ces d&eacute;tach&eacute;es'),
+		42 => array('parent_id' => 12, 'label' => 'T&eacute;l&eacute;chargements'),
+		113 => array('parent_id' => 12, 'label' => 'Imprimantes'),
+		114 => array('parent_id' => 12, 'label' => 'Lecteurs & Graveurs'),
+		115 => array('parent_id' => 12, 'label' => 'Moniteurs'),
+		116 => array('parent_id' => 12, 'label' => 'Cartes Graphiques'),
+		117 => array('parent_id' => 12, 'label' => 'Composants'),
+		118 => array('parent_id' => 12, 'label' => 'Assistants personnels'),
+		119 => array('parent_id' => 12, 'label' => 'Modems'),
+		120 => array('parent_id' => 12, 'label' => 'Scanners'),
+		159 => array('parent_id' => 12, 'label' => 'Portables'),
+		176 => array('parent_id' => 12, 'label' => 'Editeurs'),
+		184 => array('parent_id' => 12, 'label' => 'Accessoires'),
+		207 => array('parent_id' => 12, 'label' => 'Mini PC'),
+		208 => array('parent_id' => 12, 'label' => 'Cables & Connectiques'),
+		209 => array('parent_id' => 12, 'label' => 'GPS'),
+		210 => array('parent_id' => 12, 'label' => 'R&eacute;seau'),
+		211 => array('parent_id' => 12, 'label' => 'D&eacute;pannage informatique'),
+		212 => array('parent_id' => 12, 'label' => 'Stockage'),
+		213 => array('parent_id' => 12, 'label' => 'Ordinateurs PC & Mac'),
+		214 => array('parent_id' => 12, 'label' => 'Ordinateurs Portables'),
+		215 => array('parent_id' => 12, 'label' => 'Consommables & Accessoires'),
+		284 => array('parent_id' => 12, 'label' => 'Tablettes'),
+		285 => array('parent_id' => 12, 'label' => 'Accessoires pour tablettes'),
+		19 => array('parent_id' => 13, 'label' => 'Bricolage'),
+		20 => array('parent_id' => 13, 'label' => 'Jardinage'),
+		21 => array('parent_id' => 13, 'label' => 'Fournitures & Mobiliers'),
+		22 => array('parent_id' => 13, 'label' => 'Design'),
+		94 => array('parent_id' => 13, 'label' => 'D&eacute;coration'),
+		95 => array('parent_id' => 13, 'label' => 'Linge de maison'),
+		96 => array('parent_id' => 13, 'label' => 'Luminaires'),
+		97 => array('parent_id' => 13, 'label' => 'Mobilier de jardin'),
+		98 => array('parent_id' => 13, 'label' => 'Vaisselles'),
+		99 => array('parent_id' => 13, 'label' => 'Autres'),
+		170 => array('parent_id' => 13, 'label' => 'Produits d\'entretien'),
+		181 => array('parent_id' => 13, 'label' => 'Arts de la table'),
+		187 => array('parent_id' => 13, 'label' => 'Salles de bain'),
+		216 => array('parent_id' => 13, 'label' => 'Fen&ecirc;tres, Volets & Stores'),
+		217 => array('parent_id' => 13, 'label' => 'Animalerie'),
+		218 => array('parent_id' => 13, 'label' => 'Cuisines'),
+		219 => array('parent_id' => 13, 'label' => 'Ameublement'),
+		220 => array('parent_id' => 13, 'label' => 'Piscines'),
+		221 => array('parent_id' => 13, 'label' => 'Maisons en bois'),
+		222 => array('parent_id' => 13, 'label' => 'Chauffage, Climatisation & Energies renouvelables'),
+		223 => array('parent_id' => 13, 'label' => 'Barbecues, Plancha & Accessoires'),
+		224 => array('parent_id' => 13, 'label' => 'Protections & Alarmes'),
+		225 => array('parent_id' => 13, 'label' => 'Literie'),
+		227 => array('parent_id' => 13, 'label' => 'Bricolage & Outillage'),
+		228 => array('parent_id' => 13, 'label' => 'Mobilier & Am&eacute;nagement d\'exterieur'),
+		229 => array('parent_id' => 13, 'label' => 'Art de la table et de la cuisine'),
+		277 => array('parent_id' => 13, 'label' => 'Stickers & Adh&eacute;sifs'),
+		275 => array('parent_id' => 14, 'label' => 'Lunettes de soleil'),
+		276 => array('parent_id' => 14, 'label' => 'Lunettes & Lentilles'),
+		43 => array('parent_id' => 15, 'label' => 'Soins des cheveux'),
+		44 => array('parent_id' => 15, 'label' => 'Soins du corps'),
+		45 => array('parent_id' => 15, 'label' => 'Parfums'),
+		46 => array('parent_id' => 15, 'label' => 'Soins du visage'),
+		47 => array('parent_id' => 15, 'label' => 'Sexualit&eacute;'),
+		48 => array('parent_id' => 15, 'label' => 'Animaux'),
+		121 => array('parent_id' => 15, 'label' => 'Produits biologiques'),
+		122 => array('parent_id' => 15, 'label' => 'Produits di&eacute;t&eacute;tiques'),
+		123 => array('parent_id' => 15, 'label' => 'Parapharmacie'),
+		124 => array('parent_id' => 15, 'label' => 'Minceur'),
+		125 => array('parent_id' => 15, 'label' => 'Cosm&eacute;tiques'),
+		157 => array('parent_id' => 15, 'label' => 'B&eacute;b&eacute;'),
+		163 => array('parent_id' => 15, 'label' => 'Lunettes'),
+		238 => array('parent_id' => 15, 'label' => 'Appareils sant&eacute; beaut&eacute;'),
+		239 => array('parent_id' => 15, 'label' => 'Produits di&eacute;t&eacute;tiques & Bien-&ecirc;tre'),
+		240 => array('parent_id' => 15, 'label' => 'Cosm&eacute;tiques & Cosm&eacute;tiques bio'),
+		241 => array('parent_id' => 15, 'label' => 'Soins du corps et du visage'),
+		242 => array('parent_id' => 15, 'label' => 'Intimit&eacute; & Pr&eacute;servatifs'),
+		243 => array('parent_id' => 15, 'label' => 'Lentilles de contact & Lunettes de vue'),
+		288 => array('parent_id' => 15, 'label' => 'Accessoires'),
+		59 => array('parent_id' => 16, 'label' => 'Divers'),
+		60 => array('parent_id' => 16, 'label' => 'Ench&egrave;res professionnelles'),
+		61 => array('parent_id' => 16, 'label' => 'Formation'),
+		62 => array('parent_id' => 16, 'label' => 'Fournitures & Mobiliers'),
+		63 => array('parent_id' => 16, 'label' => 'Prestataires Internet'),
+		64 => array('parent_id' => 16, 'label' => 'Produits agricoles'),
+		172 => array('parent_id' => 16, 'label' => 'Information juridique'),
+		65 => array('parent_id' => 17, 'label' => 'Ev&egrave;nements'),
+		66 => array('parent_id' => 17, 'label' => 'Mat&eacute;riel'),
+		67 => array('parent_id' => 17, 'label' => 'Di&eacute;t&eacute;tique'),
+		68 => array('parent_id' => 17, 'label' => 'V&ecirc;tements'),
+		182 => array('parent_id' => 17, 'label' => 'Chaussures'),
+		247 => array('parent_id' => 17, 'label' => 'Fitness & Di&eacute;t&eacute;tique'),
+		279 => array('parent_id' => 17, 'label' => 'Ski'),
+		127 => array('parent_id' => 18, 'label' => 'Accessoires'),
+		128 => array('parent_id' => 18, 'label' => 'T&eacute;l&eacute;phones fixes'),
+		129 => array('parent_id' => 18, 'label' => 'T&eacute;l&eacute;phones mobiles'),
+		130 => array('parent_id' => 18, 'label' => 'Fax'),
+		160 => array('parent_id' => 18, 'label' => 'Abonnements'),
+		178 => array('parent_id' => 18, 'label' => 'Achats de minute'),
+		230 => array('parent_id' => 18, 'label' => 'Abonnements Internet & T&eacute;l&eacute;phonique'),
+		274 => array('parent_id' => 19, 'label' => 'Ventes priv&eacute;es'),
+		69 => array('parent_id' => 20, 'label' => 'Accessoires'),
+		70 => array('parent_id' => 20, 'label' => 'Bijoux'),
+		71 => array('parent_id' => 20, 'label' => 'Chaussures'),
+		72 => array('parent_id' => 20, 'label' => 'Lingerie'),
+		73 => array('parent_id' => 20, 'label' => 'Maroquinerie'),
+		74 => array('parent_id' => 20, 'label' => 'Mode enfants'),
+		75 => array('parent_id' => 20, 'label' => 'Mode femme'),
+		76 => array('parent_id' => 20, 'label' => 'Mode homme'),
+		77 => array('parent_id' => 20, 'label' => 'Montres'),
+		126 => array('parent_id' => 20, 'label' => 'Bagagerie'),
+		164 => array('parent_id' => 20, 'label' => 'Lunettes'),
+		190 => array('parent_id' => 20, 'label' => 'V&ecirc;tement femme enceinte'),
+		191 => array('parent_id' => 20, 'label' => 'Jeans'),
+		192 => array('parent_id' => 20, 'label' => 'Mode b&eacute;b&eacute;s & Enfants'),
+		193 => array('parent_id' => 20, 'label' => 'Lunettes de soleil'),
+		194 => array('parent_id' => 20, 'label' => 'Accessoires de mode'),
+		195 => array('parent_id' => 20, 'label' => 'Bijoux & Montres'),
+		287 => array('parent_id' => 20, 'label' => 'Vente de produits d&eacute;riv&eacute;s d\'artistes'),
+		289 => array('parent_id' => 20, 'label' => 'Militaire'),
+		49 => array('parent_id' => 21, 'label' => 'Actualit&eacute;s & Presse'),
+		50 => array('parent_id' => 21, 'label' => 'Assurance'),
+		51 => array('parent_id' => 21, 'label' => 'Banque & Finance'),
+		52 => array('parent_id' => 21, 'label' => 'Cartes & Plans'),
+		53 => array('parent_id' => 21, 'label' => 'Galeries marchandes'),
+		54 => array('parent_id' => 21, 'label' => 'Fournitures & Mobiliers'),
+		55 => array('parent_id' => 21, 'label' => 'Petites annonces'),
+		56 => array('parent_id' => 21, 'label' => 'Rencontres'),
+		57 => array('parent_id' => 21, 'label' => 'Science'),
+		58 => array('parent_id' => 21, 'label' => 'Animaux'),
+		162 => array('parent_id' => 21, 'label' => 'Tirages photos'),
+		165 => array('parent_id' => 21, 'label' => 'Immobilier'),
+		168 => array('parent_id' => 21, 'label' => 'Papeterie'),
+		171 => array('parent_id' => 21, 'label' => 'Information juridique'),
+		174 => array('parent_id' => 21, 'label' => 'Divers'),
+		180 => array('parent_id' => 21, 'label' => 'Armes'),
+		189 => array('parent_id' => 21, 'label' => 'S&eacute;curit&eacute;'),
+		226 => array('parent_id' => 21, 'label' => 'Mobilier d\'int&eacute;rieur'),
+		250 => array('parent_id' => 21, 'label' => 'Faire-part & Cartes de voeux'),
+		251 => array('parent_id' => 21, 'label' => 'Imprimerie & Cartes de visite'),
+		252 => array('parent_id' => 21, 'label' => 'Sciences'),
+		282 => array('parent_id' => 21, 'label' => 'Code de la route'),
+		131 => array('parent_id' => 22, 'label' => 'Billets d\'avion'),
+		132 => array('parent_id' => 22, 'label' => 'Location de voitures'),
+		133 => array('parent_id' => 22, 'label' => 'H&ocirc;tels'),
+		134 => array('parent_id' => 22, 'label' => 'S&eacute;jours'),
+		135 => array('parent_id' => 22, 'label' => 'Circuits'),
+		136 => array('parent_id' => 22, 'label' => 'Croisi&egrave;res'),
+		137 => array('parent_id' => 22, 'label' => 'Logements'),
+		138 => array('parent_id' => 22, 'label' => 'Week-ends'),
+		139 => array('parent_id' => 22, 'label' => 'Cartes & Guides'),
+		140 => array('parent_id' => 22, 'label' => 'Derni&egrave;re minute'),
+		141 => array('parent_id' => 22, 'label' => 'Bagagerie'));
 
 	const SCEAU_ORDER_TABLE_NAME = 'fianetsceau_order';
 	const SCEAU_STATE_TABLE_NAME = 'fianetsceau_state';
@@ -116,17 +421,18 @@ class FianetSceau extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.4';
+		$this->version = '2.6';
 		$this->tab = 'front_office_features';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
 		$this->description = $this->l('Turn your visitors into buyers by creating confidence in your site.');
-
 		/* Backward compatibility */
 		if (_PS_VERSION_ < '1.5')
 		{
-			$this->backward_error = $this->l('In order to work properly in PrestaShop v1.4, the FIA-NET Sceau de confiance module requiers the backward compatibility module at least v0.3.').'<br />';
-			$this->backward_error .= $this->l('You can download this module for free here: http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html');
+			$this->backward_error = $this->l('In order to work properly in PrestaShop v1.4, 
+				the FIA-NET Sceau de confiance module requiers the backward compatibility module at least v0.3.').'<br />';
+			$this->backward_error .= $this->l('You can download this module for free here: 
+				http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html');
 			if (file_exists(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php'))
 			{
 				include(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php');
@@ -140,6 +446,7 @@ class FianetSceau extends Module
 
 		parent::__construct();
 
+
 		//check Sceau update
 		$this->checkSceauUpdate();
 	}
@@ -147,7 +454,7 @@ class FianetSceau extends Module
 	public function install()
 	{
 		//create log file
-		SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Création du fichier de log");
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Création du fichier de log');
 
 		/** database tables creation * */
 		$sqlfile = dirname(__FILE__).'/install.sql';
@@ -162,17 +469,18 @@ class FianetSceau extends Module
 		foreach ($queries as $query)
 			if (!Db::getInstance()->Execute(trim($query)))
 			{
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Installation failed, database creation failed : ".Db::getInstance()->getMsgError());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Installation failed, database creation failed : '.Db::getInstance()->getMsgError());
 				return false;
 			}
 
 		//Sceau order statuses insertion
-		foreach ($this->_fianetsceau_order_statuses as $id => $label)
+		foreach ($this->fianetsceau_order_statuses as $id => $label)
 		{
-			$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_STATE_TABLE_NAME."` (`id_fianetsceau_state`,`label`) VALUES ('".(int) $id."','".pSQL((string) $label)."')";
+			$sql = 'INSERT INTO `'._DB_PREFIX_.self::SCEAU_STATE_TABLE_NAME."` (`id_fianetsceau_state`,`label`) 
+				VALUES ('".(int)$id."','".pSQL((string)$label)."')";
 			$insert = Db::getInstance()->execute($sql);
 			if (!$insert)
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Insertion state $id.$label échouée : ".Db::getInstance()->getMsgError());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion state'.$id.$label.' échouée : '.Db::getInstance()->getMsgError());
 		}
 
 		//tabs creation
@@ -181,9 +489,9 @@ class FianetSceau extends Module
 		//AdminSceauController registration
 		$tab_controller_main = new Tab();
 		$tab_controller_main->active = 1;
-		$tab_controller_main->class_name = "AdminSceau";
+		$tab_controller_main->class_name = 'AdminSceau';
 		foreach (Language::getLanguages() as $language)
-			$tab_controller_main->name[$language['id_lang']] = "Sceau de Confiance";
+			$tab_controller_main->name[$language['id_lang']] = 'Sceau de Confiance';
 		$tab_controller_main->id_parent = $tab_admin_id_order;
 		$tab_controller_main->module = $this->name;
 		$tab_controller_main->add();
@@ -203,6 +511,7 @@ class FianetSceau extends Module
 			&& $this->registerHook('leftColumn')
 			&& $this->registerHook('rightColumn')
 			&& $this->registerHook('postUpdateOrderStatus')
+			&& $this->registerHook('paymentTop')
 
 			);
 	}
@@ -231,10 +540,10 @@ class FianetSceau extends Module
 	/**
 	 * Load css and javascript file
 	 * 
-	 * @param type $params
+	 * 
 	 * @return html 
 	 */
-	public function hookbackOfficeHeader($params)
+	public function hookbackOfficeHeader()
 	{
 		$html = '<link rel="stylesheet" type="text/css" href="'.$this->_path.'css/toolbarAdmin.css" />';
 		$html .= '<script type="text/javascript" src="'.$this->_path.'js/javascript.js"></script>';
@@ -245,35 +554,57 @@ class FianetSceau extends Module
 	/**
 	 * insert new order into fianetsceau_order table with fields in parameters
 	 *
-	 * @param int $id_order
 	 * @param array $fields
 	 * @return boolean
 	 */
-	private function insertOrder($id_order, array $fields)
+	private function insertOrder(array $fields)
 	{
-
-		$fieldnames = "";
-		$fieldvalues = "";
+		$fieldnames = '';
+		$fieldvalues = '';
 		foreach ($fields as $key_field => $elem)
 		{
-			$fieldnames .= "`".$this->bqSQL($key_field)."`,";
+			$fieldnames .= '`'.$this->bqSQL($key_field).'`,';
 			$fieldvalues .= "'".$this->bqSQL($elem)."',";
 		}
 
-		$fieldvalues = substr($fieldvalues, 0, -1);
-		$fieldnames = substr($fieldnames, 0, -1);
+		$fieldvalues = Tools::substr($fieldvalues, 0, -1);
+		$fieldnames = Tools::substr($fieldnames, 0, -1);
 
-		$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` (".$fieldnames.") VALUES (".$fieldvalues.")";
+		$sql = 'INSERT INTO `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME.'` ('.$fieldnames.') VALUES ('.$fieldvalues.')';
 
 		$inserted = Db::getInstance()->execute($sql);
 		if (!$inserted)
 		{
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Insertion $id_order failed : ".Db::getInstance()->getMsgError());
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Insertion $id_order failed : ".$sql);
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion $id_order failed : '.Db::getInstance()->getMsgError());
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion $id_order failed : '.$sql);
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if id_cart exists on fianetsceau_order table
+	 * 
+	 * @param int 
+	 * @return bool 
+	 */
+	private function checkCartID($id_cart)
+	{
+		$sql = 'SELECT `id_cart` FROM `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` WHERE `id_cart` = '".(int)$id_cart."'";
+
+		$query_result = Db::getInstance()->getRow($sql);
+
+		if ($query_result != null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'id_cart found :'.$id_cart);
+			return true;
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'id_cart not found, id_cart added :'.$id_cart);
+			return false;
+		}
 	}
 
 	/**
@@ -283,23 +614,22 @@ class FianetSceau extends Module
 	 * @param array $fields
 	 * @return boolean 
 	 */
-	private function updateOrder($id_order, array $fields)
+	private function updateOrder($id_order, array $fields, $update_by_id_cart = false)
 	{
-		$set_string = "";
+		$set_string = '';
 		foreach ($fields as $fieldname => $fieldvalue)
-		{
-			$set_string .= "`".$this->bqSQL($fieldname)."` = '".$this->bqSQL($fieldvalue)."', ";
-		}
-		$set_string = substr($set_string, 0, '-2');
-
-		$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` SET ".$set_string." WHERE `id_order` = '".(int) $id_order."'";
-
-		SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, $sql);
+			$set_string .= '`'.$this->bqSQL($fieldname)."` = '".$this->bqSQL($fieldvalue)."', ";
+		$set_string = Tools::substr($set_string, 0, '-2');
+		if (!$update_by_id_cart)
+			$sql = 'UPDATE `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME.'` SET '.$set_string.' WHERE `id_order` = '.(int)$id_order;
+		else
+			$sql = 'UPDATE `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME.'` SET '.$set_string.' WHERE `id_cart` = '.(int)$id_order;
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $sql);
 
 		$updated = Db::getInstance()->execute($sql);
 		if (!$updated)
 		{
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Update $id_order failed : ".Db::getInstance()->getMsgError());
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Update $id_order failed : '.Db::getInstance()->getMsgError());
 			return false;
 		}
 		return true;
@@ -313,27 +643,11 @@ class FianetSceau extends Module
 	 */
 	private function getCustomerIP($id_order)
 	{
-
-		$sql = "SELECT c.`ip_address` FROM `"._DB_PREFIX_."connections` c 
-			LEFT JOIN `"._DB_PREFIX_."guest` g ON c.id_guest = g.id_guest
-			LEFT JOIN `"._DB_PREFIX_."customer` cu ON cu.id_customer = g.id_customer
-			LEFT JOIN `"._DB_PREFIX_."orders` o ON o.id_customer = cu.id_customer
-			WHERE o.`id_order` = '".(int) $id_order."'";
-
+		$sql = 'SELECT `customer_ip_address` FROM `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` WHERE `id_order` = '".(int)$id_order."'";
 		$query_result = Db::getInstance()->getRow($sql);
-		if ($query_result)
-		{
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip = '.long2ip($query_result['ip_address']));
-			return(long2ip($query_result['ip_address']));
-		}
-		else
-		{
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' : ip missing');
-			return false;
-		}
+		return ($query_result['customer_ip_address']);
 	}
 
-	//
 	/**
 	 * return Fianet payment type used for payment
 	 *
@@ -346,7 +660,18 @@ class FianetSceau extends Module
 		$payments = $this->loadPaymentMethods();
 		foreach ($payments as $element)
 			if ($order->payment == $element['name'])
-				return ($element['fianetsceau_type']);
+				$type = ($element['fianetsceau_type']);
+
+		if ($type == null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' : payment defaut type = 1'.$type);
+			return '1';
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' : payment type = '.$type);
+			return $type;
+		}
 	}
 
 	/**
@@ -357,21 +682,12 @@ class FianetSceau extends Module
 	 */
 	public function sendXML($id_order)
 	{
-
 		$order = new Order($id_order);
-		$montant = $order->total_paid;
-		$date = $order->date_add;
-
 		$customer = new Customer($order->id_customer);
-		$lastname = $customer->lastname;
-		$firstname = $customer->firstname;
-		$id_currency = $order->id_currency;
-		$currency = new Currency($id_currency);
-
 		if (_PS_VERSION_ < '1.5')
 		{
 			$civility = $customer->id_gender;
-			$accepted_civility = array("1", "2", "3");
+			$accepted_civility = array('1', '2', '3');
 			if (!(in_array($civility, $accepted_civility)))
 				$civility = '1';
 
@@ -384,7 +700,7 @@ class FianetSceau extends Module
 			$id_lang = Language::getIdByIso($this->context->language->iso_code);
 			$civility = $gender->name[$id_lang] == 'Mr.' ? 1 : 2;
 
-			$id_shop = (int) $order->id_shop;
+			$id_shop = (int)$order->id_shop;
 			$fianetsceau = new Sceau($id_shop);
 		}
 
@@ -392,9 +708,10 @@ class FianetSceau extends Module
 
 		$sceaucontrol = new SceauControl();
 
-		$sceaucontrol->createCustomer('', $civility, $customer->lastname, $customer->firstname, strtolower($customer->email));
+		$sceaucontrol->createCustomer('', $civility, $customer->lastname, $customer->firstname, Tools::strtolower($customer->email));
 
-		$sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order), $order->date_add, $lang);
+		$sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order),
+			$order->date_add, $lang);
 
 		//get default FIA-NET category
 		$default_product_type = $this->getFianetSubCategoryId(0, $id_shop);
@@ -406,7 +723,7 @@ class FianetSceau extends Module
 		foreach ($products as $product)
 		{
 
-			$product_categories = Product::getProductCategories((int) ($product['product_id']));
+			$product_categories = Product::getProductCategories((int)$product['product_id']);
 			$product_category = array_pop($product_categories);
 
 			$prod = new Product($product['product_id']);
@@ -419,24 +736,25 @@ class FianetSceau extends Module
 			else
 				$codeean = null;
 
-			$reference = (isset($prod->reference) AND !empty($prod->reference)) ? $prod->reference : $product['product_id'];
+			$reference = (isset($prod->reference) && !empty($prod->reference)) ? $prod->reference : $product['product_id'];
 
 			if ($product_type)//if a FIA-NET category is set: the type attribute takes the product FIA-NET type value
 				$fianet_type = $product_type;
 			else //if FIA-NET category not set: the type attribute takes the default value
 				$fianet_type = $default_product_type;
-
-			//get product image 
+			//get product image
 			$images = Product::getCover($product['product_id']);
 
 			if (!empty($images))
 			{
 				$image = new Image($images['id_image']);
-				$image_url = _PS_BASE_URL_._THEME_PROD_DIR_.$image->getExistingImgPath().".".$image->image_format;
+				if (method_exists($image, 'getExistingImgPath'))
+					$image_url = _PS_BASE_URL_._THEME_PROD_DIR_.$image->getExistingImgPath().'.'.$image->image_format;
+				else
+					$image_url = null;
 			}
-
-
-			$productsceau->createProduct($codeean, str_replace("'", "", $reference), $fianet_type, str_replace("'", "", $product['product_name']), (string) $product['product_price_wt'], $image_url);
+			$productsceau->createProduct($codeean, str_replace("'", '', $reference), $fianet_type, str_replace("'", '', $product['product_name']),
+				(string)$product['product_price_wt'], $image_url);
 		}
 
 		$sceaucontrol->createPayment($this->getPaymentFianetType($id_order));
@@ -453,14 +771,14 @@ class FianetSceau extends Module
 			{
 				//update fianetsceau_state 2:sent
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '2'));
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' sended');
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' sended');
 				return true;
 			}
 			else
 			{
 				//update fianetsceau_state 3:error
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
 				return false;
 			}
 		}
@@ -468,7 +786,7 @@ class FianetSceau extends Module
 		{
 			//update fianetsceau_state 3:error
 			$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
 			return false;
 		}
 	}
@@ -480,20 +798,17 @@ class FianetSceau extends Module
 	 */
 	public function hookPostUpdateOrderStatus($params)
 	{
-
 		$order_state = $params['newOrderStatus'];
 
 		$status_founded = strpos($order_state->name, 'score vert');
 		if ($status_founded === false)
-		{
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Statut de paiement non reconnu : '.$order_state->name);
-		}
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Statut de paiement non reconnu : '.$order_state->name);
 		else
 		{
 			//send xml to FIA-NET when Kwixo payment is confirmed
 			$id_order = $params['id_order'];
-			$this->sendXML((int) $id_order);
-			SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, $order_state->name);
+			$this->sendXML((int)$id_order);
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $order_state->name);
 		}
 	}
 
@@ -513,12 +828,9 @@ class FianetSceau extends Module
 		$id_order = $params['id_order'];
 
 		//retrieve order's status label
-		$sql = "
-			SELECT fs.`label` 
-			FROM `"._DB_PREFIX_.self::SCEAU_STATE_TABLE_NAME."` fs 
-				INNER JOIN `"._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME."` fo 
+		$sql = 'SELECT fs.`label` FROM `'._DB_PREFIX_.self::SCEAU_STATE_TABLE_NAME.'` fs INNER JOIN `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME.'` fo 
 				ON fo.`id_fianetsceau_state`=fs.`id_fianetsceau_state` 
-			WHERE  fo.`id_order`='".(int) $id_order."'";
+			WHERE  fo.`id_order`='.(int)$id_order;
 
 		$order_state_label = Db::getInstance()->getValue($sql);
 
@@ -526,7 +838,6 @@ class FianetSceau extends Module
 		if (!($order_state_label === false))
 		{
 			$tpl_name = preg_replace('#[^a-zA-Z0-9]#', '_', $order_state_label);
-			$base_url = __PS_BASE_URI__;
 
 			if ($tpl_name == 'sent')
 				$img = 'sent.gif';
@@ -535,7 +846,7 @@ class FianetSceau extends Module
 			elseif ($tpl_name == 'error')
 				$img = 'not_concerned.png';
 
-			$link = "index.php?tab=AdminSceau&action=ResendOrder&id_order=".(int) $id_order."&token=".Tools::getAdminTokenLite('AdminSceau');
+			$link = 'index.php?tab=AdminSceau&action=ResendOrder&id_order='.(int)$id_order.'&token='.Tools::getAdminTokenLite('AdminSceau');
 
 			$this->smarty->assign(array(
 				'fianetsceau_img' => __PS_BASE_URI__.'modules/'.$this->name.'/img/'.$img,
@@ -554,12 +865,24 @@ class FianetSceau extends Module
 				'fianetsceau_img' => __PS_BASE_URI__.'modules/'.$this->name.'/img/'.$img,
 				'logo_img' => __PS_BASE_URI__.'modules/'.$this->name.'/img/logo.gif',
 			));
-
-
 			return $this->display(__FILE__, '/views/templates/admin/nosend.tpl');
 		}
 	}
 
+	/**
+	 * Insert id_cart on fianetsceau_order table when page payment is called
+	 * 
+	 * @param type Array 
+	 */
+	public function hookPaymentTop($params)
+	{
+		$id_cart = $params['cart']->id;
+		if ($this->checkCartID($id_cart) == false)
+			$this->insertOrder(array('id_cart' => (int)$id_cart,
+				'id_fianetsceau_state' => '0',
+				'customer_ip_address' => Tools::getRemoteAddr(),
+				'date' => date('Y-m-d H:i:s')));
+	}
 	/**
 	 * Insert a new order on id_fianetsceau_state table when a new order arrives
 	 * 
@@ -569,7 +892,12 @@ class FianetSceau extends Module
 	{
 		//insert data into id_fianetsceau_order when new order arrives
 		$order = $params['order'];
-		$this->insertOrder((int) $order->id, array('id_order' => (int) $order->id, 'id_fianetsceau_state' => '1', 'customer_ip_address' => Tools::getRemoteAddr(), 'date' => $order->date_add));
+		$order->id_cart;
+		$this->updateOrder((int)$order->id_cart,
+			array('id_order' => (int)$order->id,
+				'id_fianetsceau_state' => '1',
+				'customer_ip_address' => Tools::getRemoteAddr(),
+				'date' => $order->date_add), true);
 	}
 
 	/**
@@ -581,7 +909,7 @@ class FianetSceau extends Module
 	{
 		//send xml to FIA-NET when payment is confirmed
 		$id_order = $params['id_order'];
-		$this->sendXML((int) $id_order);
+		$this->sendXML((int)$id_order);
 	}
 
 	/**
@@ -658,7 +986,7 @@ class FianetSceau extends Module
 		//retrieve logo size on database and load the corresponding image
 		$this->smarty->assign(array(
 			'siteid' => Configuration::get('FIANETSCEAU_SITEID'),
-			'fianetsceau_img' => __PS_BASE_URI__.'modules/'.$this->name.'/img/'.$this->_fianetsceau_logo_sizes[Configuration::get('FIANETSCEAU_LOGO_SIZE')]
+			'fianetsceau_img' => __PS_BASE_URI__.'modules/'.$this->name.'/img/'.$this->fianetsceau_logo_sizes[Configuration::get('FIANETSCEAU_LOGO_SIZE')]
 		));
 
 		return $this->display(__FILE__, '/views/templates/front/fianetsceau.tpl');
@@ -671,9 +999,7 @@ class FianetSceau extends Module
 	 */
 	private function loadWidgetTPL()
 	{
-
 		//retrieve widget number on database and load the corresponding widget
-
 		$host = $_SERVER['HTTP_HOST'];
 		$url_site = 'http://www.'.$host;
 		$string_site = explode('.', $host);
@@ -681,13 +1007,13 @@ class FianetSceau extends Module
 
 		$this->smarty->assign(array(
 			'siteid' => Configuration::get('FIANETSCEAU_SITEID'),
-			'shape' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'],
-			'background' => $this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['background'],
+			'shape' => $this->fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'],
+			'background' => $this->fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['background'],
 			'url_site' => $url_site,
 			'nom_site' => $nom_site,
 		));
 
-		if ($this->_fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'] == 'comment')
+		if ($this->fianetsceau_widgets[Configuration::get('FIANETSCEAU_WIDGET_NUMBER')]['shape'] == 'comment')
 			return $this->display(__FILE__, '/views/templates/front/fianetsceau_widget_comments.tpl');
 		else
 			return $this->display(__FILE__, '/views/templates/front/fianetsceau_widget.tpl');
@@ -713,18 +1039,13 @@ class FianetSceau extends Module
 		Configuration::updateValue('FIANETSCEAU_LOGO_SIZE', Tools::getValue('fianetsceau_logo_sizes'));
 		Configuration::updateValue('FIANETSCEAU_WIDGET_POSITION', Tools::getValue('fianetsceau_widget_position'));
 		Configuration::updateValue('FIANETSCEAU_WIDGET_NUMBER', Tools::getValue('fianetsceau_widget_number'));
-		Configuration::updateValue('FIANETSCEAU_SHOW_STATUS_ORDER', ((int) Tools::getValue('fianetsceau_showstatus') == 1 ? '1' : '0'));
-
-
+		Configuration::updateValue('FIANETSCEAU_SHOW_STATUS_ORDER', ((int)Tools::getValue('fianetsceau_showstatus') == 1 ? '1' : '0'));
 		if (_PS_VERSION_ < '1.5')
 			$id_shop = 1;
 		else
 			$id_shop = Context::getContext()->shop->id;
-
 		//update default category value
 		$this->manageFianetSubCategory(0, Tools::getValue('fianetsceau_0_subcategory'), 1, $id_shop);
-
-
 		/** categories configuration * */
 		//lists all product categories and update FIA-NET categories
 		$shop_categories = $this->loadProductCategories();
@@ -737,7 +1058,7 @@ class FianetSceau extends Module
 		foreach (array_keys($payment_modules) as $id)
 			Configuration::updateValue('FIANETSCEAU_'.$id.'_PAYMENT_TYPE', Tools::getValue('fianetsceau_'.$id.'_payment_type'));
 
-		SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "Configuration module mise à jour");
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Configuration module mise à jour');
 		return true;
 	}
 
@@ -748,47 +1069,44 @@ class FianetSceau extends Module
 	 */
 	private function formIsValid()
 	{
-		//include FIA-NET categories array
-		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
-
 		$iso_lang_current = Language::getIsoById($this->context->language->id);
 
 		//check login
-		if (strlen(Tools::getValue('fianetsceau_login')) < 1)
+		if (Tools::strlen(Tools::getValue('fianetsceau_login')) < 1)
 			$this->_errors[] = $this->l("Login can't be empty");
 
 		//check password
-		if (strlen(Tools::getValue('fianetsceau_password')) < 1)
+		if (Tools::strlen(Tools::getValue('fianetsceau_password')) < 1)
 			$this->_errors[] = $this->l("Password can't be empty");
 
 		//check site ID
-		if (strlen(Tools::getValue('fianetsceau_siteid')) < 1)
+		if (Tools::strlen(Tools::getValue('fianetsceau_siteid')) < 1)
 			$this->_errors[] = $this->l("Siteid can't be empty");
 
 		if (!preg_match('#^[0-9]+$#', Tools::getValue('fianetsceau_siteid')))
-			$this->_errors[] = $this->l("Siteid has to be integer. ".gettype(Tools::getValue('fianetsceau_siteid'))." given.");
+			$this->_errors[] = $this->l('Siteid has to be integer. '.gettype(Tools::getValue('fianetsceau_siteid')).' given.');
 
 		//check authkey
-		if (strlen(Tools::getValue('fianetsceau_authkey')) < 1)
+		if (Tools::strlen(Tools::getValue('fianetsceau_authkey')) < 1)
 			$this->_errors[] = $this->l("Authkey can't be empty");
 
 		//check status
-		if (!in_array(Tools::getValue('fianetsceau_status'), $this->_fianetsceau_statuses))
-			$this->_errors[] = $this->l("You must give a correct status.");
+		if (!in_array(Tools::getValue('fianetsceau_status'), $this->fianetsceau_statuses))
+			$this->_errors[] = $this->l('You must give a correct status.');
 
 		//check default product type
-		if (!in_array(Tools::getValue('fianetsceau_0_subcategory'), array_keys($_fianetsceau_subcategories)))
+		if (!in_array(Tools::getValue('fianetsceau_0_subcategory'), array_keys($this->fianetsceau_subcategories)))
 			$this->_errors[] = $this->l('You must configure a valid default product type');
 
 		//check logo and widget position
-		if (Tools::getValue('fianetsceau_logo_position') == "nothing" && Tools::getValue('fianetsceau_widget_position') == "nothing")
-			$this->_errors[] = $this->l("You must select a logo or a widget position");
+		if (Tools::getValue('fianetsceau_logo_position') == 'nothing' && Tools::getValue('fianetsceau_widget_position') == 'nothing')
+			$this->_errors[] = $this->l('You must select a logo or a widget position');
 
 		//payment means check
 		$shop_payments = $this->loadPaymentMethods();
 		foreach ($shop_payments as $id => $shop_payment)
 		{
-			if (!in_array(Tools::getValue('fianetsceau_'.$id.'_payment_type'), array_keys($this->_payment_types)))
+			if (!in_array(Tools::getValue('fianetsceau_'.$id.'_payment_type'), array_keys($this->payment_types)))
 				$this->_errors[] = $this->l("The payment type for '".$shop_payment['name']."' is not valid");
 		}
 
@@ -796,27 +1114,27 @@ class FianetSceau extends Module
 		if (!in_array(Tools::getValue('fianetsceau_showstatus'), array('0', '1')))
 			$this->_errors[] = $this->l('You must give a correct FIA-NET show status value');
 
-		//check logo position		
-		if (!in_array(Tools::getValue('fianetsceau_logo_position'), array_keys($this->_fianetsceau_positions[$iso_lang_current])))
+		//check logo position
+		if (!in_array(Tools::getValue('fianetsceau_logo_position'), array_keys($this->fianetsceau_positions[$iso_lang_current])))
 			$this->_errors[] = $this->l('You must give a correct logo position');
 
 		//check widget position
-		if (!in_array(Tools::getValue('fianetsceau_widget_position'), array_keys($this->_fianetsceau_positions[$iso_lang_current])))
+		if (!in_array(Tools::getValue('fianetsceau_widget_position'), array_keys($this->fianetsceau_positions[$iso_lang_current])))
 			$this->_errors[] = $this->l('You must give a correct widget position');
 
 		//check logo size
-		if (!in_array(Tools::getValue('fianetsceau_logo_sizes'), array_keys($this->_fianetsceau_logo_sizes)))
-			$this->_errors[] = $this->l("You must give a correct logo size");
+		if (!in_array(Tools::getValue('fianetsceau_logo_sizes'), array_keys($this->fianetsceau_logo_sizes)))
+			$this->_errors[] = $this->l('You must give a correct logo size');
 
 		//check widget type
-		if (!in_array(Tools::getValue('fianetsceau_widget_number'), array_keys($this->_fianetsceau_widgets)))
-			$this->_errors[] = $this->l("You must give a correct widget type");
+		if (!in_array(Tools::getValue('fianetsceau_widget_number'), array_keys($this->fianetsceau_widgets)))
+			$this->_errors[] = $this->l('You must give a correct widget type');
 
 		//categories check
 		$shop_categories = $this->loadProductCategories();
 		foreach ($shop_categories as $id => $shop_category)
 			if (Tools::getValue('fianetsceau_'.$id.'_subcategory') != 0)
-				if (!in_array(Tools::getValue('fianetsceau_'.$id.'_subcategory'), (array_keys($_fianetsceau_subcategories))))
+				if (!in_array(Tools::getValue('fianetsceau_'.$id.'_subcategory'), (array_keys($this->fianetsceau_subcategories))))
 					$this->_errors[] = $this->l('Invalid product type for category:')." '".$shop_category['name']."'";
 
 		return empty($this->_errors);
@@ -824,7 +1142,6 @@ class FianetSceau extends Module
 
 	public function getContent()
 	{
-
 		$head_msg = '';
 		//if some POST datas are found
 		//Get log file
@@ -834,14 +1151,12 @@ class FianetSceau extends Module
 		{
 			$id_shop = 1;
 			$fianetsceau = new Sceau();
-		} else
+		}
+		else
 		{
 			$id_shop = Context::getContext()->shop->id;
 			$fianetsceau = new Sceau($id_shop);
 		}
-
-		//include FIA-NET categories array
-		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
 
 		if (Tools::isSubmit('submitSettings'))
 		{
@@ -882,8 +1197,10 @@ class FianetSceau extends Module
 			$siteid = (Configuration::get('FIANETSCEAU_SITEID') === false ? '' : Configuration::get('FIANETSCEAU_SITEID'));
 			$authkey = (Configuration::get('FIANETSCEAU_AUTHKEY') === false ? '' : Configuration::get('FIANETSCEAU_AUTHKEY'));
 			$status = (Configuration::get('FIANETSCEAU_STATUS') === false ? 'test' : Configuration::get('FIANETSCEAU_STATUS'));
-			$fianetsceau_logo_position = (Configuration::get('FIANETSCEAU_LOGO_POSITION') === false ? 'left' : Configuration::get('FIANETSCEAU_LOGO_POSITION'));
-			$fianetsceau_widget_position = (Configuration::get('FIANETSCEAU_WIDGET_POSITION') === false ? 'left' : Configuration::get('FIANETSCEAU_WIDGET_POSITION'));
+			$fianetsceau_logo_position = (Configuration::get('FIANETSCEAU_LOGO_POSITION') === false ?
+				'left' : Configuration::get('FIANETSCEAU_LOGO_POSITION'));
+			$fianetsceau_widget_position = (Configuration::get('FIANETSCEAU_WIDGET_POSITION') === false ?
+				'left' : Configuration::get('FIANETSCEAU_WIDGET_POSITION'));
 			$fianetsceau_logo = (Configuration::get('FIANETSCEAU_LOGO_SIZE') === false ? '120' : Configuration::get('FIANETSCEAU_LOGO_SIZE'));
 			$widget_number = (Configuration::get('FIANETSCEAU_WIDGET_NUMBER') === false ? '1' : Configuration::get('FIANETSCEAU_WIDGET_NUMBER'));
 			$show_status = (Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER') === false ? '0' : Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER'));
@@ -902,7 +1219,7 @@ class FianetSceau extends Module
 
 		$base_url = __PS_BASE_URI__;
 		$logo_sizes = array();
-		foreach ($this->_fianetsceau_logo_sizes as $size => $img_name)
+		foreach ($this->fianetsceau_logo_sizes as $size => $img_name)
 			$logo_sizes[$size] = $base_url.'modules/'.$this->name.'/img/'.$img_name;
 
 		$iso_lang_current = $this->context->language->iso_code;
@@ -916,28 +1233,28 @@ class FianetSceau extends Module
 			'fianetsceau_siteid' => Tools::safeOutput($siteid),
 			'fianetsceau_authkey' => Tools::safeOutput($authkey),
 			'fianetsceau_status' => Tools::safeOutput($status),
-			'fianetsceau_statuses' => $this->_fianetsceau_statuses,
+			'fianetsceau_statuses' => $this->fianetsceau_statuses,
 			'payment_modules' => $payment_modules,
-			'fianetsceau_payment_types' => $this->_payment_types,
+			'fianetsceau_payment_types' => $this->payment_types,
 			'logo_account_path' => $base_url.'modules/'.$this->name.'/img/account.gif',
 			'logo_payments_path' => $base_url.'modules/'.$this->name.'/img/payments.gif',
-			'fianetsceau_logo_positions' => $this->_fianetsceau_positions[$iso_lang_current],
+			'fianetsceau_logo_positions' => $this->fianetsceau_positions[$iso_lang_current],
 			'fianetsceau_logo_position' => Tools::safeOutput($fianetsceau_logo_position),
 			'fianetsceau_logo_sizes' => $logo_sizes,
-			'fianetsceau_logo' => (int) $fianetsceau_logo,
-			'fianetsceau_widget_positions' => $this->_fianetsceau_positions[$iso_lang_current],
+			'fianetsceau_logo' => (int)$fianetsceau_logo,
+			'fianetsceau_widget_positions' => $this->fianetsceau_positions[$iso_lang_current],
 			'fianetsceau_widget_position' => Tools::safeOutput($fianetsceau_widget_position),
-			'fianetsceau_widget_numbers' => array_keys($this->_fianetsceau_widgets),
-			'widget_number' => (int) $widget_number,
+			'fianetsceau_widget_numbers' => array_keys($this->fianetsceau_widgets),
+			'widget_number' => (int)$widget_number,
 			'path_prefix' => $base_url.'modules/'.$this->name.'/img',
-			'fianetsceaushow_status' => (int) $show_status,
+			'fianetsceaushow_status' => (int)$show_status,
 			'log_content' => $log_content,
 			'shop_categories' => $shop_categories,
 			'fianetsceau_default_category' => Tools::safeOutput($fianetsceau_default_category),
 			'fianetsceau_default_subcategory' => Tools::safeOutput($fianetsceau_default_subcategory),
 			'logo_categories_path' => $base_url.'modules/'.$this->name.'/img/categories.gif',
-			'fianetsceau_categories' => $_fianetsceau_categories,
-			'fianetsceau_subcategories' => $_fianetsceau_subcategories,
+			'fianetsceau_categories' => $this->fianetsceau_categories,
+			'fianetsceau_subcategories' => $this->fianetsceau_subcategories,
 			'token' => $token,
 			'id_shop' => $id_shop,
 		));
@@ -1000,7 +1317,7 @@ class FianetSceau extends Module
 	 */
 	public function getNewLastPosition($id_parent)
 	{
-		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int) $id_parent);
+		return Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)$id_parent);
 	}
 
 	/**
@@ -1013,7 +1330,7 @@ class FianetSceau extends Module
 	}
 
 	/**
-	 * returns the product categories list as an array indexed by category_id and containing the category name and the corresponding fia-net product family
+	 * returns the product categories list as an array indexed by category_id
 	 * 
 	 * @return array
 	 */
@@ -1029,7 +1346,8 @@ class FianetSceau extends Module
 		$shop_categories = array();
 		foreach ($categories as $category)
 		{
-			$fianetsceau_type = Tools::isSubmit('fianetsceau_'.$category['id_category'].'_subcategory') ? Tools::getValue('fianetsceau_'.$category['id_category'].'_subcategory') : $this->getFianetSubCategoryId($category['id_category'], $id_shop);
+			$fianetsceau_type = Tools::isSubmit('fianetsceau_'.$category['id_category'].'_subcategory') ?
+				Tools::getValue('fianetsceau_'.$category['id_category'].'_subcategory') : $this->getFianetSubCategoryId($category['id_category'], $id_shop);
 			$parent_id = $this->getFianetCategoryId($fianetsceau_type);
 			$shop_categories[$category['id_category']] = array(
 				'name' => $category['name'],
@@ -1047,10 +1365,7 @@ class FianetSceau extends Module
 	 */
 	public function loadFianetSubCategories($category_id)
 	{
-		//include FIA-NET categories array
-		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
-
-		$subcategories = $_fianetsceau_subcategories;
+		$subcategories = $this->fianetsceau_subcategories;
 
 		$subcategories_array = array();
 		foreach ($subcategories as $key => $value)
@@ -1060,7 +1375,7 @@ class FianetSceau extends Module
 				$subcategories_array[] = array('subcategory_id' => $key, 'label' => $value['label']);
 		}
 
-		return($subcategories_array);
+		return ($subcategories_array);
 	}
 
 	/**
@@ -1070,10 +1385,7 @@ class FianetSceau extends Module
 	 */
 	public function getFianetCategoryId($subcategory_id)
 	{
-		//include FIA-NET categories array
-		include(_PS_MODULE_DIR_.'fianetsceau/lib/includes/fianetcategories.inc.php');
-
-		$subcategories = $_fianetsceau_subcategories;
+		$subcategories = $this->fianetsceau_subcategories;
 
 		foreach ($subcategories as $key => $value)
 		{
@@ -1090,7 +1402,10 @@ class FianetSceau extends Module
 	 */
 	public function getFianetSubCategoryId($category_id, $id_shop)
 	{
-		$sql = "SELECT `id_fianetsceau_subcategory` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND `id_shop`= ".(int) $id_shop;
+		$sql = 'SELECT `id_fianetsceau_subcategory` 
+			FROM `'._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME.'` 
+				WHERE `id_category`= '.(int)$category_id.' 
+					AND `id_shop`= '.(int)$id_shop;
 
 		$query_result = Db::getInstance()->getRow($sql);
 		if ($query_result == false)
@@ -1108,34 +1423,39 @@ class FianetSceau extends Module
 	 */
 	public function manageFianetSubCategory($category_id, $fianet_subcategory, $is_default_subcategory, $id_shop)
 	{
-		$sql = "SELECT `id_category` FROM `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` WHERE `id_category`= ".(int) $category_id." AND id_shop = ".(int) $id_shop;
+		$sql = 'SELECT `id_category` 
+			FROM `'._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME.'` 
+				WHERE `id_category`= '.(int)$category_id.' 
+					AND id_shop = '.(int)$id_shop;
 
 		$query_result = Db::getInstance()->getRow($sql);
 
 		if ($query_result == false)
 		{
-			$sql = "INSERT INTO `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` (`id_category`, `id_fianetsceau_subcategory`, `default_category`, `id_shop`) 
-				VALUES ('".$this->bqSQL($category_id)."', '".$this->bqSQL($fianet_subcategory)."', '".$this->bqSQL($is_default_subcategory)."', '".$this->bqSQL($id_shop)."')";
+			$sql = 'INSERT INTO `'._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` (`id_category`, `id_fianetsceau_subcategory`, `default_category`, `id_shop`) 
+				VALUES ('".$this->bqSQL($category_id)."', '".$this->bqSQL($fianet_subcategory)."',
+					'".$this->bqSQL($is_default_subcategory)."', '".$this->bqSQL($id_shop)."')";
 
 			$insert = Db::getInstance()->execute($sql);
 
 			if (!$insert)
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory $fianet_subcategory : insertion failed $sql: ".Db::getInstance()->getMsgError());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'subcategory insertion failed $sql: '.Db::getInstance()->getMsgError());
 			else
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory inserted ".$fianet_subcategory);
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'subcategory inserted '.$fianet_subcategory);
 		}
 		else
 		{
 
-			$sql = "UPDATE `"._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME."` SET `id_fianetsceau_subcategory` = '".$this->bqSQL($fianet_subcategory)."', `default_category` = '".$this->bqSQL($is_default_subcategory)."' 
-				WHERE `id_category` = ".(int) $category_id." AND `id_shop` = ".(int) $id_shop;
+			$sql = 'UPDATE `'._DB_PREFIX_.self::SCEAU_CATEGORY_TABLE_NAME.'` 
+				SET `id_fianetsceau_subcategory` = '.$this->bqSQL($fianet_subcategory).', `default_category` = '.$this->bqSQL($is_default_subcategory).' 
+				WHERE `id_category` = '.(int)$category_id.' AND `id_shop` = '.(int)$id_shop;
 
 			$update = Db::getInstance()->execute($sql);
 
 			if (!$update)
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory $fianet_subcategory : update failed $sql: ".Db::getInstance()->getMsgError());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'subcategory $fianet_subcategory : update failed $sql: '.Db::getInstance()->getMsgError());
 			else
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, "subcategory updated : ".$fianet_subcategory);
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'subcategory updated : '.$fianet_subcategory);
 		}
 	}
 
@@ -1147,7 +1467,7 @@ class FianetSceau extends Module
 	 */
 	public function checkModuleisEnabled($module_name)
 	{
-		return (bool) Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+		return (bool)Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
 	}
 
 	/**
@@ -1183,12 +1503,12 @@ class FianetSceau extends Module
 
 			if (!$sceau_version || $sceau_version < $this->version)
 			{
-				SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module version < '.$this->version);
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Sceau module version < '.$this->version);
 				if ($this->uninstall())
-					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module uninstalled');
+					SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Sceau module uninstalled');
 
 				if ($this->install())
-					SceauLogger::insertLogSceau(__METHOD__." : ".__LINE__, 'Sceau module installed');
+					SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Sceau module installed');
 			}
 		}
 	}

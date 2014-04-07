@@ -80,7 +80,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.6.4';
+		$this->version = '1.6.6';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -91,6 +91,7 @@ class Ebay extends Module
 		$this->displayName = $this->l('eBay');
 		$this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
 		$this->module_key = '7a6b007a219bab59c1611254347f21d5';
+
 
 		// Checking Extension
 		$this->_checkExtensionsLoading();

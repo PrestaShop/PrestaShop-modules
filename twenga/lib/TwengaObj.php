@@ -241,14 +241,16 @@ class TwengaObj
 		$arr_opt = $defaultParams + $params;
 		curl_setopt_array($session, $arr_opt);
 		$response = curl_exec($session);
-		$response = explode("\r\n\r\n", $response);
-		
-		$header = $response[0];
-		$response = $response[1];
 		
 		$status_code = (int)curl_getinfo($session, CURLINFO_HTTP_CODE);
 		if ($status_code === 0)
 			throw new TwengaException('CURL Error: '.curl_error($session));
+		
+		$response = explode("\r\n\r\n", $response);
+		
+		$header = $response[0];
+		$response = $response[1];
+
 		curl_close($session);
 		
 		return array('status_code' => $status_code, 'response' => $response);

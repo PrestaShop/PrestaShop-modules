@@ -38,7 +38,7 @@ class Adyen extends PaymentModule
 	{
 		$this->name = 'adyen';
 		$this->tab = 'payments_gateways';
-		$this->version = 2.2;
+		$this->version = '2.4';
 		$this->author = 'Adyen';
 		$this->bootstrap = true;
 		
@@ -53,6 +53,7 @@ class Adyen extends PaymentModule
 		$this->description = $this->l('Accepts payments by Adyen\'s Hosted Payment Page.');
 		
 		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+
 	}
 	
 	/*

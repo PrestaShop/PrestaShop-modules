@@ -19,12 +19,13 @@ class Firstdata extends PaymentModule
 	{
 		$this->name = 'firstdata';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.2';
+		$this->version = '1.2.4';
 
 		parent::__construct();
 
 		$this->displayName = $this->l('First Data');
 		$this->description = $this->l('Accept Credit card payments today with First Data (Visa, Mastercard, Amex, Discover, etc.)');
+
 		
 		/* Backward compatibility */
 		if (_PS_VERSION_ < 1.5)

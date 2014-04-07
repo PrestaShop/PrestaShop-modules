@@ -35,7 +35,7 @@ class Ogone extends PaymentModule
 	{
 		$this->name = 'ogone';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.6';
+		$this->version = '2.8';
 		$this->author = 'PrestaShop';
 		$this->module_key = '787557338b78e1705f2a4cb72b1dbb84';
 
@@ -43,6 +43,7 @@ class Ogone extends PaymentModule
 
 		$this->displayName = 'Ogone';
 		$this->description = $this->l('With over 80 different payment methods and 200+ acquirer connections, Ogone helps you manage, collect and secure your online or mobile payments, help prevent fraud and drive your business!');
+
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');
