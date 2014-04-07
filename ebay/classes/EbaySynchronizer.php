@@ -98,6 +98,8 @@ class EbaySynchronizer
 					'picturesLarge' => $pictures['large'],
 					'condition' => $conditions[$product->condition],
 					'shipping' => EbaySynchronizer::_getShippingDetailsForProduct($product),
+					'id_lang' => $id_lang,
+					'real_id_product' => (int)$p['id_product'],
 			);
 
 			$data = array_merge($data, EbaySynchronizer::_getProductData($product));
@@ -149,6 +151,9 @@ class EbaySynchronizer
 			'name' => str_replace('&', '&amp;', $product->name),
 			'description' => $product->description,
 			'description_short' => $product->description_short,
+			'manufacturer_name' => $product->manufacturer_name,
+			'ean13' => $product->ean13,
+			'titleTemplate' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE'),
 		);
 	}
 
@@ -231,7 +236,7 @@ class EbaySynchronizer
 	 * (this doesn't test if the product has variations)
 	 *
 	 */
-	private static function _isProductMultiSku($ebay_category, $product_id, $id_lang)
+	public static function _isProductMultiSku($ebay_category, $product_id, $id_lang)
 	{
 		return $ebay_category->isMultiSku() && EbaySynchronizer::_hasVariationsMatching($product_id, $id_lang, $ebay_category);
 	}
@@ -313,7 +318,7 @@ class EbaySynchronizer
 		return $tab_error;
 	}
 
-	private static function _getPictures($product, $id_lang, $context, $products_configuration)
+	public static function _getPictures($product, $id_lang, $context, $products_configuration)
 	{
 		$pictures = array();
 		$pictures_medium = array();
@@ -360,7 +365,7 @@ class EbaySynchronizer
 	 * Returns the eBay category object. Check if that has been loaded before
 	 *
 	 **/
-	private static function _getEbayCategory($category_id)
+	public static function _getEbayCategory($category_id)
 	{
 		if (!isset(EbaySynchronizer::$ebay_categories[$category_id]))
 			EbaySynchronizer::$ebay_categories[$category_id] = new EbayCategory(null, $category_id);
@@ -384,6 +389,7 @@ class EbaySynchronizer
 			$variation = array(
 				'id_attribute' => $combinaison['id_product_attribute'],
 				'reference' => $combinaison['reference'],
+				'ean13' => $combinaison['ean13'],
 				'quantity' => $combinaison['quantity'],
 				'price_static' => $price,
 				'variation_specifics' => EbaySynchronizer::_getVariationSpecifics($combinaison['id_product'], $combinaison['id_product_attribute'], $context->cookie->id_lang),
@@ -621,6 +627,9 @@ class EbaySynchronizer
 
 		$data['id_product'] .= '-'.(int)$data['id_attribute'];
 		$data['item_specifics'] = array_merge($data['item_specifics'], $variation['variation_specifics']);
+
+		$data['ean13'] = $variation['ean13'];
+		$data['reference'] = $variation['reference'];
 
 		return $data;
 	}
@@ -991,6 +1000,54 @@ class EbaySynchronizer
 			}
 			
 		return array_merge($covers, $images);
+	}
+
+	public static function fillAllTemplate($data, $description)
+	{
+		return str_replace(
+			array(
+				'{MAIN_IMAGE}',
+				'{MEDIUM_IMAGE_1}',
+				'{MEDIUM_IMAGE_2}',
+				'{MEDIUM_IMAGE_3}',
+				'{PRODUCT_PRICE}',
+				'{PRODUCT_PRICE_DISCOUNT}',
+				'{DESCRIPTION_SHORT}',
+				'{DESCRIPTION}',
+				'{FEATURES}',
+				'{EBAY_IDENTIFIER}',
+				'{EBAY_SHOP}',
+				'{SLOGAN}',
+				'{PRODUCT_NAME}'
+				),
+			array(
+				(isset($data['large_pictures'][0]) ? '<img src="'.$data['large_pictures'][0].'" class="bodyMainImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][1]) ? '<img src="'.$data['medium_pictures'][1].'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][2]) ? '<img src="'.$data['medium_pictures'][2].'" class="bodyMediumImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][3]) ? '<img src="'.$data['medium_pictures'][3].'" class="bodyMediumImageProductPrestashop" />' : ''),
+				$data['price'],
+				$data['price_without_reduction'],
+				$data['description_short'],
+				$data['description'],
+				$data['features'],
+				Configuration::get('EBAY_IDENTIFIER'),
+				Configuration::get('EBAY_SHOP'),
+				Configuration::get('PS_SHOP_NAME'),
+				$data['name']
+			), $description
+		);
+	}
+
+	/**
+	*
+	* @param array $tags
+	* @param array $values
+	* @param string $description
+	* @return string
+	*/
+	public static function fillTemplateTitle($tags, $values, $description)
+	{
+		return str_replace($tags, $values, $description);
 	}
 
 }

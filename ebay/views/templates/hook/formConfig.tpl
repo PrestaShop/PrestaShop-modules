@@ -31,7 +31,8 @@
 	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
 	<li id="menuTab5" class="menuTabButton">6. {l s='List products' mod='ebay'}</li>
 	<li id="menuTab6" class="menuTabButton">7. {l s='Order history' mod='ebay'}</li>
-	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab9" class="menuTabButton">8. {l s='eBay listings' mod='ebay'}</li>
+	<li id="menuTab7" class="menuTabButton">9. {l s='Help' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
 	<div id="menuTab1Sheet" class="tabItem selected">{$form_parameters}</div>
@@ -41,6 +42,7 @@
 	<div id="menuTab4Sheet" class="tabItem">{$form_template_manager}</div>
 	<div id="menuTab5Sheet" class="tabItem">{$form_ebay_sync}</div>
 	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>
+	<div id="menuTab9Sheet" class="tabItem">{$ebay_listings}</div>
 	<div id="menuTab7Sheet" class="tabItem">{$help}</div>
 </div>
 <br clear="left" />

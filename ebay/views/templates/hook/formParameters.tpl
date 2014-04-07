@@ -204,6 +204,38 @@
 		<div style="clear:both;"></div>
 
 	</fieldset>
+
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Others' mod='ebay'}</legend>
+		{if !$is_writable}<p class="warning">{l s='The log file is not writable' mod='ebay'}</p>{/if}
+		<label>
+			{l s='Activate Logs' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="checkbox" name="activate_logs" value="1"{if $activate_logs} checked="checked"{/if}>
+		</div>
+		<div class="clear both"></div>
+
+		<label>
+			{l s='Download logs' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<a href="{$url}&download_log=1" class="button">{l s='Download' mod='ebay'}</a>
+		</div>
+		<div class="clear both"></div>
+	</fieldset>
+
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Customer notifications' mod='ebay'}</legend>
+		<label>
+			{l s='Product availability' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="checkbox" name="activate_mails" value="1"{if $activate_mails} checked="checked"{/if}>
+			<span>{l s='Give the customer the option of receiving a notification for an available product if this one is out of stock.' mod='ebay'}</span>
+		</div>
+		<div class="clear both"></div>
+	</fieldset>
 		
 
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
