@@ -64,6 +64,7 @@
 	{/if}
 </div>
 {/if}
-<div class="clear"><br/><br/></div>
+<div style="padding-top:10px">
 <a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" class="button_large">{l s='Other payment methods' mod='realexredirect'}</a>
+</div>
 {/if}

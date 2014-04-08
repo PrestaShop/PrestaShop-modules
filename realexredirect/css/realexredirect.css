@@ -3,17 +3,17 @@
 	padding-left: 22.7%;
 }
 #module-realexredirect-payment #center_column h4 {
-	font-size:15px; margin-bottom:15px
+	font-size:15px; margin-bottom:15px;
 }
 
 #module-realexredirect-payment #center_column .bloc_new_card{
-	width:45%;min-width:295px;float:left;border:1px solid #FAC132;padding:2%
+	width:45%;min-width:295px;border:1px solid #FAC132;padding:2%;
 }
 #module-realexredirect-payment #center_column .bloc_new_card select{
 	margin-top:10px;
 }
 #module-realexredirect-payment #center_column .bloc_new_card .cart_navigation {
-	padding-top:10px;float:right;
+	padding-left:60%; 
 }
 #module-realexredirect-payment #center_column .bloc_registered_card{
 	width:40%;float:right;border:1px solid #FAC132;padding:2%
