@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class SceauControl extends SceauDOMDocument
 {
@@ -8,15 +32,15 @@ class SceauControl extends SceauDOMDocument
 
 	public function __construct()
 	{
-		@parent::__construct('1.0', 'UTF-8');
-		@$this->root = $this->appendChild(new SceauXMLElement('control'));
+		parent::__construct('1.0', 'UTF-8');
+		$this->root = $this->appendChild(new SceauXMLElement('control'));
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('sceaumodule', '2.4');
+		$this->root->setAttribute('sceaumodule', '2.5');
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <utilisateur> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <utilisateur> then adds id as a child of root
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -30,7 +54,8 @@ class SceauControl extends SceauDOMDocument
 	 * @param string $fax_number
 	 * @return SceauCustomer
 	 */
-	public function createCustomer($type, $civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createCustomer($type, $civility, $lastname, $firstname, $email, $society = null,
+		$phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
 		$customer = $this->root->appendChild(new SceauCustomer());
 		if ($type != '')
@@ -56,7 +81,7 @@ class SceauControl extends SceauDOMDocument
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <utilisateur type='facturation'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <utilisateur type='facturation'> then adds id as a child of root
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -70,13 +95,15 @@ class SceauControl extends SceauDOMDocument
 	 * @param string $fax_number
 	 * @return SceauCustomer
 	 */
-	public function createInvoiceCustomer($civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createInvoiceCustomer($civility, $lastname, $firstname, $email, $society = null,
+		$phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
-		return $this->createCustomer('facturation', $civility, $lastname, $firstname, $email, $society, $phone_mobile, $phone_home, $phone_office, $fax_number);
+		return $this->createCustomer('facturation', $civility, $lastname, $firstname, $email,
+			$society, $phone_mobile, $phone_home, $phone_office, $fax_number);
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <utilisateur type='livraison'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <utilisateur type='livraison'> then adds id as a child of root
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -90,13 +117,15 @@ class SceauControl extends SceauDOMDocument
 	 * @param string $fax_number
 	 * @return SceauCustomer
 	 */
-	public function createDeliveryCustomer($civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createDeliveryCustomer($civility, $lastname, $firstname, $email, $society = null,
+		$phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
-		return $this->createCustomer('livraison', $civility, $lastname, $firstname, $email, $society, $phone_mobile, $phone_home, $phone_office, $fax_number);
+		return $this->createCustomer('livraison', $civility, $lastname, $firstname, $email,
+			$society, $phone_mobile, $phone_home, $phone_office, $fax_number);
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <adresse> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <adresse> then adds id as a child of root
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -121,7 +150,7 @@ class SceauControl extends SceauDOMDocument
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <adresse type='facturation'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <adresse type='facturation'> then adds id as a child of root
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -137,7 +166,7 @@ class SceauControl extends SceauDOMDocument
 	}
 
 	/**
-	 * creates an object SceauCustomer representing the element <adresse type='livraison'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauCustomer representing the element <adresse type='livraison'> then adds id as a child of root
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -153,7 +182,7 @@ class SceauControl extends SceauDOMDocument
 	}
 
 	/**
-	 * creates an object SceauOrderDetails representing the element <infocommande> then adds it as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauOrderDetails representing the element <infocommande> then adds it as a child of root
 	 * 
 	 * @param string $refid order reference
 	 * @param int $siteid merchant ID given by fianet
@@ -187,7 +216,7 @@ class SceauControl extends SceauDOMDocument
 	}
 
 	/**
-	 * creates an object SceauXMLElement representing the element <paiement> then adds it as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object SceauXMLElement representing the element <paiement> then adds it as a child of root
 	 * 
 	 * @param string $type payment type
 	 * @param string $name name of the card carrier if $type=cb or $type=cb en n fois
@@ -202,7 +231,7 @@ class SceauControl extends SceauDOMDocument
 	{
 		$payment = $this->root->appendChild(new SceauXMLElement('paiement'));
 
-		if (!is_null($cb_number) OR !is_null($date_valid))
+		if (!is_null($cb_number) || !is_null($date_valid))
 			$hash = new HashMD5 ();
 
 		$payment->createChild('type', $type);

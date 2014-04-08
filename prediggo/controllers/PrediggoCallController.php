@@ -285,6 +285,7 @@ class PrediggoCallController
 		// Check if default web_site_id
 		if($this->oPrediggoConfig->web_site_id == 'WineDemo_Fake_Shop_ID_123456789')
 			return false;
+		$this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
 		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 		return $this->oPrediggoCall->checkWebSiteId();
 	}

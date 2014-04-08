@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -19,13 +18,13 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-//Load the correct class version for PS 1.4 or PS 1.5
+/* Load the correct class version for PS 1.4 or PS 1.5 */
 if (_PS_VERSION_ < '1.5')
 	include_once 'controllers/admin/AdminSceau.php';
 else
@@ -55,7 +54,7 @@ class AdminSceau extends AdminSceauController
 			{
 				//if sendOrder, redirection to the admin order page
 				case 'ResendOrder':
-					$this->redirect_after = $link->getAdminLink('AdminSceau')."&id_order=".Tools::getValue('id_order').'&vieworder';
+					$this->redirect_after = $link->getAdminLink('AdminSceau').'&id_order='.Tools::getValue('id_order').'&vieworder';
 					break;
 
 				//if unknown action
@@ -72,16 +71,16 @@ class AdminSceau extends AdminSceauController
 		//icons management
 		if (_PS_VERSION_ >= '1.5')
 			$icons = array(
-				'sent' => array('src' => "../../modules/fianetsceau/img/sent.gif", 'alt' => 'Commande envoyée'),
-				'waiting payment' => array('src' => "../../modules/fianetsceau/img/waiting.gif", 'alt' => 'Commande en attente de paiement'),
-				'error' => array('src' => "../../modules/fianetsceau/img/not_concerned.png", 'alt' => 'Commande en erreur'),
-				'default' => "../../modules/fianetsceau/img/error.gif");
+				'sent' => array('src' => '../../modules/fianetsceau/img/sent.gif', 'alt' => 'Commande envoyée'),
+				'waiting payment' => array('src' => '../../modules/fianetsceau/img/waiting.gif', 'alt' => 'Commande en attente de paiement'),
+				'error' => array('src' => '../../modules/fianetsceau/img/not_concerned.png', 'alt' => 'Commande en erreur'),
+				'default' => '../../modules/fianetsceau/img/error.gif');
 		else
 			$icons = array(
 				'sent' => '../../modules/fianetsceau/img/sent.gif',
 				'waiting payment' => '../../modules/fianetsceau/img/waiting.gif',
 				'error' => '../../modules/fianetsceau/img/not_concerned.png',
-				'default' => "../../modules/fianetsceau/img/error.gif");
+				'default' => '../../modules/fianetsceau/img/error.gif');
 
 		//personalize new column added in new order tab
 		$column_definition = array(
@@ -99,7 +98,6 @@ class AdminSceau extends AdminSceauController
 
 	public function postProcess()
 	{
-
 		switch (Tools::getValue('action'))
 		{
 			//resends all orders that would have been sent
@@ -111,18 +109,15 @@ class AdminSceau extends AdminSceauController
 					$this->module->sendXML($order['id_order']);
 
 				break;
-
-
 			//resends an order that would have been sent
 			case 'ResendOrder':
 				//sends the order given in param
 				$this->module->sendXML(Tools::getValue('id_order'));
 				if (_PS_VERSION_ < '1.5')
 				{
-					$admin_dir_tokens = explode('\\', _PS_ADMIN_DIR_);
-					$admin_dir = $admin_dir_tokens[count($admin_dir_tokens) - 1];
+					$admin_dir = Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.Tools::substr(_PS_ADMIN_DIR_, strrpos(_PS_ADMIN_DIR_, '/') + 1);
 					$url = $admin_dir.'/index.php?tab=AdminSceau&id_order='.Tools::getValue('id_order').'&vieworder&token='.Tools::getAdminTokenLite('AdminSceau');
-					Tools::redirect($url);
+					Tools::redirect($url, '');
 				}
 				break;
 
@@ -140,11 +135,9 @@ class AdminSceau extends AdminSceauController
 	 */
 	public function getFianetSceauOrdersToResend()
 	{
-
-		$sql = "SELECT `id_order` FROM `"._DB_PREFIX_.FianetSceau::SCEAU_ORDER_TABLE_NAME."` WHERE `id_fianetsceau_state` = '3'";
+		$sql = 'SELECT `id_order` FROM `'._DB_PREFIX_.FianetSceau::SCEAU_ORDER_TABLE_NAME.'` WHERE `id_fianetsceau_state` = 3';
 		$query_result = Db::getInstance()->executeS($sql);
-
-		return($query_result);
+		return ($query_result);
 	}
 
 }

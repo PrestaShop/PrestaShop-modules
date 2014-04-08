@@ -24,17 +24,24 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Class for the <produit> elements
- * 
- * @author CYRILLE Yann <yann.cyrille at fia-net.com>
- */
-class SceauProduct extends SceauXMLElement
+include_once 'lib/includes/includes.inc.php';
+
+require_once(dirname(__FILE__).'/../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../init.php');
+
+include_once 'fianetfraud.php';
+
+
+if (_PS_VERSION_ < '1.5')
+	$certissim = new CertissimSac();
+else
+	$certissim = new CertissimSac(Context::getContext()->shop->id);
+
+/*token security*/
+if (Tools::getValue('token') == Tools::getAdminToken($certissim->getSiteid().$certissim->getLogin()))
 {
-
-	public function __construct()
-	{
-		parent::__construct('produit');
-	}
-
+	/*Get all FIA-NET evaluations*/
+	fianetfraud::getEvaluations();
 }
+else
+	header('Location: ../');

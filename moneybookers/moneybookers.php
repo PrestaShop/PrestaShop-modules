@@ -37,7 +37,7 @@ class MoneyBookers extends PaymentModule
 	{
 		$this->name = 'moneybookers';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.6';
+		$this->version = '1.6.7';
 		$this->module_key = '1d4c89650f76d274a85e5407cffe8403';
 
 		parent::__construct();
@@ -245,6 +245,7 @@ class MoneyBookers extends PaymentModule
 					{
 						Configuration::updateValue('MB_PAY_TO_EMAIL', $_POST['mb_email_to_validate']);
 						Configuration::updateValue('MB_PARAMETERS', 1);
+						Configuration::updateValue('MONEYBOOKERS_CONFIGURATION_OK', true);
 
 						$output .= '
 							<ul style="color: green; font-weight: bold; margin-bottom: 30px; width: 506px; background: #E1FFE9; border: 1px dashed #BBB; padding: 10px;">

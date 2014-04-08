@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Description of FianetTools
@@ -14,7 +38,7 @@ class CertissimTools extends CertissimMother
 	 * @param string $string
 	 * @return bool
 	 */
-	static function isXMLstring($string)
+	public static function isXMLstring($string)
 	{
 		preg_match('#^(<\?xml.+\?>[\r\n ]*)?<([^( |>)]+).*>.*</(.+)>$#s', $string, $output);
 		preg_match('#^(<\?xml.+\?>[\r\n ]*)?<([^( |>)]+).*/>$#s', $string, $output2);
@@ -29,7 +53,7 @@ class CertissimTools extends CertissimMother
 	 * @param mixed $object object to check
 	 * @return bool
 	 */
-	static function isType($type, $object)
+	public static function isType($type, $object)
 	{
 		if (!is_object($object))
 			return false;
@@ -43,7 +67,7 @@ class CertissimTools extends CertissimMother
 	 * @param mixed $input
 	 * @return bool
 	 */
-	static function isXMLElement($input)
+	public static function isXMLElement($input)
 	{
 		return self::isType('CertissimXMLElement', $input);
 	}
@@ -54,7 +78,7 @@ class CertissimTools extends CertissimMother
 	 * @param mixed $input
 	 * @return bool
 	 */
-	static function isSimpleXMLElement($input)
+	public static function isSimpleXMLElement($input)
 	{
 		return self::isType('SimpleXMLElement', $input);
 	}
@@ -63,18 +87,17 @@ class CertissimTools extends CertissimMother
 	 * sanitize the string given a paramter to be a valid XML element name. Example : OptionsPaiement becomes options-paiement
 	 * @param string $name
 	 */
-	static function normalizeName($name)
+	public static function normalizeName($name)
 	{
-		$string = strtolower($name[0]);
+		$string = Tools::strtolower($name[0]);
 		$i = 1;
-		for ($i; $i < strlen($name); $i++)
+		$length = Tools::strlen($name);
+		for ($i; $i < $length; $i++)
 		{
 			if (ord($name[$i]) >= ord('A') && ord($name[$i]) <= ord('Z'))
-			{
 				$string .= '-';
-			}
 
-			$string .= strtolower($name[$i]);
+			$string .= Tools::strtolower($name[$i]);
 		}
 
 		return $string;
@@ -86,9 +109,9 @@ class CertissimTools extends CertissimMother
 	 * @param string $string
 	 * @return string
 	 */
-	static function normalizeString($string, $charset = "UTF-8")
+	public static function normalizeString($string, $charset = 'UTF-8')
 	{
-		$string = strtolower($string);
+		$string = Tools::strtolower($string);
 		$normalized_string = self::dropAccents($string, $charset);
 		$normalized_string = self::dropNANchars($normalized_string);
 
@@ -101,7 +124,7 @@ class CertissimTools extends CertissimMother
 	 * @param string $string
 	 * @return string
 	 */
-	static function dropAccents($string, $charset = 'UTF-8')
+	public static function dropAccents($string, $charset = 'UTF-8')
 	{
 		$string = htmlentities($string, ENT_NOQUOTES, $charset);
 
@@ -118,35 +141,35 @@ class CertissimTools extends CertissimMother
 	 * @param string $string
 	 * @return string
 	 */
-	static function dropNANchars($string)
+	public static function dropNANchars($string)
 	{
 		return preg_replace('#[^A-Za-z0-9]#', '-', $string);
 	}
 
-	static function convert_encoding($string, $to, $from = '')
+	public static function convertEncoding($string, $to, $from = '')
 	{
 // Convert string to ISO_8859-1
-		if ($from == "UTF-8")
+		if ($from == 'UTF-8')
 			$iso_string = utf8_decode($string);
 		else
-		if ($from == "UTF7-IMAP")
+		if ($from == 'UTF7-IMAP')
 			$iso_string = imap_utf7_decode($string);
 		else
 			$iso_string = $string;
 
 // Convert ISO_8859-1 string to result coding
-		if ($to == "UTF-8")
-			return(utf8_encode($iso_string));
+		if ($to == 'UTF-8')
+			return (utf8_encode($iso_string));
 		else
-		if ($to == "UTF7-IMAP")
-			return(imap_utf7_encode($iso_string));
+		if ($to == 'UTF7-IMAP')
+			return (imap_utf7_encode($iso_string));
 		else
-			return($iso_string);
+			return ($iso_string);
 	}
 
-	static function getRemoteAddr()
+	public static function getRemoteAddr()
 	{
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) AND $_SERVER['HTTP_X_FORWARDED_FOR'])
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'])
 		{
 			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ','))
 			{

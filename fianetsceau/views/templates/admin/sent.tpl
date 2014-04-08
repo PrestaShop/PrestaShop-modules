@@ -24,7 +24,9 @@
 *}
 
 <br/>
-<fieldset>
-	<legend><img src="{$logo_img}" widdth="16" height="16" alt=""/>{l s='FIA-NET Sceau status' mod='fianetsceau'}</legend>
-	<img src="{$fianetsceau_img}" alt=""/>{l s='The order has been correctly sent to Fia-Net.' mod='fianetsceau'}
-</fieldset>
+<div class="panel">
+	<fieldset>
+		<legend><img src="{$logo_img|escape:'htmlall'}" width="16" height="16" alt=""/>{l s='FIA-NET Sceau status' mod='fianetsceau'}</legend>
+		<img src="{$fianetsceau_img|escape:'htmlall'}" alt=""/>{l s='The order has been correctly sent to Fia-Net.' mod='fianetsceau'}
+	</fieldset>
+</div>

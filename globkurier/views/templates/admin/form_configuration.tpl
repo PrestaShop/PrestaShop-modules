@@ -179,7 +179,7 @@
 				{/if}
 	 			<form class="gk-form" action="" method="post">
 	 				<p class="font2">{l s='Have an account? Enter your email address, we will send you an API key to activate the module.' mod='globkurier'}</p>
-	 				<table class="form-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+	 				<table class="form-table" border="0" cellpadding="0" cellspacing="0" width="100%" style="float:left;">
 						<tr align="center">
 							<td><label class="font2">{l s='Email (Login)' mod='globkurier'}:</label></td>
 							<td align="left"><input class="gk-input-txt" type="text" name="gk_api_email" value="{$gk_api_email|escape:'htmlall':'UTF-8'}" /></td>

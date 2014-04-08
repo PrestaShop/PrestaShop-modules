@@ -23,5 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div id="widget">
-	<script type="text/javascript" src="http://static.fia-net.com/widgetscomm/{$background}/{$siteid}.js"></script>
+	<script type="text/javascript" src="http://static.fia-net.com/widgetscomm/{$background|escape:'htmlall'}/{$siteid|intval}.js"></script>
 </div>

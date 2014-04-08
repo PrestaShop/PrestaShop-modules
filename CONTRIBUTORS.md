@@ -29,6 +29,7 @@
 - Dh42 
 - djfm 
 - doekia 
+- Donatas Lomsargis 
 - Dvir Julius 
 - edamart 
 - e.lito 
@@ -40,6 +41,7 @@
 - François Gaillard 
 - François-Marie de Jouvencel 
 - Francois Gaillard 
+- Giedrius Stan 
 - Gordon Coubrough 
 - Gregory Roussac 
 - gRoussac 
@@ -77,6 +79,7 @@
 - OliverMuellerShopgate 
 - PaymentSense-Developer 
 - Peter Schaeffer 
+- prestachris 
 - PrestaEdit 
 - PrestanceDesign 
 - quadrateam 
@@ -97,6 +100,7 @@
 - Thoma Bigueres 
 - Thomas 
 - tNabord 
+- Tomasz 
 - Toto 
 - Tredez Guillaume 
 - tucoinfo 
