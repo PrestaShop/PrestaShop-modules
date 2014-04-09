@@ -331,10 +331,7 @@ class Ebay extends Module
 		$module->ebay_profile->setConfiguration('EBAY_PICTURE_SIZE_DEFAULT', $sizeMedium);
 		$module->ebay_profile->setConfiguration('EBAY_PICTURE_SIZE_SMALL', $sizeSmall);
 		$module->ebay_profile->setConfiguration('EBAY_PICTURE_SIZE_BIG', $sizeBig);
-		$module->setConfiguration('EBAY_PICTURE_SIZE_DEFAULT', $sizeMedium);
-		$module->setConfiguration('EBAY_PICTURE_SIZE_SMALL', $sizeSmall);
-		$module->setConfiguration('EBAY_PICTURE_SIZE_BIG', $sizeBig);
-		$module->setConfiguration('EBAY_PICTURE_PER_LISTING', 0);
+		$module->ebay_profile->setConfiguration('EBAY_PICTURE_PER_LISTING', 0);
 	}
 
 	/**
@@ -1300,6 +1297,10 @@ class Ebay extends Module
 			'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', $returns_policy_configuration->ebay_returns_accepted_option),
 			'ebayListingDuration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'automaticallyRelist' => $this->ebay_profile->getConfiguration('EBAY_AUTOMATICALLY_RELIST'),
+			'ebay_paypal_email' => $ebay_paypal_email,
+			'returnsConditionAccepted' => $returnsConditionAccepted,
+			'ebayListingDuration' => $ebayListingDuration,
+			'automaticallyRelist' => Configuration::get('EBAY_AUTOMATICALLY_RELIST'),
 			'sizes' => ImageType::getImagesTypes('products'),
 			'sizedefault' => (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_DEFAULT'),
 			'sizebig' => (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG'),
@@ -1308,10 +1309,13 @@ class Ebay extends Module
             'sync_products_by_cron_url' => $sync_products_by_cron_url,
             'is_multishop'  => $this->is_multishop,
             'sync_orders_by_cron_url' => $sync_orders_by_cron_url,
+			'perlisting' => (int)Configuration::get('EBAY_PICTURE_PER_LISTING'),
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => $returns_policy_configuration->ebay_returns_within,
+			'within' => $within,
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
 			'whopays' => $returns_policy_configuration->ebay_returns_who_pays,
+			'whopays' => $whopays,
 			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
