@@ -1,5 +1,6 @@
 <?php
-/* NOTICE OF LICENSE
+/**
+* NOTICE OF LICENSE
 *
 * This source file is subject to a commercial license from SARL Ether Création
 * Use, copy, modification or distribution of this source file without written
@@ -15,14 +16,15 @@
 * expressement interdite.
 * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
-* @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
-* @license Commercial license
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');	
+include(dirname(__FILE__).'/../../init.php');
 
 include(dirname(__FILE__).'/class/importProduct.class.php');
 include(dirname(__FILE__).'/class/reference.class.php');
@@ -31,17 +33,16 @@ include(dirname(__FILE__).'/class/catalog.class.php');
 $import = new importerProduct();
 $catalog = new catalog();
 
-if(Tools::getValue('ec_token') != $catalog->getInfoEco('ECO_TOKEN'))
+if (Tools::getValue('ec_token') != $catalog->getInfoEco('ECO_TOKEN'))
 {
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-    header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-    						
-    header("Cache-Control: no-store, no-cache, must-revalidate");
-    header("Cache-Control: post-check=0, pre-check=0", false);
-    header("Pragma: no-cache");
-    						
-    header("Location: ../");
-    exit;
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-store, no-cache, must-revalidate');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
+
+	header('Location: ../');
+	exit;
 }
 
 $time = time();
@@ -56,17 +57,17 @@ $lstPdt = Db::getInstance()->ExecuteS('SELECT `reference`
 	FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted`
 	WHERE status=0
 	LIMIT '.(int)$etp.', '.(int)$maxR);
-	
-foreach($lstPdt as $pdt)
+
+foreach ($lstPdt as $pdt)
 {
-	if(time() - $time <= $catalog->limitMax)
-	{										
+	if (time() - $time <= $catalog->limitMax)
+	{
 		$reference = new importerReference($pdt['reference']);
-		$import->deleteProduct($reference->id_product, $pdt['reference']);  
+		$import->deleteProduct($reference->id_product, $pdt['reference']);
 		$etp++;
 	}
 	else
 		break;
-}		 
+}
 
 echo $etp.','.$total.','.$typ.','.$pdt['reference'];
