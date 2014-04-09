@@ -398,10 +398,6 @@ class Feedaty extends Module
 			curl_setopt($ch, CURLOPT_TIMEOUT, '60');
 			$content = trim(curl_exec($ch));
 			curl_close($ch);
-			
-			$json = json_decode($content,true);
-			if (is_array($json) && count($json) > 0)
-				Configuration::updateValue('FEEDATY_CONFIGURATION_OK', true);
 
 			/* If everything is gone fine we can save it on cache */
 			if (Tools::strlen($content) > 50)
