@@ -21,7 +21,7 @@
 * @author    Feedaty <info@feedaty.com>
 * @copyright 2012-2014 Feedaty
 * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
-* @version   Release: 1.1.7 $
+* @version   Release: 1.1.8 $
 */
 
 if (!defined('_PS_VERSION_'))
@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.7';
+		$this->version = '1.1.8';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
@@ -399,8 +399,8 @@ class Feedaty extends Module
 			$content = trim(curl_exec($ch));
 			curl_close($ch);
 			
-			json_decode($content);
-			if (json_last_error() == JSON_ERROR_NONE)
+			$json = json_decode($content,true);
+			if (is_array($json) && count($json) > 0)
 				Configuration::updateValue('FEEDATY_CONFIGURATION_OK', true);
 
 			/* If everything is gone fine we can save it on cache */
