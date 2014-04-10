@@ -196,14 +196,22 @@ class EbayProfile extends ObjectModel
 			WHERE ep.`id_shop` = '.(int)$id_shop;
 		if ($profile_data = Db::getInstance()->getRow($sql)) // one row exists
 			return new EbayProfile($profile_data['id_ebay_profile']);
+		else 
+			return false;
 	}
 	
 	public static function getCurrent()
 	{
 		$id_shop = Shop::getContextShopID();
 		if (!$id_shop)
-			$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+			if(Configuration::get('PS_SHOP_DEFAULT'))
+				$id_shop = Configuration::get('PS_SHOP_DEFAULT');
+			else
+				$id_shop = 1;
+
 		return self::getOneByIdShop($id_shop);
+		
+
 	}
 	
 	public static function getByShopIds()

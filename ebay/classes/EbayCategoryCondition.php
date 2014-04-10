@@ -43,7 +43,7 @@ class EbayCategoryCondition
 		foreach ($ebay_category_ids as $category_id)
 		{
 			$xml_data = $request->GetCategoryFeatures($category_id);
-
+			    
 			if (isset($xml_data->Category->ConditionEnabled))
 				$condition_enabled = $xml_data->Category->ConditionEnabled;
 			else

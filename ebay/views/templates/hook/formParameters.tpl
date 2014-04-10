@@ -214,7 +214,7 @@
 			{l s='Photos per listing' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<input type="number" name="picture_per_listing" value="{$perlisting}" min="0" max="99" data-inlinehelp="{l s='Check eBay\'s changes for additional images' mod='ebay'}">
+			<input type="number" name="picture_per_listing" value="{$picture_per_listing}" min="0" max="99" data-inlinehelp="{l s='Check eBay\'s changes for additional images' mod='ebay'}">
 		</div>
 
 	</fieldset>
