@@ -90,4 +90,9 @@
 
 2014-02-17
 ----
-1) Change module according to new prestashop code validator.    
+1) Change module according to new prestashop code validator.  
+
+2014-04-01
+----
+1) Bug fix in reviews tab for some of the versions.
+  

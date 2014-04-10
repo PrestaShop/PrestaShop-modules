@@ -54,7 +54,7 @@ class GlobKurier extends Module {
 	{
 		$this->name = 'globkurier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.3';
+		$this->version = '1.5';
 		$this->author = 'GlobKurier | Solik Tomasz <info[at]tomaszsolik.pl>';
 		$this->need_instance = 0;
 
@@ -430,6 +430,7 @@ class GlobKurier extends Module {
 				Configuration::updateValue($this->name.'_AD_INSURANCE', GlobKurierConfig::PS_GK_AD_INSURANCE);
 				Configuration::updateValue($this->name.'_AD_COD', GlobKurierConfig::PS_GK_AD_COD);
 				Configuration::updateValue($this->name.'_AD_COD3', GlobKurierConfig::PS_GK_AD_COD3);
+				Configuration::updateValue('GLOBKURIER_CONFIGURATION_OK', true);
 			}
 		}
 		if ($login && $password && $apikey)

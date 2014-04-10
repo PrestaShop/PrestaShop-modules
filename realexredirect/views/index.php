@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2013 Coccinet
+*  @copyright  2007-2014 Coccinet
 */
 
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');

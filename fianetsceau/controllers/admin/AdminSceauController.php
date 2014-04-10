@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -19,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -32,7 +31,6 @@
  */
 class AdminSceauController extends AdminOrdersController
 {
-
 	/**
 	 * Initialize toolbar with 2 buttons : ResendOrders and ViewLog
 	 */
@@ -42,19 +40,9 @@ class AdminSceauController extends AdminOrdersController
 		if (is_null($this->display))
 		{
 			$this->toolbar_btn['sceau'] = array(
-				'href' => $this->context->link->getAdminLink('AdminSceau')."&action=ResendOrders",
+				'href' => $this->context->link->getAdminLink('AdminSceau').'&action=ResendOrders',
 				'desc' => $this->l('Resend orders'),
 			);
 		}
 	}
-
-	/**
-	 * Get FIA-NET log file and show it
-	 *  
-	 */
-	public function initContent()
-	{
-		parent::initContent();
-	}
-
 }

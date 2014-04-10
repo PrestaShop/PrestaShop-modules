@@ -1,5 +1,6 @@
 <?php
-/* NOTICE OF LICENSE
+/**
+* NOTICE OF LICENSE
 *
 * This source file is subject to a commercial license from SARL Ether Création
 * Use, copy, modification or distribution of this source file without written
@@ -15,10 +16,11 @@
 * expressement interdite.
 * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
-* @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
-* @license Commercial license
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
 
 include_once dirname(__FILE__).'/../../config/config.inc.php';
@@ -30,14 +32,13 @@ $catalog = new catalog();
 
 if (Tools::getValue('ec_token') != $catalog->getInfoEco('ECO_TOKEN'))
 {
-	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+	header('Cache-Control: no-store, no-cache, must-revalidate');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
 
-	header("Cache-Control: no-store, no-cache, must-revalidate");
-	header("Cache-Control: post-check=0, pre-check=0", false);
-	header("Pragma: no-cache");
-
-	header("Location: ../");
+	header('Location: ../');
 	exit;
 }
 
@@ -58,17 +59,17 @@ if ($catalog->tabConfig['IMPORT_AUTO'] == 1 || (isset($idcS) && $idcS != 0))
 		$reqExp = array();
 		$TotCom = Db::getInstance()->getRow('SELECT SUM(`product_quantity`) AS SPQ, `tax_rate`, SUM(`product_price`) AS SPP, SUM(`product_quantity`*`product_price`) AS STT
 						FROM `'._DB_PREFIX_.'order_detail` od
-                                            	LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca ON (od.`product_supplier_reference` = ca.`reference_attribute`)
-                                            	LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog` c ON (od.`product_supplier_reference` = c.`reference`)
+												LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca ON (od.`product_supplier_reference` = ca.`reference_attribute`)
+												LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog` c ON (od.`product_supplier_reference` = c.`reference`)
 						WHERE `id_order`='.(int)$com['id_order'].'
-                                            	GROUP BY od.`product_supplier_reference`');
+												GROUP BY od.`product_supplier_reference`');
 
 		$ComRef = Db::getInstance()->ExecuteS('SELECT `product_quantity`, `product_id`, `tax_rate`, `product_price`, `id_order`, `product_supplier_reference`
 						FROM `'._DB_PREFIX_.'order_detail` od
-                                            	LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca ON (od.`product_supplier_reference` = ca.`reference_attribute`)
-                                            	LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog` c ON (od.`product_supplier_reference` = c.`reference`)
+												LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog_attribute` ca ON (od.`product_supplier_reference` = ca.`reference_attribute`)
+												LEFT JOIN `'._DB_PREFIX_.'ec_ecopresto_catalog` c ON (od.`product_supplier_reference` = c.`reference`)
 						WHERE `id_order`='.(int)$com['id_order'].'
-                                            	GROUP BY od.`product_supplier_reference`');
+												GROUP BY od.`product_supplier_reference`');
 
 		$tem = 0;
 		foreach ($ComRef as $cr)
@@ -109,12 +110,12 @@ if ($catalog->tabConfig['IMPORT_AUTO'] == 1 || (isset($idcS) && $idcS != 0))
 				$resu .= '<idc><![CDATA['.Tools::safeOutput($com['id_order']).']]></idc>';
 				$resu .= '<date><![CDATA['.Tools::safeOutput($com['DatI']).']]></date>';
 				$resu .= '<tot_ht><![CDATA['.Tools::safeOutput($TotCom['STT']).']]></tot_ht>';
-				$resu .= '<tot_tva><![CDATA['.Tools::safeOutput($TotCom['STT']*($TotCom['tax_rate']/100)).']]></tot_tva>';
-				$resu .= '<tot_ttc><![CDATA['.Tools::safeOutput(($TotCom['STT']+($TotCom['STT']*$TotCom['tax_rate']/100))).']]></tot_ttc>';
+				$resu .= '<tot_tva><![CDATA['.Tools::safeOutput($TotCom['STT'] * ($TotCom['tax_rate'] / 100)).']]></tot_tva>';
+				$resu .= '<tot_ttc><![CDATA['.Tools::safeOutput(($TotCom['STT'] + ($TotCom['STT'] * $TotCom['tax_rate'] / 100))).']]></tot_ttc>';
 				$resu .= '</order_head>';
 				$resu .= '<all_detail>';
 			}
-			$tem=1;
+			$tem = 1;
 			$resu .= '<order_item>';
 			$resu .= '<sku><![CDATA['.Tools::safeOutput($cr['product_supplier_reference']).']]></sku>';
 			$resu .= '<product_name></product_name>';
@@ -122,7 +123,7 @@ if ($catalog->tabConfig['IMPORT_AUTO'] == 1 || (isset($idcS) && $idcS != 0))
 			$resu .= '</order_item>';
 
 		}
-		if ($tem>0)
+		if ($tem > 0)
 			$resu .= '</all_detail></export_order>';
 
 		$reqExp[] = 'INSERT INTO `'._DB_PREFIX_.'ec_ecopresto_export_com` (`id`,`id_order`) VALUES ("",'.(int)$com['id_order'].')';

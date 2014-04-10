@@ -53,7 +53,7 @@ class Sendinblue extends Module {
 		else
 		$this->tab = 'advertising_marketing';
 		$this->author = 'SendinBlue';
-		$this->version = '1.7';
+		$this->version = '1.8';
 		$pathconfig = new Pathfindsendinblue();
 		$this->path = $pathconfig->pathdisp();
 		parent::__construct();
@@ -1395,6 +1395,8 @@ class Sendinblue extends Module {
 						//have to add the Sendin newsletter block.
 						$this->removeBlocknewsletterBlock();
 					}
+					
+					Configuration::updateValue('SENDINBLUE_CONFIGURATION_OK', true);
 					$this->redirectPage($this->l('Successfully updated'), 'SUCCESS');
 				}
 			}

@@ -45,7 +45,7 @@ class Mailjet extends Module
 	{
 		// Default module variable
 		$this->name = 'mailjet';
-		$this->version = '1.5';
+		$this->version = '1.6';
 		$this->displayName = 'Mailjet';
 		$this->module_key = '59cce32ad9a4b86c46e41ac95f298076';
 
@@ -358,6 +358,7 @@ class Mailjet extends Module
 			{
 				Configuration::updateValue('MAILJET_TOKEN', pSQL($mailjet->_response->token));
 				Configuration::updateValue('MAILJET_TOKEN_IP', pSQL($_SERVER['REMOTE_ADDR']));
+				Configuration::updateValue('MAILJET_CONFIGURATION_OK', true);
 			}
 		}
 	}

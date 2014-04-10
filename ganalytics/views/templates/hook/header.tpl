@@ -69,7 +69,27 @@
         'quantity': '{$item.Quantity|escape:'htmlall':'UTF-8'}'
     });
     {/foreach}
-    ga('ecommerce:send');
+    {literal}
+    (function() {
+	    {/literal}{if $isOrder eq true}{literal}
+			var key = 'ga_trans';
+			var idtrans = {/literal}{$trans.id|intval}{literal};
+			if (!!$.prototype.totalStorage)
+				var view_ga_trans = parseInt($.totalStorage(key));
+			else if (typeof localStorage !== 'undefined' && localStorage)
+				var view_ga_trans = parseInt(localStorage.getItem(key));
+
+			if (typeof view_ga_trans !== 'undefined' &&  view_ga_trans > 0 && idtrans == view_ga_trans )
+				return false;
+
+			if (!!$.prototype.totalStorage)
+				$.totalStorage(parseInt(key, idtrans));
+			else if (typeof localStorage !== 'undefined' && localStorage)
+				localStorage.setItem(key, parseInt(idtrans));
+		{/literal}{/if}{literal}
+		ga('ecommerce:send');
+    })();
+    {/literal}
     {/if}
     {else}
     var _gaq = _gaq || [];
@@ -107,7 +127,24 @@
     {/literal}
     {/if}
     {literal}
-    (function () {
+    (function() {
+	    {/literal}{if $isOrder eq true}{literal}
+			var key = 'ga_trans';
+			var idtrans = {/literal}{$trans.id|intval}{literal};
+			if (!!$.prototype.totalStorage)
+				var view_ga_trans = parseInt($.totalStorage(key));
+			else if (typeof localStorage !== 'undefined' && localStorage)
+				var view_ga_trans = parseInt(localStorage.getItem(key));
+
+			if (typeof view_ga_trans !== 'undefined' &&  view_ga_trans > 0 && idtrans == view_ga_trans )
+				return false;
+
+			if (!!$.prototype.totalStorage)
+				$.totalStorage(parseInt(key, idtrans));
+			else if (typeof localStorage !== 'undefined' && localStorage)
+				localStorage.setItem(key, parseInt(idtrans));
+		{/literal}{/if}{literal}
+
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
