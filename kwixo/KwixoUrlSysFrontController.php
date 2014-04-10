@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -19,13 +18,13 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-//Load the correct class version for PS 1.4 or PS 1.5
+/*Load the correct class version for PS 1.4 or PS 1.5*/
 if (_PS_VERSION_ < '1.5')
 {
 	include_once 'controllers/front/MyUrlSysFrontController14.php';
@@ -46,7 +45,7 @@ include_once 'kwixo.php';
 class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 {
 
-	public static function ManageUrlSys()
+	public static function manageUrlSys()
 	{
 		$payment = new Kwixo();
 
@@ -56,13 +55,14 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 			return false;
 		}
 
-		$transactionID = Tools::getValue('TransactionID');
-		$refID = Tools::getValue('RefID');
+		$transaction_id = Tools::getValue('TransactionID');
+		$ref_id = Tools::getValue('RefID');
 		$tag = Tools::getValue('Tag');
 		$id_cart = Tools::getValue('custom', false);
 		$amount = Tools::getValue('amount', false);
+		$payment_type = Tools::getValue('payment_type', false);
 
-		$cart = new Cart((int) $id_cart);
+		$cart = new Cart((int)$id_cart);
 
 		//Multishop
 		if (_PS_VERSION_ < '1.5')
@@ -78,30 +78,34 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 
 		$md5 = new KwixoMD5();
 
-		$waitedhash = $md5->hash($kwixo->getAuthKey().$refID.$transactionID);
+		$waitedhash = $md5->hash($kwixo->getAuthKey().$ref_id.$transaction_id);
 		$receivedhash = Tools::getValue('HashControl', '0');
 
 		//Hash control
 		if ($waitedhash != $receivedhash)
-			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys erreur : HashControl invalide (valeur attendue = "'.$waitedhash.'", valeur reçue = "'.$receivedhash.'"). IP expediteur : '.Tools::getRemoteAddr());
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys erreur : HashControl invalide (valeur attendue = "'
+				.$waitedhash.'", valeur reçue = "'.$receivedhash.'"). IP expediteur : '.Tools::getRemoteAddr());
 		else
 		{
 			//if cart if empty : error and exit
 			if (!$cart->id)
 			{
-				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, "Le panier pour la commande $refid/$transactionid n'existe pas.");
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Le panier pour la commande '.$ref_id.'/'.$transaction_id.' n\'existe pas.');
 				exit;
 			}
 
-			global $cookie;
-
+			if (_PS_VERSION_ < '1.5')
+				$cookie = new Cookie('ps');
+			else
+				$cookie = Context::getContext()->cookie;
 			//Give order_id
 			$id_order = Order::getOrderByCartId($cart->id);
 
 			if ($id_order !== false)
 			{
-				$order = new Order((int) $id_order);
-				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart) ? '' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
+				$order = new Order((int)$id_order);
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart)
+					? '' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
 			}
 			else
 				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys : order false');
@@ -110,7 +114,8 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 			{
 				//Give up payment, tag sent after 1 hour
 				case 0:
-					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys abandon après 1h : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart) ? '' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys abandon après 1h : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart)
+					? '' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
 					break;
 
 				//Accepted payment
@@ -121,63 +126,72 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 					//Retrieve score if present
 					$score = Tools::getValue('Score', false);
 					//if order current state in cancelled or waiting or under control or credit status, status updated
-					if ($id_order === false || in_array($order->getCurrentState(), array((int) _PS_OS_CANCELED_, (int) Configuration::get('KW_OS_WAITING'), (int) Configuration::get('KW_OS_CREDIT'), (int) Configuration::get('KW_OS_CONTROL'))))
+					if ($id_order === false || in_array($order->getCurrentState(),
+						array((int)_PS_OS_CANCELED_, (int)Configuration::get('KW_OS_WAITING'),
+							(int)Configuration::get('KW_OS_CREDIT'), (int)Configuration::get('KW_OS_CONTROL'))))
 						if ($score == 'positif')
-							$psosstatus = (int) Configuration::get('KW_OS_PAYMENT_GREEN');
+							$psosstatus = (int)Configuration::get('KW_OS_PAYMENT_GREEN');
 						elseif ($score == 'negatif')
-							$psosstatus = (int) Configuration::get('KW_OS_PAYMENT_RED');
+							$psosstatus = (int)Configuration::get('KW_OS_PAYMENT_RED');
 						else
-							$psosstatus = (int) _PS_OS_PAYMENT_;
+							$psosstatus = (int)_PS_OS_PAYMENT_;
 					break;
 
 				//Payment refused
 				case 2:
-					if (!in_array($order->getCurrentState(), array((int) Configuration::get('KW_OS_PAYMENT_GREEN'), (int) Configuration::get('KW_OS_PAYMENT_RED'), (int) Configuration::get('KW_OS_CONTROL'), (int) Configuration::get('KW_OS_CREDIT'))))
-						$psosstatus = (int) _PS_OS_CANCELED_;
+					if (!in_array($order->getCurrentState(), array((int)Configuration::get('KW_OS_PAYMENT_GREEN'),
+						(int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'), (int)Configuration::get('KW_OS_CREDIT'),
+						(int)_PS_OS_PAYMENT_)))
+						$psosstatus = (int)_PS_OS_CANCELED_;
 					break;
 
 				//order under control
 				case 3:
 					//if order current state in cancelled or waiting or credit status, status updated
-					if ($id_order === false || in_array($order->getCurrentState(), array((int) _PS_OS_CANCELED_, (int) Configuration::get('KW_OS_WAITING'), (int) Configuration::get('KW_OS_CREDIT'))))
-						$psosstatus = (int) Configuration::get('KW_OS_CONTROL');
+					if ($id_order === false || in_array($order->getCurrentState(),
+						array((int)_PS_OS_CANCELED_, (int)Configuration::get('KW_OS_WAITING'), (int)Configuration::get('KW_OS_CREDIT'))))
+						$psosstatus = (int)Configuration::get('KW_OS_CONTROL');
 					break;
 
 				//order on waiting status
 				case 4:
 					if ($id_order === false)
-						$psosstatus = (int) Configuration::get('KW_OS_WAITING');
+						$psosstatus = (int)Configuration::get('KW_OS_WAITING');
 
 					break;
 				//order under credit status
 				case 6:
 					//if order current state in cancelled or waiting, status updated
-					if ($id_order === false || in_array($order->getCurrentState(), array((int) _PS_OS_CANCELED_, (int) Configuration::get('KW_OS_WAITING'))))
-						$psosstatus = (int) Configuration::get('KW_OS_CREDIT');
+					if ($id_order === false || in_array($order->getCurrentState(),
+						array((int)_PS_OS_CANCELED_, (int)Configuration::get('KW_OS_WAITING'))))
+						$psosstatus = (int)Configuration::get('KW_OS_CREDIT');
 					break;
 				//payment refused
 				case 11:
 				case 12:
 					//if order current state in cancelled or waiting, status updated
-					if ($id_order === false || in_array($order->getCurrentState(), array((int) _PS_OS_CANCELED_, (int) Configuration::get('KW_OS_WAITING'), (int) Configuration::get('KW_OS_CREDIT'), (int) Configuration::get('KW_OS_CONTROL'))))
-						$psosstatus = (int) _PS_OS_CANCELED_;
+					if ($id_order === false || in_array($order->getCurrentState(),
+						array((int)_PS_OS_CANCELED_, (int)Configuration::get('KW_OS_WAITING'),
+							(int)Configuration::get('KW_OS_CREDIT'), (int)Configuration::get('KW_OS_CONTROL'))))
+						$psosstatus = (int)_PS_OS_CANCELED_;
 
 					break;
 				//payment cancelled
 				case 101:
-					$psosstatus = (int) _PS_OS_CANCELED_;
+					$psosstatus = (int)_PS_OS_CANCELED_;
 					break;
 
 				//delivery done
 				case 100:
-					if ($id_order === false || !in_array($order->getCurrentState(), array((int) _PS_OS_DELIVERED_, (int) _PS_OS_PREPARATION_, (int) _PS_OS_SHIPPING_, (int) _PS_OS_PAYMENT_)))
-						$psosstatus = (int) _PS_OS_PAYMENT_;
+					if ($id_order === false || !in_array($order->getCurrentState(),
+						array((int)_PS_OS_DELIVERED_, (int)_PS_OS_PREPARATION_, (int)_PS_OS_SHIPPING_, (int)_PS_OS_PAYMENT_)))
+						$psosstatus = (int)_PS_OS_PAYMENT_;
 					break;
 
 				default:
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Appel URLSys : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart) ?
+					'' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
 					break;
-
-					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Appel URLSys : id_cart = '.$id_cart.(!Order::getOrderByCartId($id_cart) ? '' : ' | id_order = '.Order::getOrderByCartId($id_cart)).' | tag = '.$tag);
 			}
 		}
 
@@ -186,11 +200,10 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 		{
 			if ($id_order === false)
 			{
-				$feedback = 'Order Create';
-				$payment->validateOrder((int) $cart->id, $psosstatus, $amount, $payment->displayName, $feedback, NULL, $cart->id_currency);
+				$payment->validateOrder((int)$cart->id, $psosstatus, $amount, $payment->displayName, null, null, $cart->id_currency);
 				$id_order = Order::getOrderByCartId($cart->id);
-				$payment->manageKwixoOrder($id_order, $tag, $transactionID, $id_cart, 'urlsys');
-				if ($cookie->id_cart == (int) $cookie->last_id_cart)
+				$payment->manageKwixoOrder($id_order, $tag, $transaction_id, $id_cart, $payment_type, 'urlsys');
+				if ($cookie->id_cart == (int)$cookie->last_id_cart)
 					unset($cookie->id_cart);
 			}
 			else
@@ -200,6 +213,4 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 			}
 		}
 	}
-
 }
-
