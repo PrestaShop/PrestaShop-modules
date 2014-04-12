@@ -121,9 +121,10 @@ $(document).ready(function() {
 		var val = $('#all-extra-images-selection').val();
 		$('#all-extra-images-value').val(val);
 	})
-	
-	if ($("#menuTab2").hasClass('wrong'))
-	{
-		$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
-	}
+	$('#menuTab2').click(function(){
+		if ($("#menuTab1").hasClass('success') && $("#menuTab2").hasClass('wrong') && $("#configForm2SuggestedCategories input[type=submit]").length == 1)
+		{
+			$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
+		}
+	})
 });

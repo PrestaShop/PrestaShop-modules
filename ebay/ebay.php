@@ -1028,6 +1028,7 @@ class Ebay extends Module
 		$sizedefault = (int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT');
 		$sizeBig = (int)Configuration::get('EBAY_PICTURE_SIZE_BIG');
 		$sizesmall = (int)Configuration::get('EBAY_PICTURE_SIZE_SMALL');
+		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME'));
 
 		$account_setting = 0;
 		if (!empty($ebay_identifier) && !empty($ebayShopValue) && !empty($ebay_paypal_email) && !empty($shopPostalCode) && !empty($within) && !empty($whopays) && !empty($ebayListingDuration) && !empty($sizedefault) && !empty($sizeBig) && !empty($sizesmall))
@@ -1064,7 +1065,8 @@ class Ebay extends Module
 			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
-			'account_setting' => $account_setting
+			'account_setting' => $account_setting,
+			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false
 		);
 
 		if (Tools::getValue('relogin'))
@@ -1314,7 +1316,8 @@ class Ebay extends Module
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
 						'percent' => pSQL($percentValue),
-						'date_upd' => pSQL($date)
+						'date_upd' => pSQL($date),
+						'sync' => 0
 					);
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))

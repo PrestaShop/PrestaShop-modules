@@ -35,16 +35,35 @@ class EbayShipping
 			WHERE `ebay_carrier` = \''.pSQL($ebay_carrier).'\'');
 	}
 
-	public static function getNationalShippings()
+	public static function getNationalShippings($id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 0');
+
+		if ($id_product)
+		{
+			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			$shippings = array_intersect_assoc($shippings, $shippings_product);
+		}
+
+		return $shippings;
 	}
 
-	public static function getInternationalShippings()
+	public static function getInternationalShippings($id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 1');
+
+		if ($id_product)
+		{
+			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			$shippings = array_intersect_assoc($shippings, $shippings_product);
+		}
+
+		return $shippings;
 	}
 
 	public static function insert($ebay_carrier, $ps_carrier, $extra_fee, $international = false)
