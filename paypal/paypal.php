@@ -83,7 +83,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.4.0';
+		$this->version = '3.7.0';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -163,7 +163,7 @@ class PayPal extends PaymentModule
 			new PaypalAPI();
 
 			if (version_compare(_PS_VERSION_, '1.5', '<'))
-				foreach (array('2.8', '3.0') as $version)
+				foreach (array('2.8', '3.0', '3.4') as $version)
 				{
 					$file = dirname(__FILE__).'/upgrade/install-'.$version.'.php';
 					if (Configuration::get('PAYPAL_VERSION') < $version && file_exists($file))
