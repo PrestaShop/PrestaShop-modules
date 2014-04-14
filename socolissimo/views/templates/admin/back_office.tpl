@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -133,7 +133,7 @@
         <label>{l s='Allocation socolissimo' mod='socolissimo'} : </label>
         <div class="margin-form">
             <select name="id_socolissimo_allocation">
-                {foreach $carrier_socolissimo as $carrier}
+                {foreach from=$carrier_socolissimo item=carrier}
                       {if $carrier.id_carrier == $id_socolissimo}
                         <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}" selected>{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
                     {else}
@@ -146,7 +146,7 @@
         <label>{l s='Allocation socolissimo CC' mod='socolissimo'} : </label>
         <div class="margin-form">
             <select name="id_socolissimocc_allocation">
-                {foreach $carrier_socolissimo_cc as $carrier}
+                {foreach from=$carrier_socolissimo_cc item=carrier}
                     {if $carrier.id_carrier == $id_socolissimo_cc}
                         <option value="{$carrier.id_carrier|escape:'htmlall':'UTF-8'}" selected>{$carrier.id_carrier|escape:'htmlall':'UTF-8'} - {$carrier.name|escape:'htmlall':'UTF-8'}</option>
                     {else}
