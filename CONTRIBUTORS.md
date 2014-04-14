@@ -25,6 +25,7 @@
 - Damien Metzger 
 - darko 
 - David Kelly 
+- Delboy 
 - DevNet 
 - Dh42 
 - djfm 
@@ -91,6 +92,7 @@
 - Rinku Kazeno 
 - Robert 
 - samy-r 
+- seanmacdomhnall 
 - sjousse 
 - Sparer lilian 
 - Talha Umer Syed 

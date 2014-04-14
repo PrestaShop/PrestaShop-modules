@@ -418,3 +418,6 @@
 [submodule "giveit/backward_compatibility"]
 	path = giveit/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "seur/backward_compatibility"]
+	path = seur/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

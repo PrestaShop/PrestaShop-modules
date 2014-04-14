@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2013 Coccinet
+*  @copyright  2007-2014 Coccinet
 */
 class RealexRedirectValidationModuleFrontController extends ModuleFrontController
 {
