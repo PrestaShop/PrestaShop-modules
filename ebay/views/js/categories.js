@@ -87,7 +87,6 @@ function showProducts(id_category) {
 								<input name="showed_products[' + product.id + ']" type="hidden" value="1" /> \
 								<input onchange="toggleSyncProduct(this)" class="sync-product" product="' + product.id + '" name="to_synchronize[' + product.id + ']" type="checkbox" ' + (product.blacklisted == 1 ? '' : 'checked') + ' /> \
 							</td> \
-							<td align="center"><input class="extra_images" id="extra_images_' + product.id + '" name="extra_images[' + product.id + ']" type="number" value="' + product.extra_images + '" min="0" max="99" /></td> \
 						</tr>');
 					}
 					$('#loading-' + id_category).remove();
@@ -121,7 +120,10 @@ $(document).ready(function() {
 	$('#update-all-extra-images').click(function() {
 		var val = $('#all-extra-images-selection').val();
 		$('#all-extra-images-value').val(val);
-		$('.extra_images').val(val);
 	})
-
+	
+	if ($("#menuTab2").hasClass('wrong'))
+	{
+		$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
+	}
 });

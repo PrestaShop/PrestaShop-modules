@@ -25,7 +25,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UploadSiteHostedPictures xmlns="urn:ebay:apis:eBLBaseComponents">
   <!-- Call-specific Input Fields -->
-  <ExternalPictureURL>{$picture_url}</ExternalPictureURL>
+  <ExternalPictureURL>{*{$picture_url}*}http://raphaelarbuz.com/202/7-home_default.jpg</ExternalPictureURL>
   <PictureName>{$picture_name}</PictureName>
 
   <!-- Standard Input Fields -->

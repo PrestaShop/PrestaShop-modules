@@ -37,7 +37,192 @@
 	</div>
 </fieldset>
 <script type="text/javascript">
-	
+	// <![CDATA[
+	function addShipping(currentName, idPSCarrier, idEbayCarrier, additionalFee, nbSelect, zone) {
+		var lastId = 0;
+		var current = $("#"+currentName);
+		var hasValues = (typeof(idPSCarrier) != "undefined" && typeof(idEbayCarrier) != "undefined" && typeof(additionalFee) != "undefined");
+		if (current.children('table').length > 0)
+			lastId = parseInt(current.children('table').last().attr('data-nb')) + 1;
+		var createSelecstShipping = '';
+		createSelecstShipping += "<tr>";
+
+		// Carrier Prestashop
+		createSelecstShipping += "<td><div><select name='"+ (currentName == 'domesticShipping' ? 'psCarrier' : 'psCarrier_international') +"["+ lastId +"]' class='prestaCarrier'><option value='' selected>{l s='Select a PrestaShop carrier' mod='ebay'}</option>";
+		{foreach from=$newPrestashopZone item=zone}
+			{if !empty($zone.carriers)}
+			 	createSelecstShipping += "<optgroup label='{$zone.name}'>";
+					{foreach from=$zone.carriers item=carrier}
+						var testPSCarrier = (typeof(idPSCarrier) != "undefined"  && idPSCarrier == {$carrier.id_carrier});
+						createSelecstShipping += "<option "+ (testPSCarrier ? 'selected="selected"' : '')  +" data-realname='{$zone.name}, {$carrier.name}' value='{$carrier.id_carrier}'>{$carrier.name}</option>";
+						if (testPSCarrier) {
+							var valuePSCarrier = " {$carrier.name} ";
+						}
+					{/foreach}
+				createSelecstShipping += "</optgroup>";
+			{/if}
+		{/foreach}
+		createSelecstShipping += "</select>"+ (currentName == 'domesticShipping' ? '<span>' : '<p>') +"{l s='Start by choosing a PrestaShop carrier to replicate on eBay' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</div>";
+
+		createSelecstShipping += "</td>";
+
+		// end carrier Prestashop
+
+		// Carrier eBay
+		createSelecstShipping += "<td style='visibility:hidden'><p data-validate='{l s='Linked to eBay'}'>{l s='Link' mod='ebay'}<strong>"+(hasValues ? valuePSCarrier : '')+"</strong>{l s='with eBay carrier' mod='ebay'}</p><div><select name='"+ (currentName == 'domesticShipping' ? 'ebayCarrier' : 'ebayCarrier_international') +"[" + lastId + "]' class='eBayCarrier'><option value=''>{l s='Select eBay carrier' mod='ebay'}</option>";
+		{foreach from=$eBayCarrier item=carrier}
+			if (('{$carrier.InternationalService}' !== 'true' && currentName == 'domesticShipping') || ('{$carrier.InternationalService}' == 'true' && currentName == 'internationalShipping'))
+				createSelecstShipping += "<option "+ ((typeof(idEbayCarrier) != "undefined"  && idEbayCarrier == "{$carrier.shippingService}")? 'selected="selected"' : '')  +" value='{$carrier.shippingService}'>{$carrier.description}</option>";
+		{/foreach}
+		createSelecstShipping += "</select></div></td>";
+		// end carrier eBay
+		
+		if (currentName == 'internationalShipping')
+		{
+			createSelecstShipping += "<td style='visibility:hidden;clear:left;'><p>{l s='Select the countries you will ship to:' mod='ebay'}</p>";
+			createSelecstShipping += "<ul style='float:left'>";
+			{foreach from=$internationalShippingLocations item=shippingLocation name=loop}
+				if ({$smarty.foreach.loop.index%4} == 0 && {$smarty.foreach.loop.index} != 0)
+					createSelecstShipping += "</ul><ul style='float:left'>";
+				if(typeof(zone) != "undefined" && zone.indexOf('{$shippingLocation.location}') != -1)
+				{
+					createSelecstShipping += '<li><input type="checkbox" checked="checked" name="internationalShippingLocation['+lastId+'][{$shippingLocation.location}] value="{$shippingLocation.location}"> {$shippingLocation.description}</li>';
+				}
+				else
+				{
+					createSelecstShipping += '<li><input type="checkbox" name="internationalShippingLocation['+lastId+'][{$shippingLocation.location}] value="{$shippingLocation.location}"> {$shippingLocation.description}</li>';
+				}
+			{/foreach}
+			createSelecstShipping += "</ul></td>";
+		}
+
+		// extrafree
+		createSelecstShipping += "<td style='visibility:hidden;'><p>{l s='Additional item cost' mod='ebay'}</p><span>£</span><input "+ ((typeof(additionalFee) != "undefined" && additionalFee > 0) ? 'value="'+additionalFee+'"' : '')  +" name='"+ (currentName == 'domesticShipping' ? 'extrafee' : 'extrafee_international') +"["+ lastId +"]' type='text'>"+ (currentName == 'domesticShipping' ? '<span>' : '<p>') +"{l s='Increase the cost when a buyer adds more than one of the same item to their order' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</td>";
+		// end extrafree
+
+		// trash
+		var atrash = $('<a style="cursor:pointer;">');
+		var imgtrash = $('<img>').attr('src', '../img/admin/delete.gif');
+		atrash.append(imgtrash)
+		atrash.on('click', function() {
+			$(this).parents('table').remove();
+			return false;
+		});
+		var trash = $("<td style='visibility:hidden'>").append(atrash)
+		// end trash
+
+		createSelecstShipping += "</tr>";
+		createSelecstShipping = $(createSelecstShipping).append(trash);
+		if (hasValues) {
+			createSelecstShipping = $("<table class='success' data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;background-color:#DFF2BF'>").append(createSelecstShipping);
+		}
+		else {
+			createSelecstShipping = $("<table data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;'>").append(createSelecstShipping);
+		}
+
+		current.append(createSelecstShipping);
+		if (hasValues) {
+			displayEbayCarrier(current.find('.prestaCarrier').eq(nbSelect))
+			processEbayCarrier(current.find('.eBayCarrier').eq(nbSelect))
+		}
+	}
+
+	function displayEbayCarrier(select)
+	{
+		var valSelect = $(select).find('option').filter(":selected").text();
+		var div = $(select).parent('div');
+		var hasA = div.siblings('a').length;
+		var tr = div.parent('td').parent('tr');
+		if ($(select).val() > 0)
+		{
+			var contentA = $(select).find('option').filter(":selected").attr('data-realname');
+			div.fadeOut(400, function() {
+				$(this).hide();
+				if (hasA > 0)
+				{
+					div.siblings('a').html(contentA).fadeIn();
+				}
+				else
+				{
+					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
+					elementA.append(contentA);
+					div.after(elementA);
+					elementA.on('click', function()
+					{
+						$(this).fadeOut(400, function(){
+							$(this).siblings('div').fadeIn();
+							tr.children('td').not(":first").css('visibility', 'hidden');
+							tr.parent('tbody').parent('table').css('background-color', '#fff').removeClass('success');
+						});
+						return false;
+					});
+				}
+				var nextTd = tr.children('td').eq(1);
+				nextTd.children('p').children('strong').text(' '+valSelect+' ');
+				nextTd.css('visibility', 'visible');
+			});
+		}
+		else
+		{
+			if (hasA > 0)
+				div.siblings('a').fadeOut();
+			tr.children('td').not(":first").css('visibility', 'hidden');
+		}
+	}
+
+	function processEbayCarrier(select)
+	{
+		var div = $(select).parent('div');
+		var hasA = div.siblings('a').length;
+		var tr = div.parent('td').parent('tr');
+		var idDivParent = tr.parents('div').attr('id');
+
+		if ($(select).val() != 0)
+		{
+			var contentA = $(select).find('option').filter(":selected").text();
+			var newHtmlP = div.siblings('p').attr('data-validate');
+			var oldHtmlP = div.siblings('p').html();
+
+			div.fadeOut(400, function(){
+				$(this).hide();
+				if (hasA > 0)
+				{
+					div.siblings('a').html(contentA).fadeIn();
+				}
+				else
+				{
+					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
+					elementA.append(contentA);
+					div.after(elementA);
+					elementA.on('click', function()
+					{
+						tr.children('td:eq(3), td:eq(2)').css('visibility', 'hidden');
+						$(this).fadeOut(400, function() {
+							$(this).siblings('div').fadeIn();
+						});
+						div.siblings('p').html(oldHtmlP);
+						tr.parent('tbody').parent('table').css('background-color', '#fff').removeClass('success');
+						return false;
+					});
+				}
+				tr.children('td').css('visibility', 'visible');
+				div.siblings('p').html(newHtmlP);
+				tr.parent('tbody').parent('table').css('background-color', '#DFF2BF').addClass('success');
+				if (idDivParent == "domesticShipping" && $("#"+idDivParent).children('.table').length == 1)
+				{
+					addShipping('domesticShipping');
+					$('#domesticShippingButton').show();
+				}
+				else if (idDivParent == "internationalShipping" && $("#"+idDivParent).children('.table').length == 1)
+				{
+					addShipping('internationalShipping');
+					$('#internationalShippingButton').show();
+				}
+			});
+		}
+	}
+	//]]>
+
 	{literal}
 	function addShippingFee(show, internationalOnly, idEbayCarrier, idPSCarrier, additionalFee){
 	{/literal}
@@ -205,9 +390,35 @@
 		
 		showExcludeLocation();
 
+		{foreach from=$existingNationalCarrier item=nationalCarrier key=i}
+			addShipping('domesticShipping', {$nationalCarrier.ps_carrier}, '{$nationalCarrier.ebay_carrier}', {$nationalCarrier.extra_fee}, {$i});
+		{foreachelse}
+			addShipping('domesticShipping');
+		{/foreach}
+
+		var zone = new Array();
+		{foreach from=$existingInternationalCarrier item=internationalCarrier key=i}
+			zone = [];
+			{foreach from=$internationalCarrier.shippingLocation item=shippingLocation}
+				zone.push('{$shippingLocation.id_ebay_zone}');
+			{/foreach}
+			addShipping('internationalShipping', {$internationalCarrier.ps_carrier}, '{$internationalCarrier.ebay_carrier}', {$internationalCarrier.extra_fee}, {$i}, zone);
+		{foreachelse}
+			addShipping('internationalShipping');
+		{/foreach}
+
 
 		/* EVENTS */
 		bindElements();
+
+		var shipping_uiux = parseInt("{$shipping_uiux}");
+		var shipping_international_uiux = parseInt("{$shipping_international_uiux}");
+		if (shipping_uiux >= 1 && shipping_international_uiux >= 1)
+			$("#menuTab3").addClass('success');
+		else if (shipping_uiux >= 1)
+			$("#menuTab3").addClass('mind');
+		else
+			$("#menuTab3").addClass('wrong');
 	});
 
 
@@ -278,6 +489,18 @@
 			$(this).hide().parent().find('.listcountry').show();
 		});
 
+		$('#domesticShipping, #internationalShipping').unbind().on('change', 'select', function(){
+			if ($(this).attr('class') == 'prestaCarrier')
+				displayEbayCarrier($(this));
+			else if ($(this).attr('class') == 'eBayCarrier')
+				processEbayCarrier($(this));
+		});
+
+		$('#domesticShippingButton, #internationalShippingButton').unbind().on('click', function(){
+			addShipping($(this).attr('id').replace('Button', ''));
+			return false;
+		})
+
 
 	}
 </script>
@@ -347,6 +570,11 @@
 	.unquatre .onelineebaycarrier select{
 		width:140px;
 	}
+
+	#internationalShipping ul li
+	{
+		padding: 10px 5px 0 0;
+	}
 {/literal}
 </style>
 
@@ -384,7 +612,6 @@
 				$(this).parent().fadeOut();
 			})
 		}
-		
 	});
 	{/literal}
 </script>
@@ -392,6 +619,9 @@
 <fieldset style="margin-top:10px;">
 	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='You must specify at least one domestic shipping method. ' mod='ebay'}">{l s='Domestic shipping' mod='ebay'}</span></legend>
 	
+	<div id="domesticShipping"></div>
+	<a id="domesticShippingButton" {if $existingNationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new domestic carrier' mod='ebay'}</a>
+	{*
 	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
 		
 		<select name="nationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate domestic shipping costs.' mod='ebay'}">
@@ -416,9 +646,13 @@
 			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new carrier option' mod='ebay'}
 		</a>
 	</div>
+	*}
 </fieldset>
 
 <fieldset style="margin-top:10px">
+	<div id="internationalShipping"></div>
+	<a id="internationalShippingButton" {if $existingInternationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new international carrier' mod='ebay'}</a>
+	{*
 	<legend><span data-inlinehelp="{l s='Check the boxes next to the countries that you will ship to. ' mod='ebay'}">{l s='International Shipping' mod='ebay'}</span></legend>
 	<p>{l s='Prestashop zone used to calculate shipping fees  :' mod='ebay'}
 		<select name="internationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate international shipping costs.' mod='ebay'}">
@@ -441,6 +675,7 @@
 			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new international carrier option' mod='ebay'}
 		</a>
 	</div>
+	*}
 </fieldset>
 
 <fieldset style="margin-top:10px">
@@ -457,7 +692,7 @@
 	</div>
 </fieldset>
 
-<div class="margin-form" id="buttonEbayShipping" style="margin-top:5px;">
+<div id="buttonEbayShipping" style="margin-top:5px;">
 	<input class="primary button" name="submitSave" type="submit" id="save_ebay_shipping" value="{l s='Save and continue' mod='ebay'}"/>
 </div>
 

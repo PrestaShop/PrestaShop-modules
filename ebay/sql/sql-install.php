@@ -127,8 +127,8 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_zone_excluded
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_international_zone` (
 		  `id_ebay_shipping` int(11) NOT NULL,
-		  `id_ebay_zone` varchar(256) NOT NULL
-		  `id_ebay_profile` int(16) NOT NULL,
+		  `id_ebay_zone` varchar(256) NOT NULL,
+		  `id_ebay_profile` int(16) NOT NULL
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_location` (
@@ -154,6 +154,13 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_service` (
 		  `ServiceType` varchar(256) NOT NULL,
 		  PRIMARY KEY (`id_shipping_service`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+
+$sql[] = 'CREATE TABLE `'._DB_PREFIX_.'ebay_returns_policy` (
+		  `id_return_policy` int(11) NOT NULL AUTO_INCREMENT,
+		  `value` varchar(256) NOT NULL,
+		  `description` varchar(256) NOT NULL,
+		  PRIMARY KEY (`id_return_policy`)
+		) ENGINE='._MYSQL_ENGINE_.'  DEFAULT CHARSET=utf8';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_returns_policy_description` (
 		  `id_return_policy` int(11) NOT NULL AUTO_INCREMENT,
@@ -262,7 +269,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_order_order` (
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_product_modified` (
 	`id_ebay_product_modified` int(16) unsigned NOT NULL AUTO_INCREMENT,
 	`id_ebay_profile` int(16) NOT NULL,
-    `id_product` int(16) NOT NULL
+    `id_product` int(16) NOT NULL,
 	PRIMARY KEY  (`id_ebay_product_modified`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
@@ -270,7 +277,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_log` (
 	`id_ebay_log` int(16) NOT NULL,
 	`text` text NOT NULL,
 	`type` varchar(40) NOT NULL,
-    `date_add` datetime NOT NULL
+    `date_add` datetime NOT NULL,
 	PRIMARY KEY  (`id_ebay_log`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 

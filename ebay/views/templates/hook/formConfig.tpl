@@ -30,8 +30,9 @@
 	<li id="menuTab3" class="menuTabButton">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
 	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
 	<li id="menuTab5" class="menuTabButton">6. {l s='List products' mod='ebay'}</li>
-	<li id="menuTab6" class="menuTabButton">7. {l s='Order history' mod='ebay'}</li>
-	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab9" class="menuTabButton">7. {l s='eBay listings' mod='ebay'}</li>
+	<li id="menuTab7" class="menuTabButton">9. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab6" class="menuTabButton">8. {l s='Order history' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
 	<div id="menuTab1Sheet" class="tabItem selected">{$form_parameters}</div>
@@ -40,18 +41,21 @@
 	<div id="menuTab3Sheet" class="tabItem">{$form_shipping}</div>
 	<div id="menuTab4Sheet" class="tabItem">{$form_template_manager}</div>
 	<div id="menuTab5Sheet" class="tabItem">{$form_ebay_sync}</div>
-	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>
+	<div id="menuTab9Sheet" class="tabItem">{$ebay_listings}</div>
 	<div id="menuTab7Sheet" class="tabItem">{$help}</div>
+	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>
 </div>
 <br clear="left" />
 <br />
 <style>{literal}
-	#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
-	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
-	#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
+	#menuTab { float: left; padding: 0; margin: 0; text-align: left; width: 100% }
+	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background-color: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
+	#menuTab li.menuTabButton.selected { background-color: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
 	#tabList { clear: left; }
 	.tabItem { display: none; }
-	.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+	.tabItem.selected { display: block; background-color: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+	#menuTab #menuTab7, #menuTab #menuTab6 { float:right;background-color:#DFDFDF; border-left: 1px solid #CFCFCF; border-right: 1px solid #CFCFCF; border-top: 1px solid #CFCFCF; }
+	#menuTab #menuTab7.menuTabButton.selected, #menuTab #menuTab6.menuTabButton.selected { background-color: #FFF6D3; border-left: 1px solid #DFDFDF; border-right: 1px solid #DFDFDF; border-top: 1px solid #DFDFDF; }
 	{/literal}
 </style>
 <script>
@@ -101,4 +105,3 @@
 	</div>
 	<div id="categoriesProgression" style="overflow: auto;width: 200px;height: 100px;text-align: center;font-size: 16px;padding-top: 30px;"></div>
 </div>
-

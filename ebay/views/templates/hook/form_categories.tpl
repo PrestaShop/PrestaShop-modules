@@ -23,22 +23,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if isset($alerts) && !empty($alerts)}
-	<div>
-		<img src="../modules/ebay/views/img/warn.png" /> {$alerts}
-	</div>
-	<br /><br />
-{/if}
 <div>
+	{if isset($alerts) && !empty($alerts)}
+	<div class="warning big">
+		{$alerts}
+	</div>
+	{/if}
 	<p>
 		<b>{l s='Select a category' mod='ebay'}</b>
 		<br />
 		{l s='To list your products on eBay, you need to map your Prestashop category with an eBay category.' mod='ebay'} <br />
 		{l s='The button below will automatically map your categories with eBay categories. We recommend you check that you’re happy with the category chosen and amend if necessary.' mod='ebay'}
 	</p>
-	<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
-		<input class="button" name="submitSave" type="submit" value="{l s='Suggest eBay categories' mod='ebay'}" data-inlinehelp="{l s='Automatically map your Prestashop categories with the correct eBay category. ' mod='ebay'}" />
-	</form>
+	{if $form_categories == 0}
+		<form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category&action=suggestCategories" method="post" class="form" id="configForm2SuggestedCategories">
+			<input class="button" name="submitSave" type="submit" value="{l s='Suggest eBay categories' mod='ebay'}" data-inlinehelp="{l s='Automatically map your Prestashop categories with the correct eBay category. ' mod='ebay'}" />
+		</form>
+	{/if}
 	<!---------------------------->
 	<p>
 		<b>{l s='Your eBay selling price' mod='ebay'}</b>
@@ -55,6 +56,18 @@
 	</p>
 </div>
 <br />
+
+{if $nb_categorie > 0}
+	<p id="textPagination">{l s='Page'} <span>1</span> {l s='of %s' sprintf=(($nb_categorie / 3)|round:"0" + 1) mod='ebay'}</p>
+	<ul id="pagination">
+		<li class="prev"><</li>
+		{for $i=0 to ($nb_categorie / 3)|round:"0"}
+			<li{if $i == 0} class="current"{/if}>{$i + 1}</li>
+		{/for}
+		<li class="next">></li>
+	</ul>
+{/if}
+
 <form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category" method="post" class="form" id="configForm2">	<table class="table tableDnD" cellpadding="0" cellspacing="0" style="width: 100%;">
 		<thead>
 			<tr class="nodrag nodrop">
@@ -62,7 +75,7 @@
 					{l s='PrestaShop category' mod='ebay'}<br/>({l s='Quantity in stock' mod='ebay'})
 				</th>
 				<th>
-					<span data-inlinehelp="{l s='Only products with a mapped category will be listed.' mod='ebay'}">{l s='eBay category' mod='ebay'}</span>
+					<span data-inlinehelp="{l s='Only products with a mapped category will be listed.' mod='ebay'}">{l s='eBay category' mod='ebay'} <span style="color:red">{l s='(required)' mod='ebay'}</span></span>
 				</th>
 				<th style="width:185px;">
 					<span data-inlinehelp="{l s='Increase or decrease the sales price of the items listed on eBay.' mod='ebay'}">{l s='eBay selling price' mod='ebay'}</span>
@@ -70,9 +83,11 @@
 				<th class="center">
 					<span data-inlinehelp="{l s='All products with mapped categories will be listed.' mod='ebay'}">{l s='List on eBay' mod='ebay'}</span>
 				</th>
+				{*
 				<th class="center">
 					<span data-dialoghelp="http://pages.ebay.com/help/sell/pictures.html" data-inlinehelp="{l s='By default, only your main photo will appear in your eBay listing. You can add more photos but there may be a charge.' mod='ebay'}">{l s='Photos' mod='ebay'}</span>
-				</th>				
+				</th>
+				*}
 			</tr>
 		</thead>
 		<tbody>
@@ -93,7 +108,8 @@
 		<input class="primary button" name="submitSave" type="submit" value="{l s='Save and continue' mod='ebay'}" />
 	</div>
 </form>
-
+<br>
+<div style="display:none" class="warning big tips">{l s='TIP. You can improve your conversion by XYZ...' mod='ebay'}</div>
 <p><b>{l s='Warning: Only default product categories are used for the configuration' mod='ebay'}</b></p><br />
 
 <p align="left">
@@ -119,6 +135,67 @@
 		'Unselect products'		: "{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}",
 		'Unselect products clicked' : "{l s='Unselect products that you do NOT want to list on eBay' mod='ebay'}"
 	{rdelim};
+
+	// <![CDATA[
+	$(document).ready(function(){
+		$("#menuTab2Sheet").on("keypress", "input[id][name^='percent']", function(){
+			$('#menuTab2Sheet .warning.big.tips').fadeIn();
+		})
+		var form_categories = parseInt("{$form_categories}");
+		if (form_categories > 1)
+			$("#menuTab2").addClass('success');
+		else if (form_categories == 1)
+			$("#menuTab2").addClass('mind');
+		else
+		{
+			$("#menuTab2").addClass('wrong');
+		}
+
+		$("#pagination").children('li').click(function(){
+			var p = $(this).html();
+			var li = $("#pagination").children('li.current');
+			if ($(this).attr('class') == 'prev')
+			{
+				var liprev = li.prev();
+				if (!liprev.hasClass('prev'))
+				{
+					liprev.trigger('click');
+				}
+				return false;
+			}
+			if ($(this).attr('class') == 'next')
+			{
+				var linext = li.next();
+				if (!linext.hasClass('next'))
+				{
+					linext.trigger('click');
+				}
+				return false;
+			}
+			$("#pagination").children('li').removeClass('current');
+			$(this).addClass('current');
+			$("#textPagination").children('span').html(p);
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: module_dir + "ebay/ajax/saveCategories.php?token=" + ebay_token,
+				data: $('#configForm2').serialize()+"&ajax=true",
+				success : function(data)
+				{
+					if (data.valid)
+					{
+						$.ajax({
+							url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'] + '&unselect_product=' + ebay_l['Unselect products'] + '&p=' + p,
+							success : function(data) {
+								$("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data);
+							}
+						});
+					}
+				}
+			});
+		})
+	});
+	//]]>
 	
 </script>
 <script type="text/javascript" src="{$_module_dir_}ebay/views/js/categories.js?date={$date}"></script>

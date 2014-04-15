@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 {if isset($relogin) && $relogin}
 	{literal}
 	<script>
@@ -45,6 +46,11 @@
 			$('.regenerate_token_button').show();
 			$('.regenerate_token_click').hide();
 		{rdelim});
+		var account_setting = parseInt("{$account_setting}");
+		if (account_setting == 1)
+			$("#menuTab1").addClass('success');
+		else
+			$("#menuTab1").addClass('wrong');
 	})
 </script>
 
@@ -153,9 +159,10 @@
 				{/foreach}
 			</select>
 		</div>
-
-		<label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
-		<div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
+		<div>
+			<label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
+			<div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
+		</div>
 	</fieldset>
 
 	<fieldset style="margin-top:10px;">
@@ -203,6 +210,45 @@
 		</div>
 		<div style="clear:both;"></div>
 
+		<label>
+			{l s='Photos per listing' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="number" name="picture_per_listing" value="{$picture_per_listing}" min="0" max="99" data-inlinehelp="{l s='Check eBay\'s changes for additional images' mod='ebay'}">
+		</div>
+
+	</fieldset>
+
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Others' mod='ebay'}</legend>
+		{if !$is_writable}<p class="warning">{l s='The log file is not writable' mod='ebay'}</p>{/if}
+		<label>
+			{l s='Activate Logs' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="checkbox" name="activate_logs" value="1"{if $activate_logs} checked="checked"{/if}>
+		</div>
+		<div class="clear both"></div>
+
+		<label>
+			{l s='Download logs' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<a href="{$url}&download_log=1" class="button">{l s='Download' mod='ebay'}</a>
+		</div>
+		<div class="clear both"></div>
+	</fieldset>
+
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Customer notifications' mod='ebay'}</legend>
+		<label>
+			{l s='Product availability' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="checkbox" name="activate_mails" value="1"{if $activate_mails} checked="checked"{/if}>
+			<span>{l s='Give the customer the option of receiving a notification for an available product if this one is out of stock.' mod='ebay'}</span>
+		</div>
+		<div class="clear both"></div>
 	</fieldset>
     
 	<fieldset style="margin-top:10px;">
@@ -230,6 +276,7 @@
         
 	</fieldset>
 
+<<<<<<< HEAD
    <fieldset style="margin-top:10px;">
 		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
 		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
@@ -241,6 +288,9 @@
     </fieldset>
         
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
+=======
+	<div id="buttonEbayParameters" style="margin-top:5px;">
+>>>>>>> 99d16aa17c97f42ba4f000884e54cb0688a38b94
 		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
 			<input class="primary button" name="submitSave" type="hidden" value="{l s='Save and continue' mod='ebay'}" />
 			<input class="primary button" type="submit" id="save_ebay_parameters" value="{l s='Save and continue' mod='ebay'}" />
@@ -255,6 +305,24 @@
 				setTimeout(function(){					
 					$('#ebay_returns_description').val($('#ebayreturnshide').html());
 				}, 1000);
+
+				var listings_duration = $('select[name="listingdurations"]');
+				listings_duration.on('change', function(){
+					if ($(this).val() == 'GTC')
+					{
+						$(this).parent('.margin-form').siblings('div').fadeOut()
+						$(this).parent('.margin-form').siblings('div').find('input').attr('checked','checked');
+					}
+					else
+					{
+						$(this).parent('.margin-form').siblings('div').fadeIn()
+					}
+				})
+				var val_listings_duration = listings_duration.val();
+				if (val_listings_duration == 'GTC')
+				{
+					listings_duration.parent('.margin-form').siblings('div').hide()
+				}
 			});
 			
 			$('#token-btn').click(function() {

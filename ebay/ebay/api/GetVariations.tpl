@@ -58,7 +58,7 @@
 			{/if}
 			<VariationSpecificPictureSet>
 				<VariationSpecificValue>{$picture.value}</VariationSpecificValue>
-				<PictureURL>{$picture.url}</PictureURL>
+				<PictureURL>{*{$picture.url}*}http://raphaelarbuz.com/202/7-home_default.jpg</PictureURL>
 			</VariationSpecificPictureSet>
 		{/foreach}
 	{/foreach}
