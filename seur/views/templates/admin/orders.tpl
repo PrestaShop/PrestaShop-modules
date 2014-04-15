@@ -36,10 +36,10 @@
             <input type="hidden" name="module_dir" id="module_dir" value="{$path|escape:'htmlall':'UTF-8'}" />
             <input type="hidden" name="module_non_ssl_href" id="module_non_ssl_href" value="{$module_instance->name|escape:'htmlall':'UTF-8'}"/>
         {if isset($error)}
-            {include file=$smarty.const._MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/error_message.tpl' seur_error_message=$error|escape:'htmlall':'UTF-8'}
+            {include file=$smarty.const._PS_MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/error_message.tpl' seur_error_message=$error|escape:'htmlall':'UTF-8'}
         {/if}
         {if $address_error == 1}
-            {include file=$smarty.const._MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/error_message.tpl' seur_error_message=$address_error_message|escape:'htmlall':'UTF-8'}
+            {include file=$smarty.const._PS_MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/error_message.tpl' seur_error_message=$address_error_message|escape:'htmlall':'UTF-8'}
         {/if}
         <p>{l s='Pickup localizator' mod='seur'}:
             {if $pickup_s == 1}
@@ -147,6 +147,6 @@
     <br />
     <fieldset id="detalleseur">
         <legend><img src="{$path|escape:'htmlall':'UTF-8'}img/logonew_32.png" alt="{l s='SEUR' mod='seur'}" title="{l s='SEUR' mod='seur'}" border="0" /></legend>
-        {include file=$smarty.const._MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/warning_message.tpl' seur_warning_message=$configuration_warning_message|escape:'htmlall':'UTF-8'}
+        {include file=$smarty.const._PS_MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/warning_message.tpl' seur_warning_message=$configuration_warning_message|escape:'htmlall':'UTF-8'}
     </fieldset>
 {/if}
