@@ -276,7 +276,6 @@
         
 	</fieldset>
 
-<<<<<<< HEAD
    <fieldset style="margin-top:10px;">
 		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
 		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
@@ -287,10 +286,7 @@
 		<div style="clear:both;"></div>
     </fieldset>
         
-	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
-=======
 	<div id="buttonEbayParameters" style="margin-top:5px;">
->>>>>>> 99d16aa17c97f42ba4f000884e54cb0688a38b94
 		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
 			<input class="primary button" name="submitSave" type="hidden" value="{l s='Save and continue' mod='ebay'}" />
 			<input class="primary button" type="submit" id="save_ebay_parameters" value="{l s='Save and continue' mod='ebay'}" />

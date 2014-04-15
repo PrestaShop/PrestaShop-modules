@@ -1443,16 +1443,12 @@ class Ebay extends Module
 				(version_compare(_PS_VERSION_, '1.5', '>') ? Tools::nl2br(Tools::getValue('ebay_returns_description')) : nl2br2(Tools::getValue('ebay_returns_description'))),
 				pSQL(Tools::getValue('ebay_returns_accepted_option'))
 			)
-<<<<<<< HEAD
             && Configuration::updateValue('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
             && Configuration::updateGlobalValue('EBAY_SEND_STATS', Tools::getValue('stats') ? 1 : 0)
-=======
-            && $this->ebay_profile->setConfiguration('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
 			&& $this->ebay_profile->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier')))
 			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
 			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 			&& $this->ebay_profile->setConfiguration('EBAY_PICTURE_PER_LISTING', $picture_per_listing)
->>>>>>> 99d16aa17c97f42ba4f000884e54cb0688a38b94
 		)
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
