@@ -120,12 +120,12 @@ class EbayCategorySpecific
     public static function getNbOptionalItemSpecifics($id_ebay_profile)
     {
         $sql = 'SELECT count(*)
-            FROM `'._DB_PREFIX_.'ebay_category_specifics` ecs
-            INNER JOIN `'._DB_PREFIX_'ebay_category ec
+            FROM `'._DB_PREFIX_.'ebay_category_specific` ecs
+            INNER JOIN `'._DB_PREFIX_.'ebay_category` ec
             ON ecs.`id_category_ref` = ec.`id_category_ref`
-            INNER JOIN `'._DB_PREFIX_'ebay_category_configuration` ecc
+            INNER JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc
             ON ec.`id_ebay_category` = ecc.`id_ebay_category`
-            AND ec.`id_ebay_profile` = '.(int)$id_ebay_profile.'
+            AND ecc.`id_ebay_profile` = '.(int)$id_ebay_profile.'
             WHERE ecs.`required` = 0
             AND `id_ebay_category_specific_value` > 0';
         return Db::getInstance()->getValue($sql);

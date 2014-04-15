@@ -43,19 +43,19 @@ class EbayProduct
     {
         $id_shop = $ebay_profile->id_shop;
         $sql = 'SELECT `id_product` 
-            FROM `'._DB_PREFIX.'product_shop`
+            FROM `'._DB_PREFIX_.'product_shop`
             WHERE `id_shop` = '.(int)$id_shop;    
         $results = Db::getInstance()->executeS($sql);
-        $id_shop_products = array_map(function($a) {return (int)$a['id_product']; });
+        $id_shop_products = array_map(function($a) {return (int)$a['id_product']; }, $results);
 
         $nb_shop_products = count($id_shop_products);
         
         $sql2 = 'SELECT count(*)
-            FROM '._DB_PREFIX_.'ebay_product`
-            WHERE `id_product` IN ('.implode(',', $id_shop_products)')';
+            FROM `'._DB_PREFIX_.'ebay_product`
+            WHERE `id_product` IN ('.implode(',', $id_shop_products).')';
         $nb_synchronized_products = Db::getInstance()->getValue($sql2);
         
-        return number_format($nb_synchronized_products / $nb_shop_products, 2);
+        return number_format($nb_synchronized_products / $nb_shop_products * 100.0, 2);
     }
 
 	public static function getNbProducts($id_ebay_profile)

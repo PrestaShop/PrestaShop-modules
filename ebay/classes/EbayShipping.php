@@ -68,7 +68,7 @@ class EbayShipping
             AND `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $international = fals
+	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $international = false)
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_shipping`
 			VALUES(\'\',

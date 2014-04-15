@@ -27,8 +27,14 @@
 		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
 		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
 		<div class="margin-form">
-            <input type="button" value="No thanks">
-            <input type="button" value="I agree">
+            <form action="#" method="POST">
+                <input type="hidden" name="stats" value="0">
+                <input type="submit" name="submitSave" value="No thanks">
+            </form>
+            <form action="#" method="POST">
+                <input type="hidden" name="stats" value="1">
+                <input type="submit" name="submitSave" value="I agree">
+            </form>
 		</div>
 		<div style="clear:both;"></div>
     </fieldset>

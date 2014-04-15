@@ -228,8 +228,18 @@
         <a id="sync_products_by_cron_url" href="{$sync_products_by_cron_url}" target="_blank" style="{if $sync_products_by_cron == false};display:none{/if}">{$sync_products_by_cron_url}</a>
 		<div class="clear both"></div>
         
-	</fieldset>    
+	</fieldset>
 
+   <fieldset style="margin-top:10px;">
+		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
+		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
+		<div class="margin-form">
+            <input type="radio" name="stats" value="0" {if !$stats}checked="checked"{/if}> No thanks&nbsp;&nbsp;
+            <input type="radio" name="stats" value="1" {if $stats}checked="checked"{/if}> I agree<br>
+		</div>
+		<div style="clear:both;"></div>
+    </fieldset>
+        
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
 		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
 			<input class="primary button" name="submitSave" type="hidden" value="{l s='Save and continue' mod='ebay'}" />

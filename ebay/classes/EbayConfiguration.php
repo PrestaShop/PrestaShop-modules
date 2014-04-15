@@ -73,13 +73,12 @@ class EbayConfiguration
 		), false, true, Db::REPLACE);
 	}	
 	
-    public static function getJson($id_ebay_profile)
+    public static function getAll($id_ebay_profile)
     {
         $sql = 'SELECT `name`, `value`
             FROM `'._DB_PREFIX_.'ebay_configuration`
             WHERE `id_ebay_profile` = '.(int)$id_ebay_profile;
-        $results = Db::getInstance()->executeS($sql);
-        return json_encode($results);
+        return Db::getInstance()->executeS($sql);
     }    
     
 	/**

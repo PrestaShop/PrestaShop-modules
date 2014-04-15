@@ -55,6 +55,7 @@ $classes_to_load = array(
 	'EbayConfiguration',
     'EbayProductModified',
     'EbayLog',
+    'EbayStat',
     'TotFormat'
 );
 
@@ -82,6 +83,8 @@ class Ebay extends Module
 	private $ebay_profile;
     
     private $is_multishop;
+    
+    private $stats_version;
 
 	/**
 	 * Construct Method
@@ -92,6 +95,7 @@ class Ebay extends Module
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
 		$this->version = '1.7';
+        $this->stats_version = '1.0';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -883,12 +887,18 @@ class Ebay extends Module
 
 	public function hookBackOfficeTop($params)
 	{
+        if (Configuration::get('EBAY_SEND_STATS') && (Configuration::get('EBAY_STATS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-1 day')).'.000Z'))
+        {
+            EbayStat::send();
+            Configuration::updateGlobalValue('EBAY_STATS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
+        }   
+        
 		if (!((version_compare(_PS_VERSION_, '1.5.1', '>=')
 			&& version_compare(_PS_VERSION_, '1.5.2', '<'))
 			&& !Shop::isFeatureActive()))
 			$this->hookHeader($params);
 	}
-
+    
 	/**
 	* Main Form Method
 	*
@@ -931,6 +941,11 @@ class Ebay extends Module
 			else
 				foreach ($errors as $error)
 					$this->html .= '<div class="alert error"><img src="../modules/ebay/views/img/forbbiden.gif" alt="nok" />&nbsp;'.$error.'</div>';
+            
+            if (Configuration::get('EBAY_SEND_STATS')) {
+                $ebay_stat = new EbayStat($this->stats_version, $this->ebay_profile);
+                $ebay_stat->save();
+            }
 		}
 
 		$this->html .= $this->_displayForm();
@@ -1022,6 +1037,8 @@ class Ebay extends Module
 
 	private function _postProcess()
 	{
+		if (Tools::getValue('section') == '')
+			$this->_postProcessStats();
 		if (Tools::getValue('section') == 'parameters')
 			$this->_postProcessParameters();
 		elseif (Tools::getValue('section') == 'category')
@@ -1253,6 +1270,7 @@ class Ebay extends Module
             'sync_products_by_cron_url' => $sync_products_by_cron_url,
             'is_multishop'  => $this->is_multishop,
             'sync_orders_by_cron_url' => $sync_orders_by_cron_url,
+            'stats' => Configuration::get('EBAY_SEND_STATS'),
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => $returns_policy_configuration->ebay_returns_within,
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
@@ -1304,6 +1322,15 @@ class Ebay extends Module
 		);
 	}
 
+	private function _postProcessStats()
+	{
+        if (Configuration::updateGlobalValue('EBAY_SEND_STATS', Tools::getValue('stats') ? 1 : 0))
+    		$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+    	else
+    		$this->html .= $this->displayError($this->l('Settings failed'));        
+    }
+
+
 	private function _postProcessParameters()
 	{
 		// Saving new configurations
@@ -1323,6 +1350,7 @@ class Ebay extends Module
 				pSQL(Tools::getValue('ebay_returns_accepted_option'))
 			)
             && Configuration::updateValue('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
+            && Configuration::updateGlobalValue('EBAY_SEND_STATS', Tools::getValue('stats') ? 1 : 0)
 		)
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
 		else
