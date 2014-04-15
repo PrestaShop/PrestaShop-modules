@@ -302,17 +302,19 @@ class PaypalExpressCheckout extends Paypal
 		if (count($discounts) > 0)
 			foreach ($discounts as $discount)
 			{
-				$fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = $discount['id_discount'];
-
-				$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
-				if (isset($discount['description']) && !empty($discount['description']))
-					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 100).'...';
-
-				/* It is a discount so we store a negative value */
-				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = -1 * Tools::ps_round($discount['value_real'], $this->decimals);
-				$fields['L_PAYMENTREQUEST_0_QTY'.$index] = 1;
-
-				$total = Tools::ps_round($total + $fields['L_PAYMENTREQUEST_0_AMT'.$index], $this->decimals);
+				if ($discount['gift_product'] == 0) {
+					$fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = $discount['id_discount'];
+	
+					$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
+					if (isset($discount['description']) && !empty($discount['description']))
+						$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 100).'...';
+	
+					/* It is a discount so we store a negative value */
+					$fields['L_PAYMENTREQUEST_0_AMT'.$index] = -1 * Tools::ps_round($discount['value_real'], $this->decimals);
+					$fields['L_PAYMENTREQUEST_0_QTY'.$index] = 1;
+	
+					$total = Tools::ps_round($total + $fields['L_PAYMENTREQUEST_0_AMT'.$index], $this->decimals);
+				}
 			}
 	}
 
