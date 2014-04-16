@@ -249,8 +249,6 @@ class Ebay extends Module
 
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
-		
-		
 
 		return true;
 	}
@@ -276,7 +274,7 @@ class Ebay extends Module
 			$returns_policy_configuration = new EbayReturnsPolicyConfiguration();
 			$returns_policy_configuration->save();
 			
-			$profile->id_ebay_returns_policy_configuration = $id_returns_policy_configuration;
+			$profile->id_ebay_returns_policy_configuration = $returns_policy_configuration->id;
 			$profile->save();
 		}		
 	}
@@ -1085,8 +1083,8 @@ class Ebay extends Module
 
 		$errors = array();
 
-		if (!Tools::getValue('ebay_identifier'))
-			$errors[] = $this->l('Your eBay user id is not specified or is invalid');
+//		if (!Tools::getValue('ebay_identifier'))
+//			$errors[] = $this->l('Your eBay user id is not specified or is invalid');
 
 		if (!Validate::isEmail(Tools::getValue('ebay_paypal_email')))
 			$errors[] = $this->l('Your PayPal email address is not specified or invalid');
@@ -1309,8 +1307,6 @@ class Ebay extends Module
 		
 		$ebay_paypal_email = Tools::safeOutput(Tools::getValue('ebay_paypal_email', $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL')));
 		$shopPostalCode = Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE')));
-		$within = Configuration::get('EBAY_RETURNS_WITHIN');
-		$whopays = Configuration::get('EBAY_RETURNS_WHO_PAYS');
 		$ebayListingDuration = $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION');
 		$sizedefault = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_DEFAULT');
 		$sizeBig = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG');
@@ -1319,7 +1315,7 @@ class Ebay extends Module
 
 
 		$account_setting = 0;
-		if (!empty($ebay_identifier) && !empty($ebayShopValue) && !empty($ebay_paypal_email) && !empty($shopPostalCode) && !empty($within) && !empty($whopays) && !empty($ebayListingDuration) && !empty($sizedefault) && !empty($sizeBig) && !empty($sizesmall))
+		if (!empty($ebay_identifier) && !empty($ebayShopValue) && !empty($ebay_paypal_email) && !empty($shopPostalCode) && !empty($returns_policy_configuration) && !empty($ebayListingDuration) && !empty($sizedefault) && !empty($sizeBig) && !empty($sizesmall))
 			$account_setting = 1;
 
 		$smarty_vars = array(
@@ -1356,10 +1352,8 @@ class Ebay extends Module
             'stats' => Configuration::get('EBAY_SEND_STATS'),
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => $returns_policy_configuration->ebay_returns_within,
-			'within' => $within,
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
 			'whopays' => $returns_policy_configuration->ebay_returns_who_pays,
-			'whopays' => $whopays,
 			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
@@ -1429,7 +1423,7 @@ class Ebay extends Module
 			$picture_per_listing = 0;
 
 		if ($this->ebay_profile->setConfiguration('EBAY_PAYPAL_EMAIL', pSQL(Tools::getValue('ebay_paypal_email')))
-			&& ($this->ebay_profile->ebay_user_identifier = pSQL(Tools::getValue('ebay_identifier')))
+//			&& ($this->ebay_profile->ebay_user_identifier = pSQL(Tools::getValue('ebay_identifier')))
 			&& $this->ebay_profile->setConfiguration('EBAY_SHOP', pSQL(Tools::getValue('ebay_shop')))
 			&& $this->ebay_profile->setConfiguration('EBAY_SHOP_POSTALCODE', pSQL(Tools::getValue('ebay_shop_postalcode')))
 			&& $this->ebay_profile->setConfiguration('EBAY_LISTING_DURATION', Tools::getValue('listingdurations'))
@@ -1445,7 +1439,7 @@ class Ebay extends Module
 			)
             && Configuration::updateValue('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
             && Configuration::updateGlobalValue('EBAY_SEND_STATS', Tools::getValue('stats') ? 1 : 0)
-			&& $this->ebay_profile->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier')))
+//			&& $this->ebay_profile->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier')))
 			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
 			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 			&& $this->ebay_profile->setConfiguration('EBAY_PICTURE_PER_LISTING', $picture_per_listing)
