@@ -88,20 +88,21 @@ function setCustomerInformation($ppec, $email)
 function setCustomerAddress($ppec, $customer, $id = null)
 {
 	$address = new Address($id);
-	$address->id_country = Country::getByIso($ppec->result['COUNTRYCODE']);
-	$address->alias = 'Paypal_Address';
+	$address->id_country = Country::getByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
+	if($id == null)
+		$address->alias = 'Paypal_Address';
+
 	$address->lastname = $customer->lastname;
 	$address->firstname = $customer->firstname;
 	$address->address1 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET'];
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
-	$address->id_state = (int)State::getIdByIso($ppec->result['SHIPTOSTATE'], $address->id_country);
-	$address->postcode = $ppec->result['SHIPTOZIP'];
+	$address->id_state = (int)State::getIdByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE'], $address->id_country);
+	$address->postcode = $ppec->result['PAYMENTREQUEST_0_SHIPTOZIP'];
 	$address->id_customer = $customer->id;
 	return $address;
 }
-
 if ($request_type && $ppec->type)
 {
 	$id_product = (int)Tools::getValue('id_product');
