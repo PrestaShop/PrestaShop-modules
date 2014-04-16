@@ -127,3 +127,8 @@ div.table-responsive table#product a
 {
 	cursor: pointer;
 }
+
+i.process-icon-help
+{
+    background-image: none !important;
+}
