@@ -2336,8 +2336,6 @@ class Ebay extends Module
 		foreach($policiesDetails['ReturnsWithin'] as $returns_within)
 			$ReturnsWithin[] = array_map('pSQL', $returns_within);
 		$this->setConfiguration('EBAY_RETURNS_WITHIN_VALUES', serialize($ReturnsWithin));
-//		if(!Configuration::get('EBAY_RETURNS_WITHIN'))
-//			$this->setConfiguration('EBAY_RETURNS_WITHIN', 'Days_14');
 
 		$returnsWhoPays = array();
 		foreach($policiesDetails['ReturnsWhoPays'] as $returns_within)
