@@ -2343,9 +2343,6 @@ class Ebay extends Module
 		foreach($policiesDetails['ReturnsWhoPays'] as $returns_within)
 			$returnsWhoPays[] = array_map('pSQL', $returns_within);
 		$this->setConfiguration('EBAY_RETURNS_WHO_PAYS_VALUES', serialize($returnsWhoPays));
-//		if(!Configuration::get('EBAY_RETURNS_WHO_PAYS'))
-//			$this->setConfiguration('EBAY_RETURNS_WHO_PAYS', 'Buyer');
-
 
 		return $policiesDetails['ReturnsAccepted'];
 	}
