@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  *}
 {if isset($email_warning_message)}
-	{include file=$smarty.const._MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/warning_message.tpl' seur_warning_message=$email_warning_message|escape:'htmlall':'UTF-8'}
+	{include file=$smarty.const._PS_MODULE_DIR_|escape:'htmlall':'UTF-8'|cat:'seur/views/templates/admin/warning_message.tpl' seur_warning_message=$email_warning_message|escape:'htmlall':'UTF-8'}
 {/if}
 
 <div id="seur_module" class="{$ps_version|escape:'htmlall':'UTF-8'}">
