@@ -50,6 +50,7 @@ function upgrade_module_3_7($object, $install = false)
 				PRIMARY KEY (`id_paypal_login_user`)
 			) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
 			return false;
+		Configuration::updateValue('PAYPAL_VERSION', '3.7.0');
 	}
 
 

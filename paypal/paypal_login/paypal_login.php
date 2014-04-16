@@ -62,7 +62,10 @@ class PayPalLogin
 	public static function getReturnLink()
 	{
 		// return 'http://requestb.in/1jlaizq1';
-		return Context::getContext()->shop->getBaseUrl().'modules/paypal/paypal_login/paypal_login_token.php';
+		if(method_exists(Context::getContext()->shop, 'getBaseUrl'))
+			return Context::getContext()->shop->getBaseUrl().'modules/paypal/paypal_login/paypal_login_token.php';
+		else
+			return 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/modules/paypal/paypal_login/paypal_login_token.php';
 	}
 
 
