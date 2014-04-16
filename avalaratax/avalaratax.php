@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.6';
+		$this->version = '3.4.8';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -513,18 +513,17 @@ class AvalaraTax extends Module
 			$buffer .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
 		  	<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
 
-		if (Tools::isSubmit('SubmitAvalaraTaxSettings'))
+		if (Tools::isSubmit('SubmitAvalaraTaxSettings')) 
 		{
+			Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
+			Configuration::updateValue('AVALARATAX_LICENSE_KEY', Tools::getValue('avalaratax_license_key'));
+			Configuration::updateValue('AVALARATAX_URL', Tools::getValue('avalaratax_url'));
+			Configuration::updateValue('AVALARATAX_COMPANY_CODE', Tools::getValue('avalaratax_company_code'));
+
 			$connectionTestResult = $this->_testConnection();
-			
 			if (strpos($connectionTestResult[0], 'Error') === false)
 			{
-				Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
-				Configuration::updateValue('AVALARATAX_LICENSE_KEY', Tools::getValue('avalaratax_license_key'));
-				Configuration::updateValue('AVALARATAX_URL', Tools::getValue('avalaratax_url'));
-				Configuration::updateValue('AVALARATAX_COMPANY_CODE', Tools::getValue('avalaratax_company_code'));
-				Configuration::updateValue('AVALARATAX_CONFIGURATION_OK', true);
-				
+				Configuration::updateValue('AVALARATAX_CONFIGURATION_OK', true); 
 				$buffer .= $this->_displayConfirmation();
 			}
 		}
