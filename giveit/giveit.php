@@ -57,6 +57,11 @@ class GiveIt extends Module {
 	const PRIVATE_KEY = 'GIVE_IT_PRIVATE_KEY';
 	const BUTTON_ACTIVE = 'GIVE_IT_BUTTON_ACTIVE';
 	const BUTTON_POSITION = 'GIVE_IT_BUTTON_POSITION';
+	
+	const MODE = 'GIVE_IT_MODE';
+	
+	const DEBUG = 'GIVE_IT_DEBUG_MODE';
+	const PRODUCTION = 'GIVE_IT_PRODUCTION_MODE';
 
 	const CURRENT_INDEX = 'index.php?tab=AdminModules&configure=giveit&module_name=giveit&token=';
 
@@ -193,18 +198,10 @@ class GiveIt extends Module {
 						return false;
 			}
 		}
-
-		if (version_compare(_PS_VERSION_, '1.5', '<'))
-			return Configuration::updateValue(self::BUTTON_ACTIVE, 0) && Configuration::updateValue(self::BUTTON_POSITION, self::PRODUCT_FOOTER);
-		else
-		{
-			$shop_ids = Shop::getShops(false, null, true);
-
-			foreach ($shop_ids as $item => $id_shop)
-				if (!Configuration::updateValue(self::BUTTON_ACTIVE, 0) || !Configuration::updateValue(self::BUTTON_POSITION, self::PRODUCT_FOOTER))
-					return false;
-		}
-		return true;
+		
+		return Configuration::updateValue(self::BUTTON_ACTIVE, 0) &&
+			Configuration::updateValue(self::BUTTON_POSITION, self::PRODUCT_FOOTER) &&
+			Configuration::updateValue(self::MODE, self::PRODUCTION);
 	}
 
 	private function setDefaultCategorySetting($id_category, $id_shop)
@@ -262,7 +259,6 @@ class GiveIt extends Module {
 					Tools::addJS($this->_path.'js/giveit.js');
 				else
 					$this->context->controller->addJS($this->_path.'js/giveit.js');
-				
 				
 				$js = $this->api->client->getButtonJS();
 
@@ -354,7 +350,8 @@ class GiveIt extends Module {
 			$html = '';
 			foreach ($combinations as $id_product_attribute => $combination)
 			{
-				if ($combination['quantity'] && $this->buttonEnabledForProduct($product, $id_product_attribute, $combinations))
+				$button_enabled_for_product = $this->buttonEnabledForProduct($product, $id_product_attribute, $combinations);
+				if ($combination['quantity'] && $button_enabled_for_product === true)
 				{
 					$this->api->setProduct($product, $combination);
 
@@ -362,6 +359,15 @@ class GiveIt extends Module {
 						$html .= sprintf('<%s class="giveit_button_container" rel="'.$id_product_attribute
 													.'" style="display:'.($id_product_attribute ? 'none' : 'block').'">', $html_tag)
 									.$button_html.sprintf('</%s>', $html_tag);
+				}
+				else
+				{
+					if (Configuration::get(self::MODE) == self::DEBUG)
+						$html .=  sprintf('<%s class="giveit_button_container" rel="'.$id_product_attribute
+													.'" style="display:'.($id_product_attribute ? 'none' : 'block').'">', $html_tag)
+									.'<p class="error alert alert-danger">'.sprintf($this->l('Give.it button was not displayed - %s'), $button_enabled_for_product).'</p>'.sprintf('</%s>', $html_tag);
+					else
+						$html .= '<!-- '.sprintf($this->l('Give.it button was not displayed - %s'), $button_enabled_for_product).' -->';
 				}
 			}
 
@@ -373,7 +379,7 @@ class GiveIt extends Module {
 	{
 		/* button is disabled globaly */
 		if (!Configuration::get(self::BUTTON_ACTIVE))
-			return false;
+			return $this->l('button is turned off in module settings page');
 
 		if (!$combinations)
 			$combinations = $this->getProductCombinations($product);
@@ -393,7 +399,7 @@ class GiveIt extends Module {
 				return $this->isProductCategoryEnabledToDisplayButton($product->id);
 			/* button should not be displayed in any case */
 			elseif ($id_product_attribute !== null && $combination['id_product_attribute'] == $id_product_attribute)
-				return false;
+				return $this->l('disabled product combination');
 		}
 
 		return $this->isProductCategoryEnabledToDisplayButton($product->id);
@@ -403,7 +409,7 @@ class GiveIt extends Module {
 	{
 		/* checks if button is enabled for product category */
 		if (!$categories = GiveItCategory::getCategories())
-			return false;
+			return $this->l('one or more categores to which belongs product are disabled and button uses global settings');
 
 		$category_shop = version_compare(_PS_VERSION_, '1.5', '<') ? '' : ' JOIN `'
 						._DB_PREFIX_.'category_shop` cs ON (cs.`id_shop`='
@@ -424,7 +430,10 @@ class GiveIt extends Module {
 		');
 		/* if amount of categories for this product differs from amount of categories enabled hide button */
 
-		return (bool)($total_category_count_products==$active_product_categories);
+		if ($total_category_count_products==$active_product_categories)
+			return true;
+		else
+			return $this->l('one or more categores to which belongs product are disabled and button uses global settings');
 	}
 
 	/* captures give.it javascript code in order to return it in header hook rather than echoing it there */
@@ -785,6 +794,8 @@ class GiveIt extends Module {
 				$button_active = (int)Tools::isSubmit('button_active');
 
 			Configuration::updateValue(self::BUTTON_ACTIVE, $button_active);
+			if (Tools::getValue(self::MODE))
+				Configuration::updateValue(self::MODE, Tools::getValue(self::MODE));
 
 			$button_position = Tools::getValue('button_position');
 
