@@ -830,11 +830,7 @@ class Twenga extends PaymentModule
 			if (Validate::isLoadedObject($product) AND $product->active)
 			{
 				// Check if product declinations exist.
-				$combinations = $this->getCombinations($product, $lang);
-				
-				// Set an empty value even no combinations was found to make foreach usable.
-				if (empty($combinations))
-					$combinations[] = array();
+				$combinations = $this->getCombinations($product, $lang) or array();
 				
 				foreach ($combinations as $combination)
 				{
