@@ -68,7 +68,7 @@
 		<h4>{l s='To list your products on eBay, you need to create' mod='ebay'} <a href="{l s='https://scgi.ebay.co.uk/ws/eBayISAPI.dll?RegisterEnterInfo&bizflow=2' mod='ebay'}">{l s='a business seller account' mod='ebay'}</a> {l s='and' mod='ebay'} <a href="https://www.paypal.com/">{l s='a PayPal account.' mod='ebay'}</a></h4>
 		<label>{l s='eBay User ID' mod='ebay'} : </label>
 		<div class="margin-form">
-			<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}"/>
+			<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}" disabled />
 		</div>
 		<label>{l s='eBay Shop' mod='ebay'} : </label>
 		<div class="margin-form">
@@ -263,7 +263,7 @@
         <br>
         {if $is_multishop }
             {l s='in Multishop mode, you need to run the following CRON task to sync orders' mod='ebay'}
-            <a href="{$sync_orders_by_cron_url}" target="_blank">{$sync_products_by_cron_url}</a>
+            <a href="{$sync_orders_by_cron_url}" target="_blank">{$sync_orders_by_cron_url}</a>
         {/if}
         <br><br>
 		<label>
