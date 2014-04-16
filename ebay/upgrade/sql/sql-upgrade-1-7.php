@@ -108,6 +108,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_stat` (
 	`version` varchar(10) NOT NULL,
     `data` text,
     `date_add` datetime NOT NULL,
-    `tries` TINYINT unsigned NOT NULL
+    `tries` TINYINT unsigned NOT NULL,
 	PRIMARY KEY  (`id_ebay_stat`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';

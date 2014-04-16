@@ -155,7 +155,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_shipping_service` (
 		  PRIMARY KEY (`id_shipping_service`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] = 'CREATE TABLE `'._DB_PREFIX_.'ebay_returns_policy` (
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_returns_policy` (
 		  `id_return_policy` int(11) NOT NULL AUTO_INCREMENT,
 		  `value` varchar(256) NOT NULL,
 		  `description` varchar(256) NOT NULL,
@@ -287,6 +287,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_stat` (
 	`version` varchar(10) NOT NULL,
     `data` text,
     `date_add` datetime NOT NULL,
-    `tries` TINYINT unsigned NOT NULL
+    `tries` TINYINT unsigned NOT NULL,
 	PRIMARY KEY  (`id_ebay_stat`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
