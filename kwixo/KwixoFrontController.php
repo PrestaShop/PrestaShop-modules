@@ -48,8 +48,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		if (_PS_VERSION_ < '1.5')
 			$cookie = new Cookie('ps');
 		else
-			$cookie = Context::getContext()->cookie;
-		$cart = new Cart($cookie->id_cart);
+			$cart = Context::getContext()->cart;
 		$customer = new Customer((int)$cart->id_customer);
 		$module = new Kwixo();
 		//For multishop
@@ -129,7 +128,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 
 				//xml <infocommande>
 				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
 
 				break;
@@ -139,7 +138,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					$delivery_address->lastname, $delivery_address->firstname,
 					null, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
 				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
 
 				break;
@@ -186,14 +185,14 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					{
 						$control->createDeliveryAddress($address3, $zipcode, $city, $country, $address4);
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '4', $carrier_speed);
 					}
 					else
 					{
 						//<pointrelais> added if delivery mode is not BPR, A2P or CIT
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
 						$drop_off_point_address = $control->createAddress('', $address2, $zipcode,
 							$city, $country, null);
@@ -230,14 +229,14 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					{
 						$control->createDeliveryAddress($address1, $zipcode, $city, $country, $address2);
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '4', $carrier_speed);
 					}
 					else
 					{
 						//<pointrelais> added if delivery mode is not BPR, A2P or CIT
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
 						$drop_off_point_address = $control->createAddress('', $address2, $zipcode,
 							$city, $country, null);
@@ -271,7 +270,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					if ($delivery_mode == '24R' || $delivery_mode == 'DRI')
 					{
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-							$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+							$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
 						$drop_off_point_address = $control->createAddress('', $address3, $zipcode,
 							$city, $country, null);
@@ -282,7 +281,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 						$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode,
 							$delivery_address->city, $delivery_country->iso_code, $delivery_address->address2);
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-							$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+							$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '4', $carrier_speed);
 					}
 				}
@@ -308,7 +307,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					}
 					//<pointrelais>
 					$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-						$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+						$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 					$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
 					$drop_off_point_address = $control->createAddress('', $address1, $zipcode,
 						$city, $country, null);
@@ -323,7 +322,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 					$delivery_address->lastname, $delivery_address->firstname,
 					null, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
 				$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
-					$currency->iso_code, $_SERVER['REMOTE_ADDR'], date('Y-m-d H:i:s'));
+					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 				$kwixo_carrier = $order_details->createCarrier($carrier_name, $carrier_type, $carrier_speed);
 
 				if ($carrier_type == 1)
