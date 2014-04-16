@@ -1,5 +1,6 @@
 <?php
-/* NOTICE OF LICENSE
+/**
+* NOTICE OF LICENSE
 *
 * This source file is subject to a commercial license from SARL Ether Création
 * Use, copy, modification or distribution of this source file without written
@@ -15,10 +16,11 @@
 * expressement interdite.
 * Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
 * ...........................................................................
-* @package ec_ecopresto
-* @copyright Copyright (c) 2010-2013 S.A.R.L Ether Création (http://www.ethercreation.com)
-* @author Arthur R.
-* @license Commercial license
+*
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
 
 if (!defined('_PS_VERSION_'))
@@ -29,9 +31,9 @@ class sendEco
 
 	public static function sendInfo($url, $args)
 	{
-		$data = array('data' => $args);		
+		$data = array('data' => $args);
 		$postdata = http_build_query($data);
- 
+
 		$opts = array('http' =>
 			array(
 				'method'  => 'POST',
@@ -39,9 +41,8 @@ class sendEco
 				'content' => $postdata
 			)
 		);
-		 
+
 		$context  = stream_context_create($opts);
 		return Tools::file_get_contents($url, false, $context);
 	}
-	
 }
