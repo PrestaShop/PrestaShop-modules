@@ -50,7 +50,7 @@ class Seur extends CarrierModule {
 	public function __construct()
 	{
 		$this->name = 'seur';
-		$this->version = '0.6.0';
+		$this->version = '0.6.1';
 		$this->author = 'www.invertus.eu';
 		$this->need_instance = 0;
 		$this->tab = 'shipping_logistics';
