@@ -838,8 +838,8 @@ class Twenga extends PaymentModule
 					// In this way we can structure code with checking method and displaying method for more lisibility.
 					$product_values = $this->preparedValues($product, $combination, $lang, $link, $carrier);
 					array_walk($product_values,
-						function(&$v, $k){ $v = strtr($v, array('&lt;![CDATA[' => '<![CDATA[', ']]&gt;' => ']]>', '&#13;' => '')); } );
-					
+						function(&$v, $k){ $v = str_replace(array('&lt;![CDATA[', ']]&gt;', '&#13;'), array('<![CDATA[', ']]>', ''), $v); } );
+
 					// create the product node for each products and declinations
 					echo '<product>'
 					
