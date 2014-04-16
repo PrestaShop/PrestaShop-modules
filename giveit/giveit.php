@@ -69,7 +69,7 @@ class GiveIt extends Module {
 	{
 		$this->name = 'giveit';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'Give.it';
 
 		parent::__construct();
