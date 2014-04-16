@@ -841,30 +841,30 @@ class Twenga extends PaymentModule
 						function(&$v, $k){ $v = strtr($v, array('&lt;![CDATA[', ']]&gt;' => '&#13;', '<![CDATA[', ']]>' => '')); } );
 
 					// create the product node for each products and declinations
-					echo '<product>';
+					echo '<product>'
 					
 					// required Fields
-					echo '<product_url><![CDATA['.$product_values['product_url'].']]></product_url>';
-					echo '<designation><![CDATA['.$product_values['designation'].']]></designation>';
-					echo '<price><![CDATA['.$product_values['price'].']]></price>';
-					echo '<category><![CDATA['.$product_values['category'].']]></category>';
-					echo '<image_url><![CDATA['.$product_values['image_url'].']]></image_url>';
-					echo '<description><![CDATA['.$product_values['description'].']]></description>';
-					echo '<brand><![CDATA['.$product_values['brand'].']]></brand>';
+					   , '<product_url><![CDATA['   , $product_values['product_url'] , ']]></product_url>'
+					   , '  <designation><![CDATA[' , $product_values['designation'] , ']]></designation>'
+					   , '  <price><![CDATA['       , $product_values['price']       , ']]></price>'
+					   , '  <category><![CDATA['    , $product_values['category']    , ']]></category>'
+					   , '  <image_url><![CDATA['   , $product_values['image_url']   , ']]></image_url>'
+					   , '  <description><![CDATA[' , $product_values['description'] , ']]></description>'
+					   , '  <brand><![CDATA['       , $product_values['brand']       , ']]></brand>'
 
 					// optionnals fields
-					echo '<merchant_id><![CDATA['.$product_values['merchant_id'].']]></merchant_id>';
-					echo '<manufacturer_id><![CDATA['.$product_values['manufacturer_id'].']]></manufacturer_id>';
-					echo '<shipping_cost><![CDATA['.$product_values['shipping_cost'].']]></shipping_cost>';
-					echo '<in_stock><![CDATA['.$product_values['in_stock'].']]></in_stock>';
-					echo '<stock_detail><![CDATA['.$product_values['stock_detail'].']]></stock_detail>';
-					echo '<condition><![CDATA['.$product_values['condition'].']]></condition>';
-					echo '<upc_ean><![CDATA['.$product_values['upc_ean'].']]></upc_ean>';
-					echo '<product_type><![CDATA['.$product_values['product_type'].']]></product_type>';
-					echo '<isbn><![CDATA['.$product_values['isbn'].']]></isbn>';
-					echo '<eco_tax><![CDATA['.$product_values['eco_tax'].']]></eco_tax>';
-
-					echo '</product>';
+					   , '  <merchant_id><![CDATA['     , $product_values['merchant_id']     , ']]></merchant_id>'
+					   , '  <manufacturer_id><![CDATA[' , $product_values['manufacturer_id'] , ']]></manufacturer_id>'
+					   , '  <shipping_cost><![CDATA['   , $product_values['shipping_cost']   , ']]></shipping_cost>'
+					   , '  <in_stock><![CDATA['        , $product_values['in_stock']        , ']]></in_stock>'
+					   , '  <stock_detail><![CDATA['    , $product_values['stock_detail']    , ']]></stock_detail>'
+					   , '  <condition><![CDATA['       , $product_values['condition']       , ']]></condition>'
+					   , '  <upc_ean><![CDATA['         , $product_values['upc_ean']         , ']]></upc_ean>'
+					   , '  <product_type><![CDATA['    , $product_values['product_type']    , ']]></product_type>'
+					   , '  <isbn><![CDATA['            , $product_values['isbn']            , ']]></isbn>'
+					   , '  <eco_tax><![CDATA['         , $product_values['eco_tax']         , ']]></eco_tax>'
+		 
+					   , '</product>';
 				}
 			}
 		}
