@@ -25,7 +25,7 @@
  */
 
 /*Load the correct class version for PS 1.4 or PS 1.5*/
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 {
 	include_once 'controllers/front/MyUrlSysFrontController14.php';
 	require_once(dirname(__FILE__).'/../../config/config.inc.php');
@@ -65,7 +65,7 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 		$cart = new Cart((int)$id_cart);
 
 		//Multishop
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$kwixo = new KwixoPayment();
 		else
 			$kwixo = new KwixoPayment($cart->id_shop);
@@ -94,7 +94,7 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 				exit;
 			}
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$cookie = new Cookie('ps');
 			else
 				$cookie = Context::getContext()->cookie;
