@@ -27,7 +27,7 @@
 require_once '../../config/settings.inc.php';
 require_once '../../config/defines.inc.php';
 
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 {
 	require_once 'KwixoFrontController.php';
 	$kwixo = new KwixoPayment();
