@@ -153,11 +153,9 @@ class Kwixo extends PaymentModule
 		$this->displayName = $this->l('Kwixo');
 		$this->description = $this->l('Accepts payments by "Kwixo"');
 		parent::__construct();
-
-
 		/* Backward compatibility */
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			if (file_exists(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php'))
 				include(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php');
@@ -370,7 +368,7 @@ class Kwixo extends PaymentModule
 		//load submitted or default values to administration form
 		$adminform_values = $this->loadAdminFormValues();
 		//admin shop address link and log file url
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$link_shop_setting = 'index.php?tab=AdminContact&token='.Tools::getAdminTokenLite('AdminContact');
 		else
 			$link_shop_setting = $this->context->link->getAdminLink('AdminStores').'&token='.Tools::getAdminTokenLite('AdminStores');
@@ -532,7 +530,7 @@ class Kwixo extends PaymentModule
 			if (Tools::getValue('kwixo_'.$id.'_carrier_type') == 6)
 			{
 
-				if (_PS_VERSION_ >= '1.5')
+				if (version_compare(_PS_VERSION_, '1.5', '>='))
 				//check if socolissimo is enabled on PS 1.5
 					$socolissimo_is_enabled = Module::isEnabled('socolissimo');
 				else
@@ -730,7 +728,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function hookHeader()
 	{
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			Tools::addCSS($this->_path.'/css/kwixo.css', 'all');
 		else
 			$this->context->controller->addCSS($this->_path.'/css/kwixo.css', 'all');
@@ -798,7 +796,7 @@ class Kwixo extends PaymentModule
 		$banner_width = $size_tab[0];
 		$banner_height = $size_tab[1];
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			if ($banner_width == '250')
 				$banner_width_custom = '100%';
@@ -841,7 +839,7 @@ class Kwixo extends PaymentModule
 
 		$total_cart = $params['cart']->getOrderTotal(true);
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$kwixo = new KwixoPayment();
 		else
 			$kwixo = new KwixoPayment($params['cart']->id_shop);
@@ -906,7 +904,7 @@ class Kwixo extends PaymentModule
 			'logo_kwixo_credit' => __PS_BASE_URI__.'modules/'.$this->name.'/img/kwixo_credit.jpg',
 		));
 
-		if (_PS_VERSION_ < '1.6')
+		if (version_compare(_PS_VERSION_, '1.6', '<'))
 			return $this->display(__FILE__, '/views/templates/hook/payment_short_description.tpl');
 		else
 			return $this->display(__FILE__, '/views/templates/hook/payment_short_description_1.6.tpl');
@@ -923,7 +921,7 @@ class Kwixo extends PaymentModule
 	{
 		if (Configuration::get('KWIXO_SHOW_SIMULATOR') == '1')
 		{
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$kwixo = new KwixoPayment();
 			else
 				$kwixo = new KwixoPayment($params['cart']->id_shop);
@@ -969,7 +967,7 @@ class Kwixo extends PaymentModule
 
 			$show_last_tagline = ($kwixo_tagline_state == null ? '0' : '1');
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$kwixo = new KwixoPayment();
 			else
 				$kwixo = new KwixoPayment($order->id_shop);
@@ -1283,7 +1281,7 @@ class Kwixo extends PaymentModule
 		$errors = array();
 		$xml_params = array();
 
-		if (!Tools::getValue('custom'))
+		if (!Tools::getIsset('custom'))
 		{
 			$errors[] = $this->displayName.' '.$this->l('key "custom" not specified, cannot rely to cart')."\n";
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé custom non spécifiée dans xmlparams');
@@ -1292,7 +1290,7 @@ class Kwixo extends PaymentModule
 		else
 			$xml_params['id_cart'] = (int)Tools::getValue('custom');
 
-		if (!Tools::getValue('id_module'))
+		if (!Tools::getIsset('id_module'))
 		{
 			$errors[] = $this->displayName.' '.$this->l('key "module" not specified, cannot rely to payment module')."\n";
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé module non spécifiée dans xmlparams');
@@ -1301,7 +1299,7 @@ class Kwixo extends PaymentModule
 		else
 			$xml_params['id_module'] = (int)Tools::getValue('id_module');
 
-		if (!Tools::getValue('amount'))
+		if (!Tools::getIsset('amount'))
 		{
 			$errors[] = $this->displayName.' '.$this->l('"amount" not specified, cannot control the amount paid')."\n";
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé montant non spécifiée dans xmlparams');
@@ -1351,7 +1349,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getSoColissimoInfo($id_order)
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if socolissimo is enabled on PS 1.5
 			$socolissimo_is_enabled = Module::isEnabled('socolissimo');
 		else
@@ -1378,7 +1376,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getSoColissimoLiberteInfo($id_order)
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if socolissimo is enabled on PS 1.5
 			$socolissimo_is_enabled = Module::isEnabled('soliberte');
 		else
@@ -1405,7 +1403,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getMondialRelayInfo($id_cart)
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if mondialrelay is enabled on PS 1.5
 			$mondialrelay_is_enabled = Module::isEnabled('mondialrelay');
 		else
@@ -1435,7 +1433,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getIciRelaisInfo($id_cart)
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if mondialrelay is enabled on PS 1.5
 			$icirelais_is_enabled = Module::isEnabled('icirelais');
 		else
@@ -1489,7 +1487,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function checkKwixoUpdate()
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if kwixo is enabled on PS 1.5
 			$kwixo_is_enabled = Module::isEnabled('kwixo');
 		else
