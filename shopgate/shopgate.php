@@ -51,6 +51,7 @@ class ShopGate extends PaymentModule {
     );
 
 	private $shopgate_trans = array();
+	
 	private $configurations = array(
 		'SHOPGATE_CARRIER_ID' => 1,
 		'PS_OS_SHOPGATE' => 0,
