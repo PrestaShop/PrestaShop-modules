@@ -222,7 +222,8 @@ class PayPalLogin
 		$customer = new Customer();
 		$customer->firstname = $result->given_name;
 		$customer->lastname = $result->family_name;
-		$customer->id_lang = Language::getIdByIso(strstr($result->language, '_', true));
+		if(version_compare(_PS_VERSION_, '1.5.0', '>'))
+			$customer->id_lang = Language::getIdByIso(strstr($result->language, '_', true));
 		$customer->birthday = $result->birthday;
 		$customer->email = $result->email;
 		$customer->passwd = Tools::encrypt(Tools::passwdGen());

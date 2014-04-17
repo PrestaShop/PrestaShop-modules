@@ -47,7 +47,7 @@
 	<p>{l s='Your order ID is :' mod='paypal'} 
 		<span class="bold">
 		{if $smarty.const._PS_VERSION_ >= 1.5}
-			{Order::getUniqReferenceOf($order.id_order)}
+			{$order_reference}
 		{else}
 			{$order.id_order|intval}
 		{/if}

@@ -47,9 +47,9 @@
 
 <style>
 	p.payment_module.paypal a 
-	{
+	{ldelim}
 		padding-left:17px;
-	}
+	{rdelim}
 </style>
 {else}
 <p class="payment_module">

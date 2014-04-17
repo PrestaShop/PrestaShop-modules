@@ -388,12 +388,18 @@ class PayPal extends PaymentModule
 			$smarty = $this->context->smarty;
 		}
 
-		if (($smarty->getTemplateVars('page_name') == 'authentication' || 
-				$smarty->getTemplateVars('page_name') == 'order-opc' ) && 
+		if ((
+			(method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name') == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc' )) 
+				|| ($smarty->_tpl_vars['page_name'] == 'authentication' || $smarty->_tpl_vars['page_name'] == 'order-opc'))
+			&& 
 			(int)Configuration::get('PAYPAL_LOGIN') == 1)
 		{
 			$this->context->smarty->assign(array(
 				'paypal_locale' => $this->getLocale(),
+				'PAYPAL_LOGIN_CLIENT_ID' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
+				'PAYPAL_SANDBOX' => Configuration::get('PAYPAL_SANDBOX'),
+				'PAYPAL_LOGIN_TPL' => Configuration::get('PAYPAL_LOGIN_TPL'),
+				'PAYPAL_RETURN_LINK' => PayPalLogin::getReturnLink(),
 			));
 			$process .= '
 				<script src="https://www.paypalobjects.com/js/external/api.js"></script>
