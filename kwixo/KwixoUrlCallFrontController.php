@@ -25,7 +25,7 @@
  */
 
 /*Load the correct class version for PS 1.4 or PS 1.5*/
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 {
 	include_once 'controllers/front/MyUrlCallFrontController14.php';
 	require_once(dirname(__FILE__).'/../../config/config.inc.php');
@@ -56,11 +56,16 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module Kwixo non installé, retour UrlCall échoué');
 			return false;
 		}
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
+		{
 			$cookie = new Cookie('ps');
+			$cart = new Cart($cookie->id_cart);
+		}
 		else
+		{
 			$cookie = Context::getContext()->cookie;
-		$cart = new Cart($cookie->id_cart);
+			$cart = Context::getContext()->cart;
+		}
 		$errors = array();
 		$payment_ok = false;
 		$params = array();
@@ -69,7 +74,7 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 		$ref_id = Tools::getValue('RefID');
 
 		//Multishop
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$kwixo = new KwixoPayment();
 		else
 			$kwixo = new KwixoPayment($cart->id_shop);
@@ -134,7 +139,7 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 						$payment->manageKwixoOrder($id_order, '', $transaction_id, $id_cart, $payment_type, 'urlcall');
 
 						//cart clean
-						if ($cookie->id_cart == (int)$cookie->last_id_cart)
+						if ($cart->id == (int)$cookie->last_id_cart)
 							unset($cookie->id_cart);
 						break;
 
@@ -145,11 +150,9 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 						KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Tag inconnu '.$tag.' recu.');
 
 						//cart clean
-						if ($cookie->id_cart == (int)$cookie->last_id_cart)
+						if ($cart->id == (int)$cookie->last_id_cart)
 							unset($cookie->id_cart);
-
 						$payment_ok = false;
-
 						break;
 				}
 			}
