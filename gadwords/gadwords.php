@@ -34,7 +34,7 @@ class GAdwords extends Module
 	{
 		$this->name = 'gadwords';
 		$this->tab = 'advertising_marketing';
-		$this->version = 1.1;
+		$this->version = '1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 1;
 
@@ -42,7 +42,6 @@ class GAdwords extends Module
 
 		$this->displayName = $this->l('Google Adwords');
 		$this->description = $this->l('Vous souhaitez être plus visible sur Google et attirer de nouveaux clients ? 75€ offerts sur Google AdWords !');
-		$this->ps_versions_compliancy = array('min' => '1.5.6.1', 'max' => _PS_VERSION_);
 	}
 
 	public function install()
