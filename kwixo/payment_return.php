@@ -30,7 +30,7 @@ require_once(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 include_once 'kwixo.php';
 
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 {
 	require_once 'KwixoUrlCallFrontController.php';
 	$kwixo = new KwixoPayment();
