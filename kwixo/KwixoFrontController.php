@@ -25,7 +25,7 @@
  */
 
 /*Load the correct class version for PS 1.4 or PS 1.5*/
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 	include_once 'controllers/front/MyFrontController14.php';
 else
 	include_once 'controllers/front/MyFrontController15.php';
@@ -45,14 +45,17 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 {
 	public static function generateForm()
 	{
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
+		{
 			$cookie = new Cookie('ps');
+			$cart = new Cart($cookie->id_cart);
+		}
 		else
 			$cart = Context::getContext()->cart;
 		$customer = new Customer((int)$cart->id_customer);
 		$module = new Kwixo();
 		//For multishop
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			$kwixo = new KwixoPayment();
 			$customer_gender = $customer->id_gender;
@@ -95,7 +98,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 			$invoice_country->iso_code, $invoice_address->address2);
 
 		//gets the carrier kwixo type
-		if (_PS_VERSION_ >= '1.5' && Shop::isFeatureActive())
+		if (version_compare(_PS_VERSION_, '1.5', '>=') && Shop::isFeatureActive())
 		{
 			$carrier_type = Configuration::get('KWX_CARRIER_TYPE_'.(string)$carrier->id, null, null, $cart->id_shop);
 			$carrier_speed = Configuration::get('KWX_CARRIER_SPEED_'.(string)$carrier->id, null, null, $cart->id_shop);
@@ -413,7 +416,7 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 		$xml_params->addParam('id_module', $module->name);
 		$xml_params->addParam('shop_version', _PS_VERSION_);
 		//urlcall and urlsys link on PS 1.4 and PS 1.5
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			$token = Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey());
 			$link_urlcall = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'],
