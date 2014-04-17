@@ -138,7 +138,7 @@ abstract class KwixoService extends KwixoMother
 		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'set'.$param_name;
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$this->$funcname(Configuration::get('KWIXO_'.Tools::strtoupper($param_name)));
 			else
 				$this->$funcname(Configuration::get('KWIXO_'.Tools::strtoupper($param_name), null, null, $this->getIdshop()));
@@ -204,7 +204,7 @@ abstract class KwixoService extends KwixoMother
 		foreach ($this->param_names as $param_name)
 		{
 			$funcname = 'get'.$param_name;
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				Configuration::updateValue('KWIXO_'.Tools::strtoupper($param_name), $this->$funcname());
 			else
 				Configuration::updateValue('KWIXO_'.Tools::strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
