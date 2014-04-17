@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<img src="{$logo_kwixo|escape:'htmlall'}" />
+<img src="{$logo_kwixo|escape:'htmlall':'UTF-8'}" />
 <div class="warn">  
 	<p>{l s='Warning, delivery meets the following priority rules:' mod='kwixo'}</p>
 	<ul>
@@ -33,7 +33,7 @@
 </div>
 {$head_msg|strval}
 <fieldset>
-	<legend><img src="{$icon_kwixo|escape:'htmlall'}" />{l s='FIA-NET - Kwixo' mod='kwixo'}</legend>
+	<legend><img src="{$icon_kwixo|escape:'htmlall':'UTF-8'}" />{l s='FIA-NET - Kwixo' mod='kwixo'}</legend>
 		{l s='Kwixo est une solution de paiement développée par le groupe Crédit Agricole et FIA-NET Europe.' mod='kwixo'}
 	<br /><br/>
 	{l s='Ce service permet à vos clients de régler leurs achats sur votre site très simplement.' mod='kwixo'}
@@ -53,48 +53,48 @@
 	<fieldset>
 
 		<p>{l s='The following parameters are provided by FIA-NET.' mod='kwixo'}</p>
-		<legend><img src="{$logo_account_path|escape:'htmlall'}" />{l s='Account settings' mod='kwixo'}</legend>
+		<legend><img src="{$logo_account_path|escape:'htmlall':'UTF-8'}" />{l s='Account settings' mod='kwixo'}</legend>
 		<label>{l s='Login' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" name="kwixo_login" value="{$kwixo_login|escape:'htmlall'}"/>
+			<input type="text" name="kwixo_login" value="{$kwixo_login|escape:'htmlall':'UTF-8'}"/>
 		</div>
 		<label>{l s='Password' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" name="kwixo_password" value="{$kwixo_password|escape:'htmlall'}"/>
+			<input type="text" name="kwixo_password" value="{$kwixo_password|escape:'htmlall':'UTF-8'}"/>
 		</div>
 		<label>{l s='Site ID' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" name="kwixo_siteid" value="{$kwixo_siteid|escape:'htmlall'}"/>
+			<input type="text" name="kwixo_siteid" value="{$kwixo_siteid|escape:'htmlall':'UTF-8'}"/>
 		</div>
 		<label>{l s='Key' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" name="kwixo_authkey" value="{$kwixo_authkey|escape:'htmlall'}"/>
+			<input type="text" name="kwixo_authkey" value="{$kwixo_authkey|escape:'htmlall':'UTF-8'}"/>
 		</div>
 		<label>{l s='Mode' mod='kwixo'}</label>
 		<div class="margin-form">
 			<select name="kwixo_status">
 				{foreach from=$kwixo_statuses item=kwixo_status_name name=kwixo_status}
-					<option value="{$kwixo_status_name|escape:'htmlall'}" {if $kwixo_status_name eq $kwixo_status}Selected{/if}>{l s=$kwixo_status_name|escape:'htmlall' mod='kwixo'}</option>
+					<option value="{$kwixo_status_name|escape:'htmlall':'UTF-8'}" {if $kwixo_status_name eq $kwixo_status}Selected{/if}>{l s=$kwixo_status_name|escape:'htmlall':'UTF-8' mod='kwixo'}</option>
 				{/foreach}
 			</select> {l s='In test mode, you will not receive payment. In production mode, you will receive real payment.' mod='kwixo'}
 		</div>
 		<label>{l s='Delivery' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" name="kwixo_delivery" value="{$kwixo_delivery|escape:'htmlall'}"/> {l s='days' mod='kwixo'}
+			<input type="text" name="kwixo_delivery" value="{$kwixo_delivery|escape:'htmlall':'UTF-8'}"/> {l s='days' mod='kwixo'}
 		</div>
 
 		<label>{l s='Delivery max contract' mod='kwixo'}</label>
 		<div class="margin-form">
 			<select name="kwixo_max_delivery">
 				{foreach from=$kwixo_deliveries item=kwixo_number_days name=kwixo_deliveries}
-					<option value="{$kwixo_number_days|escape:'htmlall'}" {if $kwixo_number_days eq $kwixo_max_delivery}Selected{/if}>{l s=$kwixo_number_days|escape:'htmlall' mod='kwixo'}</option>
+					<option value="{$kwixo_number_days|escape:'htmlall':'UTF-8'}" {if $kwixo_number_days eq $kwixo_max_delivery}Selected{/if}>{l s=$kwixo_number_days|escape:'htmlall':'UTF-8' mod='kwixo'}</option>
 				{/foreach}
 			</select> {l s='days' mod='kwixo'}
 		</div>
 
 		<label>{l s='Email test' mod='kwixo'}</label>
 		<div class="margin-form">
-			<input type="text" size="40" name="kwixo_email_test" value="{$kwixo_email_test|escape:'htmlall'}"/> {l s='You can put multiple addresses separated by a "," ' mod='kwixo'}
+			<input type="text" size="40" name="kwixo_email_test" value="{$kwixo_email_test|escape:'htmlall':'UTF-8'}"/> {l s='You can put multiple addresses separated by a "," ' mod='kwixo'}
 		</div>
 
 		<label>{l s='Kwixo option' mod='kwixo'}</label>
@@ -109,13 +109,13 @@
 	<br />
 
 	<fieldset>
-		<legend><img src="{$logo_display_path|escape:'htmlall'}" />{l s='Display settings' mod='kwixo'}</legend>
+		<legend><img src="{$logo_display_path|escape:'htmlall':'UTF-8'}" />{l s='Display settings' mod='kwixo'}</legend>
 		<p>{l s='The banner is a block of information displayed on your shop. It must match one of the offers that you subscribed.' mod='kwixo'}</p>
 		<p>{l s='Choose a banner to display' mod='kwixo'} :</p>
 		<label>{l s='Banner to enable' mod='kwixo'}</label>
 		<div class="margin-form">
 			{foreach from=$kwixo_banner_types key=kwixo_banner_type item=kwixo_banner_name name=kwixo_banners}
-				<input type="radio" name="kwixo_banner_types" value="{$kwixo_banner_type|escape:'htmlall'}" {if $kwixo_banner_type eq $kwixo_banner}Checked{/if} /> {l s=$kwixo_banner_name|strval mod='kwixo'}<br/>
+				<input type="radio" name="kwixo_banner_types" value="{$kwixo_banner_type|escape:'htmlall':'UTF-8'}" {if $kwixo_banner_type eq $kwixo_banner}Checked{/if} /> {l s=$kwixo_banner_name|strval mod='kwixo'}<br/>
 			{/foreach}
 		</div>
 
@@ -143,7 +143,7 @@
 	<br/>	
 
 	<fieldset>
-		<legend><img src="{$logo_categories_path|escape:'htmlall'}" />{l s='Categories settings' mod='kwixo'}</legend>
+		<legend><img src="{$logo_categories_path|escape:'htmlall':'UTF-8'}" />{l s='Categories settings' mod='kwixo'}</legend>
 		<p>{l s='For a better quality of service, Kwixo needs to know the types of products' mod='kwixo'} :</p>
 		<label>{l s='Default Product Type' mod='kwixo'}</label>
 		<div class="margin-form">
@@ -155,7 +155,7 @@
 			</select>
 		</div>
 
-		<!--div class="margin-form">
+		<div class="margin-form">
 			<table class="table">
 				<thead>
 					<tr><th>{l s='Shop category' mod='kwixo'}</th><th>{l s='Kwixo category' mod='kwixo'}</th><th>{l s='Delivery' mod='kwixo'}</th></tr>
@@ -179,13 +179,13 @@
 					{/foreach}
 				</tbody>
 			</table>
-		</div-->
+		</div>
 	</fieldset>
 
 	<br/>
 
 	<fieldset>
-		<legend><img src="{$logo_carriers_path|escape:'htmlall'}"/>{l s='Carrier settings' mod='kwixo'}</legend>
+		<legend><img src="{$logo_carriers_path|escape:'htmlall':'UTF-8'}"/>{l s='Carrier settings' mod='kwixo'}</legend>
 		<p>{l s='Thank you for selecting a type of carrier for each carrier of your shop' mod='kwixo'} :</p>		
 		<label>{l s='Default Carrier Type' mod='kwixo'}</label>
 		<div class="margin-form">
@@ -233,7 +233,7 @@
 			</table>
 		</div>
 
-		<br /><img src="{$logo_warning|escape:'htmlall'}"/>{l s='To use the withdrawal store, you must enter the address of your store.' mod='kwixo'} <a href="{$link_shop_setting|strval}" target="_blank">{l s='Check the details of the shop here' mod='kwixo'}</a>.
+		<br /><img src="{$logo_warning|escape:'htmlall':'UTF-8'}"/>{l s='To use the withdrawal store, you must enter the address of your store.' mod='kwixo'} <a href="{$link_shop_setting|strval}" target="_blank">{l s='Check the details of the shop here' mod='kwixo'}</a>.
 
 	</fieldset>
 
@@ -253,7 +253,7 @@
 <br/>
 
 <fieldset>
-	<legend><img src="{$logo_information|escape:'htmlall'}"/>{l s='Manage your payments in the Kwixo administration interface' mod='kwixo'}</legend>
+	<legend><img src="{$logo_information|escape:'htmlall':'UTF-8'}"/>{l s='Manage your payments in the Kwixo administration interface' mod='kwixo'}</legend>
 	{l s='Your administration interface' mod='kwixo'} : <a target='_blank' href='https://business.kwixo.com/merchantbo/login.htm'>{l s='https://business.kwixo.com/merchantbo/login.htm' mod='kwixo'}</a>.
 	<br/><br/>{l s='The administration interface allows you Kwixo manage your payments: monitoring, cancellation, refund.' mod='kwixo'}
 </fieldset>
