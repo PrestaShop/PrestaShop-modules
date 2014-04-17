@@ -47,7 +47,11 @@
 	<p>{l s='Your order ID is :' mod='paypal'} 
 		<span class="bold">
 		{if $smarty.const._PS_VERSION_ >= 1.5}
-			{$order_reference}
+			{if isset($reference_order)}
+				{$reference_order}
+			{else}
+				{$order.id_order|intval}
+			{/if}
 		{else}
 			{$order.id_order|intval}
 		{/if}

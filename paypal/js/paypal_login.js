@@ -1,10 +1,17 @@
 $(function(){ldelim}
 	if($("#create-account_form").length > 0)
-		$("#create-account_form").before('<div id="buttonPaypalLogin1"></div>');
+		{if $smarty.const._PS_VERSION_ >= 1.6}
+			$("#create-account_form").parent().before('<div id="buttonPaypalLogin1"></div>');
+		{else}
+			$("#create-account_form").before('<div id="buttonPaypalLogin1"></div>');
+		{/if}
 	else
 	{ldelim}
-
-		$("#login_form").before('<div id="buttonPaypalLogin1"></div>');
+		{if $smarty.const._PS_VERSION_ >= 1.6}
+			$("#login_form").parent().before('<div id="buttonPaypalLogin1"></div>');
+		{else}
+			$("#login_form").before('<div id="buttonPaypalLogin1"></div>');
+		{/if}
 		$("#buttonPaypalLogin1").css({ldelim}
 			"clear"       : "both",	
 			"margin-bottom" : "13px"
@@ -13,7 +20,11 @@ $(function(){ldelim}
 
 	$("#buttonPaypalLogin1").css({ldelim}
 		"clear"       : "both",
-		'margin-bottom' : '10px',	
+		'margin-bottom' : '10px',
+		{if $smarty.const._PS_VERSION_ >= 1.6}
+		'margin-left' : '20px',
+		'width' : '100%'
+		{/if}	
 	{rdelim});
 
 	paypal.use( ["login"], function(login) {ldelim}
