@@ -1,5 +1,41 @@
 '''Deutsch'''
 
+'''Version 2.5.1'''
+* La Poste als Versandservice hinzugefügt
+
+'''Version 2.5.0'''
+* update config layout
+
+'''Version 2.4.6'''
+* fix not tax class available
+
+'''Version 2.4.5'''
+* fix deep link for no indexed products
+
+'''Version 2.4.4'''
+* Smarty Bug in admin_order.tpl gefixt and check is array
+
+'''Version 2.4.3'''
+* Smarty Bug in admin_order.tpl gefixt
+
+'''Version 2.4.2'''
+* Kompatibilitätsproblem (class loader) mit Prestashop version 1.3.x.x behoben
+
+'''Version 2.4.1'''
+* Kompatibilitätsproblem mit Prestashop Version 1.3.x.x behoben
+
+'''Version 2.4.0'''
+* nutzt die Shopgate Library 2.4.0
+
+'''Version 2.3.7'''
+* Problem beim Produktexport (tax) bei Prestashop Versionen vor 1.4.1.0 behoben
+* nutzt die Shopgate Library 2.3.9
+
+'''Version 2.3.6'''
+* Probleme beim Produktexport bei Produkten ohne Steuerzuweisung behoben
+* französische Übersetzung hinzugefügt
+* Bestellstatus von bezahlter Paypal Bestellung geändert
+
 '''Version 2.3.5'''
 * Problem beim Bestellungsimport behoben (Exception Swift_Message_MimeException)
 
@@ -121,6 +157,42 @@
 
 
 '''English'''
+
+'''Version 2.5.1'''
+* added La Poste as shipping provider
+
+'''Version 2.5.0'''
+* update config layout
+
+'''Version 2.4.6'''
+* fix not tax class available
+
+'''Version 2.4.5'''
+* fix deep link for no indexed products
+
+'''Version 2.4.4'''
+* Smarty Bug in admin_order.tpl gefixt and check is array
+
+'''Version 2.4.3'''
+* fix Smarty bug in admin_order.tpl
+
+'''Version 2.4.2'''
+* fixed issue with compatibility in Prestashop version 1.3.x.x (class loader)
+
+'''Version 2.4.1'''
+* fixed issue with compatibility in Prestashop version 1.3.x.x
+
+'''Version 2.4.0'''
+* uses Shopgate Library 2.4.0
+
+'''Version 2.3.7'''
+* fixed issue with product export (tax) in Prestashop version 1.4.1.0
+* uses Shopgate Library 2.3.9
+
+'''Version 2.3.6'''
+* fixed issue of products without tax classes on product export
+* added french translation
+* changed paypal status for paid order
 
 '''Version 2.3.5'''
 * fixed issue in order import (exception Swift_Message_MimeException)

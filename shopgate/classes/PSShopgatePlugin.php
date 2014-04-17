@@ -25,6 +25,11 @@ class PSShopgatePlugin extends ShopgatePlugin {
 
 	const prefix = 'BD';
 
+    /**
+     * default no taxable class name
+     */
+    const DEFAULT_NO_TAXABLE_CLASS_NAME = 'Not Taxable';
+
 	public function startup(){
 		include_once dirname(__FILE__).'/../backward_compatibility/backward.php';
 		
@@ -302,7 +307,10 @@ class PSShopgatePlugin extends ShopgatePlugin {
 					$id_order_state = $this->getOrderStateId('PS_OS_BANKWIRE');
 					break;
 				case 'COD': 		$payment_name = $shopgate->getTranslation('Cash on Delivery'); break;
-				case 'PAYPAL': 		$payment_name = $shopgate->getTranslation('PayPal'); break;
+				case 'PAYPAL':
+					$id_order_state = $this->getOrderStateId('PS_OS_PAYMENT');
+					$payment_name = $shopgate->getTranslation('PayPal');
+					break;
 				default: break;
 			}
 		} else {
@@ -679,45 +687,75 @@ class PSShopgatePlugin extends ShopgatePlugin {
 		return $maxSortOrderByCategoryNumber;
 	}
 
-	protected function createItemsCsv(){
-		
-		$limit = Tools::getValue('limit', 0);
-		$offset = Tools::getValue('offset', 0);
-		
-		$products = Db::getInstance((defined('_PS_USE_SQL_SLAVE_') ? _PS_USE_SQL_SLAVE_ : null))->ExecuteS
-		('
-			SELECT p.*,
-				trg.id_tax_rules_group AS tax_class_id,
-				trg.name AS tax_class_name,
-				trg.active AS tax_class_active
-			FROM `'._DB_PREFIX_.'product` p
-			JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (p.id_tax_rules_group = trg.id_tax_rules_group)
-			WHERE '. (version_compare(_PS_VERSION_, '1.4.0.2', '>=') ? '`available_for_order` = 1 AND' : '').' p.`active` = 1
-			ORDER BY p.`id_product` DESC'.
-			($limit ? ' LIMIT '.$offset.', '.$limit : '')
-		);
-		
-		$additionalLoaders = array(
-			'itemExportOptions',
-			'itemExportAttributes',
-			'itemExportInputFields',
-		);
-		
-		$loaders = array_merge($this->getCreateItemsCsvLoaders(), $additionalLoaders);
-		
-		foreach($products as $p){
-			$product = new Product($p['id_product'], true, $this->id_lang);
-			
-			$product->tax_class_id = $p['tax_class_id'];
-			$product->tax_class_name = $p['tax_class_name'];
-			$product->tax_class_active = $p['tax_class_active'];
-			
-			$row = $this->buildDefaultItemRow();
-			$row = $this->executeLoaders( $loaders, $row, $product);
-			
-			$this->addItem($row);
-		}
-	}
+    protected function createItemsCsv(){
+
+        $limit = Tools::getValue('limit', 0);
+        $offset = Tools::getValue('offset', 0);
+
+        $sql = 'SELECT DISTINCT p.*,';
+
+        if(version_compare(_PS_VERSION_, '1.4.0.2', '>')){
+
+            $sql .= sprintf(
+                'trg.id_tax_rules_group AS tax_class_id,
+                IFNULL(trg.name, \'%s\') AS tax_class_name,
+                trg.active AS tax_class_active',
+
+                self::DEFAULT_NO_TAXABLE_CLASS_NAME
+            );
+
+        } else {
+
+            $sql .= sprintf(
+                'tax.id_tax AS tax_class_id,
+                IFNULL(tax_lang.name, \'%s\') AS tax_class_name',
+                self::DEFAULT_NO_TAXABLE_CLASS_NAME
+            );
+        }
+
+        $sql .= ' FROM `'._DB_PREFIX_.'product` p';
+
+        if(version_compare(_PS_VERSION_, '1.4.0.2', '>')){
+            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (p.id_tax_rules_group = trg.id_tax_rules_group)';
+        } else {
+            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'tax` tax ON (p.id_tax = tax.id_tax)';
+            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'tax_lang` tax_lang ON (p.id_tax = tax_lang.id_tax AND tax_lang.id_lang = '.$this->id_lang.')';
+        }
+
+        $sql .= " WHERE ". (version_compare(_PS_VERSION_, '1.4.0.2', '>=')
+                ? '`available_for_order` = 1 AND'
+                : '') .
+            " p.`active` = 1 AND p.`indexed` = 1 ORDER BY p.`id_product` DESC".($limit ? ' LIMIT '.$offset.', '.$limit : '');
+
+        $products = Db::getInstance((defined('_PS_USE_SQL_SLAVE_') ? _PS_USE_SQL_SLAVE_ : null))->ExecuteS($sql);
+
+        $additionalLoaders = array(
+            'itemExportOptions',
+            'itemExportAttributes',
+            'itemExportInputFields',
+        );
+
+        $loaders = array_merge($this->getCreateItemsCsvLoaders(), $additionalLoaders);
+
+        foreach($products as $p){
+            $product = new Product($p['id_product'], true, $this->id_lang);
+
+            $product->tax_class_id = $p['tax_class_id'];
+            $product->tax_class_name = $p['tax_class_name'];
+            if(isset($p['tax_class_active'])){
+                $product->tax_class_active = $p['tax_class_active'];
+            } else {
+                // fix for 1.3.x.x there is no is_active
+                $product->tax_class_active = 1;
+            }
+
+
+            $row = $this->buildDefaultItemRow();
+            $row = $this->executeLoaders( $loaders, $row, $product);
+
+            $this->addItem($row);
+        }
+    }
 
 	
 	protected function itemExportItemNumber($row, $product) {
@@ -838,7 +876,7 @@ class PSShopgatePlugin extends ShopgatePlugin {
 		$row['manufacturer_item_number'] = $product->id_manufacturer;
 		return $row;
 	}
-	
+
 	protected function itemExportUrlDeeplink($row, $product) {
 		$row['url_deeplink'] = $this->context->link->getProductLink($product->id, $product->link_rewrite, $product->category, $product->ean13, $this->id_lang);
 		return $row;
@@ -1173,25 +1211,61 @@ class PSShopgatePlugin extends ShopgatePlugin {
 		return $rootCategoriesByCategoryId;
 	}
 
-	protected function createReviewsCsv()
-	{
-
+	protected function createReviewsCsv(){
+		// not implemented yet
 	}
 	
 	public function checkCart(ShopgateCart $shopgateCart) {
-		
+		// not implemented yet
 	}
 	
 	public function redeemCoupons(ShopgateCart $shopgateCart) {
-		
+		// not implemented yet
 	}
 	
 	public function getSettings() {
-	
+		// not implemented yet
 	}
+	
+	public function registerCustomer($user, $pass, ShopgateCustomer $customer){
+		// not implemented yet
+	}
+	
 	public function getRedirect()
 	{
 		return $this->builder->buildRedirect();
+	}
+
+	/**
+	 * Checks the items array and returns stock quantity for each item.
+	 *
+	 *
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_check_cart#API_Response
+	 *
+	 * @param ShopgateCart $cart The ShopgateCart object to be checked and validated.
+	 *
+	 * @return array(
+	 *          'items' => array(...), # list of item changes
+	 * )
+	 * @throws ShopgateLibraryException if an error occurs.
+	 */
+	public function checkStock(ShopgateCart $cart) {
+		// TODO: Implement checkStock() method.
+	}
+
+	/**
+	 * Loads the Media file information to the products of the shop system's database and passes them to the buffer.
+	 *
+	 * Use ShopgatePlugin::buildDefaultMediaRow() to get the correct indices for the field names in a Shopgate media csv and
+	 * use ShopgatePlugin::addMediaRow() to add it to the output buffer.
+	 *
+	 * @see http://wiki.shopgate.com/CSV_File_Media#Sample_Media_CSV_file
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_media_csv
+	 *
+	 * @throws ShopgateLibraryException
+	 */
+	protected function createMediaCsv() {
+		// TODO: Implement createMediaCsv() method.
 	}
 }
 
