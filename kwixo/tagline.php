@@ -34,7 +34,7 @@ include_once 'kwixo.php';
 $id_order = Tools::getValue('id_order');
 $order = new Order((int)$id_order);
 
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 	$kwixo = new KwixoPayment();
 else
 	$kwixo = new KwixoPayment($order->id_shop);
