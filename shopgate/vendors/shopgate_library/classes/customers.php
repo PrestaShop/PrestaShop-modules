@@ -43,6 +43,8 @@ class ShopgateCustomer extends ShopgateContainer {
 	protected $mobile;
 	protected $mail;
 	
+	protected $custom_fields;
+	
 	protected $newsletter_subscription;
 	
 	protected $addresses;
@@ -52,6 +54,7 @@ class ShopgateCustomer extends ShopgateContainer {
 		$v->visitCustomer($this);
 	}
 	
+
 	
 	##########
 	# Setter #
@@ -165,6 +168,28 @@ class ShopgateCustomer extends ShopgateContainer {
 	}
 	
 	/**
+	 * @param ShopgateOrderCustomField[] $value
+	 */
+	public function setCustomFields($value) {
+		if (!is_array($value)) {
+			$this->custom_fields = array();
+		}
+		
+		foreach ($value as $index => &$element) {
+			if ((!is_object($element) || !($element instanceof ShopgateOrderCustomField)) && !is_array($element)) {
+				unset($value[$index]);
+				continue;
+			}
+			
+			if (is_array($element)) {
+				$element = new ShopgateOrderCustomField($element);
+			}
+		}
+		
+		$this->custom_fields = $value;
+	}
+	
+	/**
 	 * @param bool $value
 	 */
 	public function setNewsletterSubscription($value) {
@@ -175,6 +200,21 @@ class ShopgateCustomer extends ShopgateContainer {
 	 * @param ShopgateAddress[] $value List of customer's addresses.
 	 */
 	public function setAddresses($value) {
+		if (!is_array($value)) {
+			$this->addresses = null;
+		}
+		
+		foreach ($value as $index => &$element) {
+			if ((!is_object($element) || !($element instanceof ShopgateAddress)) && !is_array($element)) {
+				unset($value[$index]);
+				continue;
+			}
+			
+			if (is_array($element)) {
+				$element = new ShopgateAddress($element);
+			}
+		}
+		
 		$this->addresses = $value;
 	}
 	
@@ -269,6 +309,16 @@ class ShopgateCustomer extends ShopgateContainer {
 	public function getMail() {
 		return $this->mail;
 	}
+	
+	/**
+	 * @return ShopgateOrderCustomField[]
+	 */
+	public function getCustomFields() {
+		if(!is_array($this->custom_fields)) {
+			$this->custom_fields = array();
+		}
+		return $this->custom_fields;
+	}
 
 	/**
 	 * @return bool
@@ -325,7 +375,22 @@ class ShopgateAddress extends ShopgateContainer {
 	protected $phone;
 	protected $mobile;
 	protected $mail;
+	
+	protected $custom_fields;
 
+	/**
+	 * Checks if two ShopgateAddress objects are equal.
+	 *
+	 * Two addresses are equal when following fields contain the same value:
+	 * 'gender','first_name','last_name','street_1','street_2','zipcode','city','country'
+	 *
+	 * @param ShopgateAddress $address
+	 * @return bool
+	 */
+	public function equals(ShopgateAddress $address){
+		$whiteList = array('gender','first_name','last_name','street_1','street_2','zipcode','city','country');
+		return $this->compare($this, $address,$whiteList);
+	}
 
 	##########
 	# Setter #
@@ -475,6 +540,28 @@ class ShopgateAddress extends ShopgateContainer {
 	public function setMail($value) {
 		$this->mail = $value;
 	}
+	
+	/**
+	 * @param ShopgateOrderCustomField[] $value
+	 */
+	public function setCustomFields($value) {
+		if (!is_array($value)) {
+			$this->custom_fields = array();
+		}
+		
+		foreach ($value as $index => &$element) {
+			if ((!is_object($element) || !($element instanceof ShopgateOrderCustomField)) && !is_array($element)) {
+				unset($value[$index]);
+				continue;
+			}
+			
+			if (is_array($element)) {
+				$element = new ShopgateOrderCustomField($element);
+			}
+		}
+		
+		$this->custom_fields = $value;
+	}
 
 
 	##########
@@ -621,6 +708,16 @@ class ShopgateAddress extends ShopgateContainer {
 	public function getMail() {
 		return $this->mail;
 	}
+	
+	/**
+	 * @return ShopgateOrderCustomField[]
+	 */
+	public function getCustomFields() {
+		if(!is_array($this->custom_fields)) {
+			$this->custom_fields = array();
+		}
+		return $this->custom_fields;
+	}
 
 	public function accept(ShopgateContainerVisitor $v) {
 		$v->visitAddress($this);
@@ -635,6 +732,27 @@ class ShopgateAddress extends ShopgateContainer {
 	protected function splitStreetData($street, $type = 'street') {
 		$splittedArray = array();
 		$street = trim($street);
+		$street = str_replace("\n", '', $street);
+		
+		//contains only digits OR no digits at all --> don't split
+		if (preg_match("/^[0-9]+$/i", $street)  || preg_match("/^[^0-9]+$/i", $street)) {
+			return ($type == 'street') ? $street : "";
+		}
+		
+		//number at the end ("Schlossstr. 10", "Schlossstr. 10a", "Schlossstr. 10a+b"...)
+		if (preg_match("/^([^0-9]+)([0-9]+ ?[a-z]?([ \-\&\+]+[a-z])?)$/i", $street, $matches)) {
+			return trim(($type == 'street') ? $matches[1] : $matches[2]);
+		}
+		
+		//number at the end ("Schlossstr. 10-12", "Schlossstr. 10 & 12"...)
+		if (preg_match("/^([^0-9]+)([0-9]+([ \-\&\+]+[0-9]+)?)$/i", $street, $matches)) {
+			return trim(($type == 'street') ? $matches[1] : $matches[2]);
+		}
+		
+		//number at the beginning (e.g. "2225 E. Bayshore Road", "2225-2227 E. Bayshore Road")
+		if (preg_match("/^([0-9]+([ \-\&\+]+[0-9]+)?)([^0-9]+.*)$/i", $street, $matches)) {
+			return trim(($type == 'street') ? $matches[3] : $matches[1]);
+		}
 		
 		if(!preg_match("/^(.+)\s(.*[0-9]+.*)$/is", $street, $splittedArray)) {
 			// for "My-Little-Street123"

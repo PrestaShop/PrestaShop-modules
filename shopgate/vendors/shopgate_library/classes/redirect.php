@@ -76,6 +76,11 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @var string path to the shopgate javascript template
 	 */
 	protected $jsHeaderTemplatePath;
+	
+	/**
+	 * @var string path to the shopgate link tag template
+	 */
+	protected $linkTagTemplatePath;
 
 	/**
 	 * @var string expiration date of the cookie as defined in http://www.ietf.org/rfc/rfc2109.txt
@@ -177,6 +182,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		// mobile header options
 		$this->mobileHeaderTemplatePath = dirname(__FILE__).'/../assets/mobile_header.html';
 		$this->jsHeaderTemplatePath = dirname(__FILE__).'/../assets/js_header.html';
+		$this->linkTagTemplatePath = dirname(__FILE__).'/../assets/link_tag.html';
 		$this->cookieLife = gmdate('D, d-M-Y H:i:s T', time());
 		$this->buttonDescription = 'Mobile Webseite aktivieren';
 	}
@@ -307,14 +313,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 			return '';
 		}
 		
-		if (!file_exists($this->mobileHeaderTemplatePath)) {
-			return '';
-		}
-		
-		$html = @file_get_contents($this->mobileHeaderTemplatePath);
-		if (empty($html)) {
-			return '';
-		}
+		$html = $this->loadTemplate($this->mobileHeaderTemplatePath);
 		
 		// set parameters
 		$this->buttonOnImageSource = (($this->useSecureConnection) ? ShopgateMobileRedirectInterface::SHOPGATE_STATIC_SSL : ShopgateMobileRedirectInterface::SHOPGATE_STATIC).'/api/mobile_header/button_on.png';
@@ -330,13 +329,14 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	}
 
 	protected function getJsHeader($mobileRedirectUrl = null) {
-		if (!file_exists($this->jsHeaderTemplatePath)) {
+		$html = $this->loadTemplate($this->jsHeaderTemplatePath);
+		if (empty($html)) {
 			return '';
 		}
 		
-		$html = @file_get_contents($this->jsHeaderTemplatePath);
-		if (empty($html)) {
-			return '';
+		$linkTag = '';
+		if ($this->config->getShopIsActive()) {
+			$linkTag = $this->loadTemplate($this->linkTagTemplatePath);
 		}
 		
 		if (!$this->config->getShopNumber()) {
@@ -430,6 +430,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		}
 		
 		// set parameters
+		$html = str_replace('{$link_tag}', $linkTag, $html);
 		$html = str_replace('{$mobile_url}', $mobileRedirectUrl, $html);
 		$html = str_replace('{$shop_number}', $this->config->getShopNumber(), $html);
 		$html = str_replace('{$redirect_code}', $redirectCode, $html);
@@ -443,6 +444,19 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	###############
 	### helpers ###
 	###############
+	
+	protected function loadTemplate($filePath) {
+		if (!file_exists($filePath)) {
+			return '';
+		}
+		
+		$html = @file_get_contents($filePath);
+		if (empty($html)) {
+			return '';
+		}
+		
+		return $html;
+	}
 	
 	/**
 	 * Generates the root mobile Url for the redirect

@@ -551,56 +551,50 @@ class ShopgateItem extends ShopgateContainer {
 	 * @param ShopgateItemOption[] $value
 	 */
 	public function setOptions($value) {
-		if (empty($value)) {
-			$this->options = null;
+		if (empty($value) || !is_array($value)) {
+			$this->options = array();
 			return;
 		}
 		
-		if (!is_array($value)) {
-			$this->options = null;
-			return;
-		}
-		
-		foreach ($value as $index => &$element) {
-			if ((!is_object($element) || !($element instanceof ShopgateItemOption)) && !is_array($element)) {
-				unset($value[$index]);
+		$options = array();
+		foreach ($value as $index => $element) {
+			if (!($element instanceof ShopgateItemOption) && !is_array($element)) {
 				continue;
 			}
 			
 			if (is_array($element)) {
-				$element = new ShopgateItemOption($element);
+				$options[] = new ShopgateItemOption($element);
+			} else {
+				$options[] = $element;
 			}
 		}
 		
-		$this->options = $value;
+		$this->options = $options;
 	}
 	
 	/**
 	 * @param ShopgateItemInput[] $value
 	 */
 	public function setInputs($value) {
-		if (empty($value)) {
-			$this->inputs = null;
+		if (empty($value) || !is_array($value)) {
+			$this->inputs = array();
 			return;
 		}
 		
-		if (!is_array($value)) {
-			$this->inputs = null;
-			return;
-		}
-		
-		foreach ($value as $index => &$element) {
-			if ((!is_object($element) || !($element instanceof ShopgateItemInput)) && !is_array($element)) {
-				unset($options[$index]);
+		$inputs = array();
+		foreach ($value as $index => $element) {
+			if (!($element instanceof ShopgateItemInput) && !is_array($element)) {
 				continue;
 			}
 			
 			if (is_array($element)) {
-				$element = new ShopgateItemInput($element);
+				$inputs[] = new ShopgateItemInput($element);
+			} else {
+				$inputs[] = $element;
 			}
 		}
 		
-		$this->inputs = $value;
+		$this->inputs = $inputs;
 	}
 	
 	
@@ -853,7 +847,7 @@ class ShopgateItem extends ShopgateContainer {
 	 * @return bool
 	 */
 	public function getIsNotOrderable() {
-		return (bool) $is_not_orderable;
+		return (bool) $this->is_not_orderable;
 	}
 	
 	/**

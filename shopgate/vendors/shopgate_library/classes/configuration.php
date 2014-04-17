@@ -1,28 +1,28 @@
 <?php
 /*
-* Shopgate GmbH
-*
-* URHEBERRECHTSHINWEIS
-*
-* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
-* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
-* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
-* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
-* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
-*
-* COPYRIGHT NOTICE
-*
-* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
-* for the purpose of facilitating communication between the IT system of the customer and the IT system
-* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
-* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
-* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
-*
-*  @author Shopgate GmbH <interfaces@shopgate.com>
-*/
+ * Shopgate GmbH
+ *
+ * URHEBERRECHTSHINWEIS
+ *
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ *
+ * COPYRIGHT NOTICE
+ *
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ *
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
 
 /**
- * Manages configuration for library _and_ plugin options.
+ * File-based configuration management for library _and_ plugin options.
  *
  * This class is used to save general library settings and specific settings for your plugin.
  *
@@ -160,6 +160,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	/**
 	 * @var bool
 	 */
+	protected $enable_check_stock;
+	
+	/**
+	 * @var bool
+	 */
 	protected $enable_redeem_coupons;
 	
 	/**
@@ -171,6 +176,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_get_customer;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_get_debug_info;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_register_customer;
 	
 	/**
 	 * @var bool
@@ -191,6 +206,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_get_pages_csv;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_get_media_csv;
 	
 	/**
 	 * @var bool
@@ -221,6 +241,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_get_settings;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_set_settings;
 	
 	#######################################################
 	### Options regarding shop system specific settings ###
@@ -279,6 +304,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var string The name of the items CSV file.
 	 */
 	protected $items_csv_filename;
+
+	/**
+	 * @var string The name of the items CSV file.
+	 */
+	protected $media_csv_filename;
 	
 	/**
 	 * @var string The name of the categories CSV file.
@@ -365,10 +395,13 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_add_order = 0;
 		$this->enable_update_order = 0;
 		$this->enable_check_cart = 0;
+		$this->enable_check_stock = 0;
 		$this->enable_redeem_coupons = 0;
 		$this->enable_get_orders = 0;
 		$this->enable_get_customer = 0;
+		$this->enable_get_debug_info = 0;
 		$this->enable_get_items_csv = 0;
+		$this->enable_get_media_csv = 0;
 		$this->enable_get_categories_csv = 0;
 		$this->enable_get_reviews_csv = 0;
 		$this->enable_get_pages_csv = 0;
@@ -378,6 +411,8 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_clear_log_file = 1;
 		$this->enable_clear_cache = 1;
 		$this->enable_get_settings = 0;
+		$this->enable_set_settings = 1;
+		$this->enable_register_customer = 0;
 		
 		$this->country = 'DE';
 		$this->language = 'de';
@@ -396,6 +431,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->cache_folder_path = SHOPGATE_BASE_DIR.DS.'temp'.DS.'cache';
 		
 		$this->items_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'items.csv';
+		$this->media_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'media.csv';
 		$this->categories_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'categories.csv';
 		$this->reviews_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'reviews.csv';
 		$this->pages_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'pages.csv';
@@ -429,6 +465,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return false;
 	}
 	
+	public function load(array $settings = null) {
+		$this->loadArray($settings);
+	}
+	
 	/**
 	 * Tries to assign the values of an array to the configuration fields or load it from a file.
 	 *
@@ -454,6 +494,21 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->mapAdditionalSettings($unmappedData);
 	}
 	
+	/**
+	 * Tries to load the configuration from a file.
+	 *
+	 * If a $path is passed, this method tries to include the file. If that fails an exception is thrown.<br />
+	 * <br />
+	 * If $path is empty it tries to load .../shopgate_library/config/myconfig.php or if that fails,
+	 * .../shopgate_library/config/config.php is tried to be loaded. If that fails too, an exception is
+	 * thrown.<br />
+	 * <br />
+	 * The configuration file must be a PHP script defining an indexed array called $shopgate_config
+	 * containing the desired configuration values to set. If that is not the case, an exception is thrown
+	 *
+	 * @param string $path The path to the configuration file or nothing to load the default Shopgate Library configuration files.
+	 * @throws ShopgateLibraryException in case a configuration file could not be loaded or the $shopgate_config is not set.
+	 */
 	public function loadFile($path = null) {
 		$config = null;
 		
@@ -480,6 +535,12 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->mapAdditionalSettings($unmappedData);
 	}
 	
+	/**
+	 * Loads the configuration file for a given Shopgate shop number.
+	 *
+	 * @param string $shopNumber The shop number.
+	 * @throws ShopgateLibraryException in case the $shopNumber is empty or no configuration file can be found.
+	 */
 	public function loadByShopNumber($shopNumber) {
 		if (empty($shopNumber) || !preg_match($this->coreValidations['shop_number'], $shopNumber)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be found without shop number');
@@ -510,6 +571,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->initFileNames();
 	}
 	
+	/**
+	 * Loads the configuration file by a given language or the global configuration file.
+	 *
+	 * @param string|null $language the ISO-639 code of the language or null to load global configuration
+	 */
 	public function loadByLanguage($language) {
 		if (!is_null($language) && !preg_match('/[a-z]{2}/', $language)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'invalid language code "'.$language.'"', true, false);
@@ -537,6 +603,31 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->redirect_skip_keyword_cache_filename = 'skip_redirect_keywords-'.$this->language.'.txt';
 	}
 	
+	public function save(array $fieldList, $validate = true) {
+		if ($this->checkUseGlobalFor($this->language)) {
+			$this->saveFile($fieldList, null, $validate);
+		} else {
+			$this->saveFileForLanguage($fieldList, $this->language, $validate);
+		}
+	}
+	
+	/**
+	 * Saves the desired configuration fields to the specified file or myconfig.php.
+	 *
+	 * This calls $this->loadFile() with the given $path to load the current configuration. In case that fails, the $shopgate_config
+	 * array is initialized empty. The values defined in $fieldList are then validated (if desired), assigned to $shopgate_config and
+	 * saved to the specified file or myconfig.php.
+	 *
+	 * In case the file cannot be (over)written or created, an exception with code ShopgateLibrary::CONFIG_READ_WRITE_ERROR is thrown.
+	 *
+	 * In case the validation fails for one or more fields, an exception with code ShopgateLibrary::CONFIG_INVALID_VALUE is thrown. The
+	 * failed fields are appended as additional information in form of a comma-separated list.
+	 *
+	 * @param string[] $fieldList The list of fieldnames that should be saved to the configuration file.
+	 * @param string $path The path to the configuration file or empty to use .../shopgate_library/config/myconfig.php.
+	 * @param bool $validate True to validate the fields that should be set.
+	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
+	 */
 	public function saveFile(array $fieldList, $path = null, $validate = true) {
 		// if desired, validate before doing anything else
 		if ($validate) {
@@ -572,6 +663,15 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		}
 	}
 	
+	/**
+	 * Saves the desired fields to the configuration file for a given language or global configuration
+	 *
+	 * @param string[] $fieldList the list of fieldnames that should be saved to the configuration file.
+	 * @param string $language the ISO-639 code of the language or null to save to global configuration
+	 * @param bool $validate true to validate the fields that should be set.
+	 *
+	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
+	 */
 	public function saveFileForLanguage(array $fieldList, $language = null, $validate = true) {
 		$fileName = null;
 		if (!is_null($language)) {
@@ -583,6 +683,15 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->saveFile($fieldList, $fileName, $validate);
 	}
 	
+	/**
+	 * Checks for duplicate shop numbers in multiple configurations.
+	 *
+	 * This checks all files in the configuration folder and shop numbers in all
+	 * configuration files.
+	 *
+	 * @param string $shopNumber The shop number to test or null to test all shop numbers found.
+	 * @return bool true if there are duplicates, false otherwise.
+	 */
 	public function checkDuplicates() {
 		$shopNumbers = array();
 		$files = scandir($this->config_folder_path);
@@ -606,6 +715,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return false;
 	}
 	
+	/**
+	 * Checks if there is more than one configuration file available.
+	 *
+	 * @return bool true if multiple configuration files are available, false otherwise.
+	 */
 	public function checkMultipleConfigs() {
 		$files = scandir($this->config_folder_path);
 		$counter = 0;
@@ -614,16 +728,41 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 			if (!is_file($this->config_folder_path.DS.$file)) {
 				continue;
 			}
+			
+			if (substr($file, -4) !== '.php') {
+				continue;
+			}
+			
+			ob_start();
+			include($this->config_folder_path.DS.$file);
+			ob_end_clean();
+			if (!isset($shopgate_config)) {
+				continue;
+			}
+			
 			$counter++;
+			unset($shopgate_config);
 		}
 		
 		return ($counter > 1);
 	}
 
+	/**
+	 * Checks if the global a configuration file should be used for the language requested.
+	 *
+	 * @param string $language the ISO-639 code of the language
+	 * @return bool true if global configuration should be used, false if the language has separate configuration
+	 */
 	public function checkUseGlobalFor($language) {
 		return !file_exists($this->config_folder_path.DS.'myconfig-'.$language.'.php');
 	}
 	
+	/**
+	 * Removes the configuration file for the language requested.
+	 *
+	 * @param string $language the ISO-639 code of the language or null to load global configuration
+	 * @throws ShopgateLibraryException in case the file exists but cannot be deleted.
+	 */
 	public function useGlobalFor($language) {
 		$fileName = $this->config_folder_path.DS.'myconfig-'.$language.'.php';
 		if (file_exists($fileName)) {
@@ -759,6 +898,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->enable_check_cart;
 	}
 	
+	public function getEnableCheckStock() {
+		return $this->enable_check_stock;
+	}
+	
 	public function getEnableRedeemCoupons() {
 		return $this->enable_redeem_coupons;
 	}
@@ -769,6 +912,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getEnableGetCustomer() {
 		return $this->enable_get_customer;
+	}
+	
+	public function getEnableGetDebugInfo() {
+		return $this->enable_get_debug_info;
 	}
 	
 	public function getEnableGetItemsCsv() {
@@ -785,6 +932,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getEnableGetPagesCsv() {
 		return $this->enable_get_pages_csv;
+	}
+	
+	public function getEnableGetMediaCsv(){
+		return $this->enable_get_media_csv;
 	}
 	
 	public function getEnableGetLogFile() {
@@ -809,6 +960,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getEnableGetSettings() {
 		return $this->enable_get_settings;
+	}
+	
+	public function getEnableSetSettings() {
+		return $this->enable_set_settings;
 	}
 	
 	public function getCountry() {
@@ -854,6 +1009,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getItemsCsvFilename() {
 		return $this->items_csv_filename;
 	}
+
+	public function getMediaCsvFilename() {
+		return $this->media_csv_filename;
+	}
 	
 	public function getCategoriesCsvFilename() {
 		return $this->categories_csv_filename;
@@ -893,6 +1052,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getItemsCsvPath() {
 		return rtrim($this->export_folder_path.DS.$this->items_csv_filename, DS);
+	}
+
+	public function getMediaCsvPath() {
+		return rtrim($this->export_folder_path.DS.$this->media_csv_filename, DS);
 	}
 	
 	public function getCategoriesCsvPath() {
@@ -935,7 +1098,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->is_shopgate_adapter;
 	}
 	
-	
+	public function getEnableRegisterCustomer() {
+		return $this->enable_register_customer;
+	}
+
 	###############
 	### Setters ###
 	###############
@@ -1015,6 +1181,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_check_cart = $value;
 	}
 	
+	public function setEnableCheckStock($value) {
+		$this->enable_check_stock = $value;
+	}
+	
 	public function setEnableRedeemCoupons($value) {
 		$this->enable_redeem_coupons = $value;
 	}
@@ -1025,6 +1195,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function setEnableGetCustomer($value) {
 		$this->enable_get_customer = $value;
+	}
+	
+	public function setEnableGetDebugInfo($value) {
+		$this->enable_get_debug_info = $value;
 	}
 	
 	public function setEnableGetItemsCsv($value) {
@@ -1041,6 +1215,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function setEnableGetPagesCsv($value) {
 		$this->enable_get_pages_csv = $value;
+	}
+	
+	public function setEnableGetMediaCsv($value){
+		$this->enable_get_media_csv = $value;
 	}
 	
 	public function setEnableGetLogFile($value) {
@@ -1065,6 +1243,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function setEnableGetSettings($value) {
 		$this->enable_get_settings = $value;
+	}
+	
+	public function setEnableSetSettings($value) {
+		$this->enable_set_settings = $value;
 	}
 	
 	public function setCountry($value) {
@@ -1110,6 +1292,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function setItemsCsvFilename($value) {
 		$this->items_csv_filename = $value;
 	}
+
+	public function setMediaCsvFilename($value) {
+		$this->media_csv_filename = $value;
+	}
 	
 	public function setCategoriesCsvFilename($value) {
 		$this->categories_csv_filename = $value;
@@ -1154,6 +1340,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		if (!empty($dir) && !empty($file)) {
 			$this->export_folder_path = $dir;
 			$this->items_csv_filename = $file;
+		}
+	}
+
+	public function setMediaCsvPath($value) {
+		$dir = dirname($value);
+		$file = basename($value);
+		
+		if (!empty($dir) && !empty($file)) {
+			$this->export_folder_path = $dir;
+			$this->media_csv_filename = $file;
 		}
 	}
 	
@@ -1251,6 +1447,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->is_shopgate_adapter = $value;
 	}
 	
+	public function setEnableRegisterCustomer($value) {
+		$this->enable_register_customer = $value;
+	}
 	
 	###############
 	### Helpers ###
@@ -1272,6 +1471,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		
 		// append the file paths
 		$properties['items_csv_path'] = $this->getItemsCsvPath();
+		$properties['media_csv_path'] = $this->getMediaCsvPath();
 		$properties['categories_csv_path'] = $this->getCategoriesCsvPath();
 		$properties['reviews_csv_path'] = $this->getReviewsCsvPath();
 		$properties['pages_csv_path'] = $this->getPagesCsvPath();
@@ -1805,9 +2005,7 @@ class ShopgateConfigOld extends ShopgateObject {
 /**
  * Manages configuration for library _and_ plugin options.
  *
- * This class is used to save general library settings and specific settings for your plugin.
- *
- * To add your own specific settings
+ * Classes implementing this class are used to save general library settings and specific settings for your plugin.
  *
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
@@ -1819,100 +2017,26 @@ interface ShopgateConfigInterface {
 	const SHOPGATE_FILE_PREFIX = 'shopgate_';
 	
 	/**
-	 * Tries to load the configuration from a file.
+	 * Loads an array of key-value pairs or a permanent storage.
 	 *
-	 * If a $path is passed, this method tries to include the file. If that fails an exception is thrown.<br />
-	 * <br />
-	 * If $path is empty it tries to load .../shopgate_library/config/myconfig.php or if that fails,
-	 * .../shopgate_library/config/config.php is tried to be loaded. If that fails too, an exception is
-	 * thrown.<br />
-	 * <br />
-	 * The configuration file must be a PHP script defining an indexed array called $shopgate_config
-	 * containing the desired configuration values to set. If that is not the case, an exception is thrown
-	 *
-	 * @param string $path The path to the configuration file or nothing to load the default Shopgate Library configuration files.
-	 * @throws ShopgateLibraryException in case a configuration file could not be loaded or the $shopgate_config is not set.
+	 * @param array $settings key-value pairs of settings or null to load from a permanent storage
+	 * @throws ShopgateLibraryException with code ShopgateLibraryException::CONFIG_READ_WRITE_ERROR
+	 * @throws ShopgateLibraryException with code ShopgateLibraryException::
+	 * @post if $settings was passed: all applicable keys and values from $settings are loaded into the configuration and can be retrieved via getter methods
+	 *       if $settings was null: all applicable keys and values from a permanent storage are loaded into the configuration and can be retrieved via getter methods
 	 */
-	public function loadFile($path = null);
+	public function load(array $settings = null);
 	
 	/**
-	 * Loads the configuration file by a given language or the global configuration file.
+	 * Saves the desired fields to a permanent storage.
 	 *
-	 * @param string|null $language the ISO-639 code of the language or null to load global configuration
+	 * @param array $fieldList the list of fields to save
+	 * @param bool $validate true to validate the values to be saved
+	 * @throws ShopgateLibraryException with code ShopgateLibraryException::CONFIG_READ_WRITE_ERROR
+	 * @throws ShopgateLibraryException with code ShopgateLibraryException::CONFIG_INVALID_VALUE
+	 * @post the configuration is saved into a permanent storage
 	 */
-	public function loadByLanguage($language);
-
-	/**
-	 * Loads the configuration file for a given Shopgate shop number.
-	 *
-	 * @param string $shopNumber The shop number.
-	 * @throws ShopgateLibraryException in case the $shopNumber is empty or no configuration file can be found.
-	 */
-	public function loadByShopNumber($shopNumber);
-	
-	/**
-	 * Saves the desired configuration fields to the specified file or myconfig.php.
-	 *
-	 * This calls $this->loadFile() with the given $path to load the current configuration. In case that fails, the $shopgate_config
-	 * array is initialized empty. The values defined in $fieldList are then validated (if desired), assigned to $shopgate_config and
-	 * saved to the specified file or myconfig.php.
-	 *
-	 * In case the file cannot be (over)written or created, an exception with code ShopgateLibrary::CONFIG_READ_WRITE_ERROR is thrown.
-	 *
-	 * In case the validation fails for one or more fields, an exception with code ShopgateLibrary::CONFIG_ is thrown. The failed
-	 * fields are appended as additional information in form of a comma-separated list.
-	 *
-	 * @param string[] $fieldList The list of fieldnames that should be saved to the configuration file.
-	 * @param string $path The path to the configuration file or empty to use .../shopgate_library/config/myconfig.php.
-	 * @param bool $validate True to validate the fields that should be set.
-	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
-	 */
-	public function saveFile(array $fieldList, $path = null, $validate = true);
-	
-	/**
-	 * Saves the desired fields to the configuration file for a given language or global configuration
-	 *
-	 * @param string[] $fieldList the list of fieldnames that should be saved to the configuration file.
-	 * @param string $language the ISO-639 code of the language or null to save to global configuration
-	 * @param bool $validate true to validate the fields that should be set.
-	 *
-	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
-	 */
-	public function saveFileForLanguage(array $fieldList, $language = null, $validate = true);
-	
-	/**
-	 * Checks for duplicate shop numbers in multiple configurations.
-	 *
-	 * This checks all files in the configuration folder and shop numbers in all
-	 * configuration files.
-	 *
-	 * @param string $shopNumber The shop number to test or null to test all shop numbers found.
-	 * @return bool true if there are duplicates, false otherwise.
-	 */
-	public function checkDuplicates();
-	
-	/**
-	 * Checks if there is more than one configuration file available.
-	 *
-	 * @return bool true if multiple configuration files are available, false otherwise.
-	 */
-	public function checkMultipleConfigs();
-	
-	/**
-	 * Checks if there is a configuration for the language requested.
-	 *
-	 * @param string $language the ISO-639 code of the language or null to load global configuration
-	 * @return bool true if global configuration should be used, false if the language has separate configuration
-	 */
-	public function checkUseGlobalFor($language);
-	
-	/**
-	 * Removes the configuration for the language requested.
-	 *
-	 * @param string $language the ISO-639 code of the language or null to load global configuration
-	 * @throws ShopgateLibraryException in case the file exists but cannot be deleted.
-	 */
-	public function useGlobalFor($language);
+	public function save(array $fieldList, $validate = true);
 	
 	/**
 	 * Validates the configuration values.
@@ -2028,6 +2152,11 @@ interface ShopgateConfigInterface {
 	/**
 	 * @return bool
 	 */
+	public function getEnableCheckStock();
+
+	/**
+	 * @return bool
+	 */
 	public function getEnableRedeemCoupons();
 	
 	/**
@@ -2039,6 +2168,12 @@ interface ShopgateConfigInterface {
 	 * @return bool
 	 */
 	public function getEnableGetCustomer();
+
+
+	/**
+	 * @return bool
+	 */
+	public function getEnableGetDebugInfo();
 
 	/**
 	 * @return bool
@@ -2084,6 +2219,16 @@ interface ShopgateConfigInterface {
 	 * @return bool
 	 */
 	public function getEnableClearCache();
+	
+	/**
+	 * @return bool
+	 */
+	public function getEnableGetSettings();
+	
+	/**
+	 * @return bool
+	 */
+	public function getEnableSetSettings();
 	
 	/**
 	 * @return string The ISO 3166 ALPHA-2 code of the country the plugin uses for export.
@@ -2139,6 +2284,11 @@ interface ShopgateConfigInterface {
 	 * @return string The name of the items CSV file.
 	 */
 	public function getItemsCsvFilename();
+
+	/**
+	 * @return string The name of the items CSV file.
+	 */
+	public function getMediaCsvFilename();
 	
 	/**
 	 * @return string The name of the categories CSV file.
@@ -2338,6 +2488,11 @@ interface ShopgateConfigInterface {
 	/**
 	 * @param bool $value
 	 */
+	public function setEnableCheckStock($value);
+
+	/**
+	 * @param bool $value	 
+	 */
 	public function setEnableRedeemCoupons($value);
 	
 	/**
@@ -2349,6 +2504,12 @@ interface ShopgateConfigInterface {
 	 * @param bool $value
 	 */
 	public function setEnableGetCustomer($value);
+
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableGetDebugInfo($value);
+
 
 	/**
 	 * @param bool $value
@@ -2394,6 +2555,16 @@ interface ShopgateConfigInterface {
 	 * @param bool $value
 	 */
 	public function setEnableClearCache($value);
+	
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableGetSettings($value);
+	
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableSetSettings($value);
 	
 	/**
 	 * @param string The ISO 3166 ALPHA-2 code of the country the plugin uses for export.
@@ -2449,6 +2620,11 @@ interface ShopgateConfigInterface {
 	 * @param string $value The name of the items CSV file.
 	 */
 	public function setItemsCsvFilename($value);
+
+	/**
+	 * @param string $value The name of the items CSV file.
+	 */
+	public function setMediaCsvFilename($value);
 	
 	/**
 	 * @param string $value The name of the categories CSV file.
