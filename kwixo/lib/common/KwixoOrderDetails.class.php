@@ -62,7 +62,7 @@ class KwixoOrderDetails extends KwixoXMLElement
 	 */
 	public function createProductList()
 	{
-		$product_list = $this->addChild(new KwixoProductList());
-		return $product_list;
+		return $this->addChild(new KwixoProductList());
+
 	}
 }
