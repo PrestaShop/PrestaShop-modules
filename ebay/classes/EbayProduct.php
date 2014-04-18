@@ -53,7 +53,7 @@ class EbayProduct
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', $data, 'INSERT');
 	}
 
-	public static function updateByIdProductRef($id_product_ref, $data)
+	public static function updateByIdProductRef($id_product_ref, $all_data)
 	{
 		$to_insert = array();
 		if(is_array($all_data) && count($all_data))

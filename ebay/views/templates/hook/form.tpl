@@ -41,7 +41,7 @@
 <script>
 	var $j = $;
 </script>
-{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4"}
+{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4" || substr($smarty.const._PS_VERSION_, 0, 5) == "1.5.2"}
 	<link rel="stylesheet" href="{$fancyboxCss}" />
 	<script src="{$ebayjquery}"></script>
 	<script src="{$noConflicts}"></script>
