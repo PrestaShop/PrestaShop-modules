@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p>{l s='Your order on' mod='paypal'} <span class="bold">{$shop_name}</span> {l s='is complete.' mod='paypal'}
+<p>{l s='Your order on' mod='paypal'} <span class="bold">{$shop_name|escape:'htmlall':'UTF-8'}</span> {l s='is complete.' mod='paypal'}
 	<br /><br />
 	{l s='You have chosen the PayPal method.' mod='paypal'}
 	<br /><br /><span class="bold">{l s='Your order will be sent very soon.' mod='paypal'}</span>

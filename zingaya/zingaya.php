@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision: 1.1 $
 *
 *  International Registered Trademark & Property of PrestaShop SA
@@ -20,13 +20,14 @@ class Zingaya extends Module
 	{
 		$this->name = 'zingaya';
 		$this->tab = 'administration';
-		$this->version = '1.1';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
 		$this->displayName = $this->l('Zingaya - Click-to-call');
 		$this->description = $this->l('Zingaya enables voice calls through any computer, right from a webpage. No download or phone is required!');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
+
 	}
 
 	public function install()
@@ -136,6 +137,7 @@ class Zingaya extends Module
 			else
 			{
 				Configuration::updateValue('ZINGAYA_API_KEY', $attach_child->api_key);
+				Configuration::updateValue('ZINGAYA_CONFIGURATION_OK', true);
 
 				$user_id = $this->_apiCall('GetCurrentUserID');
 				if (!isset($user_id->result))

@@ -1,7 +1,7 @@
 <?php
 
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2013 PrestaShop SA
+* @copyright 2007-2014 PrestaShop SA
 * @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
@@ -111,11 +111,18 @@ class ProductExtractorToXML extends DataExtractorToXML
 			$this->nbEntities--;
 			return ' ';
 		}
+		
+		// Force the shop of the context regarding the shop of the product for the getParentsCategories function
+		if((int)Context::getContext()->shop->id != (int)$aEntity['id_shop'])
+			Context::getContext()->shop = $oPrediggoConfig->getContext();
 
 		$ps_tax = (int)Configuration::get('PS_TAX');
 
 		foreach($this->aLanguages as $aLanguage)
 		{
+			if(!isset($aLanguage['shops'][(int)$aEntity['id_shop']]))
+				continue;
+			
 			$id_lang = (int)$aLanguage['id_lang'];
 
 			// Set the root of the XML

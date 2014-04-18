@@ -1,0 +1,61 @@
+.toolbarBox {
+    background-color: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+.toolbarBox .pageTitle {
+    line-height: 48px;
+    margin-left: 10px;
+}
+.toolbarBox .pageTitle h3 {
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 48px;
+    margin: 0;
+    padding: 0;
+}
+.toolbarBox ul.cc_button {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+.toolbarBox ul.cc_button li {
+    color: #666666;
+    float: left;
+    height: 48px;
+    list-style: none outside none;
+    padding: 1px 1px 3px 4px;
+    text-align: center;
+}
+.toolbarBox a.toolbar_btn {
+    border-width: 1px;
+    cursor: pointer;
+    display: block;
+    float: left;
+    min-width: 50px;
+    font-size: 11px;
+    padding: 1px 5px;
+    text-shadow: 0 1px 0 #FFFFFF;
+    white-space: nowrap;
+    border: 1px solid #F8F8F8;
+}
+
+.toolbarBox .toolbar_btn span {
+    display: block;
+    float: none;
+    height: 32px;
+    margin: 0 auto;
+    width: 32px;
+}
+
+.toolbarBox .process-icon-new, .toolbarBox .process-icon-newAttributes {
+    background-image: url("../img/process-icon-new.png");
+}
+
+.toolbarBox a.toolbar_btn:hover {
+    background-color: #FFFFFF;
+    border: 1px inset #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+}

@@ -22,7 +22,7 @@ if (!defined('_PS_VERSION_')) exit;
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.3.5');
+define('SHOPGATE_PLUGIN_VERSION', '2.3.9');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
@@ -31,6 +31,25 @@ require_once(SHOPGATE_DIR.'classes/PSShopgateOrder.php');
 require_once(SHOPGATE_DIR.'classes/PSShopgateConfig.php');
 
 class ShopGate extends PaymentModule {
+
+    /**
+     * default offer link format
+     */
+    const DEFAULT_OFFER_LINK_FORMAT = 'http://www.shopgate.com/%s/prestashop_offer';
+
+    /**
+     * offer link mapping
+     *
+     * @var array
+     */
+    private $_offer_mapping = array(
+        'en-us'     => 'us',
+        'de'        => 'de',
+        'gb'        => 'uk',
+        'fr'        => 'fr',
+        'default'   => 'uk'
+    );
+
 	private $shopgate_trans = array();
 	private $configurations = array(
 		'SHOPGATE_CARRIER_ID' => 1,
@@ -45,10 +64,11 @@ class ShopGate extends PaymentModule {
 	
 	function __construct() {
 		$this->name = 'shopgate';
-		if(version_compare(_PS_VERSION_, '1.5.0.0', '<')){
-			$this->tab = 'market_place';
-		} else {
+		if(version_compare(_PS_VERSION_, '1.5', '>='))
+		{
 			$this->tab = 'mobile';
+		} else {
+			$this->tab = 'market_place';
 		}
 		
 		$this->version = SHOPGATE_PLUGIN_VERSION;
@@ -59,6 +79,7 @@ class ShopGate extends PaymentModule {
 	
 		$this->displayName = $this->l('Shopgate');
 		$this->description = $this->l('Sell your products with your individual app and a website optimized for mobile devices.');
+
 	
 		//delivery service list
 		$this->shipping_service_list = array
@@ -631,7 +652,25 @@ class ShopGate extends PaymentModule {
 		$this->context->smarty->assign('configs', $configs);
 		$this->context->smarty->assign('mod_dir', $this->_path);
 		$this->context->smarty->assign('api_url', Tools::getHttpHost(true, true).$this->_path.'api.php');
+        $this->context->smarty->assign('shopgate_offer_url', $this->_getOfferLink(Context::getContext()->language->language_code));
 		
 		return $output.$this->display(__FILE__, 'views/templates/admin/configurations.tpl');
 	}
+
+    /**
+     * returns the current offer link by language code
+     *
+     * @param string $languageCode
+     * @return string
+     */
+    protected function _getOfferLink($languageCode)
+    {
+        if(array_key_exists($languageCode, $this->_offer_mapping)) {
+            $languageCode = $this->_offer_mapping[$languageCode];
+        } else {
+            $languageCode = $this->_offer_mapping['default'];
+        }
+
+        return sprintf(self::DEFAULT_OFFER_LINK_FORMAT, $languageCode);
+    }
 }

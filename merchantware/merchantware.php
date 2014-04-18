@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ class MerchantWare extends PaymentModule
 	{
 		$this->name = 'merchantware';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.3';
+		$this->version = '1.2.5';
 		$this->author = 'PrestaShop';
 		$this->className = 'Merchantware';
 
@@ -51,6 +51,7 @@ class MerchantWare extends PaymentModule
 		$this->description = $this->l('Eliminate expensive and unnecessary gateway fees by partnering with Merchant Warehouse for your payment processing needs!');
 
 		$this->confirmUninstall =	$this->l('Are you sure you want to delete your details?');
+
 		if (!extension_loaded('soap'))
 			$this->_warnings[] = $this->l('In order to use your module, please activate Soap (PHP extension)');
 		if (!extension_loaded('openssl'))

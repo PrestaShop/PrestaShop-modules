@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,18 +39,16 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.2';
+		$this->version = '3.4.8';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
 		$this->displayName = $this->l('Avalara - AvaTax');
 		$this->description = $this->l('Sales Tax is complicated. AvaTax makes it easy.');
 
+
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-		
-		if (!extension_loaded('soap') || !class_exists('SoapClient'))
-			$this->warning = $this->l('SOAP extension should be enabled on your server to use this module.');
 	}
 
 	/**
@@ -58,6 +56,12 @@ class AvalaraTax extends Module
 	 */
 	public function install()
 	{
+		if (!extension_loaded('soap') || !class_exists('SoapClient'))
+		{
+			$this->_errors[] = $this->l('SOAP extension should be enabled on your server to use this module.');
+			return false;
+		}
+		
 		Configuration::updateValue('AVALARATAX_URL', 'https://avatax.avalara.net');
 		Configuration::updateValue('AVALARATAX_ADDRESS_VALIDATION', 1);
 		Configuration::updateValue('AVALARATAX_TAX_CALCULATION', 1);
@@ -498,6 +502,9 @@ class AvalaraTax extends Module
 	/******************************************************************/
 	public function getContent()
 	{
+		if (!extension_loaded('soap') || !class_exists('SoapClient'))
+			return '<div class="error">'.$this->l('SOAP extension should be enabled on your server to use this module.').'</div>';
+
 		$buffer = '';
 		
 		if (version_compare(_PS_VERSION_,'1.5','>'))
@@ -506,14 +513,19 @@ class AvalaraTax extends Module
 			$buffer .= '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
 		  	<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />';
 
-		if (Tools::isSubmit('SubmitAvalaraTaxSettings'))
+		if (Tools::isSubmit('SubmitAvalaraTaxSettings')) 
 		{
 			Configuration::updateValue('AVALARATAX_ACCOUNT_NUMBER', Tools::getValue('avalaratax_account_number'));
 			Configuration::updateValue('AVALARATAX_LICENSE_KEY', Tools::getValue('avalaratax_license_key'));
 			Configuration::updateValue('AVALARATAX_URL', Tools::getValue('avalaratax_url'));
 			Configuration::updateValue('AVALARATAX_COMPANY_CODE', Tools::getValue('avalaratax_company_code'));
 
-			$buffer .= $this->_displayConfirmation();
+			$connectionTestResult = $this->_testConnection();
+			if (strpos($connectionTestResult[0], 'Error') === false)
+			{
+				Configuration::updateValue('AVALARATAX_CONFIGURATION_OK', true); 
+				$buffer .= $this->_displayConfirmation();
+			}
 		}
 		elseif (Tools::isSubmit('SubmitAvalaraTaxOptions'))
 		{
@@ -523,7 +535,6 @@ class AvalaraTax extends Module
 			Configuration::updateValue('AVALARATAX_ADDRESS_NORMALIZATION', Tools::getValue('avalaratax_address_normalization'));
 			Configuration::updateValue('AVALARATAX_TAX_OUTSIDE', Tools::getValue('avalaratax_tax_outside'));
 			Configuration::updateValue('AVALARA_CACHE_MAX_LIMIT', Tools::getValue('avalara_cache_max_limit') < 1 ? 1 : Tools::getValue('avalara_cache_max_limit') > 23 ? 23 : Tools::getValue('avalara_cache_max_limit'));
-
 			$buffer .= $this->_displayConfirmation();
 		}
 		elseif (Tools::isSubmit('SubmitAvalaraTestConnection'))

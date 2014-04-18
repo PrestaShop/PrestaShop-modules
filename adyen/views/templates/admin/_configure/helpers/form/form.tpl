@@ -25,8 +25,6 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="leadin"}
-
-	
 	<div class="adyen-info">
 		<img src="../modules/adyen/img/adyen_logo_large.png" width="400" height="132" alt="{l s='Adyen' mod='adyen'}"/>
 			
@@ -67,9 +65,9 @@
 		</div>
 		
 		<div class="adyen-payement-info right">
-			<h2>Support</h2>
+			<h2>Support & Documentation</h2>
 			<p>
-				The integration guide for this Plugin is available on the Adyen Support website: <a target="_blank" href="https://support.adyen.com">support.adyen.com</a>, type in 'Prestashop'
+				<a target="_blank" href="https://support.adyen.com/index.php?/Knowledgebase/Article/View/1711/0/plugin-for-prestashop">Click here to download the manual how to setup this plugin</a>
 			</p>
 			<p>
 				If you have any questions please visit our website <a target="_blank" href="http://adyen.com">Adyen.com</a> or mail to <a href="mailto:support@adyen.com">support@adyen.com</a>

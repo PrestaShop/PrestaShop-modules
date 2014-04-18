@@ -1,4 +1,5 @@
 "Categorie";"Champ spécifique";"Nom Web Service"
+"Luminaire";"Emplacement";"emplacement"
 "Luminaire";"Etat";"etat"
 "Luminaire";"Matière";"matiere"
 "Luminaire";"Eclairage";"eclairage"
@@ -13,6 +14,5 @@
 "Luminaire";"Culot";"support_compatible"
 "Luminaire";"Puissance maxi (Watts)";"puissance"
 "Luminaire";"Alimentation";"connectique"
-"Luminaire";"Emplacement";"emplacement"
 "Luminaire";"Garantie constructeur";"garantie_constructeur"
 "Luminaire";"Garantie Marchand";"garantie_marchand"

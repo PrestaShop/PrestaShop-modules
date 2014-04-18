@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div>
-    <a href="http://www.fia-net.com/annuaire/{$siteid}/fiche.html" target="_blank"><img src="{$fianetsceau_img}" title="{l s='See Dealer Sheet FIA-NET.com' mod='fianetsceau'}" /></a>
+    <a href="http://www.fia-net.com/annuaire/{$siteid|intval}/fiche.html" target="_blank"><img src="{$fianetsceau_img|escape:'htmlall'}" title="{l s='See Dealer Sheet FIA-NET.com' mod='fianetsceau'}" /></a>
 </div>
 
 

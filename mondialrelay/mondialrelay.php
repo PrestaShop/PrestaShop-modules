@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -70,7 +70,7 @@ class MondialRelay extends Module
 	{
 		$this->name = 'mondialrelay';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.8.9';
+		$this->version = '1.8.13';
 		$this->installed_version = '';
 		$this->module_key = '366584e511d311cfaa899fc2d9ec1bd0';
 		$this->author = 'PrestaShop';
@@ -79,6 +79,7 @@ class MondialRelay extends Module
 
 		$this->displayName = $this->l('Mondial Relay');
 		$this->description = $this->l('Deliver in Relay points');
+
 
 		/** Backward compatibility */
 		require(_PS_MODULE_DIR_.'/mondialrelay/backward_compatibility/backward.php');
@@ -679,7 +680,7 @@ class MondialRelay extends Module
 	private function _postProcess()
 	{
 		$post_action = array(
-			'type' => Tools::getValue('MR_tab_name'),
+			'type' => Tools::safeOutput(Tools::getValue('MR_tab_name')),
 			'message_success' => $this->l('Action Succeed'),
 			'had_errors' => false
 		);
@@ -687,12 +688,12 @@ class MondialRelay extends Module
 		if (Tools::isSubmit('submit_account_detail'))
 		{
 			$this->account_shop = array(
-				'MR_ENSEIGNE_WEBSERVICE' => Tools::getValue('MR_enseigne_webservice'),
-				'MR_CODE_MARQUE' => Tools::getValue('MR_code_marque'),
-				'MR_KEY_WEBSERVICE' => Tools::getValue('MR_webservice_key'),
-				'MR_LANGUAGE' => Tools::getValue('MR_language'),
-				'MR_ORDER_STATE' => $this->account_shop['MR_ORDER_STATE'],
-				'MR_WEIGHT_COEFFICIENT' => Tools::getValue('MR_weight_coefficient'),
+				'MR_ENSEIGNE_WEBSERVICE' => Tools::safeOutput(Tools::getValue('MR_enseigne_webservice')),
+				'MR_CODE_MARQUE' =>			Tools::safeOutput(Tools::getValue('MR_code_marque')),
+				'MR_KEY_WEBSERVICE' =>		Tools::safeOutput(Tools::getValue('MR_webservice_key')),
+				'MR_LANGUAGE' =>			Tools::safeOutput(Tools::getValue('MR_language')),
+				'MR_ORDER_STATE' =>			Tools::safeOutput($this->account_shop['MR_ORDER_STATE']),
+				'MR_WEIGHT_COEFFICIENT' =>	Tools::safeOutput(Tools::getValue('MR_weight_coefficient')),
 				'id_shop' => $this->context->shop->id
 			);
 
@@ -815,29 +816,33 @@ class MondialRelay extends Module
 		$simpleresul = Db::getInstance()->executeS('
 			SELECT * FROM ' . _DB_PREFIX_ . 'mr_selected 
 			WHERE id_cart='.(int)($id_cart));
+
+		if((int)sizeof($simpleresul))
+		{
 	
-		if (trim($simpleresul[0]['exp_number']) != '0') 
-			$html .= $this->l('Nb expedition:').$simpleresul[0]['exp_number']."<br>";
-		if (trim($simpleresul[0]['url_etiquette']) != '0') 
-			$html .= "<a href='".$simpleresul[0]['url_etiquette']."' target='etiquette".$simpleresul[0]['url_etiquette']."'>".$this->l('Label URL')."</a><br>";
-		if (trim($simpleresul[0]['url_suivi']) != '0')
-			$html .= "<a href='".$simpleresul[0]['url_suivi']."' target='suivi".$simpleresul[0]['exp_number']."'>".$this->l('Follow-up URL')."</a><br>";
-		if (trim($simpleresul[0]['MR_Selected_Num']) != '')
-			$html .= $this->l('Nb Point Relay :').$simpleresul[0]['MR_Selected_Num']."<br>";
-		if (trim($simpleresul[0]['MR_Selected_LgAdr1']) != '')
-			$html .= $simpleresul[0]['MR_Selected_LgAdr1']."<br>";
-		if (trim($simpleresul[0]['MR_Selected_LgAdr2']) != '')
-			$html .= $simpleresul[0]['MR_Selected_LgAdr2']."<br>";
-		if (trim($simpleresul[0]['MR_Selected_LgAdr3']) != '')
-			$html .= $simpleresul[0]['MR_Selected_LgAdr3']."<br>"; 
-		if (trim($simpleresul[0]['MR_Selected_LgAdr4']) != '')
-			$html .= $simpleresul[0]['MR_Selected_LgAdr4']."<br>"; 
-		if (trim($simpleresul[0]['MR_Selected_CP']) != '')
-			$html .= $simpleresul[0]['MR_Selected_CP']." ";
-		if (trim($simpleresul[0]['MR_Selected_Ville']) != '')
-			$html .= $simpleresul[0]['MR_Selected_Ville']."<br>";
-		if (trim($simpleresul[0]['MR_Selected_Pays']) != '')
-			$html .= $simpleresul[0]['MR_Selected_Pays']."<br>";
+			if (trim($simpleresul[0]['exp_number']) != '0')
+				$html .= $this->l('Nb expedition:').$simpleresul[0]['exp_number']."<br>";
+			if (trim($simpleresul[0]['url_etiquette']) != '0')
+				$html .= "<a href='".$simpleresul[0]['url_etiquette']."' target='etiquette".$simpleresul[0]['url_etiquette']."'>".$this->l('Label URL')."</a><br>";
+			if (trim($simpleresul[0]['url_suivi']) != '0')
+				$html .= "<a href='".$simpleresul[0]['url_suivi']."' target='suivi".$simpleresul[0]['exp_number']."'>".$this->l('Follow-up URL')."</a><br>";
+			if (trim($simpleresul[0]['MR_Selected_Num']) != '')
+				$html .= $this->l('Nb Point Relay :').$simpleresul[0]['MR_Selected_Num']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_LgAdr1']) != '')
+				$html .= $simpleresul[0]['MR_Selected_LgAdr1']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_LgAdr2']) != '')
+				$html .= $simpleresul[0]['MR_Selected_LgAdr2']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_LgAdr3']) != '')
+				$html .= $simpleresul[0]['MR_Selected_LgAdr3']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_LgAdr4']) != '')
+				$html .= $simpleresul[0]['MR_Selected_LgAdr4']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_CP']) != '')
+				$html .= $simpleresul[0]['MR_Selected_CP']." ";
+			if (trim($simpleresul[0]['MR_Selected_Ville']) != '')
+				$html .= $simpleresul[0]['MR_Selected_Ville']."<br>";
+			if (trim($simpleresul[0]['MR_Selected_Pays']) != '')
+				$html .= $simpleresul[0]['MR_Selected_Pays']."<br>";
+		}
 		$html .= '</p>';
 		return $html;
 	}

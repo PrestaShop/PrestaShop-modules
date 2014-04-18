@@ -1,6 +1,6 @@
 {*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2013 Coccinet
+*  @copyright  2007-2014 Coccinet
 *}
 {if $status == 'ok'}
 <p><strong>{l s='Your payment has been successful and your order on <em>%s</em> is complete.' sprintf=$shop_name mod='realexredirect'}</strong>		

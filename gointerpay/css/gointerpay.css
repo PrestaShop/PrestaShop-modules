@@ -1,0 +1,226 @@
+.interpay-wrapper {
+	clear: both;
+	margin: 0px auto;
+	max-width: 1024px;
+	min-width: 930px;
+	overflow: hidden;
+}
+
+a.interpay-logo {
+	display: inline-block;
+	float: left;
+	margin: 0px 85px 0px 10px;
+}
+
+p.interpay-intro {
+	color: #646464;
+	font-size: 18px;
+	line-height: 20px;
+	letter-spacing: 1px;
+	margin: 15px 0px;
+	padding: 0px;
+	overflow: hidden;
+}
+
+a.interpay-apply-link {
+	background-color: #25AAE1;
+	border: #0084BA solid 1px;
+	color: #FFF;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: bold;
+	height: 28px;
+	line-height: 27px;
+	letter-spacing: 1px;
+	padding: 0px 18px;
+	text-shadow: 1px 1px #0084BA;
+	text-decoration: none;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px; 
+	border-radius: 4px;
+}
+
+a.interpay-apply-link:hover {
+	background-color: #1AA0D7;
+	color: #FFF;
+	text-decoration: none;
+}
+
+.interpay-content {
+	border-top: #25AAE1 solid 1px;
+	clear: both;
+	margin: 25px 0px 15px 0px;
+	padding: 20px 0px 0px 0px;
+	position: relative;
+	overflow: hidden;
+}
+
+.interpay-content h3 {
+	color: #25AAE1;
+	font-size: 18px;
+	font-weight: normal;
+	line-height: 20px; 
+	letter-spacing: 1px;
+	margin: 0px 0px 15px 0px;
+}
+
+.interpay-content h4 {
+	color: #25AAE1;
+	font-size: 15px;
+	font-weight: normal;
+	line-height: 20px;
+	letter-spacing: 1px;
+	margin: 0px 0px 10px 0px;
+}
+
+.interpay-content p {
+	color: #646464;
+	font-size: 13px;
+	line-height: 18px;
+	margin: 0px 0px 10px 0px;
+}
+
+.interpay-content p a {
+	color: #1E3262;
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 1px 1px #F2F2F2;
+}
+
+.interpay-content p a:hover {
+	color: #1AA0D7;
+	text-decoration: none;
+}
+
+.interpay-content ul {
+	list-style: none;
+	margin: 0px 0px 10px 0px;
+	padding: 0px;
+}
+
+.interpay-content ul li {
+	background: url(../img/bullet.gif) 3px 6px no-repeat;
+	color: #646464;
+	font-size: 13px;
+	line-height: 18px;
+	margin: 0px;
+	padding: 0px 0px 0px 15px;
+}
+
+
+.halfCol {
+	border-top: #25AAE1 solid 1px;
+	padding-top: 15px;
+	width: 47%;
+}
+
+
+
+.interpay-leftCol {
+	margin-right: 375px;
+	overflow: hidden;
+}
+
+.interpay-video {
+	background-color: #F2F2F2;
+	border: #25AAE1 solid 1px;
+	float: right;
+	margin: 0px 0px 10px 0px;
+	padding: 5px 5px 20px 5px;
+	text-align: center;
+	overflow: hidden;
+	width: 335px;
+}
+
+a.interpay-video-btn {
+	display: block;
+	height: 210px;
+	margin-bottom: 20px;
+	position: relative;
+	width: 335px;
+}
+
+a.interpay-video-btn img.video-icon {
+	border: none;
+	position: absolute;
+	left: 134px;
+	top: 73px;
+}
+
+a.interpay-link {
+	color: #1E3262;
+	font-size: 18px;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 1px 1px #FFF;
+}
+
+a.interpay-link:hover {
+	color: #1AA0D7;
+	text-decoration: none;
+}
+
+.interpay-img {
+	border: #25AAE1 solid 1px;
+	clear: both;
+	margin: 0px;
+	padding: 5px;
+	overflow: hidden;
+}
+
+.interpay-content .interpay-img h4 {
+	color: #646464;
+	margin: 4px 0px 6px 10px;
+}
+
+#menuTab {
+	padding: 0;
+	margin: 0;
+	text-align: left;
+}
+
+#menuTab li, #select_products_for_export li {
+	text-align: left;
+	float: left;
+	display: inline;
+	padding: 5px;
+	padding-right: 10px;
+	background: #EFEFEF;
+	font-weight: bold;
+	cursor: pointer;
+	border-left: 1px solid #CCCCCC; 
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	margin-left:5px;
+	height:14px;
+}
+
+#menuTab li.menuTabButton.selected, #select_products_for_export li.menuTabButton.selected {
+	background: #FFFFF0;
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	margin-bottom: -1px;
+	padding-bottom: 6px;
+}
+
+.tabItem.selected {
+	display: block;
+	background: #FFFFF0;
+	border: 1px solid #CCCCCC;
+	padding: 10px;
+}
+
+#menuTab li img { width: 16px; }
+fieldset h4 { margin-top: 0px; }
+fieldset label { clear: left; }
+.interpay-img img { border-top: #25AAE1 solid 1px; }
+a.interpay-video-btn img { border: #FFF solid 1px; }
+.floatLeft { float: left; }
+.floatRight { float: right; }
+.interpay-content p.MB20 { margin-bottom: 20px; }
+#tabList { clear: left; }
+.tabItem { display: none; }
+#all_products { margin-top: 10px; }
+#merchantid, #checkouturl, #ratesfeedapi{ width: 300px; }

@@ -1,0 +1,47 @@
+#product-tab-content-ModuleTextmaster.tab-page .listForm
+{
+    list-style: none outside none;
+    padding-left: 210px !important;
+}
+
+#product-tab-content-ModuleTextmaster.tab-page label.radioCheck
+{
+    width: auto;
+}
+
+input#ctype_translation, input#ctype_proofreading, input#ctype_copywriting
+{
+    float: left;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.separation {
+    background-color: #E0D0B1;
+    height: 1px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+div#product-tab-content-ModuleTextmaster ul#project_data_list
+{
+    margin-top:2px;
+    list-style: none;
+    padding-left: 0 !important;
+}
+
+#ajax_running {
+    background-color: #FFF1A8;
+    border: 1px solid #FFD96F;
+    border-radius: 0 0 3px 3px;
+    color: #000000;
+    display: none;
+    font-size: 14px;
+    font-weight: bold;
+    left: 40%;
+    padding: 5px 20px;
+    position: fixed;
+    top: 0;
+    width: 300px;
+    z-index: 10000;
+}

@@ -1,7 +1,6 @@
 <?php
-
-/*
- * 2007-2013 PrestaShop
+/**
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -37,7 +36,7 @@ class KwixoUrlcallModuleFrontController extends ModuleFrontController
 	{
 		parent::initContent();
 
-		$params = KwixoURLCallFrontController::ManageUrlCall();
+		$params = KwixoURLCallFrontController::manageUrlCall();
 
 		$payment_ok = $params['payment_status'];
 		$errors = $params['errors'];
@@ -50,7 +49,8 @@ class KwixoUrlcallModuleFrontController extends ModuleFrontController
 			$products = $cart->getProducts();
 			$amount = $order->total_paid_tax_incl;
 			$total_shipping = $order->total_shipping;
-		} else
+		}
+		else
 		{
 			$products = false;
 			$amount = false;

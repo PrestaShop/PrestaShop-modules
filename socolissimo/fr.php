@@ -20,6 +20,7 @@ $_MODULE['<{socolissimo}prestashop>socolissimo_0bf6a620e5f22d8b46e3903a993f7741'
 $_MODULE['<{socolissimo}prestashop>socolissimo_228485c5faff886fa4520323dc5b2c76'] = 'Temps de préparation invalide';
 $_MODULE['<{socolissimo}prestashop>socolissimo_82b66af7b110e9bc75fd65479786e313'] = 'Surcoût non spécifié';
 $_MODULE['<{socolissimo}prestashop>socolissimo_5b2bf2a7c883ffae1b7b412d65a41984'] = 'Surcoût invalide';
+$_MODULE['<{socolissimo}prestashop>socolissimo_9ae6fe001d646e4631d877a3dd5c1e59'] = 'Le transporteur Socolissimo doit être différent du transporteur socolissimo CC';
 $_MODULE['<{socolissimo}prestashop>socolissimo_20015706a8cbd457cbb6ea3e7d5dc9b3'] = 'Configuration mise à jour';
 $_MODULE['<{socolissimo}prestashop>socolissimo_126d781eae70fa41e9e848f3013e1799'] = 'Impossible de sauvegarder les paramètres';
 $_MODULE['<{socolissimo}prestashop>socolissimo_898d22b4259367825dbbbc174f049197'] = 'Choisir un mode de livraison';
@@ -99,7 +100,7 @@ $_MODULE['<{socolissimo}prestashop>back_office_b1076b08727c4e252184a390e16668d7'
 $_MODULE['<{socolissimo}prestashop>back_office_2c26692c1e229616d8f5697ff5131161'] = 'Activer Coût commerce de proximité en France';
 $_MODULE['<{socolissimo}prestashop>back_office_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
 $_MODULE['<{socolissimo}prestashop>back_office_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
-$_MODULE['<{socolissimo}prestashop>back_office_7001bdc2a0dca0abf8cb633029c68ef6'] = 'Ce coût s\'applique en lieu et place du coût \"normal\" pour la livraison en commerce de proximité.  Un transporteur \"commerce de proximité\" a été crée afin de vous permettre de parametrer son coût par tranche de prix/poids. Ses tarifs seront utilisés à la place de ceux du transporteur classique lors d\'une livraison en point commerce. <b>Une fois configuré, merci de désactiver le transporteur \"commerce de proximité\"</b>.';
+$_MODULE['<{socolissimo}prestashop>back_office_7001bdc2a0dca0abf8cb633029c68ef6'] = 'Ce coût s\'applique en lieu et place du coût \"normal\" pour la livraison en commerce de proximité.  Un transporteur \"commerce de proximité\" a été crée afin de vous permettre de parametrer son coût par tranche de prix/poids. Ses tarifs seront utilisés à la place de ceux du transporteur classique lors d\'une livraison en point commerce. Une fois configuré, merci de désactiver le transporteur \"commerce de proximité\".';
 $_MODULE['<{socolissimo}prestashop>back_office_27146b3d202b8145c2202837f68d7dc8'] = 'Autoriser la livraison en Belgique';
 $_MODULE['<{socolissimo}prestashop>back_office_e71b5cf532cb70a086decaadd682c80d'] = 'Active ou désactive la livraison en Belgique';
 $_MODULE['<{socolissimo}prestashop>back_office_bd80ee27fdda9376df68d171b69776cb'] = 'Surcoût pour la livraison en Belgique';
@@ -118,6 +119,10 @@ $_MODULE['<{socolissimo}prestashop>back_office_85068ddf0b9bcbb6913008356fe328a0'
 $_MODULE['<{socolissimo}prestashop>back_office_c5c624091e5a3651a3a7cd1be7eb6108'] = 'Autoriser ou non la vérification de la disponibilité des services SoColissimo.';
 $_MODULE['<{socolissimo}prestashop>back_office_32996bdf4214d6cb8bf7fa02273813c8'] = 'Adresse de vérification';
 $_MODULE['<{socolissimo}prestashop>back_office_af688489282270bcd9e3399db85e30df'] = 'L\'adresse de surveillance permet de s\'assurer de la disponibilité du service SoColissimo. Il n\'est pas conseillé de la désactiver.';
+$_MODULE['<{socolissimo}prestashop>back_office_eb895e60439294b8fd07232286ce998a'] = 'Affectation id socolissimo';
+$_MODULE['<{socolissimo}prestashop>back_office_30a8385e0d8d36ce87151acb324846ab'] = 'Permet de réaffecter l\'id du transporteur socolissimo';
+$_MODULE['<{socolissimo}prestashop>back_office_3bfbd88a0de4cf04475e557486e83506'] = 'Affectation id socolissimo CC';
+$_MODULE['<{socolissimo}prestashop>back_office_0e0a1154b4f64a5085851414cd6cc5bd'] = 'Permet de réaffecter l\'id du transporteur socolissimo CC';
 $_MODULE['<{socolissimo}prestashop>back_office_c9cc8cce247e49bae79f15173ce97354'] = 'Sauvegarder';
 $_MODULE['<{socolissimo}prestashop>back_office_a82be0f551b8708bc08eb33cd9ded0cf'] = 'Information';
 $_MODULE['<{socolissimo}prestashop>back_office_3e387f5ebd657c6372f0594c8226863e'] = 'Voici les deux adresses que vous devez renseigner dans votre back-office Coliposte';

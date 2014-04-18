@@ -56,7 +56,7 @@ class AdyenPaymentModuleFrontController extends ModuleFrontController
 				$hpp_options_key_value[(string)$hpp_type->code] = (string)$hpp_type->name;
 			
 			// check environment
-		if (Configuration::get('ADYEN_MODE') == true)
+		if (Configuration::get('ADYEN_MODE') == 'live')
 		{
 			$ideal_issuers = Configuration::get('ADYEN_IDEAL_ISSUERS_LIVE');
 			$ideal_issuers_all = $this->module->getBankList(true);

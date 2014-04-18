@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,8 +57,8 @@ if ($action != 'display')
 		if ($position != 0)
 		{
 			$temp = $order_states[$position];
-			$order_states[$position] = $order_states[$position-1];
-			$order_states[$position-1] = $temp;
+			$order_states[$position] = $order_states[$position - 1];
+			$order_states[$position - 1] = $temp;
 		}
 	}
 	elseif ($action == 'delete')
@@ -83,38 +83,40 @@ if ($action != 'display')
 		{
 			$temp = $order_states[$position];
 			$order_states[$position] = $order_states[$position + 1];
-			$order_states[$position+1] = $temp;
+			$order_states[$position + 1] = $temp;
 		}
 	}
 
 	$order_states = array_unique($order_states);
 
-	foreach($order_states as $key => $id_state)
+	foreach ($order_states as $key => $id_state)
 		if (empty($id_state) || !Db::getInstance()->getRow('SELECT `id_order_state`
 			FROM `'._DB_PREFIX_.'order_state`
-			WHERE `id_order_state` = '.((int)($id_state))))
+			WHERE `id_order_state` = '.(int)$id_state) )
 			unset($order_states[$key]);
 
 	Gateway::updateConfig($field, implode(':', $order_states));
 }
 
-//affichage des state en tableau.
+/* affichage des state en tableau. */
 if (count($order_states) > 0)
-	foreach($order_states as $state)
+	foreach ($order_states as $state)
 	{
 		$state_infos = Db::getInstance()->getRow('SELECT `id_order_state`, `name` 
 			FROM `'._DB_PREFIX_.'order_state_lang`
 			WHERE `id_lang` = '.(int)$cookie->id_lang.'
-			AND `id_order_state` = '.((int)($state)).'
+			AND `id_order_state` = '.(int)$state.'
 		');
 
-		if($state_infos)
+		if ($state_infos)
 		{
 			$id_order_state = $state_infos['id_order_state'];
 			$order_state_name = $state_infos['name'];
 
 			echo '<li id="state_'.(int)$id_order_state.'" data="'.(int)$id_order_state.'" class="order_state_line">
-					<span class="delete_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'"  style="cursor:pointer;"><img src="../img/admin/disabled.gif" alt="X" /></span>
+					<span class="delete_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'"  style="cursor:pointer;">
+					    <img src="../img/admin/disabled.gif" alt="X" />
+					</span>
 					<span>'.$order_state_name.'</span>
 					<span class="up_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▲</span>
 					<span class="down_'.($field == 'ORDER_STATE_BEFORE' ? 'before' : 'after').'" style="cursor:pointer;">▼</span>

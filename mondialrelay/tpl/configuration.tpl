@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -69,7 +69,7 @@
 <div class="PS_MRFormType MR_error">
 	<ul>
 		{foreach from=$MR_upgrade_detail item=message}
-			<li>{$message}</li>
+			<li>{$message|escape:'htmlall':'UTF-8'}</li>
 		{/foreach}
 	</ul>
 </div>
@@ -104,9 +104,9 @@
 		- {l s='Enter and save your Mondial Relay account settings' mod='mondialrelay'} <br />
 		- {l s='Create a Carrier using the Shipping button' mod='mondialrelay'} <br />
 		- {l s='Define a price for your carrier on' mod='mondialrelay'}
-		<a href="index.php?tab=AdminCarriers&token={$MR_token_admin_carriers}" class="green">{l s='The Carrier page' mod='mondialrelay'}</a> <br />
+		<a href="index.php?tab=AdminCarriers&token={$MR_token_admin_carriers|escape:'htmlall':'UTF-8'}" class="green">{l s='The Carrier page' mod='mondialrelay'}</a> <br />
 		- {l s='To generate labels, you must have a valid and registered address of your store on your' mod='mondialrelay'}
-		<a href="index.php?tab={$MR_token_admin_contact.controller_name}&token={$MR_token_admin_contact.token}" class="green">{l s='contact page' mod='mondialrelay'}</a> <br />
+		<a href="index.php?tab={$MR_token_admin_contact.controller_name|escape:'htmlall':'UTF-8'}&token={$MR_token_admin_contact.token|escape:'htmlall':'UTF-8'}" class="green">{l s='contact page' mod='mondialrelay'}</a> <br />
 	</fieldset>
 </div>
 
@@ -157,7 +157,7 @@
 					<label for="MR_weight_coefficient" class="mrLabel">{l s='Weight Coefficient:' mod='mondialrelay'}</label>
 					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient|escape:'htmlall'}"/>
 					<sup>*</sup>
-					<span class="indication" style="display: inline-block; line-height: 18px; vertical-align: top">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}<br />{l s='The default billing method will be set according to the total weight.' mod='mondialrelay'}</span>
+					<span class="indication" style="display: inline-block; line-height: 18px; vertical-align: top">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used|escape:'htmlall':'UTF-8'}<br />{l s='The default billing method will be set according to the total weight.' mod='mondialrelay'}</span>
 				</li>
 				<li class="PS_MRSubmit">
 					<input type="submit" name="submit_account_detail" value="{l s='Update Settings' mod='mondialrelay'}" class="button" />
@@ -270,7 +270,7 @@
 								<input type="hidden" name="delete_mr" value="{$carrier.id_mr_method}" >
 								<a class="send_disable_carrier_form" href="javascript:void(0)"><img src="../img/admin/disabled.gif" alt="Delete" title="Delete" /></a>
 								{$carrier.name} ({$carrier.col_mode}-{$carrier.dlv_mode} - {$carrier.insurance} : {$carrier.country_list})
-								<a href="index.php?tab=AdminCarriers&id_carrier={$carrier.id_carrier}&updatecarrier&token={$MR_token_admin_carriers}" style="margin-left: 20px">
+								<a href="index.php?tab=AdminCarriers&id_carrier={$carrier.id_carrier|intval}&updatecarrier&token={$MR_token_admin_carriers}" style="margin-left: 20px">
 									<b>{l s='Config Shipping' mod='mondialrelay'}</b>
 								</a>
 							</form>

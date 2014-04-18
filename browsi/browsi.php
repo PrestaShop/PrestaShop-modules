@@ -33,7 +33,7 @@ class Browsi extends Module
 	{
 		$this->name = 'browsi';
 		$this->tab = 'mobile';
-		$this->version = '1.0.1';
+		$this->version = '1.0.3';
 		$this->author = 'MySiteApp Ltd.';
 		$this->need_instance = 1;
 
@@ -42,6 +42,7 @@ class Browsi extends Module
 		$this->displayName = $this->l('Brow.si');
 		$this->description = $this->l('Generate more traffic, increase customer engagement and sell more on mobile with Brow.si.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your Brow.si settings?');
+
 
 		if (!$this->isValidSiteId(Configuration::get('BROWSI_SITEID')))
 			$this->warning = $this->l('Site ID should be configured for customizing and analytics aggregation.');

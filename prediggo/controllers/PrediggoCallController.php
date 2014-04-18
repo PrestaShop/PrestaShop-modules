@@ -1,7 +1,7 @@
 <?php
 
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2013 PrestaShop SA
+* @copyright 2007-2014 PrestaShop SA
 * @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
@@ -285,6 +285,7 @@ class PrediggoCallController
 		// Check if default web_site_id
 		if($this->oPrediggoConfig->web_site_id == 'WineDemo_Fake_Shop_ID_123456789')
 			return false;
+		$this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
 		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 		return $this->oPrediggoCall->checkWebSiteId();
 	}

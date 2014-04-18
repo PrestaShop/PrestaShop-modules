@@ -41,7 +41,7 @@ class PrestaFraud extends Module
 	{
 		$this->name = 'prestafraud';
 	 	$this->tab = 'payment_security';
-		$this->version = '1.0';
+		$this->version = '1.1.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->module_key = '755a646c90363062eacab8fa7c047605';

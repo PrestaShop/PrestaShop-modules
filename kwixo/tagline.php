@@ -1,7 +1,6 @@
 <?php
-
-/*
- * 2007-2013 PrestaShop
+/**
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -33,14 +32,14 @@ require_once(dirname(__FILE__).'/../../init.php');
 include_once 'kwixo.php';
 
 $id_order = Tools::getValue('id_order');
-$order = new Order((int) $id_order);
+$order = new Order((int)$id_order);
 
-if (_PS_VERSION_ < '1.5')
+if (version_compare(_PS_VERSION_, '1.5', '<'))
 	$kwixo = new KwixoPayment();
 else
 	$kwixo = new KwixoPayment($order->id_shop);
 
-//token security
+/*token security*/
 if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo->getAuthkey().$kwixo->getLogin()))
 {
 	$module = new Kwixo();
@@ -56,8 +55,7 @@ if (Tools::getValue('token') == Tools::getAdminToken($kwixo->getSiteid().$kwixo-
 		$date_tagline = $info['date_tagline'];
 	}
 
-	echo $tag." => ".$module->_kwixo_order_statuses[$kwixo_tagline_state]."__".$date_tagline;
-} else
-	header("Location: ../");
-
-
+	echo $tag.' => '.$module->kwixo_order_statuses[$kwixo_tagline_state].'__'.$date_tagline;
+}
+else
+	header('Location: ../');
