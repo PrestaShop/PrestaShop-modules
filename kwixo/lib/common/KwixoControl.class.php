@@ -1,22 +1,45 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class KwixoControl extends KwixoDOMDocument
 {
-
 	private $fianetmodule = 'api_prestashop_kwixo';
 	private $fianetmoduleversion = '4.3';
 
 	public function __construct()
 	{
-		@parent::__construct('1.0', 'UTF-8');
-		@$this->root = $this->appendChild(new KwixoXMLElement('control'));
+		parent::__construct('1.0', 'UTF-8');
+		$this->root = $this->appendChild(new KwixoXMLElement('control'));
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('kwixomodule', '6.4');
+		$this->root->setAttribute('kwixomodule', '6.7');
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <utilisateur> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <utilisateur>
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -30,7 +53,8 @@ class KwixoControl extends KwixoDOMDocument
 	 * @param string $fax_number
 	 * @return KwixoCustomer
 	 */
-	public function createCustomer($type, $civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createCustomer($type, $civility, $lastname, $firstname, $email,
+		$society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
 		$customer = $this->root->appendChild(new KwixoCustomer());
 		if ($type != '')
@@ -40,7 +64,8 @@ class KwixoControl extends KwixoDOMDocument
 		}
 		$customer->createChild('nom', $lastname, array('titre' => $civility));
 		$customer->createChild('prenom', $firstname);
-		$customer->createChild('email', $email);
+		if (!is_null($email))
+			$customer->createChild('email', $email);
 		if (!is_null($society))
 			$customer->createChild('societe', $society);
 		if (!is_null($phone_mobile))
@@ -56,7 +81,7 @@ class KwixoControl extends KwixoDOMDocument
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <utilisateur type='facturation'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <utilisateur type='facturation'>
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -70,13 +95,15 @@ class KwixoControl extends KwixoDOMDocument
 	 * @param string $fax_number
 	 * @return KwixoCustomer
 	 */
-	public function createInvoiceCustomer($civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createInvoiceCustomer($civility, $lastname, $firstname, $email,
+		$society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
-		return $this->createCustomer('facturation', $civility, $lastname, $firstname, $email, $society, $phone_mobile, $phone_home, $phone_office, $fax_number);
+		return $this->createCustomer('facturation', $civility, $lastname, $firstname, $email,
+			$society, $phone_mobile, $phone_home, $phone_office, $fax_number);
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <utilisateur type='livraison'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <utilisateur type='livraison'>
 	 * 
 	 * @param string $type
 	 * @param string $civility
@@ -90,13 +117,15 @@ class KwixoControl extends KwixoDOMDocument
 	 * @param string $fax_number
 	 * @return KwixoCustomer
 	 */
-	public function createDeliveryCustomer($civility, $lastname, $firstname, $email, $society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
+	public function createDeliveryCustomer($civility, $lastname, $firstname, $email,
+		$society = null, $phone_mobile = null, $phone_home = null, $phone_office = null, $fax_number = null)
 	{
-		return $this->createCustomer('livraison', $civility, $lastname, $firstname, $email, $society, $phone_mobile, $phone_home, $phone_office, $fax_number);
+		return $this->createCustomer('livraison', $civility, $lastname, $firstname, $email,
+			$society, $phone_mobile, $phone_home, $phone_office, $fax_number);
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <adresse> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <adresse>
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -109,7 +138,8 @@ class KwixoControl extends KwixoDOMDocument
 	public function createAddress($type, $street, $zipcode, $city, $country, $secondary_street = null)
 	{
 		$address = $this->root->appendChild(new KwixoAddress());
-		$address->addAttribute('type', $type);
+		if ($type != '')
+			$address->addAttribute('type', $type);
 		/* modification format=1 */
 		$address->addAttribute('format', KwixoAddress::FORMAT);
 		/* fin modification */
@@ -124,7 +154,7 @@ class KwixoControl extends KwixoDOMDocument
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <adresse type='facturation'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <adresse type='facturation'>
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -140,7 +170,7 @@ class KwixoControl extends KwixoDOMDocument
 	}
 
 	/**
-	 * creates an object KwixoCustomer representing the element <adresse type='livraison'> then adds id as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoCustomer representing the element <adresse type='livraison'>
 	 * 
 	 * @param string $type has to be 'livraison' or 'facturation'
 	 * @param string $street main street of the address
@@ -156,7 +186,7 @@ class KwixoControl extends KwixoDOMDocument
 	}
 
 	/**
-	 * creates an object KwixoOrderDetails representing the element <infocommande> then adds it as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoOrderDetails representing the element <infocommande>
 	 * 
 	 * @param string $refid order reference
 	 * @param int $siteid merchant ID given by fianet
@@ -178,7 +208,7 @@ class KwixoControl extends KwixoDOMDocument
 	}
 
 	/**
-	 * creates an object KwixoXMLElement representing the element <paiement> then adds it as a child of root, then adds the sub-children given in param, then returns the child
+	 * creates an object KwixoXMLElement representing the element <paiement>
 	 * 
 	 * @param string $type payment type
 	 * @param string $name name of the card carrier if $type=cb or $type=cb en n fois
@@ -193,7 +223,7 @@ class KwixoControl extends KwixoDOMDocument
 	{
 		$payment = $this->root->appendChild(new KwixoXMLElement('paiement'));
 
-		if (!is_null($cb_number) OR !is_null($date_valid))
+		if (!is_null($cb_number) || !is_null($date_valid))
 			$hash = new HashMD5 ();
 
 		$payment->createChild('type', $type);
