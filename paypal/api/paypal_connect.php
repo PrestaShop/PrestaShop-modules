@@ -88,7 +88,7 @@ class PayPalConnect
 			@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			@curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			@curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-			@curl_setopt($ch, CURLOPT_VERBOSE, true);
+			@curl_setopt($ch, CURLOPT_VERBOSE, false);
 
 			if($http_header)
 				@curl_setopt($ch, CURLOPT_HTTPHEADER, $http_header);
