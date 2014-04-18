@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -19,13 +18,11 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2014 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
-
 
 if (!defined('_PS_VERSION_'))
 	exit;
@@ -35,8 +32,8 @@ require_once _PS_MODULE_DIR_.'kwixo/lib/includes/includes.inc.php';
 class Kwixo extends PaymentModule
 {
 
-	// category defined by Kwixo
-	public static $_product_types = array(
+	/*category defined by Kwixo*/
+	public static $product_types = array(
 		1 => 'Alimentation & gastronomie',
 		2 => 'Auto & moto',
 		3 => 'Culture & divertissements',
@@ -57,24 +54,27 @@ class Kwixo extends PaymentModule
 		18 => 'Articles et accessoires pour b&eacute;b&eacute;',
 		19 => 'Sonorisation & lumi&egrave;re'
 	);
-	private $_carrier_types = array(
+	private $carrier_types = array(
 		1 => 'Retrait de la marchandise chez le marchand',
 		2 => 'Utilisation d\'un r&eacute;seau de points-retrait tiers (type kiala, alveol, etc.)',
 		3 => 'Retrait dans un a&eacute;roport, une gare ou une agence de voyage',
 		4 => 'Transporteur (La Poste, Colissimo, UPS...ou tout transporteur priv&eacute;)',
 		5 => 'Emission d\'un billet &eacute;lectronique, t&eacute;l&eacute;chargements',
-		6 => 'Module So Colissimo'
+		6 => 'Module So Colissimo',
+		7 => 'Module So Colissimo Liberté',
+		8 => 'Module Mondial Relay',
+		9 => 'Module Ici Relais'
 	);
-	private $_carrier_speeds = array(
+	private $carrier_speeds = array(
 		2 => 'Standard',
 		1 => 'Express (-24h)'
 	);
-	private $_kwixo_banner_types = array(
+	private $kwixo_banner_types = array(
 		'standard' => 'Kwixo standard',
 		'comptant' => 'Kwixo comptant',
-		'credit' => 'Kwixo cr&eacute;dit',
+		'credit' => 'Kwixo crédit',
 	);
-	private $_kwixo_banner_positions = array('en' =>
+	private $kwixo_banner_positions = array('en' =>
 		array(
 			'nothing' => 'Select a position',
 			'left' => 'Left',
@@ -90,7 +90,7 @@ class Kwixo extends PaymentModule
 			'bottom' => 'Bas',
 		)
 	);
-	private $_kwixo_banner_sizes = array('en' =>
+	private $kwixo_banner_sizes = array('en' =>
 		array(
 			'250x250' => '250x250 size',
 			'160x600' => '160x600 size',
@@ -104,14 +104,14 @@ class Kwixo extends PaymentModule
 			'728x90' => 'Taille 728x90',
 		)
 	);
-	private $_kwixo_statuses = array(
+	private $kwixo_statuses = array(
 		'test',
 		'prod',
 	);
 	private $popup_link_standard = 'https://www.kwixo.com/static/payflow/html/popup-1x.htm';
 	private $popup_link_comptant = 'https://www.kwixo.com/static/payflow/html/popup-1x-rnp.htm';
 	private $popup_link_credit = 'https://www.kwixo.com/static/payflow/html/popup-3x.htm';
-	public $_kwixo_order_statuses = array(
+	public $kwixo_order_statuses = array(
 		0 => 'Paiement abandonn&eacute;',
 		1 => 'Paiement accept&eacute;',
 		2 => 'Paiement refus&eacute;',
@@ -128,16 +128,16 @@ class Kwixo extends PaymentModule
 	);
 	private $kw_os_statuses = array(
 		'KW_OS_WAITING' => 'Attente validation Kwixo',
-		'KW_OS_CREDIT' => "Cr&eacute;dit Kwixo &agrave; l'&eacute;tude",
-		'KW_OS_CONTROL' => "Controle Kwixo en cours",
+		'KW_OS_CREDIT' => 'Cr&eacute;dit Kwixo &agrave; l\'&eacute;tude',
+		'KW_OS_CONTROL' => 'Controle Kwixo en cours',
 	);
 	private $kw_os_payment_green_status = array(
 		'KW_OS_PAYMENT_GREEN' => 'Paiement Kwixo accept&eacute; - score vert',
 	);
 	private $kw_os_payment_red_status = array(
-		'KW_OS_PAYMENT_RED' => "Paiement Kwixo accept&eacute; - score rouge",
+		'KW_OS_PAYMENT_RED' => 'Paiement Kwixo accept&eacute; - score rouge',
 	);
-	private $_kwixo_max_deliveries = array(
+	private $kwixo_max_deliveries = array(
 		1 => '23',
 		2 => '53'
 	);
@@ -147,25 +147,24 @@ class Kwixo extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'kwixo';
-		$this->version = '6.6';
+		$this->version = '6.7';
 		$this->tab = 'payments_gateways';
-
-		parent::__construct();
-
+		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Kwixo');
 		$this->description = $this->l('Accepts payments by "Kwixo"');
-
-
+		parent::__construct();
 		/* Backward compatibility */
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			if (file_exists(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php'))
 				include(_PS_MODULE_DIR_.'backwardcompatibility/backward_compatibility/backward.php');
 			else
 			{
-				$this->warning = $this->l('In order to work properly in PrestaShop v1.4, the Fia-Net - kwixo module requiers the backward compatibility module at least v0.4.').'<br />';
-				$this->warning .= $this->l('You can download this module for free here: http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html');
+				$this->warning = $this->l('In order to work properly in PrestaShop v1.4,
+					the Fia-Net - kwixo module requiers the backward compatibility module at least v0.4.').'<br />';
+				$this->warning .= $this->l('You can download this module for free here
+					: http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html');
 			}
 		}
 
@@ -181,7 +180,7 @@ class Kwixo extends PaymentModule
 	public function install()
 	{
 		//create log file
-		KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Création du fichier de log");
+		KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Création du fichier de log');
 
 		/** database tables creation * */
 		$sqlfile = dirname(__FILE__).'/install.sql';
@@ -197,7 +196,7 @@ class Kwixo extends PaymentModule
 		foreach ($queries as $query)
 			if (!Db::getInstance()->Execute(trim($query)))
 			{
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Installation échouée, création base échouée : ".Db::getInstance()->getMsgError());
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Installation échouée, création base échouée : '.Db::getInstance()->getMsgError());
 				return false;
 			}
 
@@ -214,20 +213,10 @@ class Kwixo extends PaymentModule
 		Configuration::updateValue('KWIXO_MODULE_VERSION', $this->version);
 
 		//hook register
-		return (parent::install() &&
-			$this->registerHook('newOrder') &&
-			$this->registerHook('paymentConfirm') &&
-			$this->registerHook('adminOrder') &&
-			$this->registerHook('header') &&
-			$this->registerHook('leftColumn') &&
-			$this->registerHook('rightColumn') &&
-			$this->registerHook('payment') &&
-			$this->registerHook('extraRight') &&
-			$this->registerHook('paymentReturn') &&
-			$this->registerHook('top') &&
-			$this->registerHook('footer') &&
-			$this->registerHook('backOfficeHeader')
-			);
+		return (parent::install() && $this->registerHook('newOrder') &&	$this->registerHook('paymentConfirm') && $this->registerHook('adminOrder')
+			&& $this->registerHook('header') && $this->registerHook('leftColumn') &&	$this->registerHook('rightColumn') && $this->registerHook('payment')
+			&& $this->registerHook('extraRight') && $this->registerHook('paymentReturn') && $this->registerHook('top') && $this->registerHook('footer')
+			&&	$this->registerHook('backOfficeHeader'));
 	}
 
 	/**
@@ -237,12 +226,11 @@ class Kwixo extends PaymentModule
 	 */
 	public function uninstall()
 	{
-
 		if (!parent::uninstall())
 			return false;
 		else
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Désinstallation du module");
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Désinstallation du module');
 			return true;
 		}
 	}
@@ -251,7 +239,7 @@ class Kwixo extends PaymentModule
 	 * Load administration form values
 	 * 
 	 */
-	public function LoadAdminFormValues()
+	public function loadAdminFormValues()
 	{
 		if (Tools::isSubmit('submitSettings'))
 		{
@@ -275,7 +263,8 @@ class Kwixo extends PaymentModule
 			$kwixo_default_carrier_type = Tools::getValue('kwixo_default_carrier_type');
 			$kwixo_default_carrier_speed = Tools::getValue('kwixo_default_carrier_speed');
 			$kwixo_max_delivery = Tools::getValue('kwixo_max_delivery');
-		} else
+		}
+		else
 		{
 
 			//take database values or fix defaut values
@@ -294,9 +283,12 @@ class Kwixo extends PaymentModule
 			$kwixo_banner_position = (Configuration::get('KWIXO_BANNER_POSITION') === false ? 'nothing' : Configuration::get('KWIXO_BANNER_POSITION'));
 			$kwixo_banner_size = (Configuration::get('KWIXO_BANNER_SIZE') === false ? '250x250' : Configuration::get('KWIXO_BANNER_SIZE'));
 			$kwixo_simulator = (Configuration::get('KWIXO_SHOW_SIMULATOR') === false ? '0' : Configuration::get('KWIXO_SHOW_SIMULATOR'));
-			$kwixo_default_product_type = (Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE') === false ? '1' : Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE'));
-			$kwixo_default_carrier_type = (Configuration::get('KWIXO_DEFAULT_CARRIER_TYPE') === false ? '4' : Configuration::get('KWIXO_DEFAULT_CARRIER_TYPE'));
-			$kwixo_default_carrier_speed = (Configuration::get('KWIXO_DEFAULT_CARRIER_SPEED') === false ? '2' : Configuration::get('KWIXO_DEFAULT_CARRIER_SPEED'));
+			$kwixo_default_product_type = (Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE') === false
+				? '1' : Configuration::get('KWIXO_DEFAULT_PRODUCT_TYPE'));
+			$kwixo_default_carrier_type = (Configuration::get('KWIXO_DEFAULT_CARRIER_TYPE') === false
+				? '4' : Configuration::get('KWIXO_DEFAULT_CARRIER_TYPE'));
+			$kwixo_default_carrier_speed = (Configuration::get('KWIXO_DEFAULT_CARRIER_SPEED') === false
+				? '2' : Configuration::get('KWIXO_DEFAULT_CARRIER_SPEED'));
 			$kwixo_max_delivery = (Configuration::get('KWIXO_MAX_DELIVERY') === false ? '23' : Configuration::get('KWIXO_MAX_DELIVERY'));
 		}
 
@@ -333,7 +325,6 @@ class Kwixo extends PaymentModule
 	 */
 	public function getContent()
 	{
-
 		$head_msg = '';
 		$base_url = __PS_BASE_URI__;
 		$iso_lang_current = Language::getIsoById($this->context->language->id);
@@ -374,31 +365,27 @@ class Kwixo extends PaymentModule
 				$head_msg = $this->displayError($error_msg);
 			}
 		}
-
-		//load submitted or default values to administration form 
-		$adminform_values = $this->LoadAdminFormValues();
-
-
+		//load submitted or default values to administration form
+		$adminform_values = $this->loadAdminFormValues();
 		//admin shop address link and log file url
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$link_shop_setting = 'index.php?tab=AdminContact&token='.Tools::getAdminTokenLite('AdminContact');
 		else
 			$link_shop_setting = $this->context->link->getAdminLink('AdminStores').'&token='.Tools::getAdminTokenLite('AdminStores');
-
 
 		$this->smarty->assign($adminform_values);
 
 		$this->smarty->assign(array(
 			'head_msg' => $head_msg,
-			'kwixo_statuses' => $this->_kwixo_statuses,
-			'kwixo_banner_types' => $this->_kwixo_banner_types,
-			'kwixo_banner_sizes' => $this->_kwixo_banner_sizes[$iso_lang_current],
-			'kwixo_banner_positions' => $this->_kwixo_banner_positions[$iso_lang_current],
+			'kwixo_statuses' => $this->kwixo_statuses,
+			'kwixo_banner_types' => $this->kwixo_banner_types,
+			'kwixo_banner_sizes' => $this->kwixo_banner_sizes[$iso_lang_current],
+			'kwixo_banner_positions' => $this->kwixo_banner_positions[$iso_lang_current],
 			'shop_categories' => $shop_categories,
-			'kwixo_product_types' => self::$_product_types,
+			'kwixo_product_types' => self::$product_types,
 			'shop_carriers' => $shop_carriers,
-			'kwixo_carrier_types' => $this->_carrier_types,
-			'kwixo_carrier_speeds' => $this->_carrier_speeds,
+			'kwixo_carrier_types' => $this->carrier_types,
+			'kwixo_carrier_speeds' => $this->carrier_speeds,
 			'logo_account_path' => $base_url.'modules/'.$this->name.'/img/account.gif',
 			'logo_categories_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/categories.gif',
 			'logo_carriers_path' => __PS_BASE_URI__.'modules/'.$this->name.'/img/carriers.gif',
@@ -409,7 +396,7 @@ class Kwixo extends PaymentModule
 			'logo_warning' => $base_url.'modules/'.$this->name.'/img/no.gif',
 			'link_shop_setting' => $link_shop_setting,
 			'log_content' => $log_content,
-			'kwixo_deliveries' => $this->_kwixo_max_deliveries,
+			'kwixo_deliveries' => $this->kwixo_max_deliveries,
 		));
 
 		return $this->display(__FILE__, '/views/templates/admin/admin.tpl');
@@ -422,26 +409,25 @@ class Kwixo extends PaymentModule
 	 */
 	private function formIsValid()
 	{
-
 		$iso_lang_current = Language::getIsoById($this->context->language->id);
 
 		//check fields form
-		if (strlen(Tools::getValue('kwixo_login')) < 1)
+		if (Tools::strlen(Tools::getValue('kwixo_login')) < 1)
 			$this->_errors[] = $this->l('Login cannot be empty');
 
-		if (strlen(Tools::getValue('kwixo_password')) < 1)
+		if (Tools::strlen(Tools::getValue('kwixo_password')) < 1)
 			$this->_errors[] = $this->l('Password cannot be empty');
 
-		if (strlen(Tools::getValue('kwixo_siteid')) < 1)
+		if (Tools::strlen(Tools::getValue('kwixo_siteid')) < 1)
 			$this->_errors[] = $this->l('Siteid cannot be empty');
 
-		if (strlen(Tools::getValue('kwixo_authkey')) < 1)
+		if (Tools::strlen(Tools::getValue('kwixo_authkey')) < 1)
 			$this->_errors[] = $this->l('Authkey cannot be empty');
 
 		if (!preg_match('#^[0-9]+$#', Tools::getValue('kwixo_siteid')))
 			$this->_errors[] = $this->l('Siteid has to be integer');
 
-		if (!in_array(Tools::getValue('kwixo_status'), $this->_kwixo_statuses))
+		if (!in_array(Tools::getValue('kwixo_status'), $this->kwixo_statuses))
 			$this->_errors[] = $this->l('You must give a correct status');
 
 		//check kwixo option
@@ -458,15 +444,15 @@ class Kwixo extends PaymentModule
 			$this->_errors[] = $this->l('You must give a correct kwixo facturable option');
 
 		//check banner type
-		if (!in_array(Tools::getValue('kwixo_banner_types'), array_keys($this->_kwixo_banner_types)))
+		if (!in_array(Tools::getValue('kwixo_banner_types'), array_keys($this->kwixo_banner_types)))
 			$this->_errors[] = $this->l('You must give a correct banner type');
 
 		//check banner size
-		if (!in_array(Tools::getValue('kwixo_banner_sizes'), array_keys($this->_kwixo_banner_sizes[$iso_lang_current])))
+		if (!in_array(Tools::getValue('kwixo_banner_sizes'), array_keys($this->kwixo_banner_sizes[$iso_lang_current])))
 			$this->_errors[] = $this->l('You must give a correct banner size');
 
 		//check banner position
-		if (!in_array(Tools::getValue('kwixo_banner_positions'), array_keys($this->_kwixo_banner_positions[$iso_lang_current])))
+		if (!in_array(Tools::getValue('kwixo_banner_positions'), array_keys($this->kwixo_banner_positions[$iso_lang_current])))
 			$this->_errors[] = $this->l('You must give a correct banner position');
 
 		//check kwixo simulator
@@ -474,7 +460,7 @@ class Kwixo extends PaymentModule
 			$this->_errors[] = $this->l('You must give a correct simulator status');
 
 		//check defaut product type
-		if (!in_array(Tools::getValue('kwixo_default_product_type'), array_keys(self::$_product_types)))
+		if (!in_array(Tools::getValue('kwixo_default_product_type'), array_keys(self::$product_types)))
 			$this->_errors[] = $this->l('You must configure a valid default product type');
 
 		//check products type
@@ -485,7 +471,8 @@ class Kwixo extends PaymentModule
 
 		foreach (array_keys($shop_categories) as $id)
 		{
-			if (!in_array(Tools::getValue('kwixo_'.$id.'_product_type'), array_keys(self::$_product_types)) && Tools::getValue('kwixo_'.$id.'_product_type') != 0)
+			if (!in_array(Tools::getValue('kwixo_'.$id.'_product_type'),
+				array_keys(self::$product_types)) && Tools::getValue('kwixo_'.$id.'_product_type') != 0)
 				$product_type_error = true;
 
 			if (Tools::getValue('kwixo_'.$id.'_product_type_delivery') != '')
@@ -508,11 +495,11 @@ class Kwixo extends PaymentModule
 			$this->_errors[] = $this->l('Delivery category must be less than delivery max contract');
 
 		//check defaut carrier type
-		if (!in_array(Tools::getValue('kwixo_default_carrier_type'), array_keys($this->_carrier_types)))
+		if (!in_array(Tools::getValue('kwixo_default_carrier_type'), array_keys($this->carrier_types)))
 			$this->_errors[] = $this->l('You must configure a valid default carrier type');
 
 		//check defaut carrier speed
-		if (!in_array(Tools::getValue('kwixo_default_carrier_speed'), array_keys($this->_carrier_speeds)))
+		if (!in_array(Tools::getValue('kwixo_default_carrier_speed'), array_keys($this->carrier_speeds)))
 			$this->_errors[] = $this->l('You must give a correct carrier speed');
 
 		//check carrier type and carrier speed
@@ -524,10 +511,11 @@ class Kwixo extends PaymentModule
 		$delivery_shop = false;
 		foreach (array_keys($shop_carriers) as $id)
 		{
-			if (!in_array(Tools::getValue('kwixo_'.$id.'_carrier_type'), array_keys($this->_carrier_types)) && Tools::getValue('kwixo_'.$id.'_carrier_type') != 0)
+			if (!in_array(Tools::getValue('kwixo_'.$id.'_carrier_type'),
+				array_keys($this->carrier_types)) && Tools::getValue('kwixo_'.$id.'_carrier_type') != 0)
 				$carrier_type_error = true;
 
-			if (!in_array(Tools::getValue('kwixo_'.$id.'_carrier_speed'), array_keys($this->_carrier_speeds)))
+			if (!in_array(Tools::getValue('kwixo_'.$id.'_carrier_speed'), array_keys($this->carrier_speeds)))
 				$carrier_speed_error = true;
 
 			if (Tools::getValue('kwixo_'.$id.'_carrier_delivery') != '')
@@ -542,7 +530,7 @@ class Kwixo extends PaymentModule
 			if (Tools::getValue('kwixo_'.$id.'_carrier_type') == 6)
 			{
 
-				if (_PS_VERSION_ >= '1.5')
+				if (version_compare(_PS_VERSION_, '1.5', '>='))
 				//check if socolissimo is enabled on PS 1.5
 					$socolissimo_is_enabled = Module::isEnabled('socolissimo');
 				else
@@ -550,9 +538,7 @@ class Kwixo extends PaymentModule
 					$socolissimo_is_enabled = $this->checkModuleisEnabled('socolissimo');
 
 				if (!Module::isInstalled('socolissimo') || !$socolissimo_is_enabled)
-				{
 					$this->_errors[] = $this->l('Invalid carrier type for carrier:').$this->l('SoColissimo module is not installed or not enabled');
-				}
 			}
 
 			if (Tools::getValue('kwixo_'.$id.'_carrier_type') == 1)
@@ -572,7 +558,7 @@ class Kwixo extends PaymentModule
 			$this->_errors[] = $this->l('Delivery carrier must be less than delivery max contract');
 
 		//check delivery
-		if (strlen(Tools::getValue('kwixo_delivery')) < 1)
+		if (Tools::strlen(Tools::getValue('kwixo_delivery')) < 1)
 			$this->_errors[] = $this->l('Delivery cannot be empty');
 
 		if (!preg_match('#^[0-9]+$#', Tools::getValue('kwixo_delivery')))
@@ -582,15 +568,16 @@ class Kwixo extends PaymentModule
 			$this->_errors[] = $this->l('Default delivery must be less than delivery max contract');
 
 		//check max delivery
-		if (!in_array(Tools::getValue('kwixo_max_delivery'), $this->_kwixo_max_deliveries))
+		if (!in_array(Tools::getValue('kwixo_max_delivery'), $this->kwixo_max_deliveries))
 			$this->_errors[] = $this->l('You must give a correct max delivery');
 
-
 		//check correct banner size correspond to the right banner position
-		if (in_array(Tools::getValue('kwixo_banner_positions'), array('right', 'left')) && in_array(Tools::getValue('kwixo_banner_sizes'), array('468x60', '728x90')))
+		if (in_array(Tools::getValue('kwixo_banner_positions'),
+			array('right', 'left')) && in_array(Tools::getValue('kwixo_banner_sizes'), array('468x60', '728x90')))
 			$this->_errors[] = $this->l('Incompatible position and size banner');
 
-		if (in_array(Tools::getValue('kwixo_banner_positions'), array('top', 'bottom')) && in_array(Tools::getValue('kwixo_banner_sizes'), array('250x250', '160x600')))
+		if (in_array(Tools::getValue('kwixo_banner_positions'),
+			array('top', 'bottom')) && in_array(Tools::getValue('kwixo_banner_sizes'), array('250x250', '160x600')))
 			$this->_errors[] = $this->l('Incompatible position and size banner');
 
 		//check if shop address entered if selected carrier or default carrier selected is 1
@@ -619,15 +606,15 @@ class Kwixo extends PaymentModule
 			Configuration::updateValue('KWIXO_SITEID', Tools::getValue('kwixo_siteid'));
 			Configuration::updateValue('KWIXO_STATUS', Tools::getValue('kwixo_status'));
 			Configuration::updateValue('KWIXO_DELIVERY', Tools::getValue('kwixo_delivery'));
-			Configuration::updateValue('KWIXO_OPTION_STANDARD', ((int) Tools::getValue('kwixo_option_standard') == 1 ? '1' : '0'));
-			Configuration::updateValue('KWIXO_OPTION_COMPTANT', ((int) Tools::getValue('kwixo_option_comptant') == 1 ? '1' : '0'));
-			Configuration::updateValue('KWIXO_OPTION_CREDIT', ((int) Tools::getValue('kwixo_option_credit') == 1 ? '1' : '0'));
-			Configuration::updateValue('KWIXO_OPTION_FACTURABLE', ((int) Tools::getValue('kwixo_option_facturable') == 1 ? '1' : '0'));
+			Configuration::updateValue('KWIXO_OPTION_STANDARD', ((int)Tools::getValue('kwixo_option_standard') == 1 ? '1' : '0'));
+			Configuration::updateValue('KWIXO_OPTION_COMPTANT', ((int)Tools::getValue('kwixo_option_comptant') == 1 ? '1' : '0'));
+			Configuration::updateValue('KWIXO_OPTION_CREDIT', ((int)Tools::getValue('kwixo_option_credit') == 1 ? '1' : '0'));
+			Configuration::updateValue('KWIXO_OPTION_FACTURABLE', ((int)Tools::getValue('kwixo_option_facturable') == 1 ? '1' : '0'));
 			Configuration::updateValue('KWIXO_EMAILS_TEST', htmlentities(Tools::getValue('kwixo_email_test')));
 			Configuration::updateValue('KWIXO_BANNER_ENABLED', Tools::getValue('kwixo_banner_types'));
 			Configuration::updateValue('KWIXO_BANNER_POSITION', Tools::getValue('kwixo_banner_positions'));
 			Configuration::updateValue('KWIXO_BANNER_SIZE', Tools::getValue('kwixo_banner_sizes'));
-			Configuration::updateValue('KWIXO_SHOW_SIMULATOR', ((int) Tools::getValue('kwixo_show_simulator') == 1 ? '1' : '0'));
+			Configuration::updateValue('KWIXO_SHOW_SIMULATOR', ((int)Tools::getValue('kwixo_show_simulator') == 1 ? '1' : '0'));
 			Configuration::updateValue('KWIXO_MAX_DELIVERY', Tools::getValue('kwixo_max_delivery'));
 
 			/** categories configuration * */
@@ -638,8 +625,8 @@ class Kwixo extends PaymentModule
 
 			foreach (array_keys($shop_categories) as $id)
 			{
-				Configuration::updateValue('KWIXO_PRODUCT_TYPE_'.$id.'', Tools::getValue('kwixo_'.$id.'_product_type'));
-				Configuration::updateValue('KWIXO_PRODUCT_TYPE_DELIVERY_'.$id.'', Tools::getValue('kwixo_'.$id.'_product_type_delivery'));
+				Configuration::updateValue('KWX_CATEGORY_'.$id.'', Tools::getValue('kwixo_'.$id.'_product_type'));
+				Configuration::updateValue('KWX_CATEGORY_DLV_'.$id.'', Tools::getValue('kwixo_'.$id.'_product_type_delivery'));
 			}
 
 			/** carriers update * */
@@ -652,12 +639,12 @@ class Kwixo extends PaymentModule
 
 			foreach (array_keys($shop_carriers) as $id)
 			{
-				Configuration::updateValue('KWIXO_CARRIER_TYPE_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_type'));
-				Configuration::updateValue('KWIXO_CARRIER_SPEED_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_speed'));
-				Configuration::updateValue('KWIXO_CARRIER_DELIVERY_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_delivery'));
+				Configuration::updateValue('KWX_CARRIER_TYPE_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_type'));
+				Configuration::updateValue('KWX_CARRIER_SPEED_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_speed'));
+				Configuration::updateValue('KWX_CARRIER_DLV_'.$id.'', Tools::getValue('kwixo_'.$id.'_carrier_delivery'));
 			}
 
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Configuration module mise à jour");
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Configuration module mise à jour');
 
 			return true;
 		}
@@ -677,8 +664,12 @@ class Kwixo extends PaymentModule
 
 		foreach ($categories as $category)
 		{
-			$kwixo_type = Tools::isSubmit('kwixo_'.$category['id_category'].'_product_type') ? Tools::getValue('kwixo_'.$category['id_category'].'_product_type') : Configuration::get('KWIXO_PRODUCT_TYPE_'.$category['id_category'].'');
-			$kwixo_delivery = Tools::isSubmit('kwixo_'.$category['id_category'].'_product_type_delivery') ? Tools::getValue('kwixo_'.$category['id_category'].'_product_type_delivery') : Configuration::get('KWIXO_PRODUCT_TYPE_DELIVERY_'.$category['id_category'].'');
+			$kwixo_type = Tools::isSubmit('kwixo_'.$category['id_category'].'_product_type')
+				? Tools::getValue('kwixo_'.$category['id_category'].'_product_type')
+				: Configuration::get('KWX_CATEGORY_'.$category['id_category'].'');
+			$kwixo_delivery = Tools::isSubmit('kwixo_'.$category['id_category'].'_product_type_delivery')
+				? Tools::getValue('kwixo_'.$category['id_category'].'_product_type_delivery')
+				: Configuration::get('KWX_CATEGORY_DLV_'.$category['id_category'].'');
 
 			$shop_categories[$category['id_category']] = array(
 				'name' => $category['name'],
@@ -702,9 +693,15 @@ class Kwixo extends PaymentModule
 
 		foreach ($carriers as $carrier)
 		{
-			$kwixo_type = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_type') ? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_type') : Configuration::get('KWIXO_CARRIER_TYPE_'.$carrier['id_carrier'].'');
-			$kwixo_speed = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_speed') ? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_speed') : Configuration::get('KWIXO_CARRIER_SPEED_'.$carrier['id_carrier'].'');
-			$kwixo_delivery = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_delivery') ? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_delivery') : Configuration::get('KWIXO_CARRIER_DELIVERY_'.$carrier['id_carrier'].'');
+			$kwixo_type = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_type')
+				? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_type')
+				: Configuration::get('KWX_CARRIER_TYPE_'.$carrier['id_carrier'].'');
+			$kwixo_speed = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_speed')
+				? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_speed')
+				: Configuration::get('KWX_CARRIER_SPEED_'.$carrier['id_carrier'].'');
+			$kwixo_delivery = Tools::isSubmit('kwixo_'.$carrier['id_carrier'].'_carrier_delivery')
+				? Tools::getValue('kwixo_'.$carrier['id_carrier'].'_carrier_delivery')
+				: Configuration::get('KWX_CARRIER_DLV_'.$carrier['id_carrier'].'');
 
 			$shop_carriers[$carrier['id_carrier']] = array(
 				'name' => $carrier['name'],
@@ -717,10 +714,10 @@ class Kwixo extends PaymentModule
 		return $shop_carriers;
 	}
 
-	public function hookbackOfficeHeader($params)
+	public function hookbackOfficeHeader()
 	{
 		$html = '<script type="text/javascript" src="'.$this->_path.'js/javascript.js"></script>';
-
+		$html .= '<link rel="stylesheet" type="text/css" href="'.$this->_path.'css/kwixo.css" />';
 		return $html;
 	}
 
@@ -729,9 +726,9 @@ class Kwixo extends PaymentModule
 	 * 
 	 * @param type $params
 	 */
-	public function hookHeader($params)
+	public function hookHeader()
 	{
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			Tools::addCSS($this->_path.'/css/kwixo.css', 'all');
 		else
 			$this->context->controller->addCSS($this->_path.'/css/kwixo.css', 'all');
@@ -799,7 +796,7 @@ class Kwixo extends PaymentModule
 		$banner_width = $size_tab[0];
 		$banner_height = $size_tab[1];
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			if ($banner_width == '250')
 				$banner_width_custom = '100%';
@@ -819,7 +816,8 @@ class Kwixo extends PaymentModule
 			$popup_link = $this->popup_link_credit;
 
 		$this->smarty->assign(array(
-			'banner' => htmlentities(__PS_BASE_URI__.'modules/'.$this->name.'/img/banners/kwixo_'.Configuration::get('KWIXO_BANNER_ENABLED').'_'.$banner_width.'x'.$banner_height.'.gif', ENT_QUOTES),
+			'banner' => htmlentities(__PS_BASE_URI__.'modules/'.$this->name.'/img/banners/kwixo_'.Configuration::get('KWIXO_BANNER_ENABLED').
+				'_'.$banner_width.'x'.$banner_height.'.gif', ENT_QUOTES),
 			'popup_link' => $popup_link,
 			'banner_width' => $banner_width_custom,
 			'banner_height' => $banner_height,
@@ -841,14 +839,14 @@ class Kwixo extends PaymentModule
 
 		$total_cart = $params['cart']->getOrderTotal(true);
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$kwixo = new KwixoPayment();
 		else
 			$kwixo = new KwixoPayment($params['cart']->id_shop);
 
 		if ($kwixo->getStatus() == 'test')
 		{
-			$customer = new Customer((int) $params['cart']->id_customer);
+			$customer = new Customer((int)$params['cart']->id_customer);
 			$customer_mail = $customer->email;
 
 			if (Configuration::get('KWIXO_EMAILS_TEST') != '')
@@ -856,15 +854,15 @@ class Kwixo extends PaymentModule
 				$mails_test = explode(',', str_replace(' ', '', Configuration::get('KWIXO_EMAILS_TEST')));
 				if (!in_array($customer_mail, $mails_test))
 				{
-					KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "L'adresse $customer_mail n'est pas autorisée à utiliser Kwixo en test.");
-					KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Liste des adresses autorisées : ".implode(', ', $mails_test));
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Adresse $customer_mail non autorisée à utiliser Kwixo en test.');
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Liste des adresses autorisées : '.implode(', ', $mails_test));
 
 					return false;
 				}
 			}
 		}
 
-		$mobile_detect = new MobileDetect();
+		$mobile_detect = new MobileDetectKwixo();
 		$mobile = $mobile_detect->isMobile();
 
 		$kwixo_standard = (Configuration::get('KWIXO_OPTION_STANDARD') == '1') ? '1' : '0';
@@ -881,7 +879,8 @@ class Kwixo extends PaymentModule
 			$kwixo_cpt_link = __PS_BASE_URI__.'modules/'.$this->name.'/sendtoKwixo.php?payment=2&token='.$token;
 			$kwixo_credit_link = __PS_BASE_URI__.'modules/'.$this->name.'/sendtoKwixo.php?payment=3&token='.$token;
 			$kwixo_facturable_link = __PS_BASE_URI__.'modules/'.$this->name.'/sendtoKwixo.php?payment=4&token='.$token;
-		} else
+		}
+		else
 		{
 			$link = new Link();
 			$kwixo_std_link = $link->getModuleLink('kwixo', 'payment', array('payment' => '1'), true);
@@ -905,7 +904,10 @@ class Kwixo extends PaymentModule
 			'logo_kwixo_credit' => __PS_BASE_URI__.'modules/'.$this->name.'/img/kwixo_credit.jpg',
 		));
 
-		return $this->display(__FILE__, '/views/templates/hook/payment_short_description.tpl');
+		if (version_compare(_PS_VERSION_, '1.6', '<'))
+			return $this->display(__FILE__, '/views/templates/hook/payment_short_description.tpl');
+		else
+			return $this->display(__FILE__, '/views/templates/hook/payment_short_description_1.6.tpl');
 	}
 
 	/**
@@ -919,7 +921,7 @@ class Kwixo extends PaymentModule
 	{
 		if (Configuration::get('KWIXO_SHOW_SIMULATOR') == '1')
 		{
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$kwixo = new KwixoPayment();
 			else
 				$kwixo = new KwixoPayment($params['cart']->id_shop);
@@ -929,7 +931,8 @@ class Kwixo extends PaymentModule
 			//check if price > 150 euro
 			if ($product->getPrice() >= '150' && Configuration::get('KWIXO_OPTION_CREDIT') == '1')
 			{
-				$this->smarty->assign('urlsimul', "https://secure.kwixo.com/credit/calculator.htm?merchantId=".$kwixo->getSiteId()."&amount=".$product->getPrice());
+				$this->smarty->assign('urlsimul', 'https://secure.kwixo.com/credit/calculator.htm?merchantId='.
+					$kwixo->getSiteId().'&amount='.$product->getPrice());
 				$this->smarty->assign('logo_simul_credit', __PS_BASE_URI__.'modules/'.$this->name.'/img/simulcred.jpg');
 				return $this->display(__FILE__, '/views/templates/hook/simulcred.tpl');
 			}
@@ -950,7 +953,7 @@ class Kwixo extends PaymentModule
 	{
 		$id_order = $params['id_order'];
 		$info_order = $this->getInfoKwixoOrder($id_order);
-		$order = new Order((int) $id_order);
+		$order = new Order((int)$id_order);
 
 		if (!$info_order === false)
 		{
@@ -959,11 +962,12 @@ class Kwixo extends PaymentModule
 				$kwixo_tagline_state = $info['kwixo_tagline_state'];
 				$transaction_id = $info['kwixo_transaction_id'];
 				$date_tagline = $info['date_tagline'];
+				$payment_type = $info['payment_type'];
 			}
 
-			$show_last_tagline = ($kwixo_tagline_state == NULL ? '0' : '1');
+			$show_last_tagline = ($kwixo_tagline_state == null ? '0' : '1');
 
-			if (_PS_VERSION_ < '1.5')
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
 				$kwixo = new KwixoPayment();
 			else
 				$kwixo = new KwixoPayment($order->id_shop);
@@ -975,10 +979,11 @@ class Kwixo extends PaymentModule
 				'transaction_id' => $transaction_id,
 				'tag_tagline' => $kwixo_tagline_state,
 				'show_last_tagline' => $show_last_tagline,
-				'kwixo_statuses' => $this->_kwixo_order_statuses,
+				'kwixo_statuses' => $this->kwixo_order_statuses,
 				'id_order' => $id_order,
 				'tid' => $transaction_id,
 				'token' => $token,
+				'payment_type' => $payment_type,
 				'logo_kwixo' => __PS_BASE_URI__.'modules/'.$this->name.'/img/kwixo.png',
 				'img_loader' => __PS_BASE_URI__.'modules/'.$this->name.'/img/loader.gif',
 			));
@@ -997,16 +1002,17 @@ class Kwixo extends PaymentModule
 	 */
 	public function getInfoKwixoOrder($id_order)
 	{
-		$sql = "SELECT * FROM `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` WHERE `id_order`= ".(int) $id_order;
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` WHERE `id_order`= '.(int)$id_order;
 		$query_result = Db::getInstance()->executeS($sql);
 
 		if (!$query_result === false)
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Récupération infos commande réussie : ".$id_order);
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Récupération infos commande réussie : '.$id_order);
 			return $query_result;
-		} else
+		}
+		else
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Récupération infos commande échouée : ".$id_order);
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Récupération infos commande échouée : '.$id_order);
 			return false;
 		}
 	}
@@ -1023,51 +1029,59 @@ class Kwixo extends PaymentModule
 	 * @return boolean
 
 	 */
-	public function manageKwixoOrder($ref_id, $tag, $transaction_id, $id_cart, $mode)
+	public function manageKwixoOrder($ref_id, $tag, $transaction_id, $id_cart, $payment_type, $mode)
 	{
-		$sql = "SELECT `id_order` FROM `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` WHERE `id_order`= ".(int) $ref_id;
+		$sql = 'SELECT `id_order` FROM `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` WHERE `id_order`= '.(int)$ref_id;
 		$query_result = Db::getInstance()->getRow($sql);
 
 		if ($query_result == false)
 		{
 			if ($mode == 'urlsys')
 			//insert new kwixo order on database if urlsys script is called
-				$sql = "INSERT INTO `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` (`id_order`,`kwixo_urlsys_state`, `kwixo_transaction_id`, `id_cart`, `date_urlsys`) 
-				VALUES (".(int) $ref_id.", ".(int) $tag.", '".pSQL((string) $transaction_id)."', ".(int) $id_cart.", '".pSQL((string) date('d-m-Y H:i:s'))."')";
+				$sql = 'INSERT INTO `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` 
+					(`id_order`,`kwixo_urlsys_state`, `kwixo_transaction_id`, `id_cart`, `date_urlsys`, `payment_type`) 
+				VALUES ('.(int)$ref_id.', '.(int)$tag.", '".pSQL((string)$transaction_id)."', ".(int)$id_cart.",
+					'".pSQL((string)date('d-m-Y H:i:s'))."', '".$payment_type."')";
 			elseif ($mode == 'tagline')
 			//insert new kwixo order on database if tagline script is called
-				$sql = "INSERT INTO `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` (`id_order`,`kwixo_tagline_state`, `kwixo_transaction_id`, `date_tagline`) 
-				VALUES (".(int) $ref_id.", ".(int) $tag.", '".pSQL((string) $transaction_id)."', '".pSQL((string) date('d-m-Y H:i:s'))."')";
+				$sql = 'INSERT INTO `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` 
+					(`id_order`,`kwixo_tagline_state`, `kwixo_transaction_id`, `date_tagline`, `payment_type`) 
+				VALUES ('.(int)$ref_id.', '.(int)$tag.", '".pSQL((string)$transaction_id)."', '".pSQL((string)date('d-m-Y H:i:s'))."', '".$payment_type."')";
 			else
 			//insert new kwixo order on database if urlcall script is called
-				$sql = "INSERT INTO `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` (`id_order`,`id_cart`, `kwixo_transaction_id`) 
-				VALUES (".(int) $ref_id.", ".(int) $id_cart.", '".pSQL((string) $transaction_id)."')";
+				$sql = 'INSERT INTO `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` 
+					(`id_order`,`id_cart`, `kwixo_transaction_id`, `payment_type`) 
+				VALUES ('.(int)$ref_id.', '.(int)$id_cart.", '".pSQL((string)$transaction_id)."', '".$payment_type."')";
 
 			$insert = Db::getInstance()->execute($sql);
 
 			if (!$insert)
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Insertion commande kwixo $ref_id échouée $sql: ".Db::getInstance()->getMsgError());
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Insertion commande kwixo '.$ref_id.' échouée $sql: '.Db::getInstance()->getMsgError());
 
 			else
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Insertion commande kwixo ".$ref_id);
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Insertion commande kwixo '.$ref_id);
 		}
 		else
 		{
 			if ($mode == 'urlsys')
 			//update kwixo order on database if urlsys script is called
-				$sql = "UPDATE `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` SET `kwixo_urlsys_state` = ".(int) $tag.", `id_cart` = ".(int) $id_cart.", `date_urlsys` = '".pSQL((string) date('d-m-Y H:i:s'))."' WHERE `id_order` = ".(int) $ref_id."";
+				$sql = 'UPDATE `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` 
+					SET `kwixo_urlsys_state` = '.(int)$tag.', `id_cart` = '.(int)$id_cart.", `date_urlsys` = '".pSQL((string)date('d-m-Y H:i:s'))."' 
+						WHERE `id_order` = ".(int)$ref_id;
 			elseif ($mode == 'tagline')
 			//update kwixo order on database if tagline script is called
-				$sql = "UPDATE `"._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME."` SET `kwixo_tagline_state` = ".(int) $tag.", `date_tagline` = '".pSQL((string) date('d-m-Y H:i:s'))."' WHERE `id_order` = ".(int) $ref_id."";
+				$sql = 'UPDATE `'._DB_PREFIX_.self::KWIXO_ORDER_TABLE_NAME.'` 
+					SET `kwixo_tagline_state` = '.(int)$tag.", `date_tagline` = '".pSQL((string)date('d-m-Y H:i:s'))."' 
+						WHERE `id_order` = ".(int)$ref_id;
 
 			else
 				return false;
 			$update = Db::getInstance()->execute($sql);
 
 			if (!$update)
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Update commande kwixo $ref_id échouée $sql: ".Db::getInstance()->getMsgError());
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Update commande kwixo '.$ref_id.' échouée '.$sql.': '.Db::getInstance()->getMsgError());
 			else
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Update commande kwixo réussie : ".$ref_id);
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Update commande kwixo réussie : '.$ref_id);
 		}
 	}
 
@@ -1079,25 +1093,25 @@ class Kwixo extends PaymentModule
 	public function checkShopAddress()
 	{
 		$check = true;
-		if (Configuration::get('PS_SHOP_ADDR1') == false || Configuration::get('PS_SHOP_ADDR1') == NULL || Configuration::get('PS_SHOP_ADDR1') == '')
+		if (Configuration::get('PS_SHOP_ADDR1') == false || Configuration::get('PS_SHOP_ADDR1') == null || Configuration::get('PS_SHOP_ADDR1') == '')
 		{
 			$this->_errors[] = $this->l('Shop address cannot be empty');
 			$check = false;
 		}
 
-		if (Configuration::get('PS_SHOP_CITY') == false || Configuration::get('PS_SHOP_CITY') == NULL || Configuration::get('PS_SHOP_CITY') == '')
+		if (Configuration::get('PS_SHOP_CITY') == false || Configuration::get('PS_SHOP_CITY') == null || Configuration::get('PS_SHOP_CITY') == '')
 		{
 			$this->_errors[] = $this->l('Shop city cannot be empty');
 			$check = false;
 		}
 
-		if (Configuration::get('PS_SHOP_CODE') == false || Configuration::get('PS_SHOP_CODE') == NULL || Configuration::get('PS_SHOP_CODE') == '')
+		if (Configuration::get('PS_SHOP_CODE') == false || Configuration::get('PS_SHOP_CODE') == null || Configuration::get('PS_SHOP_CODE') == '')
 		{
 			$this->_errors[] = $this->l('Shop zipcode cannot be empty');
 			$check = false;
 		}
 
-		if (Configuration::get('PS_SHOP_COUNTRY') == false || Configuration::get('PS_SHOP_COUNTRY') == NULL || Configuration::get('PS_SHOP_COUNTRY') == '')
+		if (Configuration::get('PS_SHOP_COUNTRY') == false || Configuration::get('PS_SHOP_COUNTRY') == null || Configuration::get('PS_SHOP_COUNTRY') == '')
 		{
 			$this->_errors[] = $this->l('Shop country cannot be empty');
 			$check = false;
@@ -1118,12 +1132,12 @@ class Kwixo extends PaymentModule
 	 * @param string $tid
 	 * 
 	 */
-	function manageKwixoTagline($tag, $order, $tid)
+	public function manageKwixoTagline($tag, $order, $tid)
 	{
 		$id_order = $order->id;
 
 		if ($tag->hasError())
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Appel Tagline sur commande kwixo $id_order échoué : ".$tag->getError());
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Appel Tagline sur commande kwixo '.$id_order.' échoué : '.$tag->getError());
 		else
 		{
 			//get kwixo tag and kwixo score
@@ -1133,34 +1147,37 @@ class Kwixo extends PaymentModule
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Appel Tagline : id_order = '.$id_order.' | tag = '.$kwixo_tag);
 
 			//insert or update kwixo order for tagline action
-			$this->manageKwixoOrder($id_order, $kwixo_tag, $tid, '', 'tagline');
+			$this->manageKwixoOrder($id_order, $kwixo_tag, $tid, '', '', 'tagline');
 
-
-			if (in_array($order->getCurrentState(), array((int) Configuration::get('KW_OS_WAITING'), (int) Configuration::get('KW_OS_CREDIT'), (int) Configuration::get('KW_OS_CONTROL'))))
+			if (in_array($order->getCurrentState(), array(
+				(int)Configuration::get('KW_OS_WAITING'), (int)Configuration::get('KW_OS_CREDIT'),
+				(int)Configuration::get('KW_OS_CONTROL'))))
 			{
 				switch ($kwixo_tag)
 				{
 					//order canceled
 					case 2:
-						if (!in_array($order->getCurrentState(), array((int) Configuration::get('KW_OS_PAYMENT_GREEN'), (int) Configuration::get('KW_OS_PAYMENT_RED'), (int) Configuration::get('KW_OS_CONTROL'), (int) Configuration::get('KW_OS_CREDIT'))))
-							$psosstatus = (int) _PS_OS_CANCELED_;
+						if (!in_array($order->getCurrentState(), array(
+							(int)Configuration::get('KW_OS_PAYMENT_GREEN'), (int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'),
+							(int)Configuration::get('KW_OS_CREDIT'))))
+							$psosstatus = (int)_PS_OS_CANCELED_;
 						break;
 
 					//order under kwixo control
 					case 3:
-						$psosstatus = (int) Configuration::get('KW_OS_CONTROL');
+						$psosstatus = (int)Configuration::get('KW_OS_CONTROL');
 						break;
 
 					case 4:
 						//if current state is diffrent of kwixo under control
-						if (!in_array($order->getCurrentState(), array((int) Configuration::get('KW_OS_CONTROL'))))
-							$psosstatus = (int) Configuration::get('KW_OS_WAITING');
+						if (!in_array($order->getCurrentState(), array((int)Configuration::get('KW_OS_CONTROL'))))
+							$psosstatus = (int)Configuration::get('KW_OS_WAITING');
 						else
 							return false;
 						break;
 					//order under credit waiting
 					case 6:
-						$psosstatus = (int) Configuration::get('KW_OS_CREDIT');
+						$psosstatus = (int)Configuration::get('KW_OS_CREDIT');
 						break;
 					//order on valid status
 					case 1:
@@ -1168,11 +1185,11 @@ class Kwixo extends PaymentModule
 					case 14:
 					case 10:
 						if ($kwixo_score == 'positif')
-							$psosstatus = (int) Configuration::get('KW_OS_PAYMENT_GREEN');
+							$psosstatus = (int)Configuration::get('KW_OS_PAYMENT_GREEN');
 						elseif ($kwixo_score == 'negatif')
-							$psosstatus = (int) Configuration::get('KW_OS_PAYMENT_RED');
+							$psosstatus = (int)Configuration::get('KW_OS_PAYMENT_RED');
 						else
-							$psosstatus = (int) _PS_OS_PAYMENT_;
+							$psosstatus = (int)_PS_OS_PAYMENT_;
 						break;
 
 					//order on payment refused
@@ -1180,18 +1197,17 @@ class Kwixo extends PaymentModule
 					case 11:
 					case 12:
 					case 101:
-						$psosstatus = (int) _PS_OS_CANCELED_;
+						$psosstatus = (int)_PS_OS_CANCELED_;
 						break;
 
 					//order on delivery done
 					case 100:
-						$psosstatus = (int) _PS_OS_PAYMENT_;
+						$psosstatus = (int)_PS_OS_PAYMENT_;
 						break;
 
 					default:
 						break;
 				}
-
 				//return the correct payment status
 				if ($order->getCurrentState() != $psosstatus)
 				//update order history
@@ -1209,7 +1225,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getNewLastPosition($id_parent)
 	{
-		return (Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int) ($id_parent)));
+		return (Db::getInstance()->getValue('SELECT IFNULL(MAX(position),0)+1 FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = '.(int)$id_parent));
 	}
 
 	/**
@@ -1226,32 +1242,32 @@ class Kwixo extends PaymentModule
 			$kw_ow_status = Configuration::get($key);
 			if ($kw_ow_status === false)
 			{
-				$orderState = new OrderState();
-				$orderState->id_order_state = (int) $key;
+				$order_state = new OrderState();
+				$order_state->id_order_state = (int)$key;
 			}
 			else
-				$orderState = new OrderState((int) $kw_ow_status);
+				$order_state = new OrderState((int)$kw_ow_status);
 
 			$langs = Language::getLanguages();
 
-			foreach ($langs AS $lang)
-				$orderState->name[$lang['id_lang']] = utf8_encode(html_entity_decode($value));
+			foreach ($langs as $lang)
+				$order_state->name[$lang['id_lang']] = utf8_encode(html_entity_decode($value));
 
-			$orderState->invoice = $invoice;
-			$orderState->send_email = $send_email;
+			$order_state->invoice = $invoice;
+			$order_state->send_email = $send_email;
 
 			if ($template != '')
-				$orderState->template = $template;
+				$order_state->template = $template;
 
 			if ($paid != '')
-				$orderState->paid = $paid;
-			$orderState->logable = $logable;
-			$orderState->color = $color;
-			$orderState->save();
+				$order_state->paid = $paid;
+			$order_state->logable = $logable;
+			$order_state->color = $color;
+			$order_state->save();
 
-			Configuration::updateValue($key, (int) $orderState->id);
+			Configuration::updateValue($key, (int)$order_state->id);
 
-			copy(dirname(__FILE__).'/img/'.$key.'.gif', dirname(__FILE__).'/../../img/os/'.(int) $orderState->id.'.gif');
+			copy(dirname(__FILE__).'/img/'.$key.'.gif', dirname(__FILE__).'/../../img/os/'.(int)$order_state->id.'.gif');
 		}
 	}
 
@@ -1262,46 +1278,52 @@ class Kwixo extends PaymentModule
 	 */
 	public function checkUrlCallXMLParams()
 	{
-
 		$errors = array();
 		$xml_params = array();
 
-		if (!Tools::getValue('custom'))
+		if (!Tools::getIsset('custom'))
 		{
-			$errors[] = $payment->displayName.' '.$payment->l('key "custom" not specified, cannot rely to cart')."\n";
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'clé custom non spécifiée dans xmlparams');
+			$errors[] = $this->displayName.' '.$this->l('key "custom" not specified, cannot rely to cart')."\n";
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé custom non spécifiée dans xmlparams');
 			return false;
 		}
 		else
-			$xml_params['id_cart'] = (int) Tools::getValue('custom');
+			$xml_params['id_cart'] = (int)Tools::getValue('custom');
 
-		if (!Tools::getValue('id_module'))
+		if (!Tools::getIsset('id_module'))
 		{
-			$errors[] = $payment->displayName.' '.$payment->l('key "module" not specified, cannot rely to payment module')."\n";
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'clé module non spécifiée dans xmlparams');
+			$errors[] = $this->displayName.' '.$this->l('key "module" not specified, cannot rely to payment module')."\n";
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé module non spécifiée dans xmlparams');
 			return false;
 		}
 		else
-			$xml_params['id_module'] = (int) Tools::getValue('id_module');
+			$xml_params['id_module'] = (int)Tools::getValue('id_module');
 
-		if (!isset($_POST['amount']))
+		if (!Tools::getIsset('amount'))
 		{
-			$errors[] = $payment->displayName.' '.$payment->l('"amount" not specified, cannot control the amount paid')."\n";
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'clé montant non spécifiée dans xmlparams');
+			$errors[] = $this->displayName.' '.$this->l('"amount" not specified, cannot control the amount paid')."\n";
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé montant non spécifiée dans xmlparams');
 			return false;
 		}
 		else
-			$xml_params['amount'] = (float) Tools::getValue('amount');
-
+			$xml_params['amount'] = (float)Tools::getValue('amount');
+		if (!Tools::getValue('payment_type'))
+		{
+			$errors[] = $this->displayName.' '.$this->l('"payment type" not specified')."\n";
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'clé type paiement non spécifiée dans xmlparams');
+			return false;
+		}
+		else
+			$xml_params['payment_type'] = (string)Tools::getValue('payment_type');
 
 		//payed cart instanciation
-		$cart = new Cart((int) $xml_params['id_cart']);
+		$cart = new Cart((int)$xml_params['id_cart']);
 		$order_created = Order::getOrderByCartId($xml_params['id_cart']);
 		//if not founded cart
 		if (!$cart->id)
 		{
-			$errors[] = $payment->l('cart not found')."\n";
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Panier non trouvé');
+			$errors[] = $this->l('cart not found')."\n";
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Panier non trouvé');
 			return false;
 		}
 
@@ -1309,9 +1331,10 @@ class Kwixo extends PaymentModule
 		{
 			$xml_params['errors'] = 0;
 			$xml_params['order_created'] = $order_created;
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Récupération xml_params réussie');
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Récupération xml_params réussie');
 			return $xml_params;
-		} else
+		}
+		else
 		{
 			$xml_params['errors'] = count($errors);
 			return $xml_params;
@@ -1326,7 +1349,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function getSoColissimoInfo($id_order)
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if socolissimo is enabled on PS 1.5
 			$socolissimo_is_enabled = Module::isEnabled('socolissimo');
 		else
@@ -1335,12 +1358,100 @@ class Kwixo extends PaymentModule
 
 		if (Module::isInstalled('socolissimo') || $socolissimo_is_enabled)
 		{
-			$sql = "SELECT * FROM `"._DB_PREFIX_."socolissimo_delivery_info` WHERE `id_cart`= ".(int) $id_order;
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'socolissimo_delivery_info` WHERE `id_cart`= '.(int)$id_order;
 			$query_result = Db::getInstance()->executeS($sql);
 			return $query_result;
-		} else
+		}
+		else
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, "Module So Colissimo non installé ou non activé");
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module So Colissimo non installé ou non activé');
+			return false;
+		}
+	}
+	/**
+	 * Get all SoColissimo Liberte delivery informations
+	 * 
+	 * @param type $id_order
+	 * @return array 
+	 */
+	public function getSoColissimoLiberteInfo($id_order)
+	{
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
+		//check if socolissimo is enabled on PS 1.5
+			$socolissimo_is_enabled = Module::isEnabled('soliberte');
+		else
+		//check if socolissimo is enabled on PS 1.4
+			$socolissimo_is_enabled = $this->checkModuleisEnabled('soliberte');
+
+		if (Module::isInstalled('soliberte') || $socolissimo_is_enabled)
+		{
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'so_delivery` WHERE `cart_id`= '.(int)$id_order;
+			$query_result = Db::getInstance()->executeS($sql);
+			return $query_result;
+		}
+		else
+		{
+			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'Module SoColissimo Liberté non installé ou non activé');
+			return false;
+		}
+	}
+	/**
+	 * Get all Mondial relay delivery information
+	 * 
+	 * @param type $id_order
+	 * @return array 
+	 */
+	public function getMondialRelayInfo($id_cart)
+	{
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
+		//check if mondialrelay is enabled on PS 1.5
+			$mondialrelay_is_enabled = Module::isEnabled('mondialrelay');
+		else
+		//check if mondialrelay is enabled on PS 1.4
+			$mondialrelay_is_enabled = $this->checkModuleisEnabled('mondialrelay');
+
+		if (Module::isInstalled('mondialrelay') || $mondialrelay_is_enabled)
+		{
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'mr_selected` mr 
+				JOIN `'._DB_PREFIX_.'mr_method` m 
+					ON mr.id_method = m.id_mr_method 
+					WHERE `id_cart`= '.(int)$id_cart;
+			$query_result = Db::getInstance()->executeS($sql);
+			return $query_result;
+		}
+		else
+		{
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module Mondial Relay non installé ou non activé');
+			return false;
+		}
+	}
+	/**
+	 * Get all Ici Relais delivery information
+	 * 
+	 * @param type $id_order
+	 * @return array 
+	 */
+	public function getIciRelaisInfo($id_cart)
+	{
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
+		//check if mondialrelay is enabled on PS 1.5
+			$icirelais_is_enabled = Module::isEnabled('icirelais');
+		else
+		//check if mondialrelay is enabled on PS 1.4
+			$icirelais_is_enabled = $this->checkModuleisEnabled('icirelais');
+
+		if (Module::isInstalled('icirelais') || $icirelais_is_enabled)
+		{
+			$sql = 'SELECT * FROM `'._DB_PREFIX_.'icirelais_selected` ir 
+				JOIN `'._DB_PREFIX_.'country` c 
+					ON ir.id_country = c.id_country 
+					WHERE `id_cart`= '.(int)$id_cart;
+			$query_result = Db::getInstance()->executeS($sql);
+			return $query_result;
+		}
+		else
+		{
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module Ici Relais non installé ou non activé');
 			return false;
 		}
 	}
@@ -1353,7 +1464,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function checkModuleisEnabled($module_name)
 	{
-		return (bool) Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
+		return (bool)Db::getInstance()->getValue('SELECT `active` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($module_name).'\'');
 	}
 
 	/**
@@ -1376,7 +1487,7 @@ class Kwixo extends PaymentModule
 	 */
 	public function checkKwixoUpdate()
 	{
-		if (_PS_VERSION_ >= '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		//check if kwixo is enabled on PS 1.5
 			$kwixo_is_enabled = Module::isEnabled('kwixo');
 		else
@@ -1389,12 +1500,12 @@ class Kwixo extends PaymentModule
 
 			if (!$kwixo_version || $kwixo_version < $this->version)
 			{
-				KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Kwixo module version < '.$this->version);
+				KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Kwixo module version < '.$this->version);
 				if ($this->uninstall())
-					KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Kwixo module uninstalled');
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Kwixo module uninstalled');
 
 				if ($this->install())
-					KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Kwixo module installed');
+					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Kwixo module installed');
 			}
 		}
 	}
@@ -1407,22 +1518,24 @@ class Kwixo extends PaymentModule
 	 */
 	public function getKwixoDelivery($products_deliveries, $carrier_id)
 	{
-
 		$max_product_delivery = max($products_deliveries);
 
 		if ($max_product_delivery != '')
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Délai de livraison par catégorie : '.$max_product_delivery);
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Délai de livraison par catégorie : '.$max_product_delivery);
 			return $max_product_delivery;
-		} elseif (Configuration::get('KWIXO_CARRIER_DELIVERY_'.$carrier_id) != '')
+		}
+		elseif (Configuration::get('KWX_CARRIER_DLV_'.$carrier_id) != '')
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Délai de livraison par transporteur : '.Configuration::get('KWIXO_CARRIER_DELIVERY_'.$carrier_id));
-			return Configuration::get('KWIXO_CARRIER_DELIVERY_'.$carrier_id);
-		} else
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Délai de livraison par transporteur :
+				'.Configuration::get('KWX_CARRIER_DLV_'.$carrier_id));
+			return Configuration::get('KWX_CARRIER_DLV_'.$carrier_id);
+		}
+		else
 		{
-			KwixoLogger::insertLogKwixo(__METHOD__." : ".__LINE__, 'Délai de livraison par défaut : '.Configuration::get('KWIXO_DELIVERY'));
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Délai de livraison par défaut : 
+				'.Configuration::get('KWIXO_DELIVERY'));
 			return Configuration::get('KWIXO_DELIVERY');
 		}
 	}
-
 }

@@ -31,4 +31,4 @@
 
 
 <center><h4>{l s='To validate your Kwixo payment, thank you click on the button below please' mod='kwixo'}</h4></center>
-<center>{$form}</center>
+<center>{$form|strval}</center>
