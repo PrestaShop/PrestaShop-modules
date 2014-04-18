@@ -286,12 +286,12 @@
 							<dd>
 								<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_paypal_blue" value="1"{if $PayPal_login_tpl == 1} checked{/if} />
 								<label for="paypal_login_client_template_paypal_blue">
-									<img src="../modules/paypal/img/paypal_login_blue.png" alt=""> {$PayPal_content.tpl_paypal_blue} 
+									<img src="../modules/paypal/img/paypal_login_blue.png" alt=""> 
 								</label>
 								<br />
 								<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_neutral" value="2"{if $PayPal_login_tpl == 2} checked{/if} />
 								<label for="paypal_login_client_template_neutral">
-									<img src="../modules/paypal/img/paypal_login_grey.png" alt=""> {$PayPal_content.tpl_neutral}
+									<img src="../modules/paypal/img/paypal_login_grey.png" alt=""> 
 								</label>
 							</dd>
 						</dl>
