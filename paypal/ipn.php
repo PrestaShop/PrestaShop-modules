@@ -230,9 +230,9 @@ class PayPalIPN extends PayPal
 		
 		foreach ($_POST as $key => $value) 
 		{         
-		    $value = urlencode(stripslashes($value));  
-		    $request  .= "&$key=$value";           
-		  }
+			$value = urlencode(stripslashes($value));  
+			$request  .= "&$key=$value";           
+		}
 		
 		$handle = fopen(dirname(__FILE__).'/log.txt', 'w+');
 		fwrite($handle, $action_url.$request);			
