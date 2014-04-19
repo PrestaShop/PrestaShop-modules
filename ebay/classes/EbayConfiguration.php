@@ -45,7 +45,7 @@ class EbayConfiguration
 		$request = new EbayRequest();
 		$ebay_profile = EbayProfile::getCurrent();
 
-		if ($token = $request->fetchToken(Configuration::getGlobalValue('EBAY_API_USERNAME'), Configuration::getGlobalValue('EBAY_API_SESSION')))
+		if ($token = $request->fetchToken(Configuration::get('EBAY_API_USERNAME', null, 0, 0), Configuration::get('EBAY_API_SESSION', null, 0, 0)))
 		{
 			Configuration::updateGlobalValue('EBAY_API_TOKEN', $token);
 			Configuration::updateGlobalValue('EBAY_TOKEN_REGENERATE', false);

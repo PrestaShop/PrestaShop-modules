@@ -40,17 +40,23 @@ class EbayProfile extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition = array(
-		'table' => 'ebay_profile',
-		'primary' => 'id_ebay_profile',
-		'fields' => array(
-			'id_lang' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'id_shop' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'ebay_user_identifier' => array('type' => self::TYPE_STRING, 'size' => 32),
-			'ebay_site_id' => array('type' => self::TYPE_STRING, 'size' => 32),
-			'id_ebay_returns_policy_configuration' => array('type' => self::TYPE_INT, 'validate' => 'isInt')
-		),
-	);
+	public static $definition;
+    
+    public function __construct($id = null, $id_lang = null, $id_shop = null) {
+        if (version_compare(_PS_VERSION_, '1.5', '>'))        
+            $definition = array(
+            		'table' => 'ebay_profile',
+            		'primary' => 'id_ebay_profile',
+            		'fields' => array(
+            			'id_lang' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            			'id_shop' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            			'ebay_user_identifier' => array('type' => self::TYPE_STRING, 'size' => 32),
+            			'ebay_site_id' => array('type' => self::TYPE_STRING, 'size' => 32),
+            			'id_ebay_returns_policy_configuration' => array('type' => self::TYPE_INT, 'validate' => 'isInt')
+            		),
+            	);        
+        return parent::__construct($id, $id_lang, $id_shop);
+    }
 	
 	public function getReturnsPolicyConfiguration()
 	{
@@ -202,7 +208,7 @@ class EbayProfile extends ObjectModel
 	
 	public static function getCurrent()
 	{
-		$id_shop = Shop::getContextShopID();
+		$id_shop = version_compare(_PS_VERSION_, '1.5', '>') ? Shop::getContextShopID() : Shop::getCurrentShop();
 		if (!$id_shop)
 			if(Configuration::get('PS_SHOP_DEFAULT'))
 				$id_shop = Configuration::get('PS_SHOP_DEFAULT');

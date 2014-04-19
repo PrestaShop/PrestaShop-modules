@@ -41,20 +41,22 @@ class EbayReturnsPolicyConfiguration extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition = array(
-		'table' => 'ebay_returns_policy_configuration',
-		'primary' => 'id_ebay_returns_policy_configuration',
-		'fields' => array(
-			'ebay_returns_within' =>		array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_WITHIN),
-			'ebay_returns_who_pays' =>		array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_WHO_PAYS),
-			'ebay_returns_description' => array('type' => self::TYPE_STRING, 'default' => self::DEFAULT_RETURNS_DESCRIPTION),
-			'ebay_returns_accepted_option' => array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_ACCEPTED_OPTION),
-		),
-	);		
+	public static $definition;		
 	
 	public function __construct($id_ebay_returns_policy_configuration = null, $id_lang = null, $id_shop = null)
 	{
-		parent::__construct($id_ebay_returns_policy_configuration, $id_lang, $id_shop);
+        if (version_compare(_PS_VERSION_, '1.5', '>'))        
+            $definition = array(
+            		'table' => 'ebay_returns_policy_configuration',
+            		'primary' => 'id_ebay_returns_policy_configuration',
+            		'fields' => array(
+            			'ebay_returns_within' =>		array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_WITHIN),
+            			'ebay_returns_who_pays' =>		array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_WHO_PAYS),
+            			'ebay_returns_description' => array('type' => self::TYPE_STRING, 'default' => self::DEFAULT_RETURNS_DESCRIPTION),
+            			'ebay_returns_accepted_option' => array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_ACCEPTED_OPTION),
+            		),
+            	);
+		return parent::__construct($id_ebay_returns_policy_configuration, $id_lang, $id_shop);
 	}	
 		
 	/*

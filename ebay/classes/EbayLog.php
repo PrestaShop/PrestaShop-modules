@@ -33,14 +33,20 @@ class EbayLog extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition = array(
-		'table' => 'ebay_log',
-		'primary' => 'id_ebay_log',
-		'fields' => array(
-			'text' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-			'type' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-		),
-	);
+	public static $definition;
+    
+    public function __construct($id = null, $id_lang = null, $id_shop = null) {
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+            self::$definition = array(
+           		'table' => 'ebay_log',
+           		'primary' => 'id_ebay_log',
+           		'fields' => array(
+           			'text' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+           			'type' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+           		),
+           	);
+        return parent::__construct($id, $id_lang, $id_shop);     
+    }
 	
 	public static function write($text, $type)
 	{

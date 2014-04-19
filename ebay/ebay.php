@@ -101,7 +101,8 @@ class Ebay extends Module
 		parent::__construct();
 
 		/** Backward compatibility */
-		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+            require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
 		$this->displayName = $this->l('eBay');
 		$this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
@@ -140,9 +141,9 @@ class Ebay extends Module
 				$const_name = '_'.$key.'_';
 
 				if ((int)constant($const_name))
-						$this->setConfiguration($key, constant($const_name));
+                    $this->setConfiguration($key, constant($const_name));
 				else
-						$this->setConfiguration($key, $value);
+                    $this->setConfiguration($key, $value);
 			}
             
         $this->is_multishop = (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive());
@@ -161,7 +162,6 @@ class Ebay extends Module
                 else
                     $this->ebay_profile = EbayProfile::getCurrent();
 
-
 				// Check the country
 				$this->ebay_country = EbayCountrySpec::getInstanceByKey($this->ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'));
 
@@ -174,7 +174,7 @@ class Ebay extends Module
 
 
 			// Generate warnings
-			if (!Configuration::getGlobalValue('EBAY_API_TOKEN'))
+			if (!Configuration::get('EBAY_API_TOKEN', null, 0, 0))
 				$this->warning = $this->l('You must register your module on eBay.');
 
 
@@ -255,15 +255,15 @@ class Ebay extends Module
 	
 	public function createDefaultProfilesAndReturnsPolicies()
 	{
-		$id_shops = Shop::getShops(false, null, false);
-		   
+		$id_shops = version_compare(_PS_VERSION_, '1.5', '>') ? Shop::getShops(false, null, true) : array(Shop::getCurrentShop());
+        /*
 		if(count($id_shops) == 0)
-		{//Create at least one id Shop 
-			
+		{//Create at least one id Shop
 			$id_shops = array(Configuration::get('PS_SHOP_DEFAULT') ? Configuration::get('PS_SHOP_DEFAULT') : 1);
 		}
+        */
 		
-		foreach(array_keys($id_shops) as $id_shop)
+		foreach($id_shops as $id_shop)
 		{
 			if (!($profile = EbayProfile::getOneByIdShop($id_shop)))
 			{
@@ -557,12 +557,12 @@ class Ebay extends Module
             (!$this->is_multishop && ($this->ebay_profile->getConfiguration('EBAY_ORDER_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-30 minutes')).'.000Z'))
             || Tools::getValue('EBAY_SYNC_ORDERS') == 1)
 		{
-    		$current_date = date('Y-m-d\TH:i:s').'.000Z';
-
-    		// we set the new last update date after retrieving the last orders
-    		$this->ebay_profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', $current_date);
 
     		$orders = $this->_getEbayLastOrders($current_date);
+
+    		// we set the new last update date after retrieving the last orders
+    		$current_date = date('Y-m-d\TH:i:s').'.000Z';
+    		$this->ebay_profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', $current_date);
 
     		if ($orders)
     			$this->importOrders($orders);
@@ -577,19 +577,18 @@ class Ebay extends Module
     
     public function cronProductsSync()
     {
-        EbaySynchronizer::syncProducts(EbayProductModified::getAll(), $this->context, $this->ebay_country->getIdLang(), 'CRON_PRODUCT');
+        EbaySynchronizer::syncProducts(EbayProductModified::getAll(), Context::getContext(), $this->ebay_country->getIdLang(), 'CRON_PRODUCT');
         EbaySynchronizer::truncate();
     }
 	
 	public function cronOrdersSync()
 	{
-		$current_date = date('Y-m-d\TH:i:s').'.000Z';
-
-		// we set the new last update date after retrieving the last orders
-		$this->ebay_profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', $current_date);
-
 		if ($orders = $this->_getEbayLastOrders($current_date))
 			$this->importOrders($orders);
+
+		// we set the new last update date after retrieving the last orders
+		$current_date = date('Y-m-d\TH:i:s').'.000Z';
+		$this->ebay_profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', $current_date);
 	}	
 
 	public function importOrders($orders)
@@ -1045,7 +1044,7 @@ class Ebay extends Module
 		$this->smarty->assign(array(
 			'img_stats' => $this->ebay_country->getImgStats(),
 			'alert' => $alerts,
-			'regenerate_token' => Configuration::getGlobalValue('EBAY_TOKEN_REGENERATE'),
+			'regenerate_token' => Configuration::get('EBAY_TOKEN_REGENERATE', null, 0, 0),
 			'prestashop_content' => $prestashop_content,
 			'path' => $this->_path,
 			'multishop' => (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
@@ -1067,7 +1066,7 @@ class Ebay extends Module
 		
         if (Configuration::get('EBAY_SEND_STATS') === false)
             $template = $this->_displayFormStats();
-		elseif (!Configuration::getGlobalValue('EBAY_API_TOKEN'))
+		elseif (!Configuration::get('EBAY_API_TOKEN', null, 0, 0))
 			$template = $this->_displayFormRegister();
 		elseif($is_all_shops) 
 			$template = $this->_displayMultishopsList();
@@ -1980,8 +1979,6 @@ class Ebay extends Module
 		if (!$this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'))			
 			return '<p class="error"><b>'.$this->l('Please configure the \'General settings\' tab before using this tab').'</b></p><br /><script type="text/javascript">$("#menuTab5").addClass("wrong")</script>';
 		if (!EbayCategoryConfiguration::getTotalCategoryConfigurations($this->ebay_profile->id))
-			return '<p><b>'.$this->l('Please configure the \'Category settings\' tab before using this tab').'</b></p><br />';
-		if (!EbayCategoryConfiguration::getTotalCategoryConfigurations())
 			return '<p class="error"><b>'.$this->l('Please configure the \'Category settings\' tab before using this tab').'</b></p><br /><script type="text/javascript">$("#menuTab5").addClass("wrong")</script>';
 
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -2412,7 +2409,7 @@ class Ebay extends Module
 	{
 		$alerts = array();
 
-		if (!Configuration::getGlobalValue('EBAY_API_TOKEN'))
+		if (!Configuration::get('EBAY_API_TOKEN', null, 0, 0))
 			$alerts[] = 'registration';
 
 		if (!ini_get('allow_url_fopen'))
@@ -2422,7 +2419,7 @@ class Ebay extends Module
 			$alerts[] = 'curl';
 
 		$ebay = new EbayRequest();
-		$user_profile = $ebay->getUserProfile(Configuration::getGlobalValue('EBAY_API_USERNAME'));
+		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME', null, 0, 0));
 
 		$this->StoreName = $user_profile['StoreName'];
 

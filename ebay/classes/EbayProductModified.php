@@ -33,14 +33,20 @@ class EbayProductModified extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition = array(
-		'table' => 'ebay_product_modified',
-		'primary' => 'id_ebay_product_modified',
-		'fields' => array(
-			'id_product' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'id_ebay_profile' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-		),
-	);
+	public static $definition;
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null) {
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+            $definition = array(
+            		'table' => 'ebay_product_modified',
+            		'primary' => 'id_ebay_product_modified',
+            		'fields' => array(
+            			'id_product' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            			'id_ebay_profile' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            		),
+            	);
+        return parent::__construct($id, $id_lang, $id_shop); 
+    }    
 	
 	public static function addProduct($id_ebay_profile, $id_product)
 	{
