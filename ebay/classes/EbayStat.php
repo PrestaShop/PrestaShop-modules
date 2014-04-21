@@ -63,8 +63,13 @@ class EbayStat
     
     private function _getDefaultShopUrl()
     {
-        $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
-        return $shop->getBaseURL();
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+        {
+            $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+            return $shop->getBaseURL();            
+        }
+        else
+            return __PS_BASE_URI__;
     }
     
     public function save()

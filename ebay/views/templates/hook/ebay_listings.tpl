@@ -6,7 +6,7 @@
 <script type="text/javascript">
 	// <![CDATA[
 	var content_ebay_listings = $("#ebayListings");
-	content_ebay_listings.on('click', 'button', function(){
+	content_ebay_listings.bind('click', 'button', function(){
 		$.ajax({
 			url: module_dir+'ebay/ajax/getEbayListings.php',
 			data: "token="+ebay_token+"&id_employee={$id_employee}",

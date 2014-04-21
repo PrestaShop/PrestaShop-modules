@@ -734,16 +734,17 @@ class EbaySynchronizer
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			// Retrieve total nb products for eBay (which have matched categories)
-			$nb_products = Db::getInstance()->getValue('
+			$sql = '
 				SELECT COUNT( * ) FROM (
 					SELECT COUNT(p.id_product) AS nb
 						FROM  `'._DB_PREFIX_.'product` AS p
 						INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s 
-                        ON p.id_product = s.id_product
-						INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps 
+                        ON p.id_product = s.id_product';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+                $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps 
                         ON p.id_product = ps.id_product 
-                        AND ps.id_shop = '.(int)$ebay_profile->id_shop.'
-						WHERE s.`quantity` > 0
+                        AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= ' WHERE s.`quantity` > 0
 						AND  p.`id_category_default`
 						IN (
 							SELECT  `id_category`
@@ -755,20 +756,20 @@ class EbaySynchronizer
 						AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')'.
 							EbaySynchronizer::_addSqlRestrictionOnLang('s').'
 						GROUP BY p.id_product
-				)TableReponse');
+				)TableReponse';
+            $nb_products = Db::getInstance()->getValue($sql);
 		}
 		else
 		{
 			// Retrieve total nb products for eBay (which have matched categories)
-			$nb_products = Db::getInstance()->getValue('
+			$sql = '
 				SELECT COUNT(`id_product`)
-				FROM `'._DB_PREFIX_.'product` AS p
-                
-				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+				FROM `'._DB_PREFIX_.'product` AS p';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+				$sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                 ON p.id_product = ps.id_product 
-                AND ps.id_shop = '.(int)$ebay_profile->id_shop.'                
-				
-                WHERE p.`quantity` > 0
+                AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= ' WHERE p.`quantity` > 0
 				AND p.`id_category_default` IN (
 					SELECT `id_category`
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
@@ -776,7 +777,8 @@ class EbaySynchronizer
 					AND `id_ebay_category` > 0'.
 					($ebay_profile->getConfiguration('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
-				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
+				AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')';
+            $nb_products = Db::getInstance()->getValue($sql);
 		}
 
 		return $nb_products;
@@ -790,13 +792,12 @@ class EbaySynchronizer
 				SELECT p.`id_product`, '.(int)$ebay_profile->id.' AS `id_ebay_profile`
 				FROM  `'._DB_PREFIX_.'product` AS p
                 INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s 
-                ON p.id_product = s.id_product
-
-				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+                ON p.id_product = s.id_product';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+                $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                 ON p.id_product = ps.id_product 
-                AND ps.id_shop = '.(int)$ebay_profile->id_shop.'                
-
-				WHERE s.`quantity` > 0
+                AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= ' WHERE s.`quantity` > 0
 				AND  p.`id_category_default`
 					IN (
 						SELECT  `id_category`
@@ -816,13 +817,12 @@ class EbaySynchronizer
 		{
 			$sql = '
 				SELECT `id_product`, '.(int)$ebay_profile->id.' AS `id_ebay_profile`
-				FROM `'._DB_PREFIX_.'product` AS p
-                
-				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+				FROM `'._DB_PREFIX_.'product` AS p';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+                $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                 ON p.id_product = ps.id_product 
-                AND ps.id_shop = '.(int)$ebay_profile->id_shop.'
-                
-				WHERE p.`quantity` > 0
+                AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= ' WHERE p.`quantity` > 0
 				AND p.`id_category_default` IN (
 					SELECT `id_category`
 					FROM `'._DB_PREFIX_.'ebay_category_configuration`
@@ -849,12 +849,13 @@ class EbaySynchronizer
 					SELECT id_supplier
 						FROM  `'._DB_PREFIX_.'product` AS p
                         INNER JOIN  `'._DB_PREFIX_.'stock_available` AS s 
-                        ON p.id_product = s.id_product
-                        
+                        ON p.id_product = s.id_product';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))
+                $sql .= ' 
         				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                         ON p.id_product = ps.id_product 
-                        AND ps.id_shop = '.(int)$ebay_profile->id_shop.'
-                        
+                        AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= '   
 						WHERE s.`quantity` >0
 						AND  p.`active` =1
 						AND  p.`id_category_default`
@@ -877,12 +878,13 @@ class EbaySynchronizer
 		{
 			$sql = '
 				SELECT COUNT(`id_product`)
-				FROM `'._DB_PREFIX_.'product` AS p
-                
-				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
-                ON p.id_product = ps.id_product 
-                AND ps.id_shop = '.(int)$ebay_profile->id_shop.'
-                
+				FROM `'._DB_PREFIX_.'product` AS p';
+            if (version_compare(_PS_VERSION_, '1.5', '>'))    
+                $sql .= '
+    				INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+                    ON p.id_product = ps.id_product 
+                    AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+            $sql .= '
 				WHERE p.`quantity` > 0
 				AND p.`active` = 1
 				AND p.`id_category_default` IN (

@@ -42,9 +42,32 @@ class EbayProfile extends ObjectModel
 	 */
 	public static $definition;
     
+    // for Prestashop 1.4
+	protected $tables;
+	protected $fieldsRequired;
+	protected $fieldsSize;
+	protected $fieldsValidate;
+	protected $table = 'ebay_profile';
+	protected $identifier = 'id_ebay_profile';    
+    
+	public function getFields()
+	{
+		parent::validateFields();
+		if (isset($this->id))
+			$fields['id_ebay_profile'] = (int)($this->id);
+
+		$fields['id_lang'] = (int)($this->id_lang);
+		$fields['id_shop'] = (int)($this->id_shop);        
+		$fields['ebay_user_identifier'] = pSQL($this->ebay_user_identifier);
+		$fields['ebay_site_id'] = pSQL($this->ebay_site_id);
+		$fields['id_ebay_returns_policy_configuration'] = (int)($this->id_ebay_returns_policy_configuration);        
+
+		return $fields;
+	}    
+    
     public function __construct($id = null, $id_lang = null, $id_shop = null) {
         if (version_compare(_PS_VERSION_, '1.5', '>'))        
-            $definition = array(
+            self::$definition = array(
             		'table' => 'ebay_profile',
             		'primary' => 'id_ebay_profile',
             		'fields' => array(
@@ -54,7 +77,18 @@ class EbayProfile extends ObjectModel
             			'ebay_site_id' => array('type' => self::TYPE_STRING, 'size' => 32),
             			'id_ebay_returns_policy_configuration' => array('type' => self::TYPE_INT, 'validate' => 'isInt')
             		),
-            	);        
+            	); 
+        else 
+        {
+        	$tables = array ('ebay_profile');
+        	$fieldsRequired = array('id_lang', 'id_shop', 'ebay_user_identifier', 'ebay_site_id', 'id_ebay_returns_policy_configuration');
+            $fieldsSize = array('ebay_user_identifier' => 32, 'ebay_site_id' => 32);
+        	$fieldsValidate = array(
+                'id_lang' => 'isUnsignedInt',
+                'id_shop' => 'isUnsignedInt',
+                'id_ebay_returns_policy_configuration' => 'isUnsignedInt'
+            );
+        }    
         return parent::__construct($id, $id_lang, $id_shop);
     }
 	
@@ -79,29 +113,10 @@ class EbayProfile extends ObjectModel
 			$returns_policy_configuration->ebay_returns_description = $description;
 		if ($returns_policy_configuration->ebay_returns_accepted_option != $accepted_option)
 			$returns_policy_configuration->ebay_returns_accepted_option = $accepted_option;
-		return $returns_policy_configuration->save();
+        $res = $returns_policy_configuration->save();
+		return $res;
 	}	
 
-	/*
-	private function _loadFromDb()
-	{
-		$sql = 'SELECT ecc.`id_category`, ec.`id_category_ref`, ec.`is_multi_sku`, ecc.`percent` FROM `'._DB_PREFIX_.'ebay_category` ec
-			LEFT JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc
-			ON (ecc.`id_ebay_category` = ec.`id_ebay_category`)
-			WHERE ';
-
-		if ($this->id_category_ref)
-			$sql .= 'ec.`id_category_ref` = '.(int)$this->id_category_ref;
-		else
-			$sql .= 'ecc.`id_category` = '.(int)$this->id_category;
-
-		$res = Db::getInstance()->getRow($sql);
-
-		foreach ($res as $attribute => $value)
-			$this->$attribute = $value;
-	}
-	*/
-	
 	private function _loadConfiguration()
 	{
 		$sql = 'SELECT ec.`name`, ec.`value`
@@ -117,13 +132,30 @@ class EbayProfile extends ObjectModel
 	{
 		$data = array(
 			'id_ebay_profile' => $this->id,
-			'name' 			 		  => pSQL($name),
-			'value' 		 			=> pSQL($value, $html)
+			'name' => pSQL($name),
+			'value' => pSQL($value, $html)
 		);
-		$res = Db::getInstance()->insert('ebay_configuration', $data, false, true, Db::REPLACE);
+        
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+            $res = Db::getInstance()->insert('ebay_configuration', $data, false, true, Db::REPLACE);
+        else
+        {
+            if ($this->hasConfiguration(pSQL($name)))
+                $res = Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_configuration', array('value' => pSQL($value, $html)), 'UPDATE', '`id_ebay_profile` = '.(int)$this->id. ' AND `name` = \''.pSQL($name).'\'');
+            else
+                $res = Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_configuration', $data, 'INSERT');
+        }
 		if ($res)
 			$this->configurations[$name] = $value;
 		return $res;
+	}
+
+	public function hasConfiguration($name)
+	{
+		if ($this->configurations === null)
+			$this->_loadConfiguration();
+
+		return isset($this->configurations[$name]);
 	}
 
 	public function getConfiguration($name)
@@ -166,9 +198,13 @@ class EbayProfile extends ObjectModel
 	{
 		$carriers = Carrier::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
 
-		$sql = 'SELECT `id_carrier`
-			FROM `'._DB_PREFIX_.'carrier_shop`
-			WHERE `id_shop` = '.(int)$this->id_shop;
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+    		$sql = 'SELECT `id_carrier`
+    			FROM `'._DB_PREFIX_.'carrier_shop`
+    			WHERE `id_shop` = '.(int)$this->id_shop;
+        else
+            $sql = 'SELECT `id_carrier`
+    			FROM `'._DB_PREFIX_.'carrier`';
 		$res = Db::getInstance()->executeS($sql);
 		$id_carriers = array();
 		foreach($res as $row)

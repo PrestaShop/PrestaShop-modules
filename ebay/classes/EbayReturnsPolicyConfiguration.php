@@ -41,12 +41,35 @@ class EbayReturnsPolicyConfiguration extends ObjectModel
 	/**
 	 * @see ObjectModel::$definition
 	 */
-	public static $definition;		
+	public static $definition;	
+    
+    // for Prestashop 1.4
+	protected $tables;
+	protected $fieldsRequired;
+	protected $fieldsSize;
+	protected $fieldsValidate;
+	protected $table = 'ebay_returns_policy_configuration';
+	protected $identifier = 'id_ebay_returns_policy_configuration';
+    
+	public function getFields()
+	{
+		parent::validateFields();
+		if (isset($this->id))
+			$fields['id_ebay_returns_policy_configuration'] = (int)($this->id);
+
+		$fields['ebay_returns_within'] = pSQL($this->ebay_returns_within);
+		$fields['ebay_returns_who_pays'] = pSQL($this->ebay_returns_who_pays);
+		$fields['ebay_returns_description'] = pSQL($this->ebay_returns_description);
+		$fields['ebay_returns_accepted_option'] = pSQL($this->ebay_returns_accepted_option);
+
+		return $fields;
+	}    
+    
 	
 	public function __construct($id_ebay_returns_policy_configuration = null, $id_lang = null, $id_shop = null)
 	{
         if (version_compare(_PS_VERSION_, '1.5', '>'))        
-            $definition = array(
+            self::$definition = array(
             		'table' => 'ebay_returns_policy_configuration',
             		'primary' => 'id_ebay_returns_policy_configuration',
             		'fields' => array(
@@ -56,6 +79,14 @@ class EbayReturnsPolicyConfiguration extends ObjectModel
             			'ebay_returns_accepted_option' => array('type' => self::TYPE_STRING, 'size' => 255, 'default' => self::DEFAULT_RETURNS_ACCEPTED_OPTION),
             		),
             	);
+        else 
+        {
+        	$tables = array ('ebay_returns_policy_configuration');
+        	$fieldsRequired = array('ebay_returns_within', 'ebay_returns_who_pays', 'ebay_returns_description', 'ebay_returns_accepted_option');
+            $fieldsSize = array('ebay_returns_within' => 255, 'ebay_returns_who_pays' => 255, 'ebay_returns_accepted_option' => 255);
+        	$fieldsValidate = array(
+            );                    
+        }
 		return parent::__construct($id_ebay_returns_policy_configuration, $id_lang, $id_shop);
 	}	
 		

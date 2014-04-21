@@ -35,6 +35,27 @@ class EbayLog extends ObjectModel
 	 */
 	public static $definition;
     
+    // for Prestashop 1.4
+	protected $tables;
+	protected $fieldsRequired;
+	protected $fieldsSize;
+	protected $fieldsValidate;
+	protected $table = 'ebay_log';
+	protected $identifier = 'id_ebay_log';    
+    
+	public function getFields()
+	{
+		parent::validateFields();
+		if (isset($this->id))
+			$fields['id_ebay_log'] = (int)($this->id);
+
+		$fields['text'] = pSQL($this->text);
+		$fields['type'] = pSQL($this->type);
+		$fields['date_add'] = pSQL($this->date_add);
+
+		return $fields;
+	}        
+    
     public function __construct($id = null, $id_lang = null, $id_shop = null) {
         if (version_compare(_PS_VERSION_, '1.5', '>'))
             self::$definition = array(
@@ -45,6 +66,12 @@ class EbayLog extends ObjectModel
            			'type' =>		array('type' => self::TYPE_STRING, 'validate' => 'isString'),
            		),
            	);
+        else 
+        {
+        	$tables = array ('ebay_log');
+        	$fieldsRequired = array('text', 'type', 'date_add');
+        	$fieldsValidate = array();
+        }
         return parent::__construct($id, $id_lang, $id_shop);     
     }
 	

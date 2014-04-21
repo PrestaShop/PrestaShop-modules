@@ -41,10 +41,16 @@ class EbayProduct
 
     public static function getPercentOfCatalog($ebay_profile)
     {
-        $id_shop = $ebay_profile->id_shop;
-        $sql = 'SELECT `id_product` 
-            FROM `'._DB_PREFIX_.'product_shop`
-            WHERE `id_shop` = '.(int)$id_shop;    
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+        {
+            $id_shop = $ebay_profile->id_shop;
+            $sql = 'SELECT `id_product`
+                FROM `'._DB_PREFIX_.'product_shop`
+                WHERE `id_shop` = '.(int)$id_shop;
+        }
+        else
+            $sql = 'SELECT `id_product` 
+                FROM `'._DB_PREFIX_.'product`';    
         $results = Db::getInstance()->executeS($sql);
         $id_shop_products = array_map(function($a) {return (int)$a['id_product']; }, $results);
 

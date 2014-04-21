@@ -138,7 +138,7 @@
 
 	// <![CDATA[
 	$(document).ready(function(){
-		$("#menuTab2Sheet").on("keypress", "input[id][name^='percent']", function(){
+		$("#menuTab2Sheet").bind("keypress", "input[id][name^='percent']", function(){
 			$('#menuTab2Sheet .warning.big.tips').fadeIn();
 		})
 		var form_categories = parseInt("{$form_categories}");

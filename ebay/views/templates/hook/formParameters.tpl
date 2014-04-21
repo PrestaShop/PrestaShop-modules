@@ -261,7 +261,7 @@
 			<input type="button" class="button" value="{l s='Sync Orders from eBay' mod='ebay'}" />
 		</a>
         <br>
-        {if $is_multishop }
+        {if $is_multishop}
             {l s='in Multishop mode, you need to run the following CRON task to sync orders' mod='ebay'}
             <a href="{$sync_orders_by_cron_url}" target="_blank">{$sync_orders_by_cron_url}</a>
         {/if}
@@ -303,7 +303,7 @@
 				}, 1000);
 
 				var listings_duration = $('select[name="listingdurations"]');
-				listings_duration.on('change', function(){
+				listings_duration.bind('change', function(){
 					if ($(this).val() == 'GTC')
 					{
 						$(this).parent('.margin-form').siblings('div').fadeOut()

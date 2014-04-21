@@ -105,7 +105,8 @@ function upgrade_module_1_7($module)
 		'EBAY_SYNC_OPTION_RESYNC',
 		'EBAY_SYNC_MODE',
 		'EBAY_SYNC_LAST_PRODUCT',
-        'EBAY_SPECIFICS_LAST_UPDATE'
+        'EBAY_SPECIFICS_LAST_UPDATE',
+        'EBAY_PAYPAL_EMAIL'
 	);
 	EbayConfiguration::PSConfigurationsToEbayConfigurations($id_default_ebay_profile, $configurations_to_update);
 	foreach($configurations_to_update as $name)

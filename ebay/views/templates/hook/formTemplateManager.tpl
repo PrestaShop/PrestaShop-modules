@@ -153,7 +153,7 @@
 	</div>
 </form>
 <script type="text/javascript">
-	$('#selectTagTemplate').on('change', function(){
+	$('#selectTagTemplate').bind('change', function(){
 		tinyMCE.activeEditor.execCommand('mceInsertContent', false, $(this).val())
 	});
 	$('#previewButton').click(function(){
@@ -168,7 +168,7 @@
 		return false;
 	});
 
-	$('#selectTagTemplateTitle').on('change', function(){
+	$('#selectTagTemplateTitle').bind('change', function(){
 		$('#ebay_product_template_title').val($('#ebay_product_template_title').val()+$(this).val())
 	});
 	var form_template_manager = parseInt("{$form_template_manager}");

@@ -573,7 +573,7 @@ class EbayRequest
 				if ($this->error != '')
 					$this->error .= '<br />';
 				if ($e->ErrorCode == 932 || $e->ErrorCode == 931)
-					Configuration::updateGlobalValue('EBAY_TOKEN_REGENERATE', true);
+					Configuration::updateValue('EBAY_TOKEN_REGENERATE', true, false, 0, 0);
 				$this->error .= (string)$e->LongMessage;
 			}
 

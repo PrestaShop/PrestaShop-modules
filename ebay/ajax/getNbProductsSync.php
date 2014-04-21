@@ -39,17 +39,16 @@ Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', array(
 
 if (version_compare(_PS_VERSION_, '1.5', '>'))
 {
-	$nb_products = Db::getInstance()->getValue('SELECT COUNT(*) AS nb FROM(
+	$sql = 'SELECT COUNT(*) AS nb FROM(
 		SELECT p.id_product
 		FROM '._DB_PREFIX_.'product AS p
 		INNER JOIN '._DB_PREFIX_.'stock_available AS s 
-        ON s.id_product = p.id_product
-
-		INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+        ON s.id_product = p.id_product';
+    if (version_compare(_PS_VERSION_, '1.5', '>'))
+        $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
         ON p.id_product = ps.id_product 
-        AND ps.id_shop = '.(int)$ebay_profile->id_shop.'                
-        
-		WHERE s.`quantity` > 0 
+        AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+    $sql .= ' WHERE s.`quantity` > 0 
         AND p.`active` = 1
 		AND p.`id_category_default` IN (
 			SELECT `id_category`
@@ -57,25 +56,26 @@ if (version_compare(_PS_VERSION_, '1.5', '>'))
 			WHERE `id_ebay_category` > 0
 			AND `sync` = 1)
 		AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')
-		GROUP BY p.id_product) TableRequete');
+		GROUP BY p.id_product) TableRequete';
+    $nb_products = Db::getInstance()->getValue($sql);
 }
 else
 {
-	$nb_products = Db::getInstance()->getValue('SELECT COUNT(`id_product`) as nb
-		FROM `'._DB_PREFIX_.'product` AS p
-    
-        INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
+	$sql = 'SELECT COUNT(`id_product`) as nb
+		FROM `'._DB_PREFIX_.'product` AS p';
+    if (version_compare(_PS_VERSION_, '1.5', '>'))
+        $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
         ON p.id_product = ps.id_product 
-        AND ps.id_shop = '.(int)$ebay_profile->id_shop.'                
-    
-		WHERE p.`quantity` > 0
+        AND ps.id_shop = '.(int)$ebay_profile->id_shop;
+    $sql .= ' WHERE p.`quantity` > 0
 		AND p.`active` = 1
 		AND p.`id_category_default` IN (
 			SELECT `id_category`
 			FROM `'._DB_PREFIX_.'ebay_category_configuration`
 			WHERE `id_ebay_category` > 0
 			AND `sync` = 1)
-		AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')');
+		AND p.id_product NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')';
+    $nb_products = Db::getInstance()->getValue($sql);
 }
 
 echo $nb_products;
