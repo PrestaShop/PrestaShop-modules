@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2014 PrestaShop
+ * 2007-2013 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -21,7 +21,7 @@
  *
  *  @author PrestaShop SA <contact@prestashop.com>
  *  @author Quadra Informatique <modules@quadra-informatique.fr>
- *  @copyright  2007-2014 PrestaShop SA / 1997-2013 Quadra Informatique
+ *  @copyright  2007-2013 PrestaShop SA / 1997-2013 Quadra Informatique
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -114,6 +114,8 @@ class SCFields extends SCError
 			'TRRETURNURLKO' => SCFields::REQUIRED,
 			'CHARSET' => SCFields::NOT_REQUIRED,
 			'CEPAYS' => SCFields::NOT_REQUIRED,
+			'TRINTER' => SCFields::NOT_REQUIRED,
+			'CELANG' => SCFields::NOT_REQUIRED,			
 			'NUMVERSION' => SCFields::IGNORED,
 			'SIGNATURE' => SCFields::IGNORED
 		),
@@ -169,6 +171,8 @@ class SCFields extends SCError
 			'TRRETURNURLKO' => SCFields::REQUIRED,
 			'CHARSET' => SCFields::NOT_REQUIRED,
 			'CEPAYS' => SCFields::NOT_REQUIRED,
+			'TRINTER' => SCFields::NOT_REQUIRED,
+			'CELANG' => SCFields::NOT_REQUIRED,		
 			'PRPAYS' => SCFields::NOT_REQUIRED,
 			'CODERESEAU' => SCFields::NOT_REQUIRED,
 			'NUMVERSION' => SCFields::IGNORED,
