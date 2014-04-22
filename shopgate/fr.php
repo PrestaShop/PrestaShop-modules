@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Shopgate GmbH
 *
@@ -16,13 +15,15 @@
 * @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
 * @copyright  Shopgate GmbH
 * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
-*/
+ *
+ */
+
 
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{shopgate}prestashop>shopgate_bc2370b668b38eb4e890d13284c52e8d'] = 'Shopgate Commande-ID';
 $_MODULE['<{shopgate}prestashop>shopgate_1c5237b8c4f5661d478e8e4509a1090f'] = 'Shopgate';
-$_MODULE['<{shopgate}prestashop>shopgate_7dd33a276ab07a3f4989e552baa860f6'] = 'Vendez vos produits avec votre Appli individuel et avec un site optimisé pour des outils mobiles';
+$_MODULE['<{shopgate}prestashop>shopgate_7dd33a276ab07a3f4989e552baa860f6'] = 'Vendez vos produits avec votre Appli individuelle et avec un site optimisé pour des outils mobiles';
 $_MODULE['<{shopgate}prestashop>shopgate_6311ae17c1ee52b36e68aaf4ad066387'] = 'Divers';
 $_MODULE['<{shopgate}prestashop>shopgate_53c6f3cca240d98b5e648d93115a2426'] = 'DHL';
 $_MODULE['<{shopgate}prestashop>shopgate_126cc593f09382fa147b0d4facec98a3'] = 'DHL Express';

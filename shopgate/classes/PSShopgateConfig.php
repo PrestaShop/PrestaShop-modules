@@ -31,7 +31,8 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	protected $language;
 	protected $use_stock;
 
-	public function startup() {
+	public function startup()
+	{
 		// overwrite some library defaults
 		$this->plugin_name = 'prestashop';
 		$this->enable_redirect_keyword_update = 24;
@@ -55,32 +56,38 @@ class ShopgateConfigPresta extends ShopgateConfig {
 		$this->currency = 'EUR';
 	}
 
-	public function getLanguage() {
+	public function getLanguage()
+	{
 		return $this->language;
 	}
 
-	public function getCurrency() {
+	public function getCurrency()
+	{
 		return $this->currency;
 	}
 
-	public function getUseStock() {
+	public function getUseStock()
+	{
 		return $this->use_stock;
 	}
 
-	public function setLanguage($value) {
+	public function setLanguage($value)
+	{
 		$this->language = $value;
 	}
 
-	public function setCurrency($value) {
+	public function setCurrency($value)
+	{
 		$this->currency = $value;
 	}
 
-	public function setUseStock($value) {
+	public function setUseStock($value)
+	{
 		$this->use_stock = $value;
 	}
 
-	public function registerPlugin() {
-
+	public function registerPlugin()
+	{
 		try {
 			$data = array(
 				'action' => 'interface_install',
@@ -107,31 +114,36 @@ class ShopgateConfigPresta extends ShopgateConfig {
 			curl_close($ch);
 
 		} catch (Exception $e) {
-
+			ShopgateLogger::getInstance()->log('can not register plugin', ShopgateLogger::LOGTYPE_ERROR);
 		}
 	}
 
-	protected function getShopUrl() {
+	protected function getShopUrl()
+	{
 		return $_SERVER['HTTP_HOST'];
 	}
 
-	protected function getUniqueId() {
+	protected function getUniqueId()
+	{
 		return defined(_RIJNDAEL_KEY_) ? md5(_RIJNDAEL_KEY_.self::DEFAULT_SHOP_SYSTEM_ID) : md5(_COOKIE_KEY_.self::DEFAULT_SHOP_SYSTEM_ID);
 	}
 
-	protected function getStatsUniqueVisits() {
+	protected function getStatsUniqueVisits()
+	{
 		$sql = 'SELECT COUNT(DISTINCT(ip_address)) FROM '._DB_PREFIX_.'connections;';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsAcs() {
+	protected function getStatsAcs()
+	{
 		$sql = 'SELECT AVG(total_paid_tax_incl) FROM '._DB_PREFIX_.'orders';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsItems() {
+	protected function getStatsItems()
+	{
 		$sql = 'SELECT COUNT(pa.`id_product_attribute`)
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 
@@ -146,17 +158,20 @@ class ShopgateConfigPresta extends ShopgateConfig {
 
 	}
 
-	protected function getStatsCategories() {
+	protected function getStatsCategories()
+	{
 		return count(Category::getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT')));
 	}
 
-	protected function getStatsOrders() {
-		$sql = 'SELECT COUNT(id_order) FROM `'._DB_PREFIX_.'orders` WHERE `date_add` > "'.date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")."-1 months")).'"';
+	protected function getStatsOrders()
+	{
+		$sql = 'SELECT COUNT(id_order) FROM `'._DB_PREFIX_.'orders` WHERE `date_add` > "'.date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'-1 months')).'"';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsCurrency() {
+	protected function getStatsCurrency()
+	{
 		$currencyItem = Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		return $currencyItem['iso_code'];

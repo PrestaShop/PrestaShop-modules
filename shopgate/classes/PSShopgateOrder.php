@@ -19,23 +19,23 @@
 
 class PSShopgateOrder extends ObjectModel
 {
-	public		$id;
+	public $id;
 
-	public		$id_shopgate_order;
-	public		$id_cart;
-	public		$id_order;
-	public		$order_number;
-	public		$tracking_number;
-	public		$shipping_service = 'OTHER';
-	public		$shipping_cost;
-	public		$shop_number;
-	public		$comments;
+	public $id_shopgate_order;
+	public $id_cart;
+	public $id_order;
+	public $order_number;
+	public $tracking_number;
+	public $shipping_service = 'OTHER';
+	public $shipping_cost;
+	public $shop_number;
+	public $comments;
 	
-	protected	$table = 'shopgate_order';
-	protected	$identifier = 'id_shopgate_order';
+	protected $table = 'shopgate_order';
+	protected $identifier = 'id_shopgate_order';
 	
-	protected	$fieldsRequired = array('order_number', 'shipping_cost');
-	protected	$fieldsValidate = array
+	protected $fieldsRequired = array('order_number', 'shipping_cost');
+	protected $fieldsValidate = array
 	(
 		'id_cart' => 'isUnsignedId',
 		'id_order' => 'isUnsignedId',
@@ -45,14 +45,14 @@ class PSShopgateOrder extends ObjectModel
 		'tracking_number'=>'isString'
 	);
 
-	protected 	$fieldsSize = array
+	protected $fieldsSize = array
 	(
 		'tracking_number' => 32,
 		'shipping_service' => 16,
 		'order_number' => 16
 	);
 		
-	public function __construct($id = NULL, $identifier = 'id_shopgate_order')
+	public function __construct($id = null, $identifier = 'id_shopgate_order')
 	{
 		$this->identifier = $identifier;
 		parent::__construct($id);
