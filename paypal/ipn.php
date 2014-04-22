@@ -228,10 +228,11 @@ class PayPalIPN extends PayPal
 		else
 			$action_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
 		
+		$request = '';
 		foreach($_POST as $key => $value) 
 		{         
 			$value = urlencode(stripslashes($value));  
-			$request  .= "&$key=$value";           
+			$request .= "&$key=$value";           
 		}
 		
 		$handle = fopen(dirname(__FILE__).'/log.txt', 'w+');
