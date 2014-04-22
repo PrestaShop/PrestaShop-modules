@@ -53,7 +53,8 @@ class PaypalLoginUser extends ObjectModel {
 
 	);
 
-	public function __construct($id = false, $id_lang = false) {
+	public function __construct($id = false, $id_lang = false) 
+	{
 		parent::__construct($id, $id_lang);
 	}
 	
@@ -61,9 +62,7 @@ class PaypalLoginUser extends ObjectModel {
 	{
 		parent::validateFields();
 		foreach (array_keys($this->fieldsValidate) as $field)
-		{
 			$fields[$field] = $this->$field;
-		}
 		return $fields;
 	}
 
@@ -76,19 +75,13 @@ class PaypalLoginUser extends ObjectModel {
 		";
 
 		if ($id_paypal_login_user && Validate::isInt($id_paypal_login_user))
-		{
 			$sql .= " AND `id_paypal_login_user` = '".(int)$id_paypal_login_user."' ";
-		}
 
 		if ($id_customer && Validate::isInt($id_customer))
-		{
 			$sql .= " AND `id_customer` = '".(int)$id_customer."' ";
-		}
 
 		if ($refresh_token)
-		{
 			$sql .= " AND `refresh_token` = '".$refresh_token."' ";
-		}
 
 		$results = DB::getInstance()->executeS($sql);
 		$logins = array();
@@ -96,9 +89,7 @@ class PaypalLoginUser extends ObjectModel {
 		if ($results && count($results))
 		{
 			foreach ($results as $result)
-			{
 				$logins[$result['id_paypal_login_user']] = new PaypalLoginUser((int)$result['id_paypal_login_user']);
-			}
 		}
 
 		return $logins;
@@ -109,17 +100,13 @@ class PaypalLoginUser extends ObjectModel {
 		$login = self::getPaypalLoginUsers(false, $id_customer);
 
 		if ($login && count($login))
-		{
 			$login = current($login);
-		}
 		else
-		{
 			$login = false;
-		}
 
 		return $login;
 	}
 }
 
 
- ?>
+?>

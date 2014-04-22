@@ -151,10 +151,7 @@ class PaypalExpressCheckout extends Paypal
 		$fields['SIGNATURE'] = Configuration::get('PAYPAL_API_SIGNATURE');
 
 		if ($access_token)
-		{
 			$fields['IDENTITYACCESSTOKEN'] = $access_token;
-		}
-
 
 		$this->callAPI($fields);
 		$this->_storeToken();
@@ -315,7 +312,7 @@ class PaypalExpressCheckout extends Paypal
 					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 100).'...';
 
 				/* It is a discount so we store a negative value */
-				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = -1 * Tools::ps_round($discount['value_real'], $this->decimals);
+				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = - 1 * Tools::ps_round($discount['value_real'], $this->decimals);
 				$fields['L_PAYMENTREQUEST_0_QTY'.$index] = 1;
 
 				$total = Tools::ps_round($total + $fields['L_PAYMENTREQUEST_0_AMT'.$index], $this->decimals);
@@ -417,7 +414,7 @@ class PaypalExpressCheckout extends Paypal
 		if (count($discounts) > 0)
 			foreach ($discounts as $product)
 			{
-				$price = -1 * Tools::ps_round($product['value_real'], $this->decimals);
+				$price = - 1 * Tools::ps_round($product['value_real'], $this->decimals);
 				$total = Tools::ps_round($total + $price, $this->decimals);
 			}
 		
@@ -458,7 +455,7 @@ class PaypalExpressCheckout extends Paypal
 
 		$key = array();
 
-		foreach($this->product_list as $product)
+		foreach ($this->product_list as $product)
 		{
 			$id_product = $product['id_product'];
 			$id_product_attribute = $product['id_product_attribute'];

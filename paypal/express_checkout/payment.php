@@ -89,7 +89,7 @@ function setCustomerAddress($ppec, $customer, $id = null)
 {
 	$address = new Address($id);
 	$address->id_country = Country::getByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
-	if($id == null)
+	if ($id == null)
 		$address->alias = 'Paypal_Address';
 
 	$address->lastname = $customer->lastname;
@@ -133,16 +133,16 @@ if ($request_type && $ppec->type)
 		$ppec->context->cart->update();
 	}
 
-	$LoginUser = PaypalLoginUser::getByIdCustomer((int)$ppec->context->cookie->id_customer);
+	$login_user = PaypalLoginUser::getByIdCustomer((int)$ppec->context->cookie->id_customer);
 
-	if ($LoginUser && $LoginUser->expires_in <= time())
+	if ($login_user && $login_user->expires_in <= time())
 	{
 		$obj = new PayPalLogin();
-		$LoginUser = $obj->getRefreshToken();
+		$login_user = $obj->getRefreshToken();
 	}
 
 	/* Set details for a payment */
-	$ppec->setExpressCheckout(($LoginUser ? $LoginUser->access_token : false));
+	$ppec->setExpressCheckout(($login_user ? $login_user->access_token : false));
 
 	if ($ppec->hasSucceedRequest() && !empty($ppec->token))
 		$ppec->redirectToAPI();
@@ -150,7 +150,7 @@ if ($request_type && $ppec->type)
 	else
 		$ppec->displayPayPalAPIError($ppec->l('Error during the preparation of the Express Checkout payment'), $ppec->logs);
 }
-// If a token exist with payer_id, then we are back from the PayPal API
+//If a token exist with payer_id, then we are back from the PayPal API
 elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $payer_id))
 {
 	/* Get payment infos from paypal */
@@ -203,10 +203,10 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 			$address = setCustomerAddress($ppec, $customer);
 			$address->add();
 		}
-		else if($customer->id)
+		else if ($customer->id)
 		{//If address exists, we update it with new informations
-			// $address = setCustomerAddress($ppec, $customer, $address->id);
-			// $address->save();
+			$address = setCustomerAddress($ppec, $customer, $address->id);
+			$address->save();
 		}
 
 		if ($customer->id && !$address->id)
@@ -268,12 +268,9 @@ function validateOrder($customer, $cart, $ppec)
 	else
 	{
 		//Check if error is 10486, if it is redirect user to paypal
-		if($ppec->result['L_ERRORCODE0'] == 10486)
-		{
+		if ($ppec->result['L_ERRORCODE0'] == 10486)
 			$ppec->redirectToAPI();
-		}
 
-		
 		$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
 		$payment_type = (int)Configuration::get('PS_OS_ERROR');
 

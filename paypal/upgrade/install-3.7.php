@@ -25,7 +25,7 @@
 */
 
 if (!defined('_PS_VERSION_'))
-    exit;
+	exit;
 
 function upgrade_module_3_7($object, $install = false)
 {

@@ -38,7 +38,7 @@ class PayPalLogin
 
 	public function getIdentityAPIURL()
 	{
-		if ( Configuration::get('PAYPAL_SANDBOX') )
+		if (Configuration::get('PAYPAL_SANDBOX'))
 			//return 'www.sandbox.paypal.com';
 			return 'api.sandbox.paypal.com';
 		else
@@ -47,7 +47,7 @@ class PayPalLogin
 
 	public function getTokenServiceEndpoint()
 	{
-		if ( Configuration::get('PAYPAL_SANDBOX') )
+		if (Configuration::get('PAYPAL_SANDBOX'))
 			// return '/webapps/auth/protocol/openidconnect/v1/tokenservice';
 			return '/v1/identity/openidconnect/tokenservice';
 		else
@@ -62,7 +62,7 @@ class PayPalLogin
 	public static function getReturnLink()
 	{
 		// return 'http://requestb.in/1jlaizq1';
-		if(method_exists(Context::getContext()->shop, 'getBaseUrl'))
+		if (method_exists(Context::getContext()->shop, 'getBaseUrl'))
 			return Context::getContext()->shop->getBaseUrl().'modules/paypal/paypal_login/paypal_login_token.php';
 		else
 			return 'http://'.Configuration::get('PS_SHOP_DOMAIN').'/modules/paypal/paypal_login/paypal_login_token.php';
@@ -90,10 +90,10 @@ class PayPalLogin
 
 		if ($this->enable_log === true)
 		{
-			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
-			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
-			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
+			$handle = fopen(dirname(__FILE__).'/Results.txt', 'a+');
+			fwrite($handle, "Request => ".print_r($request, true)."\r\n");
+			fwrite($handle, "Result => ".print_r($result, true)."\r\n");
+			fwrite($handle, "Journal => ".print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -116,7 +116,7 @@ class PayPalLogin
 
 			$login->id_customer = $customer->id;
 			$login->token_type = $result->token_type;
-			$login->expires_in = (string) (time() + (int)$result->expires_in);
+			$login->expires_in = (string)(time() + (int)$result->expires_in);
 			$login->refresh_token = $result->refresh_token;
 			$login->id_token = $result->id_token;
 			$login->access_token = $result->access_token;
@@ -145,10 +145,10 @@ class PayPalLogin
 
 		if ($this->enable_log === true)
 		{
-			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
-			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
-			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
+			$handle = fopen(dirname(__FILE__).'/Results.txt', 'a+');
+			fwrite($handle, "Request => ".print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => ".print_r($result, true) . "\r\n");
+			fwrite($handle, "Journal => ".print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -157,7 +157,7 @@ class PayPalLogin
 		if ($result)
 		{
 			$login->access_token = $result->access_token;
-			$login->expires_in = (string) (time() + $result->expires_in);
+			$login->expires_in = (string)(time() + $result->expires_in);
 			$login->save();
 			return $login;
 		}
@@ -184,11 +184,11 @@ class PayPalLogin
 
 		if ($this->enable_log === true)
 		{
-			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
-			fwrite($handle, "Request => " . print_r($request, true) . "\r\n");
-			fwrite($handle, "Result => " . print_r($result, true) . "\r\n");
-			fwrite($handle, "Headers => " . print_r($headers, true) . "\r\n");
-			fwrite($handle, "Journal => " . print_r($this->_logs, true."\r\n"));
+			$handle = fopen(dirname(__FILE__).'/Results.txt', 'a+');
+			fwrite($handle, "Request => ".print_r($request, true) . "\r\n");
+			fwrite($handle, "Result => ".print_r($result, true) . "\r\n");
+			fwrite($handle, "Headers => ".print_r($headers, true) . "\r\n");
+			fwrite($handle, "Journal => ".print_r($this->_logs, true."\r\n"));
 			fclose($handle);
 		}
 
@@ -222,7 +222,7 @@ class PayPalLogin
 		$customer = new Customer();
 		$customer->firstname = $result->given_name;
 		$customer->lastname = $result->family_name;
-		if(version_compare(_PS_VERSION_, '1.5.0', '>'))
+		if (version_compare(_PS_VERSION_, '1.5.0', '>'))
 			$customer->id_lang = Language::getIdByIso(strstr($result->language, '_', true));
 		$customer->birthday = $result->birthday;
 		$customer->email = $result->email;

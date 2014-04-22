@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -27,7 +27,6 @@
 class PayPalConnect
 {
 	private	$_logs = array();
-	
 	private $paypal = null;
 	
 	public function __construct()
@@ -73,14 +72,13 @@ class PayPalConnect
 			$this->_logs[] = '<b>'.$this->paypal->l('Sending this params:').'</b>';
 			$this->_logs[] = $body;
 
-
 			@curl_setopt($ch, CURLOPT_URL, 'https://'.$url);
 
-			if($identify)
+			if ($identify)
 				@curl_setopt($ch, CURLOPT_USERPWD, Configuration::get('PAYPAL_LOGIN_CLIENT_ID').':'.Configuration::get('PAYPAL_LOGIN_SECRET'));
 
 			@curl_setopt($ch, CURLOPT_POST, true);
-			if($body)
+			if ($body)
 				@curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			@curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			@curl_setopt($ch, CURLOPT_HEADER, false);
@@ -90,7 +88,7 @@ class PayPalConnect
 			@curl_setopt($ch, CURLOPT_SSLVERSION, 3);
 			@curl_setopt($ch, CURLOPT_VERBOSE, false);
 
-			if($http_header)
+			if ($http_header)
 				@curl_setopt($ch, CURLOPT_HTTPHEADER, $http_header);
 
 			$result = @curl_exec($ch);

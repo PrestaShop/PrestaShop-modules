@@ -175,11 +175,11 @@ class PayPal extends PaymentModule
 			$this->warning = $this->l('All features of Paypal API module are included in the new Paypal module. In order to do not have any conflict, please do not use and remove PayPalAPI module.').'<br />';
 
 		/* For 1.4.3 and less compatibility */
-		$updateConfig = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4,
+		$update_config = array('PS_OS_CHEQUE' => 1, 'PS_OS_PAYMENT' => 2, 'PS_OS_PREPARATION' => 3, 'PS_OS_SHIPPING' => 4,
 		'PS_OS_DELIVERED' => 5, 'PS_OS_CANCELED' => 6, 'PS_OS_REFUND' => 7, 'PS_OS_ERROR' => 8, 'PS_OS_OUTOFSTOCK' => 9,
 		'PS_OS_BANKWIRE' => 10, 'PS_OS_PAYPAL' => 11, 'PS_OS_WS_PAYMENT' => 12);
 
-		foreach ($updateConfig as $key => $value)
+		foreach ($update_config as $key => $value)
 			if (!Configuration::get($key) || (int)Configuration::get($key) < 1)
 			{
 				if (defined('_'.$key.'_') && (int)constant('_'.$key.'_') > 0)
@@ -219,12 +219,10 @@ class PayPal extends PaymentModule
 		{
 			$version = Db::getInstance()->getValue('SELECT version FROM `'._DB_PREFIX_.'module` WHERE name = \''.$this->name.'\'');
 			if (empty($version) === true)
-			{
 				Db::getInstance()->execute('
 					UPDATE `'._DB_PREFIX_.'module` m
 					SET m.version = \''.bqSQL($this->version).'\'
 					WHERE m.name = \''.bqSQL($this->name).'\'');
-			}
 		}
 
 		if (defined('_PS_ADMIN_DIR_'))
@@ -380,18 +378,14 @@ class PayPal extends PaymentModule
 		$process = '<script type="text/javascript">'.$this->fetchTemplate('js/paypal.js').'</script>';
 
 		if (version_compare(_PS_VERSION_, '1.5'))
-		{
 			global $smarty;
-		}
 		else
-		{
 			$smarty = $this->context->smarty;
-		}
 
 		if ((
 			(method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name') == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc' )) 
 				|| (isset($smarty->_tpl_vars) && ($smarty->_tpl_vars['page_name'] == 'authentication' || $smarty->_tpl_vars['page_name'] == 'order-opc')))
-			&& 
+			&&
 			(int)Configuration::get('PAYPAL_LOGIN') == 1)
 		{
 			$this->context->smarty->assign(array(
@@ -411,7 +405,7 @@ class PayPal extends PaymentModule
 
 	public function getLocale()
 	{
-		switch(Language::getIsoById($this->context->cookie->id_lang))
+		switch (Language::getIsoById($this->context->cookie->id_lang))
 		{
 			case 'fr':
 				return 'fr-fr';
@@ -623,18 +617,18 @@ class PayPal extends PaymentModule
 		elseif (Tools::isSubmit('submitPayPalRefund'))
 			$this->_doTotalRefund($params['id_order']);
 
-		$adminTemplates = array();
+		$admin_templates = array();
 		if ($this->isPayPalAPIAvailable())
 		{
 			if ($this->_needValidation((int)$params['id_order']))
-				$adminTemplates[] = 'validation';
+				$admin_templates[] = 'validation';
 			if ($this->_needCapture((int)$params['id_order']))
-				$adminTemplates[] = 'capture';
+				$admin_templates[] = 'capture';
 			if ($this->_canRefund((int)$params['id_order']))
-				$adminTemplates[] = 'refund';
+				$admin_templates[] = 'refund';
 		}
 
-		if (count($adminTemplates) > 0)
+		if (count($admin_templates) > 0)
 		{
 			$order = new Order((int)$params['id_order']);
 
@@ -654,9 +648,9 @@ class PayPal extends PaymentModule
 				)
 			);
 
-			foreach ($adminTemplates as $adminTemplate)
+			foreach ($admin_templates as $admin_template)
 			{
-				$this->_html .= $this->fetchTemplate('/views/templates/admin/admin_order/'.$adminTemplate.'.tpl');
+				$this->_html .= $this->fetchTemplate('/views/templates/admin/admin_order/'.$admin_template.'.tpl');
 				$this->_postProcess();
 				$this->_html .= '</fieldset>';
 			}
@@ -699,7 +693,7 @@ class PayPal extends PaymentModule
 		{
 			if (version_compare(_PS_VERSION_, '1.5', '<'))
 			{
-				$output =  '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
+				$output = '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
 					<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
 					<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'css/jquery.fancybox-1.3.4.css" />
 					<link type="text/css" rel="stylesheet" href="'._MODULE_DIR_.$this->name.'/css/paypal.css" />';
@@ -738,7 +732,7 @@ class PayPal extends PaymentModule
 		);
 
 		$this->context->smarty->assign(array(
-			'use_mobile' => (bool) $this->useMobile(),
+			'use_mobile' => (bool)$this->useMobile(),
 			'PayPal_payment_type' => $type,
 			'PayPal_current_page' => $this->getCurrentUrl(),
 			'PayPal_lang_code' => (isset($iso_lang[$this->context->language->iso_code])) ? $iso_lang[$this->context->language->iso_code] : 'en_US',
@@ -780,28 +774,26 @@ class PayPal extends PaymentModule
 				return SMARTPHONE_TRACKING_CODE;
 		}
 
-
 		//Get Seamless checkout
-		$LoginUser = PaypalLoginUser::getByIdCustomer((int)$this->context->cookie->id_customer);
-		if ($LoginUser && $LoginUser->expires_in <= time())
+		$login_user = PaypalLoginUser::getByIdCustomer((int)$this->context->cookie->id_customer);
+		if ($login_user && $login_user->expires_in <= time())
 		{
 			$obj = new PayPalLogin();
-			$LoginUser = $obj->getRefreshToken();
+			$login_user = $obj->getRefreshToken();
 		}
 
-		
-		if($method == WPS)
+		if ($method == WPS)
 		{
-			if($LoginUser)
+			if ($login_user)
 				return TRACKING_EXPRESS_CHECKOUT_SEAMLESS;
 			else
 				return TRACKING_INTEGRAL;
 		}
-		if($method == HSS)
+		if ($method == HSS)
 			return TRACKING_INTEGRAL_EVOLUTION;
-		if($method == ECS)
+		if ($method == ECS)
 		{
-			if($LoginUser)
+			if ($login_user)
 				return TRACKING_EXPRESS_CHECKOUT_SEAMLESS;
 			else
 				return TRACKING_OPTION_PLUS;
@@ -900,14 +892,14 @@ class PayPal extends PaymentModule
 		// HSS -> Web Payment Pro / Integral Evolution
 		// ECS -> Express Checkout Solution
 
-		$paymentMethod = array('AU' => array(WPS, HSS, ECS), 'BE' => array(WPS, ECS), 'CN' => array(WPS, ECS), 'CZ' => array(), 'DE' => array(WPS),
+		$payment_method = array('AU' => array(WPS, HSS, ECS), 'BE' => array(WPS, ECS), 'CN' => array(WPS, ECS), 'CZ' => array(), 'DE' => array(WPS),
 		'ES' => array(WPS, HSS, ECS), 'FR' => array(WPS, HSS, ECS), 'GB' => array(WPS, HSS, ECS), 'HK' => array(WPS, HSS, ECS),
 		'IL' => array(WPS, ECS), 'IN' => array(WPS, ECS), 'IT' => array(WPS, HSS, ECS), 'JP' => array(WPS, HSS, ECS), 'MY' => array(WPS, ECS),
 		'NL' => array(WPS, ECS), 'NZ' => array(WPS, ECS), 'PL' => array(WPS, ECS), 'PT' => array(WPS, ECS), 'RA' => array(WPS, ECS), 'RE' => array(WPS, ECS),
 		'SG' => array(WPS, ECS), 'TH' => array(WPS, ECS), 'TR' => array(WPS, ECS), 'TW' => array(WPS, ECS), 'US' => array(WPS, ECS),
 		'ZA' => array(WPS, ECS));
 
-		return isset($paymentMethod[$this->iso_code]) ? $paymentMethod[$this->iso_code] : $paymentMethod[self::DEFAULT_COUNTRY_ISO];
+		return isset($payment_method[$this->iso_code]) ? $payment_method[$this->iso_code] : $payment_method[self::DEFAULT_COUNTRY_ISO];
 	}
 
 	public function getCountryCode()
@@ -1037,15 +1029,15 @@ class PayPal extends PaymentModule
 				Configuration::updateValue('PAYPAL_SANDBOX', (int)Tools::getValue('sandbox_mode'));
 				Configuration::updateValue('PAYPAL_CAPTURE', (int)Tools::getValue('payment_capture'));
 				/* USE PAYPAL LOGIN */
-				Configuration::updateValue('PAYPAL_LOGIN',           (int)Tools::getValue('paypal_login'));
+				Configuration::updateValue('PAYPAL_LOGIN', (int)Tools::getValue('paypal_login'));
 				Configuration::updateValue('PAYPAL_LOGIN_CLIENT_ID', Tools::getValue('paypal_login_client_id'));
-				Configuration::updateValue('PAYPAL_LOGIN_SECRET',    Tools::getValue('paypal_login_client_secret'));
-				Configuration::updateValue('PAYPAL_LOGIN_TPL',       (int)Tools::getValue('paypal_login_client_template'));
+				Configuration::updateValue('PAYPAL_LOGIN_SECRET', Tools::getValue('paypal_login_client_secret'));
+				Configuration::updateValue('PAYPAL_LOGIN_TPL', (int)Tools::getValue('paypal_login_client_template'));
 				/* /USE PAYPAL LOGIN */
 
 				//EXPRESS CHECKOUT TEMPLATE
 				Configuration::updateValue('PAYPAL_HSS_SOLUTION', (int)Tools::getValue('integral_evolution_solution'));
-				if(Tools::getValue('integral_evolution_solution') == PAYPAL_HSS_IFRAME)
+				if (Tools::getValue('integral_evolution_solution') == PAYPAL_HSS_IFRAME)
 					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', 'D');
 				else
 					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', Tools::getValue('integral_evolution_template'));				
@@ -1072,13 +1064,13 @@ class PayPal extends PaymentModule
 			$params = array('TRANSACTIONID' => $id_transaction, 'REFUNDTYPE' => 'Full');
 		else
 		{
-			$isoCurrency = Db::getInstance()->getValue('
+			$iso_currency = Db::getInstance()->getValue('
 				SELECT `iso_code`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'currency` c ON (o.`id_currency` = c.`id_currency`)
 				WHERE o.`id_order` = '.(int)$id_order);
 
-			$params = array('TRANSACTIONID'	=> $id_transaction,	'REFUNDTYPE' => 'Partial', 'AMT' => (float)$amt, 'CURRENCYCODE' => Tools::strtoupper($isoCurrency));
+			$params = array('TRANSACTIONID'	=> $id_transaction,	'REFUNDTYPE' => 'Partial', 'AMT' => (float)$amt, 'CURRENCYCODE' => Tools::strtoupper($iso_currency));
 		}
 
 		$paypal_lib	= new PaypalLib();
@@ -1352,7 +1344,7 @@ class PayPal extends PaymentModule
 		}
 	}
 
-	public function validateOrder($id_cart, $id_order_state, $amountPaid, $paymentMethod = 'Unknown', $message = null, $transaction = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
+	public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown', $message = null, $transaction = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
 	{
 		if ($this->active)
 		{
@@ -1361,9 +1353,9 @@ class PayPal extends PaymentModule
 				$this->pcc->transaction_id = (isset($transaction['transaction_id']) ? $transaction['transaction_id'] : '');
 
 			if (version_compare(_PS_VERSION_, '1.5', '<'))
-				parent::validateOrder((int)$id_cart, (int)$id_order_state, (float)$amountPaid, $paymentMethod, $message, $transaction, $currency_special, $dont_touch_amount, $secure_key);
+				parent::validateOrder((int)$id_cart, (int)$id_order_state, (float)$amount_paid, $payment_method, $message, $transaction, $currency_special, $dont_touch_amount, $secure_key);
 			else
-				parent::validateOrder((int)$id_cart, (int)$id_order_state, (float)$amountPaid, $paymentMethod, $message, $transaction, $currency_special, $dont_touch_amount, $secure_key, $shop);
+				parent::validateOrder((int)$id_cart, (int)$id_order_state, (float)$amount_paid, $payment_method, $message, $transaction, $currency_special, $dont_touch_amount, $secure_key, $shop);
 
 			if (count($transaction) > 0)
 				PayPalOrder::saveOrder((int)$this->currentOrder, $transaction);
@@ -1442,58 +1434,57 @@ class PayPal extends PaymentModule
 	public function comp($num1, $num2, $scale = null) 
 	{
 		// check if they're valid positive numbers, extract the whole numbers and decimals
-		if(!preg_match("/^\+?(\d+)(\.\d+)?$/", $num1, $tmp1)|| !preg_match("/^\+?(\d+)(\.\d+)?$/", $num2, $tmp2)) 
-			return('0');
+		if (!preg_match("/^\+?(\d+)(\.\d+)?$/", $num1, $tmp1)|| !preg_match("/^\+?(\d+)(\.\d+)?$/", $num2, $tmp2)) 
+			return ('0');
 
 		// remove leading zeroes from whole numbers
-		$num1 = ltrim($tmp1[1],'0');
-		$num2 = ltrim($tmp2[1],'0');
+		$num1 = ltrim($tmp1[1], '0');
+		$num2 = ltrim($tmp2[1], '0');
 
 		// first, we can just check the lengths of the numbers, this can help save processing time
 		// if $num1 is longer than $num2, return 1.. vice versa with the next step.
-		if(strlen($num1) > strlen($num2)) 
-			return(1);
+		if (strlen($num1) > strlen($num2)) 
+			return (1);
 		else 
 		{
-			if(strlen($num1) < strlen($num2)) 
-				return(-1);
+			if (strlen($num1) < strlen($num2)) 
+				return (-1);
 
 			// if the two numbers are of equal length, we check digit-by-digit
 			else 
 			{
 
 				// remove ending zeroes from decimals and remove point
-				$dec1 = isset($tmp1[2]) ? rtrim(substr($tmp1[2],1),'0') : '';
-				$dec2 = isset($tmp2[2]) ? rtrim(substr($tmp2[2],1),'0') : '';
+				$dec1 = isset($tmp1[2]) ? rtrim(substr($tmp1[2],1), '0') : '';
+				$dec2 = isset($tmp2[2]) ? rtrim(substr($tmp2[2],1), '0') : '';
 
 				// if the user defined $scale, then make sure we use that only
-				if($scale!=null) 
+				if ($scale != null) 
 				{
 					$dec1 = substr($dec1, 0, $scale);
 					$dec2 = substr($dec2, 0, $scale);
 				}
 
 				// calculate the longest length of decimals
-				$dLen = max(strlen($dec1), strlen($dec2));
+				$d_len = max(strlen($dec1), strlen($dec2));
 
 				// append the padded decimals onto the end of the whole numbers
-				$num1 .= str_pad($dec1, $dLen, '0');
-				$num2 .= str_pad($dec2, $dLen, '0');
+				$num1 .= str_pad($dec1, $d_len, '0');
+				$num2 .= str_pad($dec2, $d_len, '0');
 
 				// check digit-by-digit, if they have a difference, return 1 or -1 (greater/lower than)
-				for($i=0; $i < strlen($num1) ; $i++) 
+				for($i = 0; $i < strlen($num1); $i++) 
 				{ 
-					if((int)$num1{$i} > (int)$num2{$i}) 
-						return(1);
+					if ((int)$num1{$i} > (int)$num2{$i}) 
+						return (1);
 					else
-				 	 	if((int)$num1{$i} < (int)$num2{$i}) 
-				 	 		return(-1);
+				 	 	if ((int)$num1{$i} < (int)$num2{$i}) 
+				 	 		return (-1);
 				}
 
 				// if the two numbers have no difference (they're the same).. return 0
-				return(0);
+				return (0);
 			}
 		}
 	}
 }
-

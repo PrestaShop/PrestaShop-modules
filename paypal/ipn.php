@@ -228,7 +228,7 @@ class PayPalIPN extends PayPal
 		else
 			$action_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_notify-validate';
 		
-		foreach ($_POST as $key => $value) 
+		foreach($_POST as $key => $value) 
 		{         
 			$value = urlencode(stripslashes($value));  
 			$request  .= "&$key=$value";           
