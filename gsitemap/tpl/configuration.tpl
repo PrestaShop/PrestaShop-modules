@@ -28,7 +28,7 @@
 			<legend><img src="{$module_dir|escape:'htmlall':'UTF-8'}logo.gif" alt="" />{l s='Your Sitemaps' mod='gsitemap'}</legend>
 			{l s='Please set up the following Sitemap URL in your Google Webmaster account:' mod='gsitemap'}<br/> 
 			<a href="{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$shop->id|intval}_index_sitemap.xml" target="_blank"><span style="color: blue;">{$gsitemap_store_url|escape:'htmlall':'UTF-8'}{$shop->id|intval}_index_sitemap.xml</span></a><br/><br/>
-			{l s='This URL is the master Sitemap and refers to:' mod='gsitemap'}
+			{l s='This URL is the master Sitemaps file. It refers to the following sub-sitemap files:' mod='gsitemap'}
 			<div style="max-height: 220px; overflow: auto;">
 				<ul>
 					{foreach from=$gsitemap_links item=gsitemap_link}
@@ -36,7 +36,7 @@
 						{/foreach}
 				</ul>
 			</div>
-			<p>{l s='Your last update was:' mod='gsitemap'} {$gsitemap_last_export|escape:'htmlall':'UTF-8'}</p>
+			<p>{l s='Your last update was made on this date:' mod='gsitemap'} {$gsitemap_last_export|escape:'htmlall':'UTF-8'}</p>
 		</fieldset>
 	{/if}
 	<br/>
@@ -45,10 +45,10 @@
 			<p>{l s='For a better use of the module, please make sure that you have' mod='gsitemap'}<br/>
 			<ul>
 				{if $gsitemap_customer_limit.memory_limit < 128 && $gsitemap_customer_limit.memory_limit > 0}
-					<li>{l s='a minimum memory_limit value of 128MB.' mod='gsitemap'}</li>
+					<li>{l s='a minimum memory_limit value of 128 MB.' mod='gsitemap'}</li>
 					{/if}
 					{if $gsitemap_customer_limit.max_exec_time < 30 && $gsitemap_customer_limit.max_exec_time > 0}
-					<li>{l s='a minimum max_execution_time value of 30 sec.' mod='gsitemap'}</li>
+					<li>{l s='a minimum max_execution_time value of 30 seconds.' mod='gsitemap'}</li>
 					{/if}
 			</ul>
 			{l s='You can edit these limits in your php.ini file. For more details, please contact your hosting provider.' mod='gsitemap'}</p>
@@ -58,7 +58,7 @@
 <form action="{$gsitemap_form|escape:'htmlall':'UTF-8'}" method="post">
 	<fieldset style="width: 700px; margin: 0 auto;">
 		<legend><img src="{$module_dir|escape:'htmlall':'UTF-8'}logo.gif" alt="" />{l s='Configure your Sitemap' mod='gsitemap'}</legend>
-		<p>{l s='Several Sitemaps will be generated depending on how your server is configured and on the number of activated products in your catalog.' mod='gsitemap'}<br/></p>
+		<p>{l s='Several Sitemaps files will be generated depending on how your server is configured and on the number of activated products in your catalog.' mod='gsitemap'}<br/></p>
 		<div class="margin-form">
 			<label for="gsitemap_frequency" style="width: 235px;">{l s='How often do you update your store?' mod='gsitemap'}
 				<select name="gsitemap_frequency">
@@ -76,7 +76,7 @@
 		<label for="ggsitemap_check_all" style="width: 526px;"><span>{l s='check all' mod='gsitemap'}</span>
 			<input type="checkbox" name="gsitemap_check_all" value="1" class="check"></label>
 		<br class="clear" />
-		<p for="gsitemap_meta">{l s='Which page don\'t you want to include in your Sitemap:' mod='gsitemap'}</p>
+		<p for="gsitemap_meta">{l s='Indicate the page that you do not want to include in your Sitemaps file:' mod='gsitemap'}</p>
 		<ul>
 			{foreach from=$store_metas item=store_meta}
 				<li style="float: left; width: 200px; margin: 1px;">
