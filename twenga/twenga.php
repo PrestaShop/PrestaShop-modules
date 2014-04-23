@@ -820,8 +820,7 @@ class Twenga extends PaymentModule
 
 		$link = new Link();
 		
-		$result = Db::getInstance()->ExecuteS('
-		SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `active` = 1');
+		$result = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `active` = 1');
 		
 		foreach ($result as $k => $row)
 		{
@@ -837,9 +836,9 @@ class Twenga extends PaymentModule
 					// prepared values before insert it in node structure.
 					// In this way we can structure code with checking method and displaying method for more lisibility.
 					$product_values = $this->preparedValues($product, $combination, $lang, $link, $carrier);
-					array_walk($product_values,
-						function(&$v, $k){ $v = str_replace(array('&lt;![CDATA[', ']]&gt;', '&#13;'), array('<![CDATA[', ']]>', ''), $v); } );
-
+					foreach ($product_values as $k => $v)
+						$product_values[$k] = str_replace(array('&lt;![CDATA[', ']]&gt;', '&#13;'), array('<![CDATA[', ']]>', ''), $v);
+					
 					// create the product node for each products and declinations
 					echo '<product>'
 					
