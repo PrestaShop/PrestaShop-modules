@@ -1,0 +1,3008 @@
+addshoppers/
+2014-04-05 14:17:36 +0200	Merge branch 'ZiZuu-addshoppers' of https://github.com/ZiZuu-store/PrestaShop-modules into ZiZuu-store-ZiZuu-addshoppers
+2014-04-03 11:34:32 +0200	AddShoppers : Configuration data fixed
+2014-03-28 15:58:34 +0100	// MO Addshoppers : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:09:45 +0100	// MO AddShoppers : version compliancy added
+2014-03-18 17:40:22 +0100	Update header.tpl
+2014-03-18 17:39:58 +0100	Update addshoppers.php
+2014-03-18 17:38:08 +0100	Update header.tpl
+2014-03-18 17:37:43 +0100	Update addshoppers.php
+2014-03-18 17:22:08 +0100	Update header.tpl
+2014-03-18 17:20:14 +0100	Update addshoppers.php
+2014-02-27 15:18:58 +0100	// MO : AddShoppers version update in config.xml (1.1.4)
+2014-02-27 14:40:04 +0100	// MO : AddShoppers module version updated (1.1.4)
+2014-02-27 11:58:53 +0100	[-] MO : require file bug fix
+2014-02-17 15:38:58 +0100	AddShoppers - Request merged
+2014-02-14 10:08:12 +0100	AddShoppers : Merge
+2014-02-14 10:05:47 +0100	AddShoppers : Merge
+2014-01-24 09:53:03 +0100	removed "addshoppers:" prefix
+2014-01-24 09:47:58 +0100	Removed shop.css as it is added by controller
+2014-01-24 09:46:59 +0100	Added shop.css into hookHeader()
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-06-27 16:43:53 +0200	// Small fix for variable with quotes in javascript
+2013-05-13 16:48:25 +0200	[*] MO : AddShoppers module updated (v1.1.2)
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2013-01-03 15:06:52 -0500	[*] MO : addshopper new version
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+adyen/
+2014-03-28 16:15:58 +0100	// MO Adyen : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:20:43 +0100	// MO Adyen : ps_versions_compliancy added
+2014-03-10 17:19:34 +0100	// Adyen : Bug fix version compliancy
+2014-03-03 15:21:19 +0100	[-] Modules : Version update of Adyen, Bluepay & ProductComments
+2014-03-03 15:01:08 +0100	implement that payment methods are loaded from the settings in the adyen backoffice, removed last page and the name of adyen when selecting payment methods, important fix that history statement is saved into the order
+2014-03-03 14:56:24 +0100	[-] Modules : Move $this->ps_versions_compliancy after parent::__construct() to avoid var overrided
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2013-11-18 13:30:45 +0100	Adyen - Version updated (v2.1)
+2013-11-18 12:29:39 +0100	important fix that toggle test/production works correctly
+2013-10-21 21:55:39 +0200	Adyen - New module added (v2.0)
+
+alliance3/
+2014-03-28 16:15:42 +0100	// MO Alliance3 : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:21:55 +0100	// MO Adyen : ps_versions_compliancy added
+2014-02-12 16:13:56 +0100	[+] Alliance : New module added
+
+authorizeaim/
+2014-04-05 14:59:36 +0200	// Authorize AIM : PR merged
+2014-04-05 14:58:55 +0200	Merge branch 'patch-1' of https://github.com/prestachris/PrestaShop-modules into prestachris-patch-1
+2014-04-05 14:51:00 +0200	// Authorize AIM : Version changed
+2014-04-03 16:45:08 -0400	Update authorizeaim.tpl
+2014-04-01 01:53:16 +0300	secure.png was not found in a template because of the wrong paht. Fixed.
+2014-03-28 16:15:22 +0100	// MO Authorize.net : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-26 15:11:11 +0100	/ MO Authorize.net - Fixed confusion between test mode and sandbox environment
+2014-03-21 17:55:45 +0100	// MO Authorize.net : ps_versions_compliancy added
+2014-03-21 11:43:01 +0100	[+] MO Authorize.net : Added upgrade files for modifications with variable names (1.4.8 & 1.4.11). Added manual upgrade function for PS 1.4
+2014-03-21 11:36:42 +0100	// MO Authorize.net : addJqueryPlugin(...) isn't defined if PS 1.4
+2014-03-21 10:37:08 +0100	[-] MO Authorize.net : Typo fix on configuration var name
+2014-03-20 17:29:56 +0100	[+] MO Authorize.net : Added upgrade file for v1.4.11
+2014-03-20 16:10:05 +0100	// MO Authorize.net : Typo fix on class name
+2014-03-20 15:32:17 +0100	[+] MO Authorize.net : Add Test Mode in Production environment
+2014-03-20 14:26:42 +0100	Merge branch 'master' of https://github.com/jmwohl/PrestaShop-modules into jmwohl-master
+2014-03-19 10:36:52 +0100	// MO Authorize.net : Version update
+2014-03-19 10:36:37 +0100	[-] MO Authorize.net : Change fetch directory for compatibility with PS 1.4
+2014-03-19 10:36:19 +0100	[-] MO Authorize.net : jQuery & fancybox check before adding JS module files
+2014-03-19 09:31:38 +0100	Authorize AIM : Version changed (v1.3.9)
+2014-03-14 13:52:02 -0700	Update authorizeaim.tpl
+2014-03-10 22:46:08 +0100	Authorize AIM : Module cleaned (v1.4.8)
+2014-03-10 10:25:16 -0400	Fixed confusion between test mode and sandbox environment
+2014-02-07 16:53:15 -0500	[+] MO: authorizeAIM new version 1.4.7
+2014-01-29 18:08:53 +0100	// small fix on displayname of authorize
+2014-01-29 10:51:52 -0600	[*] MO : Authorizeaim fixes $this not in scope.
+2014-01-22 12:28:22 +0100	[-] MO : fixed authorize name for order validation
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 16:09:11 +0100	Authorize.net : Merge fixed
+2013-12-20 16:07:01 +0100	Authorize.net : Version changed (v1.4.5)
+2013-12-17 16:13:21 -0500	Authorize.net errors
+2013-12-12 17:51:46 -0600	[-] MO : authorizeaim fixes a bug I introduced
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-11-21 01:55:49 -0800	Merge pull request #133 from Dh42/patch-4
+2013-11-21 01:55:40 -0800	Merge pull request #132 from Dh42/patch-3
+2013-11-19 23:25:22 -0600	Makes button not sit outside of border.
+2013-11-19 23:21:20 -0600	Current version is different from config file
+2013-11-19 22:49:27 -0600	Corrects year date issue
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-18 11:42:11 +0100	// Modules fixes, Authorize, AvalaraTax, Jirafe
+2013-01-04 11:50:15 +0100	Merge branch 'development'
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-17 16:58:24 +0100	// And version number
+2012-12-17 16:57:32 +0100	// Added prestashop as a referrer in authorize
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+autoupgrade/
+2014-03-21 11:38:00 +0100	// Auto-upgrade submodule added
+2014-03-19 12:08:25 +0100	// autoupgrade prevent from fetching null
+2014-03-19 10:03:33 +0100	// autoupgrade nextRow on MySQLi
+2014-03-13 19:34:15 +0100	// Autoupgrade chmod for NT
+2014-03-13 19:18:00 +0100	// Oops
+2014-03-13 17:34:20 +0100	[-] MO : autoupgrade now disable override when non native modules are disabled
+2014-03-13 12:15:36 +0100	[*] MO : clean tabs/menu in upgrade
+2014-03-10 15:39:31 +0100	// Autoupgrade, remove blockvariouslinks and admin modules header.tpl
+2014-03-05 14:02:47 +0100	// author
+2014-02-07 14:34:05 +0100	[-] MO : Autoupgrade, handele defautlt-boostrap
+2014-02-06 15:36:50 +0100	[-] MO : Autoupgrade wrong path for NT when unlinking in admin dir
+2014-02-05 12:24:46 +0100	[*] MO : Autoupgrade, check on directory version number
+2014-01-31 10:19:00 +0100	// filemtime mute errors
+2014-01-29 15:30:05 +0100	// Autoupgrade, wrong test value after scandir
+2014-01-22 18:48:46 +0100	[-] MO : Autoupgrade, do not test modbile theme above 1.5
+2014-01-17 07:47:54 +0100	[*] MO : Autoupgrade check mobile_theme
+2014-01-16 10:43:10 +0100	// MO : Autoupgrade undefined class Tools14
+2014-01-16 00:59:03 +0100	// MO : Autoupgrade old partners modules + duplicates
+2014-01-15 21:57:12 +0100	[-] MO : Autoupgrade, initiate drop table before create tables
+2014-01-15 15:23:37 +0100	// autoupgrade new moduel version 1.2.6
+2014-01-15 15:09:52 +0100	// Autoupgrade set backupname to last back up when no back up made
+2014-01-07 10:28:32 +0100	// Autoupgrade Tools to Tools14
+2014-01-06 11:30:30 +0100	// licence
+2014-01-06 11:29:41 +0100	// conflict with jquery 1.10
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-31 15:57:56 +0100	// remove notice
+2013-12-30 11:15:32 +0100	// norms
+2013-12-26 09:58:13 +0100	// parse error
+2013-12-24 11:17:35 +0100	// small css fix
+2013-12-23 10:45:58 +0100	// trailing file size
+2013-12-08 18:59:30 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-12-02 19:24:02 +0100	// Autoupgrade, try to avoid version INSTALL_VERSION == null
+2013-12-02 08:37:09 +0100	// Autoupgrade small refactos
+2013-11-28 12:07:28 +0100	// Autoupgrade test ob length before ob clean
+2013-11-21 16:40:47 +0100	[-] MO : Autoupgrade, bad reset on vars in 1.5.6.1 installer
+2013-11-21 15:13:20 +0100	[-] MO : Autoupgrade, could not remove 1.4 modules
+2013-11-21 11:41:23 +0100	[-] MO : again _listModulesToUpgrade fail on open_basedir
+2013-11-21 11:30:55 +0100	[-] MO : Autoupgrade, wrong path in is_dir - open_basedir
+2013-11-08 14:24:06 +0100	// refacto for file_get_contens
+2013-11-08 09:03:38 +0100	[*] MO : AUtoupgrade do not back up files above 15Mo
+2013-11-07 22:58:47 +0100	// Autoupgrade remove warnings
+2013-11-06 17:55:35 +0100	// Autoupgrade remove additional sep
+2013-11-06 17:39:49 +0100	// Aminupgrade refactoring few lines
+2013-11-03 01:55:08 +0100	// Autoupgrade remove warning
+2013-11-02 22:20:45 +0100	// Autoupgrade missing ending fieldset
+2013-11-02 22:02:05 +0100	// autoupgrade small css change
+2013-10-31 19:00:55 +0100	// Autoupgrade remove warnings
+2013-10-31 14:31:10 +0100	[-] MO : Autouprade new version 1.2.3, remove Warning on MySQL::nextRow()
+2013-10-28 09:04:19 +0100	// Do not crash with empty queries
+2013-10-20 13:38:08 +0200	[*] MO: Autoupgrade, all sql errors in mode_dev
+2013-10-15 17:48:33 +0200	[-] MO : Autoupgrade, new version 1.2.2, default theme not selected when coming from 1.4
+2013-10-14 08:13:12 +0200	[*] MO : Autoupgrade, new module version 1.2.1
+2013-10-07 16:50:30 +0200	[-] MO : Autoupgrade, new module version, load channel.xml in each channel choice
+2013-10-07 13:38:39 +0200	[*] MO  : Autoupgrade, new module version 1.1.9
+2013-10-07 11:17:33 +0200	// parse error in autoupgrade
+2013-10-07 11:03:44 +0200	[-] MO : Autoupgrade could not login when default_tab set to 'AdminCatalog'
+2013-09-26 14:33:11 +0200	[-] MO : Autoupgrade new version 1.1.8, CleanDatabase not deleting empty rows from 1.4
+2013-09-25 14:58:11 +0200	// remove warnings in Autoupgrade
+2013-09-24 14:46:11 +0200	// remove warning when not base 64 encoded
+2013-09-13 16:09:34 +0200	// bad commit
+2013-09-13 16:08:04 +0200	[+] MO : Autoupgrade New module version 1.1.7
+2013-09-10 01:55:26 +0200	// revert
+2013-09-10 01:49:42 +0200	[-] MO : Autoupgrade New module version 1.1.6
+2013-09-10 01:44:28 +0200	// bad commit, sorry for that
+2013-09-10 01:38:37 +0200	[-] MO : AUtoupgrade Fix bug #PSCFV-10056 less tables in restoration than in backup
+2013-09-09 01:51:40 +0200	// disable magic_quotes_runtime
+2013-09-08 22:18:55 +0200	// tools14 instead of Tools
+2013-09-08 22:17:10 +0200	[*] MO : Autoupgred safe_mode detection
+2013-09-08 22:03:40 +0200	//norm
+2013-09-08 22:00:37 +0200	[-] MO : Autoupgrade, ini_get can return off
+2013-09-08 18:07:52 +0200	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-09-08 18:07:24 +0200	[-] MO : Autoupgrade, new module version 1.1.5, unserialize can return false on some configs
+2013-09-06 11:21:29 +0200	[-] MO : Autoupgrade, remove call to fix_download_product_feature_active.php
+2013-09-06 00:55:23 +0200	[*] MO : Autoupgrade new version 1.1.4
+2013-09-05 23:53:17 +0200	[-] MO : Autoupgrade remove false warnings
+2013-09-02 19:07:10 +0200	[-] MO : Autoupgrade bad test on test_dir
+2013-09-02 16:45:45 +0200	// Improved autoupgrade mysql driver selection
+2013-08-30 15:51:55 +0200	Update fr.php
+2013-08-30 13:35:33 +0200	// Uncomment useful lines in autoupgrade
+2013-08-29 15:29:49 +0200	// updated translations
+2013-08-26 11:02:40 +0200	// updated translations
+2013-08-22 17:22:05 +0200	// Text change in the autoupgrade
+2013-07-31 10:43:43 +0200	// small add
+2013-07-16 08:33:25 +0200	[-] MO : New version for autoupgrade, empty caches
+2013-07-02 01:53:18 +0200	[-] MO : Leave umask decides about /admin/autoupgrade/ rights
+2013-07-02 00:26:46 +0200	//parse error
+2013-07-01 23:39:57 +0200	// small fix
+2013-07-01 23:26:59 +0200	[-] MO : Fix bad notice on dibs module, new version for autoupgrade
+2013-07-01 16:41:04 +0200	[-] MO : Remove php warnings on autoupgrade
+2013-07-01 15:34:27 +0200	[-] MO : Fix rights issues on autoupgrade
+2013-07-01 14:30:28 +0200	[-] MO : $this->currentIndex for 1.4 in autoupgrade
+2013-07-01 12:36:39 +0200	// remove duplicate
+2013-07-01 12:30:08 +0200	[-] MO : Remove global $currentIndex to local car, New version for autoupgrade
+2013-06-28 10:26:10 +0200	[-] MO : Drop PDO and MYSQLI for db connection, use MYSQL only for slow sql config.
+2013-06-24 09:49:02 +0200	[-] MO : New version for autoupgrade,
+2013-06-19 18:07:00 +0200	[-] MO : New autoupgrade module
+2013-06-14 10:29:16 +0200	// vhost translations.prestashop.com on ssl
+2013-06-13 17:23:47 +0200	// https vhost not ready yet
+2013-05-24 10:36:47 +0200	[-] MO : Could not link to changelog in autoupgrader
+2013-05-17 16:43:39 +0200	// again typo
+2013-05-17 16:41:45 +0200	// typo again
+2013-05-17 16:36:01 +0200	// typo
+2013-05-17 15:37:03 +0200	[*] MO : https vhost is ready for lang_packs download
+2013-05-15 12:14:55 +0200	[-] MO : autoupgrade is for SuperAdmin only, diplay warning when not SuperAdmin + report on dateYears
+2013-05-13 17:56:32 +0200	[-] MO : Fix bug when no updating emails
+2013-05-06 16:52:54 +0200	// No need to activate the maintenance mode for local shop // Default value: update the default theme
+2013-05-03 18:05:14 +0200	[*] MO : New autoupgrade module remove Exceptions, move to http if open_ssl not available, remove jquery small undefined vars
+2013-05-02 18:41:28 +0200	[-] MO : Fix bug #PSCFV-8584, do not touch emails when upgrading according to conf
+2013-05-02 16:08:38 +0200	[-] MO : Fix bug #PSCFV-8750 do not activate disabled module during upgrade
+2013-04-30 02:09:49 +0200	[*] MO : Autoupgrade Small translations changes, pclzip loading
+2013-04-30 01:15:49 +0200	[-] MO : Manual mode to off after upgrade in config
+2013-04-29 23:47:00 +0200	[-] MO : Autoupgrade, warning about Dibs module
+2013-04-29 23:21:00 +0200	[*] MO : New version 1.0.17 for autoupgrade
+2013-04-25 11:12:30 +0200	[-] MO : Fix bug when json_encode not available on server
+2013-04-24 18:26:46 +0200	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-04-24 18:26:04 +0200	[-] MO : Fix bug on check if root dir is writeable
+2013-04-23 17:25:34 +0200	[*] TR : completed French translation of some modules
+2013-04-18 16:47:46 -0300	// Change autoupgrade warning messages to be clearer
+2013-04-17 11:51:17 +0200	[*] MO : #PSCFI-6711 connections from http to https
+2013-04-10 18:15:15 +0200	[-] MO : deactivate backward compatibility after upgrade and set manual mod to 0
+2013-04-10 14:01:35 +0200	[*] TR : Small improvement
+2013-04-10 13:42:59 +0200	[*] TR : Added russian autoupgrade translations
+2013-04-10 11:06:17 +0200	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-04-10 11:05:45 +0200	[-] MO : Fix bug #PSCFV-7688 no cleandB button in manual mode
+2013-04-05 16:45:42 +0200	[-] MO : Auto upgrade, German translations updated
+2013-04-05 15:33:03 +0200	[*] TR : German translation of Gamification Themeinstallator and Autoupgrade
+2013-03-27 14:55:57 +0100	[*] MO : New version for autoupgrade, update languages after 1.5.4.0 upgrade and del class_index.php
+2013-03-05 12:01:01 +0100	[-] MO : http 500 error when ob_starts called many times, new module version 1.0.12
+2013-03-05 10:32:25 +0100	[-] MO : New version for autoupgrade 1.0.11
+2013-03-05 10:30:03 +0100	[-] MO : Undefined $autoupgrade_dir in autoupograde module
+2013-03-04 12:12:49 +0100	// New module version + fix bug copy ajax-upgradetab.php
+2013-03-04 11:55:03 +0100	[-] MO : Big with _MYSQL_ENGINE_ again
+2013-03-01 14:10:09 +0100	[-] MO : Define _MYSQL_ENGINE_ for upgrade from 1.3
+2013-02-26 19:42:03 +0100	[-] MO : Can dl zip in default timeout
+2013-02-26 18:09:52 +0100	[-] MO : Bad if/else in autoupgrade
+2013-02-22 18:10:21 +0100	[-] BO : Avoid jquery.chosen crashing in 1.5.X
+2013-02-22 09:07:26 +0100	// Fixed potential warning #PSCFV-7944
+2013-02-21 15:20:06 +0100	[*] MO : New version 1.0.7 for autoupgrade, use CURL if allow_url_fopen disabled
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-15 17:50:39 +0100	// Added tips
+2013-02-15 17:33:17 +0100	// forgot file in last commit sorry
+2013-02-15 17:30:24 +0100	[*] MO : New module version 1.0.6 for autoupgrade fix #PSCFV-7719
+2013-02-11 09:22:15 +0100	// Merge development branch
+2013-02-06 15:18:17 +0100	// Update DB classes
+2013-02-05 12:22:46 +0100	[-] MO : New Module autoupgrade 1.0.5
+2013-02-05 11:47:21 +0100	[-] MO : New Module autoupgrade 1.0.5
+2013-02-05 11:43:03 +0100	[-] MO : New version for autoupgrade 1.0.4
+2013-02-04 12:19:45 +0100	Withdraw noredirect from htaccess in 1.4.9.X && new autoupgrade module version 1.0.3
+2013-02-04 12:17:25 +0100	Withdraw noredirect from htaccess in 1.4.9.X && new autoupgrade module version 1.0.3
+2013-01-31 19:15:19 +0100	[-] MO : New version of autoupgrade
+2013-01-31 19:13:10 +0100	[-] MO : New version of autoupgrade
+2013-01-31 19:10:33 +0100	[-] MO : Remove parse Error Sorry about this
+2013-01-31 19:09:50 +0100	[-] MO : Remove parse Error Sorry about this
+2013-01-30 12:34:45 +0100	[-] MO : autoupgrade new version 1.0.1
+2013-01-30 12:33:57 +0100	[-] MO : autoupgrade new version 1.0.1
+2013-01-29 15:59:15 +0100	[-] MO : Bad version number, use 1.0 instead
+2013-01-29 15:57:59 +0100	[-] MO : Bad version number, use 1.0 instead
+2013-01-29 15:32:19 +0100	[-] MO : Bad version number, 0.9.4 instead
+2013-01-04 11:50:15 +0100	Merge branch 'development'
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-14 18:13:00 +0100	[*] MO : adding tips at the end of the autoupgrade module
+2012-12-13 19:29:05 +0100	// replaced undefined variable
+2012-12-13 15:27:21 +0100	//new version auto upgrade module
+2012-12-11 11:51:50 +0100	//clean module & added todo list
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+avalaratax/
+2014-04-16 22:41:16 +0200	Avalara - AvaTax : Bug fix configuration
+2014-04-03 12:02:35 +0200	Avalara - AvaTax : Configuration data fixed
+2014-03-28 16:15:05 +0100	// MO AvalaraTax : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:22:39 +0100	// MO AvalaraTax : ps_versions_compliancy added
+2014-02-27 18:02:38 +0100	[-] Avalaratax : #PNM-2116 Add Soap check on install
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-09-10 15:14:50 +0200	AvalaraTax - Update (v3.4.2)
+2013-08-09 09:34:42 -0400	Version update 3.3.0
+2013-08-09 09:34:24 -0400	Removed a check on non-existing column for getOrderShippingCost()
+2013-08-09 09:31:38 -0400	Adjusted tax rate calculation for products
+2013-08-09 09:30:12 -0400	Added support for getPackageShippingCost()
+2013-08-08 16:32:44 -0400	Adjusted tax rate calculation when shipping is not taxable
+2013-08-08 16:30:37 -0400	Missing column for the Carrier cache table
+2013-08-01 10:20:18 +0200	// Avalara version was not updated
+2013-04-29 18:48:16 +0200	[-] MO : AvalaraTax : SOAP extension checked
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-03-04 13:29:25 -0500	[*] MO : new version of avalaratax module with the verification of the address
+2013-03-01 16:13:57 +0100	[-] MO : Bug fix : AvalaraTax, 1.4/1.5 compatibility
+2013-02-27 11:36:11 +0100	// AvalaraTax, no limited contries anymore
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-18 11:42:11 +0100	// Modules fixes, Authorize, AvalaraTax, Jirafe
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-13 15:04:00 +0100	[-] MO : AvalaraTax, back-office states choice list
+2013-02-07 10:10:44 +0100	[-] MO : Bug fix : Avalara Tax, Division by zero
+2013-02-05 17:10:54 +0100	[*] MO : AvalaraTax, module updated
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+backwardcompatibility/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-11-21 14:11:56 +0100	Backward compatibility - getVersion() fixed
+2013-09-30 09:57:13 +0200	[*] MO : Backward compatibility - Cannot only be installed on PrestaShop 1.4
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-03-25 10:20:59 +0100	// Useless constructor in backward compatibility
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-04 10:35:30 +0100	[-] MO : Bug fix : Backward compatibility, ignore .git folders
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+bankwire/
+2014-04-22 19:05:23 +0200	// Changelog updated
+2014-04-22 18:56:46 +0200	// Changelog updated
+2014-04-17 11:59:23 +0200	// version compliancy
+2014-03-24 15:16:08 +0100	/ MO bankwire : ps_versions_compliancy added
+2014-03-20 14:19:09 +0100	Initial commit
+
+blockadvertising/
+2014-04-22 19:05:25 +0200	// Changelog updated
+2014-04-22 18:56:48 +0200	// Changelog updated
+2014-04-15 17:23:48 +0200	[*] MO : blockadvertising - Changed the way images are stocked to avoid overwrite on update
+2014-03-24 10:44:25 +0100	// MO BlockAdvertising : ps_versions_compliancy added
+2014-03-20 14:19:12 +0100	Initial commit
+
+blockbanner/
+2014-04-22 19:05:27 +0200	// Changelog updated
+2014-04-22 18:56:51 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockbanner : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 10:55:56 +0100	/ MO blockbanner : ps_versions_compliancy added
+2014-03-20 14:19:15 +0100	Initial commit
+
+blockbestsellers/
+2014-04-22 19:05:29 +0200	// Changelog updated
+2014-04-22 18:56:53 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockbestsellers : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 10:59:58 +0100	// MO blockbestsellers : ps_versions_compliancy added
+2014-03-20 14:20:39 +0100	Initial commit
+
+blockcart/
+2014-04-22 19:05:32 +0200	// Changelog updated
+2014-04-22 18:56:55 +0200	// Changelog updated
+2014-03-26 10:01:27 +0100	[-] MO : removed cart rule description from the name in the blockcart
+2014-03-24 11:43:28 +0100	/ MO blockcart : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:26 +0100	/ MO blockcart : ps_versions_compliancy added
+2014-03-20 14:20:42 +0100	Initial commit
+
+blockcategories/
+2014-04-22 19:05:34 +0200	// Changelog updated
+2014-04-22 18:56:57 +0200	// Changelog updated
+2014-04-01 14:17:21 +0200	// blockcategories new module version
+2014-03-27 11:46:01 +0100	// follow up #PSCSX-1405 again
+2014-03-27 11:18:52 +0100	// follow up #PSCSX-1405
+2014-03-26 17:37:53 +0100	[-] MO : Blockcategories, Fix bug #PSCSX-1405, could not assign current category
+2014-03-24 11:43:28 +0100	/ MO blockcategories : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:30 +0100	/ MO blockcategories : ps_versions_compliancy added
+2014-03-20 14:20:45 +0100	Initial commit
+
+blockcms/
+2014-04-22 19:05:36 +0200	// Changelog updated
+2014-04-22 18:56:59 +0200	// Changelog updated
+2014-04-03 19:04:37 +0200	// blockcms, unassigned vars #PSCSX-1424
+2014-03-28 10:19:50 +0100	// added default value for new configuration options
+2014-03-26 12:42:47 +0100	[*] MO : blockcms : options added to display each links
+2014-03-24 12:20:38 +0100	Merge branch 'master' of https://github.com/PrestaShop/blockcms
+2014-03-24 11:43:28 +0100	/ MO blockcms : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:34 +0100	/ MO blockcms : ps_versions_compliancy added
+2014-03-24 10:55:54 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-24 10:54:46 +0100	[*] BO : updating labels and descriptions for blockcms.
+2014-03-20 14:20:55 +0100	Initial commit
+
+blockcmsinfo/
+2014-04-22 19:05:38 +0200	// Changelog updated
+2014-04-22 18:57:01 +0200	// Changelog updated
+2014-04-07 10:12:29 +0200	[-] MO : blockcmsinfo - Encoding restitution issue #PSCSX-1554 fixed
+2014-03-31 17:59:54 +0200	[-] MO : blockcmsinfo : now only show current shop custom block
+2014-03-24 17:23:58 +0100	// backquotes
+2014-03-24 17:05:05 +0100	// blockcmsinfo : displa & secu fix
+2014-03-24 12:30:34 +0100	Merge branch 'master' of https://github.com/PrestaShop/blockcmsinfo
+2014-03-24 12:28:49 +0100	// blockcmsinfo : missing buttons
+2014-03-24 11:43:28 +0100	/ MO blockcmsinfo : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:40 +0100	/ MO blockcmsinfo : ps_versions_compliancy added
+2014-03-20 14:21:06 +0100	Initial commit
+
+blockcontact/
+2014-04-22 19:05:40 +0200	// Changelog updated
+2014-04-22 18:57:04 +0200	// Changelog updated
+2014-03-24 12:20:29 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-24 12:18:44 +0100	[*] MO : Remove "toll free" from blockcontact strings.
+2014-03-24 11:43:28 +0100	/ MO blockcontact : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:44 +0100	/ MO blockcontact : ps_versions_compliancy added
+2014-03-20 14:21:10 +0100	Initial commit
+
+blockcontactinfos/
+2014-04-22 19:05:42 +0200	// Changelog updated
+2014-04-22 18:57:06 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockcontactinfos : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:01:54 +0100	// MO blockcontactinfos/ : ps_versions_compliancy added
+2014-03-20 14:22:32 +0100	Initial commit
+
+blockcurrencies/
+2014-04-22 19:05:45 +0200	// Changelog updated
+2014-04-22 18:57:08 +0200	// Changelog updated
+2014-03-24 17:48:11 +0100	Merge branch 'master' of https://github.com/PrestaShop/blockcurrencies
+2014-03-24 17:47:06 +0100	/ MO blockcurrencies : ps_versions_compliancy added
+2014-03-24 11:02:02 +0100	/ MO blockcurrencies : ps_versions_compliancy added
+2014-03-20 14:22:35 +0100	Initial commit
+
+blockcustomerprivacy/
+2014-04-22 19:05:47 +0200	// Changelog updated
+2014-04-22 18:57:11 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockcustomerprivacy : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:09 +0100	// MO blockcustomerprivacy/ : ps_versions_compliancy added
+2014-03-20 14:22:37 +0100	Initial commit
+
+blockfacebook/
+2014-04-22 19:05:49 +0200	// Changelog updated
+2014-04-22 18:57:13 +0200	// Changelog updated
+2014-04-01 16:41:02 +0200	// fix bracket missing && ++version
+2014-04-01 14:13:46 +0200	Merge pull request #1 from f31n/patch-1
+2014-04-01 11:21:48 +0200	Merge pull request #2 from Dvir-Julius/patch-1
+2014-03-29 23:49:00 +0300	// full url is required for blockFacebook
+2014-03-28 09:56:54 +0100	logic in php
+2014-03-28 09:48:56 +0100	Update blockfacebook.tpl
+2014-03-25 21:21:01 +0100	accepting full url and only name
+2014-03-25 18:31:27 +0100	bug @ v0.1 didn't work on prestashop 1.6.0.5
+2014-03-24 11:43:28 +0100	/ MO blockfacebook : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:17 +0100	// MO blockfacebook/ : ps_versions_compliancy added
+2014-03-20 14:22:40 +0100	Initial commit
+
+blocklanguages/
+2014-04-22 19:05:51 +0200	// Changelog updated
+2014-04-22 18:57:15 +0200	// Changelog updated
+2014-03-25 11:12:33 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-25 11:08:42 +0100	// Forgotten apostrophe
+2014-03-24 11:43:28 +0100	/ MO blocklanguages : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:24 +0100	/ MO blocklanguages : ps_versions_compliancy added
+2014-03-20 14:22:43 +0100	Initial commit
+
+blocklayered/
+2014-04-22 19:05:53 +0200	// Changelog updated
+2014-04-22 18:57:17 +0200	// Changelog updated
+2014-04-17 15:49:24 +0200	[-] MO : Blocklayered - FixBug #PSCSX-1505
+2014-04-17 12:21:18 +0200	[-] MO : Blocklayered - FixBug #PSCSX-1337
+2014-04-08 10:32:56 +0200	Merge pull request #4 from xBorderie/patch-1
+2014-04-08 10:29:23 +0200	// blocklayered: better wording.
+2014-04-03 15:24:10 +0200	// Update version
+2014-04-03 15:23:10 +0200	[-] BO : BlockLayered - FixBug #PSCSX-1399 pagination problem
+2014-03-27 18:22:40 +0100	// update version number
+2014-03-27 11:57:03 +0100	Merge pull request #2 from xBorderie/patch-1
+2014-03-27 11:51:19 +0100	[*] MO : a string you can actually translate.
+2014-03-27 11:51:15 +0100	// Fix wrong backquote in SQL
+2014-03-24 17:53:22 +0100	// MO blocklayered : Removed ps_version_compliancy duplicate
+2014-03-24 12:21:34 +0100	Merge branch 'master' of https://github.com/PrestaShop/blocklayered
+2014-03-24 11:43:28 +0100	/ MO blocklayered : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:30 +0100	/ MO blocklayered : ps_versions_compliancy added
+2014-03-21 18:39:28 +0100	[-] Add column names in SQL insert into
+2014-03-20 16:58:31 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-20 16:54:45 +0100	// Two forgotten periods in blocklayered 1.6 template.
+2014-03-20 14:22:46 +0100	Initial commit
+
+blocklink/
+2014-04-22 19:05:56 +0200	// Changelog updated
+2014-04-22 18:57:19 +0200	// Changelog updated
+2014-04-16 16:18:13 +0200	// Code cleaning
+2014-04-16 16:08:43 +0200	[-] BO : Bug #, Set category if multi-store active and employee has only one shop
+2014-03-24 12:22:19 +0100	Merge branch 'master' of https://github.com/PrestaShop/blocklink
+2014-03-24 11:43:28 +0100	/ MO blocklink : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:36 +0100	// MO blocklink/ : ps_versions_compliancy added
+2014-03-21 18:36:19 +0100	[-] Add column names in SQL insert into
+2014-03-20 14:22:49 +0100	Initial commit
+
+blockmanufacturer/
+2014-04-22 19:05:58 +0200	// Changelog updated
+2014-04-22 18:57:21 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockmanufacturer : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:41 +0100	/ MO blockmanufacturer : ps_versions_compliancy added
+2014-03-20 14:22:51 +0100	Initial commit
+
+blockmyaccount/
+2014-04-22 19:06:00 +0200	// Changelog updated
+2014-04-22 18:57:23 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockmyaccount : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:49 +0100	/ MO blockmyaccount : ps_versions_compliancy added
+2014-03-20 14:22:54 +0100	Initial commit
+
+blockmyaccountfooter/
+2014-04-22 19:06:02 +0200	// Changelog updated
+2014-04-22 18:57:26 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockmyaccountfooter : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:02:54 +0100	/ MO blockmyaccountfooter : ps_versions_compliancy added
+2014-03-20 14:22:57 +0100	Initial commit
+
+blocknewproducts/
+2014-04-22 19:06:04 +0200	// Changelog updated
+2014-04-22 18:57:28 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blocknewproducts : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:01 +0100	// MO blocknewproducts/ : ps_versions_compliancy added
+2014-03-20 14:22:59 +0100	Initial commit
+
+blocknewsletter/
+2014-04-22 19:06:06 +0200	// Changelog updated
+2014-04-22 18:57:30 +0200	// Changelog updated
+2014-04-18 17:47:09 +0200	// Add search form
+2014-04-18 15:54:32 +0200	[*] Merged PR #3 from @marcinsz101
+2014-04-17 18:39:21 +0200	// Refacto and add pagination
+2014-04-15 12:09:00 +0200	// Set counter value in list header
+2014-04-14 18:17:44 +0200	[-] Bug #PSCSX-1263, Fix retrocompat before HelperList modification
+2014-04-14 17:06:27 +0200	[*] BO : Bug #PSCSX-1263, redone list and export function
+2014-03-31 12:03:21 +0200	// changed icon
+2014-03-31 11:50:50 +0200	Merge pull request #1 from djfm/master
+2014-03-31 11:19:29 +0200	// updated English emails
+2014-03-27 17:20:02 +0100	[*] MO : blocknewsletter : added list of visitor who have registered to the newsletter (through inscription or blocknewsletter)
+2014-03-24 11:43:28 +0100	/ MO blocknewsletter : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:09 +0100	/ MO blocknewsletter : ps_versions_compliancy added
+2014-03-20 14:23:11 +0100	Initial commit
+
+blockpaymentlogo/
+2014-04-22 19:06:08 +0200	// Changelog updated
+2014-04-22 18:57:32 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockpaymentlogo : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:15 +0100	/ MO blockpaymentlogo : ps_versions_compliancy added
+2014-03-20 14:23:14 +0100	Initial commit
+
+blockpermanentlinks/
+2014-04-22 19:06:11 +0200	// Changelog updated
+2014-04-22 18:57:34 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockpermanentlinks : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:21 +0100	/ MO blockpermanentlinks : ps_versions_compliancy added
+2014-03-20 14:23:25 +0100	Initial commit
+
+blockreinsurance/
+2014-04-22 19:06:13 +0200	// Changelog updated
+2014-04-22 18:57:37 +0200	// Changelog updated
+2014-03-24 14:40:18 +0100	// fix configuration layout
+2014-03-24 11:43:28 +0100	/ MO blockreinsurance : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:28 +0100	/ MO blockreinsurance : ps_versions_compliancy added
+2014-03-20 14:23:28 +0100	Initial commit
+
+blockrss/
+2014-04-22 19:06:15 +0200	// Changelog updated
+2014-04-22 18:57:39 +0200	// Changelog updated
+2014-03-24 11:43:28 +0100	/ MO blockrss : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:34 +0100	// MO blockrss/ : ps_versions_compliancy added
+2014-03-20 14:24:52 +0100	Initial commit
+
+blocksearch/
+2014-04-22 19:06:18 +0200	// Changelog updated
+2014-04-22 18:57:41 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blocksearch : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:45 +0100	/ MO blocksearch : ps_versions_compliancy added
+2014-03-20 14:25:08 +0100	Initial commit
+
+blocksharefb/
+2014-04-22 19:06:20 +0200	// Changelog updated
+2014-04-22 18:57:44 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blocksharefb : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:50 +0100	/ MO blocksharefb : ps_versions_compliancy added
+2014-03-20 14:25:24 +0100	Initial commit
+
+blocksocial/
+2014-04-22 19:06:23 +0200	// Changelog updated
+2014-04-22 18:57:46 +0200	// Changelog updated
+2014-03-26 17:59:44 +0100	Merge pull request #3 from petyuska/patch-3
+2014-03-26 17:55:24 +0100	Show youtube, google+ and Pinterest links
+2014-03-26 17:36:57 +0100	Merge pull request #1 from petyuska/patch-1
+2014-03-26 17:34:00 +0100	install and uninstall default values fixed
+2014-03-24 11:43:29 +0100	/ MO blocksocial : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:03:56 +0100	// MO blocksocial/ : ps_versions_compliancy added
+2014-03-20 14:25:27 +0100	Initial commit
+
+blockspecials/
+2014-04-22 19:06:25 +0200	// Changelog updated
+2014-04-22 18:57:48 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blockspecials : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:02 +0100	/ MO blockspecials : ps_versions_compliancy added
+2014-03-20 14:25:30 +0100	Initial commit
+
+blockstore/
+2014-04-23 15:27:20 +0200	// wording #PSCSX-1888
+2014-04-23 14:33:56 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-23 11:41:11 +0200	// blockstore: Slight rewording.
+2014-04-22 19:06:27 +0200	// Changelog updated
+2014-04-22 18:57:51 +0200	// Changelog updated
+2014-04-03 11:53:18 +0200	[-] Replace Lorem Ipsum by text from configuration
+2014-03-24 12:22:58 +0100	Merge branch 'master' of https://github.com/PrestaShop/blockstore
+2014-03-24 11:43:29 +0100	/ MO blockstore : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:08 +0100	/ MO blockstore : ps_versions_compliancy added
+2014-03-24 10:19:32 +0100	[-] BO : Add Text field, cf #PSCSX-1274
+2014-03-20 14:25:32 +0100	Initial commit
+
+blocksupplier/
+2014-04-22 19:06:29 +0200	// Changelog updated
+2014-04-22 18:57:53 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blocksupplier : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:13 +0100	/ MO blocksupplier : ps_versions_compliancy added
+2014-03-20 14:26:54 +0100	Initial commit
+
+blocktags/
+2014-04-22 19:06:31 +0200	// Changelog updated
+2014-04-22 18:57:55 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blocktags : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:19 +0100	/ MO blocktags : ps_versions_compliancy added
+2014-03-20 14:28:14 +0100	Initial commit
+
+blocktopmenu/
+2014-04-22 19:06:33 +0200	// Changelog updated
+2014-04-22 18:57:57 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blocktopmenu : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:46 +0100	/ MO blocktopmenu : ps_versions_compliancy added
+2014-03-20 14:28:17 +0100	Initial commit
+
+blockuserinfo/
+2014-04-22 19:06:35 +0200	// Changelog updated
+2014-04-22 18:57:59 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blockuserinfo : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:51 +0100	/ MO blockuserinfo : ps_versions_compliancy added
+2014-03-20 14:29:37 +0100	Initial commit
+
+blockviewed/
+2014-04-22 19:06:37 +0200	// Changelog updated
+2014-04-22 18:58:01 +0200	// Changelog updated
+2014-03-24 11:43:29 +0100	/ MO blockviewed : ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 11:04:58 +0100	/ MO blockviewed : ps_versions_compliancy added
+2014-03-20 14:29:39 +0100	Initial commit
+
+blockwishlist/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-10 17:30:46 +0100	// blockwishlist : when viewing customers' wishlist : added links to configuration and front-office of the products
+2014-03-10 16:46:41 +0100	// blockwishlist : wishlist's url no more hard coded
+2014-03-04 15:31:18 +0100	blockwishlist : reset functionality added + norm
+2014-02-13 18:52:45 +0100	// blockwishlist bad ssl on mywishlist link
+2014-02-13 18:29:37 +0100	// bad link rewrite for manage wishlist and view wishlist
+2014-02-13 18:14:14 +0100	// revert
+2014-02-12 19:27:51 +0100	[-] : Blockwishlist, report of https://github.com/PrestaShop/PrestaShop-modules/pull/232
+2014-02-12 16:49:47 +0100	[-] MO : blockwishlist : a wishlist is now specific to a shop
+2014-02-04 11:50:18 +0100	// blockwishlist : small fix
+2014-02-03 15:20:26 +0100	// blockwishlist : small change wishlist display
+2014-02-03 14:40:42 +0100	// blockwishlist : require missing
+2014-02-03 12:19:06 +0100	blockwishlist : deprecated files removed
+2014-01-30 18:04:47 +0100	blockwishlist : fix when adding a product to a wishlist
+2014-01-28 12:36:30 +0100	blockwishlist : various bug fix & norm
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 18:44:33 +0100	// added missing mod= to l calls in module templates
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+bluepay/
+2014-03-28 16:14:47 +0100	// MO Bluepay : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:23:56 +0100	// MO Bluepay : ps_versions_compliancy added
+2014-03-03 15:21:19 +0100	[-] Modules : Version update of Adyen, Bluepay & ProductComments
+2014-03-03 14:56:24 +0100	[-] Modules : Move $this->ps_versions_compliancy after parent::__construct() to avoid var overrided
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-10-29 00:41:38 +0100	BluePay - Bug fix (cart id)
+2013-10-28 17:48:46 +0100	BluePay - New module added (v1.0)
+
+browsi/
+2014-03-28 16:14:37 +0100	// MO Browsi : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:24:27 +0100	// MO Browsi : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2013-10-10 10:17:59 +0200	Brow.si - Update v1.0.1
+2013-08-26 18:48:34 +0200	[+] MO : New module Brow.si - Generate more traffic, increase customer engagement and sell more on mobile
+
+carriercompare/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-20 10:53:33 +0100	[-] MO : CarrierCompare, delete temporary cart object
+2014-03-13 12:12:25 +0100	// CarrierCompare : show TR on cart update
+2014-03-13 12:04:06 +0100	[-] CarrierCompare : Introduce v2.0, new shipping calculation and ajax cart update
+2014-02-20 18:40:48 +0100	// CarrierCompare - Fix button position
+2014-02-20 10:48:22 +0100	// right pull some other buttons
+2014-02-15 16:16:16 +0100	// carriercompare limit js to shopping cart
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+cashondelivery/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+cheque/
+2014-04-22 19:06:46 +0200	// Changelog updated
+2014-04-22 18:58:10 +0200	// Changelog updated
+2014-04-17 11:25:59 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-03-24 15:20:50 +0100	/ MO cheque : ps_versions_compliancy added
+2014-03-20 14:30:59 +0100	Initial commit
+
+crossselling/
+2014-04-22 19:06:49 +0200	// Changelog updated
+2014-04-22 18:58:13 +0200	// Changelog updated
+2014-04-17 12:19:29 +0200	// Version compliancy
+2014-03-24 15:20:57 +0100	/ MO crossselling : ps_versions_compliancy added
+2014-03-20 14:32:20 +0100	Initial commit
+
+dashactivity/
+2014-04-22 19:06:51 +0200	// Changelog updated
+2014-04-22 18:58:15 +0200	// Changelog updated
+2014-04-16 14:41:07 +0200	// Add link for Total Subscriber
+2014-04-14 15:17:25 +0200	[-] MO : Dashactivity - Improvement #PSCSX-582
+2014-04-07 14:20:47 +0200	[-] MO : dashactivity - FixBug #PSCSX-1467 online user
+2014-03-24 15:21:03 +0100	/ MO dashactivity : ps_versions_compliancy added
+2014-03-20 14:32:23 +0100	Initial commit
+
+dashgoals/
+2014-04-22 19:06:53 +0200	// Changelog updated
+2014-04-22 18:58:17 +0200	// Changelog updated
+2014-04-09 16:43:28 +0200	// Fix undefined index
+2014-04-03 10:12:32 +0200	[-] BO : FixBug #PSCSX-1534 - Illegal offset type
+2014-03-29 12:04:59 +0100	// Update dashgoal version
+2014-03-29 12:03:02 +0100	[-] MO : Dashgoals - FixBug #PSCSX-1352 - Undefined dashgoal char value
+2014-03-29 11:00:18 +0100	[-] MO : Dashgoals - FixBug #PSCSX-1413 - Wrong dashgoals stats
+2014-03-24 15:21:10 +0100	/ MO dashgoals : ps_versions_compliancy added
+2014-03-20 14:32:25 +0100	Initial commit
+
+dashproducts/
+2014-04-22 19:06:55 +0200	// Changelog updated
+2014-04-22 18:58:19 +0200	// Changelog updated
+2014-03-24 15:21:15 +0100	/ MO dashproducts : ps_versions_compliancy added
+2014-03-20 14:32:28 +0100	Initial commit
+
+dashtrends/
+2014-04-22 19:06:57 +0200	// Changelog updated
+2014-04-22 16:44:08 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-22 16:25:49 +0200	// dashtrends: Better translatability.
+2014-04-14 14:51:09 +0200	[-] MO : Dashtrends - FixBug #PSCSX-1742
+2014-04-03 10:17:09 +0200	// fix date
+2014-04-01 16:33:15 +0200	[*] MO : Dashboard trends - FixBug PSCSX-1517
+2014-04-01 15:48:49 +0200	[-] MO : Dashtrends - FixBug #PSCSX-1527 - Wrong date
+2014-03-31 16:50:35 +0200	// Missing correct color on dashtrends init
+2014-03-31 16:47:09 +0200	// Fix dashtrends init
+2014-03-29 14:14:48 +0100	[-] MO : Dashtrends - FixBug #PSCSX-984 - Set units for all graphs
+2014-03-24 15:45:38 +0100	/ MO dashtrends : ps_versions_compliancy added
+2014-03-20 14:32:31 +0100	Initial commit
+
+dateofdelivery/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-02-20 10:25:16 +0100	// MO: dateofdelivery, moved button to the right
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-27 14:00:50 +0100	Prevent Delivery / Available dates in the past
+2013-12-26 15:04:20 +0100	// remove warnings
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+desjardins/
+2014-03-28 16:14:27 +0100	// MO Desjardins : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:25:22 +0100	// MO Desjardins : ps_versions_compliancy added
+2014-03-18 16:10:36 +0100	Desjardins : Bug fix - hookPayment & PS16 template
+2014-03-14 17:00:00 +0100	Desjardins : New module added
+
+ebay/
+2014-03-28 16:14:12 +0100	// MO Ebay : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:26:03 +0100	// MO Ebay : ps_versions_compliancy added
+2014-02-11 16:20:18 +0100	Merge pull request #231 from thoma202/R2
+2014-02-10 17:29:40 +0100	[*] Empty Cache of quantity available and modified version number
+2014-01-29 11:20:59 +0100	// .gitignore files updated
+2014-01-21 09:59:53 +0100	Merge branch 'R2' of https://github.com/thoma202/PrestaShop-modules into thoma202-R2
+2014-01-15 10:21:33 +0100	[+] New version of eBay module 1.6.3
+2014-01-13 18:47:34 +0100	[~] MO - EBay : translation of help page
+2014-01-13 18:45:03 +0100	[*] MO - Ebay : no changes
+2014-01-13 14:03:51 +0100	[-] MO - eBay : fix bug, take into account the handling fee for every case (just default until now)
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-27 00:25:30 -0800	Merge pull request #166 from thoma202/R2
+2013-12-23 14:19:55 +0100	[+] version 1.6.2
+2013-12-23 14:18:31 +0100	[+] Added documentation
+2013-12-20 10:36:48 +0100	[*] UI / UX modifications
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-12-04 16:43:39 +0100	[*] Now that you can choose the ebay site on which you can list, there is no need to block user when his default country is not in the list
+2013-12-03 11:57:14 +0100	[+] MO - eBay changed ebay version to 1.6.1
+2013-12-03 11:56:04 +0100	[~] MO - eBay translation
+2013-12-03 11:55:18 +0100	[*] MO - eBay, bug when upgrading the module, country synched is not the good (always french)
+2013-11-27 10:50:00 +0100	[*] Fixed security issues sql injection
+2013-11-25 18:02:20 +0100	[+] using backward compatibility instead of version_compare
+2013-11-18 15:29:48 +0100	[*] Fixed bug when in PS 1.4, invoices had not the good prices (product prices)
+2013-11-18 11:16:32 +0100	[~] Translations
+2013-11-08 16:31:44 +0100	[+] Debug mode off ready for release
+2013-11-08 16:09:18 +0100	[+] Compressed documentation
+2013-11-08 16:03:50 +0100	[*] Fixed bug when trying to go post form item specifics
+2013-11-08 15:43:17 +0100	[+] Added documentation link and translations strings
+2013-11-08 12:28:25 +0100	[*] Fixed translation issues
+2013-11-06 15:31:15 +0100	[+] First translations
+2013-11-04 18:00:25 +0100	[+] Added 1.5.4 upgrade file
+2013-10-28 19:31:26 +0100	[*] MO - Fixed bug of function name
+2013-10-28 19:06:27 +0100	[*] MO - Fixed jquery selector to be compatible with version 1.9 of jQuery (prestabox)
+2013-10-28 19:05:07 +0100	[*] MO - Added support for bSQL for version of PrestaShop where function is not implemented yet
+2013-10-28 17:38:03 +0100	[+] MO - Added information of how many products are going to be synched
+2013-10-28 17:10:16 +0100	[*] MO - ebay fixed upgrade behaviour
+2013-10-28 15:27:48 +0100	[*] MO - eBay : fixed bug for smarty V2
+2013-10-28 14:10:46 +0100	Merge branch 'hotfix' into R2
+2013-10-28 13:54:42 +0100	[*] Fixed when updating missed informations
+2013-10-23 17:21:27 +0200	[*] Deleted message when emptying database
+2013-10-23 17:09:45 +0200	[*] MO - ebay : fixed bug with jquery, always using $j where $j = $ or $j172
+2013-10-23 16:21:52 +0200	[*] MO - eBay modified fancybox for loading [+] MO - eBay added empty function to reset module
+2013-10-22 15:31:13 +0200	[*] Fixed tinyMCE for PrestaBox
+2013-10-22 14:11:13 +0200	[*] MO ebay : fixed fancybox for 1.4 + Fixed return policy who pays not send
+2013-10-21 14:39:48 +0200	[*] MO - ebay don't show fancybox once categories are loaded
+2013-10-21 14:28:49 +0200	[+] MO - ebay: added field who pays returns policies
+2013-10-21 11:58:27 +0200	[*] MO - ebay : fixed visibility of fancybox on 1.5.4 [*] MO - ebay : modified ebay version
+2013-10-21 02:54:47 +0200	Modified wording to get strings
+2013-10-16 18:14:34 +0200	[-] MO - EBAY : Content modification
+2013-10-15 16:46:55 +0200	[-] MO - EBAY : Fix bug 1.4
+2013-10-15 12:26:17 +0200	[-] MO - EBAY : Fix bugs : fix select shipping, fix select ebay site
+2013-10-14 12:10:50 +0200	[-] MO - EBAY : Fix bug taxes
+2013-10-11 17:47:33 +0200	[*] MO - EBAY : Add country (Belgium)
+2013-10-11 14:40:02 +0200	[-] MO - EBAY : Fix bug taxes
+2013-10-09 15:00:49 +0200	[*] MO - EBAY : Deleting a sentence on Categories tab
+2013-10-09 14:56:21 +0200	[*] MO - EBAY : UX remodeling
+2013-10-08 17:01:21 +0200	[+] MO - EBAY : Add tips form
+2013-10-08 15:15:11 +0200	[*] MO - EBAY : Add country settings
+2013-10-08 14:50:38 +0200	[*] MO - EBAY : Add returns within [*] MO - EBAY : Add settings pictures
+2013-10-07 16:38:07 +0200	* [*] MO - EBAY : Fixed variations sending for Prestashop 1.4. * [*] MO - eBay fixed bug when using module in multishop with context set to group * [*] MO - ebay : fixed bug for not losing sql connection * [*] Fixed bug when revising an item, item was added because cast in int was not working (item_ref is not an int) * [*] MO fixed bug when problem with item condition * [*] Ebay - Modified ebay version
+2013-09-09 08:17:16 -0700	Merge pull request #67 from thoma202/version1.5
+2013-09-09 17:01:19 +0200	[*] MO - eBay fixed bug when using module in multishop with context set to group
+2013-09-04 10:12:58 +0200	[*] MO - EBAY : Fixed variations sending for Prestashop 1.4.
+2013-08-29 09:44:26 +0200	[*] Modified version 1.5.2
+2013-08-27 15:12:51 +0200	[*] MO - eBay : Fixed bug with shipping fee not calculated
+2013-08-27 14:39:03 +0200	[*] Check if EbayCountrySpec exists before using it (for version 1.4.4 of PrestaShop)
+2013-08-21 18:22:05 +0200	[*] Fixed bug for carrier with free shipping return 0 instead of false !
+2013-08-20 10:39:31 +0200	Merge branch 'version1.5' of https://github.com/thoma202/PrestaShop-modules into thoma202-version1.5
+2013-08-19 11:21:52 +0200	[*] Modified version number (1.5.1)
+2013-08-19 11:18:12 +0200	[+] Added translations for 1.4 (modified key in translations files)
+2013-08-14 11:55:27 +0200	// eBay : Pull request merged
+2013-08-13 16:11:13 +0200	fixes security issues
+2013-08-08 17:55:00 +0200	fixes security issues
+2013-08-08 12:32:43 +0200	fixes http://forge.prestashop.com/browse/PNM-1633 by GuigZ-
+2013-08-05 19:28:18 +0200	adapts to PS coding standards by GuigZ-
+2013-08-02 20:42:11 +0200	Fixes pricing issues by GuigZ-
+2013-08-02 13:39:34 +0200	"GuigZ-" fix for price not showing in the template of a multivariation product
+2013-07-24 16:38:36 +0200	[*] MO - eBay : deleted lang folder
+2013-07-23 11:42:23 +0200	[+] MO - LG added translations for ebay
+2013-07-23 11:03:34 +0200	[*] Added translations and passed module to production
+2013-07-22 15:41:34 +0200	fixes the ebay_token not being passed properly
+2013-07-22 15:18:28 +0200	[+] MO eBay : added help in english and modified string in english
+2013-07-22 14:12:08 +0200	[*] Added two index.php
+2013-07-22 14:11:32 +0200	[*] MO eBay- Added modification by PS + Last recommandation on ajax files
+2013-07-17 17:32:04 +0200	[*] Fixed bug when conditionID is not available for a category
+2013-07-16 11:51:41 +0200	[*] Add translations for version 1.5
+2013-07-15 18:40:18 +0200	Merge branch 'version1.5' of https://github.com/thoma202/PrestaShop-modules into version1.5
+2013-07-15 18:39:16 +0200	fixes the percent turning into sum bug
+2013-07-15 18:01:10 +0200	Merge branch 'version1.5' of github.com:thoma202/PrestaShop-modules into version1.5
+2013-07-15 18:00:51 +0200	[+] MO  - eBay : Improved authentication system to automatically show when needed
+2013-07-15 15:43:22 +0200	Merge branch 'version1.5' of https://github.com/thoma202/PrestaShop-modules into version1.5
+2013-07-15 15:43:18 +0200	Upgrades the pictures links for the eBay template
+2013-07-15 15:26:45 +0200	[+] MO - eBay : Added new string for categorie form
+2013-07-15 14:00:34 +0200	[*] MO - eBay fixed bug when a lot of orders are synchronizing : duplicate orders and customers
+2013-07-12 11:57:00 +0200	Merge branch 'version1.5' of github.com:thoma202/PrestaShop-modules into version1.5
+2013-07-12 11:55:43 +0200	[-] MO - ebay fixed bug when postcode contains a "."
+2013-07-11 15:35:49 +0200	Merge branch 'version1.5' of https://github.com/thoma202/PrestaShop-modules into version1.5
+2013-07-11 15:35:36 +0200	adds test before deleting syncError.php
+2013-07-10 17:56:34 +0200	[*] Fixed bug that flushes cart informations before products are added
+2013-07-08 11:06:45 +0200	[*] MO - eBay Fixed upgrade for categories multi sku selecting
+2013-07-05 16:37:08 +0200	fixes ebay categories updates bugs
+2013-07-05 13:02:22 +0200	[*] Added fix for update of table category
+2013-07-04 16:38:55 +0200	[+] MO - eBay added translations for it, es and fr
+2013-07-04 16:36:34 +0200	[*] Added compatibility of array_map for version < 5.3 of PHP
+2013-07-04 14:38:40 +0200	[*] MO - Switched to Production version
+2013-07-04 01:44:48 +0200	[*] MO - eBay : fixed bug when using Smarty V2 and looking categories
+2013-07-04 01:15:53 +0200	[*] MO - eBay : fixed bug, in PS 1.5, flush packages listing and adresses before adding the new order
+2013-07-04 01:14:47 +0200	[*] MO - eBay : Created method importOrders to dissociate it from hookHeader
+2013-07-03 15:31:35 +0200	[*] MO - eBay Fixed hook update quantity on product
+2013-07-03 10:51:04 +0200	[*]MO - eBay Fixed for ebay upgrade in PS 1.5
+2013-07-03 10:45:35 +0200	[*] Fixed upgrade for prestashop 1.5 compatibility with auto upgrade
+2013-07-02 19:14:44 +0200	[*] MO - eBay Fixed when updating product
+2013-07-02 17:26:38 +0200	[*] Fixed for shipping price updating and item condition translation
+2013-07-02 15:54:22 +0200	fixes PSConditions translation issue
+2013-07-02 14:56:25 +0200	[*] Fixed string that didn't show up with smarty V2
+2013-07-02 14:55:56 +0200	[*] Modified tabs for array declaration
+2013-07-02 14:41:42 +0200	[*] Compatibility smarty V2
+2013-07-02 12:01:51 +0200	[*] Bug fix with eBayOrder id_carrier + item specifics not matched will still go into multivariations if they can
+2013-07-01 12:52:34 +0200	Merge branch 'version1.5' of https://github.com/thoma202/PrestaShop-modules into version1.5
+2013-07-01 12:46:49 +0200	turns orders.php objects to arrays
+2013-07-01 12:12:09 +0200	[*] Fixed DB_PREFIX bug (changed to _DB_PREFIX_)
+2013-06-28 12:38:33 +0200	fixes not matching attributes not giving variation specifics
+2013-06-28 11:09:39 +0200	fixes several versions upgrade bug
+2013-06-28 01:36:49 +0200	fixes smarty 2 (PS < 1.4.7) compatibility issue
+2013-06-28 01:36:14 +0200	now uploads every picture if extra_images and adds PhotoDisplay parameter
+2013-06-28 00:57:01 +0200	fixes pictures not appearing in description
+2013-06-27 20:55:14 +0200	translates ajax files text strings
+2013-06-27 18:03:58 +0200	module_filters bug for PS < 1.5
+2013-06-27 13:36:46 +0200	uploads extra images to ebay
+2013-06-27 12:45:51 +0200	fixes typo on extra_images
+2013-06-27 12:41:54 +0200	fixes resetting nb_images in category configuration when confirming with no category opened
+2013-06-27 12:28:53 +0200	fixes wrong variation specific name passes to ebay
+2013-06-27 10:32:56 +0200	don't delete configuration when uninstalling
+2013-06-27 10:27:54 +0200	fixes typo for images
+2013-06-26 17:48:40 +0200	missing file for testing loading of item specifics
+2013-06-26 17:47:57 +0200	missing changes for feedback of specifics loading influencing on future reloadings
+2013-06-26 17:47:29 +0200	removes attributes (useless now)
+2013-06-26 17:34:39 +0200	fixes Upgrade include problem
+2013-06-26 17:11:46 +0200	fixes suggest categories not working when some category have been set previously
+2013-06-26 16:41:02 +0200	moves templates from templates/admin to templates/hook
+2013-06-26 16:36:03 +0200	removes unused img directory
+2013-06-26 16:35:17 +0200	don't remove tables when uninstalling
+2013-06-26 16:34:27 +0200	uses Tools::file_get_contents
+2013-06-26 14:59:44 +0200	- now ends sales for all variations where deleting a multivariation product - fixes products counters issues on PS1.4
+2013-06-26 12:11:08 +0200	adds missing borders to config page
+2013-06-26 11:30:33 +0200	removes write() on the cookie, apparently useless and not working on PS1.4.1
+2013-06-26 10:44:01 +0200	amends last fix
+2013-06-25 18:06:11 +0200	Missing file
+2013-06-25 18:02:09 +0200	fixes token refresh not working before the second time
+2013-06-25 17:33:32 +0200	fixes no nb_products JS issue
+2013-06-25 17:03:51 +0200	fixes compatibility bugs for PS1.4.5 (hook / smarty 2 issues)
+2013-06-25 14:35:27 +0200	fixes the ebay.tpl html disappearing problem
+2013-06-25 11:40:14 +0200	fixes the token issue
+2013-06-25 11:17:03 +0200	fixes the non proper data of the item specifics after modifying a category on the category screen
+2013-06-24 14:53:43 +0200	fixes synchronization counters inconsistence
+2013-06-24 14:34:06 +0200	amends last commit
+2013-06-24 14:32:03 +0200	fixes ano#599
+2013-06-24 14:15:40 +0200	removes now useless general item conditions settings
+2013-06-24 14:07:45 +0200	amend last commit
+2013-06-24 13:52:49 +0200	fixes bug when trying to get inherited multi sku value
+2013-06-24 12:47:32 +0200	Fixes the javascript error when testing for fancybox
+2013-06-24 12:47:00 +0200	add updatequantity hook
+2013-06-24 12:25:44 +0200	checks for products in variations before updating to eBay
+2013-06-24 11:47:08 +0200	Fixes ano#38
+2013-06-24 11:46:31 +0200	Missing file in previous commit
+2013-06-24 11:39:59 +0200	Fixes ano#501
+2013-06-24 11:04:10 +0200	fixes ano#431
+2013-06-24 00:55:50 +0200	- updates EbaySynchronizer to work for multi sku / non multisku product with item and variation specifics - adds the brand to the features that can be matched with ebay specifics
+2013-06-21 13:41:52 +0200	- EbaySynchronizer refactoring - fixes the bug not reporting the right value for isMultiSku if the value was inherited - returns the right nb_products when synchronizing - now detetects blacklisted products when synchronizing properly
+2013-06-19 14:01:45 +0200	Fixed PrestaShop 1.4 compatibility problems
+2013-06-19 13:59:04 +0200	Prevents empty categories in ItemsSpecifics
+2013-06-19 10:11:58 +0200	adds missing redirection to right tab
+2013-06-19 01:17:24 +0200	more refactoring
+2013-06-19 00:10:18 +0200	after second code review
+2013-06-19 00:07:21 +0200	after second code review
+2013-06-18 17:15:24 +0200	Merge branch 'evo575' into version1.5
+2013-06-18 17:04:33 +0200	Merge branch 'evo574' into version1.5
+2013-06-18 16:26:43 +0200	Merge branch 'evo573' into version1.5
+2013-06-18 16:26:16 +0200	Merge branch 'evo571' into version1.5
+2013-06-18 16:19:53 +0200	Merge branch 'evo570' into version1.5
+2013-06-18 16:15:04 +0200	updates the version number
+2013-06-18 16:10:20 +0200	ItemsSpecifics for PrestasShop 1.5
+2013-06-18 12:45:40 +0200	extra images for PrestaShop 1.5
+2013-06-16 22:09:18 +0200	- almost done for PS 1.5 - needs finishing of the variationspecifics matching
+2013-06-12 01:29:40 +0200	ongoing for item specifics
+2013-06-07 15:05:29 +0200	add files for table creation for upgrade to 1.5
+2013-06-07 15:03:37 +0200	works for PrestaShop 1.5
+2013-06-06 22:12:07 +0200	Merge branch 'evo571' into evo573
+2013-06-06 22:07:39 +0200	missing files in previous commit
+2013-06-06 22:05:21 +0200	- refactoring of the postProcessCategory() and related - table for disabling a product - code and interface to disable a product in the category tab
+2013-06-05 12:29:25 +0200	- removes duplicate sql files - fixes wrong path to EbayRequest in checkToken.php - fixes variations loading in GetVariations.tpl
+2013-06-05 12:26:32 +0200	- now when a product is disabled it is removed from Ebay at the next synchronization - now when a product is deleted it is removed from Ebay immediately
+2013-06-05 00:52:43 +0200	fixes typo
+2013-06-04 23:48:58 +0200	fixed typos
+2013-06-04 23:04:23 +0200	- missing colons in upgrade classes - missing file licence headers in templates
+2013-06-04 23:01:54 +0200	missing changes in previous commit
+2013-06-04 22:59:07 +0200	missing files in previous commit
+2013-06-04 16:31:53 +0200	- adds EbayConfiguration and EbayConfigurationTest - moves parameters.tpl - almost done with the regenerate token function
+2013-05-28 00:10:39 +0200	General module refactoring
+2013-05-16 11:22:24 +0200	// Fixed unmerged files
+2013-05-16 11:12:03 +0200	// ebay config file updated
+2013-05-15 19:19:15 +0300	[*] MO - eBay : added description of why using $link variable
+2013-05-07 16:09:21 +0200	[*] MO - eBay : increased module version (1.4.0 => 1.4.1)
+2013-05-07 15:40:49 +0200	[*] MO - eBay : Allows to send brand with html encoded characters.
+2013-05-07 15:34:59 +0200	[+] MO - eBay : Allows to add title of product with 80 characters (previously 50)
+2013-05-07 15:32:39 +0200	[*] Bug fix : when using synchronization out of context (payment page)
+2013-04-25 16:44:08 +0300	// Premium activation & requirements errors fixed
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-04-24 18:16:37 +0200	[*] MO : ebay : New version released (v1.4.0)
+2013-04-24 12:26:37 +0200	[*] Added prestashop specification for eBayRequest.php
+2013-04-24 12:15:48 +0200	[*] Added prestashop rules for { and tabs
+2013-04-21 16:18:12 +0200	[*] MO - eBay : english is default language for help page
+2013-04-18 10:02:18 +0200	[+] MO - eBay : added translations
+2013-04-15 10:21:26 +0200	[*] MO : added last translations
+2013-04-14 06:46:15 +0300	[-] MO : fix old fr_FR with correct language in ErrorLanguage xml node
+2013-03-29 14:36:29 +0100	[*] MO : eBay - added a text for shipping carrier which are not shown
+2013-03-29 11:21:17 +0100	[-] MO - eBay bug in translation national / international for french
+2013-03-25 14:24:38 +0100	[+] MO - eBay : added Italian translation
+2013-03-25 13:41:53 +0100	[*] MO - eBay : added all the carrier to the prestashop carrier list
+2013-03-22 10:21:17 +0100	[-] MO eBay : Template Compatible with smarty V2
+2013-03-19 16:43:11 +0100	[*] MO - eBay : Improved structur of module + added forgotten translation
+2013-03-18 02:24:06 +0100	[*] MO - eBay : switch to production version, not sandbox anymore
+2013-03-18 01:41:49 +0100	[-] MO : eBay Added translation spanish and french
+2013-03-14 18:11:03 +0100	[-] MO - eBay : minor Bug fix
+2013-03-14 16:19:35 +0100	[-] MO - eBay : Bug fix : registration is not defined
+2013-03-14 16:08:00 +0100	[-] MO - eBay : bug fix for images in template
+2013-03-14 16:04:59 +0100	[-] MO - eBay : Bug fix for upgrade of module
+2013-03-14 13:11:12 +0100	[-] MO - eBay Bug fix : IE authentification / images in 1.4 for template
+2013-03-14 11:35:39 +0100	[-] MO - eBay bug fix on category loading
+2013-03-14 09:43:27 +0100	[*] MO - eBay : improvement for install and upgrade sql
+2013-03-14 09:42:08 +0100	[-] MO - ebay Bug fixed : images for prestashop 1.5.0.X
+2013-03-13 17:19:43 +0100	[*] MO - Ebay Improvement in different features
+2013-03-13 10:43:47 +0100	[-] MO - ebay : problem with 1.4 when module not installed
+2013-03-13 09:48:03 +0100	[+] MO - Ebay : added Great Britain Currency
+2013-03-12 12:00:35 +0100	[+] MO - ebay : Add feature shipping fee international and national
+2013-02-27 12:01:42 +0100	Merge branch 'development' of https://github.com/thoma202/PrestaShop-modules into development
+2013-02-27 12:01:05 +0100	[*] MO - Ebay improvement in parameters template
+2013-02-27 11:28:23 +0100	[*] MO - eBay - Fix bug first category
+2013-02-26 10:25:49 +0100	[*] MO - eBay - Load complete table on categories tab
+2013-02-25 13:21:14 +0100	[*] MO - Ebay : finished interface of shipping
+2013-02-22 18:12:10 +0100	[*]  MO - eBay - Suggest Categories in ajax
+2013-02-18 12:00:55 +0100	[*] MO - eBay - interface international shipping
+2013-02-18 09:27:24 +0100	# MO - eBay - Display categories ajax
+2013-02-15 11:57:57 +0100	Merge branch 'development' of https://github.com/thoma202/PrestaShop-modules into development
+2013-02-15 11:57:16 +0100	[*] Improvement shipping.tpl
+2013-02-15 11:55:50 +0100	[*] MO - eBay - Fix git process
+2013-02-15 11:44:06 +0100	[*] MO - Ebay - Improvement of shipping.tpl interface
+2013-02-15 11:29:57 +0100	[+] MO - eBay - Possibility to increase product price more than 5%
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-14 17:50:32 +0100	[-] MO - eBay - Bug fix style interface
+2013-02-14 17:12:32 +0100	[*] MOD - eBay - First merge ebay
+2013-02-14 16:59:45 +0100	Merge branch 'development' of https://github.com/thoma202/PrestaShop-modules into development
+2013-02-14 16:42:54 +0100	[+] Mod - eBay - Add return policy
+2013-02-14 16:40:17 +0100	[*] MOD - eBay - Begin of feature Add shipping Fee
+2013-02-14 15:21:27 +0100	[+] MOD - Ebay - Add Delivery Time Option
+2013-02-13 19:37:54 +0100	[-] MO : Bug fix : Country Specifics for configuration of categories
+2013-02-11 09:33:55 +0100	[*] MO : Improvement in eBay Module : S2-010 : Authentication system, and improvement in management of country
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-28 09:24:33 +0100	//ebay : remove svn keyword @version Release: $
+2012-11-27 19:21:18 +0100	// Backward compatibility replaced in ebay
+2012-11-27 19:15:11 +0100	[-] MO : Bug fix : ebay
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+ecopresto/
+2014-04-09 15:01:29 +0200	EcoPresto : PR merged (v2.8.8)
+2014-04-08 00:54:53 +0200	Revision suite remarque
+2014-04-03 14:19:01 +0200	EcoPresto : Configuration data fixed
+2014-03-31 19:12:40 +0200	Update config.xml
+2014-03-31 19:11:48 +0200	Update ecopresto.php
+2014-03-31 19:10:39 +0200	Update catalog.class.php
+2014-03-28 16:13:54 +0100	// MO Ecopresto : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:27:02 +0100	// MO Ecopresto : ps_versions_compliancy added
+2014-03-18 14:59:33 +0100	Update ecopresto.php
+2014-03-18 14:50:52 +0100	Update function.js
+2014-03-18 14:50:09 +0100	Update import.php
+2014-03-07 14:44:41 +0100	Update importProduct.class.php
+2014-03-06 14:44:45 +0100	img
+2014-03-06 13:43:45 +0100	Update stock.php
+2014-03-06 13:43:24 +0100	Update import.php
+2014-03-06 13:43:02 +0100	Update ecopresto.php
+2014-03-06 13:42:41 +0100	Update config.xml
+2014-03-06 13:42:22 +0100	Update ajax.php
+2014-03-06 13:42:00 +0100	Update function.js
+2014-03-06 13:41:40 +0100	Update ec_ecopresto.css
+2014-03-06 13:41:20 +0100	Update importProduct.class.php
+2014-03-06 13:40:59 +0100	Update catalog.class.php
+2014-02-10 13:07:18 +0100	[*] EcoPresto : Version number updated (v2.4)
+2014-02-10 12:23:11 +0100	Update index.php
+2014-02-10 12:22:46 +0100	Update index.php
+2014-02-10 12:22:05 +0100	Update tf_populateCheckList.js
+2014-02-10 12:21:25 +0100	Update tf_populateSelect.js
+2014-02-10 12:19:13 +0100	Update tablefilter.js
+2014-02-10 12:18:42 +0100	Update index.php
+2014-02-07 16:16:06 +0100	[*] EcoPresto : Version updated (v2.3)
+2014-02-05 16:26:29 +0100	Update catalog.class.php
+2014-02-03 21:54:51 +0100	Update function.js
+2014-02-03 18:11:39 +0100	Update importProduct.class.php
+2014-02-03 15:52:22 +0100	Update gen_com.php
+2014-02-03 15:51:30 +0100	Update catalog.class.php
+2014-01-30 13:10:46 +0100	Update import.php
+2014-01-30 13:09:37 +0100	Update gen_com.php
+2014-01-30 13:08:39 +0100	Update ecopresto.php
+2014-01-30 13:08:03 +0100	Update config.xml
+2014-01-30 13:07:35 +0100	Update function.js
+2014-01-30 13:06:43 +0100	Update importProduct.class.php
+2014-01-30 13:03:28 +0100	Update catalog.class.php
+2014-01-16 15:14:44 +0100	EcoPresto - New module (v2.0)
+
+editorial/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-12 11:40:49 +0100	// editorial : the homepage logo can now be deleted on 1.6
+2014-03-03 09:38:33 +0100	// Fix bootstrap design
+2014-02-20 10:48:22 +0100	// right pull some other buttons
+2014-01-20 16:18:10 +0100	[-] MO : editorial : changed 'hint' to 'desc' //norm
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-23 11:49:55 +0100	// editorial, excepetion on save
+2013-12-20 12:11:53 +0100	// Remove PHP Warning filesize(): stat failed
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+favoriteproducts/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-21 10:18:00 +0100	[-] Fix bug #PNM-2169 favoriteProducts, could not delete in ssl
+2014-03-20 15:58:30 +0100	[-] Fix bug #PNM-2169, bad ssl bind
+2014-01-15 14:26:43 +0100	// norms
+2014-01-13 02:05:33 +0100	// favoritesproducts missing smein column
+2014-01-12 23:20:35 +0100	// favoriteproducts move js
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+fedexcarrier/
+2014-04-03 14:28:57 +0200	Fedex Carrier : Configuration data fixed
+2014-03-28 16:13:40 +0100	// MO FedEx Carrier : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:27:36 +0100	// MO EcoPresto : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-08-30 15:05:07 -0400	Update sql-install.php
+2013-08-20 21:19:29 +0200	// Fedex - New version released (v1.3)
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-18 15:48:34 +0100	// Modules updated : Fedex, UPS, USPS
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+feedaty/
+2014-04-09 15:15:46 +0200	Feedaty : PR merged
+2014-04-09 14:33:38 +0200	URGENT BUG FIX!
+2014-04-07 10:39:53 +0200	Update feedaty.php
+2014-04-05 14:57:48 +0200	// Feedaty : config.xml updated
+2014-04-03 16:50:45 +0200	Update feedaty.php
+2014-04-03 16:32:12 +0200	Update feedaty.php
+2014-04-03 15:49:49 +0200	Feedaty : Configuration data fixed
+2014-03-28 16:11:36 +0100	// MO Feedaty : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:29:31 +0100	// MO Feedaty : ps_versions_compliancy added
+2014-02-14 17:21:51 +0100	Feedaty : Version number changed (v1.1.3)
+2014-02-14 17:22:56 +0100	Update download.php
+2014-02-14 17:01:01 +0100	Update download.php
+2014-01-30 12:07:56 +0100	Feedaty - New module added (v1.1.2)
+
+feeder/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-02-12 17:55:01 +0100	[*] MO : better wording for Feeder module.
+2014-02-12 17:53:52 +0100	[*] MO : better wording for Feeder module.
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+ferbuy/
+2014-03-28 16:11:24 +0100	// MO Ferbuy : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:30:04 +0100	// MO Ferbuy : ps_versions_compliancy added
+2014-01-02 18:32:38 +0100	//new icon for gamification notification
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:23:23 +0100	Klarna - Backward compatibility removed
+2014-01-02 10:22:51 +0100	FerBuy - Backward compatibility removed
+2013-11-13 16:42:58 +0100	FerBuy - New module added (v1.3)
+
+fianetfraud/
+2014-04-07 12:09:13 +0200	Update fianetfraud.php
+2014-04-02 14:46:56 +0200	Update fianetfraud.php
+2014-03-31 10:46:55 +0200	Update fianetfraud.php
+2014-03-28 15:08:30 +0100	adaptation for prestashop validation
+2014-03-28 15:08:15 +0100	adaptation for prestashop validation
+2014-03-28 14:52:37 +0100	adaptation for prestashop validation
+2014-03-28 14:51:19 +0100	adaptation for prestashop validation
+2014-03-28 14:51:01 +0100	adaptation for prestashop validation
+2014-03-28 14:50:48 +0100	adaptation for prestashop validation
+2014-03-28 14:50:29 +0100	adaptation for prestashop validation
+2014-03-28 14:50:04 +0100	adaptation for prestashop validation
+2014-03-28 14:49:49 +0100	adaptation for prestashop validation
+2014-03-28 14:49:36 +0100	adaptation for prestashop validation
+2014-03-28 14:48:33 +0100	adaptation for prestashop validation
+2014-03-28 14:48:18 +0100	adaptation for prestashop validation
+2014-03-28 14:47:53 +0100	adaptation for prestashop validation
+2014-03-28 14:47:29 +0100	adaptation for prestashop validation
+2014-03-28 14:47:09 +0100	adaptation for prestashop validation
+2014-03-28 14:46:39 +0100	adaptation for prestashop validation
+2014-03-28 14:46:17 +0100	adaptation for prestashop validation
+2014-03-28 14:46:05 +0100	adaptation for prestashop validation
+2014-03-28 14:45:42 +0100	adaptation for prestashop validation
+2014-03-28 14:45:25 +0100	adaptation for prestashop validation
+2014-03-28 14:45:07 +0100	adaptation for prestashop validation
+2014-03-28 14:44:37 +0100	adaptation for prestashop validation
+2014-03-28 14:44:07 +0100	adaptation for prestashop validation
+2014-03-28 14:43:41 +0100	adaptation for prestashop validation
+2014-03-28 14:43:10 +0100	adaptation for prestashop validation
+2014-03-28 14:42:43 +0100	adaptation for prestashop validation
+2014-03-28 14:42:21 +0100	adaptation for prestashop validation
+2014-03-28 14:42:01 +0100	adaptation for prestashop validation
+2014-03-28 14:41:48 +0100	adaptation for prestashop validation
+2014-03-28 14:41:29 +0100	adaptation for prestashop validation
+2014-03-28 14:41:13 +0100	adaptation for prestashop validation
+2014-03-28 14:40:51 +0100	adaptation for prestashop validation
+2014-03-28 14:40:15 +0100	adaptation for prestashop validation
+2014-03-28 14:39:21 +0100	adaptation for prestashop validation
+2014-03-28 14:39:04 +0100	adaptation for prestashop validation
+2014-03-28 14:38:26 +0100	adaptation for prestashop validation
+2014-03-28 14:38:00 +0100	adaptation for prestashop validation
+2014-03-28 14:36:43 +0100	adaptation for prestashop validation
+2014-03-28 14:36:22 +0100	adaptation for prestashop validation
+2014-03-28 14:36:07 +0100	adaptation for prestashop validation
+2014-03-28 14:35:50 +0100	adaptation for prestashop validation
+2014-03-28 14:35:25 +0100	adaptation for prestashop validation
+2014-03-28 14:35:00 +0100	adaptation for prestashop validation
+2014-03-28 14:34:38 +0100	adaptation for prestashop validation
+2014-03-28 14:34:22 +0100	adaptation for prestashop validation
+2014-03-28 14:34:03 +0100	adaptation for prestashop validation
+2014-03-28 14:33:39 +0100	adaptation for prestashop validation
+2014-03-28 14:33:05 +0100	adaptation for prestashop validation
+2014-03-28 14:32:36 +0100	adaptation for prestashop validation
+2014-03-28 14:32:24 +0100	adaptation for prestashop validation
+2014-03-28 14:32:08 +0100	adaptation for prestashop validation
+2014-03-28 14:31:48 +0100	adaptation for prestashop validation
+2014-03-28 14:31:36 +0100	adaptation for prestashop validation
+2014-03-28 14:30:33 +0100	adaptation for prestashop validation
+2014-03-28 14:30:04 +0100	adaptation for prestashop validation
+2014-03-28 14:29:17 +0100	adaptation for prestashop validation
+2014-03-28 14:28:44 +0100	adaptation for prestashop validation
+2014-03-28 14:28:31 +0100	adaptation for prestashop validation
+2014-03-28 14:25:30 +0100	adaptation for prestashop validation
+2014-03-28 14:25:09 +0100	adaptation for prestashop validation
+2013-11-04 15:59:32 +0100	update admin template
+2013-11-04 15:57:32 +0100	update french traduction
+2013-11-04 15:55:47 +0100	update version number on xml
+2013-11-04 15:54:48 +0100	update BuildXMLOrder method to manage SoColissimo shipping
+2013-11-04 15:52:51 +0100	update module version
+2013-11-04 15:52:11 +0100	warning image
+2013-09-12 10:54:51 +0200	Fia-Net Certissim - Update (v3.6.1)
+2013-09-10 11:28:23 -0700	Merge pull request #83 from yanncyrille/certissim_branch
+2013-09-10 16:48:06 +0200	Fix problem with logs folder creation
+2013-09-10 16:46:17 +0200	update version number on xml
+2013-09-10 16:45:04 +0200	update version number
+2013-09-10 16:44:44 +0200	update version number
+2013-08-07 10:25:56 +0200	// Norm fixed
+2013-08-06 17:21:43 +0200	Add certissim module version on xml flux
+2013-08-06 17:19:15 +0200	Add speed carrier
+2013-08-06 17:18:18 +0200	Add new labels on administration
+2013-08-06 17:16:45 +0200	Speed carrier added on xml result when it configured on certissim administration
+2013-08-06 17:13:27 +0200	update version number
+2013-07-08 14:46:25 +0200	Fix load payment method in HookNewOrder
+2013-07-08 14:44:32 +0200	Replace FIA-NET Sceau logo by FIA-NET Certissim logo
+2013-07-08 14:44:20 +0200	Replace FIA-NET Sceau logo by FIA-NET Certissim logo
+2013-07-08 14:43:36 +0200	Update version number
+2013-06-24 14:00:57 +0200	[-] MO : Fia-Net Certissim : Fixed logo in BO
+2013-06-03 14:28:45 +0200	[-] MO : Fia-Net Certissim : Fixed payment module list PS < 1.4.5.1
+2013-04-23 14:45:52 +0200	// French descriptions updated
+2013-03-21 10:26:51 +0100	[*] BO: Fia-Net Certissim: accented characters fixed
+2013-03-20 11:29:04 +0100	[-] BO: Fia-Net Certissim: redirection URL after checkoutScore and sendOrder
+2013-03-20 10:35:28 +0100	[*] BO: Fia-Net Certissim, version number upgrade
+2013-03-20 10:34:36 +0100	[-] BO: Fia-Net Certissim, product categories listing
+2013-03-14 10:58:32 +0100	[-] MO : Bug fix : Fia-Net Certissim, autoload & includes
+2013-03-12 10:59:25 +0100	// Fia-Net - Certissim module updated
+2013-02-05 11:03:41 +0100	// Fia-Net - Certissim module added
+
+fianetsceau/
+2014-04-07 18:17:34 +0200	// Fia-net Sceau de confiance : Tab changed
+2014-04-07 15:13:45 +0200	Fia-Net : PR merged
+2014-03-28 16:10:51 +0100	// MO Fia-Net Sceau : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-28 10:52:07 +0100	Fix smarty bug
+2014-03-21 17:31:50 +0100	// MO Fia-Net Sceau : ps_versions_compliancy added
+2014-03-17 11:24:01 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:23:48 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:23:25 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:23:14 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:23:00 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:22:20 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:21:58 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:21:47 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:21:33 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:20:53 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:20:39 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:20:14 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:19:53 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:19:32 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:19:04 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:18:38 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:18:21 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:17:50 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:17:25 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:17:04 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:16:42 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:12:51 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:12:36 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:12:24 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:11:39 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:11:26 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:11:03 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:10:14 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:09:59 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:09:19 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:08:59 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:08:40 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:08:05 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:07:51 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:07:33 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:07:01 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:06:37 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:06:20 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:05:54 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:05:34 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:05:05 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:04:53 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:04:32 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:04:19 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:03:54 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:03:14 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:02:52 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:02:27 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:01:47 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:01:01 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:00:47 +0100	Adaptation code for Prestashop validation
+2014-03-17 11:00:22 +0100	Adaptation code for Prestashop validation
+2014-03-17 10:59:43 +0100	Adaptation code for Prestashop validation
+2014-01-23 15:10:16 +0100	// Fia-Net Sceau de confiance : config.xml version updated
+2014-01-23 06:10:19 -0800	Merge pull request #197 from yanncyrille/sceau_branch
+2014-01-23 12:20:09 +0100	FIA-NET categories definition
+2014-01-23 12:19:16 +0100	multishop and FIA-NET categories management improved
+2014-01-23 12:15:08 +0100	id_shop added for multishop
+2014-01-23 12:14:50 +0100	id_shop added for multishop
+2014-01-23 12:14:14 +0100	id_shop added for multishop
+2014-01-23 12:13:01 +0100	status test or prod added
+2014-01-23 12:12:10 +0100	commented lines deleted
+2014-01-23 12:11:14 +0100	commented lines deleted
+2014-01-23 12:10:13 +0100	commented lines deleted
+2014-01-23 12:07:47 +0100	update version
+2014-01-23 12:06:54 +0100	id_shop field added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 16:04:39 +0100	Fia-Net Sceau : Norm fix
+2013-12-16 12:07:08 +0100	Update fianetsceau.php
+2013-12-09 17:25:46 +0100	Delete SceauXMLResult.class.php
+2013-12-09 17:25:21 +0100	Delete SceauUtilisateur.class.php
+2013-12-09 17:25:05 +0100	Delete SceauTools.class.php
+2013-12-09 17:24:05 +0100	Delete SceauPaiement.class.php
+2013-12-09 17:23:44 +0100	Delete SceauInfocommande.class.php
+2013-12-09 17:21:15 +0100	Delete SceauFianetSocket.class.php
+2013-12-09 16:49:37 +0100	FIA-NET subcategories AJAX result
+2013-12-09 16:48:22 +0100	updated with php api v4.4
+2013-12-09 16:47:54 +0100	updated with php api v4.4
+2013-12-09 16:47:34 +0100	updated with php api v4.4
+2013-12-09 16:47:20 +0100	updated with php api v4.4
+2013-12-09 16:46:58 +0100	updated with php api v4.4
+2013-12-09 16:45:20 +0100	updated with php api v4.4
+2013-12-09 16:45:05 +0100	updated with php api v4.4
+2013-12-09 16:44:42 +0100	updated with php api v4.4
+2013-12-09 16:43:56 +0100	updated with php api v4.4
+2013-12-09 16:36:57 +0100	updated with php api v4.4
+2013-12-09 16:36:42 +0100	updated with php api v4.4
+2013-12-09 16:36:16 +0100	updated with php api v4.4
+2013-12-09 16:35:52 +0100	updated with php api v4.4
+2013-12-09 16:35:30 +0100	updated with php api v4.4
+2013-12-09 16:35:15 +0100	updated with php api v4.4
+2013-12-09 16:34:59 +0100	updated with php api v4.4
+2013-12-09 16:30:46 +0100	updated with php api v4.4
+2013-12-09 16:30:29 +0100	updated with php api v4.4
+2013-12-09 16:30:09 +0100	updated with php api v4.4
+2013-12-09 16:27:12 +0100	products review added with php api v4.4
+2013-12-09 15:31:17 +0100	update admin template with FIA-NET subcategories
+2013-12-09 15:30:17 +0100	update javascript functions
+2013-12-09 15:29:33 +0100	update sql installation
+2013-12-09 15:29:09 +0100	update translation
+2013-12-09 15:28:41 +0100	update version number
+2013-10-15 12:17:05 +0200	Add <crypt> and <paiement> on xml
+2013-10-15 12:15:58 +0200	Update module version
+2013-10-15 12:15:20 +0200	Update module version
+2013-10-02 15:51:20 +0200	Update for PS < 1.5.4.1. Module compatible from PS 1.4.x to 1.5.x
+2013-10-02 15:49:19 +0200	Fix log folder problem
+2013-09-30 18:12:11 +0200	Put text traduction
+2013-09-30 18:11:49 +0200	Put text traduction
+2013-09-30 18:11:23 +0200	Put text traduction
+2013-09-30 17:18:31 +0200	Take website's url to put it on widget link
+2013-09-30 17:17:26 +0200	Update widget link
+2013-09-30 17:16:35 +0200	Update version number on xml
+2013-09-30 17:16:05 +0200	Update version number
+2013-07-11 09:34:05 +0200	[*] MO : Fia-Net Sceau de Confiance - Module update (v2.0)
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+firstdata/
+2014-03-28 16:10:26 +0100	// MO Firstdata : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:33:02 +0100	// MO Firstdata : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-27 09:49:01 +0100	First Data : Bug fix #PNM-1834 - Undefined variable
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-07-22 17:06:23 +0200	// Updated Yotpo and Firstdata
+2013-06-19 10:59:48 +0200	[*] MO : First Data : Backward compatibility submodule added
+2013-06-19 10:49:11 +0200	[+] MO : First Data : New module added
+
+followup/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-10 14:13:07 +0100	Merge pull request #265 from Dvir-Julius/patch-1
+2014-03-10 14:09:42 +0100	// Follow up - Version changed (v1.5)
+2014-03-07 22:53:14 +0200	//wording
+2014-03-07 22:41:07 +0200	Wording
+2014-03-07 15:17:13 +0100	[-]MO : Sort the stat array
+2014-02-25 17:29:02 +0100	// Followup - Use addSqlRestriction()
+2014-02-25 15:50:19 +0100	[*] MO : Followup, tasks now depends on shop (multishop) - see #PNM-2114
+2014-02-24 18:52:13 +0100	// update version numbers for 1.6 release
+2014-02-24 15:01:42 +0100	[*] MO : Fix add version check for switch input type
+2014-02-24 13:55:33 +0100	[*] MO : Fix #PNM-2114, display correct shop URL + small fixes
+2014-02-20 16:46:56 +0100	// update followup version number
+2014-02-20 16:36:45 +0100	[*] MO : Fix retrocompat 1.5, override form.tpl for 'switch' input type
+2014-01-21 12:01:31 +0100	// followup
+2014-01-21 02:17:31 -0800	Merge pull request #188 from indesign47/patch-3
+2014-01-15 17:58:12 +0100	[-] MO : followup : missing mod for translation
+2014-01-15 17:26:27 +0100	[-] MO : followup : btn btn-default > btn btn-default pull-right
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 18:44:33 +0100	// added missing mod= to l calls in module templates
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+gadwords/
+2014-04-17 11:44:52 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-03-21 17:33:19 +0100	// MO GoogleAdWords : ps_versions_compliancy added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-05-31 10:35:39 +0200	[+] MO : Google Adwords : New module added
+
+gamification/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-18 11:23:20 +0100	//small fix on gamification
+2014-03-14 18:25:19 +0100	//new gamification module version
+2014-03-05 08:52:09 +0100	//new version of gamification : fixed condition calcul && advice display
+2014-02-18 16:41:23 +0100	//gamification notification design & bug fix
+2014-02-17 17:36:14 +0100	//new version of gamification
+2014-02-13 18:13:35 +0100	//new version of gamification
+2014-02-13 18:11:40 +0100	Merge pull request #221 from Jonadabe/master
+2014-02-01 20:39:31 +0000	[-] MO : https error
+2014-01-31 10:19:34 +0100	// filemtime mute errors
+2014-01-28 15:08:13 +0100	// Groarf backwardcompatibility
+2014-01-28 15:02:15 +0100	// Fixed if/elseif priority  and duplicate columns in gamification
+2014-01-28 12:04:24 +0100	//just remove warnings
+2014-01-27 18:15:24 +0100	//new version of gamification module - fix upgrade bug  &
+2014-01-22 18:28:52 +0100	//new version of gamification && added confirm advice close message
+2014-01-22 10:40:03 +0100	//small fix
+2014-01-21 15:02:05 +0100	//new version of gamification - fixed hide column missing
+2014-01-10 19:20:20 +0100	//added hide img
+2014-01-10 16:43:24 +0100	//small fix
+2014-01-10 16:42:23 +0100	//Added new field 'hide' in table advice for gamification module
+2014-01-10 16:30:04 +0100	//new gamification version
+2014-01-02 18:32:38 +0100	//new icon for gamification notification
+2014-01-02 18:30:27 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2014-01-02 18:30:20 +0100	//merge
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 18:44:33 +0100	// added missing mod= to l calls in module templates
+2013-12-24 10:04:35 +0100	//new version of gamification with dynamic css fot advice
+2013-12-24 10:03:15 +0100	//new version of gamification with dynamic css fot advice
+2013-12-18 17:31:52 +0100	[-] TR : Bad french translation in gamification module
+2013-12-18 17:30:53 +0100	[-] TR : Bad french translation in gamification module
+2013-12-12 09:45:46 +0100	//new version of gamification module
+2013-12-12 09:45:26 +0100	//new version of gamification module
+2013-12-12 09:44:49 +0100	//small fix
+2013-12-12 09:44:08 +0100	//small fix
+2013-11-21 12:17:52 +0100	// Remove scroll bar in notifications
+2013-11-21 10:28:19 +0100	//new version of gamification module
+2013-11-21 01:17:13 -0800	Merge pull request #129 from Jonadabe/patch-2
+2013-11-21 01:16:58 -0800	Merge pull request #128 from Jonadabe/patch-1
+2013-11-20 12:17:58 +0100	// Fix Title and back button for page header toolbar in bootstrap version
+2013-11-19 18:09:48 +0000	[-] Litle typo change
+2013-11-19 17:59:20 +0000	[-] BO : Closing img tag and alt attribute in view.tpl
+2013-11-18 16:34:01 +0100	//new gamification version
+2013-11-14 10:57:30 +0100	//new version gamification
+2013-11-13 11:46:28 +0100	//small css fix for gamification
+2013-11-06 10:46:03 +0100	//bootstrap fix && badges calculation fix
+2013-11-04 17:38:13 +0100	//new version of gamification module (1.6.4)
+2013-11-04 17:37:54 +0100	//small fix
+2013-10-31 16:53:09 +0100	//small language fix on gamification group name
+2013-10-30 14:30:53 +0100	//small fix
+2013-10-29 11:41:15 +0100	//new version gamification
+2013-10-29 10:40:22 +0100	//
+2013-10-29 10:17:31 +0100	//
+2013-10-29 10:10:54 +0100	//new version gamification
+2013-10-21 17:14:29 +0200	//tooltip in gamification now use bootstrap
+2013-10-18 11:03:42 +0200	//new version of gamification module
+2013-10-18 11:03:16 +0200	//new version of gamification module
+2013-10-18 10:59:48 +0200	//new version of gamification module
+2013-10-18 10:59:31 +0200	//new version of gamification module
+2013-10-18 10:59:14 +0200	//small fix
+2013-10-15 16:48:15 +0200	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-10-15 16:48:13 +0200	//gamification now use bootstrap design
+2013-10-10 12:08:21 +0200	// New version of gamification module
+2013-10-10 12:04:27 +0200	// Fixing bootstrap notifications
+2013-10-03 17:06:18 +0200	//new version of gamification module
+2013-10-03 17:06:04 +0200	//new version of gamification module
+2013-09-24 14:47:06 +0200	// remove notices
+2013-09-23 14:37:47 +0200	//new version of gamification module
+2013-09-23 14:37:17 +0200	//small fix
+2013-09-17 12:27:26 +0200	//new version of gamification
+2013-09-13 15:30:58 +0200	//added employee && iso lang && iso country in gamification
+2013-09-10 11:40:27 +0200	//small fix
+2013-09-05 10:37:52 +0200	//missing commit
+2013-09-05 09:52:13 +0200	//new version of gamification module
+2013-09-05 09:51:46 +0200	//remove debug
+2013-09-04 23:22:07 +0200	//new version of gamification for 1.6 ps version compatibility
+2013-09-03 09:51:10 -0700	Merge pull request #74 from djfm/master
+2013-09-03 18:46:02 +0200	// need to specify the 'mod' parameter for the 'l' function
+2013-08-30 17:52:35 +0200	//small fix
+2013-08-30 16:38:47 +0200	//gamification progressbar
+2013-08-30 10:03:00 +0200	//gamification version 1.4.9 - now advices can be attached to more than one tab
+2013-08-29 15:29:49 +0200	// updated translations
+2013-08-26 11:02:40 +0200	// updated translations
+2013-08-12 16:19:22 +0200	// Updated CSS for gamification
+2013-07-30 10:18:19 +0200	// Oops gamification
+2013-07-24 16:32:32 +0200	// Gamification: Deprecated badges and advices are automatically removed from the database
+2013-06-26 12:46:45 +0200	- We do not need native jQueryUI class ".ui-progressbar-value" to be overridden for the whole backoffice (hookDisplayBackOfficeHeader)
+2013-06-19 10:09:07 +0200	//news version of gamification with somes small fixes
+2013-06-07 10:57:21 +0200	//fixed advice condition time calculation
+2013-06-05 09:43:04 +0200	//new version of gamification 1.4.2
+2013-06-05 09:41:47 +0200	//small fix on operator field type
+2013-05-29 11:36:16 +0200	//small fix - advice calculation
+2013-05-22 09:52:26 +0200	//added try catch to prevent error 500 when import advice or badges
+2013-05-14 16:19:33 +0200	//redirect to home when try to access to AdminGamificationController when module is disable
+2013-04-23 17:25:34 +0200	[*] TR : completed French translation of some modules
+2013-04-05 15:33:03 +0200	[*] TR : German translation of Gamification Themeinstallator and Autoupgrade
+2013-04-05 14:34:39 +0200	//small fix on gamification
+2013-04-05 10:19:05 +0200	//new check when install gamification
+2013-03-29 17:40:49 +0100	// There was still missing translation in gamification module
+2013-03-29 17:27:04 +0100	// Fixed translations
+2013-03-28 16:44:08 +0100	//new module version for gamification & themeinstallator
+2013-03-28 16:42:31 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-03-28 16:42:15 +0100	//check if module is already install before try to install
+2013-03-26 19:39:37 +0100	// Fixed error in gamification with AdminTab
+2013-03-26 18:26:32 +0100	//added contact us link in gamification
+2013-03-25 12:04:42 +0100	[*] TR : completed French translation for gamification and theme installer
+2013-03-22 18:02:41 +0100	//just css on gamifiaction
+2013-03-21 17:27:36 +0100	//
+2013-03-21 10:20:48 +0100	//new version gamification
+2013-03-21 10:16:58 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-03-21 10:16:52 +0100	//delete data folder when install gamification
+2013-03-21 10:07:39 +0100	// Fixed typo
+2013-03-20 18:41:47 +0100	//remove old code
+2013-03-20 18:32:30 +0100	//added tab in config.xml for gamification module
+2013-03-20 18:30:59 +0100	//gamification data folder added
+2013-03-20 17:38:11 +0100	//added new module gamification
+
+ganalytics/
+2014-04-17 11:52:08 +0200	// Version compliancy
+2014-04-01 18:02:34 +0200	[*] MO : Fix bug #PSCSX-1446 ganalytics, enable localstorage on confirmation
+2014-03-21 17:35:22 +0100	// MO Google Analytics : ps_versions_compliancy added
+2014-01-20 12:03:55 +0100	ganalytics : fix data sent upon 'addTransaction'
+2014-01-17 11:38:28 +0100	ganalytics : fix hard coded currency, tax and state //norm
+2014-01-03 10:08:47 +0100	[-] MO : fixed #PSCFV-11403 Analytics module is broken with the "universal analytics" option
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 16:23:10 +0100	Google Analytics : Version changed (v1.4.4)
+2013-12-18 09:07:28 +0100	Update header.tpl
+2013-12-18 09:06:35 +0100	Update header.tpl
+2013-12-18 09:05:48 +0100	Update header.tpl
+2013-12-12 12:03:35 +0100	Update header.tpl
+2013-12-12 12:02:47 +0100	Update header.tpl
+2013-12-12 11:24:43 +0100	Update ganalytics.php
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-11-28 22:36:24 -0600	[*]MO: ganlaytics Fixed typo in comment
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+gapi/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-11 11:48:12 +0100	[*] MO : more translatable strings in gapi module.
+2014-03-07 10:23:18 +0100	// Change gapi screenshot
+2014-03-03 16:07:20 +0100	[-] MO : Gapi - Fix help desc.
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+giveit/
+2014-04-16 18:53:39 +0200	Merge pull request #310 from remixaz/GIVEIT-58-js-minify-html
+2014-04-16 18:43:52 +0200	Give.it : Version changed
+2014-04-15 13:32:10 +0300	fixed problem connected with Minify HTML functionality
+2014-04-14 16:58:42 +0300	fixed problem connected with wrong help icon style on PrestaShop V 1.6; Added new setting of Debug / Production mode and realized its functionality to display error messages / HTML comments instead of missing Give.it buttons in Product page.
+2014-04-03 16:48:36 +0200	Give.it : Configuration data fixed
+2014-03-30 12:24:47 +0200	Give.it : Version changed
+2014-03-29 19:49:17 +0100	Replace 'home_default'to getFormatedName('medium')
+2014-03-28 11:13:17 +0100	fix prices
+2014-03-28 11:09:03 +0100	fix price
+2014-03-26 17:14:56 +0100	Give.it module added
+
+globkurier/
+2014-04-03 16:55:16 +0200	GlobKurier : Configuration data fixed
+2014-04-02 14:50:25 +0200	GlobKurier : Fixed admin view
+2014-03-28 16:10:09 +0100	// MO Globkurier : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:54:48 +0100	// MO Globkurier : ps_versions_compliancy added
+2014-01-21 15:57:55 +0100	// GlobKurier - Description updated
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:49:47 +0100	GlobKurier - New module added
+2013-12-10 09:14:19 +0100	GlobKurier - Module removed
+2013-12-02 11:18:03 +0100	GlobKurier - New module added (v1.0)
+
+gointerpay/
+2014-03-28 16:09:58 +0100	// MO Gointerpay : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:54:29 +0100	// MO Gointerpay : ps_versions_compliancy added
+2014-02-13 17:45:41 +0100	GoInterpay : Version number updated (v1.7.6)
+2014-02-13 17:44:20 +0100	GoInterpay : Use cast instead of intval()
+2014-02-04 18:14:56 +0100	Added intval when encoding id_category and id_product to JSON to avoid unneccesary double quotes around ids
+2014-02-04 18:10:10 +0100	Changed double to single quotes at checkbox value
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-18 21:56:15 +0100	GoInterpay - Bug fix undefined variable
+2013-11-14 19:51:47 +0100	GoInterpay - New module added (v1.7.4)
+
+graphnvd3/
+2014-04-22 19:07:14 +0200	// Changelog updated
+2014-04-22 18:58:39 +0200	// Changelog updated
+2014-04-17 11:58:28 +0200	[-] MO : graphnvd3 - Fix 1.5 ps_version_compliancy issue
+2014-03-24 15:21:45 +0100	/ MO graphnvd3 : ps_versions_compliancy added
+2014-03-20 14:33:52 +0100	Initial commit
+
+gridhtml/
+2014-04-22 19:07:17 +0200	// Changelog updated
+2014-04-22 18:58:41 +0200	// Changelog updated
+2014-04-17 11:33:15 +0200	[-] MO : gridhtml - Fix 1.5 ps_version_compliancy issue
+2014-04-16 13:36:40 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-16 13:26:45 +0200	// Missing closing parenthesis.
+2014-04-16 12:30:41 +0200	// gridhtml: mode description translatable.
+2014-03-24 15:21:48 +0100	/ MO gridhtml : ps_versions_compliancy added
+2014-03-20 14:35:17 +0100	Initial commit
+
+gsitemap/
+2014-04-22 18:52:40 +0200	// gsitemap: rewording.
+2014-04-17 12:07:18 +0200	[-] MO : gsitemap - Fix 1.5 ps_version_compliancy issue
+2014-04-01 12:09:25 +0200	// ++version
+2014-04-01 12:08:58 +0200	[-] MO : gsitemap : fix links not using https
+2014-03-24 11:14:30 +0100	[*] MO : updating labels and descriptions for GSitemap.
+2014-03-21 17:53:02 +0100	// MO Google Sitemap : ps_versions_compliancy added
+2014-03-17 14:38:53 +0100	// gsitemap : sql fix
+2014-03-12 15:14:37 +0100	// gsitemap : smallfix
+2014-03-11 15:35:20 +0100	// gsitemap : fix an issue with multishop & norm
+2014-02-13 18:06:17 +0100	Google Sitemap : Version number changed (v2.3.3)
+2014-02-09 12:43:35 +0000	Update gsitemap.php
+2014-02-07 10:57:59 +0000	Update gsitemap.php
+2014-02-07 10:49:32 +0000	Update gsitemap.php
+2014-01-17 09:00:37 +0100	[*] Modules: Avoid return when OK
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 12:46:44 +0100	[-] BO : different argument when function called
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-11-11 14:18:28 +0100	// Google Sitemap - Version updated (v2.3.2)
+2013-11-11 05:16:31 -0800	Merge pull request #117 from tucoinfo/master
+2013-11-06 09:33:42 +0200	[-] MO gsitemap: fix incorrect date format of lastmod
+2013-11-05 10:57:52 +0100	[-] MO gsitemap: lastmod ISO date formatting with PHP 4/5 compat
+2013-10-30 02:29:39 -0700	Merge pull request #100 from younesszed/master
+2013-10-23 17:12:59 +0200	// missing file
+2013-10-23 01:32:12 -0700	Merge pull request #103 from codeurWeb/patch-2
+2013-10-22 12:32:52 -0400	[+] MO: add missing folder
+2013-10-20 19:16:08 +0200	[-] MO : Fix multi-shop categories links on gsitemap.php
+2013-10-20 18:50:17 +0200	[-] MO : Fix multi-shop products links on gsitemap.php
+2013-10-18 10:04:43 +0200	GSiteMap - Version updated (v2.3)
+2013-10-17 18:31:33 +0200	[-] MO gsitemap: fix incorrect lastmod
+2013-09-26 12:10:54 -0400	[-] MO : Bug fix #PNM-1735 : Google Sitemap
+2013-09-23 11:36:10 +0200	// Manual merge
+2013-09-17 10:36:12 +0100	PNM-1662
+2013-09-12 22:04:35 +0200	Google Sitemap - Update (v2.2.8)
+2013-08-29 15:29:49 +0200	// updated translations
+2013-08-26 11:02:40 +0200	// updated translations
+2013-07-31 10:05:59 +0200	// Google Sitemap : Bug fix - Categories & CMS links generation
+2013-07-17 18:00:16 +0200	// gsitemap : Module version updated
+2013-07-17 17:55:30 +0200	// Merge fixed
+2013-07-17 17:51:37 +0200	Merge branch 'patch-1' of https://github.com/agusjar/PrestaShop-modules into agusjar-patch-1
+2013-07-15 19:04:54 +0200	// Fixed hardcoded DB prefix
+2013-07-12 10:34:32 -0400	[-] MO : Gsitemap - Bug fix when upgrading
+2013-07-12 14:58:36 +0200	Update gsitemap.php
+2013-07-09 14:51:42 +0200	// Update gsitemap module
+2013-07-09 11:07:01 +0200	[*] MO : Correct Google sitemap generation if id_lang = 1 doesn't exist
+2013-07-01 11:47:41 +0200	[-] MO : fixed bug #PNM-1495 - Use the tools class for the download
+2013-07-01 11:33:57 +0200	[-] MO : fixed bug #PNM-1499 - consider not to add cms pages, which are contained in a deactivated cms category
+2013-07-01 10:32:35 +0200	[*] MO : sitemap improved
+2013-05-16 15:47:29 +0200	// License headers updated
+2013-05-16 11:28:57 +0200	Merge branch 'patch-1' of https://github.com/nanowish/PrestaShop-modules into nanowish-patch-1
+2013-04-23 17:25:34 +0200	[*] TR : completed French translation of some modules
+2013-04-22 17:36:42 +0300	Using url_rewrite from 'meta_lang' when rewriting translated
+2013-04-15 09:55:49 +0200	// missing here too....
+2013-04-15 10:52:24 +0300	// something was missing
+2013-04-15 09:41:34 +0200	// fix php notice and cron
+2013-04-05 18:25:18 +0200	[+] MO : Google Sitemap module added
+
+hipay/
+2014-03-28 16:09:37 +0100	// MO Hipay : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:34:21 +0100	// MO Hipay : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-09-11 14:26:53 +0200	Hipay - Bug fix, URL rewriting
+2013-08-14 10:35:45 +0200	// HiPay - Merge done
+2013-08-09 11:58:06 +0200	new HiPay
+2013-08-07 16:43:00 +0200	Delete hipay.png
+2013-08-07 12:08:12 +0200	Update mapi_paymentparams.php
+2013-08-07 12:06:14 +0200	Update hipay.php
+2013-07-19 14:55:22 +0200	[-] MO : Hipay - safeOutput() added
+2013-07-18 15:52:28 +0200	[-] MO hipay : Configure module is fixed
+2013-05-28 11:22:36 +0200	[-] MO : Fix bug #PSCFI-6777, bad canonical url for payment.php for modules
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-07 11:58:45 +0100	[*] MO : #PNM-888 : Hipay, Check presence of Soap library
+2013-02-07 10:59:56 +0100	[*] MO : #PNM-688 : Hipay, Added issuer account login information
+2013-01-22 16:36:45 +0100	[-] MO : Bug fix : Hipay, Shop domain
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+homefeatured/
+2014-04-22 19:07:19 +0200	// Changelog updated
+2014-04-22 18:58:43 +0200	// Changelog updated
+2014-04-07 18:48:47 +0200	// typo
+2014-04-07 18:46:31 +0200	[-] FO : Fix css bug #PSCFV-11485 for 1.5
+2014-03-20 14:35:19 +0100	Initial commit
+
+homeslider/
+2014-04-22 18:57:36 +0200	Merge pull request #2 from xBorderie/patch-2
+2014-04-22 18:55:05 +0200	// homeslider: better wording.
+2014-04-17 10:51:46 +0200	[*] MO : homeslider - Improved image name for SEO #PSCSX-1800
+2014-04-11 17:51:47 +0200	// Version changed
+2014-04-11 17:47:13 +0200	[-] MO : homeslider - corrected images/img folder issue
+2014-04-11 10:05:07 +0200	// Missing file
+2014-04-11 10:03:20 +0200	// Fix missing images directory
+2014-04-10 14:09:31 +0200	// version
+2014-04-10 14:06:09 +0200	// Function exists brace
+2014-04-10 12:53:36 +0200	// version++
+2014-04-10 12:50:23 +0200	// Add function_exist
+2014-04-10 11:35:06 +0200	// Merge from dev
+2014-04-10 11:26:09 +0200	// reverted directory name change
+2014-04-09 14:20:25 +0200	[-] MO : homeslider - resolve #PSCSX-1529 responsive issue
+2014-04-09 11:54:04 +0200	// ++version
+2014-04-09 11:53:50 +0200	// missing function
+2014-04-09 11:45:48 +0200	// ++version
+2014-04-09 11:44:36 +0200	// missing function
+2014-04-08 11:28:57 +0200	// missing default img
+2014-04-08 11:27:02 +0200	// images moved to img
+2014-04-03 15:18:40 +0200	/ Small bug fix
+2014-04-03 15:07:14 +0200	[-] FO : Fixed display issues #PSCSX-1529
+2014-04-01 16:12:41 +0200	// homeslider new module version
+2014-03-27 16:49:55 +0100	// Update version
+2014-03-27 16:49:32 +0100	Compat 1.5
+2014-03-27 15:43:00 +0100	[-] MO : HomeSlider - FixBug #PSCSX-1171 - IE11 additional label
+2014-03-27 11:18:49 +0100	[*] MO : homeslider : added informations about max image upload
+2014-03-26 10:26:30 +0100	// homeslider cache fix
+2014-03-25 16:31:37 +0100	Merge branch 'master' of https://github.com/PrestaShop/homeslider
+2014-03-25 16:31:24 +0100	// homeslider bad cache
+2014-03-25 11:58:25 +0100	Merge branch 'master' of https://github.com/PrestaShop/homeslider
+2014-03-25 11:00:39 +0100	// homeslider tpl Syntax Error in template before 1.6
+2014-03-25 10:10:06 +0100	// Update version number
+2014-03-24 15:22:04 +0100	/ MO homeslider : ps_versions_compliancy added
+2014-03-24 12:09:00 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-24 11:47:55 +0100	[-] BO : Clear cache after slide update
+2014-03-20 17:14:21 +0100	// It's "caption", not "legend".
+2014-03-20 14:35:22 +0100	Initial commit
+
+itembase/
+2014-03-28 16:09:08 +0100	// MO Itembase : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:54:59 +0100	// MO Itembase : ps_versions_compliancy added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-02-27 11:14:43 +0100	// ItemBase, new version (CH, DE, GB)
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-15 16:38:33 +0100	[-] MO : Bug fix : Removed &amp; from config file (XML parsing issues)
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-13 15:54:01 +0100	// ItemBase, module added
+
+kiala/
+2014-03-28 16:08:53 +0100	// MO Kiala : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:52:05 +0100	// MO Kiala : ps_versions_compliancy added
+2013-08-08 12:02:10 +0200	// Kiala - Translation updated
+2013-03-15 11:28:10 +0100	[-] MO : Modules updated for russian translations compatibility
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+kialasmall/
+2014-03-28 16:08:45 +0100	// MO Kialasmall : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:51:56 +0100	// MO Kialasmall : ps_versions_compliancy added
+2013-09-10 20:36:25 +0200	// Norm fixed
+2013-09-10 00:55:38 +0200	//default case
+2013-09-09 01:10:49 +0200	[+] MO: kialasmall / add BE, FR & NL dspid
+2013-09-08 23:01:49 +0200	// Kiala small - Version changed (v1.4.1)
+2013-09-08 23:01:13 +0200	Merge branch 'patch-4' of https://github.com/PrestaEdit/PrestaShop-modules into PrestaEdit-patch-3
+2013-09-08 22:58:30 +0200	[-] MO: kialasmall / img doesn't exist
+2013-09-08 22:55:34 +0200	[-] MO: kialasmall / correct img path
+2013-02-07 13:54:47 +0100	// Kiala Light, config.xml updated
+2013-02-06 15:22:55 +0100	[-] MO : Bug fix : Kiala, delivery point display
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+klarnaprestashop/
+2014-03-28 16:08:31 +0100	// MO Klarna : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:50:13 +0100	// MO Klarna : ps_versions_compliancy added
+2014-03-10 10:18:55 +0100	Klarna - Bug fix backward_compatibility
+2014-01-02 18:32:38 +0100	//new icon for gamification notification
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2014-01-02 10:24:06 +0100	PayPal USA - Backward compatibility removed
+2014-01-02 10:23:23 +0100	Klarna - Backward compatibility removed
+2013-04-03 15:44:29 +0200	[-] MO : Bug fix : Klarna, install missing languages packs (mails)
+2013-04-02 19:45:30 +0200	// Update Klarna
+2013-03-04 13:29:25 -0500	[*] MO : new version of avalaratax module with the verification of the address
+2013-02-21 12:17:01 +0100	[-] MO : Bug fix #PNM-998 : Klarna, encoding fixed
+2013-02-20 17:00:25 +0100	[-] MO : Bug fix : Klarna, installation (SQL)
+2013-02-20 16:13:27 +0100	[-] MO : Jirafe, Undefined index
+2013-02-08 11:02:14 +0100	[*] MO: KlarnaModule, new version
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-31 09:13:46 -0500	[+] MO : Add new module klarnaPrestaShop
+
+kwixo/
+2014-04-17 16:52:46 +0200	Update KwixoOrderDetails.class.php
+2014-04-17 16:45:15 +0200	Update tagline.tpl
+2014-04-17 16:43:48 +0200	Update admin.tpl
+2014-04-17 16:34:02 +0200	Update tagline.php
+2014-04-17 16:32:17 +0200	Update sendtoKwixo.php
+2014-04-17 16:31:15 +0200	Update push.php
+2014-04-17 16:30:19 +0200	Update payment_return.php
+2014-04-17 16:26:45 +0200	Update KwixoUrlSysFrontController.php
+2014-04-17 16:21:06 +0200	Update KwixoUrlCallFrontController.php
+2014-04-17 16:19:40 +0200	Update KwixoService.class.php
+2014-04-17 16:16:39 +0200	Update KwixoFrontController.php
+2014-04-17 16:15:15 +0200	Update kwixo.php
+2014-04-16 11:14:04 +0200	Update KwixoFrontController.php
+2014-04-10 10:12:47 +0200	Adaptation code for Prestashop validator
+2014-03-28 16:08:18 +0100	// MO Kwixo : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:49:49 +0100	// MO Kwixo : ps_versions_compliancy added
+2014-01-21 09:45:49 +0100	// Kwixo - Norm fixed
+2014-01-21 09:35:11 +0100	// Kwixo - Merge fixed
+2014-01-07 16:23:24 +0100	manage kwixo deliveries and module update
+2014-01-07 12:23:07 +0100	apply kwixo delivery priority
+2014-01-07 12:21:56 +0100	update template for delivery by categories and carrier
+2014-01-07 12:19:16 +0100	management of priority tag reviewed
+2014-01-07 12:17:00 +0100	update version
+2014-01-07 12:09:01 +0100	update translation
+2014-01-07 12:07:19 +0100	path contact link added
+2014-01-07 12:06:14 +0100	path contact link added
+2014-01-07 12:05:37 +0100	update version number
+2014-01-07 12:04:02 +0100	update version number
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-03 05:22:58 -0800	Merge pull request #135 from yanncyrille/sceau_branch
+2013-11-25 10:46:48 +0100	update payment return
+2013-11-25 10:41:13 +0100	update module for So Colissimo delivery
+2013-11-25 10:39:00 +0100	update orderhistory management
+2013-11-25 10:37:42 +0100	update xml with point-relais and socolissimo informations
+2013-11-25 10:36:20 +0100	update api for point-relais
+2013-11-25 10:35:46 +0100	update api and module version
+2013-11-25 10:34:49 +0100	remove comments
+2013-11-25 10:29:26 +0100	update admin tpl for So Colissimo options
+2013-11-25 10:28:29 +0100	update kwixo message return
+2013-11-25 10:27:34 +0100	update kwixo message return
+2013-11-25 10:26:24 +0100	update traduction
+2013-11-25 10:25:51 +0100	update module version
+2013-09-12 14:19:34 +0200	Fix kwixo log path error
+2013-09-12 10:45:51 +0200	Kwixo - Update (v1.6.2)
+2013-07-17 18:07:23 +0200	// Kwixo norm fixed
+2013-07-17 15:07:11 +0200	Fix transport problem on PS 1.5 when onepagecheckout is used
+2013-07-17 15:05:17 +0200	Update executeTagline function
+2013-07-17 15:03:48 +0200	Update API number version used in xml
+2013-07-17 15:02:04 +0200	Update template with javascript functions
+2013-07-17 15:00:43 +0200	Update Kwixo logo
+2013-07-17 15:00:33 +0200	Update Kwixo logo
+2013-07-17 14:59:50 +0200	Remove javascipt file inclusion in HookHeader and update number version to 6.1
+2013-07-17 14:57:50 +0200	Update number version
+2013-06-26 14:54:27 +0200	[*] MO : Kwixo : New module added
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+loyalty/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-02-24 18:52:13 +0100	// update version numbers for 1.6 release
+2014-02-24 15:01:42 +0100	[*] MO : Fix add version check for switch input type
+2014-02-20 16:36:45 +0100	[*] MO : Fix retrocompat 1.5, override form.tpl for 'switch' input type
+2014-02-17 12:31:32 +0100	[-] MO: Loyalty, Add retro compatibility with PS 1.5
+2014-02-11 18:49:05 +0100	[-] MO : Loyalty - Fixed retro compatibility for category tree
+2014-02-06 16:39:15 +0100	// loyalty : norm
+2014-01-17 15:53:30 +0100	[+] MO : Loyalty add js call
+2014-01-07 09:28:19 +0100	// loyalty : fix button color
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 09:46:58 -0800	Merge pull request #170 from djfm/lint
+2013-12-26 18:44:33 +0100	// added missing mod= to l calls in module templates
+2013-12-26 11:20:36 +0100	[*] MO : Loyalty  : The validity period of a point can now be set in the module configuration
+2013-12-04 18:26:59 +0100	[*] MO : Loyalty Merge of https://github.com/PrestaShop/PrestaShop-modules/pull/145
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+mailalerts/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-18 14:12:24 +0100	// mail alerts : version update
+2014-03-18 11:58:30 +0100	[*] MO: updating labels and descriptions for Mailalerts.
+2014-03-11 09:16:07 +0100	Update mailalerts.php
+2014-03-04 18:07:27 +0100	mailalerts : reset functionality added + norm
+2014-02-24 18:52:13 +0100	// update version numbers for 1.6 release
+2014-02-24 15:01:42 +0100	[*] MO : Fix add version check for switch input type
+2014-02-21 16:54:06 +0100	[*] MailAlerts : remove double product (initialization), see PR #244
+2014-02-20 12:54:57 +0200	[-] MO : Mailalerts : Fixed bug with textarea size in module config
+2014-02-16 23:04:46 +0100	// mailalert.js on front account
+2014-02-16 22:39:45 +0100	// mailalert myaccount ssl
+2014-02-13 18:10:50 +0100	// smallfix
+2014-02-13 18:09:19 +0100	Merge pull request #219 from indesign47/patch-10
+2014-02-12 09:29:24 +0100	mailalerts : fix when deleting an alert
+2014-01-30 18:50:51 +0100	[-] MO : mailalerts : new order translation works!
+2014-01-30 14:25:37 +0100	Revert delete fix
+2014-01-20 08:18:44 +0100	[-] MO : mailalerts : btn btn-default > right
+2014-01-17 14:45:31 +0100	[*] MO : Mailalert on product page only
+2014-01-15 18:19:31 +0100	[-] MO : Mailalert, rtrimString not retro compatible
+2014-01-15 16:41:52 +0100	[-] MO : mailalerts : btn btn-default > right
+2014-01-07 13:54:21 +0100	mailalerts removed icon on "my account" block
+2014-01-07 13:51:20 +0100	mailalerts fix delete customer's alert
+2014-01-07 13:09:23 +0100	// mailalert config.xml version++
+2014-01-06 11:57:01 +0100	mailalerts : Change 'new order' email object to the same format as shown in the BO
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-30 16:56:38 +0100	[-] MO : mailalert : fixed issue when saving emails
+2013-12-30 10:54:58 +0100	// could not uninstall mailalert
+2013-12-23 09:06:29 +0100	mailalerts fix new order mail subject
+2013-12-11 12:13:58 +0100	[*] MO: mailalerts - reference instead id_order in mail subject
+2013-12-04 12:11:35 +0100	// fixed parse error in mailalerts
+2013-11-28 18:41:51 +0100	[*] MO : Mailalert Merge of https://github.com/PrestaShop/PrestaShop/pull/479
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+mailjet/
+2014-04-03 17:54:46 +0200	Mailjet : Configuration data fixed
+2014-03-28 16:08:05 +0100	// MO Mailjet : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:49:23 +0100	// MO Mailjet : ps_versions_compliancy added
+2013-04-23 14:45:52 +0200	// French descriptions updated
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-14 18:25:29 +0100	// French translations
+2013-01-11 16:14:49 +0100	[*] MO : MailJet, module updated v1.3
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+merchantware/
+2014-03-28 16:07:51 +0100	// MO Merchantware : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:48:58 +0100	// MO Merchantware : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-08-28 11:23:25 +0200	// Fixed comma bug on merchantwarehouse
+2013-06-26 11:02:31 +0200	// Merchantware version changed
+2013-06-26 10:59:18 +0200	[-] MO : Merchantware : Bug fix ($id_cart)
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-14 18:25:29 +0100	// French translations
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+mondialrelay/
+2014-03-28 16:07:34 +0100	// MO MondialRelay : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-25 18:45:19 +0100	[-] MO MondialRelay : Module updated for PS1.6 - Fixed multiple JavaScript and PHP errors - Added jQuery selectors for PrestaShop 1.6, and changed parent(...) with closest(...). - Added json_decode to allow smarty to use encoded information.
+2014-03-21 17:48:25 +0100	// MO MondialRelay : ps_versions_compliancy added
+2014-03-06 14:04:43 +0100	[-] MO Mondial Relay : Improvement
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-06-19 10:48:42 +0200	[-] MO : Mondial Relay : index.php file added
+2013-06-19 10:41:31 +0200	[-] MO : Mondial Relay : Fixed default value for deleted carrier
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-03-04 09:53:49 +0100	Merge branch 'development'
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-11 14:19:37 +0100	City name regex update
+2013-02-11 09:22:15 +0100	// Merge development branch
+2013-01-31 09:44:26 +0100	[*] MO : #PNM-334 : MondialRelay, description added
+2013-01-04 11:50:15 +0100	Merge branch 'development'
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-19 05:58:41 +0100	Update mondialrelay/classes/MRCreateTickets.php
+2012-12-05 10:32:01 +0100	[-] MO : Bug fix : Mondial Relay, JS compatibility with PS 1.4
+2012-12-04 17:17:59 +0100	[-] MO : Bug fix : Mondial Relay, JS compatibility with PS 1.4
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+moneybookers/
+2014-04-03 18:12:09 +0200	MoneyBookers : Configuration data fixed
+2014-03-28 16:07:14 +0100	// MO Moneybookers : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:51:02 +0100	// MO Moneybookers : ps_versions_compliancy added
+2013-07-11 14:55:24 +0200	[-] MO : MoneyBookers - Fixed logos URLs
+2013-02-15 11:13:53 +0100	[*] MO : #PNM-303 : MoneyBookers, Existing account block moved
+2012-11-23 15:43:20 +0100	[*] MO : Moneybookers & SoColissimo version number updated
+2012-11-23 14:50:30 +0100	[-] MO : Bug fix : Moneybookers - Payment logos url fixed when using URL Rewrite
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+newsletter/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-01-21 11:15:26 +0100	// newsletter : norm
+2014-01-20 09:05:28 +0100	[-] MO : newsletter : btn btn-default > right
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+nqgatewayneteven/
+2014-03-28 16:06:48 +0100	// MO nqgatewayneteven : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:47:23 +0100	// MO nqgatewayneteven : ps_versions_compliancy added
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-10 15:34:54 +0100	NetEven : merged
+2014-02-25 19:04:06 +0100	Fixe display notice
+2014-02-24 16:24:45 +0100	fixe bug duplicate order status with order multi-product
+2014-01-30 17:11:10 +0100	file XML : change module version to 2.6
+2014-01-30 17:05:53 +0100	// NetEven - config.xml updated
+2014-01-30 17:04:12 +0100	Merge branch 'master' of https://github.com/nqteam/PrestaShop-modules into nqteam-master
+2014-01-30 16:59:14 +0100	change module version to 2.6
+2014-01-30 16:57:23 +0100	add correctly features NetEven's files
+2014-01-30 16:56:42 +0100	remove all features NetEven's files
+2014-01-29 11:30:37 +0100	// NetEven - Norm fixed
+2014-01-29 11:24:37 +0100	Merge branch 'master' of https://github.com/nqteam/PrestaShop-modules into nqteam-master
+2014-01-28 11:47:39 +0100	change version module 2.5
+2014-01-28 11:36:52 +0100	change create employee
+2014-01-28 11:36:15 +0100	add gift message empty
+2014-01-17 10:00:52 +0100	no message
+2014-01-17 09:55:37 +0100	add order by position for image
+2014-01-06 19:08:50 +0100	refund presta to NetEven order's Neteven
+2014-01-06 11:20:17 +0100	NetEven - config.xml, version number updated
+2014-01-06 11:19:15 +0100	Merge branch 'master' of https://github.com/nqteam/PrestaShop-modules into nqteam-master
+2014-01-06 11:18:36 +0100	fixe bug installation module
+2014-01-06 10:58:53 +0100	change translate carrier france to carrier local
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-12-03 18:00:42 +0100	NetEven : Module merged (v2)
+2013-12-03 10:56:13 +0100	fixe error on cookie var
+2013-12-03 10:52:11 +0100	add set properties "newsletter" and "option" on customer for override customer (don't accept "newsletter" and "option" empty)
+2013-12-02 15:33:46 +0100	add CSV file feature NetEven and change version module en 2.3
+2013-12-02 15:30:04 +0100	Fixe bug no product on invoice prestashop and change version 2.2
+2013-12-02 15:05:56 +0100	Change version to 2.1
+2013-12-02 15:04:50 +0100	choose type SKU (reference or id)
+2013-12-02 14:58:09 +0100	respect Norme Prestashop
+2013-12-02 10:27:18 +0100	Retieve prestashop version
+2013-11-27 10:56:05 +0100	choose type SKU (reference or id)
+2013-11-25 17:22:02 +0100	NetEven - Module updated (v2)
+2013-11-22 10:13:00 +0100	add carrier NetEven
+2013-11-22 08:49:01 +0100	remove live synchro and up version module to v2
+2013-11-14 11:59:36 +0100	change version module 1.9 and remove live synchro with NetEven's web service and change test to get taxe rate
+2013-11-05 09:57:27 +0100	correction method method_exists to static method
+2013-11-05 09:40:43 +0100	add csv file to add feature NetEven
+2013-11-05 09:38:23 +0100	change retrieve taxe carrier for prestashop 1.4.8.2 and change version module 1.7.9
+2013-10-30 09:59:42 +0100	Change retrieve taxe info to create order
+2013-10-03 16:15:29 +0200	// Neteven: Trick for the webservice
+2013-09-05 10:33:05 +0200	// NetEven - Module version updated
+2013-09-05 10:31:47 +0200	Merge branch 'master' of https://github.com/nqteam/PrestaShop-modules into nqteam-master
+2013-08-22 11:18:11 +0200	Change name variable and change version module 1.7.6.5
+2013-08-06 13:38:44 +0200	// NetEven - config.xml updated
+2013-08-05 11:20:36 +0200	Modification tag and change version script
+2013-07-31 10:32:44 +0200	// NetEven : Module merged (v1.7.5)
+2013-07-23 16:28:22 +0200	add height, width, depth and weight for send to NetEven and change version module to 1.7.5
+2013-07-23 14:35:45 +0200	change version module
+2013-07-23 14:35:03 +0200	Upgrade shipping part
+2013-07-19 15:52:56 +0200	[-] MO : NetEven - New module (v1.7.3)
+2013-07-19 15:10:39 +0200	Merge branch 'master' of https://github.com/nqteam/PrestaShop-modules into nqteam-master
+2013-07-17 18:39:58 +0200	change test mail NetEven Validate::isEmail('') => true ... And change version module 1.7.3
+2013-07-17 16:28:02 +0200	change number_format and change version module 1.7.2
+2013-07-15 15:01:27 +0200	change version module
+2013-07-15 15:01:04 +0200	change send methode mail to send the request XML by classic mail PHP
+2013-07-15 12:25:24 +0200	add calcul shipping price by carrier and zone and change version module 1.7
+2013-07-15 10:39:09 +0200	debug add statut order after and before statut "Commande NetEven", change image link delete and cahnge version module to 1.6.5
+2013-07-15 10:08:53 +0200	add htmlspecialchars to send XML request by mail and change version module
+2013-07-11 16:42:35 +0200	change inversion traduction on tpl and change module version to 1.62
+2013-07-11 16:22:57 +0200	change save feature NetEven on prestashop and change module version
+2013-07-11 14:46:19 +0200	remove display log to save feature NetEven into module installation
+2013-07-04 14:11:54 +0200	// NetEven : Version updated in config.xml
+2013-07-04 12:13:01 +0200	add new documentation and change link on tpl
+2013-07-04 12:04:17 +0200	add all traduction
+2013-07-04 11:49:26 +0200	add private message on order
+2013-07-04 11:40:46 +0200	change : - generate reference order - "log" import feature NetEven - add btn synchronisation order, product, feature NetEvn into module - change version module 1.6
+2013-07-02 18:02:36 +0200	add multi boutique order
+2013-06-26 15:16:54 +0200	add systeme traduction on text intro module
+2013-06-26 15:08:55 +0200	fixe file lang en (missing ";")
+2013-06-26 15:04:28 +0200	add file feature NetEven
+2013-06-25 17:33:46 +0200	Add documentation and link this into module
+2013-06-25 12:03:53 +0200	Change for synchronisation order work !
+2013-06-20 17:09:32 +0200	add translation files
+2013-06-20 16:08:25 +0200	Change operation kewords NetEven
+2013-06-20 15:04:03 +0200	Add directory logs/
+2013-06-20 14:49:31 +0200	Add support tag Prestashop for send to Keywords NetEven
+2013-06-19 10:42:40 +0200	fix bug recovery attribute value for send on NetEven
+2013-06-19 09:59:34 +0200	Add company on addresses, and fixe bug billing adresse update
+2013-06-18 09:58:49 +0200	Changement sur l'envoi du code ean : afin d'envoyer une valeur vide si celui-ci n'est pas renseigné
+2013-06-14 14:32:25 +0200	Add array reverse on catégorie array for "classification" NetEven
+2013-06-12 15:55:31 +0200	Fixe synchonisation product
+2013-06-12 10:32:12 +0200	[-] MO : NetEven : Warnings in back-office (logs files)
+2013-05-29 18:02:16 +0200	[-] MO : NetEven : Fixed PrestaShop 1.4 compatibility
+2013-05-29 16:14:07 +0200	[+] MO : NetEven : New module added
+
+ogone/
+2014-03-28 16:06:30 +0100	// MO Ogone : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:47:55 +0100	// MO Ogone : ps_versions_compliancy added
+2014-02-28 16:45:40 +0100	[-] Ogone : #PNM-2094 Fix design issue on PrestaShop 1.6
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-07-17 18:09:36 +0200	// Ogone : Module version updated
+2013-07-17 18:09:02 +0200	Merge branch 'master' of https://github.com/mendesk/PrestaShop-modules into mendesk-master
+2013-07-11 11:55:25 +0200	[*] MO : Ogone - pcc was never used/set
+2013-07-11 11:45:14 +0200	[-] MO : Ogone - Form submit fixed
+2013-06-26 12:33:42 +0200	[-] MO : Ogone : insecure content fix
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-01-31 11:39:43 +0100	[-] MO : Bug fix : Ogone, check html variable is set
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+pagesnotfound/
+2014-04-23 14:32:38 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-23 11:42:54 +0200	// pagesnotfound: rewording.
+2014-04-23 11:34:28 +0200	// pagesnotfound: simplified strings.
+2014-04-23 11:26:00 +0200	// pagesnotfound: rewording.
+2014-04-22 18:58:54 +0200	// Changelog updated
+2014-04-17 11:35:25 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-03-24 15:22:14 +0100	/ MO pagesnotfound : ps_versions_compliancy added
+2014-03-20 14:35:27 +0100	Initial commit
+
+pagseguro/
+2014-03-28 16:05:19 +0100	// MO Pagseguro : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:44:53 +0100	// MO Pagseguro : ps_versions_compliancy added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-07-22 17:14:02 +0200	// PagSeguro - New module updated
+2013-06-20 18:06:53 +0200	[+] MO : Pagseguro : New module added
+
+paymentsense/
+2014-03-28 16:05:06 +0100	// MO PaymentSense : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:45:49 +0100	// MO PaymentSense : ps_versions_compliancy added
+2014-01-27 10:31:46 +0100	// PaymentSense - Version updated (v1.9.7)
+2014-01-24 09:23:25 +0000	Update Gateway Password Validation
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-02 09:08:30 +0100	PaymentSense - Version updated (v1.9.6)
+2013-11-29 10:20:20 +0000	Validation on Gateway MerchantID edit to allow numbers
+2013-11-18 21:52:42 +0100	PaymentSense - Bug fix ENT_HTML401
+2013-10-11 11:44:13 +0200	[+] MO : PaymentSense - New module added
+
+paypal/
+2014-03-28 16:04:50 +0100	// MO PayPal : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:43:43 +0100	// MO PayPal : ps_versions_compliancy added
+2014-03-10 23:09:27 +0100	PayPal : Fixed tandards
+2014-03-10 17:59:41 +0100	[*] MO - Paypal : function formatting for comp function
+2014-03-10 17:52:06 +0100	[*] MO - Paypal : don’t use table and smartphone tracking code when using mobile without prestashop mobile theme
+2014-02-26 15:02:58 +0100	[+] MO - Paypal : new version of module 3.6.6
+2014-02-26 11:22:22 +0100	[*] MO - Paypal : be sure that float numbers that are sent to Paypal are use with 2 numbers after the coma
+2014-02-24 11:16:54 +0100	[*] MO - Paypal : support for http1.1 request
+2014-02-24 10:53:06 +0100	[*] MO - Paypal : don’t use bccomp anymore because it is not added in all the default versions of PHP. Use homemade function (http://www.php.net/manual/en/function.bccomp.php)
+2014-01-29 11:20:59 +0100	// .gitignore files updated
+2014-01-29 10:36:48 +0100	Merge branch 'paypal_development' of https://github.com/thoma202/PrestaShop-modules into thoma202-paypal_development
+2014-01-24 02:36:15 -0800	Merge pull request #101 from kpodemski/paypal-fixes
+2014-01-23 23:07:17 +0100	[*] MO - Paypal : Gitignore
+2014-01-23 22:51:37 +0100	[*] MO - Paypal : Changed version
+2014-01-23 19:52:33 +0100	[~] MO - Paypal Added the translations for new feature
+2014-01-21 12:01:14 +0100	[+] Added evolution to choose iframe or redirection
+2014-01-21 11:18:33 +0100	[+] MO Paypal : added token
+2014-01-20 16:19:11 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules into paypal_development
+2014-01-20 16:18:28 +0100	[+] MO - Paypal : added tracking codes for each solution
+2014-01-07 14:31:38 +0100	PayPal - Merge fixed
+2014-01-07 11:52:11 +0100	[+] MO - Paypal : front office of evolution iframe or redirection
+2014-01-06 18:44:37 +0100	[+] MO : Paypal : backoffice for layout template HSS
+2014-01-03 07:00:43 -0800	Merge pull request #172 from Shoprunners/patch-1
+2014-01-03 05:54:55 -0800	Merge pull request #160 from Prestastrap/PNM1510
+2014-01-03 14:49:00 +0100	PayPal : Bug fix #PNM-1925 - getGiftWrappingPrice() & PS Version
+2014-01-03 14:45:07 +0100	PayPal : Conflict fixed
+2014-01-03 14:38:52 +0100	Merge branch 'patch-1' of https://github.com/m-hume/PrestaShop-modules into m-hume-patch-1
+2014-01-03 11:16:28 +0100	// Fixed non wanted space before php tag
+2014-01-02 14:42:23 +0100	[BO] Bugfix: read transaction_id from array
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 15:32:01 +0100	PayPal : Gitignore file added (logos)
+2013-12-20 15:28:53 +0100	Merge branch 'paypal_development' of https://github.com/thoma202/PrestaShop-modules into thoma202-paypal_development
+2013-12-20 10:27:40 +0100	[*] Begin evolution to let the user the choice of which integration he wants on EC (iframe or redirection)
+2013-12-17 11:23:01 +0100	[*] Deleted image logo because they are now retrieved dynamically
+2013-12-13 18:55:34 +0530	Fixes PNM-1510. Called the correct method Hook::getModulesFromHook instead of getModuleFromHook
+2013-12-13 18:34:08 +0530	Fixes PNM-1925. Added correct version check before calling Cart::getGiftWrappingPrice() method
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-12-03 18:58:32 +0100	MO Paypal : Fixed error 10486
+2013-11-19 11:53:45 +0000	[-] FO : Duplicate data-ajax="false" in express_checkout_short_form.tpl
+2013-11-19 00:51:54 +0000	Guest checkout bug
+2013-11-18 18:18:32 +0100	[*] Paypal - Added the ability to modify address in PS when modifying in Paypal
+2013-11-14 11:11:08 +0100	[+] Modified by PS
+2013-11-14 11:10:15 +0100	[+] Added last modifications made by PrestaShop (IPN)
+2013-10-19 13:32:57 +0200	[-] MO : PayPal - avoid conflicts in css
+2013-10-09 16:33:19 +0200	[-] MO : PayPal - Bug fix, notifier
+2013-09-12 17:36:06 +0200	PayPal : Bug fix - 1.4 Compatibility and Integral Evolution notifier
+2013-09-11 11:23:46 +0200	[*] MO : PayPal - Added confirmation on capture button
+2013-09-06 17:34:21 +0200	[-] MO : PayPal - Bug fix, CSS in back-office, IPN confirmation and stock availability
+2013-08-13 15:26:59 +0200	[-] MO : PayPal - Bug fix, back-office & fancybox
+2013-07-26 11:20:08 +0200	// PayPal : Back-office CSS bug fix
+2013-07-24 09:58:51 +0200	[-] MO : PayPal - CSS updated to work with the new Fancybox version
+2013-07-23 14:47:34 +0200	[*] MO : PayPal - Attributes added right after the product name
+2013-06-20 10:14:21 +0200	[-] MO : PayPal : Fixed current shop URL (Apache vs Nginx)
+2013-06-17 18:30:25 +0200	[-] MO : PayPal : Bug fix cancel URL generation
+2013-06-14 15:58:56 +0200	[-] MO : PayPal : Bug fix current page URL
+2013-06-13 15:46:41 +0200	// PayPal : Version num. updated
+2013-06-13 15:45:32 +0200	// Norm fixed
+2013-06-13 15:44:35 +0200	Merge branch 'patch-1' of https://github.com/Dh42/PrestaShop-modules into Dh42-patch-1
+2013-06-13 15:43:58 +0200	// Norm fixed
+2013-06-13 15:36:34 +0200	Merge branch 'master' of https://github.com/alexsegura/PrestaShop-modules into alexsegura-master
+2013-06-13 15:32:29 +0200	[-] MO : PayPal : Selected language fixed
+2013-06-07 17:10:16 -0500	This makes paypal express work with countries with states
+2013-06-02 18:20:16 +0200	Paypal: Missing smarty PayPal_current_page keyword definition
+2013-05-27 15:35:52 +0200	Added "lc" hidden input for proper internationalization
+2013-05-24 17:02:32 +0200	[-] MO : PayPal : Integral Evolution price verification + database version number
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-04-25 13:54:10 +0200	[-] MO : PayPal : Cancel URL fixed & Logos updates without openssl
+2013-04-22 16:16:25 +0200	[-] MO : PayPal : Cancel & redirection, SSL links, etc.
+2013-04-19 18:48:26 +0200	[-] MO: Do not assign base_uri if already defined.
+2013-04-19 18:21:48 +0300	Update paypal.php
+2013-04-05 16:28:04 +0200	[-] MO : PayPal, Version number changed
+2013-04-05 11:55:17 +0200	[-] MO : Bug fix : PayPal, Guest tracking order reference
+2013-04-05 10:30:58 +0200	[-] MO : Bug fix : PayPal, baseURI fixed for multistore
+2013-04-02 10:11:25 +0200	[-] MO : PayPal, Unused data removed
+2013-03-28 18:45:47 +0100	[-] MO : Bug fix #PNM-1116 : PayPal, refund fixed
+2013-03-28 16:01:11 +0100	[-] MO : PayPal, pending status verification
+2013-03-20 09:36:11 +0100	[*] MO : PayPal, Order confirmation page added for mobile template
+2013-03-19 15:33:42 +0100	[-] MO : Bug fix : PayPal, gift wrapping price fixed
+2013-02-22 16:12:07 +0100	[-] MO : Bug fix #PNM-1080 : PayPal, Integral Evolution tax calculation fixed
+2013-02-21 09:57:18 +0100	// PayPal, old jQuery compatibility
+2013-02-14 18:25:29 +0100	// French translations
+2013-02-13 15:05:08 +0100	// PayPal, version number updated
+2013-02-11 14:02:05 +0100	[-] MO : Bug fix #PNM-1046 : PayPal, Recursive dependency fixed
+2013-02-11 13:59:19 +0100	[*] MO : #PNM-1043 : PayPal, Translations fixed
+2013-02-11 12:07:01 +0100	[*] MO : #PNM-680 : PayPal, JS & Markup validation
+2013-02-11 11:57:27 +0100	[-] MO : Bug fix #PNM-951 : PayPal, Voucher greater than total cart amount
+2013-01-23 19:36:20 +0100	[-] MO : Bug fix #PNM-959 : PayPal, Redirection after payment using SSL
+2013-01-22 14:35:25 +0100	// PayPal version changed (v3.4.4)
+2013-01-22 12:03:12 +0100	// PayPal, bug fix
+2013-01-18 09:40:20 +0100	[-] MO : Bug fix #PNM-963 : PayPal, id order reference
+2013-01-17 13:38:11 +0100	[*] MO : PayPal, Default shipping address for Express Checkout Shortcut
+2013-01-17 11:31:02 +0100	[-] MO : PayPal, fixed syntax
+2013-01-17 11:18:04 +0100	[-] MO : Bug fix #PNM-962 : PayPal, error reporting email language fixed
+2013-01-17 09:13:11 +0100	[-] MO : Bug fix #PNM-957 : PayPal, Shipping address complement fixed
+2013-01-15 16:23:29 +0100	[-] MO : Bug fix : PayPal, Integral Evolution notifier fixed
+2013-01-14 14:16:35 +0100	[-] MO : PayPal, improved 1.4 compatibility
+2013-01-14 11:13:36 +0100	[-] MO : Bug fix #PNM-840 : PayPal, missing check
+2013-01-14 10:40:12 +0100	[-] MO : Bug fix #PNM-742 : PayPal, address complement was empty
+2013-01-11 17:45:51 +0100	[-] MO : Bug fix : PayPal, JS event on form submit
+2013-01-11 10:59:04 +0100	Merge branch 'patch-1' of https://github.com/PrestaEdit/PrestaShop-modules into development
+2013-01-11 10:28:53 +0100	[*] MO : Improvement #PNM-684 : PayPal, Cart currency conversion
+2013-01-10 17:49:13 +0100	[-] MO : Bug Fix #PNM-676 : PayPal, module disabled and template design
+2013-01-10 17:14:41 +0100	[-] MO : Bug fix #PNM-683 : PayPal, Express Checkout Shortcut button & quantities updates
+2013-01-08 18:20:14 +0100	[-] MO : Bug fix #PNM-574 : PayPal, Transaction id & order details
+2013-01-08 17:39:18 +0100	[-] MO : Bug fix #PNM-567 : PayPal, customer table creation on upgrade
+2013-01-08 17:01:40 +0100	[*] MO : #PNM-465 : PayPal, template overload
+2013-01-07 15:09:57 +0100	[-] MO : Bug fix : PayPal, validateOrder declaration
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-20 18:07:18 +0100	[-] MO : Bug fix : PayPal, check for empty carts
+2012-12-20 17:42:12 +0100	[-] MO : Bug fix : PayPal, JS Bug fix
+2012-12-20 17:29:09 +0100	[-] MO : Bug fix : PayPal, hook folder added
+2012-12-20 17:15:06 +0100	[*] MO : PayPal, improved compatibility with mobile theme + bug fix
+2012-12-10 19:50:44 +0100	[-] Fix: remove warning...
+2012-12-04 10:13:30 +0100	[*] MO : PayPal, default data
+2012-12-03 15:37:51 +0100	[-] MO : Bug fix : PayPal, order history was saved twice
+2012-12-03 09:41:05 +0100	[-] MO : Bug fix : PayPal upgrade (v3.4)
+2012-11-27 18:28:40 +0100	[-] MO : Bug Fix : PayPal + Mobile theme
+2012-11-27 15:16:11 +0100	[-] MO : Bug fix : PayPal, Class tools included
+2012-11-26 19:01:34 +0100	[-] MO : Bug fix : PayPal, minor update
+2012-11-26 16:14:59 +0100	[-] MO : PayPal : Bug fix : Added checks into hookHeader()
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+paypalusa/
+2014-03-28 16:04:40 +0100	// MO PayPal USA : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:44:04 +0100	// MO PayPal USA : ps_versions_compliancy added
+2014-01-16 21:14:02 +0100	PayPal USA : Conflicts merged
+2014-01-13 10:45:39 -0500	[*] MO: fix standard payment tax issue and payment validation issues
+2014-01-03 16:33:09 +0100	PayPal USA : PR #173 merged
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2014-01-02 10:24:43 +0100	PayPal USA - Backward compatibility added
+2014-01-02 10:24:06 +0100	PayPal USA - Backward compatibility removed
+2013-12-30 20:34:40 -0500	[*] MO: correcting tax bug, voucher bug and transaction source on transaction details in the order page
+2013-12-27 16:22:37 -0500	[*] MO: fixing most of paypalusa reported bugs
+2013-12-27 00:06:13 -0500	[*] MO: removing test code
+2013-12-26 22:39:10 -0500	[*] MO: fixing remaining bugs on paypalusa
+2013-12-19 10:49:55 -0500	MO: bugs fix on paypal usa / canada / mexico
+2013-12-18 10:17:42 -0500	MO: bugs fix on paypal usa / canada / mexico
+2013-12-12 13:29:58 -0500	[*] MO: redirect customer to step 3
+2013-12-11 12:22:10 -0500	[*] MO: remove test email
+2013-12-10 14:48:19 -0500	[+] MO: bugs fix on paypal usa / canada / mexico if precessing paypal checkout from the payment hook, pushing missing files from last push
+2013-12-06 20:29:25 -0500	[+] MO: bugs fix on paypal usa / canada / mexico, pushing missing files
+2013-12-06 20:24:03 -0500	[+] MO: bugs fix on paypal usa / canada / mexico
+2013-11-26 16:08:05 -0500	[+] MO: bugs fix on paypal usa / canada / mexico
+2013-10-22 12:32:52 -0400	[+] MO: add missing folder
+2013-10-18 11:54:12 -0400	[+] MO: Add taxes to paypal standard payment
+2013-10-07 17:59:04 +0200	[-] MO : Bug fix - Paypal USA
+2013-09-23 11:36:10 +0200	// Manual merge
+2013-09-11 14:17:41 +0200	PayPal USA - Version number updated
+2013-09-05 12:08:56 -0400	Update paypalusa.php
+2013-08-19 09:45:55 +0200	// PayPal USA - New version released (v1.2.5)
+2013-06-28 16:33:15 +0200	[+] MO : PayPal USA : New module added
+
+payulatam/
+2014-03-28 16:04:22 +0100	// MO PayU Latam : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:43:26 +0100	// MO PayU Latam : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-05-13 17:00:44 +0200	[-] MO : PayU Latam : Logo updated
+2013-04-25 16:11:43 +0300	// error_log file was not empty
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-12 12:21:07 -0500	[*] MO : PAyuLatam, new version of the module
+2012-12-10 14:40:07 +0100	// PayU Latam, version number changed
+2012-12-10 14:21:56 +0100	[-] TR : PayULatam, translations added
+2012-12-07 17:33:59 +0100	[*] MO : PayU Latam, version number changed
+2012-12-07 17:12:04 +0100	[*] MO : PayU Latam, improvement
+2012-12-03 10:08:50 +0100	[+] MO : PayU Latam, module added
+
+prediggo/
+2014-04-05 14:41:01 +0200	Merge branch 'master' of https://github.com/Ceboweb/PrestaShop-modules into Ceboweb-master
+2014-04-01 17:05:38 +0200	[dev] update web site id check
+2014-04-01 16:49:33 +0200	[dev] update of web site check
+2014-03-28 16:04:04 +0100	// MO Prediggo : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-28 11:31:20 +0100	[prediggo] French translation updates
+2014-03-27 17:09:48 +0100	[prediggo] Update on products export in a multishop context
+2014-03-21 17:42:14 +0100	// MO Prediggo : ps_versions_compliancy added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-10-10 15:11:59 +0200	Prediggo - Updated config.xml
+2013-10-10 15:01:26 +0200	[dev] Update for the 1.5.6.0 version of Prestashop
+2013-09-06 05:19:14 -0700	Merge pull request #79 from Ceboweb/master
+2013-09-06 02:09:46 +0200	[Prediggo] Update of translation management in search filters tpl
+2013-09-06 02:05:42 +0200	[Prediggo] Update of translation management in search filters tpl
+2013-09-05 19:08:10 +0200	// Version updated
+2013-09-03 18:00:23 +0200	[Prediggo] Addition of the web site id verification
+2013-07-17 17:27:28 +0200	[+] MO : Prediggo - New module added (PS 1.5 compliant)
+2012-11-20 14:22:04 +0100	Initial commit
+
+prestafraud/
+2014-04-17 12:12:53 +0200	// Version compliancy
+2014-03-21 17:41:30 +0100	// MO Prestafraud : ps_versions_compliancy added
+2013-06-11 10:06:45 +0200	[-] MO: Use Tools::file_get_contents() against file_get_contents()
+2013-04-22 12:38:39 +0300	// Typo
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+productcomments/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-17 15:42:56 +0100	[-] ProductComments : Add redirect after status update
+2014-03-11 18:14:46 +0100	// productcomments : ignore added
+2014-03-11 11:22:02 +0100	Merge pull request #271 from xBorderie/patch-2
+2014-03-11 11:21:43 +0100	[*] MO : ProductComments, add clear cache
+2014-03-11 10:17:29 +0100	// Typos in productcomments.php
+2014-03-10 15:36:50 +0100	// productcomments : fix issue with cache on home page
+2014-03-10 10:06:38 +0100	// productcomments : fix for a php version < 5.4
+2014-03-10 09:08:40 +0100	// Changed version
+2014-03-09 22:47:06 +0800	Fix Break to Install due to productcomments.php
+2014-03-07 15:16:48 +0100	// ProductComments: Fix new criterion creation
+2014-03-07 14:43:29 +0100	[-] MO: ProductComments, Introduce v3.0
+2014-03-05 18:30:44 +0100	// undo small change from previous commit
+2014-03-05 18:26:03 +0100	[-] BO : ProductComments, 'Fix' bulk actions
+2014-03-05 16:14:28 +0100	[-] BO : ProductComments, Bug #PSCSX-957, Fix delete comment
+2014-03-05 15:17:58 +0100	[-] BO : ProductComment, Bug #PSCSX-955, fix filter by validation status
+2014-03-05 12:13:22 +0100	// productscomments hook top to header
+2014-03-05 10:18:53 +0100	// removed ignore from insert queries
+2014-03-04 09:22:01 +0100	productcomments : fix max version & sql error
+2014-03-03 15:21:19 +0100	[-] Modules : Version update of Adyen, Bluepay & ProductComments
+2014-03-03 14:56:24 +0100	[-] Modules : Move $this->ps_versions_compliancy after parent::__construct() to avoid var overrided
+2014-02-28 11:40:10 +0100	productcomments : reset fonctionnality added
+2014-02-17 15:32:59 +0100	// productcomments update version number
+2014-02-16 17:30:32 +0100	// report of https://github.com/PrestaShop/PrestaShop/pull/1078
+2014-02-12 12:14:48 +0100	[-] MO : productcomments : 'write a review' button's appearance for a guest fixed
+2014-01-29 11:39:07 +0100	// Product comments - min version compliancy changed
+2014-01-28 15:02:48 +0100	[*] productcomments v 2.9 will not work on PrestaShop under 1.5.6 version
+2014-01-20 15:53:02 +0100	[-] MO : productcomments : send review friendly url fixed
+2014-01-13 22:13:38 +0100	// productscomments missing trailing semi column
+2014-01-12 20:26:53 +0100	[-] MO : Productscomments script in table rows
+2014-01-10 10:52:37 +0100	productcomments : fix productcomments not refreshing on home page
+2014-01-06 17:37:26 +0100	// norms
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2014-01-02 09:46:33 +0100	// fix div appearance productcomments
+2013-12-30 17:37:06 +0100	[-] MO : productcomments : wrong hook used (out of stock instead of product right column.
+2013-12-30 14:02:52 +0100	// fancybox missing
+2013-12-27 18:55:00 +0100	[-] MO : fixed incompatibility with jquery 1.10
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+productpaymentlogos/
+2014-04-22 18:58:59 +0200	// Changelog updated
+2014-04-17 11:53:57 +0200	// Version compliancy
+2014-03-31 12:08:03 +0200	[-] MO : productpaymentlogos : if there is not a link specified in the configuration, no link will be displayed
+2014-03-24 15:22:19 +0100	/ MO productpaymentlogos : ps_versions_compliancy added
+2014-03-20 14:35:30 +0100	Initial commit
+
+productscategory/
+2014-04-22 18:59:01 +0200	// Changelog updated
+2014-04-17 12:07:47 +0200	// version compliancy
+2014-04-07 13:48:08 +0200	// Update translation (module name)
+2014-03-24 15:22:21 +0100	/ MO productscategory : ps_versions_compliancy added
+2014-03-20 14:35:33 +0100	Initial commit
+
+producttooltip/
+2014-04-23 16:48:58 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-23 15:29:32 +0200	// producttooltip: wording.
+2014-04-23 15:23:11 +0200	// producttooltip: typo.
+2014-04-22 18:59:03 +0200	// Changelog updated
+2014-04-17 11:40:09 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-03-24 15:22:23 +0100	/ MO producttooltip : ps_versions_compliancy added
+2014-03-20 14:35:35 +0100	Initial commit
+
+pscleaner/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-13 12:07:16 +0100	[*] MO : pscleaner now also clean the tabs/menu
+2014-03-06 06:52:54 +0100	[-] MO : FixBug #PNM-2120 - Pscleaner now check modules tables
+2014-03-06 06:32:44 +0100	[-] MO : FixBug #PNM-2131 - Pscleaner now truncate product_sale table
+2014-02-26 09:00:08 +0100	[*] Notice: Undefined variable: id_lang
+2014-02-24 18:52:13 +0100	// update version numbers for 1.6 release
+2014-02-24 15:01:42 +0100	[*] MO : Fix add version check for switch input type
+2014-02-20 16:36:45 +0100	[*] MO : Fix retrocompat 1.5, override form.tpl for 'switch' input type
+2014-02-20 10:48:22 +0100	// right pull some other buttons
+2014-02-19 15:07:15 +0100	[-] MO : PsCleaner - Fix switch forward compatibility
+2014-02-19 14:44:49 +0100	// Groarr, fixed the same old issue
+2014-02-07 14:15:07 +0100	[-] MO : pscleaner fixed #PNM-2040 #PNM-2035 #PNM-2021 #PNM-2000
+2014-01-15 17:51:48 +0100	// pscleaner multishop
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-13 11:52:51 +0100	[-] MO : Fixed javascript ID
+2013-12-08 19:00:25 +0100	// pscleaner set version number in xml
+2013-12-04 11:27:33 +0100	// Fixed "delete orders and customers" checkbox validation
+2013-12-04 10:34:53 +0100	// Update PSCleaner logo
+2013-11-29 16:25:41 +0100	[+] MO : Added cleaning method in pscleaner
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+realexredirect/
+2014-04-09 15:33:06 +0200	Realex Redirect : PR merged
+2014-04-08 10:45:12 +0100	Additional fix for card selection
+2014-04-07 16:10:09 +0100	Added payment module class. Removed style definitions, replaced with inline style.
+2014-03-28 16:03:35 +0100	// MO Realexredirect : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:40:30 +0100	// MO Relaxredirect : ps_versions_compliancy added
+2014-03-18 14:10:44 +0000	Updated copyright.
+2014-03-18 14:04:20 +0000	Modified for additional checkout page to be compatible with 1.6
+2014-03-12 12:32:46 +0000	Added compatability for 32-Bit servers (use of string instead of int for PASREF)
+2014-03-12 10:06:24 +0000	Updated version to 1.4.
+2014-03-04 14:41:58 +0000	Revert "Updated all copyright."
+2014-03-04 14:40:35 +0000	Updated all copyright.
+2014-03-04 14:30:19 +0000	Updated all copyright.
+2014-03-04 11:06:35 +0000	Changed default button text.
+2014-03-04 11:05:06 +0000	Revert "Changed default button text."
+2014-03-04 10:57:38 +0000	Changed default button text.
+2014-03-04 10:52:04 +0000	Version change.
+2014-03-04 10:35:11 +0000	Use CSS instead of HTML styling for tables.
+2014-03-04 10:32:51 +0000	New payment button, 1.6. compatibility.
+2014-03-04 10:29:28 +0000	Added card logos
+2014-03-04 10:26:40 +0000	Added CSS for payment button, 1.6 compatibility.
+2014-03-03 23:58:58 +0000	Test commit, changed copyright.
+2014-01-20 18:28:13 +0100	Realex - Bug fix hook header & PS 1.4
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 17:52:27 +0100	Realex Payments : Version changed (v1.2)
+2013-12-19 11:21:25 +0100	Fix : Bug on subfolder installation
+2013-11-11 14:25:57 +0100	// Realex Payments - Version updated (v1.1)
+2013-10-30 16:55:45 +0100	Fix : Use SSL link when needed
+2013-10-30 16:54:27 +0100	Fix : Use SSL link when needed
+2013-10-30 16:50:55 +0100	Fix : Use SSL link when needed
+2013-10-30 16:44:04 +0100	Add message from Realex on Back office order
+2013-10-30 16:42:16 +0100	Add message from Realex on Back office order
+2013-10-30 10:07:04 +0100	Fix minor Bug
+2013-10-24 22:04:06 +0200	Realex reditect - Translation updated
+2013-10-24 13:21:56 +0200	Realex redirect - New module added (v1.0)
+
+referralprogram/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-03-10 14:12:27 +0100	// referralprogram : fix when sponsor hash contain '+' & fix layout sponsored registration
+2014-03-07 16:13:10 +0100	[-] MO : Fix #PNM-2140, Display correct referal amount for any currency
+2014-02-18 11:15:04 +0100	// referral program refacto call to addJS
+2014-02-17 00:06:35 +0100	// referralprogram add js
+2014-01-20 17:07:42 +0100	[-] MO : referralprogram : wrong display of  the discount
+2014-01-15 16:36:33 +0100	[-] MO : referralprogram : button btn btn-default right
+2014-01-08 11:10:04 +0100	//fix notice referralprogram
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-26 18:44:33 +0100	// added missing mod= to l calls in module templates
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+sekeywords/
+2014-04-22 18:59:10 +0200	// Changelog updated
+2014-04-17 11:29:22 +0200	[-] MO : sekeywords - Fix 1.5 ps_version_compliancy issue
+2014-03-24 15:22:28 +0100	/ MO sekeywords : ps_versions_compliancy added
+2014-03-20 14:35:49 +0100	Initial commit
+
+sendinblue/
+2014-04-10 14:19:14 +0200	SendinBlue : Version changed
+2014-04-10 11:44:46 +0200	Fix last merge issue
+2014-04-04 09:40:35 +0200	SendinBlue : Configuration data fixed
+2014-03-28 16:03:05 +0100	// MO Sendinblue : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-27 12:37:52 +0100	SendinBlue : Bug fix
+2014-03-26 11:58:17 +0100	SendinBlue : PR merged
+2014-03-21 17:39:50 +0100	// MO Sendinblue : ps_versions_compliancy added
+2014-03-18 10:16:32 +0100	Fix redirection issue
+2014-03-14 14:43:43 +0100	Add the good licence
+2014-03-14 11:03:42 +0100	Fix Validator issues
+2014-03-14 10:41:20 +0100	Add backward compatibility for PS 1.6
+2014-02-20 15:52:15 +0100	Change related to version name issue
+2014-02-19 15:09:36 +0100	Add Rightcolumn feature
+2014-02-17 17:17:59 +0100	Add warning message for obsolete versions and display the module in the right tab
+2014-02-12 09:49:52 +0100	[*] SendinBlue : Name changed
+
+sendtoafriend/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-01-23 16:14:11 +0100	[-] MO : sendtoafriend : update email
+2014-01-23 15:53:01 +0100	Update send_to_a_friend.txt
+2014-01-17 07:49:05 +0100	[*] MO : Sendtoafriend new limit on product page
+2014-01-12 21:17:13 +0100	[*] MO : Sendtoafriend add sendtoafriend.js
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+seur/
+2014-04-16 18:41:27 +0200	ShoppingFlux : Version changed
+2014-04-16 18:38:16 +0200	Merge branch 'master' of https://github.com/shoppingflux/PrestaShop-modules into shoppingflux-master
+2014-04-16 12:07:11 +0200	SEUR : Version changed
+2014-04-15 16:04:03 +0300	Fixed installation problem - http://forge.prestashop.com/browse/PNM-2236
+2014-04-14 12:36:54 +0200	[~] MO : Shoppingfluxexport 3.8.2 - fix a fatal error on some installs when product does not exist
+2014-04-11 18:59:45 +0200	SEUR : New module added
+
+shopgate/
+2014-03-28 16:02:38 +0100	// MO Shopgate : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:38:40 +0100	// MO Shopgate : ps_versions_compliancy added
+2014-01-21 09:50:22 +0100	// Shopgate - Version updated (v2.3.7)
+2014-01-21 09:46:54 +0100	Merge branch 'master' of https://github.com/OliverMuellerShopgate/PrestaShop-modules into OliverMuellerShopgate-master
+2014-01-08 10:37:58 +0100	set shopgate link by language in configuration panel
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2013-12-20 15:28:28 +0100	Shopgate : Bug fix - Module tab & Addons
+2013-11-07 14:39:38 +0100	french translation
+2013-10-23 10:16:43 +0200	Shopgate - New module added (v2.3.5)
+
+shoppingfluxexport/
+2014-04-16 18:41:27 +0200	ShoppingFlux : Version changed
+2014-04-14 12:36:54 +0200	[~] MO : Shoppingfluxexport 3.8.2 - fix a fatal error on some installs when product does not exist
+2014-04-05 14:44:58 +0200	// ShoppingFlux : PR merged
+2014-04-04 09:55:58 +0200	Shopping Flux : Configuration data fixed
+2014-03-31 14:57:56 +0200	[~] MO : Shoppingfluxexport 3.7.1 //very small fix for notice $skus[0]
+2014-03-28 16:02:26 +0100	// MO Shoppingfluxexport : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:38:02 +0100	// MO Shoppingfluxexport : ps_versions_compliancy added
+2014-03-10 16:11:25 +0100	// ShoppingFlux Export : Fixed standards
+2014-03-05 10:10:34 +0100	//traduction
+2014-03-03 18:08:51 +0100	- Add Spartoo Marketplace
+2014-03-03 18:08:41 +0100	- Add Spartoo Marketplace
+2014-03-03 14:54:39 +0100	[+] MO : ShoppingFluxExport 3.5 - Add Carrier Matching feature - Add Version in feed - Add QuantityUpdate when product is out of stock - Add new WS Uri - Add check order already imported feature - Add phone_mobile on Address - Fix updateQty return function
+2014-01-29 11:23:49 +0100	// ShoppingFluxExport - config.xml version number changed
+2014-01-27 18:23:36 +0100	[~] MO : ShoppingFluxExport 3.4 - fix carrier->id_carrier is undefined
+2014-01-27 10:59:54 +0100	Shopping Flux - Version updated v3.4
+2014-01-24 10:51:12 +0100	[~] ShoppingFluxExport 3.3 - small fix when user has a deleted carrier in PS_CARRIER_DEFAULT
+2014-01-23 11:47:14 +0100	// ShoppingFlux - Norm fixed
+2014-01-23 11:25:01 +0100	// ShoppingFlux - config.xml merged
+2014-01-23 10:28:46 +0100	[+] MO : ShoppingFluxExport 3.3 - some fixes on default val
+2014-01-22 15:04:47 +0100	[+] MO : ShoppingFluxExport 3.3 New features : - Choose status for shipped and canceled orders - Choose default carrier - Choose default image type
+2014-01-21 09:29:32 +0100	// ShoppingFlux - config.xml (version updated)
+2014-01-21 09:26:08 +0100	Merge branch 'master' of https://github.com/shoppingflux/PrestaShop-modules into shoppingflux-master
+2014-01-14 15:33:07 +0100	[-] MO : ShoppingFluxExport 3.2.2 - alias is limited to 32 chars
+2014-01-14 11:40:30 +0100	[-] MO : ShoppingFluxExport - add UPC for international
+2014-01-09 10:41:51 +0100	[~] MO : ShoppingFluxExport 3.2.2 - Small fix uri logo2
+2014-01-09 10:41:17 +0100	[~] MO : ShoppingFluxExport 3.2.2 - Small fix uri logo
+2014-01-06 15:59:00 +0100	[-] MO : Shoppingfluxexport 3.2.1 - small fix on sum of order prices for invoice
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 15:54:32 +0100	//very small fix
+2013-12-20 15:37:56 +0100	ShoppingFlux : Merge (ShoppingFeed removed)
+2013-12-19 12:09:19 +0100	[-] MO : avoid problem with multi orders from same merchant with different delivery addresses
+2013-12-12 16:08:09 +0100	[-] MO : ShoppingFluxExport 3.2 - remove shoppingfeedexport - translate every words of shoppingfluxexport
+2013-12-12 16:03:48 +0100	[-] MO : ShoppingFluxExport 3.2 - remove shoppingfeedexport - translate every words of shoppingfluxexport
+2013-12-09 11:33:46 +0100	Shopping Flux - config.xml updated
+2013-12-09 11:33:21 +0100	Merge branch 'master' of https://github.com/shoppingflux/PrestaShop-modules into shoppingflux-master
+2013-12-06 09:12:26 +0100	//small fix marketplace name
+2013-12-05 14:41:05 +0100	 shoppingfluxexport 3.1.1 [-] MO : compatibility with socolissimo
+2013-11-26 17:30:29 +0100	Fix "Undefined index: weight"
+2013-11-11 14:22:41 +0100	// ShoppingFlux - Version updated (v3.1)
+2013-10-24 17:46:41 +0200	[+] MO: Shoppingfluxexport - Add marketplaces managed
+2013-09-06 10:13:41 +0200	// ShoppingFlux - Bug fix
+2013-09-06 09:40:09 +0200	//small fix
+2013-09-04 17:09:16 +0200	[-] MO : automatic check of some configuration fields
+2013-09-03 11:47:20 +0200	[*] MO : add Error Message when order is not imported
+2013-08-30 13:16:32 +0200	//compatibility with 1.5.5
+2013-08-27 16:37:01 +0200	//compatibility with 1.4
+2013-08-14 10:30:30 +0200	//big fix for currencies
+2013-08-13 16:35:45 +0200	//modified some vars
+2013-08-05 17:29:01 +0200	//https for scripts
+2013-07-31 10:28:57 +0200	//small fix on image
+2013-07-25 14:46:43 +0200	Only available for order products
+2013-07-24 10:03:56 +0200	//correction for marketplace LaRedoute
+2013-07-18 15:38:09 +0200	[-] MO : Shoppingfluxexport 3.0 - Some fixes - Add feeds for multishops - Add parameters to validOrders call - Add feed generation by cron - Add orders insertions by cron
+2013-06-17 10:07:06 +0200	[*] MO : ShoppingFlux : Norm updated
+2013-06-17 10:00:48 +0200	Merge branch 'development' of https://github.com/shoppingflux/PrestaShop-modules into shoppingflux-development
+2013-05-14 13:51:41 +0200	[-] MO : Shoppingfluxexport 2.0.5 - change some texts
+2013-04-30 12:31:24 +0200	[-] MO : Shoppingfluxexport 2.0.5 - Forget update of order_carrier_table
+2013-04-30 11:23:59 +0200	[-] MO : Shoppingfluxexport 2.0.5 - added cache flushes on _validateOrder - resolve warning when no orders on backofficetop - resolve problem with prices
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-14 18:25:29 +0100	// French translations
+2013-01-04 14:29:06 +0100	// Shopping flux/feed config file version updated to 2.0.4
+2013-01-04 11:49:49 +0100	Merge pull request #12 from shoppingflux/development
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2013-01-04 10:57:00 +0100	[-] MO : Fixed problem in shoppingfluxexport && shoppingfeedexport with getting value of a controller, it's now unmatching case
+2013-01-02 12:37:33 +0100	[-] MO : shoppingfluxexport && shoppingfeedexport - Update Version
+2013-01-02 12:35:32 +0100	[-] MO : shoppingfluxexport - Fix image url in feed
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+socialsharing/
+2014-04-22 18:59:14 +0200	// Changelog updated
+2014-04-17 11:44:08 +0200	// Version compliancy
+2014-03-24 15:22:35 +0100	/ MO socialsharing : ps_versions_compliancy added
+2014-03-20 14:35:52 +0100	Initial commit
+
+socolissimo/
+2014-04-17 14:56:00 +0200	[*] MO : So Colissimo version 2.9.1
+2014-04-14 22:54:04 +0200	[*] MO : So Colissimo version 2.9.0 - La Poste API Mobile V4 & Belginium mobile support
+2014-03-28 16:02:10 +0100	// MO Socolissimo : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:36:36 +0100	// MO Socolissimo : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-20 15:50:16 +0100	SoColissimo : Merge PR #148
+2013-12-10 09:04:48 -0800	Merge pull request #139 from quadrateam/master
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-12-05 18:48:44 +0100	Initializing cart in context if not initialized for Prestashop 1.4
+2013-11-19 22:59:27 +0100	[*] MO : So Colissimo version 2.8.7 merged from developpement branch
+2013-11-14 17:57:06 +0100	[*] MO : So Colissimo improvements merged from developpement branch
+2013-10-24 16:28:04 +0200	[*] MO : So Colissimo improvements merged from developpement branch
+2013-10-16 14:27:02 +0200	[*] MO : So Colissimo improvements merged from developpement branch
+2013-10-10 18:36:53 +0200	[*] MO : So Colissimo improvements merged from developpement branch
+2013-10-09 13:13:08 +0200	[*] MO socolissimo 2.8.5 Merged from developpement branch
+2013-10-09 11:06:03 +0200	[*] MO socolissimo 2.8.5 Merged from developpement branch
+2013-10-03 22:30:16 +0200	[*] MO socolissimo 2.8.5 Merged from developpement branch
+2013-09-24 17:25:55 +0200	[*] MO Work in progress : improve coding standards
+2013-09-24 17:17:46 +0200	[*] MO Work in progress : improve coding standards
+2013-09-24 17:07:22 +0200	[*] MO socolissimo 2.8.5 Merged from developpement branch
+2013-09-24 11:39:15 +0200	Merged from 'developpement' branch
+2013-09-05 18:50:43 +0200	// SoColissimo - Norm fixed
+2013-09-05 18:46:24 +0200	Merge branch 'master' of https://github.com/quadrateam/PrestaShop-modules into quadrateam-master
+2013-08-14 15:44:25 +0200	[-] various bug fix
+2013-07-31 10:10:44 +0200	// SoColissimo - Request merged
+2013-07-25 18:58:06 +0200	[-] Price display when use TVA on carrier [-] Javascript fix
+2013-07-25 17:20:29 +0200	[-] MO : SoColissimo - JS bug fix
+2013-07-24 18:41:12 +0200	javascript fix
+2013-07-23 19:02:28 +0200	[-] TR : SoColissimo - Translation fixed
+2013-07-11 11:19:22 +0200	[-] TR : SoColissimo - Back-office translation updated
+2013-07-05 17:46:56 +0200	[-] MO : SoColissimo - New version published
+2013-07-05 15:18:59 +0200	[-] MO : add security control
+2013-07-04 11:30:28 +0200	[-] MO : change Message in BO
+2013-07-03 18:11:37 +0200	[-] MO : add warning BO for OPC mobile
+2013-06-24 09:57:06 +0200	// SoColissimo : Fixed template
+2013-06-20 11:27:29 +0200	[-] MO : bug fix overcost inBO
+2013-06-19 17:21:40 +0200	[-] MO : adding url mobile in update
+2013-06-17 21:06:34 +0200	[-] MO : bug fix when socolissimo not selected
+2013-06-17 08:52:48 +0200	[*] MO : socolissimo bug fix 404 + no zone create
+2013-06-14 18:01:42 +0200	[*] MO : fix tpl call bug when module is already install in 1.4
+2013-06-13 15:10:09 +0200	// SoColissimo : Norm fixed
+2013-06-13 06:03:00 -0700	Merge pull request #22 from elito/patch-3
+2013-06-12 17:18:22 +0200	[*] MO : socolissimo Re-organized module files
+2013-05-29 15:54:43 +0200	Socolissimo 2.8
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-04-08 17:10:02 +0300	Fix bug with french translation of mister
+2013-04-08 12:10:45 +0300	Update validation.php
+2013-04-02 14:52:03 +0200	[-] MO : Bug fix : SoColissimo, Form validation
+2013-03-15 11:28:10 +0100	[-] MO : Modules updated for russian translations compatibility
+2013-02-14 18:25:29 +0100	// French translations
+2013-01-31 11:49:35 +0100	// Added SoColissimo compatibility fix
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-12-13 14:26:57 +0100	[-] MO : Fix restriction on SoColissimo returned field TRADERCOMPANYNAME.
+2012-12-13 14:09:49 +0100	[-] MO : SoColissimo validation script fixed
+2012-12-13 11:48:55 +0100	[-] MO : Fix SoColissimo signature when not using fancybox.
+2012-12-10 17:18:33 +0100	[-] MO : Bug fix : SoColissimo, services URL changed
+2012-11-28 18:31:08 +0100	[-] MO : Bug fix : SoColissimo, config.xml updated
+2012-11-23 15:43:20 +0100	[*] MO : Moneybookers & SoColissimo version number updated
+2012-11-22 18:11:03 +0100	[*] MO : Norm updated : SoColissimo - validation.php
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-22 10:54:29 +0100	#PNM-658
+2012-11-20 14:22:04 +0100	Initial commit
+
+sofortbanking/
+2014-03-28 16:02:01 +0100	// MO Sofortbanking : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:37:09 +0100	// MO sofortbanking : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2013-11-26 18:56:04 +0100	SoFort Banking - New module added (v2.0)
+
+statsbestcategories/
+2014-04-22 18:59:16 +0200	// Changelog updated
+2014-03-27 17:16:31 +0100	/ MO statsbestcategories : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:36 +0100	/ MO statsbestcategories : ps_versions_compliancy added
+2014-03-20 14:35:55 +0100	Initial commit
+
+statsbestcustomers/
+2014-04-22 18:59:18 +0200	// Changelog updated
+2014-03-31 12:14:23 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-03-31 12:12:00 +0200	// Typo.
+2014-03-27 17:16:48 +0100	/ MO statsbestcustomers : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:38 +0100	/ MO statsbestcustomers : ps_versions_compliancy added
+2014-03-20 14:35:57 +0100	Initial commit
+
+statsbestmanufacturers/
+2014-04-22 18:59:21 +0200	// Changelog updated
+2014-03-27 17:16:57 +0100	/ MO statsbestmanufacturers : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:40 +0100	/ MO statsbestmanufacturers : ps_versions_compliancy added
+2014-03-20 14:36:00 +0100	Initial commit
+
+statsbestproducts/
+2014-04-22 18:59:23 +0200	// Changelog updated
+2014-03-27 17:17:12 +0100	/ MO statsbestproducts : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:41 +0100	/ MO statsbestproducts : ps_versions_compliancy added
+2014-03-20 14:36:03 +0100	Initial commit
+
+statsbestsuppliers/
+2014-04-22 18:59:25 +0200	// Changelog updated
+2014-03-27 17:17:25 +0100	/ MO statsbestsuppliers : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:41 +0100	/ MO statsbestsuppliers : ps_versions_compliancy added
+2014-03-20 14:36:05 +0100	Initial commit
+
+statsbestvouchers/
+2014-04-22 18:59:27 +0200	// Changelog updated
+2014-03-27 17:17:34 +0100	/ MO statsbestvouchers : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:42 +0100	/ MO statsbestvouchers : ps_versions_compliancy added
+2014-03-20 14:36:08 +0100	Initial commit
+
+statscarrier/
+2014-04-22 18:59:29 +0200	// Changelog updated
+2014-03-27 17:17:58 +0100	/ MO statscarrier : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:43 +0100	/ MO statscarrier : ps_versions_compliancy added
+2014-03-20 14:36:21 +0100	Initial commit
+
+statscatalog/
+2014-04-22 18:59:31 +0200	// Changelog updated
+2014-04-17 12:15:47 +0200	[-] MO : statscatalog - Fix 1.5 ps_version_compliancy issue
+2014-03-24 15:22:44 +0100	/ MO statscatalog : ps_versions_compliancy added
+2014-03-20 14:36:24 +0100	Initial commit
+
+statscheckup/
+2014-04-22 18:59:34 +0200	// Changelog updated
+2014-03-27 17:22:41 +0100	/ MO statscheckup : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:44 +0100	/ MO statscheckup : ps_versions_compliancy added
+2014-03-20 14:36:37 +0100	Initial commit
+
+statsdata/
+2014-04-22 18:59:36 +0200	// Changelog updated
+2014-03-27 17:19:09 +0100	/ MO statsdata : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:45 +0100	/ MO statsdata : ps_versions_compliancy added
+2014-03-20 14:36:51 +0100	Initial commit
+
+statsequipment/
+2014-04-23 16:49:10 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-23 16:06:15 +0200	// statsequipment: wording.
+2014-04-22 18:59:38 +0200	// Changelog updated
+2014-03-27 17:19:19 +0100	/ MO statsequipment : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:46 +0100	/ MO statsequipment : ps_versions_compliancy added
+2014-03-20 14:36:59 +0100	Initial commit
+
+statsforecast/
+2014-04-22 18:59:40 +0200	// Changelog updated
+2014-04-10 15:44:04 +0200	Merge pull request #1 from xBorderie/patch-1
+2014-04-10 15:42:40 +0200	// Statsforecast: typo.
+2014-03-27 17:19:43 +0100	/ MO statsforecast : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:46 +0100	/ MO statsforecast : ps_versions_compliancy added
+2014-03-20 14:37:01 +0100	Initial commit
+
+statslive/
+2014-04-22 18:59:43 +0200	// Changelog updated
+2014-03-27 17:19:58 +0100	/ MO statslive : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:47 +0100	/ MO statslive : ps_versions_compliancy added
+2014-03-20 14:37:04 +0100	Initial commit
+
+statsnewsletter/
+2014-04-22 18:59:45 +0200	// Changelog updated
+2014-03-27 17:20:07 +0100	/ MO statsnewsletter : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:48 +0100	/ MO statsnewsletter : ps_versions_compliancy added
+2014-03-20 14:37:07 +0100	Initial commit
+
+statsorigin/
+2014-04-22 18:59:47 +0200	// Changelog updated
+2014-03-27 17:20:18 +0100	/ MO statsorigin : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:48 +0100	/ MO statsorigin : ps_versions_compliancy added
+2014-03-20 14:37:10 +0100	Initial commit
+
+statspersonalinfos/
+2014-04-22 18:59:49 +0200	// Changelog updated
+2014-03-27 17:20:38 +0100	/ MO statspersonalinfos : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:49 +0100	/ MO statspersonalinfos : ps_versions_compliancy added
+2014-03-20 14:37:13 +0100	Initial commit
+
+statsproduct/
+2014-04-22 18:59:52 +0200	// Changelog updated
+2014-03-27 17:20:47 +0100	/ MO statsproduct : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:53 +0100	/ MO statsproduct : ps_versions_compliancy added
+2014-03-20 14:37:15 +0100	Initial commit
+
+statsregistrations/
+2014-04-22 18:59:54 +0200	// Changelog updated
+2014-03-27 17:21:10 +0100	/ MO statsregistrations : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:53 +0100	/ MO statsregistrations : ps_versions_compliancy added
+2014-03-20 14:37:29 +0100	Initial commit
+
+statssales/
+2014-04-22 18:59:57 +0200	// Changelog updated
+2014-03-27 17:21:21 +0100	/ MO statssales : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:55 +0100	/ MO statssales : ps_versions_compliancy added
+2014-03-20 14:37:32 +0100	Initial commit
+
+statssearch/
+2014-04-22 18:59:59 +0200	// Changelog updated
+2014-03-27 17:21:33 +0100	/ MO statssearch : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:56 +0100	/ MO statssearch : ps_versions_compliancy added
+2014-03-20 14:37:34 +0100	Initial commit
+
+statsstock/
+2014-04-22 19:00:01 +0200	// Changelog updated
+2014-03-27 17:21:44 +0100	/ MO statsstock : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:57 +0100	/ MO statsstock : ps_versions_compliancy added
+2014-03-20 14:38:55 +0100	Initial commit
+
+statsvisits/
+2014-04-22 19:00:07 +0200	// Changelog updated
+2014-03-27 17:21:55 +0100	/ MO statsvisits : min ps_versions_compliancy modified (1.5.6.1 => 1.6)
+2014-03-24 15:22:57 +0100	/ MO statsvisits : ps_versions_compliancy added
+2014-03-20 14:40:15 +0100	Initial commit
+
+textmaster/
+2014-04-05 14:24:19 +0200	// TextMaster : PR merged
+2014-04-04 10:02:04 +0200	TextMaster : Configuration data fixed
+2014-03-28 16:01:30 +0100	// MO TextMaster : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:19:07 +0100	// MO TextMaster : ps_versions_compliancy added
+2014-03-20 13:49:58 +0800	Changed the configuration file version
+2014-03-20 13:47:02 +0800	Merge pull request #6 from DonatasL/warrningmsg
+2014-03-17 12:07:00 +0200	Warrning message 'Please login / register' will be shown when api_key and api_secret are empty. Before module showed warrning 'Please login / register' if connection with api_key and api_secret was not successfull but it did not do API connection if both api parameters were empty so warrning message was not shown if both api parameters were empty - fixed now.
+2014-03-17 08:53:19 +0200	TEXTM-145 : When Multiple authors were selected then in final project creation step single author was shown as selected. Fixed.
+2014-03-14 11:09:50 +0200	undefined array element 'status' warning in project creation form
+2014-03-14 11:06:29 +0200	lowered amount of API calls, using singleton design pattern on textmaster.class.php
+2014-02-18 11:17:44 +0200	TEXTM-140 : fixed problem connected with missing products in products selection table when creating new project. Also found bug connected with uncleared filtering and fixed it.
+2014-01-30 17:10:08 +0100	// TextMaster - Version number changed
+2014-01-30 17:09:22 +0100	Merge branch 'master' of https://github.com/gillien/PrestaShop-modules into gillien-master
+2014-01-27 15:24:08 +0200	TEXTM-137 : updated functionality to get locale for sign-up. Locale for help content is retrieved via API method GET /users/me
+2014-01-24 17:28:22 +0200	TEXTM-142 : implemented possibility to import the content from documents to product when project is in status completed
+2014-01-10 10:15:01 +0800	TEXTM-140 : There was a problem in project creation page PS 1.4
+2014-01-08 15:53:24 +0800	Increment the version
+2014-01-08 15:47:22 +0800	Fix the pagination system in the API call part
+2014-01-03 15:09:32 +0100	TextMaster : Version number changed
+2014-01-03 15:08:19 +0100	Merge branch 'master' of https://github.com/gillien/PrestaShop-modules into gillien-master
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-19 18:10:34 +0100	Fixed bugs below : - My TextMasters specific to projects criteria were not loading in the pop-in  - Cannot save anymore product file with Prestashop 1.4, when the TextMaster module was uploaded.  - The help was not displaying in the locale of the user.
+2013-11-20 10:05:53 +0100	TextMaster - New module (v1.0)
+
+themeconfigurator/
+2014-04-22 19:00:10 +0200	// Changelog updated
+2014-04-17 17:34:04 +0200	[-] MO : themeconfigurator - rigth item pane is now displayed depending on default language #PSCSX-1555
+2014-04-17 10:50:50 +0200	[*] MO : themeconfigurator - Improved image name for SEO #PSCSX-1800
+2014-04-14 16:49:10 +0200	[-] BO : themeconfigurator - FixBug #PSCSX-1707
+2014-04-14 09:30:40 +0200	[-] MO : themeconfigurator - Fixed sprintf error value on upgrade 0.8
+2014-04-14 09:28:03 +0200	[-] MO : themeconfigurator - fixed traduction on upgrade error
+2014-04-11 16:16:28 +0200	[-] MO : themeconfigurator - Corrected error message for traduction in 0.8 upgrade file
+2014-04-10 09:58:03 +0200	[*] MO : themeconfigurator - Corrected #PSCSX-1713 issue. Image upload now uses general image settings
+2014-04-09 14:12:00 +0200	[*] MO : themeconfigurator - adjusted css for top content
+2014-04-07 15:55:48 +0200	[-] MO : themeconfigurator - added hook.css rules to sass file related to #PSCSX-1529
+2014-04-04 12:06:26 +0200	[-] MO : corrected URL lenght limitation issue #PSCSX-1500 for themeconfigurator
+2014-04-03 14:58:57 +0200	[-] FO : Fixed display issues #PSCSX-1529
+2014-04-02 14:12:56 +0200	[*] BO : Fix #PSCSX-1529 reponsive slider issue
+2014-03-28 17:54:36 +0100	// fix html content
+2014-03-27 10:20:03 +0100	// removed console.log
+2014-03-27 10:15:26 +0100	[-] MO : themeconfigurator : fix an issue with the deletion of items
+2014-03-25 17:05:41 +0100	Merge pull request #1 from djfm/master
+2014-03-25 14:13:38 +0100	Merge branch 'master' of https://github.com/djfm/themeconfigurator
+2014-03-25 14:13:13 +0100	// make string cleaner for translators
+2014-03-25 11:56:59 +0100	Merge branch 'master' of https://github.com/PrestaShop/themeconfigurator
+2014-03-25 10:52:11 +0100	[-] MO : themeconfigurator : wrong import links
+2014-03-24 17:37:16 +0100	// bad font link
+2014-03-24 15:34:14 +0100	// themeconfigurator
+2014-03-24 15:23:06 +0100	/ MO themeconfigurator : ps_versions_compliancy added
+2014-03-24 10:44:47 +0100	// missing files
+2014-03-24 10:33:03 +0100	[-] MO : theme configurator : fix issue with webkit when submiting form
+2014-03-20 14:40:18 +0100	Initial commit
+
+themeinstallator/
+2014-03-21 11:08:41 +0100	// Natives modules converted into submodules
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-24 11:00:31 +0100	[-] MO : themeinstallator : fix import theme via url
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-11-08 11:20:25 +0100	Theme installator : Bug fix - Ignore already installed modules
+2013-10-04 13:52:02 +0200	// Code cleaning and error messages
+2013-09-19 08:33:57 -0700	Merge pull request #89 from DevNet/patch-1
+2013-09-19 09:14:10 +0200	Update fr.php
+2013-09-19 09:12:36 +0200	Update fr.php
+2013-08-29 15:29:49 +0200	// updated translations
+2013-08-26 11:02:40 +0200	// updated translations
+2013-07-25 12:29:41 -0400	Update themeinstallator.php
+2013-04-29 17:51:26 +0200	[-] MO : Theme installator : variations fixed
+2013-04-23 17:25:34 +0200	[*] TR : completed French translation of some modules
+2013-04-05 15:33:03 +0200	[*] TR : German translation of Gamification Themeinstallator and Autoupgrade
+2013-03-28 16:44:08 +0100	//new module version for gamification & themeinstallator
+2013-03-28 16:42:15 +0100	//check if module is already install before try to install
+2013-03-25 12:04:42 +0100	[*] TR : completed French translation for gamification and theme installer
+2013-03-19 14:56:31 +0100	// Fixed theme installer version
+2013-03-05 13:57:53 +0100	[-] MO : Theme installator, missing backward_compatibility folder
+2013-01-07 16:08:21 +0100	Merge branch 'master' of https://github.com/PrestaShop/PrestaShop-modules
+2013-01-07 16:08:09 +0100	//small fix on theme installator module
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+tntcarrier/
+2014-03-28 16:01:11 +0100	// MO TNT Carrier : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:18:18 +0100	// MO TNT Carrier : ps_versions_compliancy added
+2014-03-10 15:38:20 +0100	TNT Carrier : Version updated (v1.9.7)
+2014-03-05 14:13:21 +0100	[-] MO : TNTcarrier (Add a default value in a array offset)
+2014-02-27 13:25:21 +0100	Add isset on $val->Service
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-07-25 17:14:18 +0200	[-] MO : TNT Carrier - Bug fix (image & baseDir)
+2013-06-24 09:59:00 +0200	[-] MO : TNT Carrier : Fixed tools class call
+2013-06-19 10:41:58 +0200	[*] TR : TNT Carrier : ES translations updated
+2013-06-19 10:23:47 +0200	[*] MO : TNT Carrier : Fixed account number & spaces
+2013-06-17 18:30:34 +0200	[-] MO : TNT Carrier : Bug fix PS 1.4 & context
+2013-05-16 16:57:15 +0200	[-] MO : TNT Carrier : module updated (v1.9.1)
+2013-04-23 14:45:52 +0200	// French descriptions updated
+2013-03-26 15:38:10 +0100	[-] MO : Bug fix : TNT Carrier, mutliple inclusion of Google Maps script
+2013-03-15 11:28:10 +0100	[-] MO : Modules updated for russian translations compatibility
+2013-03-04 10:05:59 +0100	[-] MO : TNT carrier, many fixes (v1.8.3)
+2013-02-19 14:00:47 +0100	// bad carriage return in licence
+2013-02-18 10:11:51 -0500	[*] MO : tntcarrier remove uninstall table carrier-option
+2013-02-14 18:25:29 +0100	// French translations
+2013-01-22 11:38:28 +0100	[*] MO : TNT, Documentation updated
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+trackingfront/
+2014-04-22 19:00:15 +0200	// Changelog updated
+2014-03-27 17:33:35 +0100	/ MO  : min ps_versions_compliancy modified
+2014-03-25 11:55:41 +0100	Merge branch 'master' of https://github.com/PrestaShop/trackingfront
+2014-03-24 16:14:51 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-24 16:08:37 +0100	// Typos.
+2014-03-24 15:23:11 +0100	/ MO trackingfront : ps_versions_compliancy added
+2014-03-20 14:40:21 +0100	Initial commit
+
+trustedshops/
+2014-03-28 16:00:58 +0100	// MO Trustedshops : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:16:58 +0100	// MO Trustedshops : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-05-16 10:37:25 +0200	[-] MO : TrustedShops : Improved jQuery compatibility
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-14 15:24:54 +0100	[-] MO: file_put_contents return length instead of true in trustedshops
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+trustly/
+2014-03-28 16:00:45 +0100	// MO Trustly : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:16:25 +0100	// MO Trustly : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-09-11 10:11:58 +0200	Trustly - Added currency mode
+2013-08-14 16:04:01 +0200	// Truslty : Contact number added
+2013-07-17 16:37:08 +0200	[*] MO : Trustly - Installation from Premium activation fixed
+2013-06-03 17:45:38 +0300	// Trustly : Version number changed (1.1)
+2013-05-29 19:23:05 +0200	[*] MO : Trustly : Version updated
+2013-05-29 19:21:41 +0200	[*] MO : Trustly : ES translations fixed
+2013-05-28 11:22:36 +0200	[-] MO : Fix bug #PSCFI-6777, bad canonical url for payment.php for modules
+2013-04-02 14:16:21 +0200	[-] MO : Trustly, text changed
+2013-03-13 18:21:31 +0100	[*] TR : Trustly module updated
+2013-03-05 10:21:23 +0100	// Trustly module added
+
+trustpilot/
+2014-03-28 16:00:32 +0100	// MO Trustpilot : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:15:48 +0100	// MO Trustpilot : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2013-11-27 17:32:17 +0100	TrustPilot - New module added (v1.0)
+
+twenga/
+2014-04-04 10:11:40 +0200	Twenga : Configuration data fixed
+2014-03-28 16:00:15 +0100	// MO Twenga : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:15:04 +0100	// MO Twenga : ps_versions_compliancy added
+2014-03-20 10:34:29 +0100	// MO Twenga : Modification from considered comments
+2014-03-20 09:38:44 +0100	[-] MO Twenga : OpenSSL verification added before checking if a file exists on a HTTPS link.
+2014-03-20 09:30:15 +0100	[-] MO Twenga : Status code verification moved before the $response explode() to avoid notice in case of cURL errors.
+2014-03-18 17:48:31 +0100	[-] MO - Twenga : Notice fix
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-09-11 10:29:29 +0200	Update version 1.9 module Twenga
+2013-09-11 10:18:44 +0200	Update version 1.9
+2013-09-10 18:35:53 +0200	Update module Twenga 1.6 for PrestaShop
+2013-07-11 17:13:03 +0200	[-] MO : Twenga - Bug fix when order state is updated
+2013-03-20 09:54:48 +0100	[*] MO : Bug fix : Twenga, Empty feeds
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+upscarrier/
+2014-04-04 10:16:38 +0200	UPS Carrier : Configuration data fixed
+2014-03-28 16:00:06 +0100	// MO UPS Carrier : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:14:18 +0100	// MO UPS Carrier : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-08-20 21:21:34 +0200	// UPS - New version released (v1.3.1)
+2013-08-08 11:36:42 +0200	[-] MO : ups stabilization
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-18 15:48:34 +0100	// Modules updated : Fedex, UPS, USPS
+2013-01-03 15:15:31 -0500	Update upscarrier/upscarrier.php
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+uspscarrier/
+2014-04-04 10:17:55 +0200	USPS Carrier : Configuration data fixed
+2014-03-28 15:59:51 +0100	// MO U.S.P.S : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:13:23 +0100	// MO U.S.P.S Carrier : ps_versions_compliancy added
+2014-01-02 10:37:51 +0100	Backward compatibility updated
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-12-13 18:31:49 +0100	USPS : Version number changed
+2013-12-13 09:28:40 -0800	Merge pull request #149 from RobertHumiston/patch-2
+2013-12-10 11:50:10 +0100	// Submodules updated
+2013-12-06 11:07:48 -0500	The module does not charge product specific shipping fees per quantity.
+2013-08-20 21:24:10 +0200	// USPS - New version released (v1.3.1)
+2013-08-08 11:36:42 +0200	[-] MO : usps stabilization
+2013-04-25 14:50:15 +0200	// Backward compatibilities switched on master
+2013-02-18 15:48:34 +0100	// Modules updated : Fedex, UPS, USPS
+2013-01-04 11:20:41 +0100	// Welcome 2013
+2012-11-22 17:35:14 +0100	//remove svn keyword @version Release: $
+2012-11-20 14:22:04 +0100	Initial commit
+
+vatnumber/
+2014-04-22 19:00:17 +0200	// Changelog updated
+2014-04-18 17:05:53 +0200	// update version for release
+2014-04-18 16:55:22 +0200	[-] Fix retrocompat PrestaShop 1.5
+2014-04-17 11:40:40 +0200	Bug fix (PS 1.5): ps_version_compliancy removed
+2014-03-25 11:47:05 +0100	Merge branch 'master' of https://github.com/PrestaShop/vatnumber
+2014-03-24 16:15:03 +0100	Merge pull request #1 from xBorderie/patch-1
+2014-03-24 16:07:23 +0100	// Typo.
+2014-03-24 15:23:12 +0100	/ MO vatnumber : ps_versions_compliancy added
+2014-03-20 14:41:47 +0100	Initial commit
+
+watermark/
+2014-03-21 13:54:13 +0100	// Watermark added as a submodule
+2014-03-03 11:08:00 +0100	watermark : the watermark is now correctly displayed on the module's configuration page
+2014-01-27 11:07:11 +0100	Update watermark.php
+2014-01-27 11:02:26 +0100	[-] MO : watermark : miss watermark Y align
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-11-27 16:25:30 +0100	// Natives modules moved
+
+yotpo/
+2014-04-05 14:55:11 +0200	// Yotpo : PR merged
+2014-04-04 10:24:37 +0200	Yotpo : Configuration data fixed
+2014-04-01 11:27:28 +0300	Bug fix in reviews tab for some of the versions.
+2014-03-28 15:59:01 +0100	// MO Yotpo : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-26 11:29:01 +0100	Yotpo request merged
+2014-03-25 16:53:11 +0200	added files
+2014-03-25 16:52:11 +0200	Change module according to new prestashop code validator.
+2014-03-21 17:10:57 +0100	// MO Yotpo : ps_versions_compliancy added
+2014-02-17 15:27:02 +0200	Version 1.3.6 1)Add option to choose status which will trigger the MAP.
+2014-01-21 09:59:15 +0100	// Yotpo - Norm fixed
+2014-01-21 09:51:36 +0100	Merge branch 'yotpo-v1.3.5' of https://github.com/alonbr/PrestaShop-modules into alonbr-yotpo-v1.3.5
+2014-01-15 11:11:24 +0200	Merge branch 'yotpo-v1.3.5' of github.com:alonbr/PrestaShop-modules into yotpo-v1.3.5
+2014-01-15 11:09:22 +0200	add file
+2014-01-15 11:08:44 +0200	1) Load yQuery asynchronously 2) Added b2c2b registarion support.
+2014-01-15 10:31:46 +0200	version
+2013-12-03 16:11:11 +0100	Yotpo : config.xml version number changed (v1.3.3)
+2013-12-03 15:59:34 +0200	remove encoding from tpl
+2013-12-03 12:47:47 +0200	Load yQuery asynchronously
+2013-10-10 10:11:24 +0200	Yotpo - Update v1.3.2
+2013-09-16 21:54:08 +0200	Yotpo - New version (v1.3.1)
+2013-09-16 10:28:50 +0200	Yotpo - Bug fix (v1.3)
+2013-09-10 15:05:56 +0200	[-] MO : Yotpo - Bug fix (v1.2.9)
+2013-07-22 17:06:23 +0200	// Updated Yotpo and Firstdata
+2013-06-26 10:06:34 +0200	// Yotpo module updated (files modes)
+2013-06-26 10:05:08 +0200	// Yotpo module updated
+2013-05-13 17:15:57 +0200	[*] MO : Yotpo module updated (v1.2.5)
+2013-04-23 15:31:11 +0200	[+] MO : Yotpo module added
+
+zingaya/
+2014-04-04 10:26:43 +0200	Zingaya : Configuration data fixed
+2014-03-28 15:59:12 +0100	// MO Zingaya : ps_versions_compliancy deleted (Bug with PS 1.5.3.1)
+2014-03-21 17:11:42 +0100	// MO Zingaya : ps_versions_compliancy added
+2014-01-02 10:33:07 +0100	// Happy New Year PrestaShop!
+2013-06-20 18:07:12 +0200	[+] MO : Zingaya : New module added
+
