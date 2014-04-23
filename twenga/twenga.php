@@ -823,11 +823,11 @@ class Twenga extends PaymentModule
 		$result = Db::getInstance()->ExecuteS('
 		SELECT `id_product` FROM `'._DB_PREFIX_.'product` WHERE `active` = 1');
 		
-		foreach ($result AS $k => $row)
+		foreach ($result as $k => $row)
 		{
 			$product = new Product((int)$row['id_product']);
 			
-			if (Validate::isLoadedObject($product) AND $product->active)
+			if (Validate::isLoadedObject($product) && $product->active)
 			{
 				// Check if product declinations exist.
 				$combinations = $this->getCombinations($product, $lang);
