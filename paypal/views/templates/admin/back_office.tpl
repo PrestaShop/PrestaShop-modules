@@ -31,18 +31,18 @@
 		{if isset($PayPal_logo.LocalPayPalLogoLarge)}
 			<img src="{$PayPal_logo.LocalPayPalLogoLarge}" alt="" style="margin-bottom: -5px" />
 		{/if}
-		<p id="paypal-slogan"><span class="dark">{$PayPal_content.leader|escape:'htmlall':'UTF-8'}</span> <span class="light">{$PayPal_content.online_payment|escape:'htmlall':'UTF-8'}</span></p>
-		<p>{$PayPal_content.tagline|escape:'htmlall':'UTF-8'}</p>
+		<p id="paypal-slogan"><span class="dark">{$PayPal_content.leader}</span> <span class="light">{$PayPal_content.online_payment}</span></p>
+		<p>{$PayPal_content.tagline}</p>
 	</div>
 
 	<div class="box half right">
-		<ul class="tick">{$PayPal_content.benefits|escape:'htmlall':'UTF-8'}</ul>
+		<ul class="tick">{$PayPal_content.benefits}</ul>
 	</div>
 	
 	{if $default_lang_iso == 'fr'}
 	<div class="clear"></div><hr />
 	<div class="box">
-	{l s='Download the ' mod='paypal'}<a href=""> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
+	{l s='Download the ' mod='paypal'}<a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-54"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
 		
 	</div>
 	{/if}
@@ -51,19 +51,19 @@
 	<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" id="paypal_configuration">
 		{* PayPal configuration blocks *}
 		<div class="box">
-			<div style="line-height: 18px;">{$PayPal_content.expectations|escape:'htmlall':'UTF-8'}</div>
+			<div style="line-height: 18px;">{$PayPal_content.expectations}</div>
 			<div style="line-height: 20px; margin-top: 8px">
 				<div>
-					<label>{$PayPal_content.your_country|escape:'htmlall':'UTF-8'} :
-						{$PayPal_country}&nbsp;&nbsp;&nbsp;<a href="#" id="paypal_country_change" class="small">{$PayPal_content.change_country|escape:'htmlall':'UTF-8'}</a>
+					<label>{$PayPal_content.your_country} :
+						{$PayPal_country}&nbsp;&nbsp;&nbsp;<a href="#" id="paypal_country_change" class="small">{$PayPal_content.change_country}</a>
 					</label>
 
 					<div class="paypal-hide" id="paypal-country-form-content">
-						<h3>{$PayPal_content.country_change_title|escape:'htmlall':'UTF-8'} :</h3>
+						<h3>{$PayPal_content.country_change_title} :</h3>
 
 						<select name="paypal_country_default" id="paypal_country_default">
 						{foreach from=$Countries item=country}
-							<option value="{$country.id_country|intval}" {if $country.id_country == $PayPal_country_id}selected="selected"{/if}>{$country.name}</option>
+							<option value="{$country.id_country}" {if $country.id_country == $PayPal_country_id}selected="selected"{/if}>{$country.name}</option>
 						{/foreach}
 						</select>
 
@@ -72,9 +72,9 @@
 					</div>
 				</div>
 
-				<label>{$PayPal_content.paypal_account|escape:'htmlall':'UTF-8'} ?</label>
-				<input type="radio" name="business" id="paypal_business_account_no" value="0" {if $PayPal_business == 0}checked="checked"{/if} /> <label for="paypal_business_account_no">{$PayPal_content.no|escape:'htmlall':'UTF-8'}</label>
-				<input type="radio" name="business" id="paypal_business_account_yes" value="1" style="margin-left: 14px" {if $PayPal_business == 1}checked="checked"{/if} /> <label for="paypal_business_account_yes">{$PayPal_content.yes|escape:'htmlall':'UTF-8'}</label>
+				<label>{$PayPal_content.paypal_account} ?</label>
+				<input type="radio" name="business" id="paypal_business_account_no" value="0" {if $PayPal_business == 0}checked="checked"{/if} /> <label for="paypal_business_account_no">{$PayPal_content.no}</label>
+				<input type="radio" name="business" id="paypal_business_account_yes" value="1" style="margin-left: 14px" {if $PayPal_business == 1}checked="checked"{/if} /> <label for="paypal_business_account_yes">{$PayPal_content.yes}</label>
 			</div>
 		</div>
 
@@ -84,25 +84,25 @@
 		<div class="box">
 
 			<div class="box right half" id="paypal-call-button">
-				<div id="paypal-call" class="box right">{$PayPal_content.customer_support|escape:'htmlall':'UTF-8'} {if !empty($PayPal_content.customer_support_image)}<img src="../modules/paypal/img/{$PayPal_content.customer_support_image|escape:'htmlall':'UTF-8'}.png" width="14px" alt="Phone" />{/if}</div>
-				<div id="paypal-call-foonote" class="box right clear">{$PayPal_content.support_foonote|escape:'htmlall':'UTF-8'}</div>
+				<div id="paypal-call" class="box right">{$PayPal_content.customer_support} {if !empty($PayPal_content.customer_support_image)}<img src="../modules/paypal/img/{$PayPal_content.customer_support_image}.png" width="14px" alt="Phone" />{/if}</div>
+				<div id="paypal-call-foonote" class="box right clear">{$PayPal_content.support_foonote}</div>
 			</div>
 
-			<span class="paypal-section">1</span> <h3 class="inline">{$PayPal_content.select_solution|escape:'htmlall':'UTF-8'}</h3> {$PayPal_content.learn_more|escape:'htmlall':'UTF-8'}
+			<span class="paypal-section">1</span> <h3 class="inline">{$PayPal_content.select_solution}</h3> {$PayPal_content.learn_more}
 
 			<br /><br /><br />
 
 			{if (in_array($PayPal_WPS, $PayPal_allowed_methods) || in_array($PayPal_HSS, $PayPal_allowed_methods))}
-				<h4 class="inline">{$PayPal_content.sole_solution_section_title|escape:'htmlall':'UTF-8'}</h4> <img src="{$PayPal_logo.BackOfficeCards}" height="22px"/>
+				<h4 class="inline">{$PayPal_content.sole_solution_section_title}</h4> <img src="{$PayPal_logo.BackOfficeCards}" height="22px"/>
 				<div class="clear"></div>
 				<div class="form-block">
 					{if (in_array($PayPal_WPS, $PayPal_allowed_methods))}
 						{* WEBSITE PAYMENT STANDARD *}
 						<label for="paypal_payment_wps">
 							<input type="radio" name="paypal_payment_method" id="paypal_payment_wps" value='{$PayPal_WPS}' {if $PayPal_payment_method == $PayPal_WPS}checked="checked"{/if} />
-							{$PayPal_content.choose|escape:'htmlall':'UTF-8'} {$PayPal_content.website_payment_standard|escape:'htmlall':'UTF-8'}
+							{$PayPal_content.choose} {$PayPal_content.website_payment_standard}
 							<br />
-							<span class="description">{$PayPal_content.website_payment_standard_tagline|escape:'htmlall':'UTF-8'}</span>
+							<span class="description">{$PayPal_content.website_payment_standard_tagline}</span>
 						</label>
 					{/if}
 
@@ -111,22 +111,22 @@
 						<br />
 						<label for="paypal_payment_wpp">
 							<input type="radio" name="paypal_payment_method" id="paypal_payment_wpp" value='{$PayPal_HSS}' {if $PayPal_payment_method == $PayPal_HSS}checked="checked"{/if} />
-							{$PayPal_content.choose|escape:'htmlall':'UTF-8'} {$PayPal_content.website_payment_pro|escape:'htmlall':'UTF-8'}<br />
-							<span class="description">{$PayPal_content.website_payment_pro_tagline|escape:'htmlall':'UTF-8'}</span>
-							<p class="toolbox">{$PayPal_content.website_payment_pro_disclaimer|escape:'htmlall':'UTF-8'}</p>
+							{$PayPal_content.choose} {$PayPal_content.website_payment_pro}<br />
+							<span class="description">{$PayPal_content.website_payment_pro_tagline}</span>
+							<p class="toolbox">{$PayPal_content.website_payment_pro_disclaimer}</p>
 						</label>
 					{/if}
 				</div>
 			{/if}
 
 			{if (in_array($PayPal_ECS, $PayPal_allowed_methods))}
-			<h4 class="inline">{$PayPal_content.additional_solution_tagline|escape:'htmlall':'UTF-8'}</h4> <img src="{$PayPal_logo.LocalPayPalMarkSmall}" />
+			<h4 class="inline">{$PayPal_content.additional_solution_tagline}</h4> <img src="{$PayPal_logo.LocalPayPalMarkSmall}" />
 			<div class="form-block">
 				{* EXPRESS CHECKOUT SOLUTION *}
 				<label for="paypal_payment_ecs">
 					<input type="radio" name="paypal_payment_method" id="paypal_payment_ecs" value='{$PayPal_ECS}' {if $PayPal_payment_method == $PayPal_ECS}checked="checked"{/if} />
-					{$PayPal_content.choose|escape:'htmlall':'UTF-8'} {$PayPal_content.express_checkout|escape:'htmlall':'UTF-8'}<br />
-					<span class="description">{$PayPal_content.express_checkout_tagline|escape:'htmlall':'UTF-8'}</span>
+					{$PayPal_content.choose} {$PayPal_content.express_checkout}<br />
+					<span class="description">{$PayPal_content.express_checkout_tagline}</span>
 				</label>
 			</div>
 			{/if}
@@ -141,32 +141,32 @@
 		{* SUBSCRIBE OR OPEN YOUR PAYPAL BUSINESS ACCOUNT *}
 		<div class="box" id="account">
 
-			<span class="paypal-section">2</span> <h3 class="inline">{$PayPal_content.account_section_title|escape:'htmlall':'UTF-8'}</h3>
+			<span class="paypal-section">2</span> <h3 class="inline">{$PayPal_content.account_section_title}</h3>
 
 			<br /><br />
 
 			<div id="signup">
 				{* Use cases 1 - 3 *}
-				<a href="{$PayPal_content.u1|escape:'htmlall':'UTF-8'->signUpRedirectLink}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1|escape:'htmlall':'UTF-8'->signUpCallButton}</a>
-				<a href="{$PayPal_content.u2|escape:'htmlall':'UTF-8'->signUpRedirectLink}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2|escape:'htmlall':'UTF-8'->signUpCallButton}</a>
-				<a href="{$PayPal_content.u3|escape:'htmlall':'UTF-8'->signUpRedirectLink}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3|escape:'htmlall':'UTF-8'->signUpCallButton}</a>
+				<a href="{$PayPal_content.u1->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
+				<a href="{$PayPal_content.u2->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
+				<a href="{$PayPal_content.u3->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
 
 				{* Use cases 4 - 6 *}
-				{*<a href="{$PayPal_content.u4|escape:'htmlall':'UTF-8'->signUpRedirectLink}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4|escape:'htmlall':'UTF-8'->signUpCallButton}</a>*}
-				<a href="{$PayPal_content.u5|escape:'htmlall':'UTF-8'->signUpRedirectLink}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5|escape:'htmlall':'UTF-8'->signUpCallButton}</a>
-				{*<a href="{$PayPal_content.u6|escape:'htmlall':'UTF-8'->signUpRedirectLink}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6|escape:'htmlall':'UTF-8'->signUpCallButton}</a>*}
+				{*<a href="{$PayPal_content.u4->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
+				<a href="{$PayPal_content.u5->signUpRedirectLink|escape:'htmlall':'UTF-8'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
+				{*<a href="{$PayPal_content.u6->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
 
 				<br /><br />
 
 				{* Use cases 1 - 3 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1|escape:'htmlall':'UTF-8'->content}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2|escape:'htmlall':'UTF-8'->content}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3|escape:'htmlall':'UTF-8'->content}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3->content|escape:'htmlall':'UTF-8'}</span>
 
 				{* Use cases 4 - 6 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4|escape:'htmlall':'UTF-8'->content}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5|escape:'htmlall':'UTF-8'->content}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6|escape:'htmlall':'UTF-8'->content}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6->content|escape:'htmlall':'UTF-8'}</span>
 
 			</div>
 
@@ -322,12 +322,12 @@
 			<input type="submit" name="submitButton" value="{$PayPal_content.save_button|escape:'htmlall':'UTF-8'}" id="paypal_submit" />
 			
 			<div class="box paypal-hide" id="paypal-test-mode-confirmation">
-				<h3>{$PayPal_content.sandbox_confirmation_title|escape:'htmlall':'UTF-8'} :</h3>
+				<h3>{$PayPal_content.sandbox_confirmation_title} :</h3>
 				<ul>
-					{$PayPal_content.sandbox_confirmation_content|escape:'htmlall':'UTF-8'}
+					{$PayPal_content.sandbox_confirmation_content}
 				</ul>
 
-				<h4>{$PayPal_content.sandbox_confirmation_question|escape:'htmlall':'UTF-8'}</h4>
+				<h4>{$PayPal_content.sandbox_confirmation_question}</h4>
 
 				<div id="buttons">
 					<button class="fancy_confirm" name="fancy_confirm" value="0">{$PayPal_content.no|escape:'htmlall':'UTF-8'}</button>
