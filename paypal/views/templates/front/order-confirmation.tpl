@@ -48,7 +48,7 @@
 		<span class="bold">
 		{if $smarty.const._PS_VERSION_ >= 1.5}
 			{if isset($reference_order)}
-				{$reference_order}
+				{$reference_order|escape:'htmlall':'UTF-8'}
 			{else}
 				{$order.id_order|intval}
 			{/if}

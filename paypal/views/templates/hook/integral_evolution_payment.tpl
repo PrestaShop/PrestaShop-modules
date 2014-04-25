@@ -31,20 +31,20 @@
 	<div class="row">
 		<div class="col-xs-12 col-md-6">
 		<p class="payment_module paypal" >
-			<a href="javascript:void(0)" style="padding-left:17px;" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice}">
+			<a href="javascript:void(0)" style="padding-left:17px;" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}">
 				
-						<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />		
-					{$PayPal_content.payment_choice}
+						<img src="{$logos.LocalPayPalHorizontalSolutionPP|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />		
+					{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}
 			</a>
 		</p>
 		</div>
 	</div>
 	{else}
 	<p class="payment_module">
-		<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice}">
+		<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}">
 			
-					<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />		
-				{$PayPal_content.payment_choice}
+					<img src="{$logos.LocalPayPalHorizontalSolutionPP|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />		
+				{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}
 		</a>
 	</p>
 	{/if}

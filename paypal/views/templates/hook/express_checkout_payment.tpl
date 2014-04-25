@@ -30,12 +30,12 @@
         <p class="payment_module paypal">
 			<a href="javascript:void(0)" onclick="$('#paypal_payment_form').submit();" id="paypal_process_payment" title="{l s='Pay with PayPal' mod='paypal'}">
 				{if isset($use_mobile) && $use_mobile}
-					<img src="{$base_dir_ssl}modules/paypal/img/logos/express_checkout_mobile/CO_{$PayPal_lang_code}_orange_295x43.png" />
+					<img src="{$base_dir_ssl|escape:'htmlall':'UTF-8'}modules/paypal/img/logos/express_checkout_mobile/CO_{$PayPal_lang_code|escape:'htmlall':'UTF-8'}_orange_295x43.png" />
 				{else}
 					{if isset($logos.LocalPayPalHorizontalSolutionPP) && $PayPal_payment_method == $PayPal_integral}
-						<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />
+						<img src="{$logos.LocalPayPalHorizontalSolutionPP|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />
 					{else}
-						<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice}" />
+						<img src="{$logos.LocalPayPalLogoMedium|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" />
 					{/if}
 					{$PayPal_content.payment_choice}
 				{/if}
@@ -58,9 +58,9 @@
 			<img src="{$base_dir_ssl}modules/paypal/img/logos/express_checkout_mobile/CO_{$PayPal_lang_code}_orange_295x43.png" />
 		{else}
 			{if isset($logos.LocalPayPalHorizontalSolutionPP) && $PayPal_payment_method == $PayPal_integral}
-				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />
+				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />
 			{else}
-				<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice}" />
+				<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" />
 			{/if}
 			{$PayPal_content.payment_choice}
 		{/if}

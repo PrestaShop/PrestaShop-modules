@@ -133,7 +133,7 @@ if ($request_type && $ppec->type)
 		$ppec->context->cart->update();
 	}
 
-	$login_user = PaypalLoginUser::getByIdCustomer((int)$ppec->context->cookie->id_customer);
+	$login_user = PaypalLoginUser::getByIdCustomer((int)$ppec->context->customer->id);
 
 	if ($login_user && $login_user->expires_in <= time())
 	{

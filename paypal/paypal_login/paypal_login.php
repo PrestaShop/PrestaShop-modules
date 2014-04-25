@@ -75,9 +75,7 @@ class PayPalLogin
 		unset($this->_logs);
 
 		if (Context::getContext()->cookie->isLogged())
-		{
 			return $this->getRefreshToken();
-		}
 
 		$params = array(
 			'grant_type'   => 'authorization_code',
@@ -97,7 +95,7 @@ class PayPalLogin
 			fclose($handle);
 		}
 
-		$result = json_decode($result);
+		$result = Tools::jsonDecode($result);
 
 		if ($result)
 		{
@@ -109,7 +107,7 @@ class PayPalLogin
 			if (!$customer)
 				return false;
 
-			$temp = PaypalLoginUser::getByIdCustomer((int)Context::getContext()->cookie->id_customer);
+			$temp = PaypalLoginUser::getByIdCustomer((int)Context::getContext()->customer->id);
 
 			if ($temp)
 				$login = $temp;
@@ -130,7 +128,7 @@ class PayPalLogin
 	public function getRefreshToken()
 	{
 		unset($this->_logs);
-		$login = PaypalLoginUser::getByIdCustomer((int)Context::getContext()->cookie->id_customer);
+		$login = PaypalLoginUser::getByIdCustomer((int)Context::getContext()->customer->id);
 
 		if (!is_object($login))
 			return false;
@@ -152,7 +150,7 @@ class PayPalLogin
 			fclose($handle);
 		}
 
-		$result = json_decode($result);
+		$result = Tools::jsonDecode($result);
 
 		if ($result)
 		{
@@ -192,7 +190,7 @@ class PayPalLogin
 			fclose($handle);
 		}
 
-		$result = json_decode($result);
+		$result = Tools::jsonDecode($result);
 
 		if ($result)
 		{

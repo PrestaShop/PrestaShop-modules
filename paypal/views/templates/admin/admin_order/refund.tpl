@@ -28,7 +28,7 @@
 		<div class="panel">
 			<div class="panel-heading"><img src="{$base_url}modules/{$module_name}/logo.gif" alt="" /> {l s='PayPal Refund' mod='paypal'}</div>
 			<form method="post" action="{$smarty.server.REQUEST_URI|escape:htmlall}">
-				<input type="hidden" name="id_order" value="{$params.id_order}" />
+				<input type="hidden" name="id_order" value="{$params.id_order|intval}" />
 				<p><b>{l s='Information:' mod='paypal'}</b> {l s='Payment accepted' mod='paypal'}</p>
 				<p><b>{l s='Information:' mod='paypal'}</b> {l s='When you refund a product, a partial refund is made unless you select "Generate a voucher".' mod='paypal'}</p>
 				<p class="center">

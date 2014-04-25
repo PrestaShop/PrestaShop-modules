@@ -377,10 +377,7 @@ class PayPal extends PaymentModule
 
 		$process = '<script type="text/javascript">'.$this->fetchTemplate('js/paypal.js').'</script>';
 
-		if (version_compare(_PS_VERSION_, '1.5'))
-			global $smarty;
-		else
-			$smarty = $this->context->smarty;
+		$smarty = $this->context->smarty;
 
 		if ((
 			(method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name') == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc' )) 
@@ -405,7 +402,7 @@ class PayPal extends PaymentModule
 
 	public function getLocale()
 	{
-		switch (Language::getIsoById($this->context->cookie->id_lang))
+		switch (Language::getIsoById($this->context->language->id))
 		{
 			case 'fr':
 				return 'fr-fr';
@@ -775,7 +772,7 @@ class PayPal extends PaymentModule
 		}
 
 		//Get Seamless checkout
-		$login_user = PaypalLoginUser::getByIdCustomer((int)$this->context->cookie->id_customer);
+		$login_user = PaypalLoginUser::getByIdCustomer((int)$this->context->customer->id);
 		if ($login_user && $login_user->expires_in <= time())
 		{
 			$obj = new PayPalLogin();
@@ -938,14 +935,14 @@ class PayPal extends PaymentModule
 
 		if ($send)
 		{
-			$id_lang = (int)$this->context->cookie->id_lang;
+			$id_lang = (int)$this->context->language->id;
 			$iso_lang = Language::getIsoById($id_lang);
 
 			if (!is_dir(dirname(__FILE__).'/mails/'.Tools::strtolower($iso_lang)))
 				$id_lang = Language::getIdByIso('en');
 
 			Mail::Send($id_lang, 'error_reporting', Mail::l('Error reporting from your PayPal module',
-			(int)$this->context->cookie->id_lang), array('{logs}' => implode('<br />', $log)), Configuration::get('PS_SHOP_EMAIL'),
+			(int)$this->context->language->id), array('{logs}' => implode('<br />', $log)), Configuration::get('PS_SHOP_EMAIL'),
 			null, null, null, null, null, _PS_MODULE_DIR_.$this->name.'/mails/');
 		}
 

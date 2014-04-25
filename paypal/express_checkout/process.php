@@ -225,7 +225,6 @@ class PaypalExpressCheckout extends Paypal
 	{
 		// Required field
 		$fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
-		// $fields['REQCONFIRMSHIPPING'] = '0';
 		$fields['NOSHIPPING'] = '1';
 		$fields['BUTTONSOURCE'] = $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD'));
 
