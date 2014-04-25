@@ -116,7 +116,7 @@ $_MODULE['<{ebay}prestashop>formitemsspecifics_287234a1ff35a314b5b6bc4e5828e745'
 $_MODULE['<{ebay}prestashop>formitemsspecifics_98f770b0af18ca763421bac22b4b6805'] = 'Caractéristiques';
 $_MODULE['<{ebay}prestashop>formitemsspecifics_cf3084f540215d39b4c5083c1dbd35d4'] = 'Specifications eBay';
 $_MODULE['<{ebay}prestashop>formitemsspecifics_1be6f9eb563f3bf85c78b4219bf09de9'] = 'Marque';
-$_MODULE['<{ebay}prestashop>formparameters_aade7c22bbc1c3e4a63bb6b898a9c993'] = 'Vous devez regénérer votre jeton d\'authentification';
+$_MODULE['<{ebay}prestashop>formparameters_aade7c22bbc1c3e4a63bb6b898a9c993'] = 'Vous devez regénérer votre jeton d authentification';
 $_MODULE['<{ebay}prestashop>formparameters_459a6f79ad9b13cbcb5f692d2cc7a94d'] = 'Jeton d\'authentification';
 $_MODULE['<{ebay}prestashop>formparameters_8bc212f48680748479bbd322d4d73d3f'] = 'Détails du compte';
 $_MODULE['<{ebay}prestashop>formparameters_9b2fa2b9d09c506b0fd3e3c1b6a047f8'] = 'Afin d\'exporter vos produits sur eBay vous avez besoin de créer';

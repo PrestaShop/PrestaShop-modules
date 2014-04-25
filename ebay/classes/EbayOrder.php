@@ -384,10 +384,10 @@ class EbayOrder
 			
 			$total_price_tax_excl += (float)(($product['price'] / $coef_rate) * $product['quantity']);
 			// ebay get one shipping cost by product
-			$total_shipping_tax_incl += $this->shippingServiceCost;
-			$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
-
 		}
+
+		$total_shipping_tax_incl += $this->shippingServiceCost;
+		$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
 
 		$data = array(
 			'total_paid'              => (float)$this->amount,

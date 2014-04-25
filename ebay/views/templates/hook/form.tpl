@@ -22,6 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<style>
+	select.ebay_select{
+		color:#000 !important;
+	}
+</style>
+
 <script type="text/javascript">
 	regenerate_token_show = false;
 	{if $regenerate_token != false}
@@ -41,7 +47,7 @@
 <script>
 	var $j = $;
 </script>
-{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4"}
+{if substr($smarty.const._PS_VERSION_, 0, 3) == "1.4" || substr($smarty.const._PS_VERSION_, 0, 5) == "1.5.2"}
 	<link rel="stylesheet" href="{$fancyboxCss}" />
 	<script src="{$ebayjquery}"></script>
 	<script src="{$noConflicts}"></script>
