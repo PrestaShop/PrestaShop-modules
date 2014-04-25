@@ -282,6 +282,7 @@
 							
 							<dt>
 								{$PayPal_content.template_to_choose}
+								<p class="description" style="margin-top:-10px;">({$PayPal_content.translated_in_lang})</p>
 							</dt>
 							<dd>
 								<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_paypal_blue" value="1"{if $PayPal_login_tpl == 1} checked{/if} />

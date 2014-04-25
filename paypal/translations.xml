@@ -21,6 +21,8 @@
 		<your_country>Your country</your_country>
 		<change_country>change</change_country>
 		<country_change_title>Select your country</country_change_title>
+		
+		<translated_in_lang>Translated in your language</translated_in_lang>
 
 		<customer_support><![CDATA[<span style="font-weight: bold">Need help ?</span>]]> Give us a call : xxxx</customer_support>
 		<customer_support_image>call</customer_support_image>
@@ -874,6 +876,8 @@
 				<li><span class="bold">Acceptez les principaux moyens de paiements</span><br />Visa, Mastercard, Carte Bleue, Aurore, Cofinoga, 4 Etoiles, PayPal</li>
 			]]>
 		</benefits>
+
+		<translated_in_lang>Traduis dans votre langue</translated_in_lang>
 
 		<your_country>Votre pays</your_country>
 		<change_country>changer</change_country>
