@@ -81,7 +81,7 @@
 
 		<label for="ebay_countries">{l s='Choose ebay site you want to listen' mod='ebay'}</label>
 		<div class="margin-form">
-			<select name="ebay_country" id="ebay_countries">
+			<select name="ebay_country" id="ebay_countries" class="ebay_select">
 				{if isset($ebay_countries) && $ebay_countries && sizeof($ebay_countries)}
 					{foreach from=$ebay_countries item='country' key='key'}
 						<option value="{$key}" data-signin="{$country.signin}" {if $key == $default_country} selected{/if}>{if $country.subdomain}{$country.subdomain}.{/if}ebay.{$country.site_extension}</option>
