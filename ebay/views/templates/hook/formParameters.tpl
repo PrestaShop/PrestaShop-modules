@@ -155,7 +155,7 @@
 
 			<select name="listingdurations" data-dialoghelp="http://pages.ebay.com/help/sell/duration.html" data-inlinehelp="{l s='The listing duration is the length of time that your listing is active on eBay.co.uk. You can have it last 1, 3, 5, 7, 10, 30 days or Good \'Til Cancelled. Good \'Til Cancelled listings renew automatically every 30 days unless all of the items sell, you end the listing, or the listing breaches an eBay policy. Good \'Til Cancelled is the default setting here to save you time relisting your items.' mod='ebay'}">
 				{foreach from=$listingDurations item=listing key=key}
-					<option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing|escape:'htmlall':'UTF-8'}</option>
+					<option value="{$key}" {if !$hasEbayBoutique && $key == "Days_10"}selected="selected"{elseif $ebayListingDuration == $key}selected="selected"{/if}>{$listing|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 			</select>
 		</div>
