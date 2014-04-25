@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <style>
-	select{
+	select.ebay_select{
 		color:#000 !important;
 	}
 </style>
