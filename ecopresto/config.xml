@@ -2,7 +2,7 @@
 		<module>
 			<name>ecopresto</name>
 			<displayName><![CDATA[Drop shipping - Ecopresto]]></displayName>
-			<version><![CDATA[2.8]]></version>
+			<version><![CDATA[2.8.1]]></version>
 			<description><![CDATA[Importer vos produits en Drop shipping avec Ecopresto]]></description>
 			<author><![CDATA[Ether Cr&eacute;ation]]></author>
 			<tab><![CDATA[Tools]]></tab>
