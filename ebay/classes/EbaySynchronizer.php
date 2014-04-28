@@ -653,6 +653,7 @@ class EbaySynchronizer
 		$service_priority = 1;
 
 		foreach (EbayShipping::getNationalShippings($ebay_profile->id) as $carrier)
+		foreach (EbayShipping::getNationalShippings($product->id) as $carrier)
 		{
 			$national_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,
@@ -667,6 +668,7 @@ class EbaySynchronizer
 		$service_priority = 1;
 
 		foreach (EbayShipping::getInternationalShippings($ebay_profile->id) as $carrier)
+		foreach (EbayShipping::getInternationalShippings($product->id) as $carrier)
 		{
 			$international_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,

@@ -48,7 +48,7 @@
 		createSelecstShipping += "<tr>";
 
 		// Carrier Prestashop
-		createSelecstShipping += "<td><div><select name='"+ (currentName == 'domesticShipping' ? 'psCarrier' : 'psCarrier_international') +"["+ lastId +"]' class='prestaCarrier'><option value='' selected>{l s='Select a PrestaShop carrier' mod='ebay'}</option>";
+		createSelecstShipping += "<td><p class='label'><strong>{l s='Prestashop carrier' mod='ebay'}</strong></p><div><select name='"+ (currentName == 'domesticShipping' ? 'psCarrier' : 'psCarrier_international') +"["+ lastId +"]' class='prestaCarrier'><option value='' selected>{l s='Select a PrestaShop carrier' mod='ebay'}</option>";
 		{foreach from=$newPrestashopZone item=zone}
 			{if !empty($zone.carriers)}
 			 	createSelecstShipping += "<optgroup label='{$zone.name}'>";
@@ -62,14 +62,14 @@
 				createSelecstShipping += "</optgroup>";
 			{/if}
 		{/foreach}
-		createSelecstShipping += "</select>"+ (currentName == 'domesticShipping' ? '<span>' : '<p>') +"{l s='Start by choosing a PrestaShop carrier to replicate on eBay' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</div>";
+		createSelecstShipping += "</select><span> {l s='Start by choosing a PrestaShop carrier to replicate on eBay' mod='ebay'}</span></div>";
 
 		createSelecstShipping += "</td>";
 
 		// end carrier Prestashop
 
 		// Carrier eBay
-		createSelecstShipping += "<td style='visibility:hidden'><p data-validate='{l s='Linked to eBay'}'>{l s='Link' mod='ebay'}<strong>"+(hasValues ? valuePSCarrier : '')+"</strong>{l s='with eBay carrier' mod='ebay'}</p><div><select name='"+ (currentName == 'domesticShipping' ? 'ebayCarrier' : 'ebayCarrier_international') +"[" + lastId + "]' class='eBayCarrier'><option value=''>{l s='Select eBay carrier' mod='ebay'}</option>";
+		createSelecstShipping += "<td class='linked "+ (currentName == 'domesticShipping' ? '' : 'big-linked') +"'' style='visibility:hidden'><p  class='label' data-validate='{l s='Linked to eBay'}'>{l s='Link' mod='ebay'}<strong>"+(hasValues ? valuePSCarrier : '')+"</strong>{l s='with eBay carrier' mod='ebay'}</p><div><select name='"+ (currentName == 'domesticShipping' ? 'ebayCarrier' : 'ebayCarrier_international') +"[" + lastId + "]' class='eBayCarrier'><option value=''>{l s='Select eBay carrier' mod='ebay'}</option>";
 		{foreach from=$eBayCarrier item=carrier}
 			if (('{$carrier.InternationalService}' !== 'true' && currentName == 'domesticShipping') || ('{$carrier.InternationalService}' == 'true' && currentName == 'internationalShipping'))
 				createSelecstShipping += "<option "+ ((typeof(idEbayCarrier) != "undefined"  && idEbayCarrier == "{$carrier.shippingService}")? 'selected="selected"' : '')  +" value='{$carrier.shippingService}'>{$carrier.description}</option>";
@@ -97,7 +97,7 @@
 		}
 
 		// extrafree
-		createSelecstShipping += "<td style='visibility:hidden;'><p>{l s='Additional item cost' mod='ebay'}</p><span>£</span><input "+ ((typeof(additionalFee) != "undefined" && additionalFee > 0) ? 'value="'+additionalFee+'"' : '')  +" name='"+ (currentName == 'domesticShipping' ? 'extrafee' : 'extrafee_international') +"["+ lastId +"]' type='text'>"+ (currentName == 'domesticShipping' ? '<span>' : '<p>') +"{l s='Increase the cost when a buyer adds more than one of the same item to their order' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</td>";
+		createSelecstShipping += "<td style='visibility:hidden;'><p  class='label'>{l s='Additional item cost' mod='ebay'}</p><span>£ </span><input "+ ((typeof(additionalFee) != "undefined" && additionalFee > 0) ? 'value="'+additionalFee+'"' : '')  +" name='"+ (currentName == 'domesticShipping' ? 'extrafee' : 'extrafee_international') +"["+ lastId +"]' type='text'>"+ (currentName == 'domesticShipping' ? '<span style="font-size:12px;">' : '<p>') +" {l s='Increase the cost when a buyer adds more than one of the same item to their order' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</td>";
 		// end extrafree
 
 		// trash
@@ -114,7 +114,7 @@
 		createSelecstShipping += "</tr>";
 		createSelecstShipping = $(createSelecstShipping).append(trash);
 		if (hasValues) {
-			createSelecstShipping = $("<table class='success' data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;background-color:#DFF2BF'>").append(createSelecstShipping);
+			createSelecstShipping = $("<table class='success' data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;background-color:#ddf2db'>").append(createSelecstShipping);
 		}
 		else {
 			createSelecstShipping = $("<table data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;'>").append(createSelecstShipping);
@@ -207,16 +207,14 @@
 				}
 				tr.children('td').css('visibility', 'visible');
 				div.siblings('p').html(newHtmlP);
-				tr.parent('tbody').parent('table').css('background-color', '#DFF2BF').addClass('success');
-				if (idDivParent == "domesticShipping" && $("#"+idDivParent).children('.table').length == 1)
+				if (idDivParent == "domesticShipping")
 				{
-					addShipping('domesticShipping');
-					$('#domesticShippingButton').show();
-				}
-				else if (idDivParent == "internationalShipping" && $("#"+idDivParent).children('.table').length == 1)
-				{
-					addShipping('internationalShipping');
-					$('#internationalShippingButton').show();
+					tr.parent('tbody').parent('table').css('background-color', '#ddf2db').addClass('success');
+					if ($("#"+idDivParent).children('.table').length == 1)
+					{
+						addShipping('domesticShipping');
+						$('#domesticShippingButton').show();
+					}
 				}
 			});
 		}
@@ -407,6 +405,22 @@
 			addShipping('internationalShipping');
 		{/foreach}
 
+		$('#menuTab3Sheet').on('click', '#internationalShipping table ul li input', function(){
+			var nbInputChecked = $(this).parent('li').parent('ul').parent('td').find('input').filter(':checked').length;
+			if (nbInputChecked >= 1)
+			{
+				$(this).parents('td').parents('table').css('background-color', '#ddf2db').addClass('success');
+				if ($("#internationalShipping").children('.table').length == 1)
+				{
+					addShipping('internationalShipping');
+					$('#internationalShippingButton').show();
+				}
+			}
+			else
+			{
+				$(this).parents('td').parents('table').css('background-color', '#fff').removeClass('success');
+			}
+		});
 
 		/* EVENTS */
 		bindElements();
@@ -506,6 +520,25 @@
 </script>
 <style>
 {literal}
+	#domesticShipping table
+	{
+		padding: 0 5px 10px 10px;
+		border: 1px solid #CCCED7;
+		border: 1px solid #CCCED7;
+	}
+
+	#internationalShipping table
+	{
+		padding: 0 5px 10px 10px;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+	}
+
+	#domesticShipping table p.label
+	{
+		color: #000;
+	}
 	.internationalShipping{
 		background-color: #FFF;
 		border: 1px solid #AAA;

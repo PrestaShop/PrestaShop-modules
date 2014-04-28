@@ -349,3 +349,14 @@ html {
 	border: 1px solid #585A69;
 	color: #0055FF;
 }
+
+#domesticShipping td.linked, #internationalShipping td.linked
+{
+	background : url('../img/link.png') no-repeat 0 15px;
+	padding-left: 45px;
+}
+
+#domesticShipping td.big-linked, #internationalShipping td.big-linked
+{
+	background-position: 0 55px;
+}

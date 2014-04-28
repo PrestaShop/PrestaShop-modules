@@ -1321,6 +1321,15 @@ class Ebay extends Module
 		$sizeBig = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG');
 		$sizesmall = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL');
 		$picture_per_listing = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_PER_LISTING');
+		$ebay_paypal_email = Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL')));
+		$shopPostalCode = Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE')));
+		$within = Configuration::get('EBAY_RETURNS_WITHIN');
+		$whopays = Configuration::get('EBAY_RETURNS_WHO_PAYS');
+		$ebayListingDuration = Configuration::get('EBAY_LISTING_DURATION');
+		$sizedefault = (int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT');
+		$sizeBig = (int)Configuration::get('EBAY_PICTURE_SIZE_BIG');
+		$sizesmall = (int)Configuration::get('EBAY_PICTURE_SIZE_SMALL');
+		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME'));
 
 
 		$account_setting = 0;
@@ -1368,6 +1377,8 @@ class Ebay extends Module
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
 			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
+			'account_setting' => $account_setting,
+			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false
 		);
 
 		if (Tools::getValue('relogin'))
@@ -1635,7 +1646,8 @@ class Ebay extends Module
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
 						'percent' => pSQL($percentValue),
-						'date_upd' => pSQL($date)
+						'date_upd' => pSQL($date),
+						'sync' => 0
 					);
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))
