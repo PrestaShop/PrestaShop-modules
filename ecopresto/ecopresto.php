@@ -395,7 +395,7 @@ class ecopresto extends Module{
 									<td>
 										<input type="checkbox" id="check'.$ncat.'" name="check'.$ncat.'" value="'.$ncat.'" class="checBB" />
 									</td>
-									<td class="cat cat'.$ncat.' curpoin">>> <span class="catdisplay">'.Tools::safeOutput($resu['category_1']).'</span></td>
+									<td class="cat cat'.$ncat.' curpoin"><span class="catdisplay">'.Tools::safeOutput($resu['category_1']).'</span></td>
 									<td></td>
 									<td>
 										<span class="spancat '.($catSelected?' dnone ':'').'">
@@ -428,7 +428,7 @@ class ecopresto extends Module{
 										<input type="checkbox" id="check'.$ncat.'___'.$nsscat.'" name="check'.$ncat.'___'.$nsscat.'" value="'.$ncat.'___'.$nsscat.'" class="checBB checBB'.$ncat.'" />
 									</td>
 									<td class="ssceza"><span class="catdisplay2">'.Tools::safeOutput($resu['category_1']).'</span></td>
-									<td class="sscat sscat'.$ncat.' nsscat'.$nsscat.' curpoin">>> '.Tools::safeOutput($resu['ss_category_1']).'</td>
+									<td class="sscat sscat'.$ncat.' nsscat'.$nsscat.' curpoin">'.Tools::safeOutput($resu['ss_category_1']).'</td>
 									<td>
 										<span class="spancat '.($ssCatSelected?' dnone ':'').'">
 											'.$this->l('Créer automatiquement').'
@@ -449,7 +449,7 @@ class ecopresto extends Module{
 					$sscat = $resu['ss_category_1'];
 				}
 
-				$html .= '<tr class="row_hover dnone" id='.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'>
+				$html .= '<tr class="row_hover" style="display:none" id='.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'>
 									<td><input type="checkbox" id="check'.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'" '.(isset($pdt_sel[$resu['reference']])?'checked="checked"':'').' rel="'.Tools::safeOutput($resu['reference']).'" name="check'.Tools::safeOutput($resu['reference']).'" value="'.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'" class="checBB checBB'.$ncat.' checBB'.$ncat.'___'.$nsscat.' pdtI"></td>
 									<td class="ssceza"><span class="catdisplay3">'.Tools::safeOutput($resu['category_1']).'</span></td>
 									<td class="ssceza"><span class="sscatdisplay3">'.Tools::safeOutput($resu['ss_category_1']).'</span></td>
