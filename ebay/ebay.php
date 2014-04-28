@@ -1323,12 +1323,6 @@ class Ebay extends Module
 		$picture_per_listing = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_PER_LISTING');
 		$ebay_paypal_email = Tools::safeOutput(Tools::getValue('ebay_paypal_email', Configuration::get('EBAY_PAYPAL_EMAIL')));
 		$shopPostalCode = Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', Configuration::get('EBAY_SHOP_POSTALCODE')));
-		$within = Configuration::get('EBAY_RETURNS_WITHIN');
-		$whopays = Configuration::get('EBAY_RETURNS_WHO_PAYS');
-		$ebayListingDuration = Configuration::get('EBAY_LISTING_DURATION');
-		$sizedefault = (int)Configuration::get('EBAY_PICTURE_SIZE_DEFAULT');
-		$sizeBig = (int)Configuration::get('EBAY_PICTURE_SIZE_BIG');
-		$sizesmall = (int)Configuration::get('EBAY_PICTURE_SIZE_SMALL');
 		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME'));
 
 
@@ -1377,7 +1371,6 @@ class Ebay extends Module
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
 			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
-			'account_setting' => $account_setting,
 			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false
 		);
 
@@ -1820,7 +1813,7 @@ class Ebay extends Module
 				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]))
 				{
 					EbayShipping::insert($ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
-					$last_id = EbayShipping::getLastShippingId();
+					$last_id = EbayShipping::getLastShippingId($this->ebay_profile->id);
 
 					if (isset($international_shipping_locations[$key]))
 						foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
@@ -2038,7 +2031,7 @@ class Ebay extends Module
                 $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                         ON p.id_product = ps.id_product 
                         AND ps.id_shop = '.(int)$this->ebay_profile->id_shop;
-            $sq .= ' WHERE s.`quantity` > 0
+            $sql .= ' WHERE s.`quantity` > 0
 						AND  p.`active` = 1
 						AND  p.`id_category_default`
 						IN (

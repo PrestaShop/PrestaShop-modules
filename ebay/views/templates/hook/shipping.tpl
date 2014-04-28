@@ -104,7 +104,7 @@
 		var atrash = $('<a style="cursor:pointer;">');
 		var imgtrash = $('<img>').attr('src', '../img/admin/delete.gif');
 		atrash.append(imgtrash)
-		atrash.bind('click', function() {
+		atrash.on('click', function() {
 			$(this).parents('table').remove();
 			return false;
 		});
@@ -147,7 +147,7 @@
 					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
 					elementA.append(contentA);
 					div.after(elementA);
-					elementA.bind('click', function()
+					elementA.on('click', function()
 					{
 						$(this).fadeOut(400, function(){
 							$(this).siblings('div').fadeIn();
@@ -194,7 +194,7 @@
 					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
 					elementA.append(contentA);
 					div.after(elementA);
-					elementA.bind('click', function()
+					elementA.on('click', function()
 					{
 						tr.children('td:eq(3), td:eq(2)').css('visibility', 'hidden');
 						$(this).fadeOut(400, function() {
@@ -503,14 +503,14 @@
 			$(this).hide().parent().find('.listcountry').show();
 		});
 
-		$('#domesticShipping, #internationalShipping').unbind().bind('change', 'select', function(){
+		$('#domesticShipping, #internationalShipping').unbind().on('change', 'select', function(){
 			if ($(this).attr('class') == 'prestaCarrier')
 				displayEbayCarrier($(this));
 			else if ($(this).attr('class') == 'eBayCarrier')
 				processEbayCarrier($(this));
 		});
 
-		$('#domesticShippingButton, #internationalShippingButton').unbind().bind('click', function(){
+		$('#domesticShippingButton, #internationalShippingButton').unbind().on('click', function(){
 			addShipping($(this).attr('id').replace('Button', ''));
 			return false;
 		})

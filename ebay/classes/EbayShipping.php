@@ -36,16 +36,12 @@ class EbayShipping
 			AND `ebay_carrier` = \''.pSQL($ebay_carrier).'\'');
 	}
 
-	public static function getNationalShippings($id_ebay_profile)
-	public static function getNationalShippings($id_product = null)
+	public static function getNationalShippings($id_ebay_profile, $id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping 
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 0');
-
-		$shippings = Db::getInstance()->ExecuteS('SELECT *
-			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 0');
 
 		if ($id_product)
 		{
@@ -57,16 +53,13 @@ class EbayShipping
 		return $shippings;
 	}
 
-	public static function getInternationalShippings($id_ebay_profile)
-	public static function getInternationalShippings($id_product = null)
+	public static function getInternationalShippings($id_ebay_profile, $id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping 
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 1');
-		$shippings = Db::getInstance()->ExecuteS('SELECT *
-			FROM '._DB_PREFIX_.'ebay_shipping WHERE international = 1');
-
+		
 		if ($id_product)
 		{
 			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier

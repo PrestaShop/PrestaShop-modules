@@ -652,8 +652,7 @@ class EbaySynchronizer
 		//Get National Informations : service, costs, additional costs, priority
 		$service_priority = 1;
 
-		foreach (EbayShipping::getNationalShippings($ebay_profile->id) as $carrier)
-		foreach (EbayShipping::getNationalShippings($product->id) as $carrier)
+		foreach (EbayShipping::getNationalShippings($ebay_profile->id, $product->id) as $carrier)
 		{
 			$national_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,
@@ -667,8 +666,7 @@ class EbaySynchronizer
 		//Get International Informations
 		$service_priority = 1;
 
-		foreach (EbayShipping::getInternationalShippings($ebay_profile->id) as $carrier)
-		foreach (EbayShipping::getInternationalShippings($product->id) as $carrier)
+		foreach (EbayShipping::getInternationalShippings($ebay_profile->id, $product->id) as $carrier)
 		{
 			$international_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,
