@@ -94,10 +94,17 @@ resultat_DELDereferencement = function (obj)
     var tot = parseInt(a[1]);
     actu = parseInt(actu+1);    
     var charge = (actu*100)/tot;
-    loaderEtat2(charge);      
-    if(actu==tot){
+    loaderEtat2(charge);
+    
+    if (actu == tot)
+    {
+    	$('.cbDeref').each(function() {
+            this.checked = false;                     
+        });
         fenetreModalhide(0,1,0,'');
-    }else{
+    }
+    else
+    {
         DELDereferencementSuite(actu,tot)
     }
 }
