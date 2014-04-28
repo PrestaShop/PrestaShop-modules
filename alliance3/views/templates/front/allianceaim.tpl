@@ -94,7 +94,7 @@
 
 				<label style="margin-top: 4px; margin-left: 35px; display: block; width: 90px; float: left;">{l s='Card number' mod='alliance3'}</label> <input type="text" name="x_card_num" value="" id="cardnum" size="30" maxlength="16" autocomplete="Off" /><img src="{$module_dir}img/secure.png" alt="" style="margin-left: 5px;" /><br /><br />
 				<label style="margin-top: 4px; margin-left: 35px; display: block; width: 90px; float: left;">{l s='Expiration date' mod='alliance3'}</label>
-				<select id="x_exp_date_m" name="x_exp_date_m" style="width:60px;">{section name=date_m start=1 loop=13}
+				<select id="x_exp_date_m" name="x_exp_date_m" style="width:60px;">{section name=date_m start=01 loop=13}
 					<option value="{$smarty.section.date_m.index|escape:'htmlall':'UTF-8'}">{$smarty.section.date_m.index|escape:'htmlall':'UTF-8'|sprintf}</option>{/section}
 				</select>
 				 /
