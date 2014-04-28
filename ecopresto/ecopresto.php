@@ -125,9 +125,9 @@ class ecopresto extends Module{
 
 		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		{
-			if ('http://'.$_SERVER['HTTP_HOST'] != Tools::getShopDomainSsl(true, true))
+			if ('http://'.$_SERVER['HTTP_HOST'] != Tools::getShopDomain(true, true))
 			{
-				header('Location: '.Tools::getShopDomainSsl(true, true).$_SERVER['REQUEST_URI']);
+				header('Location: '.Tools::getShopDomain(true, true).$_SERVER['REQUEST_URI']);
 				exit();
 			}
 		}
