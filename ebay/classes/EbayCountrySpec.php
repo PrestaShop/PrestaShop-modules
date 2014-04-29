@@ -147,7 +147,32 @@ class EbayCountrySpec
 			'iso_code'       => 'de',
 			'signin'         => 'https://signin.ebay.de/ws/eBayISAPI.dll',
 			'signin_sandbox' => 'https://signin.sandbox.ebay.de/ws/eBayISAPI.dll'
-		)
+		),
+		'ch' => array(
+			'site_id'        => 193,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'CHF',
+			'site_name'      => 'Switzerland',
+			'site_extension' => 'ch',
+			'img_stats'      => null,
+			'iso_code'       => 'ch',
+			'signin'         => 'https://signin.ebay.ch/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.ch/ws/eBayISAPI.dll'
+		),
+		'at' => array(
+			'site_id'        => 16,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'EUR',
+			'site_name'      => 'Austria',
+			'site_extension' => 'at',
+			'img_stats'      => null,
+			'iso_code'       => 'at',
+			'signin'         => 'https://signin.ebay.at/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.at/ws/eBayISAPI.dll'
+		),
+
 	);
 
 	public function __construct(Country $country = null)
