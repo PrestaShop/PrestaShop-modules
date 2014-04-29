@@ -1703,23 +1703,26 @@ class Ebay extends Module
 	private function _postProcessSpecifics() 
 	{
 		// Save specifics
-		foreach (Tools::getValue('specific') as $specific_id => $data)
+		if(Tools::getValue('specific'))
 		{
-			if ($data)
-				list($data_type, $value) = explode('-', $data);
-			else
-				$data_type = null;
+			foreach (Tools::getValue('specific') as $specific_id => $data)
+			{
+				if ($data)
+					list($data_type, $value) = explode('-', $data);
+				else
+					$data_type = null;
 
-			$field_names = EbayCategorySpecific::getPrefixToFieldNames();
-			$data = array_combine(array_values($field_names), array(null, null, null, null));
+				$field_names = EbayCategorySpecific::getPrefixToFieldNames();
+				$data = array_combine(array_values($field_names), array(null, null, null, null));
 
-			if ($data_type)
-				$data[$field_names[$data_type]] = $value;
+				if ($data_type)
+					$data[$field_names[$data_type]] = $value;
 
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-				Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.$specific_id);
-			else
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.$specific_id);
+				if (version_compare(_PS_VERSION_, '1.5', '>'))
+					Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.$specific_id);
+				else
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.$specific_id);
+			}
 		}
 
 		// save conditions
@@ -1776,20 +1779,23 @@ class Ebay extends Module
 
 		//Update global information about shipping (delivery time, ...)
 		$this->ebay_profile->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
-		$this->ebay_profile->setConfiguration('EBAY_ZONE_INTERNATIONAL', Tools::getValue('internationalZone'));
-		$this->ebay_profile->setConfiguration('EBAY_ZONE_NATIONAL', Tools::getValue('nationalZone'));
 		//Update Shipping Method for National Shipping (Delete And Insert)
 		EbayShipping::truncate($this->ebay_profile->id);
 
 		if ($ebay_carriers = Tools::getValue('ebayCarrier'))
 		{
+
 			$ps_carriers = Tools::getValue('psCarrier');
 			$extra_fees = Tools::getValue('extrafee');
 
 			foreach ($ebay_carriers as $key => $ebay_carrier)
 			{
 				if (!empty($ebay_carrier) && !empty($ps_carriers[$key]))
-					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier, $ps_carriers[$key], $extra_fees[$key]);
+				{
+					//Get id_carrier and id_zone from ps_carrier
+					$infos = explode('-', $ps_carriers[$key]); 
+					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier, $infos[0], $extra_fees[$key], $infos[1]);
+				}
 			}
 		}
 
@@ -1804,18 +1810,15 @@ class Ebay extends Module
 			$international_excluded_shipping_locations = Tools::getValue('internationalExcludedShippingLocation');
 
 			foreach ($ebay_carriers_international as $key => $ebay_carrier_international)
-			{
-//				$ebay_carrier_international['id_ebay_profile'] = $this->ebay_profile->id;
-				EbayShipping::insert($this->ebay_profile->id, $ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
-				$last_id = EbayShipping::getLastShippingId($this->ebay_profile->id);
-				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]))
+			{//				
+				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]) && isset($international_shipping_locations[$key]))
 				{
-					EbayShipping::insert($ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
+					$infos = explode('-', $ps_carriers_international[$key]); 
+					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier_international, $infos[0], $extra_fees_international[$key], $infos[1], true);
 					$last_id = EbayShipping::getLastShippingId($this->ebay_profile->id);
 
-					if (isset($international_shipping_locations[$key]))
-						foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
-							EbayShippingInternationalZone::insert($this->ebay_profile->id, $last_id, $id_ebay_zone);
+					foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
+						EbayShippingInternationalZone::insert($this->ebay_profile->id, $last_id, $id_ebay_zone);
 				}
 			}
 		}
@@ -1929,8 +1932,8 @@ class Ebay extends Module
 		if (Tools::getValue('reset_template'))
 			$ebay_product_template = str_replace($forbiddenJs, '', $this->_getProductTemplateContent());
 		else
-			$ebay_product_template = str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE')));
-		$ebay_product_template_title = Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE');
+			$ebay_product_template = str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE')));
+		$ebay_product_template_title = $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE');
 
 		$smarty_vars = array(
 			'action_url' => $action_url,
@@ -2620,7 +2623,7 @@ class Ebay extends Module
 		$products = EbayProduct::getProductsWithoutBlacklisted($id_lang);
 		$data = array(
 			'id_lang' => $id_lang,
-			'titleTemplate' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE')
+			'titleTemplate' => $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE')
 			);
 
 		foreach ($products as $p)

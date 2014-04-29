@@ -44,7 +44,7 @@ class EbayRequest
 	private $apiCall;
 	private $loginUrl;
 	private $compatibility_level;
-	private $debug = true;
+	private $debug;
 	private $dev = true;
 	private $ebay_country;
 
@@ -383,7 +383,7 @@ class EbayRequest
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
 			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
 			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'quantity' => $data['quantity'],
 			'item_specifics' => $data['item_specifics'],
@@ -466,7 +466,7 @@ class EbayRequest
 			'condition_id' => $data['condition'],
 			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
 			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
 			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
 			'title' => substr(self::prepareTitle($data), 0, 80),
@@ -523,7 +523,7 @@ class EbayRequest
 			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'listing_type' => 'FixedPriceItem',
 			'payment_method' => 'PayPal',
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
 			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
@@ -763,6 +763,7 @@ class EbayRequest
 		curl_close($connection); // Close the connection
 
 		// Debug
+		
 		if ($this->debug)
 		{
 			if (!file_exists(dirname(__FILE__).'/../log/request.txt'))

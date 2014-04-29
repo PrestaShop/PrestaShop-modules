@@ -36,9 +36,11 @@
 		</select>
 	</div>
 </fieldset>
+
+
 <script type="text/javascript">
 	// <![CDATA[
-	function addShipping(currentName, idPSCarrier, idEbayCarrier, additionalFee, nbSelect, zone) {
+	function addShipping(currentName, idPSCarrier, idEbayCarrier, additionalFee, nbSelect, id_zone, zone) {
 		var lastId = 0;
 		var current = $("#"+currentName);
 		var hasValues = (typeof(idPSCarrier) != "undefined" && typeof(idEbayCarrier) != "undefined" && typeof(additionalFee) != "undefined");
@@ -53,8 +55,8 @@
 			{if !empty($zone.carriers)}
 			 	createSelecstShipping += "<optgroup label='{$zone.name}'>";
 					{foreach from=$zone.carriers item=carrier}
-						var testPSCarrier = (typeof(idPSCarrier) != "undefined"  && idPSCarrier == {$carrier.id_carrier});
-						createSelecstShipping += "<option "+ (testPSCarrier ? 'selected="selected"' : '')  +" data-realname='{$zone.name}, {$carrier.name}' value='{$carrier.id_carrier}'>{$carrier.name}</option>";
+						var testPSCarrier = (typeof(idPSCarrier) != "undefined"  && idPSCarrier == {$carrier.id_carrier} && id_zone == {$zone.id_zone});
+						createSelecstShipping += "<option "+ (testPSCarrier ? 'selected="selected"' : '')  +" data-realname='{$zone.name}, {$carrier.name}' value='{$carrier.id_carrier}-{$zone.id_zone}'>{$carrier.name}</option>";
 						if (testPSCarrier) {
 							var valuePSCarrier = " {$carrier.name} ";
 						}
@@ -133,7 +135,7 @@
 		var div = $(select).parent('div');
 		var hasA = div.siblings('a').length;
 		var tr = div.parent('td').parent('tr');
-		if ($(select).val() > 0)
+		if ($(select).val().length > 1)
 		{
 			var contentA = $(select).find('option').filter(":selected").attr('data-realname');
 			div.fadeOut(400, function() {
@@ -389,7 +391,7 @@
 		showExcludeLocation();
 
 		{foreach from=$existingNationalCarrier item=nationalCarrier key=i}
-			addShipping('domesticShipping', {$nationalCarrier.ps_carrier}, '{$nationalCarrier.ebay_carrier}', {$nationalCarrier.extra_fee}, {$i});
+			addShipping('domesticShipping', {$nationalCarrier.ps_carrier}, '{$nationalCarrier.ebay_carrier}', {$nationalCarrier.extra_fee}, {$i}, {$nationalCarrier.id_zone});
 		{foreachelse}
 			addShipping('domesticShipping');
 		{/foreach}
@@ -400,7 +402,7 @@
 			{foreach from=$internationalCarrier.shippingLocation item=shippingLocation}
 				zone.push('{$shippingLocation.id_ebay_zone}');
 			{/foreach}
-			addShipping('internationalShipping', {$internationalCarrier.ps_carrier}, '{$internationalCarrier.ebay_carrier}', {$internationalCarrier.extra_fee}, {$i}, zone);
+			addShipping('internationalShipping', {$internationalCarrier.ps_carrier}, '{$internationalCarrier.ebay_carrier}', {$internationalCarrier.extra_fee}, {$i}, {$internationalCarrier.id_zone}, zone);
 		{foreachelse}
 			addShipping('internationalShipping');
 		{/foreach}
@@ -654,61 +656,12 @@
 	
 	<div id="domesticShipping"></div>
 	<a id="domesticShippingButton" {if $existingNationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new domestic carrier' mod='ebay'}</a>
-	{*
-	<p>{l s='Prestashop zone used to calculate shipping fees :' mod='ebay'}
-		
-		<select name="nationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate domestic shipping costs.' mod='ebay'}">
-			{foreach from=$prestashopZone item=zone}
-				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneNational} selected="selected"{/if}>{$zone.name}</option>
-			{/foreach}
-		</select>
-		{if $psCarrierModule|count > 0}
-			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
-			</a>
-			
-		{/if}
-	</p>
-	<table id="nationalCarrier" class="table">
-		<tr>
-		</tr>
-	</table>
-	
-	<div class="margin-form" id="addNationalCarrier" style="margin-top: 10px; cursor: pointer;">
-		<a class="button bold">
-			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new carrier option' mod='ebay'}
-		</a>
-	</div>
-	*}
 </fieldset>
 
 <fieldset style="margin-top:10px">
+	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='To configure international shipping you must select countries to ship to' mod='module'}">{l s='International shipping' mod='ebay'}</span></legend>
 	<div id="internationalShipping"></div>
 	<a id="internationalShippingButton" {if $existingInternationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new international carrier' mod='ebay'}</a>
-	{*
-	<legend><span data-inlinehelp="{l s='Check the boxes next to the countries that you will ship to. ' mod='ebay'}">{l s='International Shipping' mod='ebay'}</span></legend>
-	<p>{l s='Prestashop zone used to calculate shipping fees  :' mod='ebay'}
-		<select name="internationalZone" id="" data-inlinehelp="{l s='The zone is used to calculate international shipping costs.' mod='ebay'}">
-			{foreach from=$prestashopZone item=zone}
-				<option value="{$zone.id_zone}" {if $zone.id_zone == $ebayZoneInternational} selected="selected"{/if}>{$zone.name}</option>
-			{/foreach}
-		</select>
-		{if $psCarrierModule|count > 0}
-			<a href="#warningOnCarriers" class="fancyboxeBay">
-				<img src="../img/admin/help2.png" alt="" title="{l s='You cannot see all your carriers ?' mod='ebay'}">
-			</a>
-			
-		{/if}
-	</p>
-	<div id="internationalCarrier">
-		<div class="internationalShipping"></div>
-	</div>
-	<div class="margin-form" id="addInternationalCarrier" style="cursor:pointer;">
-		<a class="button bold">
-			<img src="../img/admin/add.gif" alt="" /> {l s='Add a new international carrier option' mod='ebay'}
-		</a>
-	</div>
-	*}
 </fieldset>
 
 <fieldset style="margin-top:10px">

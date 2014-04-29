@@ -65,7 +65,7 @@ class EbaySynchronizer
 			$quantity_product = EbaySynchronizer::_getProductQuantity($product, (int)$p['id_product']);
 
 			$ebay_category = EbaySynchronizer::_getEbayCategory($product->id_category_default);
-
+			    
             $ebay_profile = new EbayProfile((int)$p['id_ebay_profile']);
 
 			$variations = EbaySynchronizer::_loadVariations($product, $ebay_profile, $context, $ebay_category);
@@ -107,7 +107,7 @@ class EbaySynchronizer
 					'real_id_product' => (int)$p['id_product'],
 			);
 
-			$data = array_merge($data, EbaySynchronizer::_getProductData($product));
+			$data = array_merge($data, EbaySynchronizer::_getProductData($product, $ebay_profile));
 
 			// Fix hook update product
 			if (Tools::getValue('id_product_attribute'))
@@ -153,7 +153,7 @@ class EbaySynchronizer
 		}
 	}
 
-	private static function _getProductData($product)
+	private static function _getProductData($product, $ebay_profile)
 	{
 		return array(
 			'id_product' => $product->id,
@@ -163,7 +163,7 @@ class EbaySynchronizer
 			'description_short' => $product->description_short,
 			'manufacturer_name' => $product->manufacturer_name,
 			'ean13' => $product->ean13,
-			'titleTemplate' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE'),
+			'titleTemplate' => $ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE'),
 		);
 	}
 
@@ -499,7 +499,7 @@ class EbaySynchronizer
 			$price += $percent;
 
 		$price = round($price, 2);
-
+		    
 		return array($price, $price_original);
 	}
 
@@ -657,7 +657,7 @@ class EbaySynchronizer
 			$national_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,
 				'serviceAdditionalCosts' => $carrier['extra_fee'],
-				'serviceCosts' => EbaySynchronizer::_getShippingPriceForProduct($product, $ebay_profile->getConfiguration('EBAY_ZONE_NATIONAL'), $carrier['ps_carrier'])
+				'serviceCosts' => EbaySynchronizer::_getShippingPriceForProduct($product, $carrier['id_zone'], $carrier['ps_carrier'])
 			);
 
 			$service_priority++;
@@ -671,7 +671,7 @@ class EbaySynchronizer
 			$international_ship[$carrier['ebay_carrier']] = array(
 				'servicePriority' => $service_priority,
 				'serviceAdditionalCosts' => $carrier['extra_fee'],
-				'serviceCosts' => EbaySynchronizer::_getShippingPriceForProduct($product, $ebay_profile->getConfiguration('EBAY_ZONE_INTERNATIONAL'), $carrier['ps_carrier']),
+				'serviceCosts' => EbaySynchronizer::_getShippingPriceForProduct($product, $carrier['id_zone'], $carrier['ps_carrier']),
 				'locationsToShip' => EbayShippingInternationalZone::getIdEbayZonesByIdEbayShipping($ebay_profile->id, $carrier['id_ebay_shipping'])
 			);
 

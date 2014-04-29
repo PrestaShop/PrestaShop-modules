@@ -86,7 +86,7 @@ class EbayShipping
             AND `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $international = false)
+	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $id_zone, $international = false)
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_shipping`
 			VALUES(\'\',
@@ -94,7 +94,8 @@ class EbayShipping
 			\''.pSQL($ebay_carrier).'\',
 			\''.(int)$ps_carrier.'\',
 			\''.(float)$extra_fee.'\',
-			\''.(int)$international.'\')';
+			\''.(int)$international.'\', 
+			\''.(int)$id_zone.'\')';
 
 		DB::getInstance()->Execute($sql);
 	}
