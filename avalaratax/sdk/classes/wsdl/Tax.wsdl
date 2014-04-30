@@ -377,7 +377,6 @@
           </s:sequence>
         </s:complexType>
       </s:element>
-
       <s:complexType name="PostTaxRequest">
 		  <s:complexContent mixed="false">
 			  <s:extension base="tns:BaseRequest">
@@ -398,7 +397,6 @@
 			  </s:extension>
 		  </s:complexContent>
       </s:complexType>
-
       <s:element name="PostTaxResponse">
         <s:complexType>
           <s:sequence>
@@ -414,7 +412,7 @@
             </s:sequence>
           </s:extension>
         </s:complexContent>
-      </s:complexType>
+      </s:complexType>      
       <s:element name="CommitTax">
         <s:complexType>
           <s:sequence>
@@ -524,7 +522,7 @@
            </s:sequence>
 			  </s:extension>
 		  </s:complexContent>
-      </s:complexType>
+      </s:complexType>      
       <s:element name="ReconcileTaxHistoryResponse">
         <s:complexType>
           <s:sequence>
@@ -645,7 +643,7 @@
       <s:complexType name="RequestList">
         <s:choice minOccurs="0" maxOccurs="unbounded">
           <s:element name="AdjustTaxRequest" nillable="true" type="tns:AdjustTaxRequest" />
-          <s:element name="ApplyPaymentRequest" nillable="true" type="tns:ApplyPaymentRequest" />
+          <s:element name="ApplyPaymentRequest" nillable="true" type="tns:ApplyPaymentRequest" />            
           <s:element name="CancelTaxRequest" nillable="true" type="tns:CancelTaxRequest" />
           <s:element name="CommitTaxRequest" nillable="true" type="tns:CommitTaxRequest" />
           <s:element name="GetTaxHistoryRequest" nillable="true" type="tns:GetTaxHistoryRequest" />
