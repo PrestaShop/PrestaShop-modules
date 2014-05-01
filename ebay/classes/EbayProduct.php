@@ -102,6 +102,7 @@ class EbayProduct
 
 	public static function getProductsWithoutBlacklisted($id_lang)
 	{
+
 		return Db::getInstance()->ExecuteS('
 			SELECT ep.`id_product`, ep.`id_attribute`, ep.`id_product_ref`,
 			p.`id_category_default`, p.`reference`, p.`ean13`,
@@ -111,7 +112,7 @@ class EbayProduct
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = epc.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
-			WHERE epc.`blacklisted` = 0
+			WHERE epc.`blacklisted` = 0 OR epc.`blacklisted` IS NULL
 			');
 	}
 

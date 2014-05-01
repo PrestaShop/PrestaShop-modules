@@ -221,7 +221,7 @@
 
 	<fieldset style="margin-top:10px;">
 		<legend>{l s='Others' mod='ebay'}</legend>
-		{if !$is_writable}<p class="warning">{l s='The log file is not writable' mod='ebay'}</p>{/if}
+		{if !$is_writable && $log_file_exists}<p class="warning">{l s='The log file is not writable' mod='ebay'}</p>{/if}
 		<label>
 			{l s='Activate Logs' mod='ebay'}
 		</label>
@@ -229,14 +229,16 @@
 			<input type="checkbox" name="activate_logs" value="1"{if $activate_logs} checked="checked"{/if}>
 		</div>
 		<div class="clear both"></div>
-
-		<label>
-			{l s='Download logs' mod='ebay'}
-		</label>
-		<div class="margin-form">
-			<a href="{$url}&download_log=1" class="button">{l s='Download' mod='ebay'}</a>
-		</div>
-		<div class="clear both"></div>
+		{if $log_file_exists}
+			<label>
+				{l s='Download logs' mod='ebay'}
+			</label>
+			
+			<div class="margin-form">
+				<a href="../modules/ebay/log/request.txt" class="button">{l s='Download' mod='ebay'}</a>
+			</div>
+			<div class="clear both"></div>
+		{/if}
 	</fieldset>
 
 	<fieldset style="margin-top:10px;">

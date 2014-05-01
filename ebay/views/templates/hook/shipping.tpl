@@ -99,7 +99,7 @@
 		}
 
 		// extrafree
-		createSelecstShipping += "<td style='visibility:hidden;'><p  class='label'>{l s='Additional item cost' mod='ebay'}</p><span>£ </span><input "+ ((typeof(additionalFee) != "undefined" && additionalFee > 0) ? 'value="'+additionalFee+'"' : '')  +" name='"+ (currentName == 'domesticShipping' ? 'extrafee' : 'extrafee_international') +"["+ lastId +"]' type='text'>"+ (currentName == 'domesticShipping' ? '<span style="font-size:12px;">' : '<p>') +" {l s='Increase the cost when a buyer adds more than one of the same item to their order' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</td>";
+		createSelecstShipping += "<td style='visibility:hidden;'><p  class='label'>{l s='Additional item cost' mod='ebay'}</p><span>{$configCurrencysign} </span><input "+ ((typeof(additionalFee) != "undefined" && additionalFee > 0) ? 'value="'+additionalFee+'"' : '')  +" name='"+ (currentName == 'domesticShipping' ? 'extrafee' : 'extrafee_international') +"["+ lastId +"]' type='text'>"+ (currentName == 'domesticShipping' ? '<span style="font-size:12px;">' : '<p>') +" {l s='Increase the cost when a buyer adds more than one of the same item to their order' mod='ebay'}"+ (currentName == 'domesticShipping' ? '</span>' : '</p>') +"</td>";
 		// end extrafree
 
 		// trash

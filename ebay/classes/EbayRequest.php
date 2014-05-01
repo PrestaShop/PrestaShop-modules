@@ -655,26 +655,29 @@ class EbayRequest
 
 			foreach ($data['variations'] as $key => $variation)
 			{
-				foreach ($variation['variations'] as $variation_key => $variation_element)
-					if (!isset($attribute_used[md5($variation_element['name'].$variation_element['value'])]) && isset($variation['pictures'][$variation_key]))
-					{
-						if ($last_specific_name != $variation_element['name'])
-							$variation_pictures[$key][$variation_key]['name'] = $variation_element['name'];
-
-						$variation_pictures[$key][$variation_key]['value'] = $variation_element['value'];
-						$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$variation_key];
-
-						$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
-						$last_specific_name = $variation_element['name'];
-					}
-
-				foreach ($variation['variation_specifics'] as $name => $value)
+				if(isset($variation['variations']))
 				{
-					if (!isset($variation_specifics_set[$name]))
-						$variation_specifics_set[$name] = array();
+					foreach ($variation['variations'] as $variation_key => $variation_element)
+						if (!isset($attribute_used[md5($variation_element['name'].$variation_element['value'])]) && isset($variation['pictures'][$variation_key]))
+						{
+							if ($last_specific_name != $variation_element['name'])
+								$variation_pictures[$key][$variation_key]['name'] = $variation_element['name'];
 
-					if (!in_array($value, $variation_specifics_set[$name]))
-						$variation_specifics_set[$name][] = $value;
+							$variation_pictures[$key][$variation_key]['value'] = $variation_element['value'];
+							$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$variation_key];
+
+							$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
+							$last_specific_name = $variation_element['name'];
+						}
+
+					foreach ($variation['variation_specifics'] as $name => $value)
+					{
+						if (!isset($variation_specifics_set[$name]))
+							$variation_specifics_set[$name] = array();
+
+						if (!in_array($value, $variation_specifics_set[$name]))
+							$variation_specifics_set[$name][] = $value;
+					}
 				}
 			}
 		}

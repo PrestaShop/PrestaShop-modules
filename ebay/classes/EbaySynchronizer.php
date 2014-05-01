@@ -333,7 +333,7 @@ class EbaySynchronizer
 		$pictures = array();
 		$pictures_medium = array();
 		$pictures_large = array();
-		$nb_pictures = 1 + (int)Configuration::get('EBAY_PICTURE_PER_LISTING');
+		$nb_pictures = 1 + (int)$ebay_profile->getConfiguration('EBAY_PICTURE_PER_LISTING');
 
 		$large = new ImageType((int)$ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG'));
 		$small = new ImageType((int)$ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL'));

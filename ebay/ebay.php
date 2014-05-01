@@ -990,11 +990,6 @@ class Ebay extends Module
 				return $this->html.$this->displayError($this->l('You must enable allow_url_fopen option on your server if you want to use this module.'));
 		}
 
-		// if isset download_log
-		if (Tools::getIsset('download_log') && Tools::getValue('download_log') == 1)
-		{
-			$this->__postProcessDownloadLog();
-		}
 
 		// If isset Post Var, post process else display form
 		if (!empty($_POST) && (Tools::isSubmit('submitSave') || Tools::isSubmit('btnSubmitSyncAndPublish') || Tools::isSubmit('btnSubmitSync')))
@@ -1366,6 +1361,7 @@ class Ebay extends Module
 			'whopays' => $returns_policy_configuration->ebay_returns_who_pays,
 			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
+			'log_file_exists' => file_exists(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
 			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
@@ -1618,6 +1614,7 @@ class Ebay extends Module
 		// Insert and update categories
 		if (($percents = Tools::getValue('percent')) && ($ebay_categories = Tools::getValue('category')))
 		{
+			    
 			foreach ($percents as $id_category => $percent)
 			{
 				$data = array();
@@ -1640,6 +1637,7 @@ class Ebay extends Module
 						'date_upd' => pSQL($date),
 						'sync' => 0
 					);
+				    
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))
 				{
@@ -2679,9 +2677,10 @@ class Ebay extends Module
 
 	private function __postProcessDownloadLog()
 	{
-		$full_path = _PS_MODULE_DIR_.'ebay/log/request.php';
+		$full_path = _PS_MODULE_DIR_.'ebay/log/request.txt';
 		if (file_exists($full_path))
 		{
+			die;
 			$file_name = basename($full_path);
 
 			$date = gmdate(DATE_RFC1123);
