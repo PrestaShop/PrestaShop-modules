@@ -31,11 +31,9 @@ class PaypalLoginUser extends ObjectModel {
 		'refresh_token',
 		'id_token',
 		'access_token',
-		'account_type',
 		'user_id',
 		'verified_account',
 		'zoneinfo',
-		'age_range',
 	);
 
 	protected $fieldsValidate = array(
