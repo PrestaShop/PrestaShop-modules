@@ -20,7 +20,7 @@ class Zingaya extends Module
 	{
 		$this->name = 'zingaya';
 		$this->tab = 'administration';
-		$this->version = '1.2';
+		$this->version = '1.3';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -137,6 +137,7 @@ class Zingaya extends Module
 			else
 			{
 				Configuration::updateValue('ZINGAYA_API_KEY', $attach_child->api_key);
+				Configuration::updateValue('ZINGAYA_CONFIGURATION_OK', true);
 
 				$user_id = $this->_apiCall('GetCurrentUserID');
 				if (!isset($user_id->result))

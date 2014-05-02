@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Class matching with the pattern Singleton that allow log insertions
@@ -8,7 +32,7 @@
 class KwixoLogger
 {
 
-	private static $_handle = null; //handle resource, defined when the log fil is opened
+	private static $handle = null; /*handle resource, defined when the log fil is opened*/
 
 	/**
 	 * creates a file localized @ $path and returns its ressource
@@ -52,8 +76,8 @@ class KwixoLogger
 			rename($log_filename, $filename);
 		}
 
-		self::$_handle = self::openFile($log_filename);
-		register_shutdown_function('fclose', self::$_handle);
+		self::$handle = self::openFile($log_filename);
+		register_shutdown_function('fclose', self::$handle);
 	}
 
 	/**
@@ -65,16 +89,12 @@ class KwixoLogger
 	public static function insertLogKwixo($from, $msg)
 	{
 		//opens the log file if it's not openned yet
-		if (is_null(self::$_handle))
-		{
+		if (is_null(self::$handle))
 			self::openHandle();
-		}
-
-
 		//builds the entry string
 		$entry = date('d-m-Y H:i:s')." | $from | $msg\r";
 		//write the entry into the log file
-		fwrite(self::$_handle, $entry);
+		fwrite(self::$handle, $entry);
 	}
 
 	/**
@@ -86,12 +106,9 @@ class KwixoLogger
 	public static function getLogContent()
 	{
 		//opens the log file if it's not openned yet
-		if (is_null(self::$_handle))
-		{
+		if (is_null(self::$handle))
 			self::openHandle();
-		}
-
-		return fgets(self::$_handle);
+		return fgets(self::$handle);
 	}
 
 }

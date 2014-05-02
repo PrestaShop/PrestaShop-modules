@@ -25,10 +25,12 @@
 - Damien Metzger 
 - darko 
 - David Kelly 
+- Delboy 
 - DevNet 
 - Dh42 
 - djfm 
 - doekia 
+- Donatas Lomsargis 
 - Dvir Julius 
 - edamart 
 - e.lito 
@@ -40,6 +42,7 @@
 - François Gaillard 
 - François-Marie de Jouvencel 
 - Francois Gaillard 
+- Giedrius Stan 
 - Gordon Coubrough 
 - Gregory Roussac 
 - gRoussac 
@@ -77,6 +80,7 @@
 - OliverMuellerShopgate 
 - PaymentSense-Developer 
 - Peter Schaeffer 
+- prestachris 
 - PrestaEdit 
 - PrestanceDesign 
 - quadrateam 
@@ -88,15 +92,18 @@
 - Rinku Kazeno 
 - Robert 
 - samy-r 
+- seanmacdomhnall 
 - sjousse 
 - Sparer lilian 
 - Talha Umer Syed 
+- Thibaud Chauviere 
 - Thoma 
 - thoma202 
 - Thoma Biguères 
 - Thoma Bigueres 
 - Thomas 
 - tNabord 
+- Tomasz 
 - Toto 
 - Tredez Guillaume 
 - tucoinfo 

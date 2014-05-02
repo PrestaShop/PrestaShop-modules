@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Connexion class using fsockopen
@@ -13,7 +37,7 @@ class CertissimFianetSocket extends CertissimMother
 	protected $host;
 	protected $port;
 	protected $is_ssl = false;
-	protected $method = 'GET';
+	protected $method = 'POST';
 	protected $data;
 	protected $path;
 	protected $response = '';
@@ -29,12 +53,12 @@ class CertissimFianetSocket extends CertissimMother
 	 */
 	public function __construct($url, $method = 'GET', array $data = null)
 	{
-		if (strtoupper($method) == 'GET' || strtoupper($method) == 'POST')
-			$this->method = strtoupper($method);
+		if (Tools::strtoupper($method) == 'GET' || Tools::strtoupper($method) == 'POST')
+			$this->method = Tools::strtoupper($method);
 		else
 		{
 			$msg = "La methode demandee ($method) n'est pas reconnue.";
-			CertissimLogger::insertLog(__METHOD__." : ".__LINE__, $msg);
+			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, $msg);
 			throw new Exception($msg);
 		}
 
@@ -54,7 +78,9 @@ class CertissimFianetSocket extends CertissimMother
 		preg_match('`^([a-z0-9]+://)?([^/:]+)(/.*$)?`i', $url, $out);
 
 		$components = parse_url($url);
-		extract($components);
+		$scheme = $components['scheme'];
+		$host = $components['host'];
+		$path = $components['path'];
 		if ($scheme == 'http')
 		{
 			$this->is_ssl = false;
@@ -67,9 +93,6 @@ class CertissimFianetSocket extends CertissimMother
 		}
 		$this->host = $host;
 		$this->path = $path;
-
-		if (isset($query))
-			$this->data = $query;
 	}
 
 	/**
@@ -77,22 +100,22 @@ class CertissimFianetSocket extends CertissimMother
 	 *
 	 * @return string
 	 */
-	function build_header()
+	public function buildHeader()
 	{
 		if ($this->method == 'POST')
 		{
-			$header = "POST ".$this->path." HTTP/1.0\r\n";
-			$header .= "Host: ".$this->host."\r\n";
+			$header = 'POST '.$this->path." HTTP/1.0\r\n";
+			$header .= 'Host: '.$this->host."\r\n";
 			$header .= "Content-type: application/x-www-form-urlencoded\r\n";
-			$header .= "Content-length: ".strlen($this->data)."\r\n\r\n";
+			$header .= 'Content-length: '.Tools::strlen($this->data)."\r\n\r\n";
 			$header .= $this->data;
 		}
 		elseif ($this->method == 'GET')
 		{
-			if (strlen($this->path.$this->data) > 2048)
-				CertissimLogger::insertLog(__METHOD__." : ".__LINE__, "Maximum length in get method reached(".strlen($this->path.$this->data).")");
-			$header = "GET ".$this->path.'?'.$this->data." HTTP/1.1\r\n";
-			$header .= "Host: ".$this->host."\r\n";
+			if (Tools::strlen($this->path.$this->data) > 2048)
+				CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'Maximum length in get method reached('.Tools::strlen($this->path.$this->data).')');
+			$header = 'GET '.$this->path.'?'.$this->data." HTTP/1.1\r\n";
+			$header .= 'Host: '.$this->host."\r\n";
 			$header .= "Connection: close\r\n\r\n";
 		}
 
@@ -104,9 +127,9 @@ class CertissimFianetSocket extends CertissimMother
 	 * 
 	 * @return resource 
 	 */
-	function send()
+	public function send()
 	{
-		$header = $this->build_header();
+		$header = $this->buildHeader();
 
 		$this->response = $this->connect($header);
 
@@ -119,7 +142,7 @@ class CertissimFianetSocket extends CertissimMother
 	 * @param string $header header to send to the server to reach the script
 	 * @return type
 	 */
-	function connect($header)
+	public function connect($header)
 	{
 		$error = '';
 		$errno = '';
@@ -127,24 +150,23 @@ class CertissimFianetSocket extends CertissimMother
 			$socket = fsockopen('ssl://'.$this->host, $this->port, $errno, $error, CertissimFianetSocket::TIMEOUT);
 		else
 			$socket = fsockopen($this->host, $this->port);
-		
 		if ($socket !== false)
 		{
 			$res = '';
 
-			if (@fputs($socket, $header))
+			if (fputs($socket, $header))
 				while (!feof($socket))
 					$res .= fgets($socket, 128);
 			else
 			{
-				CertissimLogger::insertLog(__METHOD__.' - '.__LINE__, "Envoi des données impossible sur : ".$this->host);
+				CertissimLogger::insertLog(__METHOD__.' - '.__LINE__, 'Envoi des données impossible sur : '.$this->host);
 				$res = false;
 			}
 			fclose($socket);
 		}
 		else
 		{
-			$msg = "Connexion socket impossible sur l'hôte ".$this->host.". Erreur ".$errno." : ".$error;
+			$msg = 'Connexion socket impossible sur hôte '.$this->host.'. Erreur '.$errno.' : '.$error;
 			CertissimLogger::insertLog(__METHOD__.' - '.__LINE__, $msg);
 			$res = false;
 		}

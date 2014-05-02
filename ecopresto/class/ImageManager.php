@@ -1,27 +1,26 @@
 <?php
-/*
-* 2007-2013 PrestaShop
-*
+/**
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
+* This source file is subject to a commercial license from SARL Ether Création
+* Use, copy, modification or distribution of this source file without written
+* license agreement from the SARL Ether Création is strictly forbidden.
+* In order to obtain a license, please contact us: contact@ethercreation.com
+* ...........................................................................
+* INFORMATION SUR LA LICENCE D'UTILISATION
 *
-* DISCLAIMER
+* L'utilisation de ce fichier source est soumise a une licence commerciale
+* concedee par la societe Ether Création
+* Toute utilisation, reproduction, modification ou distribution du present
+* fichier source sans contrat de licence ecrit de la part de la SARL Ether Création est
+* expressement interdite.
+* Pour obtenir une licence, veuillez contacter la SARL Ether Création a l'adresse: contact@ethercreation.com
+* ...........................................................................
 *
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
-*  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*  @package ec_ecopresto
+*  @author Arthur Revenaz
+*  @copyright Copyright (c) 2010-2014 S.A.R.L Ether Création (http://www.ethercreation.com)
+*  @license Commercial license
 */
 
 /**
@@ -123,7 +122,7 @@ class ImageManagerCore
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return false;
 		list($src_width, $src_height, $type) = getimagesize($src_file);
@@ -170,7 +169,7 @@ class ImageManagerCore
 
 		if (!self::checkImageMemoryLimit($src_file))
 			return false;
-		
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -427,7 +426,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = Tools::substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;

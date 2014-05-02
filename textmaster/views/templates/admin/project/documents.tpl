@@ -17,7 +17,7 @@
 * International Registered Trademark & Property of TextMaster
 *}
 {foreach from=$documents item=document name=doc}
-    {if $document.status == 'completed'}
+    {if isset($document.status) && $document.status == 'completed'}
         {$is_completed = "true"}
     {/if}
 {/foreach}

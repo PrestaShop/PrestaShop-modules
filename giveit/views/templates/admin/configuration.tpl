@@ -84,6 +84,22 @@
                 <img src="{$smarty.const._MODULE_DIR_|escape:'htmlall':'UTF-8'}giveit/img/settings.png" alt="{l s='Settings |' mod='giveit'}" />
                 {l s='Global settings' mod='giveit'}
             </legend>
+			
+			<label>
+                {l s='Mode' mod='giveit'}
+            </label>
+            <div class="margin-form">
+				<input id="production_mode" type="radio" name="{GiveIt::MODE}" value="{GiveIt::PRODUCTION}" {if $mode == GiveIt::PRODUCTION}checked="checked" {/if} />
+				<label class="t" for="production_mode">
+					{l s='Production' mod='giveit'}
+				</label>
+				<input id="debug_mode" type="radio" name="{GiveIt::MODE}" value="{GiveIt::DEBUG}" {if $mode == GiveIt::DEBUG}checked="checked" {/if} />
+				<label class="t" for="debug_mode">
+					{l s='Debug' mod='giveit'}
+				</label>
+            </div>
+            <div class="clear"></div>
+			
             <label>
                 {l s='Give.it button is enabled' mod='giveit'}
             </label>

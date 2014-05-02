@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.7';
+		$this->version = '3.8.3';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -165,7 +165,9 @@ class ShoppingFluxExport extends Module
 		if (!in_array('curl', get_loaded_extensions()))
 			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL
 				pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
-
+		else
+			Configuration::updateValue('SHOPPINGFLUX_CONFIGURATION_OK', true);
+		
 		return $this->_html;
 	}
 
@@ -1542,7 +1544,12 @@ class ShoppingFluxExport extends Module
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode ('_', $product->SKU);
-						$added = $cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null));
+                        
+                        $p = new Product((int)($skus[0]), false, Configuration::get('PS_LANG_DEFAULT'), Context::getContext()->shop->id);
+			if (!Validate::isLoadedObject($p))
+                            return false;
+                        
+                        $added = $cart->updateQty((int)($product->Quantity), (int)($skus[0]), ((isset($skus[1])) ? $skus[1] : null));
 
 			if ($added < 0 || $added === false)
 				return false;
@@ -1571,7 +1578,7 @@ class ShoppingFluxExport extends Module
 				$quantity = StockAvailable::getQuantityAvailableByProduct((int)$product->SKU);
 
 				if ($quantity - $product->Quantity < 0)
-					StockAvailable::updateQuantity((int)$skus[0], 0, (int)$product->Quantity);
+					StockAvailable::updateQuantity((int)$product->SKU, 0, (int)$product->Quantity);
 			}
 		}
 

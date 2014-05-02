@@ -121,7 +121,7 @@ class Twenga extends PaymentModule
 		$this->token = Tools::getValue('token');
 	 	$this->name = 'twenga';
 	 	$this->tab = 'smart_shopping';
-	 	$this->version = '1.12';
+	 	$this->version = '1.13';
 		$this->author = 'PrestaShop';
 		
 	 	parent::__construct();
@@ -309,6 +309,7 @@ class Twenga extends PaymentModule
 					<div class="conf" style="font-weight:bolder;">
 						'.$this->l('Saved information.').'
 					</div>';
+					Configuration::updateValue('TWENGA_CONFIGURATION_OK', true);
 				}
 			}
 			catch (Exception $e)

@@ -109,6 +109,27 @@
 			
 			<div class="form-group">
 				<label for="button_active" class="control-label col-lg-3">
+					{l s='Mode' mod='giveit'}
+				</label>
+				<div class="col-lg-9">
+					<div class="radio">
+						<label for="production_mode">
+							<input type="radio" {if $mode == GiveIt::PRODUCTION}checked="checked" {/if}value="{GiveIt::PRODUCTION}" id="production_mode" name="{GiveIt::MODE}" />
+							{l s='Production' mod='giveit'}
+						</label>
+					</div>
+					
+					<div class="radio">
+						<label for="debug_mode">
+							<input type="radio" {if $mode == GiveIt::DEBUG}checked="checked" {/if}value="{GiveIt::DEBUG}" id="debug_mode" name="{GiveIt::MODE}" />
+							{l s='Debug' mod='giveit'}
+						</label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="button_active" class="control-label col-lg-3">
 					{l s='Give.it button accessibility' mod='giveit'}
 				</label>
 				<div class="col-lg-5">
@@ -138,7 +159,7 @@
 			</div>
 		</div>
 		
-		<div id="global_settings" class="panel form-horizontal">
+		<div id="appearance" class="panel form-horizontal">
 			<h3>
 				<i class="icon-cog"></i>
 				{l s='Appearance' mod='giveit'}
