@@ -219,7 +219,6 @@ class EbayOrder
 	public function getProductsAndProfileByShop()
 	{
         $id_products = $this->getProductIds();
-        
 		// group products by shop
         /*
 		$sql = 'SELECT ps.`id_product`, ps.`id_shop`, ep.`id_ebay_profile`
@@ -233,7 +232,6 @@ class EbayOrder
 		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
 		ON epr.`id_ebay_profile` = ep.`id_ebay_profile`
 		WHERE epr.`id_product` IN ('.implode(',', $id_products).')';
-
 		$res = array();
 		foreach(Db::getInstance()->executeS($sql) as $row) {
 			$res[$row['id_shop']]['id_ebay_profiles'][] = $row['id_ebay_profile'];
@@ -300,6 +298,7 @@ class EbayOrder
 		$cart_nb_products = 0;
 
         $products_by_shop = $this->getProductsAndProfileByShop();
+
         $product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
 		
 		foreach ($product_list as $id_product)

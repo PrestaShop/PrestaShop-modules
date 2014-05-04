@@ -592,13 +592,15 @@ class EbaySynchronizer
 
 	private static function _insertEbayProduct($id_product, $ebay_item_id, $date, $id_attribute = 0)
 	{
+		$ebay = new Ebay();
 		EbayProduct::insert(array(
 			'id_country' => 8, // NOTE RArbuz: why is this hardcoded?
 			'id_product' => (int)$id_product,
 			'id_attribute' => (int)$id_attribute,
 			'id_product_ref' => pSQL($ebay_item_id),
 			'date_add' => pSQL($date),
-			'date_upd' => pSQL($date)
+			'date_upd' => pSQL($date),
+			'id_ebay_profile' => (int)$ebay->ebay_profile->id,
 		));
 	}
 

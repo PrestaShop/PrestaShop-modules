@@ -1450,8 +1450,12 @@ class Ebay extends Module
 			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
 			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 			&& $this->ebay_profile->setConfiguration('EBAY_PICTURE_PER_LISTING', $picture_per_listing)
-		)
+		){
+			if(Tools::getValue('activate_logs') == 0)
+				if(file_exists(dirname(__FILE__).'/log/request.txt'))
+					unlink(dirname(__FILE__).'/log/request.txt');
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+		}
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
 	}

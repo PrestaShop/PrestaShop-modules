@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <form action="{$formUrl}" method="post">
 
 <fieldset>
@@ -170,6 +169,26 @@
 				div.siblings('a').fadeOut();
 			tr.children('td').not(":first").css('visibility', 'hidden');
 		}
+
+		if(div.closest('#domesticShipping').length == 1) 
+		{
+			processEbayCarrier(div.parent().next().find('select'));
+			div.parent().next().find('a').eq(1).remove();
+		}
+		else if(div.closest('#internationalShipping').length == 1)
+		{
+			processEbayCarrier(div.parent().next().find('select'));
+			div.parent().next().find('a').eq(1).remove();
+			var nbInputChecked = div.parent().parent().find('input').filter(':checked').length;
+			if (nbInputChecked >= 1)
+				div.closest('table').css('background-color', '#ddf2db').addClass('success');
+			else
+			{
+				div.closest('table').css('background-color', '#fff').removeClass('success');
+			}
+		}
+
+
 	}
 
 	function processEbayCarrier(select)
