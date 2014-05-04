@@ -48,7 +48,7 @@ class TotFormat
 	 */
 	public static function formatName($name)
 	{
-        return trim(preg_replace(Tools::cleanNonUnicodeSupport('/[0-9!<>,;?=+()@#"°{}_$%:]*/u'), ' ', stripslashes($name)));
+        return trim(preg_replace(Tools::cleanNonUnicodeSupport('/[0-9!<>,;?=+()@#"°{}_$%:]+/u'), ' ', stripslashes($name)));
 	}
     
 	/**
@@ -61,7 +61,7 @@ class TotFormat
 	{
         if (empty($address))
             return $address;
-        return trim(preg_replace('/[!<>?=+@{}_$%]*/u', ' ', $address));
+        return trim(preg_replace('/[!<>?=+@{}_$%]+/u', ' ', stripslashes($address)));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class TotFormat
 	{
         if (empty($postcode))
             return $postcode;
-        return trim(preg_replace('/[^a-zA-Z 0-9-]+/', ' ', $postcode));
+        return trim(preg_replace('/[^a-zA-Z 0-9-]+/', ' ', stripslashes($postcode)));
 	}
 
 	/**
@@ -85,7 +85,7 @@ class TotFormat
 	 */
 	public static function formatCityName($city)
 	{
-        return trim(preg_replace('/[!<>;?=+@#"°{}_$%]*/u', ' ', $city));
+        return trim(preg_replace('/[!<>;?=+@#"°{}_$%]+/u', ' ', stripslashes($city)));
 	}
     
 	/**
@@ -96,7 +96,7 @@ class TotFormat
 	 */
 	public static function formatPhoneNumber($number)
 	{
-        return trim(preg_replace('/[^+0-9. ()-]*/', ' ', $number));        
+        return trim(preg_replace('/[^+0-9. ()-]+/', ' ', $number));        
 	}
     
 
