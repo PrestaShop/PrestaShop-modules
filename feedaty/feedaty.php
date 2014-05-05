@@ -651,7 +651,7 @@ class Feedaty extends Module
 
 		/* All is sent by curl */
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, 'http://'.'www.zoorate.com/ws/feedatyapi.svc/SetKeyValue');
+		curl_setopt($ch, CURLOPT_URL, 'http://'.'www.zoorate.com/ws/feedatyapi.svc/SetPluginKeyValue');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_TIMEOUT, '60');
 		curl_setopt($ch, CURLOPT_POST, 1);
