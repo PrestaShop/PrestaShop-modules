@@ -124,6 +124,6 @@ $(document).ready(function() {
 	
 	if ($("#menuTab1").hasClass('success') && $("#menuTab2").hasClass('wrong') && $("#configForm2SuggestedCategories input[type=submit]").length == 1)
 	{
-		$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
+		//$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
 	}
 });

@@ -105,7 +105,7 @@
 		var atrash = $('<a style="cursor:pointer;">');
 		var imgtrash = $('<img>').attr('src', '../img/admin/delete.gif');
 		atrash.append(imgtrash)
-		atrash.on('click', function() {
+		atrash.click(function() {
 			$(this).parents('table').remove();
 			return false;
 		});
@@ -148,7 +148,7 @@
 					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
 					elementA.append(contentA);
 					div.after(elementA);
-					elementA.on('click', function()
+					elementA.click(function()
 					{
 						$(this).fadeOut(400, function(){
 							$(this).siblings('div').fadeIn();
@@ -215,7 +215,7 @@
 					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
 					elementA.append(contentA);
 					div.after(elementA);
-					elementA.on('click', function()
+					elementA.click(function()
 					{
 						tr.children('td:eq(3), td:eq(2)').css('visibility', 'hidden');
 						$(this).fadeOut(400, function() {
@@ -426,7 +426,7 @@
 			addShipping('internationalShipping');
 		{/foreach}
 
-		$('#menuTab3Sheet').on('click', '#internationalShipping table ul li input', function(){
+		$('#menuTab3Sheet').click('#internationalShipping table ul li input', function(){
 			var nbInputChecked = $(this).parent('li').parent('ul').parent('td').find('input').filter(':checked').length;
 			if (nbInputChecked >= 1)
 			{
@@ -524,14 +524,14 @@
 			$(this).hide().parent().find('.listcountry').show();
 		});
 
-		$('#domesticShipping, #internationalShipping').unbind().on('change', 'select', function(){
+		$('#domesticShipping select, #internationalShipping select').unbind().change(function(){
 			if ($(this).attr('class') == 'prestaCarrier')
 				displayEbayCarrier($(this));
 			else if ($(this).attr('class') == 'eBayCarrier')
 				processEbayCarrier($(this));
 		});
 
-		$('#domesticShippingButton, #internationalShippingButton').unbind().on('click', function(){
+		$('#domesticShippingButton, #internationalShippingButton').unbind().click(function(){
 			addShipping($(this).attr('id').replace('Button', ''));
 			return false;
 		})
