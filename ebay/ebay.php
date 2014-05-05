@@ -80,7 +80,7 @@ class Ebay extends Module
 	private $html = '';
 	private $ebay_country;
 	
-	private $ebay_profile;
+	public $ebay_profile;
     
     private $is_multishop;
     
@@ -2637,7 +2637,6 @@ class Ebay extends Module
 			$data['ean13'] = $p['ean13'];
 			$reference_ebay = $p['id_product_ref'];
 			$product = new Product((int)$p['id_product'], true, $id_lang);
-
 			if((int)$p['id_attribute'] > 0)
 			{
 				// No Multi Sku case so we do multiple products from a multivariation product
@@ -2656,7 +2655,7 @@ class Ebay extends Module
 					'prestashop_title' => $data['name'],
 					'ebay_title' => EbayRequest::prepareTitle($data),
 					'reference_ebay' => $reference_ebay,
-					'link' => $link->getAdminLink('AdminProducts').'&id_product='.(int)$combinaison['id_product'].'&updateproduct',
+					'link' => method_exists($link, 'getAdminLink') ? $link->getAdminLink('AdminProducts').'&id_product='.(int)$combinaison['id_product'].'&updateproduct' : $link->getProductLink((int)$combinaison['id_product']),
 					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
 					);
 			}
@@ -2668,7 +2667,7 @@ class Ebay extends Module
 					'prestashop_title' => $data['name'],
 					'ebay_title' => EbayRequest::prepareTitle($data),
 					'reference_ebay' => $reference_ebay,
-					'link' => $link->getAdminLink('AdminProducts').'&id_product='.$data['real_id_product'].'&updateproduct',
+					'link' => method_exists($link, 'getAdminLink') ? $link->getAdminLink('AdminProducts').'&id_product='.(int)$data['real_id_product'].'&updateproduct' : $link->getProductLink((int)$data['real_id_product']),
 					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
 					);
 			}

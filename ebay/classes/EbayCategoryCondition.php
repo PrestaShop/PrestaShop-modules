@@ -57,13 +57,15 @@ class EbayCategoryCondition
 			else
 				$xml_conditions = $xml_data->SiteDefaults->ConditionValues->Condition;
 
-			foreach ($xml_conditions as $xml_condition)
-				$conditions[] = array(
-                    'id_ebay_profile'  => (int)$id_ebay_profile,
-					'id_category_ref' => (int)$category_id,
-					'id_condition_ref' => (int)$xml_condition->ID,
-					'name' => pSQL((string)$xml_condition->DisplayName)
-				);
+
+			if(is_array($xml_conditions))
+				foreach ($xml_conditions as $xml_condition)
+					$conditions[] = array(
+	                    'id_ebay_profile'  => (int)$id_ebay_profile,
+						'id_category_ref' => (int)$category_id,
+						'id_condition_ref' => (int)$xml_condition->ID,
+						'name' => pSQL((string)$xml_condition->DisplayName)
+					);
 
 			//
 			Db::getInstance()->ExecuteS("SELECT 1");
