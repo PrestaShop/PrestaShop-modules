@@ -2640,7 +2640,7 @@ class Ebay extends Module
 			if((int)$p['id_attribute'] > 0)
 			{
 				// No Multi Sku case so we do multiple products from a multivariation product
-				$combinaison = $product->getAttributeCombinationsById((int)$p['id_attribute'], $id_lang);
+				$combinaison = $this->_getAttributeCombinationsById($product, (int)$p['id_attribute'], $id_lang);
 				$combinaison = $combinaison[0];
 
 				$data['reference'] = $combinaison['reference'];
@@ -2676,6 +2676,28 @@ class Ebay extends Module
 		$this->smarty->assign('products_ebay_listings', $products_ebay_listings);
 
 		echo $this->display(__FILE__, 'views/templates/hook/ebay_listings_ajax.tpl');
+	}
+
+	public function _getAttributeCombinationsById($product, $id_attribute, $id_lang)
+	{
+		if(method_exists($product, 'getATtributeCombinationsById'))
+			return $product->getAttributeCombinationsById((int)$id_attribute, $id_lang);
+
+		$sql = 'SELECT pa.*, pa.`quantity`, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
+					a.`id_attribute`, pa.`unit_price_impact`
+				FROM `'._DB_PREFIX_.'product_attribute` pa
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+				WHERE pa.`id_product` = '.(int)$product->id.'
+				AND pa.`id_product_attribute` = '.(int)$id_attribute.'
+				GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
+				ORDER BY pa.`id_product_attribute`';
+
+		return Db::getInstance()->ExecuteS($sql);
+
 	}
 
 	private function __postProcessDownloadLog()
