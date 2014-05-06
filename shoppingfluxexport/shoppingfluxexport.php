@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.8.2';
+		$this->version = '3.9';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -152,6 +152,8 @@ class ShoppingFluxExport extends Module
 		{
 			case 'Client':
 				$this->_html .= $this->_clientView();
+                                //we do this here for retro compatibility
+                                $this->_setShoppingFeedId();
 				break;
 			case 'Prospect':
 				$this->_html .= $this->displayConfirmation($this->l('Votre enregistrement Shopping Flux est effectif, vous serez contacté sous peu.'));
@@ -264,7 +266,7 @@ class ShoppingFluxExport extends Module
 
 		$html = $this->_getFeedContent();
 		$html .= $this->_getParametersContent($configuration);
-				$html .= $this->_getAdvancedParametersContent($configuration);
+                $html .= $this->_getAdvancedParametersContent($configuration);
 
 		return $html;
 
@@ -436,7 +438,7 @@ class ShoppingFluxExport extends Module
 				$value = Tools::getValue($key, '');
 				Configuration::updateValue($key, $value == 'on' ? 'checked' :  $value);
 			}
-		
+                        
 		}
 		elseif(isset($rec_shipping_config) && $rec_shipping_config != null)
 			Configuration::updateValue('SHOPPING_FLUX_SHIPPING_MATCHING', serialize(Tools::getValue('MATCHING')));
@@ -456,6 +458,7 @@ class ShoppingFluxExport extends Module
 		$xml .= '<Email><![CDATA['.Tools::safeOutput(Tools::getValue('email')).']]></Email>';
 		$xml .= '<Phone><![CDATA['.Tools::safeOutput(Tools::getValue('telephone')).']]></Phone>';
 		$xml .= '<Feed><![CDATA['.Tools::safeOutput(Tools::getValue('flux')).']]></Feed>';
+                $xml .= '<Lang><![CDATA['.Context::getContext()->country->iso_code.']]></Lang>';
 		$xml .= '</AddProspect>';
 
 		if (in_array('curl', get_loaded_extensions()))
@@ -469,7 +472,7 @@ class ShoppingFluxExport extends Module
 	}
 
 	/* Feed content */
-	private function getSimpleProducts($id_lang, $limit_from = false, $limit_to = 500)
+	private function getSimpleProducts($id_lang, $limit_from, $limit_to)
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '>'))
 		{
@@ -539,21 +542,23 @@ class ShoppingFluxExport extends Module
 		$configuration = Configuration::getMultiple(array('PS_TAX_ADDRESS_TYPE','PS_CARRIER_DEFAULT','PS_COUNTRY_DEFAULT',
 			'PS_LANG_DEFAULT', 'PS_SHIPPING_FREE_PRICE', 'PS_SHIPPING_HANDLING', 'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT', 'SHOPPING_FLUX_IMAGE'));
 
+                $no_breadcrumb = Tools::getValue('no_breadcrumb');
+                
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
 		
 		//manage case PS_CARRIER_DEFAULT is deleted
 		$carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT']);
+		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], false, 0);
+                $link = new Link();
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<produits version="'.$this->version.'">';
+		echo '<produits version="'.$this->version.'" coutry="'.Context::getContext()->country->iso_code.'">';
 
 		foreach ($products as $productArray)
 		{
 			$product = new Product((int)($productArray['id_product']), true, $configuration['PS_LANG_DEFAULT']);
-			$link = new Link();
 
 			echo '<produit>';
 			echo $this->_getBaseData($product, $configuration, $link, $carrier);
@@ -561,7 +566,10 @@ class ShoppingFluxExport extends Module
 			echo $this->_getUrlCategories($product, $configuration, $link);
 			echo $this->_getFeatures($product, $configuration);
 			echo $this->_getCombinaisons($product, $configuration, $link, $carrier);
-			echo $this->_getFilAriane($product, $configuration);
+                        
+                        if (empty($no_breadcrumb))
+                            echo $this->_getFilAriane($product, $configuration);
+                        
 			echo '<manufacturer><![CDATA['.$product->manufacturer_name.']]></manufacturer>';
 			echo '<supplier><![CDATA['.$product->supplier_name.']]></supplier>';
 
@@ -613,21 +621,26 @@ class ShoppingFluxExport extends Module
 				'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT'
 			)
 		);
+                
+                $no_breadcrumb = Tools::getValue('no_breadcrumb');
 
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
 		
+                $passes = Tools::getValue('passes');
+                $configuration['PASSES'] = !empty($passes) ? $passes : (int)($total/20)+1;
+                
 		//manage case PS_CARRIER_DEFAULT is deleted
 		$carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], $current);
+		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], $current, $configuration['PASSES']);
+                $link = new Link();
 
 		$str = '';
 
 		foreach ($products as $productArray)
 		{
 			$product = new Product((int)($productArray['id_product']), true, $configuration['PS_LANG_DEFAULT']);
-			$link = new Link();
 
 			$str .= '<produit>';
 			$str .= $this->_getBaseData($product, $configuration, $link, $carrier);
@@ -635,7 +648,10 @@ class ShoppingFluxExport extends Module
 			$str .= $this->_getUrlCategories($product, $configuration, $link);
 			$str .= $this->_getFeatures($product, $configuration);
 			$str .= $this->_getCombinaisons($product, $configuration, $link, $carrier);
-			$str .= $this->_getFilAriane($product, $configuration);
+                        
+                        if (empty($no_breadcrumb))
+                            $str .= $this->_getFilAriane($product, $configuration);
+                        
 			$str .= '<manufacturer><![CDATA['.$product->manufacturer_name.']]></manufacturer>';
 			$str .= '<supplier><![CDATA['.$product->supplier_name.']]></supplier>';
 
@@ -659,11 +675,11 @@ class ShoppingFluxExport extends Module
 		fwrite($file, $str);
 		fclose($file);
 
-		if ($current + 500 >= $total)
+		if ($current + $configuration['PASSES'] >= $total)
 			$this->closeFeed ();
 		else
 		{
-			$next_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/cron.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN').'&current='.($current + 500).'&total='.$total;
+			$next_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/cron.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN').'&current='.($current + $configuration['PASSES']).'&total='.$total.'&passes='.$configuration['PASSES'];
 			header('Location:'.$next_uri);
 		}
 
@@ -699,7 +715,8 @@ class ShoppingFluxExport extends Module
 			17 => 'tva',
 			18 => 'ref-constructeur',
 			19 => 'ref-fournisseur',
-			20 => 'upc'
+			20 => 'upc',
+                        21 => 'wholesale-price'
 		);
 
 		$data = array();
@@ -722,6 +739,7 @@ class ShoppingFluxExport extends Module
 		$data[18] = $product->reference;
 		$data[19] = $product->supplier_reference;
 		$data[20] = $product->upc;
+                $data[21] = $product->wholesale_price;
 
 		foreach ($titles as $key => $balise)
 			$ret .= '<'.$balise.'><![CDATA['.$data[$key].']]></'.$balise.'>';
@@ -878,6 +896,7 @@ class ShoppingFluxExport extends Module
 			$combinations[$combinaison['id_product_attribute']]['upc'] = $combinaison['upc'];
 			$combinations[$combinaison['id_product_attribute']]['quantity'] = $combinaison['quantity'];
 			$combinations[$combinaison['id_product_attribute']]['weight'] = $combinaison['weight'];
+                        $combinations[$combinaison['id_product_attribute']]['reference'] = $combinaison['reference'];
 		}
 
 		foreach ($combinations as $id => $combination)
@@ -926,6 +945,8 @@ class ShoppingFluxExport extends Module
 				if (!empty($attributeName))
 					$ret .= '<'.$attributeName.'><![CDATA['.$attributeValue.']]></'.$attributeName.'>';
 			}
+                        
+                        $ret .= '<ref-constructeur><![CDATA['.$combination['reference'].']]></ref-constructeur>';
 
 			$ret .= '</attributs>';
 			$ret .= '</declinaison>';
@@ -1094,10 +1115,10 @@ class ShoppingFluxExport extends Module
 	{
 		$ip = Db::getInstance()->getValue('SELECT `ip` FROM `'._DB_PREFIX_.'customer_ip` WHERE `id_customer` = '.(int)$params['order']->id_customer);
 		if (empty($ip))
-			$ip = $_SERVER['REMOTE_ADDR'];
+                    $ip = $_SERVER['REMOTE_ADDR'];
 
-		if ((Configuration::get('SHOPPING_FLUX_TRACKING') != '' || Configuration::get('SHOPPING_FLUX_BUYLINE') != '') && !in_array($params['order']->payment, $this->_getMarketplaces()))
-			Tools::file_get_contents('https://tracking.shopping-flux.com/?ip='.$ip.'&cl='.Configuration::get('SHOPPING_FLUX_LOGIN').'&mt='.$params['order']->total_paid_real.'&cmd='.$params['order']->id.'&index='.Configuration::get('SHOPPING_FLUX_INDEX'));
+		if ((Configuration::get('SHOPPING_FLUX_TRACKING') != '' || Configuration::get('SHOPPING_FLUX_BUYLINE') != '') && Configuration::get('SHOPPING_FLUX_ID') != '' && !in_array($params['order']->payment, $this->_getMarketplaces()))
+			Tools::file_get_contents('https://tag.shopping-flux.com/order/'.base64_encode(Configuration::get('SHOPPING_FLUX_ID').'|'.$params['order']->id.'|'.$params['order']->total_paid).'?ip='.$ip);
 
 		if (Configuration::get('SHOPPING_FLUX_STOCKS') != '' && !in_array($params['order']->payment, $this->_getMarketplaces()))
 		{
@@ -1121,8 +1142,17 @@ class ShoppingFluxExport extends Module
 
 	public function hookFooter()
 	{
-		if (Configuration::get('SHOPPING_FLUX_BUYLINE') != '')
-			return '<script type="text/javascript" src="https://tracking.shopping-flux.com/gg.js"></script>';
+		if (Configuration::get('SHOPPING_FLUX_BUYLINE') != '' && Configuration::get('SHOPPING_FLUX_ID') != '')
+			return '<script type="text/javascript">
+                        var sf2 = sf2 || [];
+                        sf2.push([\''.Configuration::get('SHOPPING_FLUX_ID').'\'],[escape(document.referrer)]);
+                        (function() {
+                        var sf_script = document.createElement(\'script\');
+                        sf_script.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'tag.shopping-feed.com/buyline.js\';
+                        sf_script.setAttribute(\'async\', \'true\');
+                        document.documentElement.firstChild.appendChild(sf_script);
+                        })();
+                        </script>';
 		return '';
 	}
 
@@ -1604,6 +1634,27 @@ class ShoppingFluxExport extends Module
 
 		$this->_callWebService('ValidOrders', $xml);
 	}
+        
+        private function _setShoppingFeedId(){
+            
+            $login = Configuration::get('SHOPPING_FLUX_LOGIN');
+            $id = Configuration::get('SHOPPING_FLUX_ID');
+            
+            if (empty($login) OR !empty($id))
+                return;
+            
+            $xml  = '<?xml version="1.0" encoding="UTF-8"?>';
+            $xml .= '<GetClientId>';
+            $xml .= '<Login>'.$login.'</Login>';
+            $xml .= '</GetClientId>';
+            
+            $getClientId = $this->_callWebService('GetClientId', $xml);
+			
+            if (!is_object($getClientId))
+                return;
+            
+            Configuration::updateValue('SHOPPING_FLUX_ID', (string)$getClientId->Response->ID);
+        }
 
 	/* Liste Marketplaces SF */
 	private function _getMarketplaces()
@@ -1618,6 +1669,7 @@ class ShoppingFluxExport extends Module
 			'eBay',
 			'Ecitizen',
 			'Fnac',
+                        'Galerieslafayette',
 			'Glamour',
 			'GreenRepublic',
 			'Gstk',
@@ -1626,10 +1678,12 @@ class ShoppingFluxExport extends Module
 			'Laredoute',
 			'Mistergooddeal',
 			'Monechelle',
+                        'Nutspark',
 			'Pixmania',
 			'PriceMinister',
 			'RueDuCommerce',
 			'Rueducommerceean',
+                        'Sears',
 			'Spartoo',
 			'ToutAPorter'
 		);
