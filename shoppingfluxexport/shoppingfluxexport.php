@@ -554,7 +554,7 @@ class ShoppingFluxExport extends Module
                 $link = new Link();
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<produits version="'.$this->version.'" coutry="'.Context::getContext()->country->iso_code.'">';
+		echo '<produits version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">';
 
 		foreach ($products as $productArray)
 		{
@@ -596,7 +596,7 @@ class ShoppingFluxExport extends Module
 	public function initFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits version="'.$this->version.'">');
+		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">');
 		fclose($file);
 
 		$totalProducts = $this->countProducts();
