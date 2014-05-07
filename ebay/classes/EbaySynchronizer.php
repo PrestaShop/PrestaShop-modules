@@ -113,11 +113,10 @@ class EbaySynchronizer
 			if (Tools::getValue('id_product_attribute'))
 			{
 				$id_product_attribute_fix = (int)Tools::getValue('id_product_attribute');
-				$key = $product_id.'-'.$id_product_attribute_fix;
+				$key = $product_id.'-'.$id_product_attribute_fix.'_'.$ebay_profile->id;
 				if (isset($data['variations'][$key]['quantity']))
 					$data['variations'][$key]['quantity'] = EbaySynchronizer::_fixHookUpdateProduct($context, $product_id, $data['variations'][$key]['quantity']);
 			}
-
 			// Price Update
 			if (isset($p['noPriceUpdate']))
 				$data['noPriceUpdate'] = $p['noPriceUpdate'];
@@ -440,7 +439,7 @@ class EbaySynchronizer
 				{
 					// If issue, it's because of https/http in the url
 					$link = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $large->name);
-					$variations[$product->id.'-'.$image['id_product_attribute']]['pictures'][] = $link;
+					$variations[$product->id.'-'.$image['id_product_attribute'].'_'.$ebay_profile->id]['pictures'][] = $link;
 				}
 
 		return $variations;
