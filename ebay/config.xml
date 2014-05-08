@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<<<<<<< HEAD
-        <module>
-            <name>ebay</name>
-            <displayName><![CDATA[eBay]]></displayName>
-            <version><![CDATA[1.7]]></version>
-            <description><![CDATA[Exportez facilement vos produits de PrestaShop vers eBay.]]></description>
-            <author><![CDATA[PrestaShop]]></author>
-            <tab><![CDATA[market_place]]></tab>
-	<confirmUninstall>Êtes vous sûr de vouloir désinstaller le module ? Toutes les configurations seront supprimées</confirmUninstall>
-            <is_configurable>1</is_configurable>
-            <need_instance>1</need_instance>
-=======
 <module>
 	<name>ebay</name>
 	<displayName><![CDATA[eBay]]></displayName>
@@ -21,6 +9,5 @@
 	<confirmUninstall>Are you sure you want to uninistall this module? All configuration settings will be lost</confirmUninstall>
 	<is_configurable>1</is_configurable>
 	<need_instance>1</need_instance>
->>>>>>> bb894d7a879dcebbe4db6832f519e82ccd4f1383
 	<limited_countries></limited_countries>
         </module>
