@@ -189,7 +189,7 @@ class EbayProfile extends ObjectModel
 	 		throw new PrestaShopException('keys var is not an array');
 
 		if ($this->configurations === null)
-			_loadConfiguration();
+			$this->_loadConfiguration();
 
 	 	$results = array();
 	 	foreach ($keys as $key)
