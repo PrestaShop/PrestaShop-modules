@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +35,7 @@ include_once(dirname(__FILE__).'/Toolbox.php');
 
 class Gateway
 {
-	private $_log = '';
+	private $log = '';
 	private $id_order_state_neteven = 0;
 	private $id_employee_neteven = 0;
 	private $id_customer_neteven = 0;
@@ -50,42 +50,36 @@ class Gateway
 	private $feature_links;
 	private $order_state_before = array();
 	private $order_state_after = array();
-
-	// mailing system, if product not found in BDD.
+	/* mailing system, if product not found in BDD.*/
 	private $mail_list_alert = array();
 	private $mail_active = false;
-
-	// Possible order states for an order.
+	/* Possible order states for an order.*/
 	private $t_list_order_status = array('Canceled', 'Refunded', 'Shipped', 'toConfirmed');
 	private $t_list_order_status_traite = array('Shipped', 'toConfirmed', 'toConfirm', 'Confirmed');
 	private $t_list_order_status_retraite_order = array('Canceled', 'Refunded');
-	
 	private $debug = false;
 	private $send_request_to_mail = false;
-
-	// Separator for attribute groups / features
+	/* Separator for attribute groups / features */
 	private $separator = '$-# ';
-
 	public static $send_order_state_to_neteven = true;
 	public static $send_product_to_neteven = true;
-	
-	protected $_client = NULL;
+	protected $client = null;
 	public static $translations = array();
 	
-	public function __construct($client = NULL)
+	public function __construct($client = null)
 	{
-		if($client)
-			$this->_client = $client;
+		if ($client)
+			$this->client = $client;
 		else
 		{	
-			$this->_client = new SoapClient(Gateway::getConfig('NETEVEN_URL'), array('trace' => 1));
+			$this->client = new SoapClient(Gateway::getConfig('NETEVEN_URL'), array('trace' => 1));
 			$auth = $this->createAuthentication(Gateway::getConfig('NETEVEN_LOGIN'), Gateway::getConfig('NETEVEN_PASSWORD'));
-			$this->_client->__setSoapHeaders(new SoapHeader(Gateway::getConfig('NETEVEN_NS'), 'AuthenticationHeader', $auth));
+			$this->client->__setSoapHeaders(new SoapHeader(Gateway::getConfig('NETEVEN_NS'), 'AuthenticationHeader', $auth));
 		}
 		
 		$connection = $this->testConnection();
 		
-		if($connection != 'Accepted')
+		if ($connection != 'Accepted')
 			Toolbox::manageError('Connection non acceptée', 'connexion au webservice');
 
 		$this->affectProperties();
@@ -94,7 +88,7 @@ class Gateway
 	
 	public function affectProperties()
 	{
-		global $cookie;
+		$context = Context::getContext();
 		
 		// Get the configuration
 		$this->shipping_delay = Gateway::getConfig('SHIPPING_DELAY');
@@ -111,12 +105,15 @@ class Gateway
 		
 		// Get feature links NetEven/PrestaShop
 		$feature_links = Db::getInstance()->ExecuteS('
-			SELECT ogfl.*, agl.`name` as attribute_name, fl.`name` as feature_name, ogf.`value`
-			FROM `'._DB_PREFIX_.'orders_gateway_feature_link` ogfl
-			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (agl.`id_attribute_group` = ogfl.`id_attribute_group` AND agl.`id_lang` = '.(int)$cookie->id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (fl.`id_feature` = ogfl.`id_feature` AND fl.`id_lang` = '.(int)$cookie->id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'orders_gateway_feature` ogf ON (ogf.`id_order_gateway_feature` = ogfl.`id_order_gateway_feature`)
-			');
+            SELECT ogfl.*, agl.`name` as attribute_name, fl.`name` as feature_name, ogf.`value`
+            FROM `'._DB_PREFIX_.'orders_gateway_feature_link` ogfl
+            LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+                ON (agl.`id_attribute_group` = ogfl.`id_attribute_group` AND agl.`id_lang` = '.(int)$context->cookie->id_lang.')
+            LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl
+                ON (fl.`id_feature` = ogfl.`id_feature` AND fl.`id_lang` = '.(int)$context->cookie->id_lang.')
+            LEFT JOIN `'._DB_PREFIX_.'orders_gateway_feature` ogf
+                ON (ogf.`id_order_gateway_feature` = ogfl.`id_order_gateway_feature`)
+        ');
 		
 		$temp = array();
 		foreach ($feature_links as $feature_link)
@@ -127,7 +124,7 @@ class Gateway
 
 		$this->feature_links = $temp;
 
-		// Get order states
+		/* Get order states */
 		if (Gateway::getConfig('ORDER_STATE_BEFORE'))
 			$this->order_state_before = explode(':', Gateway::getConfig('ORDER_STATE_BEFORE'));
 		
@@ -191,7 +188,7 @@ class Gateway
 	{
 		try
 		{
-			$response = $this->_client->TestConnection();
+			$response = $this->client->TestConnection();
 			$message = $response->TestConnectionResult;
 		}
 		catch (Exception $e)
@@ -216,18 +213,34 @@ class Gateway
 
 	public static function getConfig($name)
 	{
-		$value = Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.'orders_gateway_configuration` WHERE name = "'.pSQL($name).'"');
+		$value = Db::getInstance()->getValue('
+		    SELECT `value`
+		    FROM `'._DB_PREFIX_.'orders_gateway_configuration`
+		    WHERE name = "'.pSQL($name).'"
+		');
 		return $value ? $value : false;
 	}
 
 	public static function updateConfig($name, $value)
 	{
-		$config_exist = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders_gateway_configuration` WHERE `name` = "'.pSQL($name).'"');
+		$config_exist = Db::getInstance()->getValue('
+		    SELECT COUNT(*)
+		    FROM `'._DB_PREFIX_.'orders_gateway_configuration`
+		    WHERE `name` = "'.pSQL($name).'"
+		');
 		
 		if (!$config_exist)
-			Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'orders_gateway_configuration` (`name`, `value`) VALUES ("'.pSQL($name).'", "'.pSQL($value).'")');
+			Db::getInstance()->Execute('
+			    INSERT INTO `'._DB_PREFIX_.'orders_gateway_configuration`
+			    (`name`, `value`)
+			    VALUES ("'.pSQL($name).'", "'.pSQL($value).'")
+			');
 		else
-			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'orders_gateway_configuration` SET `value` = "'.pSQL($value).'" WHERE `name` = "'.pSQL($name).'"');
+			Db::getInstance()->Execute('
+			    UPDATE `'._DB_PREFIX_.'orders_gateway_configuration`
+			    SET `value` = "'.pSQL($value).'"
+			    WHERE `name` = "'.pSQL($name).'"
+			');
 		
 	}
 	
@@ -239,12 +252,26 @@ class Gateway
 		foreach ($emails as $email)
 			if (Validate::isEmail($email))
 			{
-				if(!$classic_mail)
+				if (!$classic_mail)
 				{
 					$id_lang = $this->id_lang ? (int)$this->id_lang : Configuration::get('PS_LANG_DEFAULT');
 					$shop_email = Configuration::get('PS_SHOP_EMAIL');
 					$shop_name = Configuration::get('PS_SHOP_NAME');
-					Mail::Send($id_lang, 'debug', $subject, array('{message}' => $message), $email, NULL, $shop_email, $shop_name, NULL, NULL, dirname(__FILE__).'/../mails/');
+					Mail::Send(
+                        $id_lang,
+                        'debug',
+                        $subject,
+                        array(
+                            '{message}' => $message
+                        ),
+                        $email,
+                        null,
+                        $shop_email,
+                        $shop_name,
+                        null,
+                        null,
+                        dirname(__FILE__).'/../mails/'
+                    );
 				}
 				else
 					mail($email, $subject, $message);

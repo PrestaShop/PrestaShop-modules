@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -37,5 +37,5 @@
 			<li>{l s='PayPal is accepted by millions of businesses worldwide and is the preferred payment method on eBay' mod='paypal'}</li>
 		</ul>
 	</p>
-	<p><a href="https://www.paypal.com/{$iso_code}/cgi-bin/webscr?cmd=_registration-run&pal=TWJHHUL9AEP9C">{l s='Start using PayPal today!' mod='paypal'}</a></p>
+	<p><a href="https://www.paypal.com/{$iso_code|escape:'htmlall':'UTF-8'}/cgi-bin/webscr?cmd=_registration-run&pal=TWJHHUL9AEP9C">{l s='Start using PayPal today!' mod='paypal'}</a></p>
 </div>

@@ -1,7 +1,6 @@
 <?php
-
-/*
- * 2007-2013 PrestaShop
+/**
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,9 +18,9 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -34,18 +33,19 @@ include_once _PS_ADMIN_DIR_.'/tabs/AdminOrders.php';
  */
 class AdminSceauController extends AdminOrders
 {
-
 	/**
 	 * displays available actions in the top of the order list
 	 */
 	public function displayTop()
 	{
-		$header = "<fieldset>";
-		$header .= 
-			"<div id='header_sceau'>
+		$url = 'index.php?tab=AdminSceau&action=ResendOrders&token='.Tools::getAdminTokenLite('AdminSceau');
+		$url_img = _PS_BASE_URL_.__PS_BASE_URI__.'modules/fianetsceau/img/sceauresend14.png';
+		$label_resend = $this->l('Resend orders');
+		$header = '<fieldset>';
+		$header .= "<div id='header_sceau'>
 				<div class='sceau_control'>
-					<a href='index.php?tab=AdminSceau&action=ResendOrders&token=".Tools::getAdminTokenLite('AdminSceau')."'>
-						<img src='"._PS_BASE_URL_.__PS_BASE_URI__."modules/fianetsceau/img/sceauresend14.png'/>".$this->l('Resend orders')."
+					<a href=$url>
+						<img src=$url_img />$label_resend
 					</a>
 				</div>
 			</div>";
@@ -53,13 +53,4 @@ class AdminSceauController extends AdminOrders
 
 		echo $header;
 	}
-
-	/**
-	 * Get FIA-NET log file and show it
-	 */
-	public function display()
-	{
-		return parent::display();
-	}
-
 }

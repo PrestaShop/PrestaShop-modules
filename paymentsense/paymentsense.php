@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.4';
+		$this->version = '1.9.9';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
@@ -51,6 +51,7 @@ class PaymentSense extends PaymentModule
 		$this->displayName = $this->l('PaymentSense');
 		$this->description = $this->l('Process transactions through the PaymentSense gateway.');
 		$this->confirmUninstall = $this->l('Are you sure?');
+
 	}
 
 	public function install()
@@ -253,11 +254,11 @@ class PaymentSense extends PaymentModule
 			// Display errors / confirmation
 			if (Tools::getValue('paymentsense_SUBMIT') != '')
 			{
-				if (preg_match('/merchant/', Tools::getValue('PAYMENTSENSE_GATEWAYID')) || !preg_match( '/^([a-zA-Z]{6})([-])([0-9]{7})$/', Tools::getValue('PAYMENTSENSE_GATEWAYID')))
+				if (preg_match('/merchant/', Tools::getValue('PAYMENTSENSE_GATEWAYID')) || !preg_match( '/^([a-zA-Z0-9]{6})([-])([0-9]{7})$/', Tools::getValue('PAYMENTSENSE_GATEWAYID')))
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Merchant ID').'</b> - Your Gateway Merchant ID should contain 
 					<strong>the first 6 characters of the company name followed by a hyphen (-) and 7 numbers</strong>';
 
-				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) <= 10)
+				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) < 10)
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Password').'</b> - 
 					Your gateway password is too short, this should contain 10 characters including 3 numbers. 
 					This password does <strong>NOT</strong> contain a symbol';
@@ -273,7 +274,7 @@ class PaymentSense extends PaymentModule
 			}
 
 			// Display the form
-			$this->_html .= '<form action="'.htmlentities($_SERVER['REQUEST_URI'], ENT_COMPAT | ENT_HTML401, 'UTF-8').'" method="post">
+			$this->_html .= '<form action="'.htmlentities($_SERVER['REQUEST_URI'], ENT_COMPAT, 'UTF-8').'" method="post">
 			<table width="945px"><tr><td width="247px" align="right">';
 
 			//Display options

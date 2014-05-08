@@ -82,7 +82,7 @@ class AdyenValidationModuleFrontController extends ModuleFrontController
 		
 		if (!Validate::isLoadedObject($address) || !Validate::isLoadedObject($customer) || !Validate::isLoadedObject($currency))
 		{
-			Logger::addLog('Adyen module: invalid address, customer, or currency for id_order '.$order->id, 4);
+			Logger::addLog('Adyen module: invalid address, customer, or currency for id_order '.$cart->id, 4);
 			return $this->module->l('Adyen error: (invalid address, customer, or currency)');
 		}
 		
@@ -92,7 +92,7 @@ class AdyenValidationModuleFrontController extends ModuleFrontController
 		$shopper_email = (string)$customer->email;
 		$merchant_reference = (int)$this->module->currentOrder; // set when order is validated
 		
-		$payment_amount = number_format(Tools::convertPrice($cart->getOrderTotal(true, 3), $currency), 2, '', '');
+		$payment_amount = number_format($cart->getOrderTotal(true, 3), 2, '', '');
 		
 		$shopper_reference = (string)$customer->secure_key;
 		
@@ -116,9 +116,7 @@ class AdyenValidationModuleFrontController extends ModuleFrontController
 		$use_tax = !($tax_calculation_method == PS_TAX_EXC);
 		
 		$shipping_cost = Tools::displayPrice($cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING), $currency);
-		
-		$shipping_cost_float = Tools::convertPrice($cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING), $currency);
-		
+
 		$prod_details = sprintf('Shipment cost: %s <br />', $shipping_cost);
 		$prod_details .= 'Order rows: <br />';
 		

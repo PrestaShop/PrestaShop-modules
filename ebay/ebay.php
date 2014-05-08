@@ -2,7 +2,7 @@
 
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -21,7 +21,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,8 +94,12 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
+<<<<<<< HEAD
 		$this->version = '1.7';
         $this->stats_version = '1.0';
+=======
+		$this->version = '1.6.7';
+>>>>>>> bb894d7a879dcebbe4db6832f519e82ccd4f1383
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -106,7 +110,12 @@ class Ebay extends Module
 		$this->displayName = $this->l('eBay');
 		$this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
 		$this->module_key = '7a6b007a219bab59c1611254347f21d5';
+<<<<<<< HEAD
 		
+=======
+
+
+>>>>>>> bb894d7a879dcebbe4db6832f519e82ccd4f1383
 		// Checking Extension
 		$this->_checkExtensionsLoading();
 
@@ -1635,7 +1644,8 @@ class Ebay extends Module
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
 						'percent' => pSQL($percentValue),
-						'date_upd' => pSQL($date)
+						'date_upd' => pSQL($date),
+						'sync' => 0
 					);
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))

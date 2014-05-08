@@ -19,7 +19,7 @@
 <h2>{l s='Shopgate' mod='shopgate'}</h2>
 
 <p><img src="{$mod_dir}img/logo_web.png"/></p>
-<p>{l s='Create fast and easy to own mobile shop. Shopgate developed for you from 19,- EUR a mobile web page and real apps for iPhone, Android, iPad and other mobile systems. About the module, products and inventories with the mobile shop and orders automatically synchronized from the mobile shop in your store Presto transfer. For more information, see' mod='shopgate'} <a href="http://www.shopgate.com" target="_blank">www.shopgate.com</a></p>
+<p>{l s='Create fast and easy to own mobile shop. Shopgate developed for you from 19,- EUR a mobile web page and real apps for iPhone, Android, iPad and other mobile systems. About the module, products and inventories with the mobile shop and orders automatically synchronized from the mobile shop in your store Presto transfer. For more information, see' mod='shopgate'} <a href="{$shopgate_offer_url}" target="_blank">www.shopgate.com</a></p>
 <p style="clear: both;">&nbsp;</p>
 
 <script src="../js/jquery/jquery-colorpicker.js" type="text/javascript"></script>

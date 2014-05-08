@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ if (!in_array('Ebay', get_declared_classes()))
 class EbayCountrySpec
 {
 	public $country;
-	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl', 'be');
+	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl', 'be', 'de');
 	protected $ebay_iso;
 
 	private $dev;
@@ -135,7 +135,44 @@ class EbayCountrySpec
 			'iso_code'       => 'be',
 			'signin'         => 'https://signin.benl.ebay.be/ws/eBayISAPI.dll',
 			'signin_sandbox' => 'https://signin.sandbox.benl.ebay.be/ws/eBayISAPI.dll'
-		)
+		),
+		'de' => array(
+			'site_id'        => 77,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'EUR',
+			'site_name'      => 'Germany',
+			'site_extension' => 'de',
+			'img_stats'      => null,
+			'iso_code'       => 'de',
+			'signin'         => 'https://signin.ebay.de/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.de/ws/eBayISAPI.dll'
+		),
+		'ch' => array(
+			'site_id'        => 193,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'CHF',
+			'site_name'      => 'Switzerland',
+			'site_extension' => 'ch',
+			'img_stats'      => null,
+			'iso_code'       => 'ch',
+			'signin'         => 'https://signin.ebay.ch/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.ch/ws/eBayISAPI.dll'
+		),
+		'at' => array(
+			'site_id'        => 16,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'EUR',
+			'site_name'      => 'Austria',
+			'site_extension' => 'at',
+			'img_stats'      => null,
+			'iso_code'       => 'at',
+			'signin'         => 'https://signin.ebay.at/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.at/ws/eBayISAPI.dll'
+		),
+
 	);
 
 	public function __construct(Country $country = null)

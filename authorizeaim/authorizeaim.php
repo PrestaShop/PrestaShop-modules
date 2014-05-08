@@ -27,20 +27,21 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class authorizeAIM extends PaymentModule
+class AuthorizeAIM extends PaymentModule
 {
 	public function __construct()
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4.3';
+		$this->version = '1.5.1';
 		$this->author = 'PrestaShop';
-		$this->need_instance = 0;
+		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
 		parent::__construct();
 
 		$this->displayName = 'Authorize.net AIM (Advanced Integration Method)';
 		$this->description = $this->l('Receive payment with Authorize.net');
+
 
 		/* For 1.4.3 and less compatibility */
 		$updateConfig = array(
@@ -72,6 +73,8 @@ class authorizeAIM extends PaymentModule
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+
+		$this->checkForUpdates();
 	}
 
 	public function install()
@@ -80,20 +83,30 @@ class authorizeAIM extends PaymentModule
 			$this->registerHook('orderConfirmation') &&
 			$this->registerHook('payment') &&
 			$this->registerHook('header') &&
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', 1) &&
+			$this->registerHook('backOfficeHeader') &&
+			Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1) &&
+			Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0) &&
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', _PS_OS_ERROR_);
 	}
 
 	public function uninstall()
 	{
-		Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID');
-		Configuration::deleteByName('AUTHORIZE_AIM_KEY');
-		Configuration::deleteByName('AUTHORIZE_AIM_DEMO');
+		Configuration::deleteByName('AUTHORIZE_AIM_SANDBOX');
+		Configuration::deleteByName('AUTHORIZE_AIM_TEST_MODE');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_VISA');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_MASTERCARD');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_AX');
 		Configuration::deleteByName('AUTHORIZE_AIM_HOLD_REVIEW_OS');
+		
+		/* Removing credentials configuration variables */
+		$currencies = Currency::getCurrencies(false, true);
+		foreach ($currencies as $currency)
+			if (in_array($currency['iso_code'], $this->aim_available_currencies))
+			{
+				Configuration::deleteByName('AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code']);
+				Configuration::deleteByName('AUTHORIZE_AIM_KEY_'.$currency['iso_code']);
+			}
 
 		return parent::uninstall();
 	}
@@ -108,85 +121,105 @@ class authorizeAIM extends PaymentModule
 		else
 			$this->context->smarty->assign('status', 'failed');
 
-		return $this->display(__FILE__, 'hookorderconfirmation.tpl');
+		return $this->display(__FILE__, 'views/templates/hook/orderconfirmation.tpl');
+	}
+
+	public function hookBackOfficeHeader()
+	{
+		$this->context->controller->addJQuery();
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
+			$this->context->controller->addJqueryPlugin('fancybox');
+
+		$this->context->controller->addJS($this->_path.'js/authorizeaim.js');
+		$this->context->controller->addCSS($this->_path.'css/authorizeaim.css');
 	}
 
 	public function getContent()
 	{
 		$html = '';
+
 		if (Tools::isSubmit('submitModule'))
 		{
-			Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID', Tools::getvalue('authorizeaim_login_id'));
-			Configuration::updateValue('AUTHORIZE_AIM_KEY', Tools::getvalue('authorizeaim_key'));
-			Configuration::updateValue('AUTHORIZE_AIM_DEMO', Tools::getvalue('authorizeaim_demo_mode'));
+			$authorizeaim_mode = (int)Tools::getvalue('authorizeaim_mode');
+			// Sandbox environment
+			if ($authorizeaim_mode == 2)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 1);
+			}
+			// Production environment + test mode
+			else if ($authorizeaim_mode == 1)
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 1);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+			// Production environment
+			else
+			{
+				Configuration::updateValue('AUTHORIZE_AIM_TEST_MODE', 0);
+				Configuration::updateValue('AUTHORIZE_AIM_SANDBOX', 0);
+			}
+
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_VISA', Tools::getvalue('authorizeaim_card_visa'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_MASTERCARD', Tools::getvalue('authorizeaim_card_mastercard'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_AX', Tools::getvalue('authorizeaim_card_ax'));
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', Tools::getvalue('authorizeaim_hold_review_os'));
+			
+			/* Updating credentials for each active currency */
+			foreach ($_POST as $key => $value)
+			{
+				if (strstr($key, 'authorizeaim_login_id_'))
+					Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID_'.str_replace('authorizeaim_login_id_', '', $key), $value);
+				elseif (strstr($key, 'authorizeaim_key_'))
+					Configuration::updateValue('AUTHORIZE_AIM_KEY_'.str_replace('authorizeaim_key_', '', $key), $value);		
+			}
 
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
 		}
 
-		// For Hold for Review
-		$orderStates = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
+		// For "Hold for Review" order status
+		$currencies = Currency::getCurrencies(false, true);
+		$order_states = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 
-		$html .= '<h2>'.$this->displayName.'</h2>
-		<fieldset><legend><img src="../modules/'.$this->name.'/logo.gif" alt="" /> '.$this->l('Help').'</legend>
-			<a href="http://api.prestashop.com/partner/authorize.net/" target="_blank" style="float: right;"><img src="../modules/'.$this->name.'/logo_authorize.png" alt="" /></a>
-			<h3>'.$this->l('In your PrestaShop admin panel').'</h3>
-			- '.$this->l('Fill the  Login ID  provided by Authorize.net').'<br />
-			- '.$this->l('Fill the key field with the transaction key provided by Authorize.net').'<br />
-			<span style="color: red;" >- '.$this->l('Warning: Your website must possess a SSL certificate to use the Authorize.net AIM payment system. You are responsible for the safety of your customers\' bank information. PrestaShop cannot be blamed for any security issue on your website.').'</span><br />
-			<br />
-		</fieldset><br />
-		<form action="'.Tools::htmlentitiesutf8($_SERVER['REQUEST_URI']).'" method="post">
-			<fieldset class="width2">
-				<legend><img src="../img/admin/contact.gif" alt="" />'.$this->l('Settings').'</legend>
-				<label for="authorizeaim_login_id">'.$this->l('Login ID').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_login_id" value="'.Configuration::get('AUTHORIZE_AIM_LOGIN_ID').'" /></div>
-				<label for="authorizeaim_key">'.$this->l('Key').'</label>
-				<div class="margin-form"><input type="text" size="20" id="authorizeaim_login_id" name="authorizeaim_key" value="'.Configuration::get('AUTHORIZE_AIM_KEY').'" /></div>
-				<label for="authorizeaim_demo_mode">'.$this->l('Mode:').'</label>
-				<div class="margin-form" id="authorizeaim_demo">
-					<input type="radio" name="authorizeaim_demo_mode" value="0" style="vertical-align: middle;" '.(!Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
-					<span style="color: #080;">'.$this->l('Production').'</span>
-					<input type="radio" name="authorizeaim_demo_mode" value="1" style="vertical-align: middle;" '.(Tools::getValue('authorizeaim_demo_mode', Configuration::get('AUTHORIZE_AIM_DEMO')) ? 'checked="checked"' : '').' />
-					<span style="color: #900;">'.$this->l('Test').'</span>
-				</div>
-				<label for="authorizeaim_cards">'.$this->l('Cards:').'</label>
-				<div class="margin-form" id="authorizeaim_cards">
-					<input type="checkbox" name="authorizeaim_card_visa" '.(Configuration::get('AUTHORIZE_AIM_CARD_VISA') ? 'checked="checked"' : '').' />
-						<img src="../modules/'.$this->name.'/cards/visa.gif" alt="visa" />
-					<input type="checkbox" name="authorizeaim_card_mastercard" '.(Configuration::get('AUTHORIZE_AIM_CARD_MASTERCARD') ? 'checked="checked"' : '').' />
-						<img src="../modules/'.$this->name.'/cards/mastercard.gif" alt="visa" />
-					<input type="checkbox" name="authorizeaim_card_discover" '.(Configuration::get('AUTHORIZE_AIM_CARD_DISCOVER') ? 'checked="checked"' : '').' />
-						<img src="../modules/'.$this->name.'/cards/discover.gif" alt="visa" />
-					<input type="checkbox" name="authorizeaim_card_ax" '.(Configuration::get('AUTHORIZE_AIM_CARD_AX') ? 'checked="checked"' : '').' />
-						<img src="../modules/'.$this->name.'/cards/ax.gif" alt="visa" />
-				</div>
+		$this->context->smarty->assign(array(
+			'available_currencies' => $this->aim_available_currencies,
+			'currencies' => $currencies,
+			'module_dir' => $this->_path,
+			'order_states' => $order_states,
 
-				<label for="authorizeaim_hold_review_os">'.$this->l('Order status:  "Hold for Review" ').'</label>
-				<div class="margin-form">
-								<select id="authorizeaim_hold_review_os" name="authorizeaim_hold_review_os">';
-		// Hold for Review order state selection
-		foreach ($orderStates as $os)
-			$html .= '
-				<option value="'.(int)$os['id_order_state'].'"'.((int)$os['id_order_state'] == (int)Configuration::get('AUTHORIZE_AIM_HOLD_REVIEW_OS') ? ' selected' : '').'>'.
-			Tools::stripslashes($os['name']).
-			'</option>'."\n";
-		return $html.'</select></div>
-				<br /><center><input type="submit" name="submitModule" value="'.$this->l('Update settings').'" class="button" /></center>
-			</fieldset>
-		</form>';
+			'AUTHORIZE_AIM_TEST_MODE' => (bool)Configuration::get('AUTHORIZE_AIM_TEST_MODE'),
+			'AUTHORIZE_AIM_SANDBOX' => (bool)Configuration::get('AUTHORIZE_AIM_SANDBOX'),
+
+			'AUTHORIZE_AIM_CARD_VISA' => Configuration::get('AUTHORIZE_AIM_CARD_VISA'),
+			'AUTHORIZE_AIM_CARD_MASTERCARD' => Configuration::get('AUTHORIZE_AIM_CARD_MASTERCARD'),
+			'AUTHORIZE_AIM_CARD_DISCOVER' => Configuration::get('AUTHORIZE_AIM_CARD_DISCOVER'),
+			'AUTHORIZE_AIM_CARD_AX' => Configuration::get('AUTHORIZE_AIM_CARD_AX'),
+			'AUTHORIZE_AIM_HOLD_REVIEW_OS' => (int)Configuration::get('AUTHORIZE_AIM_HOLD_REVIEW_OS'),
+		));
+				
+		/* Determine which currencies are enabled on the store and supported by Authorize.net & list one credentials section per available currency */
+		foreach ($currencies as $currency)
+		{
+			if (in_array($currency['iso_code'], $this->aim_available_currencies))
+			{
+				$configuration_id_name = 'AUTHORIZE_AIM_LOGIN_ID_'.$currency['iso_code'];
+ 				$configuration_key_name = 'AUTHORIZE_AIM_KEY_'.$currency['iso_code'];
+				$this->context->smarty->assign($configuration_id_name, Configuration::get($configuration_id_name));
+				$this->context->smarty->assign($configuration_key_name, Configuration::get($configuration_key_name));
+			}
+		}
+		
+		return $this->context->smarty->fetch(dirname(__FILE__).'/views/templates/admin/configuration.tpl');
 	}
 
 	public function hookPayment($params)
 	{
 		$currency = Currency::getCurrencyInstance($this->context->cookie->id_currency);
-		if (!Validate::isLoadedObject($currency) || $currency->iso_code != 'USD')
+		
+		if (!Validate::isLoadedObject($currency))
 			return false;
-
+		
 		if (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$isFailed = Tools::getValue('aimerror');
@@ -206,8 +239,9 @@ class authorizeAIM extends PaymentModule
 			$this->context->smarty->assign('cards', $cards);
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
-
-			return $this->display(__FILE__, 'authorizeaim.tpl');
+			$this->context->smarty->assign('currency', $currency);
+			
+			return $this->display(__FILE__, 'views/templates/hook/authorizeaim.tpl');
 		}
 	}
 
@@ -243,5 +277,20 @@ class authorizeAIM extends PaymentModule
 			// 68 => Owner name
 			$this->pcc->card_holder = (string)$response[68];
 		}
+	}
+
+	private function checkForUpdates()
+	{
+		// Used by PrestaShop 1.3 & 1.4
+		if (version_compare(_PS_VERSION_, '1.5', '<') && self::isInstalled($this->name))
+			foreach (array('1.4.8', '1.4.11') as $version)
+			{
+				$file = dirname(__FILE__).'/upgrade/install-'.$version.'.php';
+				if (Configuration::get('AUTHORIZE_AIM') < $version && file_exists($file))
+				{
+					include_once($file);
+					call_user_func('upgrade_module_'.str_replace('.', '_', $version), $this);
+				}
+			}
 	}
 }

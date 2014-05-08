@@ -1,19 +1,19 @@
 /*---------- FRONT ----------------*/
-#module-realexredirect-payment #center_column {
-	width: 757px;
+#module-realexredirect-payment #right_column {
+	padding-left: 22.7%;
 }
 #module-realexredirect-payment #center_column h4 {
-	font-size:15px; margin-bottom:15px
+	font-size:15px; margin-bottom:15px;
 }
 
 #module-realexredirect-payment #center_column .bloc_new_card{
-	width:40%;float:left; border:1px solid #FAC132;padding:2%
+	width:45%;min-width:295px;border:1px solid #FAC132;padding:2%;
 }
 #module-realexredirect-payment #center_column .bloc_new_card select{
-	margin-top:10px
+	margin-top:10px;
 }
 #module-realexredirect-payment #center_column .bloc_new_card .cart_navigation {
-	float:right;margin:0px;padding: 0px
+	padding-left:60%; 
 }
 #module-realexredirect-payment #center_column .bloc_registered_card{
 	width:40%;float:right;border:1px solid #FAC132;padding:2%
@@ -32,8 +32,49 @@
 	color:red
 }
 
+p.payment_module.realexredirect {
+	background-color:#53585a;
+	-webkit-border-top-left-radius:23px;
+	-moz-border-radius-topleft:23px;
+	border-top-left-radius:23px;
+	-webkit-border-top-right-radius:23px;
+	-moz-border-radius-topright:23px;
+	border-top-right-radius:23px;
+	-webkit-border-bottom-right-radius:23px;
+	-moz-border-radius-bottomright:23px;
+	border-bottom-right-radius:23px;
+	-webkit-border-bottom-left-radius:23px;
+	-moz-border-radius-bottomleft:23px;
+	border-bottom-left-radius:23px;
+	border:2px solid #53585a;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Lucida, Verdana, Arial;
+        font-weight: bold ; 
+	font-size:18px ;
+	text-shadow:1px 1px 0px #53585a;
+        padding: 33px 25px 34px 99px ;
+        background-image:url('../.../../img/creditcardo.png');
+        background-repeat:no-repeat ;
+        background-position: 15px  ;
+        width: 570px ;
+        max-width: 95% ;
+        text-decoration: none ;
+        text-transform:capitalize;
+}
+p.payment_module.realexredirect:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #eeaf41), color-stop(1, #ffce79) );
+	background:-moz-linear-gradient( center top, #eeaf41 5%, #ffce79 100% );
+	background-image:url('../.../../img/creditcardg.png');
+        background-repeat:no-repeat ;
+        background-position: 15px  ;
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeaf41', endColorstr='#ffce79');
+	background-color:#f79421;
+        border:2px solid #f79421;
+        text-shadow:1px 1px 0px #f79421;
+}
 
-
-.clear {clear:both}
-.fleft {float:left}
-
+p.payment_module.realexredirect:active {
+	position:relative;
+	top:1px;
+}

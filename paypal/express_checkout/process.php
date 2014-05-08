@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,7 +47,7 @@ class PaypalExpressCheckout extends Paypal
 	/** @var token Contains the last token **/
 	public $token;
 
-	// Depending of the type set, id_cart or id_product will be set
+	/* Depending of the type set, id_cart or id_product will be set */
 	public $id_cart;
 
 	// Depending of the type set, id_cart or id_product will be set
@@ -65,13 +65,13 @@ class PaypalExpressCheckout extends Paypal
 
 	public $product_list = array();
 
-	// Used to know if user can validated his payment after shipping / address selection
+	/* Used to know if user can validated his payment after shipping / address selection */
 	public $ready = false;
 
-	// Take for now cart or product value
+	/* Take for now cart or product value */
 	public $type = false;
 
-	static public $COOKIE_NAME = 'express_checkout';
+	static public $cookie_name = 'express_checkout';
 
 	public $cookie_key = array(
 		'token', 'id_product', 'id_p_attr',
@@ -86,14 +86,14 @@ class PaypalExpressCheckout extends Paypal
 		// If type is sent, the cookie has to be delete
 		if ($type)
 		{
-			unset($this->context->cookie->{self::$COOKIE_NAME});
+			unset($this->context->cookie->{self::$cookie_name});
 			$this->setExpressCheckoutType($type);
 		}
 
 		// Store back the PayPal data if present under the cookie
-		if (isset($this->context->cookie->{self::$COOKIE_NAME}))
+		if (isset($this->context->cookie->{self::$cookie_name}))
 		{
-			$paypal = unserialize($this->context->cookie->{self::$COOKIE_NAME});
+			$paypal = unserialize($this->context->cookie->{self::$cookie_name});
 
 			foreach ($this->cookie_key as $key)
 				$this->{$key} = $paypal[$key];
@@ -224,7 +224,7 @@ class PaypalExpressCheckout extends Paypal
 		$fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
 		$fields['REQCONFIRMSHIPPING'] = '0';
 		$fields['NOSHIPPING'] = '1';
-		$fields['BUTTONSOURCE'] = $this->getTrackingCode();
+		$fields['BUTTONSOURCE'] = $this->getTrackingCode((int)Configuration::get('PAYPAL_PAYMENT_METHOD'));
 
 		// Products
 		$taxes = $total = 0;
@@ -286,7 +286,7 @@ class PaypalExpressCheckout extends Paypal
 			if (isset($product['attributes']) && (empty($product['attributes']) === false))
 				$fields['L_PAYMENTREQUEST_0_NAME'.$index] .= ' - '.$product['attributes'];
 
-			$fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($product['description_short']), 0, 120).'...';
+			$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($product['description_short']), 0, 100).'...';
 
 			$fields['L_PAYMENTREQUEST_0_AMT'.$index] = Tools::ps_round($product['price_wt'], $this->decimals);
 			$fields['L_PAYMENTREQUEST_0_QTY'.$index] = $product['quantity'];
@@ -306,7 +306,7 @@ class PaypalExpressCheckout extends Paypal
 
 				$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
 				if (isset($discount['description']) && !empty($discount['description']))
-					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($discount['description']), 0, 120).'...';
+					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 100).'...';
 
 				/* It is a discount so we store a negative value */
 				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = -1 * Tools::ps_round($discount['value_real'], $this->decimals);
@@ -333,7 +333,7 @@ class PaypalExpressCheckout extends Paypal
 
 	private function setPaymentValues(&$fields, &$index, &$total, &$taxes)
 	{
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$shipping_cost_wt = $this->context->cart->getOrderShippingCost();
 		else
 			$shipping_cost_wt = $this->context->cart->getTotalShippingCost();
@@ -363,9 +363,9 @@ class PaypalExpressCheckout extends Paypal
 		}
 		else
 		{
-			$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = Tools::ps_round($shipping_cost_wt, $this->decimals);
+			$fields['PAYMENTREQUEST_0_SHIPPINGAMT'] = sprintf('%.2f', $shipping_cost_wt);
 			$fields['PAYMENTREQUEST_0_ITEMAMT'] = Tools::ps_round($total, $this->decimals);
-			$fields['PAYMENTREQUEST_0_AMT'] = $total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT'];
+			$fields['PAYMENTREQUEST_0_AMT'] = sprintf('%.2f', ($total + $fields['PAYMENTREQUEST_0_SHIPPINGAMT']));
 		}
 	}
 
@@ -397,7 +397,7 @@ class PaypalExpressCheckout extends Paypal
 		if ($this->context->cart->gift == 1)
 			$total = Tools::ps_round($total + $this->getGiftWrappingPrice(), $this->decimals);
 		
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 		{
 			$discounts = $this->context->cart->getDiscounts();
 			$shipping_cost = $this->context->cart->getOrderShippingCost();
@@ -432,14 +432,14 @@ class PaypalExpressCheckout extends Paypal
 		foreach ($this->cookie_key as $key)
 			$tab[$key] = $this->{$key};
 
-		$this->context->cookie->{self::$COOKIE_NAME} = serialize($tab);
+		$this->context->cookie->{self::$cookie_name} = serialize($tab);
 	}
 
 	public function hasSucceedRequest()
 	{
 		if (is_array($this->result))
-			foreach(array('ACK', 'PAYMENTINFO_0_ACK') as $key)
-				if (isset($this->result[$key]) && strtoupper($this->result[$key]) == 'SUCCESS')
+			foreach (array('ACK', 'PAYMENTINFO_0_ACK') as $key)
+				if (isset($this->result[$key]) && Tools::strtoupper($this->result[$key]) == 'SUCCESS')
 					return true;
 
 		return false;
@@ -489,7 +489,7 @@ class PaypalExpressCheckout extends Paypal
 		else
 			$url = '/websc&cmd=_express-checkout';
 			
-		header('Location: https://'.$this->getPayPalURL().$url.'&token='.urldecode($this->token));
+		Tools::redirectLink('https://'.$this->getPayPalURL().$url.'&token='.urldecode($this->token));
 		exit(0);
 	}
 
@@ -506,7 +506,7 @@ class PaypalExpressCheckout extends Paypal
 		$this->context->cookie->is_guest = $customer->isGuest();
 		$this->context->cookie->logged = 1;
 
-		if (_PS_VERSION_ < '1.5')
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			Module::hookExec('authentication');
 		else
 			Hook::exec('authentication');

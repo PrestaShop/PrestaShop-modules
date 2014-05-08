@@ -1,9 +1,8 @@
 {*
 *  @author Coccinet <web@coccinet.com>
-*  @copyright  2007-2013 Coccinet
+*  @copyright  2007-2014 Coccinet
 *}
 {capture name=path}{l s='Realex Payments' mod='realexredirect'}{/capture}
-{include file="$tpl_dir./breadcrumb.tpl"}
 
 <h2>{l s='Order summary' mod='realexredirect'}</h2>
 
@@ -65,6 +64,7 @@
 	{/if}
 </div>
 {/if}
-<div class="clear"><br/><br/></div>
+<div style="padding-top:10px">
 <a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'htmlall':'UTF-8'}" class="button_large">{l s='Other payment methods' mod='realexredirect'}</a>
+</div>
 {/if}

@@ -1,0 +1,160 @@
+.table_grid {
+    width: 100%;
+}
+
+#ajax_running {
+    background-color: #FFF1A8;
+    border: 1px solid #FFD96F;
+    border-radius: 0 0 3px 3px;
+    color: #000000;
+    display: none;
+    font-size: 14px;
+    font-weight: bold;
+    left: 40%;
+    padding: 5px 20px;
+    position: fixed;
+    top: 0;
+    width: 300px;
+    z-index: 10000;
+}
+
+.table .filter {
+    margin: 2px;
+}
+input[type="text"], input[type="password"], input[type="file"], textarea {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+}
+input[type="text"], input[type="password"], input[type="file"], textarea {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+    padding: 2px 4px;
+}
+.filter {
+    background-color: #F1F9FF;
+}
+.datepicker {
+    position: relative;
+    z-index: 20;
+}
+
+.table tr td {
+    border-bottom: 1px solid #CCCCCC;
+	background: #ffffff;
+    color: #333333;
+    font-size: 12px;
+    padding: 4px 4px 4px 6px;
+}
+
+.table tr th {
+    background: -moz-linear-gradient(center top , #F9F9F9, #ECECEC) repeat-x scroll left top #ECECEC;
+    color: #333333;
+    font-size: 13px;
+    padding: 4px 6px;
+    text-align: left;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.productTabs {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #FAFAFA;
+    border-color: #CCCED7 -moz-use-text-color #CCCED7 #CCCED7;
+    border-image: none;
+    border-style: solid none solid solid;
+    border-width: 1px medium 1px 1px;
+    float: left;
+    width: 140px;
+}
+
+.productTabs ul {
+    margin: 0;
+    padding: 0;
+	list-style: none;
+}
+
+
+.productTabs ul li.tab-row {
+    border: medium none;
+}
+
+.productTabs ul li.tab-row a.selected {
+    background-color: #EBEDF4;
+    border-right: medium none;
+    color: #000000;
+    font-weight: bold;
+}
+.productTabs ul li.tab-row:first-child a {
+    border-top: medium none;
+}
+.tab-row .tab-page.selected {
+}
+.productTabs ul li.tab-row a {
+    border-right: 1px solid #CCCED7;
+    border-top: 1px solid #CCCED7;
+    color: #666666;
+    display: block;
+    font-weight: normal;
+    padding: 7px 10px;
+}
+
+form#product_form, form#access_form, form#cart_rule_form, #modules_tab_list {
+    background-color: #FFFFF0;
+    border: 1px solid #CCCED7;
+    margin-left: 140px;
+    min-height: 404px;
+    padding: 5px 10px 10px;
+}
+
+form#product_form h4 {
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1.4em;
+    margin-bottom: 0.5em;
+}
+
+.separation {
+    background-color: #E0D0B1;
+    height: 1px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+
+.category-filter {
+    background-color: #DDE0E9;
+    min-height: 20px;
+    padding: 5px 10px;
+}
+
+.category-filter a {
+    color: #585A69;
+    float: left;
+    line-height: 20px;
+    padding: 0 5px;
+}
+
+.category-filter span {
+    color: #585A69;
+    float: left;
+    line-height: 18px;
+}
+
+label.radioCheck {
+	width: auto;
+    font-weight: normal;
+    margin: 0 1em 0 0.25em;
+    padding: 0;
+}
+
+fieldset .optionsDescription, fieldset p.description, .info {
+	position: relative;
+	left: 0px;
+	margin-top: 4px;
+	margin-bottom: 2px;
+	border: 1px solid #50B0EC;
+	padding: 8px 6px 8px 34px;
+	color: #383838;
+	background: #DDE9F7 url(../../../img/admin/help2.png) no-repeat 6px 5px;
+}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,7 +52,7 @@ class PayPalNotifier extends PayPal
 		
 		$result = $this->getResult();
 
-		if (strcmp($result, "VERIFIED") == 0)
+		if (strcmp(trim($result), "VERIFIED") == 0)
 		{
 			$currency_decimals = is_array($this->context->currency) ? (int)$this->context->currency['decimals'] : (int)$this->context->currency->decimals;
 			$this->decimals = $currency_decimals * _PS_PRICE_DISPLAY_PRECISION_;
@@ -68,7 +68,7 @@ class PayPalNotifier extends PayPal
 			
 			$total_price = Tools::ps_round($shipping + $subtotal + $tax, $this->decimals);
 		
-			if (bccomp($mc_gross, $total_price, 2) !== 0)
+			if ($this->comp($mc_gross, $total_price, 2) !== 0)
 			{
 				$payment = (int)Configuration::get('PS_OS_ERROR');
 				$message = $this->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';

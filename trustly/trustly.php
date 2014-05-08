@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop 
+* 2007-2014 PrestaShop 
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3.1';
+		$this->version = '1.3.3';
 		$this->limited_countries = array('es');
 
 		$this->currencies = true;
@@ -57,6 +57,7 @@ class Trustly extends PaymentModule
 
 		$this->displayName = 'Trustly';
 		$this->description = $this->l('Allow your customers to pay from their online bank account directly in your web-shop. The only payment method in Spain with 90% bank coverage.');
+
 
 		/* For 1.4.3 and prior compatibility */
 		$array_name = array('PS_OS_CHEQUE', 'PS_OS_PAYMENT', 'PS_OS_PREPARATION', 'PS_OS_SHIPPING', 'PS_OS_CANCELED', 'PS_OS_REFUND', 'PS_OS_ERROR', 'PS_OS_OUTOFSTOCK', 'PS_OS_BANKWIRE', 'PS_OS_PAYPAL', 'PS_OS_WS_PAYMENT');

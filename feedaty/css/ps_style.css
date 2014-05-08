@@ -1,0 +1,203 @@
+.ps .clearfix {
+    clear: both;
+    font-size:1px; height:1px;
+}
+
+html[xmlns]  .ps .clearfix {
+    display: block;
+}
+* html .ps .clearfix {
+    height: 1%;
+}
+.ps h1,  .ps_pg h1{font-size: 16px; font-weight:bold; color:#444444; margin-top:0px;}
+.ps h2,  .ps_pg h2{font-size: 14px; font-weight:normal; color:#BE3232; margin:10px 0px 0px 0px;}
+
+.ps a {
+    text-decoration: underline;
+    color: #BE3232;
+}
+
+.ps p {
+    color:#000000;
+    line-height:16px;
+}
+
+.ps{  font-size:14px; font-family:Arial, Helvetica, sans-serif; width:1024px; margin:40px auto; }
+.ps_content{background-color:#F4F4F4; padding:40px;}
+
+.ps_content .lf_clm{float:left; width:49%;}
+.ps_content .lf_clm p{text-align:center; font-size:16px; line-height:22px; width:350px; margin:0px auto;}
+.ps_content .lf_clm p img{margin:60px 0px 40px 0px;}
+.ps_content .rg_clm{float:right; width:49%;}
+.ps_content .box{background-color:#CCCCCC; padding:20px; margin:0px 0px 20px 0px;}
+.ps_content .claim{text-align:center; font-size:15px; margin:0px 0px 15px 0px;}
+.ps_content .claim strong{color:#BE3232;}
+.ps_content .subscribe{background-color:#BE3232; font-size:16px; color:#FFF; font-weight:bold; padding:35px 35px 42px 35px;}
+.ps_content .subscribe p{text-align:left; width:100%; color:#FFFFFF;}
+.ps_content .subscribe p .small{font-size:12px;}
+.ps_content .subscribe .label{font-weight:normal; width:125px; float:left; line-height:32px;}
+.ps_content .line{clear:both;}
+
+.ps input.simple_btn{float:right; width:auto!important;  border:3px solid #016601; display:block;  padding:7px 15px 7px 15px; color:#FFFFFF;  font-weight:bold;
+    text-align:center; margin:10px 0px 0px 0px; text-decoration:none; cursor:pointer; line-height:1em; font-size:13px; background:url("../img/bkgd_btn.png") repeat 0px 0px; text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);}
+.ps input.simple_btn:hover{ color:#cccccc!important;}
+
+/* FF hack */
+.ps input.simple_btn,  x:-moz-any-link  { padding:5px 15px 5px 15px;}
+
+
+.ps_content input{width:250px; padding:5px; margin:5px 0px;}
+
+.ps_content hr{margin:20px 0px 30px 0px; border-top:1px solid #8C0000; border-bottom:1px solid #FF9999;}
+
+.ps_content ul, .ps_content ol{list-style:none; margin:0px; padding:0px 0px 0px 10px;}
+.ps_content ul li{ background:url("../img/bullet.png") no-repeat 5px 7px; padding-left:20px; line-height:20px;}
+
+.ps .instructions{border:1px solid #BE3232; padding:35px;  background:url("../img/bkgd_content.png") repeat 0px 0px; text-align:justify;}
+.ps .instructions p{margin:0px; }
+.ps .instructions ol{margin:0px 0px 20px 0px; list-style:none;}
+.ps .instructions ol li{line-height:38px; margin:8px 0px; float:left; width:100%;}
+.ps .instructions ol li .num{  font-size:38px; font-weight:bold; color:#BE3232;  line-height:38px;  padding-right:10px; float:left; width:20px;}
+.ps .instructions ol li.top{line-height:18px; }
+
+/* SECONDA PAGINA */
+
+.ps .lf{float:left;}
+.ps .rg{float:right;}
+.ps .ps_top{margin-bottom:8px;}
+
+.ps_top .lf_clm{background-color:#F4F4F4; padding:20px; float:left; width:467px;}
+.ps_top .lf_clm p{font-size:12px; margin:0px;}
+.ps_top .lf_clm h1{float:left; line-height:28px; margin:0px 10px 0px 0px;}
+.ps_top .lf_clm input{float:left;}
+.ps_top .rg_clm{background-color:#CCCCCC;  float:right; width:467px; padding:10px 20px 10px 20px;}
+.ps_top .rg_clm div{margin:3px 0px;}
+
+.ps_top .rg_clm .lf{ padding-top:10px; }
+
+.ps .ps_three_clm{width:341px; float:left;}
+.ps .ps_three_clm .box{background-color:#F4F4F4; padding:20px; margin:0px 10px 10px 0px;}
+
+.ps .ps_three_clm .box.brown{background-color:#CCCCCC; margin:10px 0px 10px 0px; text-align:center; font-weight:bold;  height:139px; height:122px \9;/* hack IE9 */ }
+.ps .ps_three_clm .box.brown div{  margin: auto; padding:20px; padding-top:15px \9;/* hack IE9 */}
+.ps .ps_three_clm .box.brown .simple_btn{float:none; width:200px!important; margin:auto; text-align:center; white-space:normal;}
+
+.ps .ps_three_clm .box.other .label{margin-top:21px;}
+.ps .ps_three_clm .box.other .label .sub{padding:0px;}
+
+
+.ps .box hr{border-top:1px solid #CCCCCC; border-bottom:0px; margin:20px 0px; margin:23px 0px\9; /* hack IE9 */}
+
+.ps .box select{width:100%;}
+.ps .box .label{font-size:12px; font-weight:bold; margin:10px 0px 0px 0px; line-height:15px; }
+/* FF hack */
+.ps .box .label,  x:-moz-any-link  { line-height:18px;}
+.ps .box .label input{font-size:12px; font-weight:bold; vertical-align:middle; margin-left:25px;}
+.ps .box .sub .label{font-weight:normal; }
+
+.ps .ps_three_clm .instructions{padding:20px;}
+.ps .ps_three_clm .instructions ol{margin:0px 0px 10px 0px; padding:0px 0px 0px 3px;}
+
+.ps .save_settings{background-color:#BE3232; padding:10px 20px; margin:0px 0px 8px 0px; color:#FFFFFF; font-weight:bold;}
+.save_settings input.simple_btn{margin-top:0px;}
+.save_settings .lf{line-height:35px;}
+
+
+
+/* Clean up the lists styles */
+.widget ul.accordion {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Hide the radio buttons */
+/* These are what allow us to toggle content panes */
+.widget  ul.accordion label + input[type='radio'] {
+    display: none;
+
+}
+
+/* Give each content pane some styles */
+.widget  ul.accordion li {
+    border-bottom: 1px solid #DDDDDD;
+    margin-bottom:10px;
+}
+
+.widget  ul.accordion h4{font-weight:bold; color:#BE3232; margin:0px; padding:0px; font-size:18px;}
+.widget  ul.accordion .desc{display:inline-block; margin:0px 10px 5px 5px; vertical-align:top;}
+.widget  ul.accordion li img{margin:20px;}
+
+
+/* Make the main tab look more clickable */
+.widget  ul.accordion label {
+    color: #BE3232;
+    float:right;
+    font-size:12px;
+    font-weight:bold;
+    margin:5px 0px 5px 0px;
+}
+
+.widget  ul.accordion label:hover {
+    cursor: pointer;
+}
+
+/* Set up the div that will show and hide */
+.widget ul.accordion div.content {
+
+    padding: 0 10px;
+    display: none;
+
+}
+
+/* Show the content boxes when the radio buttons are checked */
+.widget  ul.accordion label + input[type='radio']:checked + div.content {
+    display: block;
+}
+
+
+/* * * * * * * * * Added by C * * * * * * * * * */
+#layered-ajax-loading {
+    background-color: black;
+    opacity: 0.2;
+    position: relative;
+    overflow:hidden;
+}
+#layered-ajax-loading > div {
+    margin: 0px 0px;
+    padding: 10px;
+    text-align: center;
+    margin-top: 60px;
+    float: left;
+    width: 100%;
+}
+#layered-ajax-loading > div p {
+    text-align:center;
+}
+
+#new-account {
+    height:189px;
+}
+#new-account .return {
+    float:left;
+    font-size:12px;
+    width:300px;
+}
+
+/* * * * * * * * * Fix for 1.4 * * * * * * * * * */
+.ps14 .ps {
+    width:928px !important;
+}
+.ps14 .ps_top .lf_clm {
+    width:381px;
+    height:83px;
+}
+.ps14 .ps_top .rg_clm {
+    height:103px;
+}
+.ps14 .ps .ps_three_clm {
+    width:309px;
+}
+.ps14 .ps .instructions ol li {
+    line-height:18px;
+}

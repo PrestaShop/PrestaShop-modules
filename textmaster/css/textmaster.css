@@ -1,0 +1,324 @@
+/* menu icons styles */
+.process-icon-settings
+{
+    background-image: url("../img/toolbar/settings.png");
+}
+
+.process-icon-translation
+{
+    background-image: url("../img/toolbar/translation.png");
+}
+
+.process-icon-proofreading
+{
+    background-image: url("../img/toolbar/proofreading.png");
+}
+
+.process-icon-copywriting
+{
+    background-image: url("../img/toolbar/copywriting.png");
+}
+
+.process-icon-help
+{
+    background-image: url("../img/toolbar/help.png") !important;
+}
+
+/* hides prestashop help button */
+#desc-adminmodules-help, .help-context-adminmodules, li.help-context-AdminModules
+{
+    display: none !important;
+}
+
+/* gap between fieldsets in module settings page */
+#settings_form fieldset
+{
+    margin-bottom: 15px;
+}
+
+/* TextMaster product page styles */
+
+#product-tab-content-ModuleTextmaster fieldset
+{
+    border:none;
+    padding-left: 0;
+    padding-bottom: 0;
+}
+
+#product-tab-content-ModuleTextmaster fieldset legend
+{
+    display:none;
+}
+
+#textMaster_error
+{
+    display: none;
+}
+
+#product-tab-content-ModuleTextmaster .listForm label.product_data_list_group
+{
+    float: none;
+    margin-top: 10px;
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+#product-tab-content-ModuleTextmaster #project_data_list
+{
+    width: 235px;
+    padding-right: 30px;
+    border-right: 1px solid #CCCCCC;
+    display: inline-block;
+}
+
+#product-tab-content-ModuleTextmaster .level_service_wrapper
+{
+}
+
+
+#product-tab-content-ModuleTextmaster .listForm li
+{
+    position: relative;
+}
+
+#product-tab-content-ModuleTextmaster .listForm li .word_count
+{
+    text-align: right;
+    position:absolute;
+    right:0;
+    top: 0;
+    color: #777777;
+}
+
+#product-tab-content-ModuleTextmaster .listForm li .word_count .word_count_value
+{
+    font-weight: bold;
+}
+
+#product-tab-content-ModuleTextmaster .total_words_count_container
+{
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 30px;
+    color: #585A69;
+    text-shadow: 0 1px 0 #FFFFFF;
+    font-weight: bold;
+}
+
+#product-tab-content-ModuleTextmaster .total_price_container .margin-form
+{
+   padding-top: 4px;
+   padding-bottom: 0;
+}
+
+#product-tab-content-ModuleTextmaster .total_words_count_container span,
+    #product-tab-content-ModuleTextmaster .total_price_container span,
+    .project_total
+{
+    font-weight: normal;
+    color: #777777;
+}
+
+#product-tab-content-ModuleTextmaster .total_words_count_container span#total_words,
+    #product-tab-content-ModuleTextmaster .total_price_container span.total_project_price,
+    .project_total
+{
+    font-weight: bold;
+}
+
+#product-tab-content-ModuleTextmaster .total_price_container span.total_project_price
+{
+    font-size: 12px;
+}
+
+#product-tab-content-ModuleTextmaster .toggle_optional_parameters
+{
+    font-size: 12px;
+    font-weight: bold;
+    color: #777777;
+    font-style: normal;
+    text-decoration: underline;
+}
+
+#product-tab-content-ModuleTextmaster .selected_authors
+{
+    font-style: normal;
+    color: #777777;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+#product-tab-content-ModuleTextmaster .toggle_optional_parameters:hover
+{
+    text-decoration:none;
+}
+
+.authors_selection_container
+{
+    background:#EBEDF4;
+    padding: 10px;
+    width: 500px;
+    height: 275px;
+    display:none;
+}
+
+.authors_selection_container .my_authors_container
+{
+    width: 500px;
+    height: 180px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.authors_selection_container h4
+{
+    margin-top: 0;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.preference_description .price
+{
+    color: #777777;
+}
+
+/* advanced project creation form */
+
+#textmaster_project_view fieldset
+{
+    border: none;
+    padding-left: 0;
+    padding-bottom: 0;
+}
+
+#textmaster_project_view h4
+{
+    margin-top: 0;
+}
+
+#tab_summary .margin-form
+{
+    font-size: 1em;
+    padding-top: 3px;
+}
+
+/* project results page */
+
+#project_view table tr
+{
+    cursor: pointer;
+}
+
+#project_view table tr.active
+{
+    background-color:#FFF1B5 !important;
+}
+
+#reponse_message.message_success
+{
+    color: green;
+}
+
+#reponse_message.message_error
+{
+    color:red;
+}
+
+#project_view fieldset
+{
+    width: 756px;
+}
+
+input[name='submitBulkproductsList'],
+#selected_products_form input[name='submitResetproductsList'],
+#selected_products_form #submitFilterButtonproductsList,
+#selected_products_form table.productsList thead tr.filter
+{
+    display: none;
+}
+
+div#products_list_to_select table.productsList tbody a
+{
+    cursor: default;
+}
+
+div#products_list_to_select table.productsList thead a
+{
+    text-decoration: none !important;
+}
+
+.table-loader
+{
+    background: url("../img/ajax-loader-big.gif") no-repeat scroll center center silver;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    opacity: 0.4;
+}
+
+#selected_products_ids_container
+{
+    display: none;
+}
+
+#tab_summary table.table_grid tbody input.button,
+#tab_summary table.table_grid tbody tr td table thead tr.filter
+{
+    display: none;
+}
+
+.authors_selection_description_container
+{
+    display: none;
+}
+
+#tableToDisplayHtml
+{
+    width: auto;
+    height: auto;
+    background: #FFFFFF;
+    display: none;
+    padding: 10px;
+}
+
+#showTableHtml
+{
+    display: none;
+    cursor: pointer;
+}
+
+#tableToDisplayHtmlTools
+{
+    display: block;
+    padding: 0;
+    width: 100%;
+    text-align: right;
+}
+
+#tableToDisplayHtmlTools a.close
+{
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 5px 0 5px 0;
+    display: inline;
+}
+
+#tableToDisplayHtmlTools a.close:hover
+{
+    text-decoration: none;
+}
+
+fieldset#info_block
+{
+    margin-bottom: 15px;
+}
+
+.hint.list
+{
+    margin-bottom: 15px;
+    display: block;
+    position: relative;
+}

@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Implement a Fia-Net's service (Certissim, Kwixo or Sceau) *
@@ -28,20 +52,20 @@
  * $service->getUrlStacking(); //returns the stacking.cgi URL
  * </code>
  */
-abstract class KwixoService extends KwixoMother {
-  /* site params */
+abstract class KwixoService extends KwixoMother
+{
 
-  protected $name; //product name
-  protected $siteid;
-  protected $login;
-  protected $password;
-  protected $passwordurlencoded;
-  protected $authkey;
-  protected $status;
-  protected $cryptversion;
-  protected $url = array();
-  
-  private $_url = array(
+	/*site params*/
+	protected $name; /*product name*/
+	protected $siteid;
+	protected $login;
+	protected $password;
+	protected $passwordurlencoded;
+	protected $authkey;
+	protected $status;
+	protected $cryptversion;
+	protected $url = array();
+	private $urlscript = array(
 		'available' => array(
 			'prod' => 'https://services.kwixo.com/merchant/available',
 			'test' => 'https://recette.kwixo.com/merchant-ws/available',
@@ -71,8 +95,7 @@ abstract class KwixoService extends KwixoMother {
 			'test' => 'https://recette.kwixo.com/professionnels/',
 		)
 	);
-  
-  private $_param_names = array(
+	private $param_names = array(
 		'siteid',
 		'login',
 		'password',
@@ -80,120 +103,124 @@ abstract class KwixoService extends KwixoMother {
 		'status',
 		'cryptversion',
 	);
-	private $_available_statuses = array(
+	private $available_statuses = array(
 		'test',
 		'prod',
 	);
 
-  public function __construct($id_shop = null) {
-    //for PS >= 1.5, sets the $id_shop
-	$this->setIdshop($id_shop);
-
-	//loads site params
-	$this->loadParams();
-	//loads webservices URL
-	$this->loadURLs();
-  }
-
-  public function getProductname() {
-    $name = $this->getName();
-    if (empty($name))
-      $this->setName(strtolower(get_class($this)));
-
-    return $this->getName();
-  }
-
-  /**
-   * loads site params from the file given in param
-   * 
-   * @param string $filename
-   */
-  private function loadParams() {
-    foreach ($this->_param_names as $param_name)
+	public function __construct($id_shop = null)
 	{
-		$funcname = 'set'.$param_name;
-		if (_PS_VERSION_ < '1.5')
-			$this->$funcname(Configuration::get('KWIXO_'.strtoupper($param_name)));
-		else
-			$this->$funcname(Configuration::get('KWIXO_'.strtoupper($param_name), null, null, $this->getIdshop()));
-	}
-  }
+		//for PS >= 1.5, sets the $id_shop
+		$this->setIdshop($id_shop);
 
-  /**
-   * loads scripts URL according to the current status if status defined and active
-   */
-  private function loadURLs() {
-    $status = $this->statusIsAvailable($this->getStatus()) ? $this->getStatus() : 'test';
-
-	foreach ($this->_url as $scriptname => $modes)
-	{
-		$this->url[$scriptname] = $modes[$status];
-	}
-  }
-
-  /**
-   * returns the URL of the script given in param if it exists, false otherwise
-   *
-   * @param string $script
-   * @return string
-   */
-  public function getUrl($script) {
-    if (!array_key_exists($script, $this->url)) {
-      $msg = "L'url pour le script $script n'existe pas ou n'est pas chargée. Vérifiez le paramétrage.";
-      insertLogKwixo(__METHOD__ . ' : ' . __LINE__, $msg);
-      return false;
-    }
-
-    return $this->url[$script];
-  }
-
-  /**
-   * switches status to $mode and reload URL if available, returns false otherwise
-   *
-   * @param string $mode test OR prod OR off
-   * @return bool
-   */
-  public function switchMode($mode) {
-    if (!$this->statusIsAvailable($mode))
-	{
-		CertissimLogger::insertLogKwixo(__FILE__, "Le mode '$mode' n'est pas reconnu. 'test' dÃ©fini Ã  la place.");
-		$mode = 'test';
+		//loads site params
+		$this->loadParams();
+		//loads webservices URL
+		$this->loadURLs();
 	}
 
-	//switch the status to $mode
-	$this->setStatus($mode);
-
-	//reload URLs
-	$this->loadURLs();
-  }
-
-  /**
-   * saves params into the param YAML file and returns true if save succeed, false otherwise
-   *
-   * @return bool
-   */
-  public function saveParamInFile() {
-    foreach ($this->_param_names as $param_name)
+	public function getProductname()
 	{
-		$funcname = 'get'.$param_name;
-		if (_PS_VERSION_ < '1.5')
-			Configuration::updateValue('KWIXO_'.strtoupper($param_name), $this->$funcname());
-		else
-			Configuration::updateValue('KWIXO_'.strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
-	}
-  }
-  
-  public function statusIsAvailable($status)
-	{
-		return in_array($status, $this->_available_statuses);
+		$name = $this->getName();
+		if (empty($name))
+			$this->setName(Tools::strtolower(get_class($this)));
+
+		return $this->getName();
 	}
 
-  public function __call($name, array $params) {
-    if (preg_match('#^getUrl.+$#', $name) > 0) {
-      return $this->getUrl(preg_replace('#^getUrl(.+)$#', '$1', $name));
-    }
+	/**
+	 * loads site params from the file given in param
+	 * 
+	 * @param string $filename
+	 */
+	private function loadParams()
+	{
+		foreach ($this->param_names as $param_name)
+		{
+			$funcname = 'set'.$param_name;
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
+				$this->$funcname(Configuration::get('KWIXO_'.Tools::strtoupper($param_name)));
+			else
+				$this->$funcname(Configuration::get('KWIXO_'.Tools::strtoupper($param_name), null, null, $this->getIdshop()));
+		}
+	}
 
-    return parent::__call($name, $params);
-  }
+	/**
+	 * loads scripts URL according to the current status if status defined and active
+	 */
+	private function loadURLs()
+	{
+		$status = $this->statusIsAvailable($this->getStatus()) ? $this->getStatus() : 'test';
 
+		foreach ($this->urlscript as $scriptname => $modes)
+			$this->url[$scriptname] = $modes[$status];
+	}
+
+	/**
+	 * returns the URL of the script given in param if it exists, false otherwise
+	 *
+	 * @param string $script
+	 * @return string
+	 */
+	public function getUrl($script)
+	{
+		if (!array_key_exists($script, $this->url))
+		{
+			$msg = "L'url pour le script $script n'existe pas ou n'est pas chargée. Vérifiez le paramétrage.";
+			insertLogKwixo(__METHOD__.':'.__LINE__, $msg);
+			return false;
+		}
+		return $this->url[$script];
+	}
+
+	/**
+	 * switches status to $mode and reload URL if available, returns false otherwise
+	 *
+	 * @param string $mode test OR prod OR off
+	 * @return bool
+	 */
+	public function switchMode($mode)
+	{
+		if (!$this->statusIsAvailable($mode))
+		{
+			CertissimLogger::insertLogKwixo(__FILE__, "Le mode '$mode' n'est pas reconnu. 'test' dÃ©fini Ã  la place.");
+			$mode = 'test';
+		}
+
+		//switch the status to $mode
+		$this->setStatus($mode);
+
+		//reload URLs
+		$this->loadURLs();
+	}
+
+	/**
+	 * saves params into the param YAML file and returns true if save succeed, false otherwise
+	 *
+	 * @return bool
+	 */
+	public function saveParamInFile()
+	{
+		foreach ($this->param_names as $param_name)
+		{
+			$funcname = 'get'.$param_name;
+			if (version_compare(_PS_VERSION_, '1.5', '<'))
+				Configuration::updateValue('KWIXO_'.Tools::strtoupper($param_name), $this->$funcname());
+			else
+				Configuration::updateValue('KWIXO_'.Tools::strtoupper($param_name), $this->$funcname(), false, null, $this->getIdshop());
+		}
+	}
+
+	public function statusIsAvailable($status)
+	{
+		return in_array($status, $this->available_statuses);
+	}
+
+	public function __call($name, array $params)
+	{
+		if (preg_match('#^getUrl.+$#', $name) > 0)
+			return $this->getUrl(preg_replace('#^getUrl(.+)$#', '$1', $name));
+
+		return parent::__call($name, $params);
+	}
 }
