@@ -1359,7 +1359,6 @@ class Ebay extends Module
             'sync_products_by_cron_url' => $sync_products_by_cron_url,
             'is_multishop'  => $this->is_multishop,
             'sync_orders_by_cron_url' => $sync_orders_by_cron_url,
-            'stats' => Configuration::get('EBAY_SEND_STATS'),
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => $returns_policy_configuration->ebay_returns_within,
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
@@ -1370,6 +1369,9 @@ class Ebay extends Module
 			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
 		);
+        
+        if (Configuration::hasKey('EBAY_SEND_STATS'))
+            $smarty_vars['stats'] = Configuration::get('EBAY_SEND_STATS');    
 
 		if (Tools::getValue('relogin'))
 		{

@@ -272,8 +272,8 @@
 		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
 		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
 		<div class="margin-form">
-            <input type="radio" name="stats" value="0" {if !$stats}checked="checked"{/if}> No thanks&nbsp;&nbsp;
-            <input type="radio" name="stats" value="1" {if $stats}checked="checked"{/if}> I agree<br>
+            <input type="radio" name="stats" value="0" {if isset($stats) && !$stats}checked="checked"{/if}> No thanks&nbsp;&nbsp;
+            <input type="radio" name="stats" value="1" {if !isset($stats) || $stats}checked="checked"{/if}> I agree<br>
 		</div>
 		<div style="clear:both;"></div>
     </fieldset>
