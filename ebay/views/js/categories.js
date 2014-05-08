@@ -122,8 +122,8 @@ $(document).ready(function() {
 		$('#all-extra-images-value').val(val);
 	})
 	
-	if ($("#menuTab2").hasClass('wrong'))
+	if ($("#menuTab1").hasClass('success') && $("#menuTab2").hasClass('wrong') && $("#configForm2SuggestedCategories input[type=submit]").length == 1)
 	{
-		$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
+		//$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
 	}
 });

@@ -67,9 +67,6 @@
 [submodule "uspscarrier/backward_compatibility"]
 	path = uspscarrier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ebay/backward_compatibility"]
-	path = ebay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -376,9 +373,6 @@
 [submodule "followup"]
 	path = followup
 	url = https://github.com/PrestaShop/followup.git
-[submodule "gamification"]
-	path = gamification
-	url = https://github.com/PrestaShop/gamification.git
 [submodule "gapi"]
 	path = gapi
 	url = https://github.com/PrestaShop/gapi.git
@@ -403,9 +397,6 @@
 [submodule "sendtoafriend"]
 	path = sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend.git
-[submodule "backwardcompatibility"]
-	path = backwardcompatibility
-	url = https://github.com/PrestaShop/backwardcompatibility.git
 [submodule "themeinstallator"]
 	path = themeinstallator
 	url = https://github.com/PrestaShop/themeinstallator.git

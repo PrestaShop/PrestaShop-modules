@@ -147,6 +147,7 @@ class EbayCountrySpec
 			'iso_code'       => 'de',
 			'signin'         => 'https://signin.ebay.de/ws/eBayISAPI.dll',
 			'signin_sandbox' => 'https://signin.sandbox.ebay.de/ws/eBayISAPI.dll'
+<<<<<<< HEAD
 		),
 		'ch' => array(
 			'site_id'        => 193,
@@ -173,6 +174,9 @@ class EbayCountrySpec
 			'signin_sandbox' => 'https://signin.sandbox.ebay.at/ws/eBayISAPI.dll'
 		),
 
+=======
+		)
+>>>>>>> 6e09e6d2c2cefad8d2dfa2b3adebc00bcf7359c5
 	);
 
 	public function __construct(Country $country = null)

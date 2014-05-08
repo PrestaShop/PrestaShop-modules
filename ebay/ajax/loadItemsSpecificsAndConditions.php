@@ -32,6 +32,7 @@ include(dirname(__FILE__).'/../classes/EbayCategoryCondition.php');
 if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	die('ERROR : INVALID TOKEN');
 
+
 $id_ebay_profile = (int)Tools::getValue('profile');
 $ebay_profile = new EbayProfile($id_ebay_profile);
 
@@ -44,6 +45,7 @@ function loadItemsMap($row)
 sleep(1);
 
 $category = new EbayCategory((int)Tools::getValue('ebay_category'));
+
 
 if (!$ebay_profile->getConfiguration('EBAY_SPECIFICS_LAST_UPDATE') || ($ebay_profile->getConfiguration('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
 {

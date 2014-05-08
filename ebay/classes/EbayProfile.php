@@ -44,9 +44,9 @@ class EbayProfile extends ObjectModel
     
     // for Prestashop 1.4
 	protected $tables;
-	protected $fieldsRequired;
-	protected $fieldsSize;
-	protected $fieldsValidate;
+	protected $fieldsRequired = array();
+	protected $fieldsSize = array();
+	protected $fieldsValidate = array();
 	protected $table = 'ebay_profile';
 	protected $identifier = 'id_ebay_profile';    
     
@@ -94,16 +94,17 @@ class EbayProfile extends ObjectModel
 	
 	public function getReturnsPolicyConfiguration()
 	{
+		
 		if ($this->id_ebay_returns_policy_configuration)
 			$returns_policy_configuration = new EbayReturnsPolicyConfiguration($this->id_ebay_returns_policy_configuration);
 		else
 			$returns_policy_configuration = new EbayReturnsPolicyConfiguration();
-		
 		return $returns_policy_configuration;
 	}
 	
 	public function setReturnsPolicyConfiguration($within, $who_pays, $description, $accepted_option)
 	{
+		
 		$returns_policy_configuration = $this->getReturnsPolicyConfiguration();
 		if ($returns_policy_configuration->ebay_returns_within != $within)
 			$returns_policy_configuration->ebay_returns_within = $within;
@@ -113,7 +114,8 @@ class EbayProfile extends ObjectModel
 			$returns_policy_configuration->ebay_returns_description = $description;
 		if ($returns_policy_configuration->ebay_returns_accepted_option != $accepted_option)
 			$returns_policy_configuration->ebay_returns_accepted_option = $accepted_option;
-        $res = $returns_policy_configuration->save();
+    		$res = $returns_policy_configuration->save();		
+
 		return $res;
 	}	
 
@@ -134,7 +136,8 @@ class EbayProfile extends ObjectModel
 			'id_ebay_profile' => $this->id,
 			'name' => pSQL($name),
 			'value' => pSQL($value, $html)
-		);
+		);	
+
         
         if (version_compare(_PS_VERSION_, '1.5', '>'))
             $res = Db::getInstance()->insert('ebay_configuration', $data, false, true, Db::REPLACE);
@@ -194,7 +197,7 @@ class EbayProfile extends ObjectModel
 		return $results;
 	}
 	
-	public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = Carrier::PS_CARRIERS_ONLY)
+	public function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = 1)
 	{
 		$carriers = Carrier::getCarriers($id_lang, $active, $delete, $id_zone, $ids_group, $modules_filters);
 

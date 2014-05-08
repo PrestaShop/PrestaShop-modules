@@ -36,20 +36,42 @@ class EbayShipping
 			AND `ebay_carrier` = \''.pSQL($ebay_carrier).'\'');
 	}
 
-	public static function getNationalShippings($id_ebay_profile)
+	public static function getNationalShippings($id_ebay_profile, $id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping 
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 0');
+
+		if ($id_product)
+		{
+			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			if(count($shippings_product) > 0)
+			{
+				if(array_intersect_assoc($shippings, $shippings_product))
+					$shippings = array_intersect_assoc($shippings, $shippings_product);
+			}
+		}
+
+		return $shippings;
 	}
 
-	public static function getInternationalShippings($id_ebay_profile)
+	public static function getInternationalShippings($id_ebay_profile, $id_product = null)
 	{
-		return Db::getInstance()->ExecuteS('SELECT *
+		$shippings = Db::getInstance()->ExecuteS('SELECT *
 			FROM '._DB_PREFIX_.'ebay_shipping 
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 1');
+		
+		if ($id_product)
+		{
+			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			$shippings = array_intersect_assoc($shippings, $shippings_product);
+		}
+
+		return $shippings;
 	}
 
 	public static function getNbNationalShippings($id_ebay_profile)
@@ -68,7 +90,7 @@ class EbayShipping
             AND `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $international = false)
+	public static function insert($id_ebay_profile, $ebay_carrier, $ps_carrier, $extra_fee, $id_zone, $international = false)
 	{
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'ebay_shipping`
 			VALUES(\'\',
@@ -76,7 +98,8 @@ class EbayShipping
 			\''.pSQL($ebay_carrier).'\',
 			\''.(int)$ps_carrier.'\',
 			\''.(float)$extra_fee.'\',
-			\''.(int)$international.'\')';
+			\''.(int)$international.'\', 
+			\''.(int)$id_zone.'\')';
 
 		DB::getInstance()->Execute($sql);
 	}

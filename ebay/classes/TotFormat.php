@@ -27,6 +27,14 @@
 
 class TotFormat
 {
+	public static function cleanNonUnicodeSupport($pattern)
+	{
+		if(method_exists('Tools', 'cleanNonUnicodeSupport'))
+			return Tools::cleanNonUnicodeSupport($pattern);
+		else 
+			return $pattern;
+	}
+
  	/**
 	 * Format e-mail to be valid
 	 *
@@ -35,7 +43,7 @@ class TotFormat
 	 */
 	public static function formatEmail($email)
 	{
-		if (empty($email) || !preg_match(Tools::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+$/ui'), $email))
+		if (empty($email) || !preg_match(self::cleanNonUnicodeSupport('/^[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+$/ui'), $email))
             return str_replace('@', '__at__', $email).'_misspelled@dontknow.com';
         return $email;
 	}
@@ -48,7 +56,7 @@ class TotFormat
 	 */
 	public static function formatName($name)
 	{
-        return trim(preg_replace(Tools::cleanNonUnicodeSupport('/[0-9!<>,;?=+()@#"°{}_$%:]*/u'), ' ', stripslashes($name)));
+        return trim(preg_replace(self::cleanNonUnicodeSupport('/[0-9!<>,;?=+()@#"°{}_$%:]+/u'), ' ', stripslashes($name)));
 	}
     
 	/**
@@ -61,7 +69,7 @@ class TotFormat
 	{
         if (empty($address))
             return $address;
-        return trim(preg_replace('/[!<>?=+@{}_$%]*/u', ' ', $address));
+        return trim(preg_replace('/[!<>?=+@{}_$%]+/u', ' ', stripslashes($address)));
 	}
 
 	/**
@@ -74,7 +82,7 @@ class TotFormat
 	{
         if (empty($postcode))
             return $postcode;
-        return trim(preg_replace('/[^a-zA-Z 0-9-]+/', ' ', $postcode));
+        return trim(preg_replace('/[^a-zA-Z 0-9-]+/', ' ', stripslashes($postcode)));
 	}
 
 	/**
@@ -85,7 +93,7 @@ class TotFormat
 	 */
 	public static function formatCityName($city)
 	{
-        return trim(preg_replace('/[!<>;?=+@#"°{}_$%]*/u', ' ', $city));
+        return trim(preg_replace('/[!<>;?=+@#"°{}_$%]+/u', ' ', stripslashes($city)));
 	}
     
 	/**
@@ -96,7 +104,7 @@ class TotFormat
 	 */
 	public static function formatPhoneNumber($number)
 	{
-        return trim(preg_replace('/[^+0-9. ()-]*/', ' ', $number));        
+        return trim(preg_replace('/[^+0-9. ()-]+/', ' ', $number));        
 	}
     
 

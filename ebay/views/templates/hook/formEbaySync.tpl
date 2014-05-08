@@ -60,6 +60,7 @@
 					
 					nbProducts = data;
 					nbProductsModeB = data;
+					$('#save_and_publish').val({/literal}"{l s='Save and export' mod='ebay'} "+data+" {l s='products' mod='ebay'}"{literal});
 					$('#nbproducttosync').html(data);
 				}
 			});
@@ -198,7 +199,7 @@
 			{/if}
 		</div><br />
 		<div>
-			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and list %d products' sprintf=$nb_products mod='ebay'}" />
+			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and list %d products' sprintf=$nb_products mod='ebay'}" id="save_and_publish"/>
 			<input type="submit" name="btnSubmitSync" class="button" value="{l s='Save' mod='ebay'}" />
 		</div>
 	</fieldset>

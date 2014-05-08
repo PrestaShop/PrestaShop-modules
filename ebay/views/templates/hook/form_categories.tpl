@@ -147,9 +147,7 @@
 		else if (form_categories == 1)
 			$("#menuTab2").addClass('mind');
 		else
-		{
 			$("#menuTab2").addClass('wrong');
-		}
 
 		$("#pagination").children('li').click(function(){
 			var p = $(this).html();
@@ -178,14 +176,14 @@
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: module_dir + "ebay/ajax/saveCategories.php?token=" + ebay_token,
+				url: module_dir + "ebay/ajax/saveCategories.php?token=" + ebay_token + "&profile=" + id_ebay_profile,
 				data: $('#configForm2').serialize()+"&ajax=true",
 				success : function(data)
 				{
 					if (data.valid)
 					{
 						$.ajax({
-							url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'] + '&unselect_product=' + ebay_l['Unselect products'] + '&p=' + p,
+							url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&p=" + p + "&profile=" + id_ebay_profile + "&id_lang=" + id_lang + "&ch_cat_str=" + ebay_l["no category selected"] + "&ch_no_cat_str=" + ebay_l["no category found"] + "&not_logged_str=" + ebay_l["You are not logged in"] + "&unselect_product=" + ebay_l["Unselect products"]  ,
 							success : function(data) {
 								$("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data);
 							}

@@ -80,7 +80,7 @@ class Ebay extends Module
 	private $html = '';
 	private $ebay_country;
 	
-	private $ebay_profile;
+	public $ebay_profile;
     
     private $is_multishop;
     
@@ -991,11 +991,6 @@ class Ebay extends Module
 				return $this->html.$this->displayError($this->l('You must enable allow_url_fopen option on your server if you want to use this module.'));
 		}
 
-		// if isset download_log
-		if (Tools::getIsset('download_log') && Tools::getValue('download_log') == 1)
-		{
-			$this->__postProcessDownloadLog();
-		}
 
 		// If isset Post Var, post process else display form
 		if (!empty($_POST) && (Tools::isSubmit('submitSave') || Tools::isSubmit('btnSubmitSyncAndPublish') || Tools::isSubmit('btnSubmitSync')))
@@ -1322,6 +1317,7 @@ class Ebay extends Module
 		$sizeBig = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG');
 		$sizesmall = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL');
 		$picture_per_listing = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_PER_LISTING');
+		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME'));
 
 
 		$account_setting = 0;
@@ -1365,9 +1361,11 @@ class Ebay extends Module
 			'whopays' => $returns_policy_configuration->ebay_returns_who_pays,
 			'activate_logs' => Configuration::get('EBAY_ACTIVATE_LOGS'),
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
+			'log_file_exists' => file_exists(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
 			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
+			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false
 		);
         
         if (Configuration::hasKey('EBAY_SEND_STATS'))
@@ -1455,8 +1453,12 @@ class Ebay extends Module
 			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
 			&& $this->setConfiguration('EBAY_ACTIVATE_MAILS', Tools::getValue('activate_mails') ? 1 : 0)
 			&& $this->ebay_profile->setConfiguration('EBAY_PICTURE_PER_LISTING', $picture_per_listing)
-		)
+		){
+			if(Tools::getValue('activate_logs') == 0)
+				if(file_exists(dirname(__FILE__).'/log/request.txt'))
+					unlink(dirname(__FILE__).'/log/request.txt');
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
+		}
 		else
 			$this->html .= $this->displayError($this->l('Settings failed'));
 	}
@@ -1619,6 +1621,7 @@ class Ebay extends Module
 		// Insert and update categories
 		if (($percents = Tools::getValue('percent')) && ($ebay_categories = Tools::getValue('category')))
 		{
+			    
 			foreach ($percents as $id_category => $percent)
 			{
 				$data = array();
@@ -1641,6 +1644,7 @@ class Ebay extends Module
 						'date_upd' => pSQL($date),
 						'sync' => 0
 					);
+				    
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))
 				{
@@ -1704,23 +1708,26 @@ class Ebay extends Module
 	private function _postProcessSpecifics() 
 	{
 		// Save specifics
-		foreach (Tools::getValue('specific') as $specific_id => $data)
+		if(Tools::getValue('specific'))
 		{
-			if ($data)
-				list($data_type, $value) = explode('-', $data);
-			else
-				$data_type = null;
+			foreach (Tools::getValue('specific') as $specific_id => $data)
+			{
+				if ($data)
+					list($data_type, $value) = explode('-', $data);
+				else
+					$data_type = null;
 
-			$field_names = EbayCategorySpecific::getPrefixToFieldNames();
-			$data = array_combine(array_values($field_names), array(null, null, null, null));
+				$field_names = EbayCategorySpecific::getPrefixToFieldNames();
+				$data = array_combine(array_values($field_names), array(null, null, null, null));
 
-			if ($data_type)
-				$data[$field_names[$data_type]] = $value;
+				if ($data_type)
+					$data[$field_names[$data_type]] = $value;
 
-			if (version_compare(_PS_VERSION_, '1.5', '>'))
-				Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.$specific_id);
-			else
-				Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.$specific_id);
+				if (version_compare(_PS_VERSION_, '1.5', '>'))
+					Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.$specific_id);
+				else
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.$specific_id);
+			}
 		}
 
 		// save conditions
@@ -1777,20 +1784,23 @@ class Ebay extends Module
 
 		//Update global information about shipping (delivery time, ...)
 		$this->ebay_profile->setConfiguration('EBAY_DELIVERY_TIME', Tools::getValue('deliveryTime'));
-		$this->ebay_profile->setConfiguration('EBAY_ZONE_INTERNATIONAL', Tools::getValue('internationalZone'));
-		$this->ebay_profile->setConfiguration('EBAY_ZONE_NATIONAL', Tools::getValue('nationalZone'));
 		//Update Shipping Method for National Shipping (Delete And Insert)
 		EbayShipping::truncate($this->ebay_profile->id);
 
 		if ($ebay_carriers = Tools::getValue('ebayCarrier'))
 		{
+
 			$ps_carriers = Tools::getValue('psCarrier');
 			$extra_fees = Tools::getValue('extrafee');
 
 			foreach ($ebay_carriers as $key => $ebay_carrier)
 			{
 				if (!empty($ebay_carrier) && !empty($ps_carriers[$key]))
-					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier, $ps_carriers[$key], $extra_fees[$key]);
+				{
+					//Get id_carrier and id_zone from ps_carrier
+					$infos = explode('-', $ps_carriers[$key]); 
+					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier, $infos[0], $extra_fees[$key], $infos[1]);
+				}
 			}
 		}
 
@@ -1805,18 +1815,15 @@ class Ebay extends Module
 			$international_excluded_shipping_locations = Tools::getValue('internationalExcludedShippingLocation');
 
 			foreach ($ebay_carriers_international as $key => $ebay_carrier_international)
-			{
-//				$ebay_carrier_international['id_ebay_profile'] = $this->ebay_profile->id;
-				EbayShipping::insert($this->ebay_profile->id, $ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
-				$last_id = EbayShipping::getLastShippingId($this->ebay_profile->id);
-				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]))
+			{//				
+				if (!empty($ebay_carrier_international) && !empty($ps_carriers_international[$key]) && isset($international_shipping_locations[$key]))
 				{
-					EbayShipping::insert($ebay_carrier_international, $ps_carriers_international[$key], $extra_fees_international[$key], true);
-					$last_id = EbayShipping::getLastShippingId();
+					$infos = explode('-', $ps_carriers_international[$key]); 
+					EbayShipping::insert($this->ebay_profile->id, $ebay_carrier_international, $infos[0], $extra_fees_international[$key], $infos[1], true);
+					$last_id = EbayShipping::getLastShippingId($this->ebay_profile->id);
 
-					if (isset($international_shipping_locations[$key]))
-						foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
-							EbayShippingInternationalZone::insert($this->ebay_profile->id, $last_id, $id_ebay_zone);
+					foreach (array_keys($international_shipping_locations[$key]) as $id_ebay_zone)
+						EbayShippingInternationalZone::insert($this->ebay_profile->id, $last_id, $id_ebay_zone);
 				}
 			}
 		}
@@ -1930,8 +1937,8 @@ class Ebay extends Module
 		if (Tools::getValue('reset_template'))
 			$ebay_product_template = str_replace($forbiddenJs, '', $this->_getProductTemplateContent());
 		else
-			$ebay_product_template = str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', Configuration::get('EBAY_PRODUCT_TEMPLATE')));
-		$ebay_product_template_title = Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE');
+			$ebay_product_template = str_replace($forbiddenJs, '', Tools::getValue('ebay_product_template', $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE')));
+		$ebay_product_template_title = $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE');
 
 		$smarty_vars = array(
 			'action_url' => $action_url,
@@ -2030,7 +2037,7 @@ class Ebay extends Module
                 $sql .= ' INNER JOIN  `'._DB_PREFIX_.'product_shop` AS ps
                         ON p.id_product = ps.id_product 
                         AND ps.id_shop = '.(int)$this->ebay_profile->id_shop;
-            $sq .= ' WHERE s.`quantity` > 0
+            $sql .= ' WHERE s.`quantity` > 0
 						AND  p.`active` = 1
 						AND  p.`id_category_default`
 						IN (
@@ -2621,7 +2628,7 @@ class Ebay extends Module
 		$products = EbayProduct::getProductsWithoutBlacklisted($id_lang);
 		$data = array(
 			'id_lang' => $id_lang,
-			'titleTemplate' => Configuration::get('EBAY_PRODUCT_TEMPLATE_TITLE')
+			'titleTemplate' => $this->ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE')
 			);
 
 		foreach ($products as $p)
@@ -2633,11 +2640,10 @@ class Ebay extends Module
 			$data['ean13'] = $p['ean13'];
 			$reference_ebay = $p['id_product_ref'];
 			$product = new Product((int)$p['id_product'], true, $id_lang);
-
 			if((int)$p['id_attribute'] > 0)
 			{
 				// No Multi Sku case so we do multiple products from a multivariation product
-				$combinaison = $product->getAttributeCombinationsById((int)$p['id_attribute'], $id_lang);
+				$combinaison = $this->_getAttributeCombinationsById($product, (int)$p['id_attribute'], $id_lang);
 				$combinaison = $combinaison[0];
 
 				$data['reference'] = $combinaison['reference'];
@@ -2652,7 +2658,7 @@ class Ebay extends Module
 					'prestashop_title' => $data['name'],
 					'ebay_title' => EbayRequest::prepareTitle($data),
 					'reference_ebay' => $reference_ebay,
-					'link' => $link->getAdminLink('AdminProducts').'&id_product='.(int)$combinaison['id_product'].'&updateproduct',
+					'link' => method_exists($link, 'getAdminLink') ? $link->getAdminLink('AdminProducts').'&id_product='.(int)$combinaison['id_product'].'&updateproduct' : $link->getProductLink((int)$combinaison['id_product']),
 					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
 					);
 			}
@@ -2664,7 +2670,7 @@ class Ebay extends Module
 					'prestashop_title' => $data['name'],
 					'ebay_title' => EbayRequest::prepareTitle($data),
 					'reference_ebay' => $reference_ebay,
-					'link' => $link->getAdminLink('AdminProducts').'&id_product='.$data['real_id_product'].'&updateproduct',
+					'link' => method_exists($link, 'getAdminLink') ? $link->getAdminLink('AdminProducts').'&id_product='.(int)$data['real_id_product'].'&updateproduct' : $link->getProductLink((int)$data['real_id_product']),
 					'link_ebay' => EbayProduct::getEbayUrl($reference_ebay, $ebay->getDev())
 					);
 			}
@@ -2675,11 +2681,34 @@ class Ebay extends Module
 		echo $this->display(__FILE__, 'views/templates/hook/ebay_listings_ajax.tpl');
 	}
 
+	public function _getAttributeCombinationsById($product, $id_attribute, $id_lang)
+	{
+		if(method_exists($product, 'getATtributeCombinationsById'))
+			return $product->getAttributeCombinationsById((int)$id_attribute, $id_lang);
+
+		$sql = 'SELECT pa.*, pa.`quantity`, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
+					a.`id_attribute`, pa.`unit_price_impact`
+				FROM `'._DB_PREFIX_.'product_attribute` pa
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+				WHERE pa.`id_product` = '.(int)$product->id.'
+				AND pa.`id_product_attribute` = '.(int)$id_attribute.'
+				GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
+				ORDER BY pa.`id_product_attribute`';
+
+		return Db::getInstance()->ExecuteS($sql);
+
+	}
+
 	private function __postProcessDownloadLog()
 	{
-		$full_path = _PS_MODULE_DIR_.'ebay/log/request.php';
+		$full_path = _PS_MODULE_DIR_.'ebay/log/request.txt';
 		if (file_exists($full_path))
 		{
+			die;
 			$file_name = basename($full_path);
 
 			$date = gmdate(DATE_RFC1123);

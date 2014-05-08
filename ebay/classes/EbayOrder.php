@@ -744,5 +744,4 @@ class EbayOrder
 
 		return $ebay_order;
 	}
-
 }

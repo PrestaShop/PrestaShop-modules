@@ -12,7 +12,7 @@ html {
 /* Tips */
 
 
-/* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
+/* This is the 	 Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
 .tooltipster-default {
 	border-radius: 5px; 
 	border: 1px solid #000;
@@ -289,6 +289,7 @@ html {
 	padding: 10px 20px 10px 40px;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #fff;
+	min-width:92%;
 	background : url('../img/big-warning.png') no-repeat 2px 5px #fff;
 }
 
@@ -348,4 +349,15 @@ html {
 {
 	border: 1px solid #585A69;
 	color: #0055FF;
+}
+
+#domesticShipping td.linked, #internationalShipping td.linked
+{
+	background : url('../img/link.png') no-repeat 0 15px;
+	padding-left: 45px;
+}
+
+#domesticShipping td.big-linked, #internationalShipping td.big-linked
+{
+	background-position: 0 55px;
 }

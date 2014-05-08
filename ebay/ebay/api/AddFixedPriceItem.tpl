@@ -38,7 +38,7 @@
 					<PhotoDisplay>PicturePack</PhotoDisplay>
 				{/if}
 				{foreach from=$pictures item=picture}
-					<PictureURL>{*{$picture}*}http://raphaelarbuz.com/202/7-home_default.jpg</PictureURL>
+					<PictureURL>{*{$picture}*}http://dev-so12.fr/4.jpg</PictureURL>
 				{/foreach}
 			</PictureDetails>
 		{/if}

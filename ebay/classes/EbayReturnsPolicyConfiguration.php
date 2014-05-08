@@ -45,9 +45,9 @@ class EbayReturnsPolicyConfiguration extends ObjectModel
     
     // for Prestashop 1.4
 	protected $tables;
-	protected $fieldsRequired;
-	protected $fieldsSize;
-	protected $fieldsValidate;
+	protected $fieldsRequired =  array();
+	protected $fieldsSize =  array();
+	protected $fieldsValidate =  array();
 	protected $table = 'ebay_returns_policy_configuration';
 	protected $identifier = 'id_ebay_returns_policy_configuration';
     

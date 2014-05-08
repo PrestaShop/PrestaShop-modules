@@ -76,7 +76,11 @@ $sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_product`
 	ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_product`';
 
 $sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping`
-	ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_shipping`';
+	ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `international`';
+
+
+$sql[] = 'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping`
+	ADD `id_zone` INT( 16 ) NOT NULL AFTER `id_ebay_shipping`';
 
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ebay_order_order` (
 	`id_ebay_order_order` int(16) unsigned NOT NULL AUTO_INCREMENT,
