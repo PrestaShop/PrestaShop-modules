@@ -445,9 +445,6 @@ class EbayOrder
 		$total_shipping_tax_incl += $this->shippingServiceCost;
 		$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));		
 
-		$total_shipping_tax_incl += $this->shippingServiceCost;
-		$total_shipping_tax_excl += $this->shippingServiceCost / (1 + ($carrier_tax_rate / 100));
-
 		$data = array(
 			'total_paid'              => (float)$this->amount,
 			'total_paid_real'         => (float)$this->amount,
