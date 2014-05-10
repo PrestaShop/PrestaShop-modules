@@ -1367,8 +1367,14 @@ class Ebay extends Module
 			'picture_per_listing' => $picture_per_listing,
 			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false
 		);
+            
+        if (version_compare(_PS_VERSION_, '1.5', '>'))
+            $is_ebay_send_stats_set = Configuration::hasKey('EBAY_SEND_STATS');
+        else {
+            $is_ebay_send_stats_set = $db->getRow('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \''.pSQL('EBAY_SEND_STATS').'\'');
+        }
         
-        if (Configuration::hasKey('EBAY_SEND_STATS'))
+        if ($is_ebay_send_stats_set)
             $smarty_vars['stats'] = Configuration::get('EBAY_SEND_STATS');    
 
 		if (Tools::getValue('relogin'))
