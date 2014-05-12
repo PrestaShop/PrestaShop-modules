@@ -126,6 +126,13 @@
 			displayEbayCarrier(current.find('.prestaCarrier').eq(nbSelect))
 			processEbayCarrier(current.find('.eBayCarrier').eq(nbSelect))
 		}
+
+		$('#domesticShipping select, #internationalShipping select').unbind().change(function(){
+			if ($(this).attr('class') == 'prestaCarrier')
+				displayEbayCarrier($(this));
+			else if ($(this).attr('class') == 'eBayCarrier')
+				processEbayCarrier($(this));
+		});
 	}
 
 	function displayEbayCarrier(select)
@@ -426,7 +433,7 @@
 			addShipping('internationalShipping');
 		{/foreach}
 
-		$('#menuTab3Sheet').click('#internationalShipping table ul li input', function(){
+		$('#menuTab3Sheet').click('#internationalShipping table ul li input', function(data){
 			var nbInputChecked = $(this).parent('li').parent('ul').parent('td').find('input').filter(':checked').length;
 			if (nbInputChecked >= 1)
 			{
@@ -434,7 +441,6 @@
 				if ($("#internationalShipping").children('.table').length == 1)
 				{
 					addShipping('internationalShipping');
-					$('#internationalShippingButton').show();
 				}
 			}
 			else
@@ -680,7 +686,7 @@
 <fieldset style="margin-top:10px">
 	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='To configure international shipping you must select countries to ship to' mod='module'}">{l s='International shipping' mod='ebay'}</span></legend>
 	<div id="internationalShipping"></div>
-	<a id="internationalShippingButton" {if $existingInternationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new international carrier' mod='ebay'}</a>
+	<a id="internationalShippingButton" class="button bold"><img src="../img/admin/add.gif">{l s='Add new international carrier' mod='ebay'}</a>
 </fieldset>
 
 <fieldset style="margin-top:10px">
