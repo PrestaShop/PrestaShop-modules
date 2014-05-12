@@ -39,7 +39,6 @@ function upgrade_module_1_7($module)
 		foreach ($sql as $request)
 			if (!Db::getInstance()->execute($request))
 			{
-				$this->_errors[] = DB::getInstance()->getMsgError();
 				return false;
 			}
 	}

@@ -43,7 +43,7 @@ class EbayShipping
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 0');
 
-		if ($id_product)
+		if ($id_product && version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
 			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
@@ -64,11 +64,15 @@ class EbayShipping
 			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' 
 			AND international = 1');
 		
-		if ($id_product)
+		if ($id_product && version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
 			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
-			$shippings = array_intersect_assoc($shippings, $shippings_product);
+			if(count($shippings_product) > 0)
+			{
+				if(array_intersect_assoc($shippings, $shippings_product))
+					$shippings = array_intersect_assoc($shippings, $shippings_product);
+			}
 		}
 
 		return $shippings;
