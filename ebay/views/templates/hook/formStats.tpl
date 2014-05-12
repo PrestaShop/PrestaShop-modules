@@ -23,18 +23,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-   <fieldset style="margin-top:10px;">
-		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
-		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
-		<div class="margin-form">
-            <form action="#" method="POST">
-                <input type="hidden" name="stats" value="0">
-                <input type="submit" name="submitSave" value="No thanks">
-            </form>
-            <form action="#" method="POST">
-                <input type="hidden" name="stats" value="1">
-                <input type="submit" name="submitSave" value="I agree">
-            </form>
-		</div>
-		<div style="clear:both;"></div>
-    </fieldset>
+<fieldset style="margin-top:10px;">
+	<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
+	<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
+	<div class="margin-form">
+        <form action="#" method="POST">
+            <input type="radio" name="stats" value="0"> No thanks
+            <input type="radio" name="stats" value="1" checked> I agree
+            <input type="submit" name="submitSave" value="Continue">
+        </form>                
+	</div>
+	<div style="clear:both;"></div>
+</fieldset>
