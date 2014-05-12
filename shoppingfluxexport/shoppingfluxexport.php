@@ -1043,20 +1043,8 @@ class ShoppingFluxExport extends Module
 					$products_available = $this->_checkProducts($order->Products);
 
 					$current_customer = new Customer((int)$id_customer);
-					$last_cart = new Cart($current_customer->getLastCart());
-					$add = true;
 					
-					if ($last_cart->id)
-					{
-						$date_cart = date_create($last_cart->date_add);
-						$date = new Datetime();
-						$date->modify('-5 min');
-
-						if ($date < $date_cart)
-							$add = false;
-					}
-					
-					if ($products_available && $id_address_shipping && $id_address_billing && $id_customer && $add)
+					if ($products_available && $id_address_shipping && $id_address_billing && $id_customer)
 					{
 						$cart = $this->_getCart($id_customer, $id_address_billing, $id_address_shipping, $order->Products, (string)$order->Currency, (string)$order->ShippingMethod);
 
