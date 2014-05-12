@@ -300,7 +300,11 @@ class EbayOrder
 		$cart_nb_products = 0;
 
         $products_by_shop = $this->getProductsAndProfileByShop();
-        $product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
+
+        if(isset($product_list[$ebay_profile->id_shop]))
+        	$product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
+        else
+        	$product_list = array();
 		
 		foreach ($product_list as $id_product)
 		{
