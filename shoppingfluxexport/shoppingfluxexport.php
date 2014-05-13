@@ -246,6 +246,7 @@ class ShoppingFluxExport extends Module
 				<p><label>'.$this->l('Prenom').' : </label><input type="text" name="prenom" value="'.Tools::safeOutput($owner->firstname).'"></p>
 				<p><label>'.$this->l('E-mail').' : </label><input type="text" name="email" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'"></p>
 				<p><label>'.$this->l('Téléphone').' : </label><input type="text" name="telephone" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_PHONE')).'"></p>
+                                <p><label>'.$this->l('Code Prestashop (laisser vide si vous n\'en possédez pas)').' : </label><input type="text" name="code"></p>
 				<input type="hidden" name="flux" value="'.Tools::safeOutput($uri).'"/>
 				<p style="text-align:center" ><input type="submit" value="'.$this->l('Envoyer la demande').'" name="send_mail" class="button"/></p>
 			</fieldset>
@@ -458,6 +459,7 @@ class ShoppingFluxExport extends Module
 		$xml .= '<Email><![CDATA['.Tools::safeOutput(Tools::getValue('email')).']]></Email>';
 		$xml .= '<Phone><![CDATA['.Tools::safeOutput(Tools::getValue('telephone')).']]></Phone>';
 		$xml .= '<Feed><![CDATA['.Tools::safeOutput(Tools::getValue('flux')).']]></Feed>';
+                $xml .= '<Code><![CDATA['.Tools::safeOutput(Tools::getValue('code')).']]></Code>';
                 $xml .= '<Lang><![CDATA['.Context::getContext()->country->iso_code.']]></Lang>';
 		$xml .= '</AddProspect>';
 
