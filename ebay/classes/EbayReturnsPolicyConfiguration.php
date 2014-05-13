@@ -104,7 +104,7 @@ class EbayReturnsPolicyConfiguration extends ObjectModel
 	public static function getDefaultObjectId()
 	{
 		$sql = 'SELECT `id_ebay_returns_policy_configuration`
-			FROM `'._DB_PREFIX_.self::$definition['table'].'` erpc
+			FROM `'._DB_PREFIX_.'ebay_returns_policy_configuration` erpc
 			WHERE erpc.`ebay_returns_within`= \''.pSQL(self::DEFAULT_RETURNS_WITHIN).'\'
 			AND erpc.`ebay_returns_who_pays` = \''.pSQL(self::DEFAULT_RETURNS_WHO_PAYS).'\'
 			AND erpc.`ebay_returns_description` = \''.pSQL(self::DEFAULT_RETURNS_DESCRIPTION).'\'
