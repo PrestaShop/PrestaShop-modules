@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.9';
+		$this->version = '3.4.10';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -394,41 +394,63 @@ class AvalaraTax extends Module
 
 		if ((isset($_GET['updateproduct']) || isset($_GET['addproduct'])) && isset($_GET['id_product']) && (int)$_GET['id_product'])
 		{
-			$r = Db::getInstance()->getRow('SELECT `tax_code`
-														FROM `'._DB_PREFIX_.'avalara_taxcodes` atc
-														WHERE atc.`id_product` = '.(int)Tools::getValue('id_product'));
+			$r = Db::getInstance()->getRow('
+			SELECT `tax_code`
+			FROM `'._DB_PREFIX_.'avalara_taxcodes` atc
+			WHERE atc.`id_product` = '.(int)Tools::getValue('id_product'));
 
-			// JS for 1.4
-			if (version_compare(_PS_VERSION_, '1.5', '<'))
-				return '<script type="text/javascript">
-			$(function() {
-				// Add the Tax Code field
-				$(\'<tr><td class="col-left">'.$this->l('Tax Code (Avalara)').':</td><td style="padding-bottom:5px;"><input type="text" style="width: 130px; margin-right: 5px;" value="'.
-					($r ? Tools::safeOutput($r['tax_code']) : '').'" name="tax_code" maxlength="13" size="55"></td></tr>\').appendTo(\'#product #step1 table:eq(0) tbody\');
+			if (version_compare(_PS_VERSION_, '1.5', '<')) /* v1.4.x an older */
+			{
+				return '
+				<script type="text/javascript">
+					$(function() {
+						// Add the Tax Code field
+						$(\'<tr><td class="col-left">'.$this->l('Tax Code (Avalara)').':</td><td style="padding-bottom:5px;"><input type="text" style="width: 130px; margin-right: 5px;" value="'.
+							($r ? Tools::safeOutput($r['tax_code']) : '').'" name="tax_code" maxlength="13" size="55"></td></tr>\').appendTo(\'#product #step1 table:eq(0) tbody\');
 
-				// override original tax rules
-				$(\'span #id_tax_rules_group\').parent().html(\'Avalara\');
-			});
-		</script>';
-			// JS for 1.5
-			return '<script type="text/javascript">
-			$(function() {
-				var done = false;
-				// Add the Tax Code field
-				$(\'#link-Informations\').click(function() {
-								if (done == false) {
-												done = true;
-												$(\'<tr><td class="col-left"><label for="tax_code">'.$this->l('Tax Code:').'</label></td><td style="padding-bottom:5px;"><input type="text" style="width: 130px; margin-right: 5px;" value="'.
-												($r ? Tools::safeOutput($r['tax_code']) : '').'" name="tax_code" maxlength="13" size="55"> <span class="small">(Avalara)</span></td></tr>\').appendTo(\'#step1 table:first tbody\');
-								}
-				});
+						// override original tax rules
+						$(\'span #id_tax_rules_group\').parent().html(\'Avalara\');
+					});
+				</script>';
+			}
+			elseif (version_compare(_PS_VERSION_, '1.6', '<')) /* v1.5.x */
+			{
+				return '
+				<script type="text/javascript">
+					$(function() {
+						var done = false;
+						// Add the Tax Code field
+						$(\'#link-Informations\').click(function() {
+										if (done == false) {
+														done = true;
+														$(\'<tr><td class="col-left"><label for="tax_code">'.$this->l('Tax Code:').'</label></td><td style="padding-bottom:5px;"><input type="text" style="width: 130px; margin-right: 5px;" value="'.
+														($r ? Tools::safeOutput($r['tax_code']) : '').'" name="tax_code" maxlength="13" size="55"> <span class="small">(Avalara)</span></td></tr>\').appendTo(\'#step1 table:first tbody\');
+										}
+						});
 
-				// override original tax rules
-				$(\'#link-Prices\').click(function() {
-								$(\'span #id_tax_rules_group\').parent().html(\'Avalara\');
-				});
-      });
-		</script>';
+						// override original tax rules
+						$(\'#link-Prices\').click(function() {
+										$(\'span #id_tax_rules_group\').parent().html(\'Avalara\');
+						});
+					});
+				</script>';
+			}
+			else /* v1.6.x and newer */
+			{
+				return '
+				<script type="text/javascript">
+					$(function() {
+						var done = false;
+						// Add the Tax Code field
+						$(\'#link-Prices\').click(function() {
+							if (done == false) {
+								done = true;
+								$(\'#id_tax_rules_group\').parent().parent().parent().parent().html(\'<div class="form-group"><label class="control-label col-lg-3" for="tax_code"><span class="label-tooltip" data-toggle="tooltip" title="" data-original-title="'.$this->l('Tax rules will be handled by Avalara').'">'.$this->l('Tax Code (Avalara):').'</span></label><div class="input-group col-lg-4"><input type="text" value="'.($r ? Tools::safeOutput($r['tax_code']) : '').'" name="tax_code" maxlength="13" /><div class="alert alert-info" style="margin-top: 40px;">'.$this->l('Tax rules will be handled by Avalara').'</div></div>\');
+							}
+						});
+					});
+				</script>';
+			}
 		}
 		elseif ((Tools::isSubmit('updatecarrier') || Tools::isSubmit('addcarrier')) && Tools::getValue('id_carrier'))
 			return '<script type="text/javascript">
