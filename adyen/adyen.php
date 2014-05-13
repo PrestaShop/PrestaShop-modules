@@ -38,7 +38,7 @@ class Adyen extends PaymentModule
 	{
 		$this->name = 'adyen';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.4';
+		$this->version = '2.5';
 		$this->author = 'Adyen';
 		$this->bootstrap = true;
 		
@@ -263,7 +263,13 @@ class Adyen extends PaymentModule
 				$output .= $this->displayConfirmation($this->l('Settings updated'));
 			}
 		}
-		return $output.$this->displayForm();
+		
+		if (version_compare(_PS_VERSION_, '1.6', '>='))
+			$intro = $this->display(__FILE__, '/views/templates/admin/configuration_intro.tpl');
+		else
+			$intro = "";
+			
+		return $output.$intro.$this->displayForm();
 	}
 	public function displayForm()
 	{
@@ -307,11 +313,32 @@ class Adyen extends PaymentModule
 			),
 			'input' => array (
 				array (
+						'type' => 'radio',
+						'label' => $this->l('Enabled'),
+						'name' => 'ADYEN_HPP_ENABLED',
+						'class' => 't',
+						'values' => array (
+								array (
+										'id' => 'true',
+										'value' => 1,
+										'label' => $this->l('Yes')
+								),
+								array (
+										'id' => 'false',
+										'value' => 0,
+										'label' => $this->l('No')
+								)
+						),
+						'is_bool' => true,
+						'required' => true
+				),
+				array (
 					'type' => 'text',
 					'label' => $this->l('Merchant Account'),
 					'name' => 'ADYEN_MERCHANT_ACCOUNT',
 					'size' => 20,
-					'required' => true
+					'required' => true,
+					'hint' => $this->l('In Adyen backoffice you have a company account with one or more merchantaccounts. Fill in the merchantaccount you want to use for this webshop.	')
 				),
 				array (
 					'type' => 'radio',
@@ -343,7 +370,8 @@ class Adyen extends PaymentModule
 						),
 						'id' => 'id',
 						'name' => 'name'
-					)
+					),
+					'hint' => $this->l('The status the order when it is just created before a payment is done.')
 				),
 				array (
 					'type' => 'select',
@@ -354,7 +382,8 @@ class Adyen extends PaymentModule
 						'query' => $order_states,
 						'id' => 'id',
 						'name' => 'name'
-					)
+					),
+					'hint' => $this->l('The status the order when a successful payment is done.')
 				),
 				array (
 					'type' => 'select',
@@ -365,131 +394,121 @@ class Adyen extends PaymentModule
 						'query' => $order_states,
 						'id' => 'id',
 						'name' => 'name'
-					)
+					),
+					'hint' => $this->l('The status the order has when a payment is failed or cancelled.')
 				),
 				array (
 					'type' => 'text',
 					'label' => $this->l('Notification Username'),
 					'name' => 'ADYEN_NOTI_USERNAME',
 					'size' => 20,
-					'required' => true
+					'required' => true,
+					'hint' => $this->l('Must correspond to the notification username in the Adyen Backoffice under Settings => Notifications')
 				),
 				array (
 					'type' => 'text',
 					'label' => $this->l('Notification Password'),
 					'name' => 'ADYEN_NOTI_PASSWORD',
 					'size' => 20,
-					'required' => true
+					'required' => true,
+					'hint' => $this->l('Must correspond to the notification password in the Adyen Backoffice under Settings => Notifications')
 				),
 				array (
-					'type' => 'text',
-					'label' => $this->l('Country Code ISO'),
-					'name' => 'ADYEN_COUNTRY_CODE_ISO',
-					'size' => 20,
-					'required' => false,
-					'hint' => $this->l('Leave empty to let Adyen decide on IP-address (Ex: NL)')
+						'type' => 'text',
+						'label' => $this->l('Skin code'),
+						'name' => 'ADYEN_SKIN_CODE',
+						'required' => true,
+						'hint' => $this->l('Choose a skin code that you have setup in the Adyen test backoffice under Skins')
 				),
 				array (
-					'type' => 'text',
-					'label' => $this->l('Language locale'),
-					'name' => 'ADYEN_LANGUAGE_LOCALE',
-					'size' => 20,
-					'required' => false,
-					'hint' => $this->l('Leave empty to let Prestashop decide (Ex: nl_NL)')
+						'type' => 'text',
+						'label' => $this->l('HMAC Key for Test'),
+						'name' => 'ADYEN_HMAC_TEST',
+						'required' => true,
+						'hint' => $this->l('Must correspond to the  HMAC Key for Test in the Adyen Test Backoffice under Skin details')
+				),
+				array (
+						'type' => 'text',
+						'label' => $this->l('HMAC Key for Live'),
+						'name' => 'ADYEN_HMAC_LIVE',
+						'required' => true,
+						'hint' => $this->l('Must correspond to the  HMAC Key for Live in the Adyen Test Backoffice under Skin details')
 				)
 			)
 		);
 		
 		$fields_form[1]['form'] = array (
 				'legend' => array (
-					'title' => $this->l('HPP Settings'),
+					'title' => $this->l('Advanced Settings'),
 					'image' => '../img/admin/payment.gif'
 				),
 				'input' => array (
 					array (
-						'type' => 'radio',
-						'label' => $this->l('Enabled'),
-						'name' => 'ADYEN_HPP_ENABLED',
-						'class' => 't',
-						'values' => array (
-							array (
-								'id' => 'true',
-								'value' => 1,
-								'label' => $this->l('Yes')
+							'type' => 'radio',
+							'label' => $this->l('Leave payment method selection on HPP'),
+							'name' => 'ADYEN_HPP_DISABLE',
+							'class' => 't',
+							'values' => array (
+									array (
+											'id' => 'true',
+											'value' => 1,
+											'label' => $this->l('yes')
+									),
+									array (
+											'id' => 'false',
+											'value' => 0,
+											'label' => $this->l('no')
+									)
 							),
-							array (
-								'id' => 'false',
-								'value' => 0,
-								'label' => $this->l('No')
-							)
-						),
-						'is_bool' => true,
-						'required' => true
+							'is_bool' => true,
+							'required' => true,
+							'hint' => $this->l('If you say yes here, payment methods in the checkout won\'t be displayed and you will be redirected to the Adyen HPP to make the selection.')
 					),
 					array (
-						'type' => 'text',
-						'label' => $this->l('Skin code'),
-						'name' => 'ADYEN_SKIN_CODE',
-						'required' => true
-					),
-					array (
-						'type' => 'text',
-						'label' => $this->l('HMAC Key for Test'),
-						'name' => 'ADYEN_HMAC_TEST',
-						'required' => true
-					),
-					array (
-						'type' => 'text',
-						'label' => $this->l('HMAC Key for Live'),
-						'name' => 'ADYEN_HMAC_LIVE',
-						'required' => true
-					),
-					array (
-						'type' => 'select',
-						'label' => $this->l('Payment Flow Selection:'),
-						'name' => 'ADYEN_PAYMENT_FLOW',
-						'required' => false,
-						'options' => array (
-							'query' => array (
-								array (
-									'id' => 'multi',
-									'name' => $this->l('Multi-page Payment Routine ')
-								),
-								array (
-									'id' => 'single',
-									'name' => $this->l('Single Page Payment Routine')
-								)
+							'type' => 'select',
+							'label' => $this->l('Payment Flow Selection:'),
+							'name' => 'ADYEN_PAYMENT_FLOW',
+							'required' => false,
+							'options' => array (
+									'query' => array (
+											array (
+													'id' => 'multi',
+													'name' => $this->l('Multi-page Payment Routine ')
+											),
+											array (
+													'id' => 'single',
+													'name' => $this->l('Single Page Payment Routine')
+											)
+									),
+									'id' => 'id',
+									'name' => 'name'
 							),
-							'id' => 'id',
-							'name' => 'name'
-						)
+							'hint' => $this->l('With Single Page the Adyen HPP show all the payment methods in one overview')
+					),
+					array (
+							'type' => 'text',
+							'label' => $this->l('Country Code ISO'),
+							'name' => 'ADYEN_COUNTRY_CODE_ISO',
+							'size' => 20,
+							'required' => false,
+							'hint' => $this->l('Leave empty to let Adyen decide on IP-address (Ex: NL)')
+					),
+					array (
+							'type' => 'text',
+							'label' => $this->l('Language locale'),
+							'name' => 'ADYEN_LANGUAGE_LOCALE',
+							'size' => 20,
+							'required' => false,
+							'hint' => $this->l('Leave empty to let Prestashop decide (Ex: nl_NL)')
 					),
 					array (
 						'type' => 'text',
 						'label' => $this->l('Day\'s for delivery'),
 						'name' => 'ADYEN_DAYS_DELIVERY',
-						'required' => true
+						'required' => false,
+						'hint' => $this->l('How many days to be added to the current date for delivery. ONLY numbers allowed.')
 					),
-					array (
-						'type' => 'radio',
-						'label' => $this->l('Disable HPP payment methods'),
-						'name' => 'ADYEN_HPP_DISABLE',
-						'class' => 't',
-						'values' => array (
-							array (
-								'id' => 'true',
-								'value' => 1,
-								'label' => $this->l('yes')
-							),
-							array (
-								'id' => 'false',
-								'value' => 0,
-								'label' => $this->l('no')
-							)
-						),
-						'is_bool' => true,
-						'required' => true
-					),
+					
 				),
 				'submit' => array (
 					'title' => $this->l('Save'),
@@ -645,7 +664,7 @@ class Adyen extends PaymentModule
 					'ADYEN_SKIN_CODE',
 					'ADYEN_COUNTRY_CODE_ISO',
 				));
-					
+
 				$currency = $this->context->currency;
 				$currency_code = (string)$currency->iso_code;
 				$skin_code = (string)$config['ADYEN_SKIN_CODE'];
@@ -656,8 +675,8 @@ class Adyen extends PaymentModule
 				if ($config['ADYEN_COUNTRY_CODE_ISO'] != '')
 					$country_code = (string)$config['ADYEN_COUNTRY_CODE_ISO'];
 				else
-					$country_code = (string)$country->iso_code;
-					
+					$country_code = (string)$this->context->country->iso_code;
+				
 				$request = array(
 					"paymentAmount" => $payment_amount,
 					"currencyCode" => $currency_code,
@@ -730,7 +749,6 @@ class Adyen extends PaymentModule
 			
 			$this->context->smarty->assign(array (
 				'hpp_options' => $hpp_options,
-				'ideal_options' => $ideal_issuers_key_value,
 				'nbProducts' => $cart->nbProducts(),
 				'cust_currency' => $cart->id_currency,
 				'currencies' => $this->getCurrency((int)$cart->id_currency),
