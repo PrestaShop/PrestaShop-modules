@@ -162,14 +162,19 @@ class Ebay extends Module
                 else
                     $this->ebay_profile = EbayProfile::getCurrent();
 
-				// Check the country
-				$this->ebay_country = EbayCountrySpec::getInstanceByKey($this->ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'));
+                if ($this->ebay_profile) {
+    				// Check the country
+    				$this->ebay_country = EbayCountrySpec::getInstanceByKey($this->ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'));
 
-				if (!$this->ebay_country->checkCountry())
-				{
-					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk, eBay.pl, eBay.nl and eBay.es');
-					return false;
-				}
+    				if (!$this->ebay_country->checkCountry())
+    				{
+    					$this->warning = $this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk, eBay.pl, eBay.nl and eBay.es');
+    					return false;
+    				}
+                                        
+                } else {
+                    return false;
+                }
 			}
 
 
@@ -538,10 +543,9 @@ class Ebay extends Module
 	{
 		if(Tools::getValue('DELETE_EVERYTHING_EBAY') == 1)
 			$this->emptyEverything();
-		
-		if (!$this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL')) // if the module is not configured don't do anything
+        
+		if (!$this->ebay_profile || !$this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL')) // if the module is not upgraded or not configured don't do anything
 			return false;
-
 
 		// if multishop, change context Shop to be default
 		if ($this->is_multishop)
