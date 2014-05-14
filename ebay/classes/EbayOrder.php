@@ -530,13 +530,13 @@ class EbayOrder
 		$id_ebay_order = EbayOrder::insert(array(
 			'id_order_ref' => pSQL($this->id_order_ref),
 		));		
-		
+            
 		foreach ($this->id_orders as $id_shop => $id_order)
 		{
 			Db::getInstance()->insert('ebay_order_order', array(
 				'id_ebay_order' => $id_ebay_order,
-				'id_order' 			=> $id_order,
-				'id_shop'				=> $id_shop
+				'id_order'      => $id_order,
+				'id_shop'       => $id_shop
 			));
 		}
 	}

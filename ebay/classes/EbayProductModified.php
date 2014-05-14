@@ -90,7 +90,7 @@ class EbayProductModified extends ObjectModel
     public static function getAll()
     {
         $sql = 'SELECT `id_ebay_profile`, `id_product`
-            FROM '._DB_PREFIX.'ebay_product_modified';
+            FROM '._DB_PREFIX_.'ebay_product_modified';
         return Db::getInstance()->executeS($sql);
     }
     

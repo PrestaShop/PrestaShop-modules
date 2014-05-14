@@ -37,6 +37,9 @@ class EbaySynchronizer
 
 	public static function syncProducts($products, $context, $id_lang, $log_type = false)
 	{
+        if (!$products)
+            return;
+        
 		$date = date('Y-m-d H:i:s');
 
 		// Get errors back

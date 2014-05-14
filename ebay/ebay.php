@@ -582,7 +582,7 @@ class Ebay extends Module
     public function cronProductsSync()
     {
         EbaySynchronizer::syncProducts(EbayProductModified::getAll(), Context::getContext(), $this->ebay_country->getIdLang(), 'CRON_PRODUCT');
-        EbaySynchronizer::truncate();
+        EbayProductModified::truncate();
     }
 	
 	public function cronOrdersSync()
