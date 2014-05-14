@@ -26,14 +26,14 @@
 
 include_once(_PS_MODULE_DIR_.'paypal/api/paypal_connect.php');
 
-define('PAYPAL_API_VERSION', '94.0');
+define('PAYPAL_API_VERSION', '106.0');
 
 class PaypalLib
 {
+
+	private $enable_log = false;
 	private $_logs = array();
-
 	protected $paypal = null;
-
 	public function __construct()
 	{
 		$this->paypal = new PayPal();
@@ -50,19 +50,29 @@ class PaypalLib
 		$method_version = (!empty($method_version)) ? $method_version : PAYPAL_API_VERSION;
 
 		$params = array(
-			'METHOD' => $method_name,
-			'VERSION' => $method_version,
-			'PWD' => Configuration::get('PAYPAL_API_PASSWORD'),
-			'USER' => Configuration::get('PAYPAL_API_USER'),
+			'METHOD'    => $method_name,
+			'VERSION'   => $method_version,
+			'PWD'       => Configuration::get('PAYPAL_API_PASSWORD'),
+			'USER'      => Configuration::get('PAYPAL_API_USER'),
 			'SIGNATURE' => Configuration::get('PAYPAL_API_SIGNATURE')
 		);
 
-		$request = http_build_query($params, '', '&');
-		$request .= '&'.(!is_array($data) ? $data : http_build_query($data, '', '&'));
-
+		$data = array_merge($data, $params);
+		
+		$request = http_build_query($data, '', '&');
 		// Making connection
 		$result = $this->makeSimpleCall($host, $script, $request, true);
 		$response = explode('&', $result);
+		
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, 'Host : '.print_r($host, true)."\r\n");
+			fwrite($handle, 'Request : '.print_r($request, true)."\r\n");
+			fwrite($handle, 'Result : '.print_r($result, true)."\r\n");
+			fwrite($handle, 'Logs : '.print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
 
 		foreach ($response as $value)
 		{

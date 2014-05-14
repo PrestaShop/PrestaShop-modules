@@ -26,19 +26,41 @@
 
 {*Displaying a button or the iframe*}
 {if $payment_hss_solution == $smarty.const.PAYPAL_HSS_REDIRECTION}
-<p class="payment_module">
-	<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice}">
-		{if isset($logos.LocalPayPalHorizontalSolutionPP) && $PayPal_payment_method == $PayPal_integral}
-				<img src="{$logos.LocalPayPalHorizontalSolutionPP}" alt="{$PayPal_content.payment_choice}" height="48px" />
-			{else}
-				<img src="{$logos.LocalPayPalLogoMedium}" alt="{$PayPal_content.payment_choice}" />
-			{/if}
-			{$PayPal_content.payment_choice}
-	</a>
-</p>
+	{if $smarty.const._PS_VERSION_ >= 1.6}
+
+	<div class="row">
+		<div class="col-xs-12 col-md-6">
+		<p class="payment_module paypal" >
+			<a href="javascript:void(0)" style="padding-left:17px;" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}">
+				
+						<img src="{$logos.LocalPayPalHorizontalSolutionPP|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />		
+					{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}
+			</a>
+		</p>
+		</div>
+	</div>
+	{else}
+	<p class="payment_module">
+		<a href="javascript:void(0)" onclick="$('#paypal_form').submit();" id="paypal_process_payment" title="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}">
+			
+					<img src="{$logos.LocalPayPalHorizontalSolutionPP|escape:'htmlall':'UTF-8'}" alt="{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}" height="48px" />		
+				{$PayPal_content.payment_choice|escape:'htmlall':'UTF-8'}
+		</a>
+	</p>
+	{/if}
 {else}
+	{if $smarty.const._PS_VERSION_ >= 1.6}
+	<div class="row">
+		<div class="col-xs-12 col-md-6">
+		<p class="payment_module">
+			<iframe name="hss_iframe" width="556px" height="540px" style="overflow: hidden; border: none" class="payment_module"></iframe>	
+		</p>
+		</div>
+	</div>
+	{else}
 	<hr style="border-top: 1px dotted rgb(204, 204, 204);" />
 	<iframe name="hss_iframe" width="556px" height="540px" style="overflow: hidden; border: none" class="payment_module"></iframe>
+	{/if}
 {/if}
 
 

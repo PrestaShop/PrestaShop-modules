@@ -83,6 +83,15 @@ class PayPalExpressCheckoutSubmit extends OrderConfirmationControllerCore
 				)
 			);
 
+			if(version_compare(_PS_VERSION_, '1.5', '>'))
+			{
+				
+				$this->context->smarty->assign(array(
+					'reference_order' => Order::getUniqReferenceOf($paypal_order['id_order'])
+				));
+			}
+
+
 			$template = 'order-confirmation.tpl';
 		}
 		

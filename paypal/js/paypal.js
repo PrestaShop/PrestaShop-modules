@@ -139,7 +139,8 @@ $(document).ready( function() {
 	}
 
 	function checkOrder() {
-		confirmTimer = setInterval(getOrdersCount, 1000);
+		if(confirmTimer == false)
+			confirmTimer = setInterval(getOrdersCount, 1000);
 	}
 
 	{/literal}{if isset($id_cart)}{literal}
