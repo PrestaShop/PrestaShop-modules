@@ -217,6 +217,8 @@ $(document).ready( function() {
 		return true;
 	});
 
+
+
 	if ($("#paypal-wrapper").length > 0) {
 		$('input[type="submit"]').live('click', function() {
 			var paypal_business = $('input[name="business"]:checked').val();
@@ -278,6 +280,20 @@ $(document).ready( function() {
 			var form = $('#paypal_configuration');
 			form.append('<input type="hidden" name="paypal_country_only" value="'+$(this).val()+'" />');
 			form.submit();
+		});
+
+
+		$("#paypal_login_yes_or_no input[name='paypal_login']").change(function(){
+			var val = parseInt($(this).val());
+			if (val === 1)
+			{
+				$("#paypal_login_configuration").slideDown();
+			}
+			else
+			{
+				$("#paypal_login_configuration").slideUp();
+			}
+
 		});
 	}
 

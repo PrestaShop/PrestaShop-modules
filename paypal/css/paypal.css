@@ -33,7 +33,7 @@ span.paypal-section{background:url(../img/sprites.png) no-repeat 0 0;color:#FFF!
 #paypal-wrapper dl dd{margin:0 0 16px 10px}
 #paypal-wrapper label{display:inline-block;float:none;font-size:.9em;font-weight:400;margin-bottom:5px;padding-left:6px;padding-top:0;position:relative;text-align:left;width:auto}
 #paypal-wrapper dl dt label{margin:0;padding:0}
-#paypal-wrapper .description,#paypal-wrapper .paypal-signup-content{color:#666;font-size:.9em;font-weight:400;margin:2px 0}
+#paypal-wrapper .description,#paypal-wrapper .paypal-signup-content{color:#666;font-size:.9em;font-weight:400;margin:2px 0;font-size:11px; font-style:italic;}
 label span.description{display:block;padding-left:16px}
 #paypal-wrapper input[type=submit],.fancybox-wrap button,#fancybox-wrap button,#paypal-wrapper .paypal-button{background:url(../img/bg-button.png) repeat-x;border:1px solid #f29116;border-radius:4px;color:#292929;cursor:pointer;display:inline-block;font-weight:700;height:25px;line-height:26px;padding:0 10px;text-decoration:none;text-shadow:0 1px 1px #DDD;text-transform:uppercase}
 #fancybox-wrap ul,.fancybox-wrap ul{font-size:1.1em;padding-left:10px}
