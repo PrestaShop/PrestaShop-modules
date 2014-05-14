@@ -22,11 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<style>
-	select.ebay_select{
-		color:#000 !important;
-	}
-</style>
+
 
 <script type="text/javascript">
 	regenerate_token_show = false;
@@ -63,29 +59,7 @@
 <script src="{$tips202}" type="text/javascript"></script>
 
 {literal}
-<style type="text/css">
-	#fancybox-loading {
-		display: none;
-	}
 
-	input.primary {
-		text-shadow: none;
-		background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
-		background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
-		color: white;
-	}
-
-	.tooltip {
-		vertical-align: middle;
-		display: inline-block;
-		margin-left: 3px;
-	}
-
-	textarea + .tooltip {
-		vertical-align: top;
-	}
-
-</style>
 {/literal}
 <fieldset>
 	<legend><img src="{$path}logo.gif" alt="" />{l s='eBay Module Status' mod='ebay'}</legend>

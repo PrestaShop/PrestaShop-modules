@@ -7,7 +7,58 @@ html {
 	text-decoration: underline;
 }
 
+select.ebay_select{
+	color:#000 !important;
+}
 
+#statsForm div.label
+{
+	width:100%;
+	margin-bottom:10px;
+	font-weight:bold;
+}
+
+#statsForm div.input
+{
+	margin-bottom:5px;
+
+}
+
+#statsForm div.input input
+{
+	margin-right:3px;
+}
+
+#statsForm div.input:last-child
+{
+	margin-bottom:10px;
+}
+
+#statsForm .primary{
+	margin-top:10px;
+}
+
+
+#fancybox-loading {
+	display: none;
+}
+
+input.primary {
+	text-shadow: none;
+	background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+	background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
+	color: white;
+}
+
+.tooltip {
+	vertical-align: middle;
+	display: inline-block;
+	margin-left: 3px;
+}
+
+textarea + .tooltip {
+	vertical-align: top;
+}
 
 /* Tips */
 
