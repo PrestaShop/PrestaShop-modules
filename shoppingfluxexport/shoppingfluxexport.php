@@ -908,7 +908,7 @@ class ShoppingFluxExport extends Module
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
 			$ret .= '<upc><![CDATA['.$combination['upc'].']]></upc>';
 			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
-						$ret .= '<weight><![CDATA['.$combination['weight'].']]></weight>';
+                        $ret .= '<poids><![CDATA['.$combination['weight'].']]></poids>';
 			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
 			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
 			$ret .= '<frais-de-port><![CDATA['.$this->_getShipping($product, $configuration, $carrier, $id, $combination['weight']).']]></frais-de-port>';
