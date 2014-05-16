@@ -232,6 +232,7 @@ elseif (Tools::getValue('alliancepay') == 'ccauth')
 	/* If auth ends */
 }
 
+Configuration::updateValue('ALLIANCE3_CONFIGURATION_OK', true);
 $url = 'index.php?controller=order-confirmation&';
 
 if (version_compare(_PS_VERSION_, '1.5', '<'))
