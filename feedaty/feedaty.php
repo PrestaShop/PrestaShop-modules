@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.8';
+		$this->version = '1.1.9';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
