@@ -59,10 +59,11 @@
 
 	</ul>
 
-Choose Payment Type:<br />
 				<input type="hidden" name="x_solution_ID" value="A1000006" />
 				<input type="hidden" name="x_invoice_num" value="{$x_invoice_num|escape:'htmlall':'UTF-8'}" />
 					{if $midtype.authnet == 1 && $midtype.achmod == 1}
+					Choose Payment Type:<br />
+
 				<input type=radio onClick="Hide('didfv1', this); Reveal('div2', this)" id="check_valueCC" name='alliancepay'   value='ccauth' checked=checked>Credit Card
 				<input type=radio onClick="Hide('div2', this); Reveal('didfv1', this)" id="check_valueACH" name='alliancepay'
                  value='achauth' >Electronic Check
@@ -97,7 +98,7 @@ Choose Payment Type:<br />
 					<option value="{$smarty.section.date_m.index|escape:'htmlall':'UTF-8'}">{$smarty.section.date_m.index|escape:'htmlall':'UTF-8'}</option>{/section}
 				</select>
 				 /
-				<select name="x_exp_date_y">{section name=date_y start=11 loop=20}
+				<select name="x_exp_date_y">{section name=date_y start=14 loop=28}
 					<option value="{$smarty.section.date_y.index|escape:'htmlall':'UTF-8'}">20{$smarty.section.date_y.index|escape:'htmlall':'UTF-8'}</option>{/section}
 				</select>
 				<img src="{$module_dir}img/secure.png" alt="" style="margin-left: 5px;" /><br />
