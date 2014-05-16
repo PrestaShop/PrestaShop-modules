@@ -38,7 +38,7 @@ class Adyen extends PaymentModule
 	{
 		$this->name = 'adyen';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.5';
+		$this->version = '2.6';
 		$this->author = 'Adyen';
 		$this->bootstrap = true;
 		
@@ -791,8 +791,10 @@ class Adyen extends PaymentModule
 			switch ($auth_result)
 			{
 				case 'PENDING':
+					Configuration::updateValue('ADYEN_CONFIGURATION_OK', true);
 					$template = 'pending.tpl';
 				case 'AUTHORISED':
+					Configuration::updateValue('ADYEN_CONFIGURATION_OK', true);
 					$template = 'authorised.tpl';
 					break;
 				case 'REFUSED':
