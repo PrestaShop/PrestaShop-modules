@@ -67,11 +67,9 @@
 	{if empty($alert)}
 		<img src="../modules/ebay/views/img/valid.png" /><strong>{l s='eBay Module is configured and online!' mod='ebay'}</strong>
 		{if $is_version_one_dot_five}
-			{if $is_version_one_dot_five_dot_one and !$multishop}
+			{if $is_version_one_dot_five_dot_one}
 				<br/><img src="../modules/ebay/views/img/warn.png" /><strong>{l s='You\'re using version 1.5.1 of PrestaShop. We invite you to upgrade to version 1.5.2  so you can use the eBay module properly.' mod='ebay'}</strong>
 				<br/><strong>{l s='Please synchronize your eBay sales in your Prestashop front office' mod='ebay'}</strong>
-			{elseif $multishop}
-				<br/><strong>{l s='The eBay module does not support multishop. Stock and categories will be sent from the default Prestashop store' mod='ebay'}</strong>				
 			{/if}
 		{/if}
 	{else}
