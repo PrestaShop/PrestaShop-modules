@@ -1470,9 +1470,15 @@ class Ebay extends Module
 
 		if ($path_add != '')
 			$path[] = $path_add;
+        
+        if (isset($categories[$id])) {
+            $cats = $categories[$id];
+        } elseif (!$id) {
+            $cats = reset($categories); // fix to deal with the case where the first element of categories has no key
+        }
 
-		if (isset($categories[$id]))
-			foreach ($categories[$id] as $idc => $cc)
+		if (isset($cats))
+			foreach ($cats as $idc => $cc)
 			{
 				$name = '';
 				if ($path)
@@ -2104,7 +2110,6 @@ class Ebay extends Module
 		foreach (EbayCategoryConfiguration::getEbayCategoryConfigurations($this->ebay_profile->id) as $c)
 			$category_config_list[$c['id_category']] = $c;
 
-//        print_r(json_encode(Category::getCategories($this->context->language->id)));die;
 		$category_list = $this->getChildCategories(Category::getCategories($this->context->language->id), 0);
 		$categories = array();
 
