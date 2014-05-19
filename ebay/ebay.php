@@ -238,13 +238,6 @@ class Ebay extends Module
 
 		$this->createDefaultProfilesAndReturnsPolicies();
 		$this->ebay_profile =  EbayProfile::getCurrent();
-		$this->ebay_profile->setConfiguration('EBAY_PRODUCT_TEMPLATE', ''); // fix to work around the PrestaShop bug when saving html for a configuration key that doesn't exist yet
-		$this->ebay_profile->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
-		$this->ebay_profile->setConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE', '{TITLE}');
-		$this->ebay_profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
-		$this->ebay_profile->setConfiguration('EBAY_DELIVERY_TIME', 2);
-		$this->ebay_profile->setConfiguration('EBAY_ACTIVATE_LOGS', '0');
-		$this->ebay_profile->setConfiguration('EBAY_ACTIVATE_MAILS', '0');
 		
 		$this->setConfiguration('EBAY_INSTALL_DATE', date('Y-m-d\TH:i:s.000\Z'));
 		// Picture size
@@ -261,12 +254,6 @@ class Ebay extends Module
 	public function createDefaultProfilesAndReturnsPolicies()
 	{
 		$id_shops = version_compare(_PS_VERSION_, '1.5', '>') ? Shop::getShops(false, null, true) : array(Shop::getCurrentShop());
-        /*
-		if(count($id_shops) == 0)
-		{//Create at least one id Shop
-			$id_shops = array(Configuration::get('PS_SHOP_DEFAULT') ? Configuration::get('PS_SHOP_DEFAULT') : 1);
-		}
-        */
 		
 		foreach($id_shops as $id_shop)
 		{
@@ -281,6 +268,14 @@ class Ebay extends Module
                         
 			$profile->id_ebay_returns_policy_configuration = $returns_policy_configuration->id;
 			$profile->save();
+            
+    		$profile->setConfiguration('EBAY_PRODUCT_TEMPLATE', ''); // fix to work around the PrestaShop bug when saving html for a configuration key that doesn't exist yet
+    		$profile->setConfiguration('EBAY_PRODUCT_TEMPLATE', $this->_getProductTemplateContent(), true);
+    		$profile->setConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE', '{TITLE}');
+    		$profile->setConfiguration('EBAY_ORDER_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'));
+    		$profile->setConfiguration('EBAY_DELIVERY_TIME', 2);
+    		$profile->setConfiguration('EBAY_ACTIVATE_LOGS', '0');
+    		$profile->setConfiguration('EBAY_ACTIVATE_MAILS', '0');
 		}		
 	}
 
