@@ -29,7 +29,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$this->name = 'realexredirect';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6';
+		$this->version = '1.7';
 		$this->author = 'Coccinet';
 		$this->bout_valide = $this->l('Pay Now');
 		$this->bout_suppr = $this->l('Do you want to delete your stored card ?');
@@ -1271,6 +1271,7 @@ class RealexRedirect extends PaymentModule
 				else
 					$retour_msg .= "RealVault: No \r\n";
 			}
+			Configuration::updateValue('REALEX_REDIRECT_CONFIGURATION_OK', true);
 			$this->validateOrder($cart->id, Configuration::get('PS_OS_PAYMENT'), $total, $this->displayName, $retour_msg, null, (int)$cart->id_currency, false, $customer->secure_key);
 		}
 		// ---------------- PAYMENT PB
