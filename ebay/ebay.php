@@ -2180,7 +2180,7 @@ class Ebay extends Module
 			// Select the sync Categories and Retrieve product list for eBay (which have matched and sync categories)
 			if (Tools::getValue('category'))
 			{
-				EbayCategoryConfiguration::updateAll(array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 0));
+				EbayCategoryConfiguration::updateByIdProfile($this->ebay_profile->id, array('sync' => 0));
 				foreach (Tools::getValue('category') as $id_category)
 					EbayCategoryConfiguration::updateByIdCategory($id_category, array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 1));
 			}

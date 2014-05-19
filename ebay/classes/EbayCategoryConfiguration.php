@@ -136,9 +136,9 @@ class EbayCategoryConfiguration
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'INSERT');
 	}
 
-	public static function updateAll($data)
+	public static function updateByIdProfile($id_profile, $data)
 	{
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE');
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_ebay_profile` = '.(int)$id_profile);
 	}
 
 	public static function updateByIdCategory($id_category, $data)
