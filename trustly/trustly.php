@@ -44,7 +44,7 @@ class Trustly extends PaymentModule
 	{
 		$this->name = 'trustly';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3.3';
+		$this->version = '1.3.4';
 		$this->limited_countries = array('es');
 
 		$this->currencies = true;
@@ -472,6 +472,7 @@ class Trustly extends PaymentModule
 					$customer->secure_key
 				);
 			}
+			Configuration::updateValue('TRUSTLY_CONFIGURATION_OK', true);
 		} catch(Exception $e) {
 			// This status will be returned to Trustly
 			$status = 'FAILED';
