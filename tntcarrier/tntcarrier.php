@@ -51,7 +51,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.9.9';
+		$this->version = '1.9.10';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -642,6 +642,7 @@ class TntCarrier extends CarrierModule
 			try
 			{
 				$verif = $tntWebService->verifCity($postal_code, $city);
+				Configuration::updateValue('TNTCARRIER_CONFIGURATION_OK', true);
 			}
 			catch (SoapFault $e)
 			{
