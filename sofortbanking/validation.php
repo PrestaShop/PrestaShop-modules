@@ -82,4 +82,6 @@ $sofortbanking->validateOrder($cart->id, $order_state, (float)number_format($car
 	$sofortbanking->displayName, $sofortbanking->l('Directebanking transaction id: ').Tools::getValue('transaction'),
 	null, null, false, $customer->secure_key, null);
 
+Configuration::updateValue('SOFORTBANKING_CONFIGURATION_OK', true);
+
 ?>
