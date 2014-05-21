@@ -826,11 +826,15 @@ class Twenga extends PaymentModule
 		{
 			$product = new Product((int)$row['id_product']);
 			
-			if (Validate::isLoadedObject($product) && $product->active)
+			if (Validate::isLoadedObject($product) AND $product->active)
 			{
 				// Check if product declinations exist.
 				$combinations = $this->getCombinations($product, $lang);
-				
+
+				// Set an empty value even no combinations was found to make foreach usable.
+				if (empty($combinations))
+					$combinations[] = array();
+
 				foreach ($combinations as $combination)
 				{
 					// prepared values before insert it in node structure.
