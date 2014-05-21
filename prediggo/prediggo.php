@@ -62,7 +62,7 @@ class Prediggo extends Module
 	{
 		$this->name = 'prediggo';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.4';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->_html = '';
@@ -494,6 +494,9 @@ class Prediggo extends Module
 	private function checkWebSiteId()
 	{
 		$this->oPrediggoConfig->web_site_id_checked = (int)$this->oPrediggoCallController->checkWebSiteId();
+		if($this->oPrediggoConfig->web_site_id_checked == true)
+			Configuration::updateValue('PREDIGGO_CONFIGURATION_OK', true);
+
 		if(!$this->oPrediggoConfig->save())
 			$this->_errors[] = $this->l('An error occurred while updating the main configuration settings');
 	}
