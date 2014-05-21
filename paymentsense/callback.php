@@ -506,6 +506,9 @@ if ($paymentsense->active)
 
 				/* Update order */
 				$paymentsense->validateOrder((int)$OrderID, $orderState, $orderTotal, $paymentsense->displayName, $szMessage, $AdditionalDetails, null, false, $customer->secure_key);
+
+				if($orderState == 2)
+					Configuration::updateValue('PAYMENTSENSE_CONFIGURATION_OK', true);
 			}
 			catch (Exception $e)
 			{
