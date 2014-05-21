@@ -40,7 +40,7 @@ class ecopresto extends Module{
 	{
 		$this->name = 'ecopresto';
 		$this->tab = 'shipping_logistics';
-		$this->version = 2.8;
+		$this->version = '2.9';
 		$this->need_instance = 0;
 		$this->author = 'Ether Création';
 		$this->displayName = $this->l('Drop shipping - Ecopresto');
@@ -118,7 +118,8 @@ class ecopresto extends Module{
 			return $res;
 		else
 		{
-			Configuration::updateValue('ECOPRESTO_CONFIGURATION_OK', true);
+			if($id_eco != 'demo123456789demo123456789demo12')
+				Configuration::updateValue('ECOPRESTO_CONFIGURATION_OK', true);
 			return true;
 		}
 	}
