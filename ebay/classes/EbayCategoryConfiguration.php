@@ -141,9 +141,9 @@ class EbayCategoryConfiguration
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_ebay_profile` = '.(int)$id_profile);
 	}
 
-	public static function updateByIdCategory($id_category, $data)
+	public static function updateByIdProfileAndIdCategory($id_profile, $id_category, $data)
 	{
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_category` = '.(int)$id_category);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_ebay_profile` = '.(int)$id_profile.' AND `id_category` = '.(int)$id_category);
 	}
 
 	public static function deleteByIdCategory($id_ebay_profile, $id_category)

@@ -1652,9 +1652,9 @@ class Ebay extends Module
 				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))
 				{
 					if ($data)
-						EbayCategoryConfiguration::updateByIdCategory($id_category, $data);
+						EbayCategoryConfiguration::updateByIdProfileAndIdCategory($this->ebay_profile->id, $id_category, $data);
 					else
-						EbayCategoryConfiguration::deleteByIdCategory($id_ebay_profile, $id_category);
+						EbayCategoryConfiguration::deleteByIdCategory($this->ebay_profile->id, $id_category);
 				}
 				elseif ($data)
 				{
@@ -2182,7 +2182,7 @@ class Ebay extends Module
 			{
 				EbayCategoryConfiguration::updateByIdProfile($this->ebay_profile->id, array('sync' => 0));
 				foreach (Tools::getValue('category') as $id_category)
-					EbayCategoryConfiguration::updateByIdCategory($id_category, array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 1));
+					EbayCategoryConfiguration::updateByIdProfileAndIdCategory($this->ebay_profile->id, $id_category, array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 1));
 			}
 		}
 	}
