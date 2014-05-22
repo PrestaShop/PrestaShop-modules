@@ -414,15 +414,6 @@
 
 		/* EVENTS */
 		bindElements();
-
-		var shipping_uiux = parseInt("{$shipping_uiux}");
-		var shipping_international_uiux = parseInt("{$shipping_international_uiux}");
-		if (shipping_uiux >= 1 && shipping_international_uiux >= 1)
-			$("#menuTab3").addClass('success');
-		else if (shipping_uiux >= 1)
-			$("#menuTab3").addClass('mind');
-		else
-			$("#menuTab3").addClass('wrong');
 	});
 
 
