@@ -1060,7 +1060,13 @@ class Ebay extends Module
 			'noConflicts' => $this->_path . 'views/js/jquery.noConflict.php?version=1.7.2',
 			'ebayjquery' => $this->_path . 'views/js/jquery-1.7.2.min.js',
 			'fancybox' => $this->_path . 'views/js/jquery.fancybox.min.js',
-			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css'
+			'fancyboxCss' => $this->_path . 'views/css/jquery.fancybox.css',
+			'parametersValidator' => EbayValidatorTab::getParametersTabConfiguration($this->ebay_profile->id),
+			'categoryValidator' => EbayValidatorTab::getCategoryTabConfiguration($this->ebay_profile->id),
+			'itemSpecificValidator' => EbayValidatorTab::getitemSpecificsTabConfiguration($this->ebay_profile->id),
+			'shippingValidator' => EbayValidatorTab::getShippingTabConfiguration($this->ebay_profile->id),
+			'synchronisationValidator' => EbayValidatorTab::getSynchronisationTabConfiguration($this->ebay_profile->id),
+			'templateValidator' => EbayValidatorTab::getTemplateTabConfiguration($this->ebay_profile->id),
 		));
 		
 		// test if multishop Screen and all shops
@@ -1320,10 +1326,6 @@ class Ebay extends Module
 		$user_profile = $ebay->getUserProfile(Configuration::get('EBAY_API_USERNAME'));
 
 
-		$account_setting = 0;
-		if (!empty($ebay_identifier) && !empty($ebayShopValue) && !empty($ebay_paypal_email) && !empty($shopPostalCode) && !empty($returns_policy_configuration) && !empty($ebayListingDuration) && !empty($sizedefault) && !empty($sizeBig) && !empty($sizesmall))
-			$account_setting = 1;
-
 		$smarty_vars = array(
 			'url' => $url,
 			'ebay_sign_in_url' => $ebay_sign_in_url,
@@ -1363,7 +1365,6 @@ class Ebay extends Module
 			'is_writable' => is_writable(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'log_file_exists' => file_exists(_PS_MODULE_DIR_.'ebay/log/request.txt'),
 			'activate_mails' => Configuration::get('EBAY_ACTIVATE_MAILS'),
-			'account_setting' => $account_setting,
 			'picture_per_listing' => $picture_per_listing,
 			'hasEbayBoutique' => isset($user_profile['StoreUrl']) && !empty($user_profile['StoreUrl']) ? true : false,
             'stats' => Configuration::get('EBAY_SEND_STATS')
@@ -1904,8 +1905,6 @@ class Ebay extends Module
 			'ebay_token' => $configs['EBAY_SECURITY_TOKEN'],
             'id_ebay_profile' => $this->ebay_profile->id,	
 			'newPrestashopZone' => $zones,
-			'shipping_uiux' => EbaySynchronizer::getNbSynchronizableEbayShipping(),
-			'shipping_international_uiux' => EbaySynchronizer::getNbSynchronizableEbayShippingInternational()
 		));
 
 		return $this->display(dirname(__FILE__), '/views/templates/hook/shipping.tpl');
@@ -1954,7 +1953,7 @@ class Ebay extends Module
 			'is_one_dot_three' => (substr(_PS_VERSION_, 0, 3) == '1.3'),
 			'is_one_dot_five' => version_compare(_PS_VERSION_, '1.5', '>'),
 			'theme_css_dir' => _THEME_CSS_DIR_,
-			'form_template_manager' => $ebay_product_template_title == '{TITLE}' ? 0 : 1
+			
 		);
 
 		if (substr(_PS_VERSION_, 0, 3) == '1.3')

@@ -57,6 +57,15 @@ class EbayShipping
 		return $shippings;
 	}
 
+	public static function internationalShippingsHaveZone($shippings)
+	{
+		foreach ($shippings as $shipping) {
+			if(!Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'ebay_shipping_international_zone WHERE id_ebay_shipping = '.$shipping['id_ebay_shipping']))
+				return false;
+		}
+		return true;
+	}
+
 	public static function getInternationalShippings($id_ebay_profile, $id_product = null)
 	{
 		$shippings = Db::getInstance()->ExecuteS('SELECT *

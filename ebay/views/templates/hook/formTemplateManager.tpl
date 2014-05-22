@@ -22,19 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<style>
-{literal}
-	#selectTagTemplate {
-		position: absolute;
-		left: 485px;
-		padding: 2px 0;
-	}
-	.mceIframeContainer iframe
-	{
-		width: 800px !important;
-	}
-{/literal}
-</style>
 <form action="{$action_url}" method="post" class="form" id="configForm3">
 	<fieldset style="border: 0">
 		<h4>{l s='Optimise your listing titles with tags:' mod='ebay'}</h4>
@@ -105,7 +92,10 @@
 						media_external_list_url : "lists/media_list.js",
 						elements : "nourlconvert",
 						convert_urls : false,
-						language : "{$language}"
+						language : "{$language}", 
+						init_instance_callback:function(){
+							$('#selectTagTemplate').appendTo('#ebay_product_template_toolbargroup');
+						}
 					{rdelim}});
 			</script>			
 		{elseif $is_one_dot_five}
@@ -115,18 +105,67 @@
 				var ad = '{$ad}';
 			</script>
 			<script type="text/javascript" src="{$base_uri}js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="{$base_uri}js/tinymce.inc.js"></script>
 			<script type="text/javascript">
 			{literal}
-				$(document).ready(function(){
-					tinySetup({
-						editor_selector :"rte",
-						theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull|cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,undo,redo",
-						theme_advanced_buttons2 : "link,unlink,anchor,image,cleanup,code,|,forecolor,backcolor,|,hr,removeformat,visualaid,|,charmap,media,|,ltr,rtl,|,fullscreen",
-						theme_advanced_buttons3 : "",
-						theme_advanced_buttons4 : ""
-					});
+				tinyMCE.init({
+					mode : "specific_textareas",
+					theme : "advanced",
+					skin:"cirkuit",
+					editor_selector : "rte",
+					editor_deselector : "noEditor",
+					plugins : "safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview",
+					// Theme options
+					theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
+					theme_advanced_buttons3 : "",
+					theme_advanced_buttons4 : "",
+					theme_advanced_toolbar_location : "top",
+					theme_advanced_toolbar_align : "left",
+					theme_advanced_statusbar_location : "bottom",
+					theme_advanced_resizing : false,
+			        content_css : pathCSS+"global.css",
+					document_batinyse_url : ad,
+					width: "600",
+					height: "auto",
+					font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
+					elements : "nourlconvert,ajaxfilemanager",
+					file_browser_callback : "ajaxfilemanager",
+					entity_encoding: "raw",
+					convert_urls : false,
+			        language : iso,
+			        setup : function(ed) {
+				      ed.onInit.add(function(ed) {
+				          $('#selectTagTemplate').appendTo('#ebay_product_template_toolbargroup');
+				      });
+				   }
+					
 				});
+
+				function ajaxfilemanager(field_name, url, type, win) {
+					var ajaxfilemanagerurl = ad+"/ajaxfilemanager/ajaxfilemanager.php";
+					switch (type) {
+						case "image":
+							break;
+						case "media":
+							break;
+						case "flash": 
+							break;
+						case "file":
+							break;
+						default:
+							return false;
+				}
+			    tinyMCE.activeEditor.windowManager.open({
+			        url: ajaxfilemanagerurl,
+			        width: 782,
+			        height: 440,
+			        inline : "yes",
+			        close_previous : "no"
+			    },{
+			        window : win,
+			        input : field_name
+			    });
+			}
 			{/literal}
 			</script>
 		{else}
@@ -136,13 +175,66 @@
 				var ad = '{$ad}';
 			</script>
 			<script type="text/javascript" src="{$ps_js_dir}/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="{$ps_js_dir}/tinymce.inc.js"></script>
 			<script>
-				tinyMCE.settings.selector = '.rte';
-				tinyMCE.settings.width = 850;
-				tinyMCE.settings.height = 800;
-				tinyMCE.settings.extended_valid_elements = "iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
-				tinyMCE.settings.extended_valid_elements = "link[href|type|rel|id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]";
+				tinyMCE.init({
+					mode : "specific_textareas",
+					theme : "advanced",
+					skin:"cirkuit",
+					editor_selector : "rte",
+					editor_deselector : "noEditor",
+					plugins : "safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview",
+					// Theme options
+					theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,,|,forecolor,backcolor",
+					theme_advanced_buttons3 : "",
+					theme_advanced_buttons4 : "",
+					theme_advanced_toolbar_location : "top",
+					theme_advanced_toolbar_align : "left",
+					theme_advanced_statusbar_location : "bottom",
+					theme_advanced_resizing : false,
+			        content_css : pathCSS+"global.css",
+					document_batinyse_url : ad,
+					width: "600",
+					height: "auto",
+					font_size_style_values : "8pt, 10pt, 12pt, 14pt, 18pt, 24pt, 36pt",
+					elements : "nourlconvert,ajaxfilemanager",
+					file_browser_callback : "ajaxfilemanager",
+					entity_encoding: "raw",
+					convert_urls : false,
+			        language : iso,
+			        setup : function(ed) {
+				      ed.onInit.add(function(ed) {
+				          $('#selectTagTemplate').appendTo('#ebay_product_template_toolbargroup');
+				      });
+				   }
+					
+				});
+
+				function ajaxfilemanager(field_name, url, type, win) {
+					var ajaxfilemanagerurl = ad+"/ajaxfilemanager/ajaxfilemanager.php";
+					switch (type) {
+						case "image":
+							break;
+						case "media":
+							break;
+						case "flash": 
+							break;
+						case "file":
+							break;
+						default:
+							return false;
+				}
+			    tinyMCE.activeEditor.windowManager.open({
+			        url: ajaxfilemanagerurl,
+			        width: 782,
+			        height: 440,
+			        inline : "yes",
+			        close_previous : "no"
+			    },{
+			        window : win,
+			        input : field_name
+			    });
+			}
 			</script>			
 		{/if}
 	</fieldset>
@@ -171,9 +263,5 @@
 	$('#selectTagTemplateTitle').bind('change', function(){
 		$('#ebay_product_template_title').val($('#ebay_product_template_title').val()+$(this).val())
 	});
-	var form_template_manager = parseInt("{$form_template_manager}");
-	if (form_template_manager == 1)
-		$("#menuTab4").addClass('success');
-	else
-		$("#menuTab4").addClass('mind');
+	
 </script>	

@@ -46,11 +46,6 @@
 			$('.regenerate_token_button').show();
 			$('.regenerate_token_click').hide();
 		{rdelim});
-		var account_setting = parseInt("{$account_setting}");
-		if (account_setting == 1)
-			$("#menuTab1").addClass('success');
-		else
-			$("#menuTab1").addClass('wrong');
 	})
 </script>
 
