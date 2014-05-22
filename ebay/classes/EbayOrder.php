@@ -523,14 +523,25 @@ class EbayOrder
 			'id_order_ref' => pSQL($this->id_order_ref),
 		));		
             
-		foreach ($this->id_orders as $id_shop => $id_order)
-		{
-			Db::getInstance()->insert('ebay_order_order', array(
-				'id_ebay_order' => $id_ebay_order,
-				'id_order'      => $id_order,
-				'id_shop'       => $id_shop
-			));
-		}
+        if(is_array($this->id_orders))
+        {
+			foreach ($this->id_orders as $id_shop => $id_order)
+			{
+				if (version_compare(_PS_VERSION_, '1.5', '>'))
+					Db::getInstance()->insert('ebay_order_order', array(
+						'id_ebay_order' => $id_ebay_order,
+						'id_order'      => $id_order,
+						'id_shop'       => $id_shop
+					));
+				else
+					$db->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
+						'id_ebay_order' => $id_ebay_order,
+						'id_order'      => $id_order,
+						'id_shop'       => $id_shop
+					), 'INSERT');
+
+			}
+        }
 	}
 
 	public function addErrorMessage($message)
