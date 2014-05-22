@@ -80,7 +80,7 @@
 		
 		if (currentName == 'internationalShipping')
 		{
-			createSelecstShipping += "<td style='visibility:hidden;clear:left;'><p>{l s='Select the countries you will ship to:' mod='ebay'}</p>";
+			createSelecstShipping += "<td style='visibility:hidden;clear:left;' class='shipping_destinations'><p>{l s='Select the countries you will ship to:' mod='ebay'}</p>";
 			createSelecstShipping += "<ul style='float:left'>";
 			{foreach from=$internationalShippingLocations item=shippingLocation name=loop}
 				if ({$smarty.foreach.loop.index%4} == 0 && {$smarty.foreach.loop.index} != 0)
@@ -102,11 +102,11 @@
 		// end extrafree
 
 		// trash
-		var atrash = $('<a style="cursor:pointer;">');
+		var atrash = $('<a class="ebay_trash">');
 		var imgtrash = $('<img>').attr('src', '../img/admin/delete.gif');
 		atrash.append(imgtrash)
 		atrash.click(function() {
-			$(this).parents('table').remove();
+			$(this).closest('table').remove();
 			return false;
 		});
 		var trash = $("<td style='visibility:hidden'>").append(atrash)
@@ -115,10 +115,10 @@
 		createSelecstShipping += "</tr>";
 		createSelecstShipping = $(createSelecstShipping).append(trash);
 		if (hasValues) {
-			createSelecstShipping = $("<table class='success' data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;background-color:#ddf2db'>").append(createSelecstShipping);
+			createSelecstShipping = $("<table data-nb='"+lastId+"' class='table'>").append(createSelecstShipping);
 		}
 		else {
-			createSelecstShipping = $("<table data-nb='"+lastId+"' class='table' style='width:100%;margin-bottom:20px;'>").append(createSelecstShipping);
+			createSelecstShipping = $("<table data-nb='"+lastId+"' class='table'>").append(createSelecstShipping);
 		}
 
 		current.append(createSelecstShipping);
@@ -152,7 +152,7 @@
 				}
 				else
 				{
-					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
+					var elementA = $('<a class="presta_shipping_text">');
 					elementA.append(contentA);
 					div.after(elementA);
 					elementA.click(function()
@@ -160,7 +160,7 @@
 						$(this).fadeOut(400, function(){
 							$(this).siblings('div').fadeIn();
 							tr.children('td').not(":first").css('visibility', 'hidden');
-							tr.parent('tbody').parent('table').css('background-color', '#fff').removeClass('success');
+							checkShippingConfiguration(tr.closest('table'));
 						});
 						return false;
 					});
@@ -177,23 +177,9 @@
 			tr.children('td').not(":first").css('visibility', 'hidden');
 		}
 
-		if(div.closest('#domesticShipping').length == 1) 
-		{
-			processEbayCarrier(div.parent().next().find('select'));
-			div.parent().next().find('a').eq(1).remove();
-		}
-		else if(div.closest('#internationalShipping').length == 1)
-		{
-			processEbayCarrier(div.parent().next().find('select'));
-			div.parent().next().find('a').eq(1).remove();
-			var nbInputChecked = div.parent().parent().find('input').filter(':checked').length;
-			if (nbInputChecked >= 1)
-				div.closest('table').css('background-color', '#ddf2db').addClass('success');
-			else
-			{
-				div.closest('table').css('background-color', '#fff').removeClass('success');
-			}
-		}
+		processEbayCarrier(div.parent().next().find('select'));
+		cleanShippings();
+		checkShippingConfiguration(div.closest('table'));
 
 
 	}
@@ -219,7 +205,7 @@
 				}
 				else
 				{
-					var elementA = $('<a style="text-decoration:underline;cursor:pointer;">');
+					var elementA = $('<a class="ebay_shipping_text">');
 					elementA.append(contentA);
 					div.after(elementA);
 					elementA.click(function()
@@ -229,23 +215,15 @@
 							$(this).siblings('div').fadeIn();
 						});
 						div.siblings('p').html(oldHtmlP);
-						tr.parent('tbody').parent('table').css('background-color', '#fff').removeClass('success');
+						checkShippingConfiguration(tr.closest('table'))
 						return false;
 					});
 				}
 				tr.children('td').css('visibility', 'visible');
 				div.siblings('p').html(newHtmlP);
-				if (idDivParent == "domesticShipping")
-				{
-					tr.parent('tbody').parent('table').css('background-color', '#ddf2db').addClass('success');
-					if ($("#"+idDivParent).children('.table').length == 1)
-					{
-						addShipping('domesticShipping');
-						$('#domesticShippingButton').show();
-					}
-				}
 			});
 		}
+		checkShippingConfiguration(tr.closest('table'))
 	}
 	//]]>
 
@@ -433,21 +411,6 @@
 			addShipping('internationalShipping');
 		{/foreach}
 
-		$('#menuTab3Sheet').click('#internationalShipping table ul li input', function(data){
-			var nbInputChecked = $(this).parent('li').parent('ul').parent('td').find('input').filter(':checked').length;
-			if (nbInputChecked >= 1)
-			{
-				$(this).parents('td').parents('table').css('background-color', '#ddf2db').addClass('success');
-				if ($("#internationalShipping").children('.table').length == 1)
-				{
-					addShipping('internationalShipping');
-				}
-			}
-			else
-			{
-				$(this).parents('td').parents('table').css('background-color', '#fff').removeClass('success');
-			}
-		});
 
 		/* EVENTS */
 		bindElements();
@@ -488,14 +451,78 @@
 				}
 			});
 		});
-		{/literal}
 
 			bindElements();
 
 		});
+		setTimeout(function(){
+			cleanShippings();
+			checkGlobalShippingConfiguration();
+		}, 500);
+		{/literal}
+
+	}
+
+	function cleanShippings()
+	{
+		$('#domesticShipping table tr').each(function(index, e){
+			$(e).find('a.ebay_shipping_text').eq(2).remove();
+		});
+		$('#internationalShipping table tr').each(function(index, e){
+			$(e).find('a.ebay_shipping_text').eq(2).remove();
+		});
+	}
+
+	function checkGlobalShippingConfiguration()
+	{
+		$('#domesticShipping table').each(function(index, e){
+			checkShippingConfiguration($(e));
+		});
+		$('#internationalShipping table').each(function(index, e){
+			checkShippingConfiguration($(e));
+		});
+	}
+
+	/**
+	 * Check if a configuration is well configured
+	 * @param  jQuery Element : Table} el
+	 * @param  Boolean isInternational [description]
+	 * @return Boolean                  [description]
+	 */
+	{literal}
+	function checkShippingConfiguration(el)
+	{
+		is_configured = true;
+		isInternational = true;
+		//Check if international or domestic shipping
+		if(el.closest('#domesticShipping').length == 1)
+			isInternational = false;
+
+		//Check shipping configuration
+		if(isInternational)
+		{
+			if(el.find('input').filter(':checked').length == 0)
+				is_configured = false;
+		}
+		
+		if(el.find('.prestaCarrier').val() == '')
+			is_configured = false;
+
+		if(el.find('.eBayCarrier').val() == '')
+			is_configured = false;
+
+		if(is_configured)
+			el.removeClass('shipping_not_configured').addClass('shipping_configured');
+		else
+			el.removeClass('shipping_configured').addClass('shipping_not_configured');
+
+
+		bindElements();
+		return is_configured;
 
 
 	}
+	{/literal}
 
 	function bindElements()
 	{literal}{{/literal}
@@ -539,10 +566,15 @@
 
 		$('#domesticShippingButton, #internationalShippingButton').unbind().click(function(){
 			addShipping($(this).attr('id').replace('Button', ''));
+			checkGlobalShippingConfiguration();
 			return false;
+		});
+
+		{literal}
+		$('.shipping_destinations input').unbind().click(function(el){
+			checkShippingConfiguration($(this).closest('table'));
 		})
-
-
+		{/literal}
 	}
 </script>
 <style>
@@ -680,7 +712,7 @@
 	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='You must specify at least one domestic shipping method. ' mod='ebay'}">{l s='Domestic shipping' mod='ebay'}</span></legend>
 	
 	<div id="domesticShipping"></div>
-	<a id="domesticShippingButton" {if $existingNationalCarrier|count == 0}style="display:none"{/if} class="button bold"><img src="../img/admin/add.gif">{l s='Add new domestic carrier' mod='ebay'}</a>
+	<a id="domesticShippingButton" class="button bold"><img src="../img/admin/add.gif">{l s='Add new domestic carrier' mod='ebay'}</a>
 </fieldset>
 
 <fieldset style="margin-top:10px">

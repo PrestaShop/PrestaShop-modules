@@ -389,6 +389,7 @@ textarea + .tooltip {
 	margin-left: 0;
 }
 
+
 #menuTab2Sheet #pagination li.prev,
 #menuTab2Sheet #pagination li.next
 {
@@ -408,7 +409,35 @@ textarea + .tooltip {
 	padding-left: 45px;
 }
 
+.shipping_destinations ul, .shipping_destinations ul li{
+	list-style:none;
+}
+
+#ebay_trash
+{
+	cursor:pointer;
+}
+
+.ebay_shipping_text, .presta_shipping_text
+{
+	text-decoration:underline;cursor:pointer;
+}
+
+.shipping_configured
+{
+	width: 100%; 
+	margin-bottom: 20px; 
+	background-color: rgb(221, 242, 219);
+}
+
+.shipping_not_configured
+{
+	width:100%;
+	margin-bottom:20px;
+	background-color:#FFF;
+}
+
 #domesticShipping td.big-linked, #internationalShipping td.big-linked
 {
-	background-position: 0 55px;
+	background-position: left center;
 }
