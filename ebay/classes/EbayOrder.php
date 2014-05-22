@@ -92,6 +92,8 @@ class EbayOrder
 				$this->phone = '0100000000';
 		else
 			$this->phone = $phone;
+        
+        $this->id_orders = array();
 
 		$date = substr((string)$order_xml->CreatedTime, 0, 10).' '.substr((string)$order_xml->CreatedTime, 11, 8);
 		$this->date = $date;
@@ -221,18 +223,12 @@ class EbayOrder
         $id_products = $this->getProductIds();
         
 		// group products by shop
-        /*
-		$sql = 'SELECT ps.`id_product`, ps.`id_shop`, ep.`id_ebay_profile`
-		FROM `'._DB_PREFIX_.'product_shop` ps
-		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
-		ON ps.`id_shop` = ep.`id_shop`
-		WHERE ps.`id_product` IN ('.implode(',', $id_products).')';
-        */
 		$sql = 'SELECT epr.`id_product`, ep.`id_shop`, epr.`id_ebay_profile`
 		FROM `'._DB_PREFIX_.'ebay_product` epr
 		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
 		ON epr.`id_ebay_profile` = ep.`id_ebay_profile`
-		WHERE epr.`id_product` IN ('.implode(',', $id_products).')';
+		WHERE epr.`id_product` IN ('.implode(',', $id_products).')
+        GROUP BY epr.`id_product` , ep.`id_shop` , epr.`id_ebay_profile`';
 
 		$res = array();
 		foreach(Db::getInstance()->executeS($sql) as $row) {
@@ -282,7 +278,7 @@ class EbayOrder
 		$cart->recyclable = 0;
 		$cart->gift = 0;
 		$cart->add();
-
+        
 		$this->carts[$ebay_profile->id_shop] = $cart;
 
 		return $cart;
@@ -300,25 +296,24 @@ class EbayOrder
 		$cart_nb_products = 0;
 
         $products_by_shop = $this->getProductsAndProfileByShop();
-
-        if(isset($product_list[$ebay_profile->id_shop]))
+        
+        if(isset($products_by_shop[$ebay_profile->id_shop]))
         	$product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
         else
         	$product_list = array();
-		
+
 		foreach ($product_list as $id_product)
 		{
             foreach($this->product_list as $product)
                 if ($id_product == $product['id_product'])
                     break;
-            
 			// check if product is in this cart
 //			if (!count($this->carts[$ebay_profile->id_shop]->getProducts(false, $product['id_product'])))
 //				continue;
 			
 			$prod = new Product($product['id_product'], false, $id_lang);
 			$minimal_quantity = empty($product['id_product_attribute']) ? $prod->minimal_quantity : (int)Attribute::getAttributeMinimalQty($product['id_product_attribute']);
-
+            
 			if ($product['quantity'] >= $minimal_quantity)
 			{
 				$id_product_attribute = empty($product['id_product_attribute']) ? null : $product['id_product_attribute'];
@@ -360,9 +355,6 @@ class EbayOrder
 	{
 		$customer = new Customer($this->id_customers[$id_shop]);
 		$paiement = new EbayPayment();
-
-        var_dump($this->carts[$id_shop]);
-        var_dump($this->id_orders[$id_shop]);
 
 		$paiement->validateOrder(
 			(int)$this->carts[$id_shop]->id,
