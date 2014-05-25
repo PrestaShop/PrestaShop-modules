@@ -98,6 +98,6 @@
 
 2014-05-20
 ----
-1) Ensure app key exist before loading any fornt end hook.
+1) Ensure app key exist before loading any front end hook.
    
   
