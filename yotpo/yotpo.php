@@ -23,7 +23,7 @@ class Yotpo extends Module
 		$version_test = $version_mask[0] > 0 && $version_mask[1] > 4;
 		$this->name = 'yotpo';
 		$this->tab = $version_test ? 'advertising_marketing' : 'Reviews';
-		$this->version = '1.4';
+		$this->version = '1.4.1';
 		if ($version_test)
 			$this->author = 'Yotpo';
 		$this->need_instance = 1;
@@ -116,23 +116,29 @@ class Yotpo extends Module
 
 	public function hookheader()
 	{
-		$smarty = $this->context->smarty;
-		$smarty->assign(array('yotpoAppkey' => Configuration::get('yotpo_app_key'), 
-							  'yotpoDomain' => $this->getShopDomain(),
-							  'yotpoLanguage' => $this->getLanguage()));
-		
-		if(isset($this->context->controller)) {
-			$this->context->controller->addJS(($this->_path).'/js/headerScript.js');
-		}
-		else {
-			return '<script type="text/javascript" src="'.$this->_path.'/js/headerScript.js"></script>';				
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			$smarty = $this->context->smarty;
+			$smarty->assign(array('yotpoAppkey' => $app_key, 
+								  'yotpoDomain' => $this->getShopDomain(),
+								  'yotpoLanguage' => $this->getLanguage()));
+			
+			if(isset($this->context->controller)) {
+				$this->context->controller->addJS(($this->_path).'/js/headerScript.js');
+			}
+			else {
+				return '<script type="text/javascript" src="'.$this->_path.'/js/headerScript.js"></script>';				
+			}
 		}
 	}
 
 	public function hookproductfooter($params)
 	{
-		$widgetLocation = Configuration::get('yotpo_widget_location');
-		return ($widgetLocation == 'footer' || $widgetLocation == 'other') ? $this->showWidget($params['product']) : null;
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			$widgetLocation = Configuration::get('yotpo_widget_location');
+			return ($widgetLocation == 'footer' || $widgetLocation == 'other') ? $this->showWidget($params['product']) : null;			
+		}
 	}
 
 	public function hookpostUpdateOrderStatus($params)
@@ -147,30 +153,42 @@ class Yotpo extends Module
 
 	public function hookProductTab()
 	{
-		if ($this->parseProductId() != null && Configuration::get('yotpo_widget_location') == 'tab') {
-			if (version_compare(_PS_VERSION_, '1.6') >= 0) {
-				return '<h3 class="page-product-heading"><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></h3>';	
-			}
-			return '<li><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></li>';
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			if ($this->parseProductId() != null && Configuration::get('yotpo_widget_location') == 'tab') {
+				if (version_compare(_PS_VERSION_, '1.6') >= 0) {
+					return '<h3 class="page-product-heading"><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></h3>';	
+				}
+				return '<li><a href="#idTab-yotpo">'.Configuration::get('yotpo_widget_tab_name').'</a></li>';
+			}		
 		}
 		return null;
 	}
 
 	public function hookProductTabContent()
 	{
-		$product = $this->getPageProduct(null);
-		if ($product != null && Configuration::get('yotpo_widget_location') == 'tab')
-			return '<div id="idTab-yotpo">'.$this->showWidget($product).'</div>';
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			$product = $this->getPageProduct(null);
+			if ($product != null && Configuration::get('yotpo_widget_location') == 'tab')
+				return '<div id="idTab-yotpo">'.$this->showWidget($product).'</div>';
+		}
 	}
 
 	public function hookextraLeft()
 	{
-		return $this->showBottomLine('left_column');	
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			return $this->showBottomLine('left_column');	
+		}			
 	}
 	
 	public function hookextraRight()
-	{		
-		return $this->showBottomLine('right_column');	
+	{	
+		$app_key = Configuration::get('yotpo_app_key');
+		if(isset($app_key) && !empty($app_key)) {
+			return $this->showBottomLine('right_column');	
+		}				
 	}
 		
 	public function hookorderConfirmation($params)
