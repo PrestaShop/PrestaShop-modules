@@ -72,6 +72,10 @@ function upgrade_module_1_7($module)
         else
         {
     		$returns_policy_configuration = new EbayReturnsPolicyConfiguration();
+            $returns_policy_configuration->ebay_returns_within = Configuration::get('EBAY_RETURNS_WITHIN');
+            $returns_policy_configuration->ebay_returns_who_pays = Configuration::get('EBAY_RETURNS_WHO_PAYS');
+            $returns_policy_configuration->ebay_returns_description = Configuration::get('EBAY_RETURNS_DESCRIPTION');
+            $returns_policy_configuration->ebay_returns_accepted_option = Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION');            
     		$returns_policy_configuration->save();		
     		$profile->id_ebay_returns_policy_configuration = $returns_policy_configuration->id;            
         }
@@ -92,10 +96,6 @@ function upgrade_module_1_7($module)
 		'EBAY_LISTING_DURATION',
 		'EBAY_AUTOMATICALLY_RELIST',
 		'EBAY_LAST_RELIST',
-		'EBAY_RETURNS_DESCRIPTION',
-		'EBAY_RETURNS_ACCEPTED_OPTION',
-		'EBAY_RETURNS_WITHIN',
-		'EBAY_RETURNS_WHO_PAYS',
 		'EBAY_SYNC_PRODUCTS_MODE',
 		'EBAY_ZONE_NATIONAL',
 		'EBAY_ZONE_INTERNATIONAL',
@@ -108,7 +108,9 @@ function upgrade_module_1_7($module)
         'EBAY_PAYPAL_EMAIL'
 	);
 	EbayConfiguration::PSConfigurationsToEbayConfigurations($id_default_ebay_profile, $configurations_to_update);
-	foreach($configurations_to_update as $name)
+
+    $configurations_to_delete = array_merge($configurations_to_update, array('EBAY_RETURNS_DESCRIPTION', 'EBAY_RETURNS_ACCEPTED_OPTION', 'EBAY_RETURNS_WITHIN', 'EBAY_RETURNS_WHO_PAYS'));
+	foreach($configurations_to_delete as $name)
 		Configuration::deleteByName($name);
 	
 	// ebay_category_configuration table
