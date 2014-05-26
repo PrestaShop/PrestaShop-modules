@@ -1318,7 +1318,7 @@ class Ebay extends Module
 		
 		$ebay_paypal_email = Tools::safeOutput(Tools::getValue('ebay_paypal_email', $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL')));
 		$shopPostalCode = Tools::safeOutput(Tools::getValue('ebay_shop_postalcode', $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE')));
-		$ebayListingDuration = $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION');
+		$ebayListingDuration = $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION') ? $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION') : 'GTC';
 		$sizedefault = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_DEFAULT');
 		$sizeBig = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_BIG');
 		$sizesmall = (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL');
@@ -1343,7 +1343,6 @@ class Ebay extends Module
 			'ebayShop' => $this->ebay_profile->getConfiguration('EBAY_SHOP'),
 			'ebay_paypal_email' => Tools::safeOutput(Tools::getValue('ebay_paypal_email', $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'))),
 			'returnsConditionAccepted' => Tools::getValue('ebay_returns_accepted_option', $returns_policy_configuration->ebay_returns_accepted_option),
-			'ebayListingDuration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'automaticallyRelist' => $this->ebay_profile->getConfiguration('EBAY_AUTOMATICALLY_RELIST'),
 			'ebay_paypal_email' => $ebay_paypal_email,
 			'returnsConditionAccepted' => $returnsConditionAccepted,
