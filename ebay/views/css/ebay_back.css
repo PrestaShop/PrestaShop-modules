@@ -349,8 +349,8 @@ textarea + .tooltip {
 #content .warning.big.tips {
 	background : url('../img/tips.png') no-repeat 2px 50% #fff;
 }
-#content .warning.big, #content .ebay_mind.big, #content .ebay_error{
-	padding: 10px 20px 10px 60px;
+#content .warning.big, #content .ebay_mind.big, #content .ebay_wrong{
+	padding: 20px 20px 20px 60px;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #fff;
 	width: 100%;
@@ -362,7 +362,7 @@ textarea + .tooltip {
 	margin-bottom:10px;
 }
 
-#content .ebay_error.big{
+#content .ebay_wrong.big{
 	background : url('../img/big-error.png') no-repeat 2px 50% #fff;;
 }
 

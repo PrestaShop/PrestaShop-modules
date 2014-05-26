@@ -244,7 +244,6 @@ class Ebay extends Module
 		// Picture size
 		self::installPicturesSettings($this);
 
-		$this->installUpgradeOneFour();
 
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
@@ -277,6 +276,9 @@ class Ebay extends Module
     		$profile->setConfiguration('EBAY_DELIVERY_TIME', 2);
     		$profile->setConfiguration('EBAY_ACTIVATE_LOGS', '0');
     		$profile->setConfiguration('EBAY_ACTIVATE_MAILS', '0');
+    		$profile->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
+			$profile->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
+			$profile->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
 		}		
 	}
 
@@ -408,15 +410,6 @@ class Ebay extends Module
 		$this->context->cookie->eBayUsername = '';
 
 		return true;
-	}
-
-	public function installUpgradeOneFour()
-	{
-		$this->ebay_profile->setConfiguration('EBAY_LISTING_DURATION', 'GTC');
-		$this->ebay_profile->setConfiguration('EBAY_AUTOMATICALLY_RELIST', 'on');
-		$this->ebay_profile->setConfiguration('EBAY_LAST_RELIST', date('Y-m-d'));
-//		$this->ebay_profile->setConfiguration('EBAY_RETURNS_DESCRIPTION', '');
-//		$this->ebay_profile->setConfiguration('EBAY_RETURNS_ACCEPTED_OPTION', 'ReturnsAccepted');
 	}
 
 	private function _upgrade()
