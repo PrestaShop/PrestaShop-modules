@@ -56,7 +56,8 @@ $classes_to_load = array(
     'EbayProductModified',
     'EbayLog',
     'EbayStat',
-    'TotFormat'
+    'TotFormat',
+    'EbayValidatorTab',
 );
 
 foreach ($classes_to_load as $classname)
