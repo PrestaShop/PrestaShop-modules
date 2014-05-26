@@ -1634,7 +1634,7 @@ class Ebay extends Module
 				}
 				if (isset($ebay_categories[$id_category]))
 					$data = array(
-						'id_ebay_profile' => $this->ebay_profile->id,
+						'id_ebay_profile' => Tools::getValue('profile') ? Tools::getValue('profile') : $this->ebay_profile->id,
 						'id_country' => 8,
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,

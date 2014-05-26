@@ -64,12 +64,12 @@ class EbayConfiguration
 			AND `name` = "'.pSQL($name).'"');
 	}
 	
-	public static function set($id_ebay_profile, $name, $value)
+	public static function set($id_ebay_profile, $name, $value, $html = false)
 	{
 		return Db::getInstance()->insert('ebay_configuration', array(
 			'id_ebay_profile' => $id_ebay_profile,
 			'name'						=> pSQL($name),
-			'value'						=> pSQL($value)
+			'value'						=> pSQL($value, $html)
 		), false, true, Db::REPLACE);
 	}	
 	
@@ -88,7 +88,7 @@ class EbayConfiguration
 	 *
 	 * @return boolean
 	 */	
-	public static function PSConfigurationsToEbayConfigurations($id_ebay_profile, $attributes)
+	public static function PSConfigurationsToEbayConfigurations($id_ebay_profile, $attributes, $attributes_html)
 	{
 		foreach($attributes as $name)
 		{
@@ -96,6 +96,13 @@ class EbayConfiguration
 			$ebay_value = EbayConfiguration::get($id_ebay_profile, $name);
 			if ($ps_value && !$ebay_value)
 				EbayConfiguration::set($id_ebay_profile, $name, $ps_value);
+		}
+		foreach($attributes_html as $name)
+		{
+			$ps_value = Configuration::get($name);
+			$ebay_value = EbayConfiguration::get($id_ebay_profile, $name);
+			if ($ps_value && !$ebay_value)
+				EbayConfiguration::set($id_ebay_profile, $name, $ps_value, true);
 		}
 	}
 

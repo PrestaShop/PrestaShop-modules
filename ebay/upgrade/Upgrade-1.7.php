@@ -83,31 +83,37 @@ function upgrade_module_1_7($module)
 		
 		if ($id_shop_default == $id_shop)
 			$id_default_ebay_profile = $profile->id;
+		
+		$configurations_to_update = array(
+			'EBAY_COUNTRY_DEFAULT',
+			'EBAY_ORDER_LAST_UPDATE',
+			'EBAY_DELIVERY_TIME',
+			'EBAY_PICTURE_SIZE_DEFAULT',
+			'EBAY_PICTURE_SIZE_SMALL',
+			'EBAY_PICTURE_SIZE_BIG',
+			'EBAY_LISTING_DURATION',
+			'EBAY_AUTOMATICALLY_RELIST',
+			'EBAY_LAST_RELIST',
+			'EBAY_SYNC_PRODUCTS_MODE',
+			'EBAY_ZONE_NATIONAL',
+			'EBAY_ZONE_INTERNATIONAL',
+			'EBAY_SHOP',
+			'EBAY_SHOP_POSTALCODE',
+			'EBAY_SYNC_OPTION_RESYNC',
+			'EBAY_SYNC_MODE',
+			'EBAY_SYNC_LAST_PRODUCT',
+	        'EBAY_SPECIFICS_LAST_UPDATE',
+	        'EBAY_PAYPAL_EMAIL'
+		);
+
+		$configuration_to_update_html = array(
+			'EBAY_PRODUCT_TEMPLATE',
+		);
+		EbayConfiguration::PSConfigurationsToEbayConfigurations($profile->id, $configurations_to_update, $configuration_to_update_html);
+
+		$profile->setConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE', '{TITLE}');
 	}
 	
-	$configurations_to_update = array(
-		'EBAY_COUNTRY_DEFAULT',
-		'EBAY_PRODUCT_TEMPLATE',
-		'EBAY_ORDER_LAST_UPDATE',
-		'EBAY_DELIVERY_TIME',
-		'EBAY_PICTURE_SIZE_DEFAULT',
-		'EBAY_PICTURE_SIZE_SMALL',
-		'EBAY_PICTURE_SIZE_BIG',
-		'EBAY_LISTING_DURATION',
-		'EBAY_AUTOMATICALLY_RELIST',
-		'EBAY_LAST_RELIST',
-		'EBAY_SYNC_PRODUCTS_MODE',
-		'EBAY_ZONE_NATIONAL',
-		'EBAY_ZONE_INTERNATIONAL',
-		'EBAY_SHOP',
-		'EBAY_SHOP_POSTALCODE',
-		'EBAY_SYNC_OPTION_RESYNC',
-		'EBAY_SYNC_MODE',
-		'EBAY_SYNC_LAST_PRODUCT',
-        'EBAY_SPECIFICS_LAST_UPDATE',
-        'EBAY_PAYPAL_EMAIL'
-	);
-	EbayConfiguration::PSConfigurationsToEbayConfigurations($id_default_ebay_profile, $configurations_to_update);
 
     $configurations_to_delete = array_merge($configurations_to_update, array('EBAY_RETURNS_DESCRIPTION', 'EBAY_RETURNS_ACCEPTED_OPTION', 'EBAY_RETURNS_WITHIN', 'EBAY_RETURNS_WHO_PAYS'));
 	foreach($configurations_to_delete as $name)
