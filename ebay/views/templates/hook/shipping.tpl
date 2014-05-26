@@ -457,10 +457,10 @@
 	function cleanShippings()
 	{
 		$('#domesticShipping table tr').each(function(index, e){
-			$(e).find('a.ebay_shipping_text').eq(2).remove();
+			$(e).find('a.ebay_shipping_text').eq(1).remove();
 		});
 		$('#internationalShipping table tr').each(function(index, e){
-			$(e).find('a.ebay_shipping_text').eq(2).remove();
+			$(e).find('a.ebay_shipping_text').eq(1).remove();
 		});
 	}
 
