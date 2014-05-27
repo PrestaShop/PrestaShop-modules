@@ -95,8 +95,15 @@ function setCustomerAddress($ppec, $customer, $id = null)
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
-	$address->id_state = (int)State::getIdByIso($ppec->result['SHIPTOSTATE'], $address->id_country);
+
+	if (Country::containsStates($address->id_country))
+		$address->id_state = (int)State::getIdByIso($ppec->result['SHIPTOSTATE'], $address->id_country);
+
 	$address->postcode = $ppec->result['SHIPTOZIP'];
+	
+	if (isset($ppec->result['SHIPTOPHONENUM']))
+		$address->phone = $ppec->result['SHIPTOPHONENUM'];
+	
 	$address->id_customer = $customer->id;
 	return $address;
 }
