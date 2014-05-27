@@ -45,7 +45,7 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 				$this->_paymentStandard();
 			
 			/* Case 2 - This script is called by PayPal to validate an order placed using PayPal Payments Advanced (from the <iframe>) */
-			elseif ((Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') || Configuration::get('PAYPAL_USA_PAYFLOW_LINK'))&& isset($_POST['RESULT']) && Tools::getValue('TYPE') == 'S' && Tools::getValue('PNREF') != '')
+			elseif ((Configuration::get('PAYPAL_USA_PAYMENT_ADVANCED') || Configuration::get('PAYPAL_USA_PAYFLOW_LINK')))
 				$this->_paymentAdvanced();
 		}
 	}
@@ -177,8 +177,13 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 	 */
 	private function _paymentAdvanced()
 	{
+		$valid_token = isset($this->context->cookie->paypal_advanced_token) && Tools::getValue('SECURETOKEN') != '' &&
+		Tools::getValue('SECURETOKEN') == $this->context->cookie->paypal_advanced_token;
+		
+		$result_type_ok = Tools::getValue('RESULT') != '' && Tools::getValue('TYPE') == 'S' && Tools::getValue('PNREF') != '';
+	
 		/* Step 1 - The tokens sent by PayPal must match the ones stores in the customer cookie while displaying the <iframe> (see hookPayment() method in paypalusa.php)  */
-		if (isset($this->context->cookie->paypal_advanced_token) && Tools::getValue('SECURETOKEN') != '' && Tools::getValue('SECURETOKEN') == $this->context->cookie->paypal_advanced_token)
+		if ($valid_token && $result_type_ok)
 		{
 			/* Step 2 - Determine the order status in accordance with the response from PayPal */
 			
@@ -237,7 +242,16 @@ class PayPalUSAValidationModuleFrontController extends ModuleFrontController
 		}
 		else
 		{
-			$this->context->smarty->assign('paypal_usa_error_messages', array($this->paypal_usa->l('Invalid PayPal token')));
+			$errors = array();
+
+			if (!$valid_token)
+				$errors[] = $this->paypal_usa->l('Invalid PayPal token');
+			if (!$result_type_ok && Tools::getValue('RESPMSG') != '')
+				$errors[] = $this->paypal_usa->l(Tools::safeOutput(Tools::getValue('RESPMSG')));
+			if (!count($errors))
+				$errors[] = $this->paypal_usa->l('Unknown error');
+		
+			$this->context->smarty->assign('paypal_usa_error_messages', $errors);
 			$this->setTemplate('errors-messages.tpl');
 		}
 	}
