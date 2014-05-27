@@ -995,11 +995,11 @@ class EbaySynchronizer
 	 * Returns the item specifics that correspond to a variation and not to the product in general
 	 *
 	 **/
-	public static function _getVariationSpecifics($product_id, $product_attribute_id, $id_lang)
+	public static function _getVariationSpecifics($product_id, $product_attribute_id, $id_lang, $ebay_category = false)
 	{
 		$variation_specifics_pairs = array();
 
-		$attributes_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$sql = '
 			SELECT IF(ecs.name is not null, ecs.name, agl.name) AS name, al.name AS value
 			FROM '._DB_PREFIX_.'product_attribute_combination pac
 			JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang='.(int)$id_lang.')
@@ -1010,8 +1010,12 @@ class EbaySynchronizer
 			AND agl.id_lang = '.(int)$id_lang.'
 			LEFT JOIN '._DB_PREFIX_.'ebay_category_specific ecs
 			ON a.id_attribute_group = ecs.id_attribute_group
-			WHERE pac.id_product_attribute='.(int)$product_attribute_id);
+			WHERE pac.id_product_attribute='.(int)$product_attribute_id;
 
+		if($ebay_category !== false)
+			$sql .= '  AND ecs.id_category_ref = '.(int)$ebay_category->getIdCategoryRef();
+
+		$attributes_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$variation_specifics_pairs = array();
 
 		foreach ($attributes_values as $attribute_value)
