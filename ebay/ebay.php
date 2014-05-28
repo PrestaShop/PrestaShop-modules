@@ -313,10 +313,10 @@ class Ebay extends Module
 	public static function installPicturesSettings($module) {
 
 		// Default
-		if ($default = ImageType::getByNameNType('medium', 'products')) {
+		if ($default = ImageType::getByNameNType('thickbox', 'products')) {
 			$sizeMedium = (int) $default['id_image_type'];
 		} 
-		else if ($medium = ImageType::getByNameNType('medium_default', 'products')) {
+		else if ($medium = ImageType::getByNameNType('thickbox_default', 'products')) {
 			$sizeMedium = (int) $default['id_image_type'];
 		}
 		else {
