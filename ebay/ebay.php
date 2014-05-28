@@ -672,7 +672,13 @@ class Ebay extends Module
             $customer_ids = array();
             if ($has_shared_customers)
             {
-                $ebay_profile = EbayProfile::getCurrent();                
+                // in case of shared customers in multishop, we take the profile of the first shop
+                if ($this->is_multishop) {
+                    $shop_data = reset($shops_data);
+                    $ebay_profile = new EbayProfile($shop_data['id_ebay_profiles'][0]);
+                }
+                else
+                    $ebay_profile = EbayProfile::getCurrent();
     			$id_customer = $order->getOrAddCustomer($ebay_profile);
     			$id_address = $order->updateOrAddAddress($ebay_profile);
                 $customer_ids[] = $id_customer;
@@ -692,7 +698,7 @@ class Ebay extends Module
 					$ebay_profile = new EbayProfile($id_ebay_profile);				    
 				} else
 					$ebay_profile = EbayProfile::getCurrent();
-                
+
                 if (!$has_shared_customers)
                 {
         			$id_customer = $order->getOrAddCustomer($ebay_profile);
@@ -708,7 +714,7 @@ class Ebay extends Module
                 }
 				
 				$cart = $order->addCart($ebay_profile, $this->ebay_country); //Create a Cart for the order
-
+                
 				if (!$order->updateCartQuantities($ebay_profile)) // if products in the cart
 				{
 					$order->deleteCart($ebay_profile->id_shop);
