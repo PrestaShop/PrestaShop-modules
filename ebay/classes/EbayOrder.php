@@ -220,22 +220,29 @@ class EbayOrder
 	
 	public function getProductsAndProfileByShop()
 	{
-        $id_products = $this->getProductIds();
+        $res = array();
+        foreach($this->product_list as $product) {
+            if ($product['id_ebay_profile'])
+                $id_ebay_profile = $product['id_ebay_profile'];
+            else {
+        		$sql = 'SELECT epr.`id_ebay_profile`
+        		FROM `'._DB_PREFIX_.'ebay_product` epr
+        		WHERE epr.`id_product` = '.(int)$product['id_product'];
+                $id_ebay_profile = (int)Db::getInstance()->getValue($sql);
+            }
+            $ebay_profile = new EbayProfile($id_ebay_profile);
+            
+            if (!isset($res[$ebay_profile->id_shop])) {
+                $res[$ebay_profile->id_shop] = array(
+                    'id_ebay_profiles' => array($id_ebay_profile),
+                    'id_products'      => array()
+                );
+            } elseif (!in_array($id_ebay_profile, $res[$ebay_profile->id_shop]['id_ebay_profiles']))
+                $res[$ebay_profile->id_shop]['id_ebay_profiles'][] = $id_ebay_profile;
+            
+            $res[$ebay_profile->id_shop]['id_products'][] = $product['id_product'];
+        }
         
-		// group products by shop
-		$sql = 'SELECT epr.`id_product`, ep.`id_shop`, epr.`id_ebay_profile`
-		FROM `'._DB_PREFIX_.'ebay_product` epr
-		INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
-		ON epr.`id_ebay_profile` = ep.`id_ebay_profile`
-		WHERE epr.`id_product` IN ('.implode(',', $id_products).')
-        GROUP BY epr.`id_product` , ep.`id_shop` , epr.`id_ebay_profile`';
-
-		$res = array();
-		foreach(Db::getInstance()->executeS($sql) as $row) {
-			$res[$row['id_shop']]['id_ebay_profiles'][] = $row['id_ebay_profile'];
-			$res[$row['id_shop']]['id_products'][] = $row['id_product'];			
-		}
-		
 		return $res;
 	}
 
@@ -534,7 +541,7 @@ class EbayOrder
 						'id_shop'       => $id_shop
 					));
 				else
-					$db->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
 						'id_ebay_order' => $id_ebay_order,
 						'id_order'      => $id_order,
 						'id_shop'       => $id_shop
@@ -589,16 +596,20 @@ class EbayOrder
 		return $this->date;
 	}
 
-	private function _parseSku($sku, $id_product, $id_product_attribute)
+	private function _parseSku($sku, $id_product, $id_product_attribute, $id_ebay_profile)
 	{
 		$data = explode('-', (string)$sku);
 
 		if (isset($data[1]))
 			$id_product = $data[1];
-		if (isset($data[2]))
-			$id_product_attribute = $data[2];
+		if (isset($data[2])) {
+            $data2 = explode('_', $data[2]);
+			$id_product_attribute = $data2[0];
+            if (isset($data2[1]))
+                $id_ebay_profile = (int)$data2[1];
+		}
 
-		return array($id_product, $id_product_attribute);
+		return array($id_product, $id_product_attribute, $id_ebay_profile);
 	}
 
 	private function _formatShippingAddressName($name)
@@ -644,13 +655,14 @@ class EbayOrder
 		{
 			$id_product = 0;
 			$id_product_attribute = 0;
+            $id_ebay_profile = 0;
 			$quantity = (string)$transaction->QuantityPurchased;
 
 			if (isset($transaction->Item->SKU))
-				list($id_product, $id_product_attribute) = $this->_parseSku($transaction->Item->SKU, $id_product, $id_product_attribute);
+				list($id_product, $id_product_attribute, $id_ebay_profile) = $this->_parseSku($transaction->Item->SKU, $id_product, $id_product_attribute, $id_ebay_profile);
 
 			if (isset($transaction->Variation->SKU))
-				list($id_product, $id_product_attribute) = $this->_parseSku($transaction->Variation->SKU, $id_product, $id_product_attribute);
+				list($id_product, $id_product_attribute, $id_ebay_profile) = $this->_parseSku($transaction->Variation->SKU, $id_product, $id_product_attribute, $id_ebay_profile);
 
 			$id_product = (int)Db::getInstance()->getValue('SELECT `id_product`
 				FROM `'._DB_PREFIX_.'product`
@@ -660,11 +672,12 @@ class EbayOrder
 				FROM `'._DB_PREFIX_.'product_attribute`
 				WHERE `id_product` = '.(int)$id_product.'
 				AND `id_product_attribute` = '.(int)$id_product_attribute);
-
+            
 			if ($id_product)
 				$products[] = array(
 					'id_product' => $id_product,
 					'id_product_attribute' => $id_product_attribute,
+                    'id_ebay_profile' => $id_ebay_profile,
 					'quantity' => $quantity,
 					'price' => (string)$transaction->TransactionPrice);
 			else
@@ -681,6 +694,7 @@ class EbayOrder
 						$products[] = array(
 							'id_product' => $id_product,
 							'id_product_attribute' => 0,
+                            'id_ebay_profile' => 0,
 							'quantity' => $quantity,
 							'price' => (string)$transaction->TransactionPrice);
 					else
@@ -693,13 +707,14 @@ class EbayOrder
 							$products[] = array(
 								'id_product' => (int)$row['id_product'],
 								'id_product_attribute' => (int)$row['id_product_attribute'],
+                                'id_ebay_profile' => 0,
 								'quantity' => $quantity,
 								'price' => (string)$transaction->TransactionPrice);
 					}
 				}
 			}
 		}
-
+        
 		return $products;
 	}
 
