@@ -136,7 +136,7 @@ class EbaySynchronizer
 			$data['description'] = EbaySynchronizer::_getEbayDescription($product, $ebay_profile, $id_lang);
 
 			// Export to eBay
-			$ebay = EbaySynchronizer::_exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $context, $id_lang);
+			$ebay = EbaySynchronizer::_exportProductToEbay($product, $data, $p['id_ebay_profile'], $ebay_category, $ebay, $date, $context, $id_lang);
 
 			if (!empty($ebay->error)) // Check for errors
             {
@@ -173,7 +173,7 @@ class EbaySynchronizer
 	 * Exports the product to eBay and updates the ebay_product table
 	 *
 	 **/
-	private static function _exportProductToEbay($product, $data, $ebay_category, $ebay, $date, $context, $id_lang)
+	private static function _exportProductToEbay($product, $data, $id_ebay_profile, $ebay_category, $ebay, $date, $context, $id_lang)
 	{
 		if (count($data['variations']))
 		{
@@ -190,10 +190,10 @@ class EbaySynchronizer
 					if (!EbaySynchronizer::_hasVariationProducts($data['variations']))
 						EbaySynchronizer::endProductOnEbay($ebay, $ebay_profile, $context, $id_lang, $item_id);
 					else
-						$ebay = EbaySynchronizer::_updateMultiSkuItem($product->id, $data, $ebay, $date);
+						$ebay = EbaySynchronizer::_updateMultiSkuItem($product->id, $data, $id_ebay_profile, $ebay, $date);
 				}
 				else
-					EbaySynchronizer::_addMultiSkuItem($product->id, $data, $ebay, $date);
+					EbaySynchronizer::_addMultiSkuItem($product->id, $data, $id_ebay_profile, $ebay, $date);
 			}
 			else
 			{
@@ -212,10 +212,10 @@ class EbaySynchronizer
 						if ($data_variation['quantity'] < 1) // no more products
 							EbaySynchronizer::endProductOnEbay($ebay, $ebay_profile, $context, $id_lang, $itemID);
 						else
-							EbaySynchronizer::_updateItem($product->id, $data_variation, $ebay, $date, $data_variation['id_attribute']);
+							EbaySynchronizer::_updateItem($product->id, $data_variation, $id_ebay_profile, $ebay, $date, $data_variation['id_attribute']);
 					}
 					else
-						EbaySynchronizer::_addItem($product->id, $data_variation, $ebay, $date, $data_variation['id_attribute']);
+						EbaySynchronizer::_addItem($product->id, $data_variation, $id_ebay_profile, $ebay, $date, $data_variation['id_attribute']);
 				}
 			}
 		}
@@ -234,10 +234,10 @@ class EbaySynchronizer
 				if ($data['quantity'] < 1)
 					EbaySynchronizer::endProductOnEbay($ebay, $ebay_profile, $context, $id_lang, $itemID);
 				else
-					EbaySynchronizer::_updateItem($product->id, $data, $ebay, $date);
+					EbaySynchronizer::_updateItem($product->id, $data, $id_ebay_profile, $ebay, $date);
 			}
 			else
-				EbaySynchronizer::_addItem($product->id, $data, $ebay, $date);
+				EbaySynchronizer::_addItem($product->id, $data, $id_ebay_profile, $ebay, $date);
 		}
 
 		return $ebay;
@@ -262,16 +262,16 @@ class EbaySynchronizer
 		return false;
 	}
 
-	private static function _addItem($product_id, $data, $ebay, $date, $id_attribute = 0)
+	private static function _addItem($product_id, $data, $id_ebay_profile, $ebay, $date, $id_attribute = 0)
 	{
 		$ebay->addFixedPriceItem($data);
 		if ($ebay->itemID > 0)
-			EbaySynchronizer::_insertEbayProduct($product_id, $ebay->itemID, $date, $id_attribute);
+			EbaySynchronizer::_insertEbayProduct($product_id, $id_ebay_profile, $ebay->itemID, $date, $id_attribute);
 
 		return $ebay;
 	}
 
-	private static function _updateItem($product_id, $data, $ebay, $date, $id_attribute = 0)
+	private static function _updateItem($product_id, $data, $id_ebay_profile, $ebay, $date, $id_attribute = 0)
 	{
 		if ($ebay->reviseFixedPriceItem($data))
 			EbayProduct::updateByIdProductRef($data['itemID'], array('date_upd' => pSQL($date)));
@@ -281,23 +281,23 @@ class EbaySynchronizer
 		{
 			// We delete from DB and Add it on eBay
 			EbayProduct::deleteByIdProductRef($data['itemID']);
-			EbaySynchronizer::_addItem($product_id, $data, $ebay, $date, $id_attribute);
+			EbaySynchronizer::_addItem($product_id, $data, $id_ebay_profile, $ebay, $date, $id_attribute);
 		}
 
 		return $ebay;
 	}
 
-	private static function _addMultiSkuItem($product_id, $data, $ebay, $date)
+	private static function _addMultiSkuItem($product_id, $data, $id_ebay_profile, $ebay, $date)
 	{
 		$ebay->addFixedPriceItemMultiSku($data);
 
 		if ($ebay->itemID > 0)
-			EbaySynchronizer::_insertEbayProduct($product_id, $ebay->itemID, $date);
+			EbaySynchronizer::_insertEbayProduct($product_id, $id_ebay_profile, $ebay->itemID, $date);
 
 		return $ebay;
 	}
 
-	private static function _updateMultiSkuItem($product_id, $data, $ebay, $date)
+	private static function _updateMultiSkuItem($product_id, $data, $id_ebay_profile, $ebay, $date)
 	{
 		if ($ebay->reviseFixedPriceItemMultiSku($data))
 			EbayProduct::updateByIdProductRef($data['itemID'], array('date_upd' => pSQL($date)));
@@ -307,7 +307,7 @@ class EbaySynchronizer
 		{
 			// We delete from DB and Add it on eBay
 			EbayProduct::deleteByIdProductRef($data['itemID']);
-			$ebay = EbaySynchronizer::_addMultiSkuItem($product_id, $data, $ebay, $date);
+			$ebay = EbaySynchronizer::_addMultiSkuItem($product_id, $data, $id_ebay_profile, $ebay, $date);
 		}
 
 		return $ebay;
@@ -592,9 +592,8 @@ class EbaySynchronizer
 		);
 	}
 
-	private static function _insertEbayProduct($id_product, $ebay_item_id, $date, $id_attribute = 0)
+	private static function _insertEbayProduct($id_product, $id_ebay_profile, $ebay_item_id, $date, $id_attribute = 0)
 	{
-		$ebay = new Ebay();
 		EbayProduct::insert(array(
 			'id_country' => 8, // NOTE RArbuz: why is this hardcoded?
 			'id_product' => (int)$id_product,
@@ -602,7 +601,7 @@ class EbaySynchronizer
 			'id_product_ref' => pSQL($ebay_item_id),
 			'date_add' => pSQL($date),
 			'date_upd' => pSQL($date),
-			'id_ebay_profile' => (int)$ebay->ebay_profile->id,
+			'id_ebay_profile' => (int)$id_ebay_profile,
 		));
 	}
 
