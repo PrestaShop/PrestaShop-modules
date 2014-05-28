@@ -83,7 +83,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.7.0';
+		$this->version = '3.7.1';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -381,7 +381,7 @@ class PayPal extends PaymentModule
 		$smarty = $this->context->smarty;
 
 		if ((
-			(method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name') == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc' )) 
+			(method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name') == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc' ))
 				|| (isset($smarty->_tpl_vars) && ($smarty->_tpl_vars['page_name'] == 'authentication' || $smarty->_tpl_vars['page_name'] == 'order-opc')))
 			&&
 			(int)Configuration::get('PAYPAL_LOGIN') == 1)
@@ -412,7 +412,7 @@ class PayPal extends PaymentModule
 			case 'cn':
 				return 'zh-cn';
 			case 'tw':
-				return 'zh-tw';	
+				return 'zh-tw';
 			case 'xc':
 				return 'zh-xc';
 			case 'dk':
@@ -449,7 +449,7 @@ class PayPal extends PaymentModule
 				return 'tr-tr';
 			default :
 				return 'en-gb';
-		}		
+		}
 	}
 
 	public function hookDisplayMobileHeader()
@@ -531,7 +531,7 @@ class PayPal extends PaymentModule
 				'cancel_return' => $this->context->link->getPageLink('order.php'),
 				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/ipn.php',
 				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
-				'tracking_code' => $this->getTrackingCode($method), 
+				'tracking_code' => $this->getTrackingCode($method),
 				'iso_code' => Tools::strtoupper($this->context->language->iso_code),
 				'payment_hss_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
 				'payment_hss_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
@@ -1038,7 +1038,7 @@ class PayPal extends PaymentModule
 				if (Tools::getValue('integral_evolution_solution') == PAYPAL_HSS_IFRAME)
 					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', 'D');
 				else
-					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', Tools::getValue('integral_evolution_template'));				
+					Configuration::updateValue('PAYPAL_HSS_TEMPLATE', Tools::getValue('integral_evolution_template'));
 				$this->context->smarty->assign('PayPal_save_success', true);
 			}
 			else
@@ -1298,7 +1298,7 @@ class PayPal extends PaymentModule
 		/* Check preactivation warning */
 		if (Configuration::get('PS_PREACTIVATION_PAYPAL_WARNING'))
 			$this->warning .= (!empty($this->warning)) ? ', ' : Configuration::get('PS_PREACTIVATION_PAYPAL_WARNING').'<br />';
-		
+
 		if (!function_exists('curl_init'))
 			$this->warning .= $this->l('In order to use your module, please activate cURL (PHP extension)');
 	}
@@ -1414,7 +1414,7 @@ class PayPal extends PaymentModule
 		$protocol_link = $this->usingSecureMode() ? 'https://' : 'http://';
 		$request = $_SERVER['REQUEST_URI'];
 		$pos = strpos($request, '?');
-		
+
 		if (($pos !== false) && ($pos >= 0))
 			$request = Tools::substr($request, 0, $pos);
 
@@ -1429,10 +1429,10 @@ class PayPal extends PaymentModule
 	 * @param float $num2  number 2 to compare
 	 * @param [type] $scale [description]
 	 */
-	public function comp($num1, $num2, $scale = null) 
+	public function comp($num1, $num2, $scale = null)
 	{
 		// check if they're valid positive numbers, extract the whole numbers and decimals
-		if (!preg_match("/^\+?(\d+)(\.\d+)?$/", $num1, $tmp1)|| !preg_match("/^\+?(\d+)(\.\d+)?$/", $num2, $tmp2)) 
+		if (!preg_match("/^\+?(\d+)(\.\d+)?$/", $num1, $tmp1)|| !preg_match("/^\+?(\d+)(\.\d+)?$/", $num2, $tmp2))
 			return ('0');
 
 		// remove leading zeroes from whole numbers
@@ -1441,15 +1441,15 @@ class PayPal extends PaymentModule
 
 		// first, we can just check the lengths of the numbers, this can help save processing time
 		// if $num1 is longer than $num2, return 1.. vice versa with the next step.
-		if (Tools::strlen($num1) > Tools::strlen($num2)) 
+		if (Tools::strlen($num1) > Tools::strlen($num2))
 			return 1;
-		else 
+		else
 		{
-			if (Tools::strlen($num1) < Tools::strlen($num2)) 
+			if (Tools::strlen($num1) < Tools::strlen($num2))
 				return -1;
 
 			// if the two numbers are of equal length, we check digit-by-digit
-			else 
+			else
 			{
 
 				// remove ending zeroes from decimals and remove point
@@ -1457,7 +1457,7 @@ class PayPal extends PaymentModule
 				$dec2 = isset($tmp2[2]) ? rtrim(substr($tmp2[2], 1), '0') : '';
 
 				// if the user defined $scale, then make sure we use that only
-				if ($scale != null) 
+				if ($scale != null)
 				{
 					$dec1 = substr($dec1, 0, $scale);
 					$dec2 = substr($dec2, 0, $scale);
@@ -1471,11 +1471,11 @@ class PayPal extends PaymentModule
 				$num2 .= str_pad($dec2, $d_len, '0');
 
 				// check digit-by-digit, if they have a difference, return 1 or -1 (greater/lower than)
-				for ($i = 0; $i < Tools::strlen($num1); $i++) 
-				{ 
-					if ((int)$num1{$i} > (int)$num2{$i}) 
+				for ($i = 0; $i < Tools::strlen($num1); $i++)
+				{
+					if ((int)$num1{$i} > (int)$num2{$i})
 						return 1;
-					elseif((int)$num1{$i} < (int)$num2{$i}) 
+					elseif((int)$num1{$i} < (int)$num2{$i})
 				 	 	return -1;
 				}
 

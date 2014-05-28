@@ -56,11 +56,11 @@ function setContextData($ppec)
 	$ppec->context->cart = new Cart();
 	$ppec->context->cart->id_currency = (int)$ppec->context->currency->id;
 	$ppec->context->cart->id_lang = (int)$ppec->context->language->id;
-	
+
 	// Customer settings
 	$ppec->context->cart->id_guest = (int)$ppec->context->cookie->id_guest;
 	$ppec->context->cart->id_customer = (int)$ppec->context->customer->id;
-	
+
 	// Secure key information
 	$secure_key = isset($ppec->context->customer) ? $ppec->context->customer->secure_key : null;
 	$ppec->context->cart->secure_key = $secure_key;
@@ -98,8 +98,11 @@ function setCustomerAddress($ppec, $customer, $id = null)
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
-	$address->id_state = (int)State::getIdByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE'], $address->id_country);
+	if (Country::containsStates($address->id_country))
+		$address->id_state = (int)State::getIdByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE'], $address->id_country);
 	$address->postcode = $ppec->result['PAYMENTREQUEST_0_SHIPTOZIP'];
+	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOPHONENUM']))
+		$address->phone = $ppec->result['PAYMENTREQUEST_0_SHIPTOPHONENUM'];
 	$address->id_customer = $customer->id;
 	return $address;
 }
@@ -117,13 +120,13 @@ if ($request_type && $ppec->type)
 		{
 			$ppec->logs[] = $ppec->l('Cannot create new cart');
 			$display = (_PS_VERSION_ < '1.5') ? new BWDisplay() : new FrontController();
-				
+
 			$ppec->context->smarty->assign(array(
 					'logs' => $ppec->logs,
 					'message' => $ppec->l('Error occurred:'),
 					'use_mobile' => (bool)$ppec->useMobile()
 					));
-			
+
 			$template = 'error.tpl';
 		}
 		else
@@ -175,7 +178,7 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		{
 			$customer = setCustomerInformation($ppec, $email);
 			$customer->add();
-			
+
 			PayPal::addPayPalCustomer($customer->id, $email);
 		}
 
@@ -185,7 +188,7 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 		if (!isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET']) || !isset($ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'])
 		|| !isset($ppec->result['SHIPTOZIP']) || !isset($ppec->result['COUNTRYCODE']))
 			$ppec->redirectToCheckout($customer, ($ppec->type != 'payment_cart'));
-		
+
 		$addresses = $customer->getAddresses($ppec->context->language->id);
 		foreach ($addresses as $address)
 			if ($address['alias'] == 'Paypal_Address')
@@ -251,7 +254,7 @@ function validateOrder($customer, $cart, $ppec)
 				$payment_status = $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'];
 			else
 				$payment_status = 'Error';
-			
+
 			if (strcmp($payment_status, 'Completed') === 0)
 			{
 				$payment_type = (int)Configuration::get('PS_OS_PAYMENT');
@@ -279,7 +282,7 @@ function validateOrder($customer, $cart, $ppec)
 		else
 			$message = $ppec->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';
 	}
-		
+
 	$transaction = PayPalOrder::getTransactionDetails($ppec, $payment_status);
 	$ppec->context->cookie->id_cart = $cart->id;
 
@@ -339,7 +342,7 @@ if ($ppec->ready && !empty($ppec->token) && (Tools::isSubmit('confirmation') || 
 				'logs' => $ppec->logs,
 				'message' => $ppec->l('Error occurred:'),
 			));
-			
+
 			$template = 'error.tpl';
 		}
 	}
@@ -361,13 +364,13 @@ if ($ppec->ready && $payment_confirmation && (_PS_VERSION_ < '1.5'))
 	$form_action = $shop_domain._MODULE_DIR_.$ppec->name.'/express_checkout/payment.php';
 	$order_total = $ppec->context->cart->getOrderTotal(true);
 	$currency = new Currency((int)$ppec->context->cart->id_currency);
-	
+
 	$ppec->context->smarty->assign(array(
 		'form_action' => $form_action,
 		'total' => Tools::displayPrice($order_total, $currency),
 		'logos' => $ppec->paypal_logos->getLogos(),
 	));
-	
+
 	$template = 'order-summary.tpl';
 }
 /* Display result if error occurred */
@@ -382,7 +385,7 @@ else
 		'logs' => $ppec->logs,
 		'message' => $ppec->l('Error occurred:'),
 	));
-	
+
 	$template = 'error.tpl';
 }
 
