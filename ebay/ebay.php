@@ -465,12 +465,26 @@ class Ebay extends Module
 		if (!(int)$params['cart']->id)
 			return false;
 
-		$sql = 'SELECT cp.`id_product`, ep.`id_ebay_profile`
+		if (version_compare(_PS_VERSION_, '1.5', '>'))		
+		{
+			$sql = 'SELECT cp.`id_product`, ep.`id_ebay_profile`
 			FROM `'._DB_PREFIX_.'cart_product` cp
 			INNER JOIN `'._DB_PREFIX_.'product` p
 			ON p.`id_product` = cp.`id_product`
 			INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
 			ON cp.`id_shop` = ep.`id_shop`			
+			WHERE cp.`id_cart` = '.(int)$params['cart']->id.'
+			AND p.`active` = 1
+			AND p.`id_category_default` IN
+			('.EbayCategoryConfiguration::getCategoriesQuery($this->ebay_profile).')';
+		}
+		else
+			$sql = 'SELECT cp.`id_product`, ep.`id_ebay_profile`
+			FROM `'._DB_PREFIX_.'cart_product` cp
+			INNER JOIN `'._DB_PREFIX_.'product` p
+			ON p.`id_product` = cp.`id_product`
+			INNER JOIN `'._DB_PREFIX_.'ebay_profile` ep
+			ON 1 = ep.`id_shop`			
 			WHERE cp.`id_cart` = '.(int)$params['cart']->id.'
 			AND p.`active` = 1
 			AND p.`id_category_default` IN
