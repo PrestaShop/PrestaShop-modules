@@ -313,10 +313,10 @@ class Ebay extends Module
 	public static function installPicturesSettings($module) {
 
 		// Default
-		if ($default = ImageType::getByNameNType('medium', 'products')) {
+		if ($default = ImageType::getByNameNType('thickbox', 'products')) {
 			$sizeMedium = (int) $default['id_image_type'];
 		} 
-		else if ($medium = ImageType::getByNameNType('medium_default', 'products')) {
+		else if ($medium = ImageType::getByNameNType('thickbox_default', 'products')) {
 			$sizeMedium = (int) $default['id_image_type'];
 		}
 		else {
@@ -1312,6 +1312,8 @@ class Ebay extends Module
 		$returns_policy_configuration = $this->ebay_profile->getReturnsPolicyConfiguration();
         
         $sync_products_by_cron_url = $this->_getModuleUrl().'synchronizeProducts_CRON.php';
+        $sync_products_by_cron_path = dirname(__FILE__).'/synchronizeProducts_CRON.php';
+        $sync_orders_by_cron_path = dirname(__FILE__).'/synchronizeOrders_CRON.php';
         $sync_orders_by_cron_url = $this->_getModuleUrl().'synchronizeOrders_CRON.php';
 		$returnsConditionAccepted = Tools::getValue('ebay_returns_accepted_option', Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'));
 		
@@ -1353,8 +1355,11 @@ class Ebay extends Module
 			'sizesmall' => (int)$this->ebay_profile->getConfiguration('EBAY_PICTURE_SIZE_SMALL'),
             'sync_products_by_cron' => Configuration::get('EBAY_SYNC_PRODUCTS_BY_CRON'),
             'sync_products_by_cron_url' => $sync_products_by_cron_url,
+            'sync_products_by_cron_path' => $sync_products_by_cron_path,
             'is_multishop'  => $this->is_multishop,
+            'sync_orders_by_cron' => Configuration::get('EBAY_SYNC_ORDERS_BY_CRON'),
             'sync_orders_by_cron_url' => $sync_orders_by_cron_url,
+            'sync_orders_by_cron_path' => $sync_orders_by_cron_path,
 			'within_values' => unserialize(Configuration::get('EBAY_RETURNS_WITHIN_VALUES')),
 			'within' => $returns_policy_configuration->ebay_returns_within,
 			'whopays_values' => unserialize(Configuration::get('EBAY_RETURNS_WHO_PAYS_VALUES')),
@@ -1445,6 +1450,7 @@ class Ebay extends Module
 				pSQL(Tools::getValue('ebay_returns_accepted_option'))
 			)
             && Configuration::updateValue('EBAY_SYNC_PRODUCTS_BY_CRON', ('cron' === Tools::getValue('sync_products_mode')))
+            && Configuration::updateValue('EBAY_SYNC_ORDERS_BY_CRON', ('cron' === Tools::getValue('sync_orders_mode')))
             && Configuration::updateValue('EBAY_SEND_STATS', Tools::getValue('stats') ? 1 : 0, false, 0, 0)
 //			&& $this->ebay_profile->setConfiguration('EBAY_IDENTIFIER', pSQL(Tools::getValue('ebay_identifier')))
 			&& $this->setConfiguration('EBAY_ACTIVATE_LOGS', Tools::getValue('activate_logs') ? 1 : 0)
@@ -1625,6 +1631,7 @@ class Ebay extends Module
 		if (($percents = Tools::getValue('percent')) && ($ebay_categories = Tools::getValue('category')))
 		{
 			    
+			$id_ebay_profile = Tools::getValue('profile') ? Tools::getValue('profile') : $this->ebay_profile->id; 
 			foreach ($percents as $id_category => $percent)
 			{
 				$data = array();
@@ -1639,7 +1646,7 @@ class Ebay extends Module
 				}
 				if (isset($ebay_categories[$id_category]))
 					$data = array(
-						'id_ebay_profile' => $this->ebay_profile->id,
+						'id_ebay_profile' => $id_ebay_profile,
 						'id_country' => 8,
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
@@ -1649,12 +1656,12 @@ class Ebay extends Module
 					);
 				    
 
-				if (EbayCategoryConfiguration::getIdByCategoryId($this->ebay_profile->id, $id_category))
+				if (EbayCategoryConfiguration::getIdByCategoryId($id_ebay_profile, $id_category))
 				{
 					if ($data)
-						EbayCategoryConfiguration::updateByIdProfileAndIdCategory($this->ebay_profile->id, $id_category, $data);
+						EbayCategoryConfiguration::updateByIdProfileAndIdCategory($id_ebay_profile, $id_category, $data);
 					else
-						EbayCategoryConfiguration::deleteByIdCategory($this->ebay_profile->id, $id_category);
+						EbayCategoryConfiguration::deleteByIdCategory($id_ebay_profile, $id_category);
 				}
 				elseif ($data)
 				{
@@ -2458,7 +2465,8 @@ class Ebay extends Module
 		$cat_with_problem = array();
 
 		$sql_get_cat_non_multi_sku = 'SELECT * FROM '._DB_PREFIX_.'ebay_category_configuration AS ecc
-			INNER JOIN '._DB_PREFIX_.'ebay_category AS ec ON ecc.id_ebay_category = ec.id_ebay_category';
+			INNER JOIN '._DB_PREFIX_.'ebay_category AS ec ON ecc.id_ebay_category = ec.id_ebay_category
+			WHERE ecc.id_ebay_profile = '.$this->ebay_profile->id;
 
 		foreach (Db::getInstance()->ExecuteS($sql_get_cat_non_multi_sku) as $cat)
 		{
@@ -2487,9 +2495,9 @@ class Ebay extends Module
 		if (count($cat_with_problem) > 0)
 		{
 			if (count($cat_with_problem == 1)) // RAPH: pb here in the test. Potential typo
-				$alert = '<b>'.$this->l('You have chosen eBay category : ').$var.$this->l(' which does not support multivariation products. Each variation of a product will generate a new product in eBay').'</b>';
+				$alert = '<b>'.$this->l('You have chosen eBay category : ').' "'.$var.'" '.$this->l(' which does not support multivariation products. Each variation of a product will generate a new product in eBay').'</b>';
 			else
-				$alert = '<b>'.$this->l('You have chosen eBay categories : ').$var.$this->l(' which do not support multivariation products. Each variation of a product will generate a new product in eBay').'</b>';
+				$alert = '<b>'.$this->l('You have chosen eBay categories : ').' "'.$var.'"" '.$this->l(' which do not support multivariation products. Each variation of a product will generate a new product in eBay').'</b>';
 		}
 
 		return $alert;

@@ -14,7 +14,7 @@ select.ebay_select{
 #selectTagTemplate {
 	padding: 29px 0;
 	background: white;
-	height: 27px;
+	height: 22px;
 	margin-left: 5px;
 	margin-top: 4px;
 	margin-bottom: 3px;
@@ -450,7 +450,7 @@ textarea + .tooltip {
 {
 	width: 100%; 
 	margin-bottom: 20px; 
-	background-color: rgb(221, 242, 219);
+	background-color: rgb(221, 242, 219) !important;
 }
 
 .shipping_not_configured

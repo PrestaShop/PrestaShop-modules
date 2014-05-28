@@ -141,7 +141,7 @@ function showOptionals(category_id)
 {
 	var nb_rows_to_add = $('tr.optional[category=' + category_id + ']').length;
 
-	var first_td = $('#specifics-' + category_id + ' td::nth-child(1)');
+	var first_td = $('#specifics-' + category_id + ' td:nth-child(1)');
 	first_td.attr('rowspan', parseInt(first_td.attr('rowspan')) + nb_rows_to_add - 1);
 
 	$('tr[category=' + category_id + ']').show();
