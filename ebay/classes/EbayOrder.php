@@ -541,7 +541,7 @@ class EbayOrder
 						'id_shop'       => $id_shop
 					));
 				else
-					$db->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
 						'id_ebay_order' => $id_ebay_order,
 						'id_order'      => $id_order,
 						'id_shop'       => $id_shop
