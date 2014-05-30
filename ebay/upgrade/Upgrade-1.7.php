@@ -43,6 +43,10 @@ function upgrade_module_1_7($module)
 			}
 	}
 	
+	Db::getInstance()->Execute('UPDATE '. _DB_PREFIX_.'ebay_shipping SET id_zone = '.(int)Configuration::get('EBAY_ZONE_NATIONAL').' WHERE international = 0');
+	Db::getInstance()->Execute('UPDATE '. _DB_PREFIX_.'ebay_shipping SET id_zone = '.(int)Configuration::get('EBAY_ZONE_INTERNATIONAL').' WHERE international = 1');
+
+
 	// create default profile(s)
 	$is_multishop = (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive());
 	$id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT') ? (int)Configuration::get('PS_SHOP_DEFAULT') : 1;
@@ -135,7 +139,6 @@ function upgrade_module_1_7($module)
 		'ebay_category_condition',
 		'ebay_category_condition_configuration',
 		'ebay_shipping',
-
 	);
 
 	if(version_compare(_PS_VERSION_, '1.5', '<'))
@@ -145,6 +148,8 @@ function upgrade_module_1_7($module)
 		foreach ($tables as $table)
 			Db::getInstance()->update($table, array('id_ebay_profile' => $id_default_ebay_profile));
 	
+	
+
 	$sql = 'SELECT `id_ebay_order`, `id_order`
 			FROM `'._DB_PREFIX_.'ebay_order`';
 	$res = Db::getInstance()->executeS($sql);
