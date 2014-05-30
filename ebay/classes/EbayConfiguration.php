@@ -66,11 +66,17 @@ class EbayConfiguration
 	
 	public static function set($id_ebay_profile, $name, $value, $html = false)
 	{
-		return Db::getInstance()->insert('ebay_configuration', array(
-			'id_ebay_profile' => $id_ebay_profile,
-			'name'						=> pSQL($name),
-			'value'						=> pSQL($value, $html)
-		), false, true, Db::REPLACE);
+		$datas = array(
+				'id_ebay_profile' => $id_ebay_profile,
+				'name'						=> pSQL($name),
+				'value'						=> pSQL($value, $html)
+			);
+		if(version_compare(_PS_VERSION_, '1.5', '<'))
+		{
+			return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_configuration', $datas, 'INSERT');
+		}
+		else
+			return Db::getInstance()->insert('ebay_configuration', $datas , false, true, Db::REPLACE);
 	}	
 	
     public static function getAll($id_ebay_profile)

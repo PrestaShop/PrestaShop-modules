@@ -45,18 +45,26 @@ function upgrade_module_1_7($module)
 	
 	// create default profile(s)
 	$is_multishop = (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive());
-	$id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT');
+	$id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT') ? (int)Configuration::get('PS_SHOP_DEFAULT') : 1;
 
 	// handle default returns policy	
 	if (!($id_returns_policy_configuration = EbayReturnsPolicyConfiguration::getDefaultObjectId()))
 	{
 		$returns_policy_configuration = new EbayReturnsPolicyConfiguration();
+		$returns_policy_configuration->ebay_returns_within = Configuration::get('EBAY_RETURNS_WITHIN');
+		$returns_policy_configuration->ebay_returns_who_pays = Configuration::get('EBAY_RETURNS_WHO_PAYS');
+		$returns_policy_configuration->ebay_returns_description = Configuration::get('EBAY_RETURNS_DESCRIPTION');
+		$returns_policy_configuration->ebay_returns_accepted_option = Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION');     
 		$returns_policy_configuration->save();		
 		$id_returns_policy_configuration = $returns_policy_configuration->id;
 	}
 
 	// handle default profile
-	$id_shops = Shop::getShops(false, null, false);
+	if(version_compare(_PS_VERSION_, '1.5', '<'))
+		$id_shops = array('1' => '1');
+	else
+		$id_shops = Shop::getShops(false, null, false);
+
 	foreach(array_keys($id_shops) as $id_shop)
 	{
 		if (!($profile = EbayProfile::getOneByIdShop($id_shop)))
@@ -129,8 +137,13 @@ function upgrade_module_1_7($module)
 		'ebay_shipping',
 
 	);
-	foreach ($tables as $table)
-		Db::getInstance()->update($table, array('id_ebay_profile' => $id_default_ebay_profile));
+
+	if(version_compare(_PS_VERSION_, '1.5', '<'))
+		foreach ($tables as $table)
+			Db::getInstance()->autoExecute(_DB_PREFIX_.$table, array('id_ebay_profile' => $id_default_ebay_profile), 'UPDATE');
+	else
+		foreach ($tables as $table)
+			Db::getInstance()->update($table, array('id_ebay_profile' => $id_default_ebay_profile));
 	
 	$sql = 'SELECT `id_ebay_order`, `id_order`
 			FROM `'._DB_PREFIX_.'ebay_order`';
@@ -141,7 +154,14 @@ function upgrade_module_1_7($module)
 			'id_ebay_order' => $row['id_ebay_order'],
 			'id_order'      => $row['id_order'],
 		);
-		Db::getInstance()->insert('ebay_order_order', $data, false, true, Db::REPLACE);
+		if(version_compare(_PS_VERSION_, '1.5', '<'))
+		{
+			Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order_order', $data, 'INSERT');
+		}
+		else
+		{
+			Db::getInstance()->insert('ebay_order_order', $data, false, true, Db::REPLACE);
+		}
 	}
 
 	$module->setConfiguration('EBAY_VERSION', $module->version);

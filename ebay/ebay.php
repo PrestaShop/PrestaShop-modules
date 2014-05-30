@@ -414,7 +414,6 @@ class Ebay extends Module
 
 	private function _upgrade()
 	{
-
 		$version = Configuration::get('EBAY_VERSION');
 
 		if ($version == '1.1' || empty($version))
