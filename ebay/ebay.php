@@ -1572,7 +1572,7 @@ class Ebay extends Module
 			'module_name' => Tools::getValue('module_name'),
 			'date' => pSQL(date('Ymdhis')),
 			'form_categories' => EbaySynchronizer::getNbSynchronizableEbayCategorie(),
-			'nb_categorie' => count(Category::getCategories($this->context->cookie->id_lang))
+			'nb_categorie' => count(Category::getCategories($this->context->cookie->id_lang, true, false))
 		);
 
 		$this->smarty->assign($template_vars);
