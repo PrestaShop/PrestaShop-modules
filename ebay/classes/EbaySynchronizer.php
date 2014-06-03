@@ -89,7 +89,7 @@ class EbaySynchronizer
 				continue;
 			}
 
-			$pictures = EbaySynchronizer::_getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration);
+			$pictures = EbaySynchronizer::_getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration, $variations);
 
 			// Load basic price
 			list($price, $price_original) = EbaySynchronizer::_getPrices($product->id, $ebay_category->getPercent());
@@ -330,7 +330,7 @@ class EbaySynchronizer
 		return $tab_error;
 	}
 
-	private static function _getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration)
+	private static function _getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration, $variations)
 	{
 		$pictures = array();
 		$pictures_medium = array();
@@ -344,7 +344,7 @@ class EbaySynchronizer
 		foreach (EbaySynchronizer::orderImages($product->getImages($id_lang)) as $image)
 		{
 			$pictures_default = EbaySynchronizer::_getPictureLink($product->id, $image['id_image'], $context->link, $default->name);
-			if ((count($pictures) == 0) && ($nb_pictures == 1)) // no extra picture, we don't upload the image
+			if (((count($pictures) == 0) && ($nb_pictures == 1)) || self::_hasVariationProducts($variations)) // no extra picture, we don't upload the image
 				$pictures[] = $pictures_default;
 			elseif (count($pictures) < $nb_pictures) // we upload every image if there are extra pictures
 				$pictures[] = EbayProductImage::getEbayUrl($pictures_default, $product->name.'_'.(count($pictures) + 1));
