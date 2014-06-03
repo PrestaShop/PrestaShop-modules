@@ -751,7 +751,8 @@ class EbayOrder
 
 	public static function insert($data)
 	{
-		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order', $data, 'INSERT');
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order', $data, 'INSERT');
+		return Db::getInstance()->Insert_ID();
 	}
 
 	public static function __set_state($attributes)

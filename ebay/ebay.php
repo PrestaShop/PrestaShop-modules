@@ -678,7 +678,8 @@ class Ebay extends Module
 			}
 			else
             {
-				$id_shops = array(Configuration::get('PS_SHOP_DEFAULT'));
+            	$default_shop = Configuration::get('PS_SHOP_DEFAULT') ? Configuration::get('PS_SHOP_DEFAULT') : 1;
+				$id_shops = array($default_shop);
                 $has_shared_customers = true;                
             }
             
