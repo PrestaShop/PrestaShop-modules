@@ -646,7 +646,7 @@ class MoneyBookers extends PaymentModule
 			$mbParams['recipient_description'] = Configuration::get('PS_SHOP_NAME');
 			$mbParams['hide_login'] = (int)(Configuration::get('MB_HIDE_LOGIN'));
 			$mbParams['id_logo'] = (int)(Configuration::get('MB_ID_LOGO'));
-			$mbParams['return_url'] = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)($params['cart']->id).'&id_module='.(int)($this->id).'&key='.$customer->secure_key;
+			$mbParams['return_url'] = (Configuration::get('PS_SSL_ENABLED') ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.'index.php?controller=order-confirmation?id_cart='.(int)($params['cart']->id).'&id_module='.(int)($this->id).'&key='.$customer->secure_key;
 			$mbParams['cancel_url'] = Configuration::get('MB_CANCEL_URL');
 
 			/* About the customer */
