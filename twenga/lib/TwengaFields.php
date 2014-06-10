@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2014 PrestaShop
+ * 2007-2013 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2014 PrestaShop SA : 6 rue lacepede, 75005 PARIS
+ *  @copyright 2007-2013 PrestaShop SA : 6 rue lacepede, 75005 PARIS
  *  @version  Release: $Revision: 16855 $
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
@@ -178,7 +178,7 @@ abstract class TwengaFields
 		$fieldValidate = $this->getField($key);
 		$str_return = '';
 		// check the length
-		if ($fieldValidate[0] !== 0 && (Tools::strlen((string)$value) > $fieldValidate[0]))
+		if (strlen((string)$value) > $fieldValidate[0] AND  $fieldValidate[0] !== 0)
 			return Tools::displayError('Wrong length of the value. Must be set between 1 and ').$fieldValidate[0].'<br />'."\n";
 		
 		// check each validators.
