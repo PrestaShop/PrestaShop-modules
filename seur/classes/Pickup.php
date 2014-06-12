@@ -155,6 +155,8 @@ class Pickup extends ObjectModel
 					return (string)$xml->DESCRIPCION;
 				elseif (!self::insertPickup((int)$xml->LOCALIZADOR, (string)$xml->NUM_RECOGIDA, (float)$xml->TASACION))
 					return 'Error en base de datos.'; // @TODO check if must be translatable
+
+				Configuration::updateValue('SEUR_CONFIGURATION_OK', true);
 			}
 			catch (PrestaShopException $e)
 			{
