@@ -49,6 +49,7 @@ class TextMaster extends Module
     private $api_instance;
     private $textmaster_data_with_cookies_manager_obj;
     public $available_statuses = array();
+    public $debug_mode = false;
 
     const CURRENT_INDEX = 'index.php?tab=AdminModules&configure=textmaster&token=';
 
@@ -64,7 +65,6 @@ class TextMaster extends Module
 
         $this->displayName = $this->l('TextMaster');
         $this->description = $this->l('Your ultimate one-stop-shop for online professional translation and proofreading');
-
 
         if (!function_exists('curl_init'))
             $this->warning = $this->l('CURL should be installed');
@@ -100,6 +100,9 @@ class TextMaster extends Module
 
         if (!defined('TEXTMASTER_IMG_DIR'))
             define('TEXTMASTER_IMG_DIR', $this->_path.'views/img/');
+        
+        if (Configuration::get('TEXTMASTER_DEBUG_MODE'))
+            $this->debug_mode = true;
     }
 
     function install()
@@ -158,9 +161,7 @@ class TextMaster extends Module
     public function registerHook($hook_name, $shop_list = NULL)
     {
         if (version_compare(_PS_VERSION_, '1.5', '<'))
-        {
             $hook_name = 'backOfficeTop';
-        }
 
         return parent::registerHook($hook_name, $shop_list);
     }
@@ -194,6 +195,25 @@ class TextMaster extends Module
 			$this->_html .= $this->displayWarnings(array($this->l('Module is in SANDBOX mode')));
 		elseif (TEXTMASTER_STAGIGN_ENVIRONMENT)
 			$this->_html .= $this->displayWarnings(array($this->l('Module is in STAGING mode')));
+
+        if (Tools::isSubmit('debug_on'))
+        {
+            Configuration::updateValue('TEXTMASTER_DEBUG_MODE', '1');
+            $debug_filename = $this->getDebugFileName();
+            print_r(_PS_BASE_URL_._MODULE_DIR_.$this->name.'/'.$debug_filename);die;
+        }
+        elseif (Tools::isSubmit('debug_off'))
+        {
+            Configuration::deleteByName('TEXTMASTER_DEBUG_MODE');
+            $debug_filename = $this->getDebugFileName();
+            @unlink(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+            Configuration::deleteByName(TextMasterAPI::DEBUG_FILENAME);
+        }
+        elseif (Tools::isSubmit('debug_delete'))
+        {
+            $debug_filename = $this->getDebugFileName();
+            @unlink(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+        }
 
         if (Tools::isSubmit('reset_cookie'))
             $this->textmaster_data_with_cookies_manager_obj->deleteAllProjectDataFromCookie();
@@ -303,6 +323,24 @@ class TextMaster extends Module
         }
         return $this->_html;
     }
+    
+    private function getDebugFileName()
+	{
+		$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+		if (!$debug_filename)
+		{
+			$debug_filename = Tools::passwdGen(TextMasterAPI::DEBUG_FILENAME_LENGTH).'.html';
+			Configuration::updateValue(TextMasterAPI::DEBUG_FILENAME, $debug_filename);
+		}
+		
+		if (!file_exists(_PS_MODULE_DIR_.'textmaster/'.$debug_filename))
+		{
+			$file = fopen(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, 'w');
+			fclose($file);
+		}
+        
+        return $debug_filename;
+	}
 
     private function displayNavigation()
     {
@@ -552,7 +590,23 @@ class TextMaster extends Module
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($curl, CURLOPT_TIMEOUT, 10); //timeout in seconds
         curl_setopt ($curl, CURLOPT_POSTFIELDS, $header);
-        return curl_exec($curl);
+        $result = curl_exec($curl);
+        
+        if ($this->debug_mode)
+		{
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_EU_URI.'/oauth/token'.'\'
+				</h2> <h3>Params:</h3><pre>';
+			$debug_content .= $header;
+			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
+			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
+        
+        return $result;
     }
 
     function createNewTextMasterUser($oAuthTokenNew, $email, $password, $phone = null)
@@ -596,7 +650,23 @@ class TextMaster extends Module
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
         curl_setopt ($curl, CURLOPT_POSTFIELDS, $post);
-        return curl_exec($curl);
+        $result = curl_exec($curl);
+        
+        if ($this->debug_mode)
+		{
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_API_URI.'/admin/users'.'\'
+				</h2> <h3>Params:</h3><pre>';
+			$debug_content .= print_r($post_arr, true);
+			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
+			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
+        
+        return $result;
     }
 
     public function getFullLocale($registration = false)
@@ -703,7 +773,23 @@ class TextMaster extends Module
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($curl, CURLOPT_TIMEOUT, 10); //timeout in seconds
         curl_setopt ($curl, CURLOPT_POSTFIELDS, $header);
-        return curl_exec($curl);
+        $result = curl_exec($curl);
+        
+        if ($this->debug_mode)
+		{
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_EU_URI.'/oauth/token'.'\'
+				</h2> <h3>Params:</h3><pre>';
+			$debug_content .= $header;
+			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
+			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
+        
+        return $result;
     }
 
     private function getTextMasterAPIKeys($oAuthToken)
@@ -717,7 +803,23 @@ class TextMaster extends Module
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
         curl_setopt($curl, CURLOPT_TIMEOUT, 10); //timeout in seconds
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-        return curl_exec($curl);
+        $result = curl_exec($curl);
+        
+        if ($this->debug_mode)
+		{
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_API_URI.'/admin/users/me'.'\'
+				</h2> <h3>Params:</h3><pre>';
+			$debug_content .= "Authorization: Bearer {$oAuthToken}";
+			$debug_content .= '</pre><h3>Response:</h3><pre>';
+			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
+        
+        return $result;
     }
 
     private function displayTextmasterWebPage()
