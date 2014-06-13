@@ -1228,11 +1228,11 @@ class TextMaster extends Module
             return false;
         }
     }
-    
+
     private function approveDocument()
     {
         $update_product_only = (bool)Tools::getValue('update_product_only');
-        
+
         if ($update_product_only)
         {
             $error_message = $this->l('Product data could not be updated');
@@ -1243,46 +1243,73 @@ class TextMaster extends Module
             $error_message = $this->l('Document could not be approved');
             $success_message = $this->l('Document was successfully approved');
         }
-        
+
         $id_document = (int)Tools::getValue('id_document');
         $id_product = (int)Tools::getValue('id_product');
-        
-        
+
         $document = new TextMasterDocument((int)$id_document);
         if (!Validate::isLoadedObject($document))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $document_data = $document->getApiData();
+
+        $product_data_validation = $this->validateProductData($document_data);
+        if ($product_data_validation !== true)
+            return $this->_html .= $this->displayError($product_data_validation);
+
         if (!$document_data || !isset($document_data['author_work']) || !isset($document_data['project_id']))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $product = new Product((int)$id_product);
         if (!Validate::isLoadedObject($product))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $project = TextMasterProject::getProjectByApiId($document_data['project_id'], true);
         if (!Validate::isLoadedObject($project))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $project_data = $project->getProjectData();
         if (!isset($project_data['language_to']))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $id_lang = Language::getIdByIso($project_data['language_to']);
         if (!$id_lang)
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         if (!$update_product_only)
             if (!$document->approve())
-                return $this->displayError($error_message);
-        
+                return $this->_html .= $this->displayError($error_message);
+
         if (!$this->updateProductData($document_data, $product, $id_lang))
-            return $this->displayError($error_message);
-        
+            return $this->_html .= $this->displayError($error_message);
+
         $this->addFlashMessage($success_message);
         Tools::redirectAdmin(self::CURRENT_INDEX.Tools::getValue('token').'&configure='.$this->name.'&menu='.Tools::getValue('menu').'&id_project='.Tools::getValue('id_project').'&viewproject&token='.Tools::getAdminTokenLite('AdminModules'));
     }
-    
+
+    private function validateProductData($document_data)
+    {
+        $errors = '';
+
+        foreach ($document_data['author_work'] as $element => $content)
+            if ($element == 'name' && !Validate::isCatalogName($content))
+                $errors .= $this->l('name is not valid').'<br />';
+            elseif ($element == 'description' && !Validate::isCleanHtml($content))
+                $errors .= $this->l('description is not valid').'<br />';
+            elseif ($element == 'description_short' && !Validate::isCleanHtml($content))
+                $errors .= $this->l('description_short is not valid').'<br />';
+            elseif ($element == 'meta_title' && !Validate::isGenericName($content))
+                $errors .= $this->l('meta_title is not valid').'<br />';
+            elseif ($element == 'meta_description' && !Validate::isGenericName($content))
+                $errors .= $this->l('meta_description is not valid').'<br />';
+            elseif ($element == 'meta_keywords' && !Validate::isGenericName($content))
+                $errors .= $this->l('meta_keywords is not valid').'<br />';
+            elseif ($element == 'link_rewrite' && !Validate::isLinkRewrite($content))
+                $errors .= $this->l('link_rewrite is not valid').'<br />';
+
+        return $errors === '' ? true : $errors;
+    }
+
     private function updateProductData($document_data, $product, $id_lang)
     {
         foreach ($document_data['author_work'] as $element => $content)
