@@ -100,4 +100,6 @@
 ----
 1) Ensure app key exist before loading any front end hook.
    
-  
+2014-07-15
+----
+1) Update plugin to show widget V2.  

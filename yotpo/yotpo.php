@@ -123,12 +123,7 @@ class Yotpo extends Module
 								  'yotpoDomain' => $this->getShopDomain(),
 								  'yotpoLanguage' => $this->getLanguage()));
 			
-			if(isset($this->context->controller)) {
-				$this->context->controller->addJS(($this->_path).'/js/headerScript.js');
-			}
-			else {
-				return '<script type="text/javascript" src="'.$this->_path.'/js/headerScript.js"></script>';				
-			}
+			return $this->display(__FILE__, 'views/templates/front/header.tpl');
 		}
 	}
 
@@ -137,7 +132,8 @@ class Yotpo extends Module
 		$app_key = Configuration::get('yotpo_app_key');
 		if(isset($app_key) && !empty($app_key)) {
 			$widgetLocation = Configuration::get('yotpo_widget_location');
-			return ($widgetLocation == 'footer' || $widgetLocation == 'other') ? $this->showWidget($params['product']) : null;			
+			if (Configuration::get('yotpo_widget_location') == 'footer')
+				return $this->showWidget($params['product']);
 		}
 	}
 
@@ -318,14 +314,11 @@ class Yotpo extends Module
 		if(Configuration::get('yotpo_rich_snippets') == true) {
 			$rich_snippets .= $this->getRichSnippet($this->parseProductId());
 		}
-		$smarty = $this->context->smarty;		
-		$smarty->assign('richSnippetsCode', $rich_snippets);
-		
+		$smarty = $this->context->smarty;			
+		$smarty->assign('richSnippetsCode', $rich_snippets);		
 		$this->assignProductVars($product);
-		if (Configuration::get('yotpo_widget_location') != 'other')
-			return $this->display(__FILE__, 'views/templates/front/widgetDiv.tpl');
-
-		return null;
+	    return $this->display(__FILE__, 'views/templates/front/widgetDiv2.tpl');
+		
 	}
 
 	private function assignProductVars($product = null)
@@ -579,26 +572,8 @@ class Yotpo extends Module
 		'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets'),
 		'yotpo_all_statuses' => $all_statuses));
 
-		$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
-		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false)
-		{
-			if(method_exists($smarty, 'clearCompiledTemplate'))
-			{
-				$smarty->clearCompiledTemplate(_PS_MODULE_DIR_ . $this->name .'/views/templates/admin/settingsForm.tpl');	
-				$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
-			}
-			elseif (method_exists($smarty, 'clear_compiled_tpl'))
-			{
-				$smarty->clear_compiled_tpl(_PS_MODULE_DIR_ . $this->name .'/views/templates/admin/settingsForm.tpl');
-				$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
-			}
-			elseif (isset($smarty->force_compile)) {
-				$value = $smarty->force_compile;
-				$smarty->force_compile = true;
-				$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
-				$smarty->force_compile = $value;
-			}
-		}
+		$regexp = '/yotpo_map_enabled' | 'yotpo_language_as_site' | 'yotpo_rich_snippets/';
+        $settings_template = $this->getNonCachedTemplate('views/templates/admin/settingsForm.tpl', $regexp);
 		$this->_html .= $settings_template;
 	}
 
@@ -816,4 +791,34 @@ class Yotpo extends Module
 			return $this->context->cookie->id_lang;
 		}
 	}		
+	
+
+	
+	/*
+     * deletes the cached smarty template - if needed (if the cached version template is an older version and therefore different than the current template version)
+     *
+     * returns the non-cached template.
+     */
+
+    private function getNonCachedTemplate($template_path, $regexp)
+    {
+        $smarty = $this->context->smarty;
+        $template = $this->display($template_path);
+        if (!preg_match($regexp, $template, $matches)) //this means the cache of the old template version was returned , so we need to delete it:
+        {
+            if (method_exists($smarty, 'clearCompiledTemplate')) {
+                $smarty->clearCompiledTemplate();
+                $template = $this->display(__FILE__, $template_path);
+            } elseif (method_exists($smarty, 'clear_compiled_tpl')) {
+                $smarty->clear_compiled_tpl();
+                $template = $this->display(__FILE__, $template_path);
+            } elseif (isset($smarty->force_compile)) {
+                $value = $smarty->force_compile;
+                $smarty->force_compile = true;
+                $template = $this->display(__FILE__, $template_path);
+                $smarty->force_compile = $value;
+            }
+        }
+        return $template;
+    }
 }
