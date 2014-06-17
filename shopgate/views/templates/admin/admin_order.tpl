@@ -19,7 +19,7 @@
 <br />
 <form action="" method="post">
 <fieldset style="width: 400px;float: left;">
-	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/logo.gif">{l s='Shopgate information' mod='shopgate'}</legend>
+	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/img/logo.png">{l s='Shopgate information' mod='shopgate'}</legend>
 	
 	{if $shopgate_error}<span style="color:red; font-weight:bold;">{$shopgate_error|escape:'htmlall':'UTF-8'}</span>{/if}
 	

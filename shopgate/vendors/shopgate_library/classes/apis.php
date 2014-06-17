@@ -93,7 +93,6 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				'get_items_csv',
 				'get_categories_csv',
 				'get_reviews_csv',
-				'get_pages_csv',
 				'get_media_csv',
 				'get_log_file',
 				'clear_log_file',
@@ -105,6 +104,8 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				'register_customer',
 				'get_settings',
 				'set_settings',
+				'get_items',
+				'get_categories'
 		);
 	}
 
@@ -244,6 +245,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		$this->responseData['php_extensions'] = get_loaded_extensions();
 		$this->responseData['shopgate_library_version'] = SHOPGATE_LIBRARY_VERSION;
 		$this->responseData['plugin_version'] = defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'UNKNOWN';
+		$this->responseData['shop_info'] = $this->plugin->createShopInfo();
 		
 		// set data and return response
 		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
@@ -299,7 +301,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 
 				// check error count
 				if ($jobErrorcount > 0) {
-					$message .= 'Errors happend in job: "'.$job['job_name'].'" ('.$jobErrorcount.' errors)\n';
+					$message .= "{$jobErrorcount} errors occured while executing cron job '{$job['job_name']}'\n";
 					$errorcount += $jobErrorcount;
 				}
 			} catch (Exception $e) {
@@ -472,6 +474,30 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 			$responseData["currency"] = $cartData['currency'];
 		}
 		
+		if (!empty($cartData['customer']) && $cartCustomer = $cartData['customer']) {
+			/** @var ShopgateCartCustomer $cartCustomer */
+			if (!is_object($cartCustomer) || !($cartCustomer instanceof ShopgateCartCustomer)) {
+				throw new ShopgateLibraryException(
+					ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT,
+					"$cartCustomer is of type: " . is_object($cartCustomer)
+						? get_class($cartCustomer)
+						: gettype($cartCustomer)
+				);
+			}
+			foreach ($cartCustomer->getCustomerGroups() as $cartCustomerGroup) {
+				/** @var ShopgateCartCustomerGroup $cartCustomerGroup */
+				if (!is_object($cartCustomerGroup) || !($cartCustomerGroup instanceof ShopgateCartCustomerGroup)) {
+					throw new ShopgateLibraryException(
+						ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT,
+						'$cartCustomerGroup is of type: ' . is_object($cartCustomerGroup)
+							? get_class($cartCustomerGroup)
+							: gettype($cartCustomerGroup)
+					);
+				}
+			}
+			$responseData["customer"] = $cartCustomer->toArray();
+		}
+		
 		$shippingMethods = array();
 		if (!empty($cartData['shipping_methods'])) {
 			foreach ($cartData["shipping_methods"] as $shippingMethod) {
@@ -621,11 +647,22 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		}
 		// settings that may never be changed:
 		$shopgateSettingsBlacklist = array(
-				'shop_number', 'customer_number', 'apikey', 'plugin_name',
-				'export_folder_path', 'log_folder_path', 'cache_folder_path',
-				'items_csv_filename', 'categories_csv_filename', 'reviews_csv_filename', 'pages_csv_filename',
-				'access_log_filename', 'error_log_filename', 'request_log_filename', 'debug_log_filename',
-				'redirect_keyword_cache_filename', 'redirect_skip_keyword_cache_filename',
+				'shop_number',
+				'customer_number',
+				'apikey',
+				'plugin_name',
+				'export_folder_path',
+				'log_folder_path',
+				'cache_folder_path',
+				'items_csv_filename',
+				'categories_csv_filename',
+				'reviews_csv_filename',
+				'access_log_filename',
+				'error_log_filename',
+				'request_log_filename',
+				'debug_log_filename',
+				'redirect_keyword_cache_filename',
+				'redirect_skip_keyword_cache_filename',
 		);
 		
 		// filter the new settings
@@ -678,6 +715,18 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		$customer = $this->plugin->getCustomer($this->params['user'], $this->params['pass']);
 		if (!is_object($customer) || !($customer instanceof ShopgateCustomer)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT, 'Plugin Response: '.var_export($customer, true));
+		
+			foreach ($customer->getCustomerGroups() as $customerGroup) {
+				/** @var ShopgateCustomerGroup $customerGroup */
+				if (!is_object($customerGroup) || !($customerGroup instanceof ShopgateCustomerGroup)) {
+					throw new ShopgateLibraryException(
+						ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT,
+						'$customerGroup is of type: ' . is_object($customerGroup)
+							? get_class($customerGroup)
+							: gettype($customerGroup)
+					);
+				}
+			}
 		}
 
 		$customerData = $customer->toArray();
@@ -756,9 +805,10 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		// generate / update items csv file if requested
 		$this->plugin->startGetMediaCsv();
 		
-		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsv($this->trace_id);
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsvExport($this->trace_id);
 		$this->responseData = $this->config->getMediaCsvPath();
 	}
+	
 	/**
 	 * Represents the "get_items_csv" action.
 	 *
@@ -775,8 +825,84 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		// generate / update items csv file if requested
 		$this->plugin->startGetItemsCsv();
 
-		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsv($this->trace_id);
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsvExport($this->trace_id);
 		$this->responseData = $this->config->getItemsCsvPath();
+	}
+
+	/**
+	 * Represents the "get_items" action.
+	 *
+	 * @throws ShopgateLibraryException
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_items
+	 */
+	protected function getItems() {
+		$limit = isset($this->params['limit']) ? (int) $this->params['limit'] : null;
+		$offset = isset($this->params['offset']) ? (int) $this->params['offset'] : null;
+		$uids = isset($this->params['uids']) ? (array) $this->params['uids'] : array();
+		$responseType = isset($this->params['response_type']) ? $this->params['response_type'] : false;
+		
+		$supportedResponseTypes = $this->config->getSupportedResponseTypes();
+		if (!empty($responseType) && !in_array($responseType, $supportedResponseTypes['get_items'])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNSUPPORTED_RESPONSE_TYPE, 'Requested type: "'.$responseType.'"');
+		}
+		
+		$this->plugin->startGetItems($limit, $offset, $uids, $responseType);
+
+		switch ($responseType) {
+			default: case 'xml':
+				$response = new ShopgatePluginApiResponseAppXmlExport($this->trace_id);
+				$responseData = $this->config->getItemsXmlPath();
+				break;
+
+			case 'json':
+				$response = new ShopgatePluginApiResponseAppJsonExport($this->trace_id);
+				$responseData = $this->config->getItemsJsonPath();
+				break;
+		}
+
+		if (empty($this->response)) {
+			$this->response = $response;
+		}
+
+		$this->responseData = $responseData;
+	}
+
+	/**
+	 * Represents the "get_categories" action.
+	 *
+	 * @throws ShopgateLibraryException
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_categories
+	 */
+	protected function getCategories() {
+		$limit = isset($this->params['limit']) ? (int) $this->params['limit'] : null;
+		$offset = isset($this->params['offset']) ? (int) $this->params['offset'] : null;
+		$uids = isset($this->params['uids']) ? (array) $this->params['uids'] : array();
+		$responseType = isset($this->params['response_type']) ? $this->params['response_type'] : false;
+		
+		$supportedResponseTypes = $this->config->getSupportedResponseTypes();
+		if (!empty($responseType) && !in_array($responseType, $supportedResponseTypes['get_categories'])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNSUPPORTED_RESPONSE_TYPE, 'Requested type: "'.$responseType.'"');
+		}
+		
+		$this->plugin->startGetCategories($limit, $offset, $uids, $responseType);
+
+		switch ($responseType) {
+			default: case 'xml':
+				$response = new ShopgatePluginApiResponseAppXmlExport($this->trace_id);
+				$responseData = $this->config->getCategoriesXmlPath();
+				break;
+				
+			case 'json':
+				$response = new ShopgatePluginApiResponseAppJsonExport($this->trace_id);
+				$responseData = $this->config->getCategoriesJsonPath();
+				break;
+		}
+
+		if (empty($this->response)) {
+			$this->response = $response;
+		}
+
+		$this->responseData = $responseData;
 	}
 
 	/**
@@ -786,11 +912,17 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_categories_csv
 	 */
 	protected function getCategoriesCsv() {
+		if (isset($this->params['limit']) && isset($this->params['offset'])) {
+			$this->plugin->setExportLimit((int) $this->params['limit']);
+			$this->plugin->setExportOffset((int) $this->params['offset']);
+			$this->plugin->setSplittedExport(true);
+		}
+		
 		// generate / update categories csv file
 		$this->plugin->startGetCategoriesCsv();
 
 		
-		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsv($this->trace_id);
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsvExport($this->trace_id);
 		$this->responseData = $this->config->getCategoriesCsvPath();
 	}
 
@@ -810,7 +942,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		// generate / update reviews csv file
 		$this->plugin->startGetReviewsCsv();
 
-		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsv($this->trace_id);
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsvExport($this->trace_id);
 		$this->responseData = $this->config->getReviewsCsvPath();
 	}
 
@@ -1553,7 +1685,28 @@ class ShopgatePluginApiResponseTextPlain extends ShopgatePluginApiResponse {
 /**
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
-class ShopgatePluginApiResponseTextCsv extends ShopgatePluginApiResponse {
+class ShopgatePluginApiResponseAppJson extends ShopgatePluginApiResponse {
+	public function send() {
+		$data = array();
+		$data['error'] = $this->error;
+		$data['error_text'] = $this->error_text;
+		$data['trace_id'] = $this->trace_id;
+		$data['shopgate_library_version'] = $this->version;
+		if (!empty($this->pluginVersion)) {
+			$data['plugin_version'] = $this->pluginVersion;
+		}
+		$this->data = array_merge($data, $this->data);
+
+		header("HTTP/1.0 200 OK");
+		header("Content-Type: application/json");
+		echo $this->jsonEncode($this->data);
+	}
+}
+
+/**
+ * @author Shopgate GmbH, 35510 Butzbach, DE
+ */
+abstract class ShopgatePluginApiResponseExport extends ShopgatePluginApiResponse {
 	public function setData($data) {
 		if (!file_exists($data)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_NOT_FOUND, 'File: '.$data, true);
@@ -1570,36 +1723,71 @@ class ShopgatePluginApiResponseTextCsv extends ShopgatePluginApiResponse {
 		
 		// output headers ...
 		header('HTTP/1.0 200 OK');
-		header('Content-Type: text/csv');
-		header('Content-Disposition: attachment; filename="'.basename($this->data).'"');
+		$headers = $this->getHeaders();
+		foreach ($headers as $header) {
+			header($header);
+		}
 		
-		// ... and csv file
-		while ($line = fgets($fp)) echo $line;
+		// ... and the file
+		while ($line = fgets($fp, 4096)) {
+			echo $line;
+		}
 		
 		// clean up and leave
 		fclose($fp);
 		exit;
+	}
+	
+	/**
+	 * Returns all except the "200 OK" HTTP headers to send before outputting the file.
+	 *
+	 * @return string[]
+	 */
+	protected abstract function getHeaders();
+}
+
+/**
+ * @author Shopgate GmbH, 35510 Butzbach, DE
+ */
+class ShopgatePluginApiResponseTextCsvExport extends ShopgatePluginApiResponseExport {
+	protected function getHeaders() {
+		return array(
+				'Content-Type: text/csv',
+				'Content-Disposition: attachment; filename="'.basename($this->data).'"',
+		);
 	}
 }
 
 /**
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
-class ShopgatePluginApiResponseAppJson extends ShopgatePluginApiResponse {
-	public function send() {
-		$data = array();
-		$data['error'] = $this->error;
-		$data['error_text'] = $this->error_text;
-		$data['trace_id'] = $this->trace_id;
-		$data['shopgate_library_version'] = $this->version;
-		if (!empty($this->pluginVersion)) {
-			$data['plugin_version'] = $this->pluginVersion;
+class ShopgatePluginApiResponseAppXmlExport extends ShopgatePluginApiResponseExport {
+	protected function getHeaders() {
+		return array(
+				'Content-Type: application/xml',
+				'Content-Disposition: attachment; filename="'.basename($this->data).'"',
+		);
+	}
+}
+
+/**
+ * @author Shopgate GmbH, 35510 Butzbach, DE
+ */
+class ShopgatePluginApiResponseAppJsonExport extends ShopgatePluginApiResponseExport {
+	protected function getHeaders() {
+		return array(
+				'Content-Type: application/json',
+				'Content-Disposition: attachment; filename="'.basename($this->data).'"',
+		);
+	}
 		}
-		$this->data = array_merge($data, $this->data);
 		
-		header("HTTP/1.0 200 OK");
-		header("Content-Type: application/json");
-		echo $this->jsonEncode($this->data);
+class ShopgatePluginApiResponseAppGzipExport extends ShopgatePluginApiResponseExport {
+	protected function getHeaders() {
+		return array(
+				'Content-Type: application/gzip',
+				'Content-Disposition: attachment; filename="'.basename($this->data).'"',
+		);
 	}
 }
 

@@ -17,8 +17,8 @@
 *}
 
 <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin,latin-ext'/>
-<link rel="stylesheet" type="text/css" href="{$mod_dir}assets/MyFontsWebfontsKit.css">
-<link rel="stylesheet" type="text/css" href="{$mod_dir}assets/configurations.css">
+<link rel="stylesheet" type="text/css" href="{$mod_dir}css/MyFontsWebfontsKit.css">
+<link rel="stylesheet" type="text/css" href="{$mod_dir}css/configurations.css">
 
 <div id="shopgateTeaser">
 
@@ -31,7 +31,7 @@
 				<img src="{$mod_dir}img/devices.png"/>
 			</div>
 			<div class="register">
-				<a href="{$offer_url}" target="_blank" class="register">{l s='Jetzt registrieren' mod='shopgate'}</a>
+				<a href="{$offer_url}" target="_blank" class="register">{l s='Register now​' mod='shopgate'}</a>
 			</div>
 		</div>
 	</div>
@@ -39,7 +39,7 @@
 	<div id="shopgateTeaserContent">
 
 		<div id="shopgateTeaserSidebar">
-			<h3>{l s='Empfohlen von Prestashop!' mod='shopgate'}</h3>
+			<h3>{l s='Recommended by Prestashop!' mod='shopgate'}</h3>
 			<ul>
 				<li>{l s='Mobile Website' mod='shopgate'}</li>
 				<li>{l s='iPhone App' mod='shopgate'}</li>
@@ -48,41 +48,38 @@
 				<li>{l s='Android Tablet App' mod='shopgate'}</li>
 				<li>{l s='200+ Features' mod='shopgate'}</li>
 			</ul>
-			<a href="#" class="video">
-				<img src="{$mod_dir}img/video_prev.png"/>
-			</a>
+			<iframe width="330" height="168" src="{$video_url}" frameborder="0" allowfullscreen></iframe>
 		</div>
 
 		<div id="shopgateTeaserMain">
-			<h3>{l s='Shopgate - Mobile Commerce für Prestashop' mod='shopgate'}</h3>
+			<h3>{l s='Shopgate - Mobile Commerce for Prestashop' mod='shopgate'}</h3>
 
-			<p>{l s='Mit Shopgate können Sie Ihre Produkte schnell und einfach auch über mobile Geräte verkaufen. Wir erstellen für Sie einen mobil optimierten Webshop und innovative Shopping-Apps mit zahlreichen Features. Steigern Sie durch gezieltes Marketing das Interesse des Kunden und somit Ihren Umsatz' mod='shopgate'}</p>
+			<p>{l s='With Shopgate you can sell your products quickly and easily via mobile devices. We will create a mobile-optimized webshop and innovative shopping apps with numerous features. Increase your sales and the customer\'s interest through targeted marketing!' mod='shopgate'}</p>
 
 			<img class="contentImage" src="{$mod_dir}img/content_image.png"/>
 
-			<h4>{l s='Ihre Vorteile mit Shopgate:' mod='shopgate'}</h4>
+			<h4>{l s='Your advantages with Shopgate​:' mod='shopgate'}</h4>
 			<ul>
-				<li>{l s='Touch-optimiert' mod='shopgate'}</li>
-				<li>{l s='Übersichtliche Navigation' mod='shopgate'}</li>
-				<li>{l s='Hohe Conversion-Rate' mod='shopgate'}</li>
-				<li>{l s='Aktive Conversion-Optimierung' mod='shopgate'}</li>
-				<li>{l s='SEO Optimiert' mod='shopgate'}</li>
+				<li>{l s='Touch-optimized​' mod='shopgate'}</li>
+				<li>{l s='Easy navigation' mod='shopgate'}</li>
+				<li>{l s='High Conversion Rates​' mod='shopgate'}</li>
+				<li>{l s='Active Conversion Optimization​' mod='shopgate'}</li>
+				<li>{l s='SEO Optimized' mod='shopgate'}</li>
 				<li>{l s='Push Marketing' mod='shopgate'}</li>
 				<li>{l s='Barcode & QR-Scanner' mod='shopgate'}</li>
 			</ul>
 
 			<div class="register">
-				<a href="{$offer_url}" target="_blank" class="register">{l s='Jetzt registrieren' mod='shopgate'}</a>
+				<a href="{$offer_url}" target="_blank" class="register">{l s='Register now' mod='shopgate'}</a>
 			</div>
 			<div class="registerText">
-				{l s='Haben Sie noch Fragen?' mod='shopgate'}<br/>
-				{l s='Rufen Sie uns an: 06033 / 7470-100' mod='shopgate'}
+				{l s='Got questions?' mod='shopgate'}<br/>
+				{l s='Give us a call at​: 06033 / 7470-100' mod='shopgate'}
 			</div>
 		</div>
 
 	</div>
-
-
+	
 </div>
 
 
@@ -114,7 +111,7 @@
 
 <form method="post" action="">
 	<fieldset>
-		<legend><img title="" alt="" src="{$mod_dir}logo.gif">{l s='Configuration' mod='shopgate'}</legend>
+		<legend><img title="" alt="" src="{$mod_dir}img/logo.png">{l s='Configuration' mod='shopgate'}</legend>
 
 		<h2>{l s='Info' mod='shopgate'}</h2>
 
@@ -158,21 +155,45 @@
 		<label>{l s='Language' mod='shopgate'}</label>
 
 		<div class="margin-form">
-			{html_options name='configs[language]' options=$langs selected={$configs.language|escape:'htmlall':'UTF-8'}}
+			<select name="configs[language]">
+				{foreach from=$langs key=key item=name}
+					<option value="{$key}"
+							{if $key == $configs.language}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+				{/foreach}
+			</select>
 		</div>
-		<label>{l s='Default shipping service' mod='shopgate'}:</label>
+		<label>{l s='Default shipping service' mod='shopgate'}</label>
 
 		<div class="margin-form">
-			{html_options name='settings[SHOPGATE_SHIPPING_SERVICE]' options=$shipping_service_list selected={$settings['SHOPGATE_SHIPPING_SERVICE']|escape:'htmlall':'UTF-8'}}
+			<select name="settings[SHOPGATE_SHIPPING_SERVICE]">
+				{foreach from=$shipping_service_list key=key item=name}
+					<option value="{$key}"
+							{if $key == $settings.SHOPGATE_SHIPPING_SERVICE}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+				{/foreach}
+			</select>
 		</div>
 
+		<label>{l s='Subscribe mobile customer to newsletter' mod='shopgate'}</label>
+		<div class="margin-form">
+			<label class="t"><input type="radio" value="1"
+									name="settings[SHOPGATE_SUBSCRIBE_NEWSLETTER]"{if $settings.SHOPGATE_SUBSCRIBE_NEWSLETTER} checked="checked"{/if}/>
+				<img title="{l s='Enabled' mod='shopgate'}" alt="{l s='Enabled' mod='shopgate'}" src="../img/admin/enabled.gif"></label>
+			<label class="t"><input type="radio" value="0"
+									name="settings[SHOPGATE_SUBSCRIBE_NEWSLETTER]"{if !$settings.SHOPGATE_SUBSCRIBE_NEWSLETTER} checked="checked"{/if}/>
+				<img title="{l s='Disabled' mod='shopgate'}" alt="{l s='Disabled' mod='shopgate'}" src="../img/admin/disabled.gif"></label>
+		</div><p style="clear: both;">&nbsp;</p>
 
 		<h2>{l s='Server' mod='shopgate'}</h2>
 
 		<label>{l s='Server' mod='shopgate'}</label>
 
 		<div class="margin-form">
-			{html_options name='configs[server]' options=$servers onchange="shopgate_settings_toggle_server(this);" selected={$configs.server|escape:'htmlall':'UTF-8'}}
+			<select name="configs[server]" onchange="shopgate_settings_toggle_server(this);">
+				{foreach from=$servers key=key item=name}
+					<option value="{$key}"
+							{if $key == $configs.server}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+				{/foreach}
+			</select>
 		</div>
 		<div id="shopgate_server" {if $configs.server !='custom'}style="display:none;"{/if}>
 			<label>{l s='Custom API URL' mod='shopgate'}</label>
@@ -228,6 +249,33 @@
 		<div class="margin-form">
 			<input type="text" name="configs[cname]" value="{$configs.cname|escape:'htmlall':'UTF-8'}" size="16"/>
 		</div>
+
+		<h2>{l s='Product export' mod='shopgate'}</h2>
+		<label>{l s='Description' mod='shopgate'}</label>
+		<div class="margin-form">
+			<select name="settings[SHOPGATE_PRODUCT_DESCRIPTION]">
+				{foreach from=$product_export_descriptions key=key item=name}
+					<option value="{$key}"
+							{if $key == $settings.SHOPGATE_PRODUCT_DESCRIPTION}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+				{/foreach}
+			</select>
+		</div>
+
+		{if $carrier_list}
+			<h2>{l s='Carrier mapping' mod='shopgate'}</h2>
+
+			{foreach from=$carrier_list key=config_key item=carrier}
+				<label>{$carrier.name|escape:'htmlall':'UTF-8'}</label>
+				<div class="margin-form">
+					<select name="settings[{$config_key}]">
+						{foreach from=$shipping_service_list key=key item=name}
+							<option value="{$key}"
+									{if $key == $settings.$config_key}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+						{/foreach}
+					</select>
+				</div>
+			{/foreach}
+		{/if}
 
 		<center><input class="button" type="submit" value="{l s='Save' mod='shopgate'}" name="saveConfigurations"></center>
 	</fieldset>

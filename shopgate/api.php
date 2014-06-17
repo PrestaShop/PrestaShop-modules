@@ -61,4 +61,3 @@ if(in_array(Tools::strtoupper($countryIsoCode), array('US'))){
 }
 
 $response = $plugin->handleRequest($_POST);
-?>

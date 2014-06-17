@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * NOTICE OF LICENSE
@@ -22,14 +22,18 @@ if (!defined('_PS_VERSION_')) exit;
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-
-define('SHOPGATE_PLUGIN_VERSION', '2.5.1');
+define('SHOPGATE_PLUGIN_VERSION', '2.6.15');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
 require_once(SHOPGATE_DIR.'classes/PSShopgatePlugin.php');
 require_once(SHOPGATE_DIR.'classes/PSShopgateOrder.php');
 require_once(SHOPGATE_DIR.'classes/PSShopgateConfig.php');
+require_once(SHOPGATE_DIR.'classes/PluginModelItemObject.php');
+require_once(SHOPGATE_DIR.'classes/PluginModelCategoryObject.php');
+require_once(SHOPGATE_DIR.'classes/PSShopgateCheckCart.php');
+
+#define('SHOPGATE_DEBUG', 1);
 
 class ShopGate extends PaymentModule {
 	private $shopgate_trans = array();
@@ -40,11 +44,18 @@ class ShopGate extends PaymentModule {
 		'SHOPGATE_SHIPPING_SERVICE' => 'OTHER',
 		'SHOPGATE_MIN_QUANTITY_CHECK' => 0,
 		'SHOPGATE_OUT_OF_STOCK_CHECK' => 0,
+		'SHOPGATE_PRODUCT_DESCRIPTION' => self::PRODUCT_EXPORT_DESCRIPTION,
+		'SHOPGATE_SUBSCRIBE_NEWSLETTER' => 0,
 	);
 	
-	private $shipping_service_list = array();
+	const PRODUCT_EXPORT_DESCRIPTION        = 'DESCRIPTION';
+	const PRODUCT_EXPORT_SHORT_DESCRIPTION  = 'SHORT';
+	const PRODUCT_EXPORT_BOTH_DESCRIPTIONS  = 'BOTH';
 	
-	function __construct() {
+	private $shipping_service_list = array();
+	private $product_export_descriptions = array();
+	
+	public function __construct() {
 		$this->name = 'shopgate';
 		if(version_compare(_PS_VERSION_, '1.5.0.0', '<')){
 			$this->tab = 'market_place';
@@ -76,6 +87,13 @@ class ShopGate extends PaymentModule {
 			'TOF'		=> $this->l('trans-o-flex'),
 			'UPS'		=> $this->l('UPS'),
 			'LAPOSTE'	=> $this->l('LA POSTE'),
+		);
+		
+		$this->product_export_descriptions = array
+		(
+			self::PRODUCT_EXPORT_DESCRIPTION       => $this->l('Description'),
+			self::PRODUCT_EXPORT_SHORT_DESCRIPTION => $this->l('Short Description'),
+			self::PRODUCT_EXPORT_BOTH_DESCRIPTIONS => $this->l('Short Description + Description'),
 		);
 		
 		$this->shopgate_trans = array(
@@ -116,7 +134,7 @@ class ShopGate extends PaymentModule {
 		ShopgateLogger::getInstance()->log($message, $type);
 	}
 	
-	function install() {
+	public function install() {
 		ShopgateLogger::getInstance()->enableDebug();
 		
 		$this->log('INSTALLATION - checking for cURL', ShopgateLogger::LOGTYPE_DEBUG);
@@ -222,7 +240,12 @@ class ShopGate extends PaymentModule {
 			}
 		}
 
-		$shopgateConfig = new ShopgateConfigPresta();
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+				array()
+
+		);
 		$shopgateConfig->registerPlugin();
 
 		$this->log('INSTALLATION - installation was successful', ShopgateLogger::LOGTYPE_DEBUG);
@@ -364,8 +387,11 @@ class ShopGate extends PaymentModule {
 		return true;
 	}
 	
-	function uninstall() {
-		$shopgateConfig = new ShopgateConfigPresta();
+	public function uninstall() {
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+			unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+			array());
 		
 		$carrier = Db::getInstance()->ExecuteS('SELECT `id_carrier` FROM `'._DB_PREFIX_.'carrier` WHERE `name` = "Shopgate"');
 
@@ -407,6 +433,10 @@ class ShopGate extends PaymentModule {
 				return false;
 			}
 		}
+
+		// delete config from database
+		Configuration::deleteByName('SHOPGATE_CONFIG');
+
 		// Uninstall
 		return parent::uninstall();
 	}
@@ -451,7 +481,11 @@ class ShopGate extends PaymentModule {
 			$indexFile = Configuration::get('PS_HOMEPAGE_PHP_SELF');
 		}
 
-		$shopgateConfig = new ShopgateConfigPresta();
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+				array()
+		);
 		
 		// instantiate and set up redirect class
 		$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
@@ -487,7 +521,11 @@ class ShopGate extends PaymentModule {
 		$orderState = $params['newOrderStatus'];
 		$shopgateOrder = PSShopgateOrder::instanceByOrderId($id_order);
 		
-		$shopgateConfig = new ShopgateConfigPresta();
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+				array()
+		);
 		$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
 		$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
 		
@@ -530,7 +568,11 @@ class ShopGate extends PaymentModule {
 			
 			if(isset($shippingService)){
 				try {
-					$shopgateConfig = new ShopgateConfigPresta();
+					$shopgateConfig = new ShopgateConfigPresta(
+						Configuration::get('SHOPGATE_CONFIG') ?
+							unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+							array()
+					);
 					$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
 					$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
 					$shopgateMerchantApi->addOrderDeliveryNote($shopgateOrder->order_number, $shippingService, $trackingNumber, true, false);
@@ -548,10 +590,14 @@ class ShopGate extends PaymentModule {
 			return '';
 		}
 		
-		$sOrder = null;
+		$sOrder = new ShopgateOrder();
 		$error = null;
 		try {
-			$shopgateConfig = new ShopgateConfigPresta();
+			$shopgateConfig = new ShopgateConfigPresta(
+				Configuration::get('SHOPGATE_CONFIG') ?
+					unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+					array()
+			);
 			$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
 			$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
 			$orders = $shopgateMerchantApi->getOrders(array('order_numbers[0]'=>$shopgateOrder->order_number));
@@ -561,7 +607,7 @@ class ShopGate extends PaymentModule {
 					$sOrder = $o;
 				}
 			}
-		} catch(ShopgateMerchantApiException $e) {
+		} catch(Exception $e) {
 			$error = $e->getMessage();
 		}
 		
@@ -614,18 +660,42 @@ class ShopGate extends PaymentModule {
 		$this->context->smarty->assign('shippingInfos', $sOrder->getShippingInfos());
 		$this->context->smarty->assign('shipping_service_list', $this->shipping_service_list);
 		$this->context->smarty->assign('sModDir', $this->_path);
-		$this->context->smarty->assign('api_url', Tools::getHttpHost(true, true).$this->_path.'api.php');
+		$this->context->smarty->assign('api_url', $this->getApiUrl());
 		
 		return $this->display(__FILE__, 'views/templates/admin/admin_order.tpl');
 	}
 	
 	public function getContent() {
+
 		include_once dirname(__FILE__).'/backward_compatibility/backward.php';
-		
+
 		$output = '';
-		$shopgateConfig = new ShopgateConfigPresta();
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+				array()
+		);
 		
 		$bools = array('true'=>true, 'false'=>false);
+	
+		/** @var CarrierCore $carrierModel */
+		$carrierModel = new Carrier();
+		$carrierCollection = $carrierModel->getCarriers($this->context->language->id);
+
+		$settingKeys = array(
+			'SHOPGATE_SHIPPING_SERVICE',
+			'SHOPGATE_MIN_QUANTITY_CHECK',
+			'SHOPGATE_OUT_OF_STOCK_CHECK',
+			'SHOPGATE_PRODUCT_DESCRIPTION',
+			'SHOPGATE_SUBSCRIBE_NEWSLETTER',
+		);
+		$carriers = array();
+
+		foreach ($carrierCollection as $carrier) {
+			$configKey = 'SHOPGATE_CARRIER_MAPPING_' . $carrier['id_carrier'];
+			$carriers[$configKey] = $carrier;
+			$settingKeys[] = $configKey;
+		}
 	
 		if(Tools::isSubmit('saveConfigurations')) {
 			$configs = Tools::getValue('configs', array());
@@ -639,9 +709,11 @@ class ShopGate extends PaymentModule {
 			$configs['use_stock'] = !((bool)Configuration::get('PS_ORDER_OUT_OF_STOCK'));
 	
 			$settings = Tools::getValue('settings', array());
+
 			foreach($settings as $key => $value){
-				if(in_array($key, array('SHOPGATE_SHIPPING_SERVICE', 'SHOPGATE_MIN_QUANTITY_CHECK', 'SHOPGATE_MIN_QUANTITY_CHECK', 'SHOPGATE_OUT_OF_STOCK_CHECK', 'SHOPGATE_OUT_OF_STOCK_CHECK'))){
+				if(in_array($key, $settingKeys)){
 					Configuration::updateValue($key, htmlentities($value, ENT_QUOTES));
+				//}
 				}
 			}
 			$languageID = Configuration::get('PS_LANG_DEFAULT');
@@ -652,7 +724,8 @@ class ShopGate extends PaymentModule {
 			
 			try {
 				$shopgateConfig->loadArray($configs);
-				$shopgateConfig->saveFile(array_keys($configs));
+				$shopgateConfig->initFolders();
+				$shopgateConfig->save(array_keys($configs));
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Configurations updated').'</div>';
 			} catch (ShopgateLibraryException $e) {
 				$output .= '<div class="conf error"><img src="../img/admin/error.png" alt="'.$this->l('Error').'" />'.$this->l('Error').': '.$e->getAdditionalInformation().'</div>';
@@ -661,7 +734,7 @@ class ShopGate extends PaymentModule {
 		
 		$langs = array();
 		foreach(Language::getLanguages() as $id => $l) {
-			$langs[strtoupper($l['iso_code'])] = $l['name'];
+			$langs[Tools::strtoupper($l['iso_code'])] = $l['name'];
 		}
 	
 		$servers = array(
@@ -672,9 +745,17 @@ class ShopGate extends PaymentModule {
 	
 		$enables = array();
 	
-		$settings = Configuration::getMultiple(array('SHOPGATE_SHIPPING_SERVICE', 'SHOPGATE_MIN_QUANTITY_CHECK', 'SHOPGATE_OUT_OF_STOCK_CHECK'));
-		$shopgateConfig = new ShopgateConfigPresta();
+		$settings = Configuration::getMultiple($settingKeys);
+		/**
+		 * read config from db
+		 */
+		$shopgateConfig = new ShopgateConfigPresta(
+			Configuration::get('SHOPGATE_CONFIG') ?
+				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
+				array()
+		);
 		$configs = $shopgateConfig->toArray();
+
 
 		$this->context->smarty->assign('settings', $settings);
 		$this->context->smarty->assign('shipping_service_list', $this->shipping_service_list);
@@ -684,12 +765,45 @@ class ShopGate extends PaymentModule {
 		$this->context->smarty->assign('enables', $enables);
 		$this->context->smarty->assign('configs', $configs);
 		$this->context->smarty->assign('mod_dir', $this->_path);
-		$this->context->smarty->assign('api_url', Tools::getHttpHost(true, true).$this->_path.'api.php');
+		$this->context->smarty->assign('api_url', $this->getApiUrl());
 		$this->context->smarty->assign('offer_url', $this->getOfferLink());
+		$this->context->smarty->assign('video_url', $this->getVideoLink());
+		$this->context->smarty->assign('product_export_descriptions', $this->product_export_descriptions);
+		$this->context->smarty->assign('carrier_list', $carriers);
 
 		return $output.$this->display(__FILE__, 'views/templates/admin/configurations.tpl');
 	}
 
+	/**
+	 * returns the api url
+	 *
+	 * @return string
+	 */
+	protected function getApiUrl()
+	{
+		$api_url = 'http://';
+
+		/** @var ShopCore $shopModel */
+		$shopModel = $this->context->shop;
+		if($shopModel->domain) {
+			if($shopModel->domain)
+				$api_url=$api_url.$shopModel->domain;
+			if($shopModel->physical_uri)
+				$api_url=$api_url.$shopModel->physical_uri;
+			if($shopModel->virtual_uri)
+				$api_url=$api_url.$shopModel->virtual_uri;
+		} else {
+			$api_url = _PS_BASE_URL_.__PS_BASE_URI__;
+		}
+
+		return $api_url.'modules/shopgate/api.php';
+	}
+
+	/**
+	 * returns the offer link by iso code
+	 *
+	 * @return string
+	 */
 	protected function getOfferLink() {
 
 		$query = 'https://www.shopgate.com/%s/prestashop_offer';
@@ -709,5 +823,24 @@ class ShopGate extends PaymentModule {
 		}
 
 		return sprintf($query, $country);
+	}
+
+	protected function getVideoLink()
+	{
+		switch ($this->context->language->iso_code) {
+			case 'de' :
+				$url = '//www.youtube.com/embed/z7EY_nakQDc?controls=0&showinfo=0&rel=0';
+				break;
+			case 'pl' :
+				$url = '//www.youtube.com/embed/nx6d2L2J4y8?controls=0&showinfo=0&rel=0';
+				break;
+			case 'fr' :
+				$url = '//www.youtube.com/embed/0cbXcocbgkA?controls=0&showinfo=0&rel=0';
+				break;
+			default :
+				$url = '//www.youtube.com/embed/I6UcmbGdZcw?controls=0&showinfo=0&rel=0';
+		}
+
+		return $url;
 	}
 }

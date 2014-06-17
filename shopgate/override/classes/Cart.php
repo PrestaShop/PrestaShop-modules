@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * NOTICE OF LICENSE
