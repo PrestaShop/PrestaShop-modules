@@ -24,6 +24,9 @@ require_once(dirname(__FILE__).'/config.api.php');
 
 class TextMasterAPI
 {
+	const DEBUG_FILENAME = 'TEXTMASTER_DEBUG_FILENAME';
+	const DEBUG_FILENAME_LENGTH	= 6;
+	
 	private $api_key;
 
 	private $api_secret;
@@ -51,7 +54,6 @@ class TextMasterAPI
 		$this->connection &= $this->testConnection();
 
 		$this->module_instance  = (!$module_instance or !is_object($module_instance)) ? Module::getInstanceByName('textmaster') : $module_instance; // initiates module instance
-		$this->getAuthors();
     }
 	
 	public static function getInstance($module_instance = null, $api_key = null, $api_secret = null)
@@ -125,6 +127,22 @@ class TextMasterAPI
 
 		$curl = $this->initConnection($name, $public, $clients, $version);
 		$content = curl_exec($curl);
+		
+		if ($this->module_instance->debug_mode)
+		{
+			$decoded_content = Tools::jsonDecode($content, true);
+			
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+			['.date('Y-m-d H:i:s').']</h2><h2>Request \''.TEXTMASTER_API_URI . ($version ? "/$version" : '') . '/' . ($clients ? 'clients/' : '') . ($public ? 'public/' : '') . $name.'\'
+			</h2><h3>Response:</h3><pre>';
+			
+			$debug_content .= print_r($decoded_content, true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(self::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
+		
 		curl_close($curl);
 		$this->$name = Tools::jsonDecode($content, true); // append data to cache
 		return $this->$name;
@@ -147,6 +165,20 @@ class TextMasterAPI
 			curl_setopt($curl, CURLOPT_POSTFIELDS, Tools::jsonEncode($data));
 
 		$result = Tools::jsonDecode(curl_exec($curl), true);
+
+		if ($this->module_instance->debug_mode)
+		{
+			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_API_URI . '/'.TEXTMASTER_API_VERSION . '/clients/' . $name.'\'
+				</h2><h3>Method: '.$method.', Params:</h3><pre>';
+			$debug_content .= print_r($data, true);
+			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
+			$debug_content .= print_r($result, true);
+			$debug_content .= '</pre>';
+			$debug_filename = Configuration::get(self::DEBUG_FILENAME);
+			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+		}
 
 		$info = curl_getinfo($curl);
 
