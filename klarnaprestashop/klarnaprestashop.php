@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.7';
+		$this->version = '1.7.8';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -439,6 +439,7 @@ class KlarnaPrestaShop extends PaymentModule
 
 					if (!$error)
 					{
+						Configuration::updateValue('KLARNA_CONFIGURATION_OK', true);
 						Configuration::updateValue('KLARNA_STORE_ID_'.$country['name'], $storeId);
 						Configuration::updateValue('KLARNA_SECRET_'.$country['name'], $secret);
 						Configuration::updateValue('KLARNA_INVOICE_FEE_'.$country['name'], (float)Tools::getValue('klarnaInvoiceFee'.$country['name']));

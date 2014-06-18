@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.8';
+		$this->version = '1.1.9';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
@@ -651,7 +651,7 @@ class Feedaty extends Module
 
 		/* All is sent by curl */
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, 'http://'.'www.zoorate.com/ws/feedatyapi.svc/SetKeyValue');
+		curl_setopt($ch, CURLOPT_URL, 'http://'.'www.zoorate.com/ws/feedatyapi.svc/SetPluginKeyValue');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_TIMEOUT, '60');
 		curl_setopt($ch, CURLOPT_POST, 1);

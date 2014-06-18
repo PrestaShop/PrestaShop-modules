@@ -39,7 +39,7 @@ class alliance3 extends PaymentModule
 	{
 		$this->name = 'alliance3';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.5';
+		$this->version = '1.2.6';
 		$this->author = 'go4.fi';
 		$this->className = 'alliance3';
 		

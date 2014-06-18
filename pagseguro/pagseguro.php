@@ -50,7 +50,7 @@ class PagSeguro extends PaymentModule
 	{
 		$this->name = 'pagseguro';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6';
+		$this->version = '1.7';
 		$this->author = 'PagSeguro Internet LTDA.';
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
@@ -465,6 +465,8 @@ class PagSeguro extends PaymentModule
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'status' => 'ok',
 				'id_order' => (int)$params['objOrder']->id));
+
+			Configuration::updateValue('PAGSEGURO_CONFIGURATION_OK', true);
 
 			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
 				$this->smarty->assign('reference', $params['objOrder']->reference);

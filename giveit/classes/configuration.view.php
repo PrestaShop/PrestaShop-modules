@@ -42,7 +42,8 @@ class GiveItConfigurationView {
 			'data_key' => Configuration::get(GiveIt::DATA_KEY),
 			'private_key' => Configuration::get(GiveIt::PRIVATE_KEY),
 			'button_active' => (int)Configuration::get(GiveIt::BUTTON_ACTIVE),
-			'button_position' => Configuration::get(GiveIt::BUTTON_POSITION)
+			'button_position' => Configuration::get(GiveIt::BUTTON_POSITION),
+			'mode' => Configuration::get(GiveIt::MODE),
 		));
 
 		if (version_compare(_PS_VERSION_, '1.6', '>='))

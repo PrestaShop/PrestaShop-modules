@@ -32,7 +32,7 @@ class BluePay extends PaymentModule
 	{
 		$this->name = 'bluepay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3';
+		$this->version = '1.4';
 		$this->author = 'BluePay Processing, LLC';
 		$this->need_instance = 0;
 
@@ -783,6 +783,7 @@ class BluePay extends PaymentModule
 				'order_reference' => $order_reference
 			)
 		);
+		Configuration::updateValue('BLUEPAY_CONFIGURATION_OK', true);
 		return $this->display(__FILE__, 'views/templates/front/order_confirmation.tpl');
 	}
 

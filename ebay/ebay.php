@@ -80,7 +80,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.6.6';
+		$this->version = '1.6.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -1227,7 +1227,8 @@ class Ebay extends Module
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
 						'percent' => pSQL($percentValue),
-						'date_upd' => pSQL($date)
+						'date_upd' => pSQL($date),
+						'sync' => 0
 					);
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))

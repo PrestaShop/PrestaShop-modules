@@ -19,7 +19,7 @@ class Firstdata extends PaymentModule
 	{
 		$this->name = 'firstdata';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.4';
+		$this->version = '1.2.5';
 
 		parent::__construct();
 
@@ -207,6 +207,7 @@ class Firstdata extends PaymentModule
 			{
 				$this->_insertTransaction(array('id_cart' => (int)$cart->id, 'authorization_num' => pSQL($json_result->authorization_num), 'transaction_tag' => (int)$json_result->transaction_tag, 'date_add' => date('Y-m-d H:i:s')));
 				$this->validateOrder((int)$cart->id, (int)Configuration::get('PS_OS_PAYMENT'), (float)$json_result->amount, $this->displayName, pSQL($json_result->ctr), array(), null, false, $cart->secure_key);
+				Configuration::updateValue('FIRSTDATA_CONFIGURATION_OK', true);
 
 				/** @since 1.5.0 Attach the First Data Transaction ID to this Order */
 				if (version_compare(_PS_VERSION_, '1.5', '>='))

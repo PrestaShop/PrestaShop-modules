@@ -40,7 +40,7 @@ class ecopresto extends Module{
 	{
 		$this->name = 'ecopresto';
 		$this->tab = 'shipping_logistics';
-		$this->version = 2.8;
+		$this->version = '2.10';
 		$this->need_instance = 0;
 		$this->author = 'Ether Création';
 		$this->displayName = $this->l('Drop shipping - Ecopresto');

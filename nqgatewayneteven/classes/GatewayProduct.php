@@ -517,6 +517,8 @@ class GatewayProduct extends Gateway
 			
 			$response = $this->client->PostItems($params);
             $itemsStatus = '';
+			
+			Configuration::updateValue('NETEVEN_CONFIGURATION_OK', true);
 
 			if ($this->getValue('debug'))
 				Toolbox::displayDebugMessage(self::getL('Sends data to NetEven'));

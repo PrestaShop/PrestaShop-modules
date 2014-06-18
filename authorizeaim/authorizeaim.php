@@ -33,7 +33,7 @@ class AuthorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5.1';
+		$this->version = '1.5.2';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -117,7 +117,10 @@ class AuthorizeAIM extends PaymentModule
 			return;
 
 		if ($params['objOrder']->getCurrentState() != Configuration::get('PS_OS_ERROR'))
+		{
+			Configuration::updateValue('AUTHORIZEAIM_CONFIGURATION_OK', true);
 			$this->context->smarty->assign(array('status' => 'ok', 'id_order' => intval($params['objOrder']->id)));
+		}
 		else
 			$this->context->smarty->assign('status', 'failed');
 

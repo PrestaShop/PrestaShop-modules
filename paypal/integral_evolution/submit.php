@@ -53,8 +53,14 @@ class PayPalIntegralEvolutionSubmit extends OrderConfirmationControllerCore
 		
 		$this->context->smarty->assign(array(
 			'order' => $order,
-			'price' => $price
+			'price' => $price,
 		));
+		if(version_compare(_PS_VERSION_, '1.5', '>'))
+		{
+			$this->context->smarty->assign(array(
+				'reference_order' => Order::getUniqReferenceOf($id_order)
+			));
+		}
 
 		echo $this->context->smarty->fetch(_PS_MODULE_DIR_.'/paypal/views/templates/front/order-confirmation.tpl');
 	}

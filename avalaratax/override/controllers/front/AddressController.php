@@ -22,24 +22,24 @@ class AddressController extends AddressControllerCore
 		parent::preProcess();
 	}
 	
-	public function processSubmitAddress()
+	public function processSubmitAddress()
 	{
 		include_once(_PS_MODULE_DIR_.'avalaratax/avalaratax.php');
 		$avalara_module = new AvalaraTax();
 		if ($avalara_module->active)
 		{
 			$result = $avalara_module->fixPOST();
-			if (isset($result['ResultCode']) && $result['ResultCode'] == 'Error')
-			{
-				if (isset($result['Messages']['Summary']))
-					foreach ($result['Messages']['Summary'] as $error)
-						$this->errors[] = Tools::safeOutput($error);
-				else
-					$this->errors[] = Tools::displayError('This address cannot be submitted');
-				return false;
+			if (isset($result['ResultCode']) && $result['ResultCode'] == 'Error')
+			{
+				if (isset($result['Messages']['Summary']))
+					foreach ($result['Messages']['Summary'] as $error)
+						$this->errors[] = Tools::safeOutput($error);
+				else
+					$this->errors[] = Tools::displayError('This address cannot be submitted');
+				return false;
 			}
-		}
-
-		parent::processSubmitAddress();
-	}
+		}
+
+		parent::processSubmitAddress();
+	}
 }

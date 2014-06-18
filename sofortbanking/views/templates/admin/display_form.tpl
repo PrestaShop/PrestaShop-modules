@@ -88,7 +88,7 @@ fieldset a:hover {
 		</select>
 		<p>
 			{l s='You need a bank account with' mod='sofortbanking'}
-			<a target="_blank" href="http://www.sofort-bank.com" target="_blank">Sofort Bank</a>
+			<a target="_blank" href="https://www.sofortueberweisung.de/payment/users/register/666" target="_blank">Sofort Bank</a>
 			{l s='You need a bank account with and customer protection must be enabled in your project settings. Please check with' mod='sofortbanking'}
 			<a target="_blank" href="https://kaeuferschutz.sofort-bank.com/consumerProtections/index/{$sofort.config.SOFORTBANKING_PROJECT_ID|escape:'htmlall':'UTF-8'}">{l s='this link' mod='sofortbanking'}</a>
 			{l s='if customer protection is activated and enabled before enabling it here.' mod='sofortbanking'}
