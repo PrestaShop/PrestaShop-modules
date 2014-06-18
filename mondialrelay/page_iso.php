@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2012 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,23 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2012 PrestaShop SA
+*  @version  Release: $Revision: 14011 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-//header('Content-Type: text/html; charset=iso-8859-15');
-function ote_accent($str){
-
-$str = str_replace("'", " ", $str);
-
-$str = utf8_decode($str);
-
-$ch = strtr($str,
-
-      '����������������������������������������������������',
-
-      'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-
-return utf8_encode($ch);
-
+function ote_accent($str) 
+{
+	$str = str_replace("'", ' ', $str);
+	$str = utf8_decode($str);
+	$ch = strtr($str, '����������������������������������������������������', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+	return utf8_encode($ch);
 }
