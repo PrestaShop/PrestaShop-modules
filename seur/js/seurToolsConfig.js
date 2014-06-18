@@ -166,8 +166,8 @@ $(document).ready(function(){
 		var undefined;
 		var tmpTxt = "";
 		var send = true;
-		inputsRequireds = $('li.required input', $(this));
-		selectsRequireds = $('li.required select', $(this));
+		inputsRequireds = $('.required input', $(this));
+		selectsRequireds = $('.required select', $(this));
 		$(".form_error").remove();
 		$.each(inputsRequireds, function(index, input){
 			if($(input).val() == ''){

@@ -25,7 +25,11 @@
 */
 
 $(document).ready(function(){
-		
+
+	$('a.buttongenerar').click(function(){
+		$('input.buttonguardar').css('display', 'none').remove();
+	});
+	
 	//------------------
 	// ORDERS -
 	//--------------------
