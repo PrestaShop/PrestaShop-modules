@@ -303,6 +303,20 @@ class alliance3 extends PaymentModule
 
 	private function _postValidationSubscription()
 	{
+		/*
+		CompanyName=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&CID=21229&
+		FirstName=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&
+		LastName=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&
+		Address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&
+		City=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&
+		State=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&
+		Zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')))."&
+		Phone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&
+		Email=".urlencode(Tools::safeOutput(Tools::getValue('email')))."&
+		customer_notes=".urlencode(Tools::safeOutput(Tools::getValue('comments')));
+		*/
+		$url="https://aurora.visionpayments.com/aurora/lead_post.php";
+		
 		$url="https://www.sales-exec.net/LeadReceiver/LeadInterface.asmx/ReceiveLead?LID=10983&VID=22324&CompanyName=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&CID=21229&FirstName=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&LastName=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&Address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&City=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&State=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&Zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')))."&Phone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&Email=".urlencode(Tools::safeOutput(Tools::getValue('email')))."&customer_notes=".urlencode(Tools::safeOutput(Tools::getValue('comments')));
 		
 		//plain post
