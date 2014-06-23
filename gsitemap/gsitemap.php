@@ -28,6 +28,7 @@ if (!defined('_PS_VERSION_'))
 
 class Gsitemap extends Module
 {
+	const HOOK_ADD_URLS = 'gSitemapAppendUrls';
 
 	public $cron = false;
 	private $sql_checks = array();
@@ -72,7 +73,8 @@ class Gsitemap extends Module
 
 		return parent::install() &&
 		Db::getInstance()->Execute('CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'gsitemap_sitemap` (`link` varchar(255) DEFAULT NULL, `id_shop` int(11) DEFAULT 0) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;') &&
-		$this->_installOverride();
+		$this->_installOverride() &&
+		$this->_installHook();
 	}
 
 	private function _installOverride()
@@ -89,6 +91,15 @@ class Gsitemap extends Module
 		return true;
 	}
 
+	private function _installHook()
+	{
+		$hook = new Hook();
+		$hook->name = self::HOOK_ADD_URLS;
+		$hook->title = 'GSitemap Append URLs';
+		$hook->description = 'This hook allows a module to add URLs to a generated sitemap';
+		$hook->position = true;
+		return $hook->save();
+	}
 
 	/**
 	 * Google Sitemap uninstallation process:
@@ -114,7 +125,8 @@ class Gsitemap extends Module
 		) as $key => $val)
 			if (!Configuration::deleteByName($key))
 				return false;
-
+		$hook = new Hook(Hook::getIdByName($hook_name));
+		$hook->delete();
 		return parent::uninstall() && $this->removeSitemap();
 	}
 
@@ -647,6 +659,25 @@ class Gsitemap extends Module
 
 		return true;
 	}
+	
+	private function _getModuleLink(&$link_sitemap, $lang, &$index, &$i, $num_link = 0)
+	{
+		$modules_links = Hook::exec(self::HOOK_ADD_URLS, array('lang' => $lang), null, true);
+		$links = array();
+		foreach ($modules_links as $module_links) {
+			$links = array_merge($links, $module_links);
+		}
+		foreach ($module_links as $n => $link) {
+			if ($num_link > $n) {
+				continue;
+			}
+			$link['type'] = 'module';
+			if (!$this->_addLinkToSitemap($link_sitemap, $link, $lang['iso_code'], $index, $i, $n)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Create the Google Sitemap by Shop
@@ -677,7 +708,7 @@ class Gsitemap extends Module
 		$languages = Language::getLanguages();
 		$lang_stop = Tools::getValue('lang') ? true : false;
 		$id_obj = Tools::getValue('id') ? (int)Tools::getValue('id') : 0;
-		$type_array = array('home', 'meta', 'product', 'category', 'manufacturer', 'supplier', 'cms');
+		$type_array = array('home', 'meta', 'product', 'category', 'manufacturer', 'supplier', 'cms', 'module');
 		//$type_array = array('product', 'manufacturer', 'supplier', 'cms');
 		foreach ($languages as $lang)
 		{
