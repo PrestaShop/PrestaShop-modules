@@ -43,6 +43,7 @@
 	position: absolute;
 	left: -10000px;
 	height: 400px;
+	width: 100%;
 }
 
 #collectionPointInfo{ display: none; }
