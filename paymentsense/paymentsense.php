@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.10';
+		$this->version = '1.9.11';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
@@ -398,10 +398,6 @@ class PaymentSense extends PaymentModule
 		$HashString .= '&Password='.$paymentsense_gatewaypass;
 		$HashString .= '&Amount='.$amount;
 		$HashString .= '&CurrencyCode='.$this->getCurrencyISO($currencyps);
-		$HashString .= '&EchoAVSCheckResult=True';
-		$HashString .= '&EchoCV2CheckResult=True';
-		$HashString .= '&EchoThreeDSecureAuthenticationCheckResult=True';
-		$HashString .= '&EchoCardType=True';
 		$HashString .= '&OrderID='.$gatewayorderID;
 		$HashString .= '&TransactionType='.$paymentsense_transactiontype;
 		$HashString .= '&TransactionDateTime='.$datestamp;
@@ -429,19 +425,12 @@ class PaymentSense extends PaymentModule
 		$HashString .= '&ResultDeliveryMethod=SERVER';
 		$HashString .= '&ServerResultURL='.$module_url.'callback.php';
 		$HashString .= '&PaymentFormDisplaysResult=False';
-		$HashString .= '&ServerResultURLCookieVariables='.'';
-		$HashString .= '&ServerResultURLFormVariables=orderTotal='.$orderTotal;
-		$HashString .= '&ServerResultURLQueryStringVariables=';
 		$HashDigest = sha1($HashString);
 
 		$parameters['HashDigest'] = $HashDigest;
 		$parameters['MerchantID'] = $this->getSetting('PAYMENTSENSE_GATEWAYID');
 		$parameters['Amount'] = $amount;
 		$parameters['CurrencyCode'] = $this->getCurrencyISO($currencyps);
-		$parameters['EchoAVSCheckResult'] = 'True';
-		$parameters['EchoCV2CheckResult'] = 'True';
-		$parameters['EchoThreeDSecureAuthenticationCheckResult'] = 'True';
-		$parameters['EchoCardType'] = 'True';
 		$parameters['OrderID'] = $gatewayorderID;
 		$parameters['TransactionType'] = $paymentsense_transactiontype;
 		$parameters['TransactionDateTime'] = $datestamp;
@@ -469,12 +458,6 @@ class PaymentSense extends PaymentModule
 		$parameters['ResultDeliveryMethod'] = 'SERVER';
 		$parameters['ServerResultURL'] = $module_url.'callback.php';
 		$parameters['PaymentFormDisplaysResult'] = 'False';
-		$parameters['ServerResultURLCookieVariables'] = '';
-		$parameters['ServerResultURLFormVariables'] = 'orderTotal='.$orderTotal;
-		$parameters['ServerResultURLQueryStringVariables'] = '';
-
-		$parameters['ThreeDSecureCompatMode'] = 'false';
-		$parameters['ServerResultCompatMode'] = 'false';
 
 		$form_target = 'https://mms.paymentsensegateway.com/Pages/PublicPages/PaymentForm.aspx';
 
