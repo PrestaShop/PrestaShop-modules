@@ -251,7 +251,7 @@ class Gsitemap extends Module
 				$this->context->smarty->assign(
 					array(
 						'gsitemap_number' => (int)$index,
-						'gsitemap_refresh_page' => './index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&continue=1&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1).'&id_shop='.$this->context->shop->id
+						'gsitemap_refresh_page' => './index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&continue=1&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj).'&id_shop='.$this->context->shop->id
 					)
 				);
 
@@ -259,18 +259,18 @@ class Gsitemap extends Module
 			}
 			else if ($index % 20 == 0 && $this->cron)
 			{
-				header('Refresh: 5; url=http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue=1&token='.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1).'&id_shop='.$this->context->shop->id);
+				header('Refresh: 5; url=http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue=1&token='.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj).'&id_shop='.$this->context->shop->id);
 				die();
 			}
 			else
 			{
 				if ($this->cron)
-					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue=1&token='.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1).'&id_shop='.$this->context->shop->id);
+					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.'modules/gsitemap/gsitemap-cron.php?continue=1&token='.substr(Tools::encrypt('gsitemap/cron'), 0, 10).'&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj).'&id_shop='.$this->context->shop->id);
 				else
 				{
 					$admin_folder = str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
 					$admin_folder = substr($admin_folder, 1);
-					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.$admin_folder.'/index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&continue=1&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj + 1).'&id_shop='.$this->context->shop->id);
+					header('location: http'.(Configuration::get('PS_SSL_ENABLED') ? 's' : '').'://'.Tools::getShopDomain(false, true).__PS_BASE_URI__.$admin_folder.'/index.php?tab=AdminModules&configure=gsitemap&token='.Tools::getAdminTokenLite('AdminModules').'&tab_module='.$this->tab.'&module_name=gsitemap&continue=1&type='.$new_link['type'].'&lang='.$lang.'&index='.$index.'&id='.($id_obj).'&id_shop='.$this->context->shop->id);
 				}
 				die();
 			}
@@ -315,7 +315,7 @@ class Gsitemap extends Module
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
 		$link = new Link();
-		$metas = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'meta` WHERE `id_meta` > '.(int)$id_meta.' ORDER BY `id_meta` ASC');
+		$metas = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'meta` WHERE `id_meta` >= '.(int)$id_meta.' ORDER BY `id_meta` ASC');
 		foreach ($metas as $meta)
 		{
 			$url = '';
@@ -364,7 +364,7 @@ class Gsitemap extends Module
 		if (method_exists('ShopUrl', 'resetMainDomainCache'))
 			ShopUrl::resetMainDomainCache();
 
-		$products_id = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product_shop` WHERE `active` = 1 AND `id_shop`='.$this->context->shop->id);
+		$products_id = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'product_shop` WHERE `active` = 1 AND `id_shop` = '.(int)$this->context->shop->id.' AND `id_product` >= '.(int)$id_product.' ORDER BY `id_product` ASC');
 
 		foreach ($products_id as $product_id)
 		{
@@ -439,7 +439,7 @@ class Gsitemap extends Module
 		$categories_id = Db::getInstance()->ExecuteS(
 			'SELECT c.id_category FROM `'._DB_PREFIX_.'category` c
 				INNER JOIN `'._DB_PREFIX_.'category_shop` cs ON c.`id_category` = cs.`id_category`
-				WHERE c.`active` = 1 AND c.`id_category` != 1 AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = '.(int)$this->context->shop->id.' ORDER BY c.`id_category` ASC'
+				WHERE c.`active` = 1 AND c.`id_category` != 1 AND c.id_parent > 0 AND c.`id_category` > '.(int)$id_category.' AND cs.`id_shop` = '.(int)$this->context->shop->id.' ORDER BY c.`id_category` ASC'
 		);
 
 		foreach ($categories_id as $category_id)
@@ -506,7 +506,7 @@ class Gsitemap extends Module
 			'SELECT m.`id_manufacturer` FROM `'._DB_PREFIX_.'manufacturer` m
 			INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml on m.`id_manufacturer` = ml.`id_manufacturer`'.
 			($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON m.`id_manufacturer` = ms.`id_manufacturer` ' : '').
-			' WHERE m.`active` = 1  AND m.`id_manufacturer` > '.(int)$id_manufacturer.
+			' WHERE m.`active` = 1  AND m.`id_manufacturer` >= '.(int)$id_manufacturer.
 			($this->tableColumnExists(_DB_PREFIX_.'manufacturer_shop') ? ' AND ms.`id_shop` = '.(int)$this->context->shop->id : '').
 			' AND ml.`id_lang` = '.(int)$lang['id_lang'].
 			' ORDER BY m.`id_manufacturer` ASC'
@@ -569,7 +569,7 @@ class Gsitemap extends Module
 			'SELECT s.`id_supplier` FROM `'._DB_PREFIX_.'supplier` s
 			INNER JOIN `'._DB_PREFIX_.'supplier_lang` sl ON s.`id_supplier` = sl.`id_supplier` '.
 			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? 'INNER JOIN `'._DB_PREFIX_.'supplier_shop` ss ON s.`id_supplier` = ss.`id_supplier`' : '').' 
-			WHERE s.`active` = 1 AND s.`id_supplier` > '.(int)$id_supplier.
+			WHERE s.`active` = 1 AND s.`id_supplier` >= '.(int)$id_supplier.
 			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? ' AND ss.`id_shop` = '.(int)$this->context->shop->id : '').' 
 			AND sl.`id_lang` = '.(int)$lang['id_lang'].' 
 			ORDER BY s.`id_supplier` ASC'
@@ -633,7 +633,7 @@ class Gsitemap extends Module
 			'SELECT c.`id_cms` FROM `'._DB_PREFIX_.'cms` c INNER JOIN `'._DB_PREFIX_.'cms_lang` cl ON c.`id_cms` = cl.`id_cms` '.
 			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? 'INNER JOIN `'._DB_PREFIX_.'cms_shop` cs ON c.`id_cms` = cs.`id_cms` ' : '').
 			'INNER JOIN `'._DB_PREFIX_.'cms_category` cc ON c.id_cms_category = cc.id_cms_category AND cc.active = 1
-				WHERE c.`active` =1 AND c.`id_cms` > '.(int)$id_cms.
+				WHERE c.`active` =1 AND c.`id_cms` >= '.(int)$id_cms.
 			($this->tableColumnExists(_DB_PREFIX_.'supplier_shop') ? ' AND cs.id_shop = '.(int)$this->context->shop->id : '').
 			' AND cl.`id_lang` = '.(int)$lang['id_lang'].
 			' ORDER BY c.`id_cms` ASC'
