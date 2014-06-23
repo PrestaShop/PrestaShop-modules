@@ -2,7 +2,7 @@
 <module>
 	<name>paymentsense</name>
 	<displayName><![CDATA[PaymentSense]]></displayName>
-	<version><![CDATA[1.9.10]]></version>
+	<version><![CDATA[1.9.11]]></version>
 	<description><![CDATA[Process transactions through the PaymentSense gateway.]]></description>
 	<author><![CDATA[PaymentSense]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
