@@ -35,7 +35,7 @@ class Desjardins extends PaymentModule
 	{
 		$this->name = 'desjardins';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.3.9';
+		$this->version = '0.3.9.1';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -205,7 +205,7 @@ class Desjardins extends PaymentModule
 		$params['reference'] = (int)$this->context->cart->id;
 		$params['texte-libre'] = 'PrestaShop';
 		$params['mail'] = $this->context->customer->email;
-		$params['lgue'] = in_array($this->context->language->iso_code, array('EN', 'FR')) ? Tools::strtoupper($this->context->language->iso_code) : 'EN';
+		$params['lgue'] = in_array(Tools::strtoupper($this->context->language->iso_code), array('EN', 'FR')) ? Tools::strtoupper($this->context->language->iso_code) : 'EN';
 		$params['societe'] = Configuration::get('DESJARDINS_CODE_SOCIETE');
 		$params['url_retour'] = $this->context->link->getPageLink('order');
 		$params['url_retour_ok'] = version_compare(_PS_VERSION_, '1.4', '<') ? (Configuration::get('PS_SSL_ENABLED') ?
