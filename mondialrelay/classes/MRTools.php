@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 6839 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,9 +43,9 @@ class MRTools
 	 */
 	public static function seemsUTF8($str)
 	{
-		$length = strlen($str);
+		$length = Tools::strlen($str);
 
-		for($i = 0; $i < $length; $i++)
+		for ($i = 0; $i < $length; $i++)
 		{
 			$c = ord($str[$i]);
 			if ($c < 0x80)
@@ -52,13 +53,13 @@ class MRTools
 			else if (($c & 0xE0) == 0xC0)
 				$n = 1; # 110bbbbb
 			else if (($c & 0xF0) == 0xE0)
-				$n=2; # 1110bbbb
+				$n = 2; # 1110bbbb
 			else if (($c & 0xF8) == 0xF0)
 				$n = 3; # 11110bbb
 			else if (($c & 0xFC) == 0xF8)
 				$n = 4; # 111110bb
 			else if (($c & 0xFE) == 0xFC)
-				$n=5; # 1111110b
+				$n = 5; # 1111110b
 			else
 				return false; # Does not match any model
 			for ($j = 0; $j < $n; $j++)
@@ -202,7 +203,7 @@ class MRTools
 				.chr(244).chr(245).chr(246).chr(248).chr(249).chr(250).chr(251)
 				.chr(252).chr(253).chr(255);
 
-			$chars['out'] = "EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy";
+			$chars['out'] = 'EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy';
 
 			$string = strtr($string, $chars['in'], $chars['out']);
 			$double_chars['in'] = array(chr(140), chr(156), chr(198), chr(208), chr(222), chr(223), chr(230), chr(240), chr(254));
@@ -212,17 +213,17 @@ class MRTools
 		return $string;
 	}
 
-	// Add for 1.3 compatibility and avoid duplicate code
+	/* Add for 1.3 compatibility and avoid duplicate code */
 	public static function jsonEncode($result)
 	{
 		return (method_exists('Tools', 'jsonEncode')) ?
-			Tools::jsonEncode($result) : json_encode($result);
+			Tools::jsonEncode($result) : Tools::jsonEncode($result);
 	}
 	
 	/*
 	** Fix security and compatibility for PS < 1.4.5
 	*/
-	static function bqSQL($string)
+	public static function bqSQL($string)
 	{
 		return str_replace('`', '\`', pSQL($string));
 	}
@@ -230,7 +231,7 @@ class MRTools
 	/*
 	** Check zip code by country
 	*/
-	static public function checkZipcodeByCountry($zipcode, $params)
+	public static function checkZipcodeByCountry($zipcode, $params)
 	{
 		$id_country = $params['id_country'];
 		
@@ -255,13 +256,13 @@ class MRTools
 		return false;
 	}
 
-	static public function getFormatedPhone($phone_number)
+	public static function getFormatedPhone($phone_number)
 	{
-		$begin = substr($phone_number, 0, 3);
+		$begin = Tools::substr($phone_number, 0, 3);
 		$pad_number = (strpos($begin, '+3') !== false) ? 12 :
 			(strpos($begin, '00') ? 13 : 10);
 
-		return str_pad(substr(preg_replace(MRTools::REGEX_CLEAN_PHONE, '', $phone_number), 0, $pad_number), $pad_number, '0');
+		return str_pad(Tools::substr(preg_replace(MRTools::REGEX_CLEAN_PHONE, '', $phone_number), 0, $pad_number), $pad_number, '0');
 	}
 }
 

@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 8783 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -56,14 +57,14 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	private $_relayPointNumList = array(); 
 	private $_id_address_delivery = 0;
 	private $_webServiceKey = '';
-	private $_mondialrelay = NULL;
+	private $_mondialrelay = null;
 	private $_markCode = '';
 	
 	private $_resultList = array(
 		'error' => array(),
 		'success' => array());
 	
-	private $_webserviceURL = 'http://www.mondialrelay.fr/webservice/Web_Services.asmx?WSDL';
+	private $_webserviceURL = '';
 	
 	public function __construct($params, $object)	
 	{
@@ -73,11 +74,12 @@ class MRRelayDetail implements IMondialRelayWSMethod
 		$this->_id_address_delivery = (int)($params['id_address_delivery']);
 		$this->_webServiceKey = $this->_mondialRelay->account_shop['MR_KEY_WEBSERVICE'];
 		$this->_markCode = $this->_mondialRelay->account_shop['MR_CODE_MARQUE'];
+		$this->_webserviceURL = MondialRelay::MR_URL.'webservice/Web_Services.asmx?WSDL';
 	}
 	
 	public function __destruct()
 	{
-		 unset($this->_mondialrelay);
+		unset($this->_mondialrelay);
 	}
 	
 	public function init()
@@ -110,29 +112,25 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	{
 		// RootCase is the array case where the main information are stored
 		// it's an array containing id_mr_selected and an array with the necessary fields
-		foreach($this->_fieldsList as &$rootCase)
+		foreach ($this->_fieldsList as &$rootCase)
 		{
 			$concatenationValue = '';
-			foreach($rootCase['list'] as $paramName => &$valueDetailed)
+			foreach ($rootCase['list'] as $paramName => &$valueDetailed)
 				if ($paramName != 'Texte' && $paramName != 'Security')
 				{
 					// Mac server make an empty string instead of a cleaned string
 					// TODO : test on windows and linux server
 					$cleanedString = MRTools::removeAccents($valueDetailed['value']);
-					$valueDetailed['value'] = !empty($cleanedString) ? strtoupper($cleanedString) : strtoupper($valueDetailed['value']);
+					$valueDetailed['value'] = !empty($cleanedString) ? Tools::strtoupper($cleanedString) : Tools::strtoupper($valueDetailed['value']);
 					
 					// Call a pointer function if exist to do different test
-					if (isset($valueDetailed['methodValidation']) &&
-							method_exists('MRTools', $valueDetailed['methodValidation']) && 
-							isset($valueDetailed['params']) && 
-							MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
+					if (isset($valueDetailed['methodValidation']) && method_exists('MRTools', $valueDetailed['methodValidation']) && isset($valueDetailed['params']) && MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
 						$concatenationValue .= $valueDetailed['value'];
 					// Use simple Regex test given by MondialRelay
-					else if (isset($valueDetailed['regexValidation']) &&
-							preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
+					else if (isset($valueDetailed['regexValidation']) && preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 						$concatenationValue .= $valueDetailed['value'];
 					// If the key is required, we set an error, else it's skipped 
-					else if ((!strlen($valueDetailed['value']) && $valueDetailed['required']) || strlen($valueDetailed['value']))
+					elseif ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
 					{
 						if (empty($valueDetailed['value']))
 							$error = $this->_mondialrelay->l('This key').' ['.$paramName.'] '.$this->_mondialrelay->l('is empty and need to be filled');
@@ -142,7 +140,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 					}
 				}
 			$concatenationValue .= $this->_webServiceKey;
-			$rootCase['list']['Security']['value'	] = strtoupper(md5($concatenationValue));
+			$rootCase['list']['Security']['value'] = Tools::strtoupper(md5($concatenationValue));
 		}
 	}
 
@@ -154,7 +152,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	{
 		$params = array();
 		
-		foreach($fields as $keyName => $valueDetailed)
+		foreach ($fields as $keyName => $valueDetailed)
 			$params[$keyName] = $valueDetailed['value'];
 		return $params;
 	}
@@ -166,12 +164,8 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	private function _parseResult($client, $result, $params)
 	{
 		$errors = array();
-
-		if ($client->fault)
-			$errors[$errorTotal++] = $this->_mondialrelay->l('It seems the request isn\'t valid:').
-				$result;
-		$result = $result['WSI2_DetailPointRelaisResult'];
-		if (($errorNumber = $result['STAT']) != 0)
+		$result = $result->WSI2_DetailPointRelaisResult;
+		if (($errorNumber = $result->STAT) != 0)
 		{
 			$errors[] = $this->_mondialrelay->l('There is an error number : ').$errorNumber;
 			$errors[] = $this->_mondialrelay->l('Details : ').
@@ -191,18 +185,19 @@ class MRRelayDetail implements IMondialRelayWSMethod
 			$orderedDate = array();
 			// Format hour properly
 			$priority = 0;
-			foreach($HDayList as $day => $tradDayName)
+			foreach ($HDayList as $day => $tradDayName)
 			{
-				foreach($result[$day]['string'] as $num => &$value)
+				$mr_day = $result->{$day};
+				foreach ($mr_day['string'] as $num => &$value)
 					if ($value == '0000')
 						$value = '';
 					else
 						$value = implode('h', str_split($value, 2));
-				$orderedDate[$priority++] = array('name' => $tradDayName, 'list' => $result[$day]);
+				$orderedDate[$priority++] = array('name' => $tradDayName, 'list' => $mr_day);
 				unset($result[$day]);
 			}
-			$result['orderedDate'] = $orderedDate;
-			$this->_resultList['success'][$result['Num']] = $result;
+			$result->orderedDate = $orderedDate;
+			$this->_resultList['success'][$result->Num] = $result;
 		}	
 		$this->_resultList['error'][] = $errors;
 	}
@@ -212,20 +207,15 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	*/
 	public function send()
 	{
-		if ($client = new nusoap_client($this->_webserviceURL, true))
+		if ($client = new SoapClient($this->_webserviceURL))
 		{
 			$client->soap_defencoding = 'UTF-8';
 			$client->decode_utf8 = false;
 			
-			foreach($this->_fieldsList as $rootCase)
+			foreach ($this->_fieldsList as $rootCase)
 			{
 				$params = $this->_getSimpleParamArray($rootCase['list']);
-				$result = $client->call(
-					'WSI2_DetailPointRelais', 
-					$params, 
-					'http://www.mondialrelay.fr/webservice/', 
-					'http://www.mondialrelay.fr/webservice/WSI2_GetEtiquettes');
-				
+				$result = $client->WSI2_DetailPointRelais($params);				
 				$this->_parseResult($client, $result, $params);
 			}
 			unset($client);
@@ -237,7 +227,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	/*
 	** Generate a list of perma link
 	*/
-	static public function getPermaLink($relayList, $id_address_delivery)
+	public static function getPermaLink($relayList, $id_address_delivery)
 	{
 		if (!($address = new Address($id_address_delivery)))
 			return array();
@@ -245,12 +235,12 @@ class MRRelayDetail implements IMondialRelayWSMethod
 		$mondialrelay = new MondialRelay();
 		
 		$list = array();
-		$iso = strtoupper(Country::getIsoById($address->id_country));
+		$iso = Tools::strtoupper(Country::getIsoById($address->id_country));
 		$ens = $mondialrelay->account_shop['MR_ENSEIGNE_WEBSERVICE'].$mondialrelay->account_shop['MR_CODE_MARQUE'];
 		$url = 'http://www.mondialrelay.com/public/permanent/details_relais.aspx?ens='.$ens;
-		foreach($relayList as $relayNum)
+		foreach ($relayList as $relayNum)
 		{
-			$crc = strtoupper(MD5('<'.strtoupper($ens).'>'.$relayNum.$iso.'<'.$mondialrelay->account_shop['MR_KEY_WEBSERVICE'].'>'));
+			$crc = Tools::strtoupper(md5('<'.Tools::strtoupper($ens).'>'.$relayNum.$iso.'<'.$mondialrelay->account_shop['MR_KEY_WEBSERVICE'].'>'));
 			$list[$relayNum] = $url.'&num='.$relayNum.'&pays='.$iso.'&crc='.$crc;
 		}
 		unset($address, $mondialrelay);

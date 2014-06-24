@@ -1,7 +1,30 @@
-var PS_MRObject = (function($, undefined) {
+/*
+* 2007-2014 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 16986 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+var PS_MRObject = (function($, undifened) {
 
-	var selected_id_carrier = 0;
-	var selected_relay_point = 0;
 	var toggle_status_order_list = false;
 	var toggle_history_order_list = false;
 	var relay_point_max = 10;
@@ -52,7 +75,7 @@ var PS_MRObject = (function($, undefined) {
 		$.ajax(
 			{
 				type : 'POST',
-				url : window.location.href,
+				url : _PS_MR_MODULE_DIR_+"ajax.php",
 				data :	{'detailedExpeditionList':detailedExpeditionList, 'method':'MRGetTickets', 'mrtoken':mrtoken},
 				dataType: 'json',
 				success: function(json)
@@ -64,9 +87,9 @@ var PS_MRObject = (function($, undefined) {
 							if (json.success[id_order])
 							{
 								$('#URLA4_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A4 + '">\
-								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'images/pdf_icon.jpg" alt="download pdf"" /></a>');
+								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#URLA5_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A5 + '">\
-								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'images/pdf_icon.jpg" alt="download pdf"" /></a>');
+								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#expeditionNumber_' + id_order).html(json.success[id_order].expeditionNumber);
 								$('#detailHistory_' + id_order).children('td').children('input').attr('value', json.success[id_order].id_mr_history);
 								$('#detailHistory_' + id_order).children('td').children('input').attr('id', 'PS_MRHistoryId_' + json.success[id_order].id_mr_history);
@@ -195,6 +218,7 @@ var PS_MRObject = (function($, undefined) {
 	{
 		var order_id_list = new Array();
 		var weight_list = new Array();
+		var insurance_list = new Array();
 
 		$('#PS_MRSubmitButtonGenerateTicket').css('display', 'none');
 		$('#PS_MRSubmitGenerateLoader').fadeIn('slow');
@@ -204,15 +228,17 @@ var PS_MRObject = (function($, undefined) {
 		{
 			order_id_list.push($(this).val());
 			weight_list.push(($('#weight_' + $(this).val()).val()) + '-' + $(this).val());
+			insurance_list.push(($('#insurance_' + $(this).val()).val()) + '-' + $(this).val());
 		});
 
 		$.ajax(
 			{
 				type : 'POST',
-				url : window.location.href,
+				url : _PS_MR_MODULE_DIR_+"ajax.php",
 				data :	{'order_id_list' : order_id_list,
 					'numSelected' : numSelected,
 					'weight_list' : weight_list,
+					'insurance_list' : insurance_list,
 					'method' : 'MRCreateTickets',
 					'mrtoken' : mrtoken},
 				dataType: 'json',
@@ -297,7 +323,7 @@ var PS_MRObject = (function($, undefined) {
 		$.ajax(
 			{
 				type : 'POST',
-				url : window.location.href,
+				url : _PS_MR_MODULE_DIR_+"ajax.php",
 				data :	{'history_id_list' : history_id_list,
 					'numSelected' : numSelected,
 					'method' : 'DeleteHistory',
@@ -315,6 +341,50 @@ var PS_MRObject = (function($, undefined) {
 				}
 			});
 	}
+	
+	function PS_MRSubmitButtonPrintSelected(format) {
+		var history_id_list = new Array();
+		var history_id_list_str = '';		
+		$('input[name="history_id_list[]"]:checked').each(function()
+		{
+			var id_order = $.trim($(this).parent().next().html());
+			var expeditionNumber = $.trim($(this).parent().next().next().html());
+			history_id_list.push({'id_order':id_order, 'expeditionNumber':expeditionNumber});			
+			history_id_list_str += expeditionNumber+';';
+		});
+		
+		if(history_id_list.length) {
+			history_id_list_str = history_id_list_str.substr(0,(history_id_list_str.length-1));
+			$.ajax(
+				{
+					type : 'POST',
+					url : _PS_MR_MODULE_DIR_+"ajax.php",
+					data :	{
+						'detailedExpeditionList' : history_id_list_str,
+						'history_id_list' : history_id_list,
+						'method' : 'MRDownloadPDF',
+						'mrtoken' : mrtoken},
+					dataType: 'json',
+					success: function(json)
+					{						
+						var url = json.success[0];
+						if(format == 4 && url!=null) {
+							document.location.href= url.URL_PDF_A4;
+						}
+						if(format == 5 && url!=null) {
+							document.location.href= url.URL_PDF_A5;
+						}		
+						if(format == '10x15' && url!=null) {
+							document.location.href= url.URL_PDF_10x15;
+						}							
+					},
+					error: function(xhr, ajaxOptions, thrownError)
+					{
+						;
+					}
+				});
+		}
+	}
 
 	/**
 	 * Display a fancy box displaying details about the
@@ -325,7 +395,7 @@ var PS_MRObject = (function($, undefined) {
 		$.ajax(
 			{
 				type: 'POST',
-				url: window.location.href,
+				url: _PS_MR_MODULE_DIR_+"ajax.php",
 				data: {'method' : 'uninstallDetail',
 					'action' : 'showFancy',
 					'href' : url,
@@ -394,7 +464,7 @@ var PS_MRObject = (function($, undefined) {
 		$.ajax(
 			{
 				type: 'POST',
-				url: window.location.href,
+				url: _PS_MR_MODULE_DIR_+"ajax.php",
 				data: {'method' : 'uninstallDetail',
 					'action' : 'backupAndUninstall',
 					'mrtoken' : mrtoken},
@@ -424,7 +494,7 @@ var PS_MRObject = (function($, undefined) {
 
 		// Ajax call to add the selection in the database (compatibility for 1.3)
 		// But keep this way to add a selection better that the hook
-		MRjQuery.ajax({
+		$.ajax({
 			type: 'POST',
 			url: _PS_MR_MODULE_DIR_ + 'ajax.php',
 			data: {'method' : 'addSelectedCarrierToDB',
@@ -500,17 +570,7 @@ var PS_MRObject = (function($, undefined) {
 	 */
 	function PS_MRHideLastRelayPointList()
 	{
-		var value = 0;
-		
-		if (PS_MRData.PS_VERSION < '1.5')
-			value = $('.id_carrier:checked').val();
-		else if (PS_MRData.PS_VERSION >= '1.5')
-			value = $('.delivery_option_radio:checked').val().replace(',', '');
-
-		if (value != selected_id_carrier) {
-			selected_id_carrier = value;
-			$('.PS_MRSelectedCarrier').fadeOut('fast');
-		}
+		$('.PS_MRSelectedCarrier').fadeOut('fast');
 	}
 
 	/**
@@ -558,7 +618,7 @@ var PS_MRObject = (function($, undefined) {
 			// Store Separated data for the ajax query
 			if (tab.length == 3)
 			{
-				var relayPointNumber = selected_relay_point = tab[1];
+				var relayPointNumber = tab[1];
 				var id_carrier = tab[2];
 				PS_MRAddSelectedRelayPointInDB(relayPointNumber, id_carrier);
 			}
@@ -599,7 +659,7 @@ var PS_MRObject = (function($, undefined) {
 							'PS_MRFloatRelayPointSelected' : 'PS_MRFloatRelayPointSelecteIt';
 
 						$('<div class="PS_MRRelayPointInfo clearfix" id="' + contentBlockid + '">'
-							+ '<img src="' + _PS_MR_MODULE_DIR_ + 'logo_hd.png" />'
+							+ '<img src="' + _PS_MR_MODULE_DIR_ + 'img/logo_hd.png" />'
 							+ '<p><b>' + json.success[relayPoint].LgAdr1 + '</b><br /> ' +  json.success[relayPoint].LgAdr3
 							+ ' - ' + json.success[relayPoint].CP + ' - ' + json.success[relayPoint].Ville
 							+ ' ' + json.success[relayPoint].Pays + '</p>'
@@ -654,20 +714,18 @@ var PS_MRObject = (function($, undefined) {
 	function PS_MRFetchRelayPoint(carrierSelected)
 	{
 		carrier_id = carrierSelected.val();
-
 		// Block is an input, we need the 'tr' element
-		blockTR = carrierSelected.closest('tr');
-
+		blockTR = carrierSelected.parent().parent();
 		// Add a new line to the table after the clicked parent element
 		blockTR.after(' \
 		<tr class="PS_MRSelectedCarrier" id="PS_MRSelectedCarrier_' + carrier_id + '"> \
 			<td colspan="4"><div> \
-				<img src="' + _PS_MR_MODULE_DIR_ + 'images/loader.gif" /> \
+				<img src="' + _PS_MR_MODULE_DIR_ + 'images/loader.gif" alt="" /> \
 			</div> \
 		</td></tr>');
 
 		fetchingRelayPoint[carrier_id] = $('#PS_MRSelectedCarrier_' + carrier_id);
-		MRjQuery.ajax(
+		$.ajax(
 			{
 				type: 'POST',
 				url: _PS_MR_MODULE_DIR_ + 'ajax.php',
@@ -861,7 +919,8 @@ var PS_MRObject = (function($, undefined) {
 	 */
 	function PS_MRGetTimeRelayDetail(relayInfo)
 	{
-		onClick = 'onClick="PS_MROpenPopupDetail(\'' + relayInfo.permaLinkDetail + '\')"';
+		var params = "\'height=200, width=400, top=100, left=100, toolbar=no, menubar=yes, location=no, resizable=yes, scrollbars=no, status=no\'";
+		onClick = 'onClick="window.open(\'' + relayInfo.permaLinkDetail + '\', \'MondialRelay\', '+ params +' )"';
 
 		var html = ' \
 		<div class="PS_MRGmapBulbe"> \
@@ -996,7 +1055,6 @@ var PS_MRObject = (function($, undefined) {
 		var block_form_id = block_id + '_block';
 		var total_form = $('.PS_MRFormType').length;
 		var i = 0;
-
 		$('.PS_MRFormType').each(function()
 		{
 			if ($(this).attr('id') != block_form_id)
@@ -1013,16 +1071,15 @@ var PS_MRObject = (function($, undefined) {
 		if ($('#' + block_form_id).length == 0)
 			$('#MR_error_account').fadeIn('fast');
 	}
-
+	
 	function checkToDisplayRelayList()
 	{
 		if (typeof PS_MRData != 'undefined')
 		{
-			PS_MRSelectedRelayPoint['relayPointNum'] = selected_relay_point = PS_MRData.pre_selected_relay;
+			PS_MRSelectedRelayPoint['relayPointNum'] = PS_MRData.pre_selected_relay;
 			// PS_VERSION < '1.5'
 			if (PS_MRData.PS_VERSION < '1.5')
 			{
-				selected_id_carrier = $('input[name=id_carrier]:checked').val();
 				// Bind id_carrierX to an ajax call
 				$.each(PS_MRData.carrier_list, function(i, carrier) {
 					$('#id_carrier' + carrier.id_carrier).click(function(){
@@ -1036,23 +1093,15 @@ var PS_MRObject = (function($, undefined) {
 			}
 			else if (PS_MRData.PS_VERSION >= '1.5' && PS_MRData.carrier)
 			{ // 1.5 way
-				selected_id_carrier = $('input[class=delivery_option_radio]:checked').val().replace(',', '');
-				if (PS_MRData.PS_VERSION < '1.6')
-					var carrier_block = $('input[class=delivery_option_radio]:checked').parent('div.delivery_option');
-				else var carrier_block = $('input[class=delivery_option_radio]:checked').closest('div.delivery_option').children('div');
+				var carrier_block = $('input[class=delivery_option_radio]:checked').parent('div.delivery_option');
 				
 				PS_MRCarrierMethodList[PS_MRData.carrier.id] = PS_MRData.carrier.id_mr_method;	
 				PS_MRSelectedRelayPoint['carrier_id'] = PS_MRData.carrier.id;
-
 				// Simulate 1.4 table to store the relay point fetched
 				$(carrier_block).append(
-					'<div>'
-						+'<table width="' + $(carrier_block).width() + '">'
-							+'<tr>'
-							+	  '<td><input type="hidden" id="id_carrier' + PS_MRData.carrier.id + '" value="'+PS_MRData.carrier.id+'" /></td>'
-							+ '</tr>'
-						+'</table>'
-					+'</div>');
+					'<div><table width="' + $(carrier_block).width() + '"><tr>'
+						+	  '<td><input type="hidden" id="id_carrier' + PS_MRData.carrier.id + '" value="'+PS_MRData.carrier.id+'" /></td>'
+						+ '</tr></table></div>');
 	
 				PS_MRCarrierMethodList[PS_MRData.carrier.id_carrier] = PS_MRData.carrier.id_mr_method;
 				PS_MRCarrierSelectedProcess($('#id_carrier' + PS_MRData.carrier.id), PS_MRData.carrier.id, PS_MRData.carrier.mr_dlv_mode);
@@ -1101,6 +1150,18 @@ var PS_MRObject = (function($, undefined) {
 		{
 			deleteSelectedHistories();
 		});
+		$('#PS_MRSubmitButtonPrintSelectedA4').click(function()
+		{
+			PS_MRSubmitButtonPrintSelected(4);
+		});
+		$('#PS_MRSubmitButtonPrintSelectedA5').click(function()
+		{
+			PS_MRSubmitButtonPrintSelected(5);
+		});
+		$('#PS_MRSubmitButtonPrintSelected10x15').click(function()
+		{
+			PS_MRSubmitButtonPrintSelected('10x15');
+		});
 
 		// Shipping method list
 		$('.send_disable_carrier_form').click(function() {
@@ -1113,21 +1174,6 @@ var PS_MRObject = (function($, undefined) {
 				PS_MRDisplayConfigurationForm($(this).attr('id'));
 			});
 		})
-		
-		$('input[name="processCarrier"]').click(function() {
-			if (PS_MRData != 'undefined' && PS_MRData.carrier != null) {
-				var result = false;
-				$.each(PS_MRData.carrier_list, function(key, value) {
-					if (value.id_carrier == selected_id_carrier && selected_relay_point > 0)
-						result = true;
-				});
-				if (result == true)
-					return true;
-				alert(PS_MRWarningMessage);
-				return false;
-			}
-			return true;
-		});
 
 		if (typeof(PS_MR_SELECTED_TAB ) != 'undefined')
 			$('#MR_' + PS_MR_SELECTED_TAB + '_block').fadeIn('fast');
@@ -1164,3 +1210,35 @@ var PS_MRObject = (function($, undefined) {
 		}
 	};
 })(jQuery);
+
+
+
+
+/**
+ * Check connexion to webservice	 * 
+ */
+function mr_checkConnexion() {
+	var enseigne = $("#MR_enseigne_webservice").val();
+	var code_marque = $("#MR_code_marque").val();
+	var key = $("#MR_webservice_key").val();
+	$.ajax(
+	{
+		type : 'POST',
+		url: _PS_MR_MODULE_DIR_ + 'connexion.php',
+		data :	"enseigne="+enseigne+"&code_marque="+code_marque+"&key="+key+"&token="+mrtoken,
+		dataType: 'json',
+		success: function(json)
+		{
+			if (json && json.success)
+			{
+				alert("Connection valide. Veuillez mettre à jour votre compte.");
+			}
+			else {
+				if(json && json.error)
+					alert(json.error);
+				else
+					alert("Service Indisponible");
+			}
+		} 
+	});
+}

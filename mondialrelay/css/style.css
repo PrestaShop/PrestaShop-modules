@@ -183,7 +183,7 @@ div.PS_MRLoader
 div#PS_MRAskBackupContent
 {
 	border:1px solid #000;
-	background: url(../logo_hd.png) no-repeat 10px 50px #BEBEBE;
+	background: url(../img/logo_hd.png) no-repeat 10px 50px #BEBEBE;
 	line-height:18px;
 	font-size:14px;
 	height:190px;
@@ -260,7 +260,7 @@ tr.PS_MRSelectedCarrier > td
 .PS_MRRelayPointInfo .PS_MRFloatRelayPointSelected
 {
 	color:#333333;
-	background:url(../images/selectRelayPoint.png) no-repeat 0px -25px;
+	background:url(../img/selectRelayPoint.png) no-repeat 0px -25px;
 }
 
 .PS_MRFloatRelayPointSelected
@@ -278,7 +278,7 @@ tr.PS_MRSelectedCarrier > td
 	color:#666666;
 	text-decoration: none;
 	margin-top: 8px;
-	background:url(../images/selectRelayPoint.png) no-repeat 0px 0px;
+	background:url(../img/selectRelayPoint.png) no-repeat 0px 0px;
 }
 
 .PS_MRFloatRelayPointSelected a.PS_MRSelectRelayPointButton
@@ -292,13 +292,13 @@ tr.PS_MRSelectedCarrier > td
 	text-decoration: none;
 	margin-top: 8px;
 	color:#333333;
-	background:url(../images/selectRelayPoint.png) no-repeat 0px -25px;
+	background:url(../img/selectRelayPoint.png) no-repeat 0px -25px;
 }
 
 a.PS_MRSelectRelayPointButton:hover
 {
 	color:#333333;
-	background:url(../images/selectRelayPoint.png) no-repeat 0px -25px;
+	background:url(../img/selectRelayPoint.png) no-repeat 0px -25px;
 }
 
 .PS_MRGmapDefaultPosition
@@ -384,7 +384,7 @@ div#PS_MRPersonalizedFields
 	border: 1px solid #268CCD;
 	padding: 8px 6px 8px 34px;
 	color: #383838;
-	background: #F1F9FF url(../images/help.png) no-repeat 6px 5px;
+	background: #F1F9FF url(../img/help.png) no-repeat 6px 5px;
 	border-radius: 3px;
 }
 

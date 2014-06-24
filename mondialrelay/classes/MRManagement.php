@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 16117 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,20 +52,24 @@ class MRManagement extends MondialRelay
 	*/
 	public function addSelectedCarrierToDB()
 	{
-		$query = 'SELECT `id_mr_selected`
-					FROM `' . _DB_PREFIX_ . 'mr_selected`
-					WHERE `id_cart` = '.(int)$this->_params['id_cart'];
-		
+		$db = Db::getInstance();
+		// insutance 		
+		$sql = 'SELECT insurance FROM '._DB_PREFIX_.'mr_method WHERE id_mr_method = '.(int)$this->_params['id_mr_method'];
+		$insurance = $db->getValue($sql);
+	
+		$query = 'SELECT `id_mr_selected` FROM `' ._DB_PREFIX_.'mr_selected` WHERE `id_cart` = '.(int)$this->_params['id_cart'].' ';
+
 		// Not exist and needed for database
 		unset($this->_params['relayPointInfo']['permaLinkDetail']);
 		
 		// Update if Exist else add a new entry	
-		if (Db::getInstance()->getRow($query))
+		if ($db->getRow($query))
 		{
 			$query = 'UPDATE `'._DB_PREFIX_.'mr_selected` 
-				SET `id_method` = '.(int)$this->_params['id_mr_method'].', ';
+				SET `id_method` = '.(int)$this->_params['id_mr_method'].', 
+				`MR_insurance` = '.(int)$insurance.',';
 			if (is_array($this->_params['relayPointInfo']))
-				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
+				foreach ($this->_params['relayPointInfo'] as $nameKey => $value)
 					$query .= '`MR_Selected_'.MRTools::bqSQL($nameKey).'` = "'.pSQL($value).'", ';
 			else // Clean the existing relay point data
 				$query .= '
@@ -81,20 +86,22 @@ class MRManagement extends MondialRelay
 		else
 		{
 			$query = 'INSERT INTO `'._DB_PREFIX_.'mr_selected`
-				(`id_customer`, `id_method`, `id_cart`, ';
+				(`id_customer`, `id_method`, `id_cart`, MR_insurance, ';
 			if (is_array($this->_params['relayPointInfo']))
-				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
+				foreach ($this->_params['relayPointInfo'] as $nameKey => $value)
 					$query .= '`MR_Selected_'.MRTools::bqSQL($nameKey).'`, ';
 			$query = rtrim($query, ', ').') VALUES (
 					'.(int)$this->_params['id_customer'].',
 					'.(int)$this->_params['id_mr_method'].',
-					'.(int)$this->_params['id_cart'].', ';
+					'.(int)$this->_params['id_cart'].', 
+					'.(int)$insurance.', '
+			;
 			if (is_array($this->_params['relayPointInfo']))
-				foreach($this->_params['relayPointInfo'] as $nameKey => $value)
+				foreach ($this->_params['relayPointInfo'] as $nameKey => $value)
 					$query .= '"'.pSQL($value).'", ';
 			$query = rtrim($query, ', ').')';
 		}
-		Db::getInstance()->execute($query);
+		$db->execute($query);
 	}
 
 	public function uninstallDetail()
@@ -140,7 +147,7 @@ class MRManagement extends MondialRelay
 			$query = '
 				DELETE FROM `'._DB_PREFIX_.'mr_history`
 				WHERE id IN(';
-			foreach($this->_params['historyIdList'] as $id)
+			foreach ($this->_params['historyIdList'] as $id)
 				$query .= (int)$id.', ';
 			$query = trim($query, ', ').')';
 			
@@ -149,13 +156,12 @@ class MRManagement extends MondialRelay
 			if (count($success['deletedListId']) != $totalDeleted)
 			{
 				$error[] = $this->l('Some items can\'t be removed, please try to remove it again');
-				foreach($success['deletedListId'] as $id)
+				foreach ($success['deletedListId'] as $id)
 				{
 					$query = '
 						SELECT id FROM `'._DB_PREFIX_.'mr_history`
 						WHERE id='.(int)$id;
-					if (Db::getInstance()->getRow($query) && 
-							($key = array_search($id, $success['deletedListId'])) !== FALSE)
+					if (Db::getInstance()->getRow($query) && ($key = array_search($id, $success['deletedListId'])) !== false)
 						unset($success['deletedListId'][$key]);
 				}
 			}

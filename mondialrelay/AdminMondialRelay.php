@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 16127 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,7 +30,7 @@ require_once(dirname(__FILE__).'/mondialrelay.php');
 
 class AdminMondialRelay extends AdminTab
 {
-	private $mondialrelay = NULL;
+	private $mondialrelay = null;
 
 	public $post_errors = array();
 
@@ -50,21 +51,21 @@ class AdminMondialRelay extends AdminTab
 
 		// Simulate a ticket generation
 		$MRCreateTicket = new MRCreateTickets(array(
-			'orderIdList' => NULL,
-			'totalOrder' => NULL,
-			'weightList' => NULL
+			'orderIdList' => null,
+			'totalOrder' => null,
+			'weightList' => null
 			),
 			$this->mondialrelay
 		);
-
-		foreach($orders as &$order)
+		if (is_array($orders) && count($orders))
+		foreach ($orders as &$order)
 		{
 			$order['display_total_price'] = Tools::displayPrice($order['total'], new Currency($order['id_currency']));
 			$order['display_shipping_price'] = Tools::displayPrice($order['shipping'], new Currency($order['id_currency']));
-			$order['display_date'] = Tools::displayDate($order['date'], $order['id_lang']);
+			$order['display_date'] = Tools::displayDate($order['date']);
 			$order['weight'] = (!empty($order['mr_weight']) && $order['mr_weight'] > 0) ? $order['mr_weight'] : $order['order_weight'];
 		}
-		
+
 		$controller = (_PS_VERSION_ < '1.5') ? 'AdminContact' : 'AdminStores';
 
 		$this->context->smarty->assign(array(
@@ -80,17 +81,22 @@ class AdminMondialRelay extends AdminTab
 		);
 
 		unset($order_state);
-		echo $this->mondialrelay->fetchTemplate('/tpl/admintab/', 'generate_tickets');
+		echo $this->mondialrelay->fetchTemplate('/views/templates/admin/', 'generate_tickets');
 	}
 
 	public function displayhistoriqueForm()
 	{
-		$query = "SELECT * FROM `"._DB_PREFIX_ ."mr_history` ORDER BY `id` DESC ;";
-
+		$query = 'SELECT * FROM `'._DB_PREFIX_.'mr_history` ORDER BY `id` DESC ;';
+		$history = Db::getInstance()->executeS($query);
+		
+		foreach ($history as &$item) 
+		{
+			$item['url_10x15'] = str_replace('format=A4', 'format=10x15', $item['url_a4']);
+		}
 		$this->context->smarty->assign(array(
-			'MR_histories' => Db::getInstance()->executeS($query))
+			'MR_histories' => $history)
 		);
-		echo $this->mondialrelay->fetchTemplate('/tpl/admintab/', 'history');
+		echo $this->mondialrelay->fetchTemplate('/views/templates/admin/', 'history');
 	}
 
 	public function displaySettings($post_action)
@@ -110,7 +116,7 @@ class AdminMondialRelay extends AdminTab
 			'MR_error_list' => $this->post_errors
 		));
 
-		echo $this->mondialrelay->fetchTemplate('/tpl/admintab/', 'settings');
+		echo $this->mondialrelay->fetchTemplate('/views/templates/admin/', 'settings');
 	}
 
 	public function postProcess()
@@ -142,7 +148,7 @@ class AdminMondialRelay extends AdminTab
 
 	public function display()
 	{
-		$post_action = count($_POST) ? $this->postProcess() : NULL;
+		$post_action = count($_POST) ? $this->postProcess() : null;
 
 		$this->displaySettings($post_action);
 		if (MondialRelay::isAccountSet() && (int)$this->mondialrelay->account_shop['MR_ORDER_STATE'])

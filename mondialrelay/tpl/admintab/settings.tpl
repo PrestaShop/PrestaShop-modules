@@ -40,7 +40,7 @@
 					{if $order_state.id_order_state == $MR_order_state.id_order_state}
 						{assign var='selected_option' value='selected="selected"'}
 					{/if}
-					<option value="{$order_state.id_order_state}" style="background-color:{$order_state.color};" {$selected_option}>{$order_state.name}</option>
+					<option value="{$order_state.id_order_state}" style="background-color:{$order_state.color};" {$selected_option}>{$order_state.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 				</select>
 				<p>

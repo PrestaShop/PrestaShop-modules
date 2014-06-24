@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -20,22 +19,24 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 10285 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
-//header('Content-Type: text/html; charset=iso-8859-15');
-function ote_accent($str){
+*}
 
-$str = str_replace("'", " ", $str);
-
-$str = utf8_decode($str);
-
-$ch = strtr($str,
-
-      '����������������������������������������������������',
-
-      'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-
-return utf8_encode($ch);
-
-}
+<div class="bootstrap">
+{if $MR_error_list|count}
+<div class="alert error">
+	{$MR_error_list|count} {l s='error(s)' mod='mondialrelay'}
+	<ul>
+		{foreach from=$MR_error_list key=error_num item=error_message}
+			<li>{$error_message|escape:'htmlall':'UTF-8'}</li>
+		{/foreach}
+	</ul>
+</div>
+	{elseif $MR_form_action.type|strlen != 0}
+<div class="conf confirm alert alert-success">
+	{$MR_form_action.message_success|escape:'htmlall':'UTF-8'}
+</div>
+{/if}
+</div>
