@@ -66,14 +66,12 @@
 		<div class="margin-form">
 			<input id="phone" name="phone" type="text" class="text" value="" />
 		</div>
+
 		<label for="phone2">{l s='Cell Phone Number' mod='alliance3'} </label>
 		<div class="margin-form">
 			<input id="phone2" name="phone2" type="text" class="text" value="" />
 		</div>
-		<label for="comments">{l s='Products sold' mod='alliance3'}<br />{l s='or Services provided' mod='alliance3'} </label>
-		<div class="margin-form">
-			<textarea name="comments" id="comments" cols="30" rows="6" class="textarea"></textarea>
-		</div>
+
 		<div class="margin-form">
 			<input type="submit" class="button" id="validForm" name="validForm" value="{l s='Register' mod='alliance3'}" />
 		</div>
