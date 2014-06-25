@@ -24,7 +24,7 @@ require_once(dirname(__FILE__).'/config.api.php');
 
 class TextMasterAPI
 {
-	const DEBUG_FILENAME = 'TEXTMASTER_DEBUG_FILENAME';
+	const CONFIG_DEBUG_FILENAME = 'TEXTMASTER_DEBUG_FILENAME';
 	const DEBUG_FILENAME_LENGTH	= 6;
 	
 	private $api_key;
@@ -138,7 +138,7 @@ class TextMasterAPI
 			
 			$debug_content .= print_r($decoded_content, true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(self::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(self::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}
@@ -175,7 +175,7 @@ class TextMasterAPI
 			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
 			$debug_content .= print_r($result, true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(self::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(self::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}

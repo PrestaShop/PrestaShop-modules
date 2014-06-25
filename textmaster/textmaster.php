@@ -207,7 +207,7 @@ class TextMaster extends Module
             Configuration::deleteByName('TEXTMASTER_DEBUG_MODE');
             $debug_filename = $this->getDebugFileName();
             @unlink(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
-            Configuration::deleteByName(TextMasterAPI::DEBUG_FILENAME);
+            Configuration::deleteByName(TextMasterAPI::CONFIG_DEBUG_FILENAME);
         }
         elseif (Tools::isSubmit('debug_delete'))
         {
@@ -326,11 +326,11 @@ class TextMaster extends Module
     
     private function getDebugFileName()
 	{
-		$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+		$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
 		if (!$debug_filename)
 		{
 			$debug_filename = Tools::passwdGen(TextMasterAPI::DEBUG_FILENAME_LENGTH).'.html';
-			Configuration::updateValue(TextMasterAPI::DEBUG_FILENAME, $debug_filename);
+			Configuration::updateValue(TextMasterAPI::CONFIG_DEBUG_FILENAME, $debug_filename);
 		}
 		
 		if (!file_exists(_PS_MODULE_DIR_.'textmaster/'.$debug_filename))
@@ -601,7 +601,7 @@ class TextMaster extends Module
 			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
 			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}
@@ -661,7 +661,7 @@ class TextMaster extends Module
 			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
 			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}
@@ -784,7 +784,7 @@ class TextMaster extends Module
 			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
 			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}
@@ -814,7 +814,7 @@ class TextMaster extends Module
 			$debug_content .= '</pre><h3>Response:</h3><pre>';
 			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
 			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::DEBUG_FILENAME);
+			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
 			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
 			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
 		}
