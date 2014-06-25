@@ -1270,7 +1270,7 @@ class Seur extends CarrierModule {
 
 		if ($type == 'txt')
 		{
-			if (file_exists($directory.$name.'.txt') && $fp = Tools::file_get_contents($directory.$name.'.txt'))
+			if (file_exists($directory.$name.'.txt') && ($fp = Tools::file_get_contents($directory.$name.'.txt')))
 			{
 				ob_end_clean();
 				header('Content-type: text/plain');
