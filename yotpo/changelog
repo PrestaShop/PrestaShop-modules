@@ -95,4 +95,11 @@
 2014-04-01
 ----
 1) Bug fix in reviews tab for some of the versions.
-  
+
+2014-05-20
+----
+1) Ensure app key exist before loading any front end hook.
+   
+2014-07-15
+----
+1) Update plugin to show widget V2.  
