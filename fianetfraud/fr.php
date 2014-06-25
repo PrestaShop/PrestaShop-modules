@@ -42,11 +42,11 @@ $_MODULE['<{fianetfraud}prestashop>admincertissimcontroller_84ae0dfc28c87c137175
 $_MODULE['<{fianetfraud}prestashop>admincertissimcontroller_8360e0cb0a39464f904a0b4136efd38b'] = 'R√©cup√©rer les r√©√©valuations';
 $_MODULE['<{fianetfraud}prestashop>admincertissimcontroller_55f3a0f4e9394161252cff812dfb632e'] = 'Retour √† la page de configuration';
 $_MODULE['<{fianetfraud}prestashop>admin_d86976c626d8911560edf3166466925f'] = ' FIA-NET - Certissim';
-$_MODULE['<{fianetfraud}prestashop>admin_d976a4d72775090f2b096fa9c74a6174'] = 'FIA-NET, le leader fran√ßais de la lutte contre la fraude √† la carte bancaire sur internet !';
-$_MODULE['<{fianetfraud}prestashop>admin_b44a8949e0bb2f21d8263db121c0365d'] = 'Avec son r√©seau mutualis√© de plus de 1 700 sites marchands, et sa base de donn√©es de 14 millions de cyber-acheteurs, Certissim vous offre une protection compl√®te et unique contre le risque d\'impay√©.';
-$_MODULE['<{fianetfraud}prestashop>admin_f69c3361928d4c2045ba0c600016db6e'] = 'Le logiciel expert score vos transactions en quasi temps r√©el √† partir de plus de 200 crit√®res pour valider plus de 92% de vos transactions.';
-$_MODULE['<{fianetfraud}prestashop>admin_9e727722c149e19d38cc722e4dc97bbe'] = 'Le contr√¥le humain, prenant en charge les transactions les plus risqu√©s, associ√© √† l\'assurance FIA-NET vous permet de valider et garantir jusqu\'√† 100% de vos transactions.';
-$_MODULE['<{fianetfraud}prestashop>admin_dd325eaf0c7aba904e2f160ffc11782c'] = 'Ne restez pas isol√© face √† l\'explosion des r√©seaux de fraudeurs !';
+$_MODULE['<{fianetfraud}prestashop>admin_d976a4d72775090f2b096fa9c74a6174'] = 'FIA-NET, le leader franÁais de la lutte contre la fraude ‡ la carte bancaire sur internet !';
+$_MODULE['<{fianetfraud}prestashop>admin_b44a8949e0bb2f21d8263db121c0365d'] = 'Avec son rÈseau mutualisÈ de plus de 1 700 sites marchands, et sa base de donnÈes de 14 millions de cyber-acheteurs, Certissim vous offre une protection complËte et unique contre le risque d\'impayÈ.';
+$_MODULE['<{fianetfraud}prestashop>admin_f69c3361928d4c2045ba0c600016db6e'] = 'Le logiciel expert score vos transactions en quasi temps rÈel ‡ partir de plus de 200 critËres pour valider plus de 92% de vos transactions.';
+$_MODULE['<{fianetfraud}prestashop>admin_9e727722c149e19d38cc722e4dc97bbe'] = 'Le contrÙle humain, prenant en charge les transactions les plus risquÈs, associÈ ‡ l\'assurance FIA-NET vous permet de valider et garantir jusqu\'‡ 100% de vos transactions.';
+$_MODULE['<{fianetfraud}prestashop>admin_dd325eaf0c7aba904e2f160ffc11782c'] = 'Ne restez pas isolÈ face ‡ l\'explosion des rÈseaux de fraudeurs !';
 $_MODULE['<{fianetfraud}prestashop>admin_380b4179d36bce6ca862459a43b217b5'] = 'Pour souscrire, cliquez ici :';
 $_MODULE['<{fianetfraud}prestashop>admin_592fcfe937f6d58f70d0918ef6373afa'] = 'Site web Fia-Net';
 $_MODULE['<{fianetfraud}prestashop>admin_8af703b2bf59cc9742883ae7f4cb0e5b'] = 'Param√®tres du compte';
