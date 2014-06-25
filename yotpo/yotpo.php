@@ -571,7 +571,8 @@ class Yotpo extends Module
 	    'yotpo_language_as_site' => Configuration::get('yotpo_language_as_site'),
 		'yotpo_rich_snippets' => Configuration::get('yotpo_rich_snippets'),
 		'yotpo_all_statuses' => $all_statuses));
-
+		
+		$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
 		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false) {
 			$settings_template = $this->getNonCachedTemplate('views/templates/admin/settingsForm.tpl');	
 		}
