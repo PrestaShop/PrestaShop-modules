@@ -452,7 +452,7 @@
 				</li>
 				<li class="required">
 					<label>{l s='CIT' mod='seur'}</label>
-					<input type="text" name="ci" class="onlyNumbers" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="ci" class="onlyNumbers" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<sup name="ci">*</sup>
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
@@ -472,14 +472,14 @@
 				</li>
 				<li>
 					<label>{l s='User' mod='seur'}</label>
-					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="id_employee_cfg" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
 				<li>
 					<label>{l s='Password' mod='seur'}</label>
-					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}"/>
+					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
 				<li>

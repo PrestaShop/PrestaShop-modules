@@ -76,7 +76,7 @@ try
 		
 		header('Content-type: application/octet-stream');
 		header("Content-Disposition: attachment; filename=\"{$current_expedition_number}.png\"\n");
-		ob_clean();
+		ob_end_clean();
 		echo $image;
 		
 		file_put_contents('../files/deliveries_notes/'.$current_expedition_number.'.png', $image);

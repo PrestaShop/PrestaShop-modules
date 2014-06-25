@@ -151,8 +151,8 @@ text-align: center;text-decoration: none;text-shadow: 1px 1px 2px #000000;width:
 #seur_module .field-help {display: block; line-height: 16px; margin-bottom: 10px; color: gray; font-style: italic; font-size: .9em}
 
 /*DETALLE SEUR*/
-fieldset#detalleseur,fieldset#cashondeliveryseur{border: none;background-color: #F2F2F2;color: #4C4C4C;font-size: 13px;position: relative; }
-fieldset#detalleseur legend{ background-color: transparent;border:none;padding: 0px;}
+fieldset#detalleseur,fieldset#cashondeliveryseur{border: none;background-color: #F2F2F2;color: #4C4C4C;font-size: 13px;position: relative; min-height: 260px; padding: 10px; margin-bottom: 20px;}
+fieldset#detalleseur legend{ background-color: transparent; border:none; padding: 0px;}
 fieldset#cashondeliveryseur legend{border: none;background-color: #F2F2F2;color: #4C4C4C;padding: 10px}
 #nBultos label,#pBultos label{width: 150px;}
 #nBultos input,#pBultos input{width: 50px;}
@@ -214,6 +214,7 @@ table#deliveriesTable tr td.Detalles,table#deliveriesTable tr td.EXPEDICION{text
 #pickups .table tr td.createpickup a:hover{background-color: #90AB17;background-image: linear-gradient(to bottom, #A9C813, #90AB17);}
 
 .form_error{font-size: 12px;font-weight: normal;border: 1px solid #EC9B9B; background-color: #FAE2E3; text-align: left;padding: 3px 5px 3px 5px;clear: both;display: block;margin-left: 125px;margin-top: 10px;width: 180px}
+#new_customer .form_error{margin-left: -100px; padding: 0 5px;}
 #tos_text{width: 800px;line-height: 20px;font-size: 14px;padding: 10px}
 #tos{color: #4C4C4C;font-size: 13px;font-weight: bold;text-decoration: underline;}
 

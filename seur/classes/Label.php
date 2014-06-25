@@ -187,21 +187,13 @@ class Label
 				{
 					$pdf = base64_decode($response->out->PDF);
 
-					if (Tools::file_get_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.$label_name.'.txt'))
-						file_put_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.$label_name.'.txt', $pdf);
+					if (is_writable(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'))
+						file_put_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.$label_name.'.pdf', $pdf);
 					
 					SeurLib::setSeurOrder($label_data['pedido'], $total_packages, $total_weight, 'PDF');
 
 					if ($make_pickup && $auto)
 						Pickup::createPickup();
-
-					ob_clean();
-					header('Content-type: application/pdf');
-					header('Content-Disposition: inline; filename='.$label_name.'.pdf');
-					header('Content-Transfer-Encoding: binary');
-					header('Accept-Ranges: bytes');
-
-					echo $pdf;
 				}
 			}
 			elseif($tipo == 'zebra')
@@ -226,7 +218,7 @@ class Label
 					return SeurLib::displayErrors('Error al crear el envio y la etiqueta: '.$response->out->mensaje); // @TODO check if must be translatable
 				else
 				{
-					if (Tools::file_get_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.pSQL($label_name).'.txt'))
+					if (is_writable(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'))
 						file_put_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.pSQL($label_name).'.txt', (string)$response->out->traza);
 
 					SeurLib::setSeurOrder(pSQL($label_data['pedido']), (float)$total_packages, (float)$total_weight, 'zebra');
@@ -239,7 +231,7 @@ class Label
 		catch (PrestaShopException $e)
 		{
 			$e->displayMessage();
-		} 
+		}
 
 		return true;
 	}

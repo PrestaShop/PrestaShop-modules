@@ -32,7 +32,14 @@
         <legend>
             <img src="{$path|escape:'htmlall':'UTF-8'}img/logonew_32.png" alt="{l s='SEUR' mod='seur'}" title="{l s='SEUR' mod='seur'}" />
         </legend>
-        <form id="fichaPedidoSeur" method="POST" action="{Tools::safeOutput($request_uri|escape:'htmlall':'UTF-8')}">
+
+        {if isset($pickup_point_warning)}
+            <p class="alertaconfiguracion">
+                {l s='PickUp point address could not be saved as order delivery address in PrestaShop system' mod='seur'}
+            </p>
+        {/if}
+
+        <form id="fichaPedidoSeur" method="POST" action="{$request_uri|escape:'htmlall':'UTF-8'}">
             <input type="hidden" name="module_dir" id="module_dir" value="{$path|escape:'htmlall':'UTF-8'}" />
             <input type="hidden" name="module_non_ssl_href" id="module_non_ssl_href" value="{$module_instance->name|escape:'htmlall':'UTF-8'}"/>
         {if isset($error)}
@@ -58,13 +65,16 @@
         {if $iso_country == 'ES' || $iso_country == 'PT' || $iso_country == 'AD'}
             {if $order_data.imprimido == NULL}
                 <p id="nBultos"><label>{l s='Number of packages:' mod='seur'}</label>
-                    <input type="text" name="numBultos" value="{$order_data.numero_bultos|escape:'htmlall':'UTF-8'}" />
+                    {if $printed}{$order_data.numero_bultos|escape:'htmlall':'UTF-8'}{else}<input type="text" name="numBultos" value="{$order_data.numero_bultos|escape:'htmlall':'UTF-8'}" />{/if}
                 </p>
                 <p id="pBultos">
                     <label>{l s='Weigth:' mod='seur'}</label>
-                    <input type="text" name="pesoBultos" value="{$order_weigth|escape:'htmlall':'UTF-8'}" /> {l s='Kg.' mod='seur'}
+                    {if $printed}{$order_weigth|escape:'htmlall':'UTF-8'}{else}<input type="text" name="pesoBultos" value="{$order_weigth|escape:'htmlall':'UTF-8'}" />{/if} {l s='Kg.' mod='seur'}
                 </p>
-                <br /><input class="buttonguardar" type="submit" name="submitBultos" value="{l s='Save' mod='seur'}"/>
+                <br />
+                {if !$printed}
+                    <input class="buttonguardar" type="submit" name="submitBultos" value="{l s='Save' mod='seur'}" />
+                {/if}
             {/if}
             <br />
             <p class="tarifa">{l s='Delivery price: ' mod='seur'}{Tools::displayPrice((float)$delivery_price)|escape:'htmlall':'UTF-8'}

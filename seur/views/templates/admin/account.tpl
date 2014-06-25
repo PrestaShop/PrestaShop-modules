@@ -45,35 +45,35 @@
 			
 			<dl>
 				<dt><label>{l s='NIF / CIF' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="nif_dni" />
 					<sup name="nif_dni">*</sup>
 					<span class="field-help">{l s='Enter the NIF / CIF Company.' mod='seur'}
 				</dd>
 
 				<dt><label>{l s='Name' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="name" class="onlyText" />
 					<sup name="name">*</sup>
 					<span class="field-help">{l s='Name of the contact person.' mod='seur'}
 				</dd>
 
 				<dt><label>{l s='Firstname' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="first_name" class="onlyText" />
 					<sup name="first_name">*</sup>
 					<span class="field-help">{l s='Firstname of the contact person.' mod='seur'}
 				</dd>
 
 				<dt><label>{l s='Company Name' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="company_name" />
 					<sup name="company_name">*</sup>
 					<span class="field-help">{l s='Legal name of the company.' mod='seur'}
 				</dd>
 				
 				<dt><label>{l s='Street Type' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<select name="street_type">
 						<option value="">---</option>
 						{foreach from=$street_types key='abbreviation' item='street_type'}
@@ -84,13 +84,13 @@
 				</dd>
 				
 				<dt><label>{l s='Name street' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="street_name" />
 					<sup name="street_name">*</sup>
 				</dd>
 				
 				<dt><label>{l s='Number' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="street_number" />
 					<sup name="street_number">*</sup>
 				</dd>
@@ -105,33 +105,33 @@
 				<dd><input type="text" name="door" /></dd>
 				
 				<dt><label>{l s='Postal Code' mod='seur'}</label></dt>
-				<dd><input type="text" name="post_code" class="onlyNumbers" />
-					<sup name="post_code">*</sup>
+				<dd class="required"><input type="text" name="post_code_cfg" class="onlyNumbers" />
+					<sup name="post_code_cfg">*</sup>
 					<span class="field-help">{l s='Postal code of the company.' mod='seur'}</span>
 					<input type="hidden" name="token" value="{$token|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="id_employee" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
 				</dd>
 
 				<dt><label>{l s='City' mod='seur'}</label></dt>
-				<dd>
-					<input type="text" name="town" class="onlyText" value=""  />
-					<sup name="town">*</sup>
+				<dd class="required">
+					<input type="text" name="town_cfg" class="onlyText" value=""  />
+					<sup name="town_cfg">*</sup>
 					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 
 				
 				<dt><label>{l s='State' mod='seur'}</label></dt>
-				<dd>
-					<input type="text" name="state" value="" class="onlyText"/>
-					<sup name="state">*</sup>
+				<dd class="required">
+					<input type="text" name="state_cfg" value="" class="onlyText"/>
+					<sup name="state_cfg">*</sup>
 					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 
 				
 				<dt><label>{l s='Country' mod='seur'}</label></dt>
-				<dd>
-					<select name="country">
-						<option value="---"></option>
+				<dd class="required">
+					<select name="country_cfg">
+						<option value=""></option>
 						{foreach from=$seur_countries key='abbreviation' item='seur_country'}
 							<option value="{$abbreviation|escape:'htmlall':'UTF-8'}">{$seur_country|escape:'htmlall':'UTF-8'}</option>
 						{/foreach}
@@ -142,14 +142,14 @@
 
 				
 				<dt><label>{l s='Franchise' mod='seur'}</label></dt>
-				<dd>
-					<input type="text" name="franchise" value="" class="onlyNumbers"/>
-					<sup name="franchise">*</sup>
+				<dd class="required">
+					<input type="text" name="franchise_cfg" value="" class="onlyNumbers"/>
+					<sup name="franchise_cfg">*</sup>
 					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 				
 				<dt><label>{l s='Phone' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="phone" class="onlyNumbers" />
 					<sup name="phone">*</sup>
 				</dd>
@@ -158,15 +158,15 @@
 				<dd><input type="text" name="fax" class="onlyNumbers" /></dd>
 				
 				<dt><label>{l s='Email' mod='seur'}</label></dt>
-				<dd>
+				<dd class="required">
 					<input type="text" name="email" class="onlyEmail" />
 					<sup name="email">*</sup>
 				</dd>
 				
 				<dt><label>{l s='CCC' mod='seur'}</label></dt>
-				<dd>
-					<input type="text" name="ccc" class="onlyNumbers"/>
-					<sup name="ccc">*</sup>
+				<dd class="required">
+					<input type="text" name="ccc_cfg" class="onlyNumbers"/>
+					<sup name="ccc_cfg">*</sup>
 					<span class="field-help">{l s='The CCC will be provided by SEUR. It is a numeric code from 1 to 7 digits.' mod='seur'}
 				</dd>
 				
@@ -191,6 +191,15 @@
 		   </dl>
 		</fieldset>
 	</form>
+</div>
+
+<div id="seurJsTranslations" class="hidden">
+	<input type="hidden" name="requiredField" value="{l s='Fill in the field.' mod='seur'}" />
+	<input type="hidden" name="onlyNumbers" value="{l s='Please enter only numbers.' mod='seur'}" />
+	<input type="hidden" name="onlyEmail" value="{l s='Malformed e-mail.' mod='seur'}" />
+	<input type="hidden" name="onlyText" value="{l s='Enter only letters.' mod='seur'}" />
+	<input type="hidden" name="requiredSelect" value="{l s='Select an option.' mod='seur'}" />
+	<input type="hidden" name="acceptPrivacyPolicy" value="{l s='Accept the privacy policy.' mod='seur'}" />
 </div>
 
 <div id="outputData"></div>

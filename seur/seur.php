@@ -50,7 +50,7 @@ class Seur extends CarrierModule {
 	public function __construct()
 	{
 		$this->name = 'seur';
-		$this->version = '0.6.2';
+		$this->version = '0.6.3';
 		$this->author = 'www.invertus.eu';
 		$this->need_instance = 0;
 		$this->tab = 'shipping_logistics';
@@ -95,7 +95,7 @@ class Seur extends CarrierModule {
 
 		if (!parent::install() || !$this->registerHook('adminOrder') ||
 			!$this->registerHook('orderDetail') ||
-			!$this->registerHook('extraCarrier') || !$this->registerHook('updateCarrier') ||
+			!$this->registerHook('extraCarrier') || !$this->registerHook('updateCarrier') || !$this->registerHook('displayOrderConfirmation') ||
 			!$this->registerHook('header') || !$this->registerHook('backOfficeHeader'))
 			return false;
 		
@@ -753,6 +753,15 @@ class Seur extends CarrierModule {
 
 			$order = new Order((int)$params['id_order']);
 			
+			$address_saved = DB::getInstance()->getValue('
+				SELECT `id_address_delivery`
+				FROM `'._DB_PREFIX_.'seur_order`
+				WHERE `id_order` = "'.(int)$order->id.'"
+			');
+
+			if ($address_saved === '0')
+				$this->context->smarty->assign('pickup_point_warning', true);
+			
 			if (!Validate::isLoadedObject($order))
 				return false;
 			
@@ -889,7 +898,7 @@ class Seur extends CarrierModule {
 								'pedido' => sprintf('%06d', (int)$order->id),
 								'total_bultos' => $order_data['numero_bultos'],
 								'total_kilos' => (float)$order_weigth,
-								'direccion_consignatario' => $datospos['address'],
+								'direccion_consignatario' => $direccion,
 								'consignee_town' => $datospos['city'],
 								'codPostal_consignatario' => $datospos['postal_code'],
 								'telefono_consignatario' => (!empty($address_delivery->phone_mobile) ? $address_delivery->phone_mobile : $address_delivery->phone),
@@ -919,18 +928,36 @@ class Seur extends CarrierModule {
 
 					if (Tools::getValue('submitLabel'))
 					{
-						$success = Label::createLabels($label_data, 'pdf');
-						if($success === true)
-							$this->printLabel((int)$order->id, 'pdf');
+						if ($this->isPrinted((int)$order->id))
+							$success = true;
+						else
+							$success = Label::createLabels($label_data, 'pdf');
+
+						if ($success === true)
+						{
+							if (!$this->setAsPrinted((int)$order->id))
+								$this->context->smarty->assign('error', $this->l('Could not set printed value for this order'));
+							else
+								$this->printLabel((int)$order->id, 'pdf');
+						}
 						else
 							$this->context->smarty->assign('error', $success);
 					}
 
 					if (Tools::getValue('submitPrint'))
 					{
-						$success = Label::createLabels($label_data, 'zebra');
-						if($success === true)
-							$this->printLabel((int)$order->id, 'txt');
+						if ($this->isPrinted((int)$order->id, true))
+							$success = true;
+						else
+							$success = Label::createLabels($label_data, 'zebra');
+
+						if ($success === true)
+						{
+							if (!$this->setAsPrinted((int)$order->id, true))
+								$this->context->smarty->assign('error', $this->l('Could not set printed value for this order'));
+							else
+								$this->printLabel((int)$order->id, 'txt');
+						}
 						else
 							$this->context->smarty->assign('error', $success);
 					}
@@ -946,7 +973,7 @@ class Seur extends CarrierModule {
 					}
 
 					$address_error = 0;
-					if (!empty($towns) && !in_array(mb_strtoupper($address_delivery->city, "UTF-8"), $towns))
+					if (!empty($towns) && !in_array(mb_strtoupper($this->replaceSpanishLettersToEnglishLetters($address_delivery->city), "UTF-8"), $towns))
 						$address_error = 1;
 					$pickup_s = 0;
 					if ($pickup && strtotime(date('Y-m-d')) == strtotime($pickup_date))
@@ -990,9 +1017,11 @@ class Seur extends CarrierModule {
 						'file' => $file,
 						'datospos' => $datospos,
 						'versionSpecialClass' => $versionSpecialClass,
-						'configured' => (int)Configuration::get('SEUR_Configured')
+						'configured' => (int)Configuration::get('SEUR_Configured'),
+						'printed' => (bool)($this->isPrinted((int)$order->id) || $this->isPrinted((int)$order->id, true))
 					));
-					$this->display(__FILE__, 'views/templates/admin/orders.tpl');
+
+					return $this->display(__FILE__, 'views/templates/admin/orders.tpl');
 				}
 			}
 		}
@@ -1003,10 +1032,54 @@ class Seur extends CarrierModule {
 				'path' => $this->_path,
 				'configuration_warning_message' => $this->l('Please, first configure your SEUR module as a merchant.')
 			));
-			$this->display(__FILE__, 'views/templates/admin/orders.tpl');
+
+			return $this->display(__FILE__, 'views/templates/admin/orders.tpl');
 		}
 	}
 	
+	private function isPrinted($id_order, $label=false)
+	{
+		$field = $label ? 'printed_label' : 'printed_pdf';
+
+		return DB::getInstance()->getValue('
+			SELECT `'.bqSQL($field).'`
+			FROM `'._DB_PREFIX_.'seur_order`
+			WHERE `id_order` = "'.(int)$id_order.'"
+		');
+	}
+
+	private function setAsPrinted($id_order, $label=false)
+	{
+		$field = $label ? 'printed_label' : 'printed_pdf';
+
+		return DB::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'seur_order`
+			SET `'.bqSQL($field).'` = 1
+			WHERE `id_order` = "'.(int)$id_order.'"
+		');
+	}
+
+	private function replaceSpanishLettersToEnglishLetters($text)
+	{
+		$letters = array(
+			'Á' => 'A',
+			'É' => 'E',
+			'Í' => 'I',
+			'Ó' => 'O',
+			'Ú' => 'U',
+			'á' => 'a',
+			'é' => 'e',
+			'í' => 'i',
+			'ó' => 'o',
+			'ú' => 'u'
+		);
+
+		foreach ($letters as $spanish_letter => $english_letter)
+			str_replace($spanish_letter, $english_letter, $text);
+
+		return $text;
+	}
+
 	public function hookDisplayOrderDetail($params)
 	{
 		return $this->hookOrderDetailDisplayed($params);
@@ -1182,37 +1255,6 @@ class Seur extends CarrierModule {
 
 	public function getOrderShippingCost($params, $shipping_cost)
 	{
-		/*$id_carrier = (int)$this->id_carrier;
-		if (!$this->id_carrier)
-			return false;
-		
-        $seur_carriers = SeurLib::getSeurCarriers();
-        $is_in_carriers = false;
-
-        foreach ($seur_carriers as $carrier)
-        {
-            if (in_array((int)$id_carrier, $carrier))
-            {
-                $is_in_carriers = true;
-                break;
-            }
-        }
-
-        if ($id_carrier == NULL || !$is_in_carriers)
-        	return parent::getPackageShippingCost();
-
-		$configuration = Configuration::getMultiple(array(
-			'SEUR_FREE_PRICE',
-			'SEUR_FREE_WEIGTH'
-		));
-		// Free fees
-		if (isset($configuration['SEUR_FREE_PRICE']))
-			$free_fees_price = Tools::convertPrice((float)$configuration['SEUR_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
-		else
-			$free_fees_price = 0;
-
-		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);*/
-
 		return $shipping_cost;
 	}
 
@@ -1224,39 +1266,38 @@ class Seur extends CarrierModule {
 	private function printLabel($id_order, $type)
 	{
 		$name = sprintf('%06d', (int)$id_order);
-		$pattern = '/^'.$name.'/';
 		$directory = _PS_MODULE_DIR_.'seur/files/deliveries_labels/';
 
-		if ($handle = opendir($directory))
+		if ($type == 'txt')
 		{
-			while (false !== ($file = readdir($handle)))
+			if (file_exists($directory.$name.'.txt') && $fp = Tools::file_get_contents($directory.$name.'.txt'))
 			{
-				if (preg_match($pattern, $file))
-				{
-					if ($fp = Tools::file_get_contents($directory.$file))
-					{
-						closedir($handle);
+				ob_end_clean();
+				header('Content-type: text/plain');
+				header('Content-Disposition: attachment; filename='.$name.'.txt');
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
 
-						if ($type == 'txt')
-						{
-							ob_clean();
-							header('Content-type: text/plain');
-							header('Content-Disposition: attachment; filename='.$name.'.txt');
-							header('Content-Transfer-Encoding: binary');
-							header('Accept-Ranges: bytes');
-							echo $fp;
-						}
-
-						if ($type == 'pdf')
-						{
-							ob_clean();
-							echo $fp;
-						}
-					}
-					exit;
-				}
+				echo $fp;
+				exit;
 			}
 		}
+		elseif ($type == 'pdf')
+		{
+			if (file_exists($directory.$name.'.pdf') && ($fp = Tools::file_get_contents($directory.$name.'.pdf')))
+			{
+				ob_end_clean();
+				header('Content-type: application/pdf');
+				header('Content-Disposition: inline; filename='.$name.'.pdf');
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
+
+				echo $fp;
+				exit;
+			}
+		}
+		
+		$this->context->smarty->assign('error', $this->l('Document was already printed, but is missing in module directory'));
 	}
 	
 	public function hookBackOfficeHeader($params)
@@ -1288,5 +1329,64 @@ class Seur extends CarrierModule {
 			if (Tools::getValue('configure') == 'seur' && $tab == 'adminmodules')
 				$this->context->controller->addJS($this->_path.'js/seurToolsConfig.js');
 		}
+	}
+	
+	public function hookDisplayOrderConfirmation($params)
+	{
+		$carrier_pos = SeurLib::getSeurCarrier('SEP');
+
+		if ($carrier_pos['id'] != (int)$params['objOrder']->id_carrier) //check if COD carrier with pickup points
+			return '';
+
+		if (Db::getInstance()->getValue('
+			SELECT `id_address_delivery`
+			FROM `'._DB_PREFIX_.'seur_order`
+			WHERE `id_order` = "'.(int)$params['objOrder']->id.'"
+		'))
+			return;
+
+		$customer_address = new Address((int)$params['objOrder']->id_address_delivery);
+		$pickup_point_info = SeurLib::getOrderPos((int)$params['objOrder']->id_cart);
+		$pickup_point_address = new Address();
+		$pickup_point_address->id_country = $customer_address->id_country;
+		$pickup_point_address->id_state = $customer_address->id_state;
+		$pickup_point_address->alias = $customer_address->alias;
+		$pickup_point_address->company = urldecode($pickup_point_info['company']);
+		$pickup_point_address->lastname = $customer_address->lastname;
+		$pickup_point_address->firstname = $customer_address->firstname;
+		$pickup_point_address->address1 = urldecode($pickup_point_info['address']);
+		$pickup_point_address->postcode = urldecode($pickup_point_info['postal_code']);
+		$pickup_point_address->city = urldecode($pickup_point_info['city']);
+		$pickup_point_address->phone = urldecode($pickup_point_info['phone']);
+
+		$order = new Order((int)$params['objOrder']->id);
+
+		$products = $order->getProductsDetail();
+		$order_weigth = 0;
+
+		foreach ($products as $product)
+			$order_weigth += (float)$product['product_weight'] * (float)$product['product_quantity'];
+
+		$order_weigth = $order_weigth > 1 ? $order_weigth : 1;
+		if ($pickup_point_address->save())
+		{
+			$order->id_address_delivery = (int)$pickup_point_address->id;
+			
+			if ($order->save())
+				Db::getInstance()->Execute('
+					INSERT INTO `'._DB_PREFIX_.'seur_order`
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "'.(int)$pickup_point_address->id.'");'
+				);
+			else
+				Db::getInstance()->Execute('
+					INSERT INTO `'._DB_PREFIX_.'seur_order`
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+				);
+		}
+		else
+			Db::getInstance()->Execute('
+				INSERT INTO `'._DB_PREFIX_.'seur_order`
+				VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+			);
 	}
 }

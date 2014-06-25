@@ -276,7 +276,7 @@ class SeurLib
 		else
 			return Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'seur_order`
-				VALUES ('.(int)$id_order.','.(int)$bultos.','.(float)$peso.',null);'
+				VALUES ('.(int)$id_order.','.(int)$bultos.','.(float)$peso.',null, 0, 0, "");'
 				);
 	}
 
