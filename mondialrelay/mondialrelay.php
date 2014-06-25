@@ -101,11 +101,11 @@ class MondialRelay extends Module
 		if (!parent::install())
 			return false;
 			
-		if (!function_exists('curl_version'))
+		if (!function_exists('curl_version') || !extension_loaded('soap'))
+		{
+			$this->_errors[] = $this->l('Mondial Relay needs SOAP & cURL to be installed on your server.');
 			return false;
-		
-		if(!extension_loaded('soap')) 
-			return false;
+		}
 
 		if (!$this->registerHookByVersion())
 			return false;
@@ -185,8 +185,7 @@ class MondialRelay extends Module
 			return false;
 
 		if (version_compare(_PS_VERSION_, '1.4', '>=') && 
-			(!$this->registerHook('processCarrier') ||
-				!$this->registerHook('orderDetail') ||
+			(!$this->registerHook('processCarrier') || 
 				!$this->registerHook('newOrder') || 
 				!$this->registerHook('orderDetailDisplayed')  
 			)
@@ -195,8 +194,7 @@ class MondialRelay extends Module
 		if (version_compare(_PS_VERSION_, '1.6', '>=') && 
 			(
 				!$this->registerHook('displayBackOfficeHeader') || 
-				!$this->registerHook('processCarrier') ||
-				!$this->registerHook('orderDetail') ||
+				!$this->registerHook('processCarrier') || 
 				!$this->registerHook('newOrder') || 
 				!$this->registerHook('orderDetailDisplayed')  
 			) 
@@ -446,19 +444,7 @@ class MondialRelay extends Module
 
 			return $this->fetchTemplate('/views/templates/admin/', 'bo-header');
 		}
-	}
-
-	public function hookOrderDetail($params)
-	{
-		return '';
-		if (!Mondialrelay::isMondialRelayCarrier($params['order']->id_carrier))
-			return ;
-
-		$order = $params['order'];
-
-		if (!empty($order->shipping_number))
-			$this->context->smarty->assign('followup', $this->get_followup($order->shipping_number));
-	}
+	} 
 
 	public function hookOrderDetailDisplayed($params)
 	{
@@ -762,7 +748,7 @@ class MondialRelay extends Module
 	 * @return bool
 	 */
 	public function updateAccountShop()
-	{
+	{ 
 		return Configuration::updateValue('MR_ACCOUNT_DETAIL', serialize($this->account_shop));
 	}
 
@@ -772,35 +758,35 @@ class MondialRelay extends Module
 	 * @return array
 	 */
 	private function _postProcess()
-	{
+	{ 
 		$post_action = array(
-			'type' => Tools::getValue('MR_tab_name'),
+			'type' =>Tools::safeOutput(Tools::getValue('MR_tab_name')),
 			'message_success' => $this->l('Action Succeed'),
 			'had_errors' => false
 		);
+
 		
-		
-		
-		if(Tools::isSubmit('submitAdvancedSettings')) {
+		if(Tools::isSubmit('submitAdvancedSettings')) { 
 			Configuration::updateValue('MONDIAL_RELAY_MODE', Tools::getValue('mode'));
 		}
 		
 		else if (Tools::isSubmit('submit_account_detail'))
 		{
 			$this->account_shop = array(
-				'MR_ENSEIGNE_WEBSERVICE' => Tools::getValue('MR_enseigne_webservice'),
-				'MR_CODE_MARQUE' => Tools::getValue('MR_code_marque'),
-				'MR_KEY_WEBSERVICE' => Tools::getValue('MR_webservice_key'),
-				'MR_LANGUAGE' => Tools::getValue('MR_language'),
-				'MR_ORDER_STATE' => $this->account_shop['MR_ORDER_STATE'],
-				'MR_WEIGHT_COEFFICIENT' => Tools::getValue('MR_weight_coefficient'),
+				'MR_ENSEIGNE_WEBSERVICE' => Tools::safeOutput(Tools::getValue('MR_enseigne_webservice')),
+				'MR_CODE_MARQUE' => Tools::safeOutput(Tools::getValue('MR_code_marque')),
+				'MR_KEY_WEBSERVICE' =>Tools::safeOutput(Tools::getValue('MR_webservice_key')),
+				'MR_LANGUAGE' => Tools::safeOutput(Tools::getValue('MR_language')),
+				'MR_ORDER_STATE' => Tools::safeOutput($this->account_shop['MR_ORDER_STATE']),
+				'MR_WEIGHT_COEFFICIENT' => Tools::safeOutput(Tools::getValue('MR_weight_coefficient')),
 				'id_shop' => $this->context->shop->id
 			);
-
-			if ($this->updateAccountShop())
+			if ($this->updateAccountShop()) {
 				$post_action['message_success'] = $this->l('Account detail has been updated');
-			else
+			}
+			else {
 				$this->_postErrors[] = $this->l('Cannot Update the account shop');
+			}
 		}
 
 		else if (Tools::isSubmit('submit_add_shipping'))
@@ -832,8 +818,7 @@ class MondialRelay extends Module
 			$this->_postValidation();
 			if (!sizeof($this->_postErrors))
 				$post_action = $this->_postProcess();
-		}
-
+		} 
 		$carriers_list = Db::getInstance()->executeS('
 			SELECT m.*
 			FROM `'._DB_PREFIX_.'mr_method` m

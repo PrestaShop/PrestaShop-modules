@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mr_selected` (
 	`id_cart` int(10) unsigned NULL,
 	`id_order` int(10) unsigned NULL,	
 	`MR_poids` varchar(7)  NULL,
+	`MR_insurance` INT( 11 ) NOT NULL DEFAULT '0',
 	`MR_Selected_Num` varchar(6)  NULL,	
 	`MR_Selected_LgAdr1` varchar(36) NULL,
 	`MR_Selected_LgAdr2` varchar(36) NULL,
@@ -49,6 +50,3 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mr_history` (
 `url_a5` VARCHAR( 1000 ) NOT NULL ,
 PRIMARY KEY ( `id` )
 )ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
-
-ALTER TABLE `PREFIX_mr_selected` ADD `MR_insurance` INT( 11 ) NOT NULL DEFAULT '0' AFTER `MR_poids`;
