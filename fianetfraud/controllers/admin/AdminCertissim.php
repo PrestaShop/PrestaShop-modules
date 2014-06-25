@@ -53,7 +53,7 @@ class AdminCertissimController extends AdminOrders
 		{
 			//loads the log content
 			$log_content = CertissimLogger::getLogContent();
-			$log_txt = CertissimTools::convert_encoding($log_content, 'UTF-8');
+			$log_txt = CertissimTools::convertEncoding($log_content, 'UTF-8');
 			$url_back = 'index.php?tab=AdminModules&configure=fianetfraud&tab_module=payment_security&module_name=fianetfraud
 				&token='.Tools::getAdminTokenLite('AdminModules');
 			echo '<center><a style=\'padding: 3px; margin: 6px; border: 1px solid black\' 
