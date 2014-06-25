@@ -143,7 +143,7 @@ class PaypalExpressCheckout extends Paypal
 		// Set payment detail (reference)
 		$this->_setPaymentDetails($fields);
 		$fields['SOLUTIONTYPE'] = 'Sole';
-		$fields['LANDINGPAGE'] = 'Login';
+		$fields['LANDINGPAGE'] = 'Billing';
 
 		// Seller informations
 		$fields['USER'] = Configuration::get('PAYPAL_API_USER');
