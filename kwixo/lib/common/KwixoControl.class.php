@@ -35,7 +35,7 @@ class KwixoControl extends KwixoDOMDocument
 		$this->root = $this->appendChild(new KwixoXMLElement('control'));
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('kwixomodule', '6.7');
+		$this->root->setAttribute('kwixomodule', '6.8');
 	}
 
 	/**
