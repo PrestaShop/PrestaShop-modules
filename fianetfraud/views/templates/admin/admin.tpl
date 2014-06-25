@@ -26,17 +26,17 @@
 {$head_msg|strval}
 <fieldset>
 	<legend><img src="{$image_path|escape:'htmlall'}"/>{l s='FIA-NET - Certissim' mod='fianetfraud'}</legend>
-		{l s='FIA-NET, le leader français de la lutte contre la fraude à la carte bancaire sur internet !' mod='fianetfraud'}
+		{l s='FIA-NET, le leader français de la lutte contre la fraude à  la carte bancaire sur internet !' mod='fianetfraud'}
 	<br />
 	<br />
-	{l s='Avec son réseau mutualisé de plus de 1 700 sites marchands, et sa base de données de 14 millions de cyber-acheteurs, Certissim vous offre une protection complète et unique contre le risque d\'impayé.' mod='fianetfraud'}
+	{l s='Avec son réseau mutualisé de plus de 1 700 sites marchands, et sa base de données de 14 millions de cyber-acheteurs, Certissim vous offre une protection complète et unique contre le risque dimpayé.' mod='fianetfraud'}
 	<br /><br />
-	{l s='Le logiciel expert score vos transactions en quasi temps réel à partir de plus de 200 critères pour valider plus de 92% de vos transactions.' mod='fianetfraud'}
+	{l s='Le logiciel expert score vos transactions en quasi temps réel à  partir de plus de 200 critères pour valider plus de 92% de vos transactions.' mod='fianetfraud'}
 	<br />
-	{l s='Le contrôle humain, prenant en charge les transactions les plus risqués, associé à l\'assurance FIA-NET vous permet de valider et garantir jusqu\'à 100% de vos transactions.' mod='fianetfraud'}
+	{l s='Le contrôle humain, prenant en charge les transactions les plus risquées, associé à  l\'assurance FIA-NET vous permet de valider et garantir jusqu\'à  100% de vos transactions.' mod='fianetfraud'}
 	<br />
 	<br />
-	{l s='Ne restez pas isolé face à l\'explosion des réseaux de fraudeurs !' mod='fianetfraud'}
+	{l s='Ne restez pas isolé face à  l\'explosion des réseaux de fraudeurs !' mod='fianetfraud'}
 	<p>
 	{l s='To sign in, check out: ' mod='fianetfraud'} <u><a href="https://www.fia-net.com/marchands/devispartenaire.php?p=185" target="_blank">{l s='Fia-net Website' mod='fianetfraud'}</a></u>
 </p>
@@ -196,7 +196,7 @@
 		<legend>{l s='Log file' mod='fianetfraud'}</legend>
 		<p>{l s='The log file is a file that contains an history of what happened technically inside the module.' mod='fianetfraud'}</p>
 		<p>{l s='We advise you to join the content of the log file each time you contact the Fia-Net support team.' mod='fianetfraud'}</p>
-		<p><a href="{$url_log|escape:'url'}">{l s='Display log.' mod='fianetfraud'}</a></p>
+		<p><a href="{$url_log|escape:'htmlall'}">{l s='Display log.' mod='fianetfraud'}</a></p>
 	</fieldset>
 
 	<br />
