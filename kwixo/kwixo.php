@@ -147,7 +147,7 @@ class Kwixo extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'kwixo';
-		$this->version = '6.7';
+		$this->version = '6.8';
 		$this->tab = 'payments_gateways';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Kwixo');
@@ -1158,8 +1158,7 @@ class Kwixo extends PaymentModule
 					//order canceled
 					case 2:
 						if (!in_array($order->getCurrentState(), array(
-							(int)Configuration::get('KW_OS_PAYMENT_GREEN'), (int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'),
-							(int)Configuration::get('KW_OS_CREDIT'))))
+							(int)Configuration::get('KW_OS_PAYMENT_GREEN'), (int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'))))
 							$psosstatus = (int)_PS_OS_CANCELED_;
 						break;
 
@@ -1211,7 +1210,8 @@ class Kwixo extends PaymentModule
 				//return the correct payment status
 				if ($order->getCurrentState() != $psosstatus)
 				//update order history
-					$order->setCurrentState($psosstatus);
+					if ($order->module == 'kwixo')
+						$order->setCurrentState($psosstatus);
 			}
 		}
 	}
@@ -1391,7 +1391,7 @@ class Kwixo extends PaymentModule
 		}
 		else
 		{
-			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, 'Module SoColissimo Liberté non installé ou non activé');
+			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Module SoColissimo Liberté non installé ou non activé');
 			return false;
 		}
 	}
