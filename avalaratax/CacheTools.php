@@ -137,9 +137,27 @@ class CacheTools
 			}
 		}
 	}
-
+	
 	public static function getCarrierTaxAmount(Cart $cart)
 	{
-		return (float)Db::getInstance()->getValue('SELECT `amount` FROM `'._DB_PREFIX_.'avalara_carrier_cache` WHERE `id_cart` = '.(int)$cart->id.' AND `id_carrier` = '.(int)$cart->id_carrier);
+		$region = null;
+
+		$id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+		if ($id_address)
+		{
+			$address = new Address((int)$id_address);
+			if (Validate::isLoadedObject($address) && isset($address->id_state) && $address->id_state)
+			{
+				$state = new State((int)$address->id_state);
+				if (Validate::isLoadedObject($state) && isset($state->iso_code) && !empty($state->iso_code))
+					$region = $state->iso_code;
+			}
+		}
+
+		return (float)Db::getInstance()->getValue('
+		SELECT `amount`
+		FROM `'._DB_PREFIX_.'avalara_carrier_cache`
+		WHERE `id_cart` = '.(int)$cart->id.' AND `id_carrier` = '.(int)$cart->id_carrier.(!empty($region) ? ' AND region = \''.pSQL($region).'\'' : '').'
+		ORDER BY update_date DESC');
 	}
 }

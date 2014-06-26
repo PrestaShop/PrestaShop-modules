@@ -47,16 +47,12 @@
 				<div class="y-label">{l s='In order to locate the widget in a custom position, please open the "root" folder, then enter the "themes" library. Locate the specific theme you would like the widget to show up on, and in this specific themes folder, locate the file "product.tpl". Add the code here, wherever you would like it placed.' mod='yotpo'}<br> <br> 
 					<div class="y-code">
 					{literal}
-					&lt;div class="yotpo reviews" </br>
-					data-appkey="{$yotpoAppkey|escape:'htmlall':'UTF-8'}"</br>
-					data-domain="{$yotpoDomain|escape:'htmlall':'UTF-8'}"</br>
+					&lt;div class="yotpo yotpo-main-widget" </br>
 					data-product-id="{$yotpoProductId|intval}"</br>
-					data-product-models="{$yotpoProductModel|escape:'htmlall':'UTF-8'}" </br>
 					data-name="{$yotpoProductName|escape:'htmlall':'UTF-8'}" </br>
 					data-url="{$link-&gt;getProductLink($smarty.get.id_product, $smarty.get.id_product.link_rewrite)|escape:'htmlall':'UTF-8'}" </br>
 					data-image-url="{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}" </br>
 					data-description="{$yotpoProductDescription|escape:'htmlall':'UTF-8'}" </br>
-					data-bread-crumbs="{$yotpoProductBreadCrumbs|escape:'htmlall':'UTF-8'}"</br>
 					data-lang="{$yotpoLanguage|escape:'htmlall':'UTF-8'}"&gt; </br>
 					{$richSnippetsCode|escape:'UTF-8'} <br>
 					&lt;/div&gt;

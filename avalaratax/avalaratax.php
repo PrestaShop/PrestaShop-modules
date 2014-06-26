@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.4.10';
+		$this->version = '3.4.11';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -105,7 +105,8 @@ class AvalaraTax extends Module
 		`id_cart` int(10) unsigned NOT NULL,
 		`cart_hash` varchar(32) DEFAULT NULL,
 		PRIMARY KEY (`id_cache`),
-		KEY `cart_hash` (`cart_hash`))
+		KEY `cart_hash` (`cart_hash`),
+		KEY `cart_idx` (`id_cart`, `id_carrier`, `region`))
 		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8') ||
 			!Db::getInstance()->Execute('
 		CREATE TABLE `'._DB_PREFIX_.'avalara_address_validation_cache` (
