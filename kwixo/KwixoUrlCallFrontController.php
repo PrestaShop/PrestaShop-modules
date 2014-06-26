@@ -126,7 +126,9 @@ class KwixoURLCallFrontController extends KwixoUrlcallModuleFrontController
 						//order validation
 						if ($order_created == false)
 							$payment->validateOrder((int)$cart->id, (int)Configuration::get('KW_OS_WAITING'), $amount,
-								$payment->displayName, null, '', $cart->id_currency, false, $cart->secure_key);
+								$payment->displayName, null, '', $cart->id_currency, false, $cart->secure_key);	
+						if (Configuration::get('KWIXO_CONFIGURATION_OK') === false)
+							Configuration::updateValue('KWIXO_CONFIGURATION_OK', 1);
 
 						$payment_ok = true;
 

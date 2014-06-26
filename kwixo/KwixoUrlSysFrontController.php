@@ -79,8 +79,8 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 		$md5 = new KwixoMD5();
 
 		$waitedhash = $md5->hash($kwixo->getAuthKey().$ref_id.$transaction_id);
-		$receivedhash = Tools::getValue('HashControl', '0');
-
+		$receivedhash = Tools::getValue('HashControl');
+		
 		//Hash control
 		if ($waitedhash != $receivedhash)
 			KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'URLSys erreur : HashControl invalide (valeur attendue = "'
@@ -140,7 +140,7 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 				//Payment refused
 				case 2:
 					if (!in_array($order->getCurrentState(), array((int)Configuration::get('KW_OS_PAYMENT_GREEN'),
-						(int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'), (int)Configuration::get('KW_OS_CREDIT'),
+						(int)Configuration::get('KW_OS_PAYMENT_RED'), (int)Configuration::get('KW_OS_CONTROL'),
 						(int)_PS_OS_PAYMENT_)))
 						$psosstatus = (int)_PS_OS_CANCELED_;
 					break;
@@ -205,11 +205,14 @@ class KwixoURLSysFrontController extends KwixoUrlSysModuleFrontController
 				$payment->manageKwixoOrder($id_order, $tag, $transaction_id, $id_cart, $payment_type, 'urlsys');
 				if ($cookie->id_cart == (int)$cookie->last_id_cart)
 					unset($cookie->id_cart);
+				if (Configuration::get('KWIXO_CONFIGURATION_OK') === false)
+					Configuration::updateValue('KWIXO_CONFIGURATION_OK', 1);
 			}
 			else
 			{
 				//update order history
-				$order->setCurrentState($psosstatus);
+				if ($order->module == 'kwixo')
+					$order->setCurrentState($psosstatus);
 			}
 		}
 	}

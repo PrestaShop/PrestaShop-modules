@@ -97,7 +97,7 @@ class Fianetfraud extends Module
 	public function __construct()
 	{
 		$this->name = 'fianetfraud';
-		$this->version = '3.9';
+		$this->version = '3.10';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 
@@ -245,18 +245,20 @@ class Fianetfraud extends Module
 		$payment_modules = array();
 		foreach ($payments as $payment)
 		{
+			
 			$module = Module::getInstanceById($payment['id_module']);
 			//reloads submitted values if exists, loads conf otherwise
 			$certissim_type = Tools::isSubmit('certissim_'.$module->id.'_payment_type') ?
 				Tools::getValue('certissim_'.$module->id.'_payment_type') : Configuration::get('CERTISSIM_'.$module->id.'_PAYMENT_TYPE');
 			$certissim_enabled = Tools::isSubmit('certissim_'.$module->id.'_payment_enabled') ?
 				Tools::getValue('certissim_'.$module->id.'_payment_enabled') : Configuration::get('CERTISSIM_'.$module->id.'_PAYMENT_ENABLED');
-
-			$payment_modules[$module->id] = array(
-				'name' => $module->displayName,
-				'certissim_type' => $certissim_type,
-				'enabled' => $certissim_enabled,
-			);
+			
+			if ($module->id != 0)
+				$payment_modules[$module->id] = array(
+					'name' => $module->displayName,
+					'certissim_type' => $certissim_type,
+					'enabled' => $certissim_enabled,
+				);
 		}
 		return $payment_modules;
 	}
@@ -1438,11 +1440,11 @@ class Fianetfraud extends Module
 				}
 
 				$adressepointrelais = new CertissimXMLElement('<adresse></adresse>');
-				$adressepointrelais->childRue1($address1);
-				$adressepointrelais->childRue2($address2);
-				$adressepointrelais->childCpostal($zipcode);
-				$adressepointrelais->childVille($city);
-				$adressepointrelais->childPays($country);
+				$adressepointrelais->childRue1($delivery_address['address1']);
+				$adressepointrelais->childRue2($delivery_address['address2']);
+				$adressepointrelais->childCpostal($delivery_address['zipcode']);
+				$adressepointrelais->childVille($delivery_address['city']);
+				$adressepointrelais->childPays($delivery_address['country']);
 				$xml_pointrelais = new CertissimPointrelais(null, $delivery_address['shop_name'], $adressepointrelais);
 
 				break;
@@ -1555,6 +1557,8 @@ class Fianetfraud extends Module
 
 					//sets the certissim order state to 'sent'
 					self::switchOrderToState($id_order, 'sent');
+					if (Configuration::get('FIANETFRAUD_CONFIGURATION_OK') === false)
+						Configuration::updateValue('FIANETFRAUD_CONFIGURATION_OK', 1);
 					break;
 
 				//if an error occured during the analysis
