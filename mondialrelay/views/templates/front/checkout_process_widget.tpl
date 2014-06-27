@@ -109,7 +109,7 @@
 	}
 	
 	function updateBox() { 
-		button = $('<br clear="all"><center><a href="#" id="close_fancybox" class="button_large" onclick="$.fancybox.close();">'+button_validate+'</a></center>');
+		button = $('<br clear="all"><center><a href="javascript:$.fancybox.close(); return false;" id="close_fancybox" class="button_large" onclick="$.fancybox.close(); return false;">'+button_validate+'</a></center>');
 		button.appendTo($('#Zone_Widget').parent()); 
 
 		$("#fancybox-content #close_fancybox").click(

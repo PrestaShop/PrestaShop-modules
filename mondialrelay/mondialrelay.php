@@ -73,7 +73,7 @@ class MondialRelay extends Module
 	{
 		$this->name		= 'mondialrelay';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '2.0.2';
+		$this->version	= '2.0.3';
 		$this->installed_version = '';
 		$this->module_key = '366584e511d311cfaa899fc2d9ec1bd0';
 		$this->author = 'PrestaShop';
@@ -185,18 +185,14 @@ class MondialRelay extends Module
 			return false;
 
 		if (version_compare(_PS_VERSION_, '1.4', '>=') && 
-			(!$this->registerHook('processCarrier') || 
-				!$this->registerHook('newOrder') || 
+			(!$this->registerHook('processCarrier') ||  
 				!$this->registerHook('orderDetailDisplayed')  
 			)
 		)
 			return false;
 		if (version_compare(_PS_VERSION_, '1.6', '>=') && 
 			(
-				!$this->registerHook('displayBackOfficeHeader') || 
-				!$this->registerHook('processCarrier') || 
-				!$this->registerHook('newOrder') || 
-				!$this->registerHook('orderDetailDisplayed')  
+				!$this->registerHook('displayBackOfficeHeader')    
 			) 
 		)
 			return false;		
