@@ -603,6 +603,9 @@ class EbaySynchronizer
 			'date_upd' => pSQL($date),
 			'id_ebay_profile' => (int)$id_ebay_profile,
 		));
+
+		//If eBay Product has been inserted then the configuration of eBay is OK
+		Configuration::updateValue('EBAY_CONFIGURATION_OK', true);
 	}
 
 	private static function _getVariationData($data, $variation)
@@ -1012,8 +1015,9 @@ class EbaySynchronizer
 			WHERE pac.id_product_attribute='.(int)$product_attribute_id;
 
 		if($ebay_category !== false)
-			$sql .= '  (AND ecs.id_category_ref = '.(int)$ebay_category->getIdCategoryRef().' OR ecs.id_category_ref IS NULL)';
+			$sql .= '  AND (ecs.id_category_ref = '.(int)$ebay_category->getIdCategoryRef().' OR ecs.id_category_ref IS NULL)';
 
+	
 		$attributes_values = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 		$variation_specifics_pairs = array();
 

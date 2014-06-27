@@ -34,7 +34,8 @@ class EbayValidatorTab{
 		if(!is_array($shipping_national) || count($shipping_national) == 0)
 			return array(
 				'indicator' => 'wrong', 
-				'message' => $ebay->l('You must at least configure one domestic shipping service')
+				'indicatorBig' => 'wrong',
+				'message' => $ebay->l('You must at least configure one domestic shipping service', 'ebayvalidatortab')
 			);
 
 
@@ -42,13 +43,15 @@ class EbayValidatorTab{
 		if(!EbayShipping::internationalShippingsHaveZone($shipping_international))
 			return array(
 				'indicator' => 'wrong', 
-				'message' => $ebay->l('Your international shipping must at least have one zone configured')
+				'indicatorBig' => 'wrong',
+				'message' => $ebay->l('Your international shipping must at least have one zone configured', 'ebayvalidatortab')
 			);
 
 		if(count($shipping_international) == 0)
 			return array(
-				'indicator' => 'mind', 
-				'message' => $ebay->l('You could benefit to configure international shipping services')
+				'indicator' => 'success', 
+				'indicatorBig' => 'mind',
+				'message' => $ebay->l('You could benefit to configure international shipping services', 'ebayvalidatortab')
 			);
 
 		return array(
@@ -67,7 +70,8 @@ class EbayValidatorTab{
 			if(($ebay_profile->getConfiguration($config)) == null)
 				return array(
 					'indicator' => 'wrong',
-					'message' => $ebay->l('Your need to configure the field ') . $config
+					'indicatorBig' => 'wrong',
+					'message' => $ebay->l('Your need to configure the field ', 'ebayvalidatortab') . $config
 				);
 		}
 
@@ -76,7 +80,8 @@ class EbayValidatorTab{
 			if((Configuration::get($config)) == null)
 				return array(
 					'indicator' => 'wrong',
-					'message' => $ebay->l('Your need to configure the field ') . $config
+					'indicatorBig' => 'wrong',
+					'message' => $ebay->l('Your need to configure the field ', 'ebayvalidatortab') . $config
 				);
 		}
 
@@ -92,7 +97,30 @@ class EbayValidatorTab{
 
 	public static function getItemSpecificsTabConfiguration($id_ebay_profile)
 	{
+		//Check if all mandatory items specifics have been configured
+		$ebay = new Ebay();
+		if(!EbayCategorySpecific::allMandatorySpecificsAreConfigured($id_ebay_profile))
+		{
+			return array(
+				'indicator' => 'wrong', 
+				'indicatorBig' => 'wrong',
+				'message' => $ebay->l('You need to configure your mandatory items specifics ')
+			);
+		}
 
+		//Check if optional items specifics have been configured
+		if(!EbayCategorySpecific::atLeastOneOptionalSpecificIsConfigured($id_ebay_profile))
+		{
+			return array(
+				'indicator' => 'success', 
+				'indicatorBig' => 'mind',
+				'message' => $ebay->l('You could gain visibility by configuring optional items specifics ')
+			);
+		}
+
+		return array(
+			'indicator' => 'success'
+		);
 	}
 
 	public static function getTemplateTabConfiguration($id_ebay_profile)
@@ -103,13 +131,15 @@ class EbayValidatorTab{
 		if($ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE') == '')
 			return array(
 				'indicator' => 'wrong', 
-				'message' => $ebay->l('You need to add something in your template title. Use the tags available to personnalize your product title on eBay')
+				'indicatorBig' => 'wrong',
+				'message' => $ebay->l('You need to add something in your template title. Use the tags available to personnalize your product title on eBay', 'ebayvalidatortab')
 			);
 
 		if($ebay_profile->getConfiguration('EBAY_PRODUCT_TEMPLATE_TITLE') == '{TITLE}')
 			return array(
-				'indicator' => 'mind', 
-				'message' => $ebay->l('You could improve your title template by adding informations about the items')
+				'indicator' => 'success', 
+				'indicatorBig' => 'mind',
+				'message' => $ebay->l('You could improve your title template by adding informations about the items', 'ebayvalidatortab')
 			);
 		return array(
 			'indicator' => 'success',

@@ -92,6 +92,9 @@ class EbayProduct
 			foreach($datas as $key => $data)
 				$to_insert[pSQL($key)] = $data;
 
+		//If eBay Product has been inserted then the configuration of eBay is OK
+		Configuration::updateValue('EBAY_CONFIGURATION_OK', true);
+
 		return Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_product', $to_insert, 'UPDATE', '`id_product_ref` = '.pSQL($id_product_ref));
 	}
 

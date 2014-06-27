@@ -118,6 +118,55 @@ class EbayCategorySpecific
 		return true;
 	}
     
+	public static function atLeastOneOptionalSpecificIsConfigured($id_ebay_profile)
+	{
+		$optional_items = EbayCategorySpecific::getAllOptional($id_ebay_profile);
+		foreach ($optional_items as $item) {
+			if(EbayCategorySpecific::isConfigured($item))
+				return true;
+		}
+		return false;
+	}
+
+	public static function allMandatorySpecificsAreConfigured($id_ebay_profile)
+	{
+		$mandatory_items = EbayCategorySpecific::getAllMandatory($id_ebay_profile);
+		foreach ($mandatory_items as $item) {
+			if(!EbayCategorySpecific::isConfigured($item))
+				return false;
+		}
+		return true;
+	}
+
+	public static function isConfigured($item_specific)
+	{
+		if($item_specific['id_attribute_group'] != 0 || $item_specific['id_feature'] != 0 || $item_specific['id_ebay_category_specific_value'] != 0 || $item_specific['is_brand'] != 0)
+			return true;
+		return false;
+	}
+
+	public static function getAllMandatory($id_ebay_profile)
+	{
+		return Db::getInstance()->ExecuteS('
+			SELECT * FROM '._DB_PREFIX_.'ebay_category_specific ecs	
+			INNER JOIN '._DB_PREFIX_.'ebay_category ec ON ecs.id_category_ref = ec.id_category_ref 
+			INNER JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc
+            ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+            AND ecc.`id_ebay_profile` = '.(int)$id_ebay_profile.'
+			WHERE required = 1');
+	}
+
+	public static function getAllOptional($id_ebay_profile)
+	{
+		return Db::getInstance()->ExecuteS('
+			SELECT * FROM '._DB_PREFIX_.'ebay_category_specific ecs	
+			INNER JOIN '._DB_PREFIX_.'ebay_category ec ON ecs.id_category_ref = ec.id_category_ref 
+			INNER JOIN `'._DB_PREFIX_.'ebay_category_configuration` ecc
+            ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+            AND ecc.`id_ebay_profile` = '.(int)$id_ebay_profile.'
+			WHERE required = 0');
+	}
+
     public static function getNbOptionalItemSpecifics($id_ebay_profile)
     {
         $sql = 'SELECT count(*)

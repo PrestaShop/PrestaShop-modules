@@ -139,6 +139,7 @@ function upgrade_module_1_7($module)
 		'ebay_category_condition',
 		'ebay_category_condition_configuration',
 		'ebay_shipping',
+		'ebay_product',
 	);
 
 	if(version_compare(_PS_VERSION_, '1.5', '<'))

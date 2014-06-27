@@ -106,15 +106,7 @@
 		possible_features[{$feature.id_feature}] = "{$feature.name}";
 	{/foreach}
 
-	var form_items_specifics = parseInt("{$form_items_specifics}");
-	var form_items_specifics_mixed = parseInt("{$form_items_specifics_mixed}");
 	
-	if (form_items_specifics_mixed >= 1)
-		$("#menuTab8").addClass('success');
-	else if (form_items_specifics >= 1)
-		$("#menuTab8").addClass('mind');
-	else
-		$("#menuTab8").addClass('wrong');
 
 	{literal}			
 	$('#menuTab8').click(function() {

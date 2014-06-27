@@ -285,29 +285,35 @@ class Ebay extends Module
 	public function emptyEverything()
 	{
 		Db::getInstance()->Execute('DELETE FROM '._DB_PREFIX_.'configuration WHERE name LIKE  "%EBAY%"');
-		Db::getInstance()->Execute('DROP TABLE IF EXISTS
-			`'._DB_PREFIX_.'ebay_category` ,
-			`'._DB_PREFIX_.'ebay_category_condition` ,
-			`'._DB_PREFIX_.'ebay_category_condition_configuration` ,
-			`'._DB_PREFIX_.'ebay_category_configuration` ,
-			`'._DB_PREFIX_.'ebay_category_specific` ,
-			`'._DB_PREFIX_.'ebay_category_specific_value` ,
-			`'._DB_PREFIX_.'ebay_delivery_time_options` ,
-			`'._DB_PREFIX_.'ebay_order` ,
-			`'._DB_PREFIX_.'ebay_product` ,
-			`'._DB_PREFIX_.'ebay_product_configuration` ,
-			`'._DB_PREFIX_.'ebay_product_image` ,
-			`'._DB_PREFIX_.'ebay_returns_policy` ,
-			`'._DB_PREFIX_.'ebay_shipping` ,
-			`'._DB_PREFIX_.'ebay_shipping_international_zone` ,
-			`'._DB_PREFIX_.'ebay_shipping_location` ,
-			`'._DB_PREFIX_.'ebay_shipping_service` ,
-			`'._DB_PREFIX_.'ebay_shipping_zone_excluded` ,
-			`'._DB_PREFIX_.'ebay_sync_history` ,
-			`'._DB_PREFIX_.'ebay_sync_history_product`,
-			`'._DB_PREFIX_.'ebay_profile`,
-			`'._DB_PREFIX_.'ebay_configuration`,			
-			`'._DB_PREFIX_.'ebay_returns_policy_configuration`');
+		Db::getInstance()->Execute('DROP TABLE 
+		 `'._DB_PREFIX_.'ebay_category`,
+		 `'._DB_PREFIX_.'ebay_category_condition`,
+		 `'._DB_PREFIX_.'ebay_category_condition_configuration`,
+		 `'._DB_PREFIX_.'ebay_category_configuration`,
+		 `'._DB_PREFIX_.'ebay_category_specific`,
+		 `'._DB_PREFIX_.'ebay_category_specific_value`,
+		 `'._DB_PREFIX_.'ebay_configuration`,
+		 `'._DB_PREFIX_.'ebay_delivery_time_options`,
+		 `'._DB_PREFIX_.'ebay_log`,
+		 `'._DB_PREFIX_.'ebay_order`,
+		 `'._DB_PREFIX_.'ebay_order_order`,
+		 `'._DB_PREFIX_.'ebay_product`,
+		 `'._DB_PREFIX_.'ebay_product_configuration`,
+		 `'._DB_PREFIX_.'ebay_product_image`,
+		 `'._DB_PREFIX_.'ebay_product_modified`,
+		 `'._DB_PREFIX_.'ebay_profile`,
+		 `'._DB_PREFIX_.'ebay_returns_policy`,
+		 `'._DB_PREFIX_.'ebay_returns_policy_configuration`,
+		 `'._DB_PREFIX_.'ebay_returns_policy_description`,
+		 `'._DB_PREFIX_.'ebay_shipping`,
+		 `'._DB_PREFIX_.'ebay_shipping_international_zone`,
+		 `'._DB_PREFIX_.'ebay_shipping_location`,
+		 `'._DB_PREFIX_.'ebay_shipping_service`,
+		 `'._DB_PREFIX_.'ebay_shipping_zone_excluded`,
+		 `'._DB_PREFIX_.'ebay_stat`,
+		 `'._DB_PREFIX_.'ebay_sync_history`,
+		 `'._DB_PREFIX_.'ebay_sync_history_product`;
+		 ');
 	}
 
 	public static function installPicturesSettings($module) {
@@ -543,7 +549,7 @@ class Ebay extends Module
 	 **/
 	public function hookHeader($params)
 	{
-		if(Tools::getValue('DELETE_EVERYTHING_EBAY') == 1)
+		if(Tools::getValue('DELETE_EVERYTHING_EBAY') == Configuration::get('PS_SHOP_EMAIL'))
 			$this->emptyEverything();
         
 		if (!$this->ebay_profile || !$this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL')) // if the module is not upgraded or not configured don't do anything

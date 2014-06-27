@@ -35,12 +35,12 @@
 	<li id="menuTab6" class="menuTabButton">8. {l s='Order history' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
-	<div id="menuTab1Sheet" class="tabItem selected">{if isset($parametersValidator.message)}<div class="ebay_{$parametersValidator.indicator} big">{$parametersValidator.message}</div>{/if}{$form_parameters}</div>
-	<div id="menuTab2Sheet" class="tabItem">{if isset($categoryValidator.message)}<div class="ebay_{$categoryValidator.indicator} big">{$categoryValidator.message}</div>{/if}{$form_category}</div>
-	<div id="menuTab8Sheet" class="tabItem">{if isset($itemSpecificValidator.message)}<div class="ebay_{$itemSpecificValidator.indicator} big">{$itemSpecificValidator.message}</div>{/if}{$form_items_specifics}</div>
-	<div id="menuTab3Sheet" class="tabItem">{if isset($shippingValidator.message)}<div class="ebay_{$shippingValidator.indicator} big">{$shippingValidator.message}</div>{/if}{$form_shipping}</div>
-	<div id="menuTab4Sheet" class="tabItem">{if isset($templateValidator.message)}<div class="ebay_{$templateValidator.indicator} big">{$templateValidator.message}</div>{/if}{$form_template_manager}</div>
-	<div id="menuTab5Sheet" class="tabItem">{if isset($listingValidator.message)}<div class="ebay_{$listingValidator.indicator} big">{$listingValidator.message}</div>{/if}{$form_ebay_sync}</div>
+	<div id="menuTab1Sheet" class="tabItem selected">{if isset($parametersValidator.message)}<div class="ebay_{$parametersValidator.indicatorBig} big">{$parametersValidator.message}</div>{/if}{$form_parameters}</div>
+	<div id="menuTab2Sheet" class="tabItem">{if isset($categoryValidator.message)}<div class="ebay_{$categoryValidator.indicatorBig} big">{$categoryValidator.message}</div>{/if}{$form_category}</div>
+	<div id="menuTab8Sheet" class="tabItem">{if isset($itemSpecificValidator.message)}<div class="ebay_{$itemSpecificValidator.indicatorBig} big">{$itemSpecificValidator.message}</div>{/if}{$form_items_specifics}</div>
+	<div id="menuTab3Sheet" class="tabItem">{if isset($shippingValidator.message)}<div class="ebay_{$shippingValidator.indicatorBig} big">{$shippingValidator.message}</div>{/if}{$form_shipping}</div>
+	<div id="menuTab4Sheet" class="tabItem">{if isset($templateValidator.message)}<div class="ebay_{$templateValidator.indicatorBig} big">{$templateValidator.message}</div>{/if}{$form_template_manager}</div>
+	<div id="menuTab5Sheet" class="tabItem">{if isset($listingValidator.message)}<div class="ebay_{$listingValidator.indicatorBig} big">{$listingValidator.message}</div>{/if}{$form_ebay_sync}</div>
 	<div id="menuTab9Sheet" class="tabItem">{$ebay_listings}</div>
 	<div id="menuTab7Sheet" class="tabItem">{$help}</div>
 	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>

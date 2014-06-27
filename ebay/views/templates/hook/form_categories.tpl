@@ -115,7 +115,7 @@
 <p align="left">
 	* {l s='In most eBay categories, you can list variations of your products together in one listing called a multi-variation listing, for example a red t-shirt size small, medium and large. In those few categories that don’t support multi-variation listings, a listing will be added for every variation of your product.' mod='ebay'}<br />
 	<a href="{l s='http://sellerupdate.ebay.fr/autumn2012/improvements-multi-variation-listings' mod='ebay'}" target="_blank">{l s='Click here for more informations on multi-variation listings' mod='ebay'}</a>
-</p><br /><br />
+</p><br /><br />qzefzqef
 <script type="text/javascript">
 		
 	var $selects = false;
@@ -142,10 +142,8 @@
 			/*$('#menuTab2Sheet .warning.big.tips').fadeIn();*/
 		})
 		var form_categories = parseInt("{$form_categories}");
-		if (form_categories > 1)
+		if (form_categories >= 1)
 			$("#menuTab2").addClass('success');
-		else if (form_categories == 1)
-			$("#menuTab2").addClass('mind');
 		else
 			$("#menuTab2").addClass('wrong');
 
