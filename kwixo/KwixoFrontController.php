@@ -207,7 +207,6 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 				break;
 			case '7':
 				$socolissimoinfo = $module->getSoColissimoLiberteInfo($cart->id);
-
 				if ($socolissimoinfo != false)
 				{
 					foreach ($socolissimoinfo as $info)
@@ -224,6 +223,9 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 						$city = $info['commune'];
 						$country = 'FR';
 					}
+					
+								
+					
 					$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'),
 							$name, $firstname, null, null, $mobile_phone, null);
 
@@ -241,13 +243,25 @@ class KwixoFrontController extends KwixoPaymentModuleFrontController
 						$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
 					$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
 						$kwixo_carrier = $order_details->createCarrier($carrier_name, '2', $carrier_speed);
-						$drop_off_point_address = $control->createAddress('', $address2, $zipcode,
+						$drop_off_point_address = $control->createAddress('', $address1, $zipcode,
 							$city, $country, null);
 						$kwixo_carrier->createDropOffPoint($enseigne, null, $drop_off_point_address);
 					}
 				}
 				else
+				{
 					KwixoLogger::insertLogKwixo(__METHOD__.' : '.__LINE__, 'Flux incorrect : Module SoColissimo Liberté non installé ou non activé');
+					$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'),
+					$delivery_address->lastname, $delivery_address->firstname,
+					null, $delivery_company, $delivery_address->phone_mobile, $delivery_address->phone);
+					$control->createDeliveryAddress($delivery_address->address1, $delivery_address->postcode,
+						$delivery_address->city, $delivery_country->iso_code, $delivery_address->address2);
+
+					//xml <infocommande>
+					$order_details = $control->createOrderDetails($cart->id, $kwixo->getSiteid(), (string)$cart->getOrderTotal(true),
+						$currency->iso_code, Tools::getRemoteAddr(), date('Y-m-d H:i:s'));
+					$kwixo_carrier = $order_details->createCarrier($carrier_name, '4', $carrier_speed);
+				}
 				break;
 			case '8':
 				$control->createDeliveryCustomer((($customer_gender == $male_gender) ? 'Monsieur' : 'Madame'), $delivery_address->lastname,

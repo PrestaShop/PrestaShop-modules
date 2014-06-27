@@ -39,7 +39,7 @@ class alliance3 extends PaymentModule
 	{
 		$this->name = 'alliance3';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.6';
+		$this->version = '1.2.7';
 		$this->author = 'go4.fi';
 		$this->className = 'alliance3';
 		
@@ -304,25 +304,30 @@ class alliance3 extends PaymentModule
 
 	private function _postValidationSubscription()
 	{
-		$url="https://www.sales-exec.net/LeadReceiver/LeadInterface.asmx/ReceiveLead?LID=10983&VID=22324&CompanyName=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&CID=21229&FirstName=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&LastName=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&Address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&City=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&State=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&Zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')))."&Phone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&Email=".urlencode(Tools::safeOutput(Tools::getValue('email')))."&customer_notes=".urlencode(Tools::safeOutput(Tools::getValue('comments')));
-		
+
+		$url="https://aurora.visionpayments.com/aurora/lead_post.php";
+		$postFields="agent_id=4774&source_id=0&campaign_id=0&lead_post_key=d1c5e2d2b3d056c6df1a37d46861d656&";
+		$postFields.="return_url=http://alliance-processing.com&firstname=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&lastname=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&legal_name=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&legal_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&Email=".urlencode(Tools::safeOutput(Tools::getValue('email')));
+		$postFields.="&legal_address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&legal_city=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&legal_state=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&legal_zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')));
+		$postFields.="&mobile_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone2')));
 		//plain post
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_POST, false);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+
 		$output = curl_exec($ch);
 		curl_close($ch);
 
-		if (!substr_count($output,'true'))
+		if(!substr_count($output,'alliance'))
 		{
-			$xml = new SimpleXMLElement($output);
-			$error = $xml->PostResponse->ResponseDetails.";";
-			$this->_postErrors = explode(';', Tools::substr(Tools::safeOutput($error), 0, -1));
+			$this->_postErrors = $output;
 		}
 		else
 			$this->displayConfirmation($this->l('Application Submitted'));
+
 	}
 
 	private function _postProcessCredentials()
