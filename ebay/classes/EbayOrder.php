@@ -223,22 +223,37 @@ class EbayOrder
         $res = array();
         foreach($this->product_list as $product) {
             if ($product['id_ebay_profile'])
-                $id_ebay_profile = $product['id_ebay_profile'];
+                $ebay_profile = new EbayProfile((int)$product['id_ebay_profile']);
             else {
         		$sql = 'SELECT epr.`id_ebay_profile`
         		FROM `'._DB_PREFIX_.'ebay_product` epr
         		WHERE epr.`id_product` = '.(int)$product['id_product'];
                 $id_ebay_profile = (int)Db::getInstance()->getValue($sql);
+                if ($id_ebay_profile) {
+                    $ebay_profile = new EbayProfile($id_ebay_profile);
+                } else {
+                    // case where the row in ebay_product has disappeared like if the product has been removed from eBay before sync
+                    if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()) {
+                        $sql = 'SELECT `id_ebay_profile`
+                            FROM `'._DB_PREFIX_.'ebay_profile` ep
+                            LEFT JOIN `'._DB_PREFIX_.'product_shop` ps
+                            ON ep.`id_shop` = ps.`id_shop`
+                            AND ps.`id_product` = '.(int)$product['id_product'];
+                        $id_ebay_profile = (int)Db::getInstance()->getValue($sql);
+                        $ebay_profile = new EbayProfile($id_ebay_profile);
+                    } else {
+                        $ebay_profile = EbayProfile::getCurrent();                        
+                    }
+                }
             }
-            $ebay_profile = new EbayProfile($id_ebay_profile);
             
             if (!isset($res[$ebay_profile->id_shop])) {
                 $res[$ebay_profile->id_shop] = array(
-                    'id_ebay_profiles' => array($id_ebay_profile),
+                    'id_ebay_profiles' => array($ebay_profile->id),
                     'id_products'      => array()
                 );
-            } elseif (!in_array($id_ebay_profile, $res[$ebay_profile->id_shop]['id_ebay_profiles']))
-                $res[$ebay_profile->id_shop]['id_ebay_profiles'][] = $id_ebay_profile;
+            } elseif (!in_array($ebay_profile->id, $res[$ebay_profile->id_shop]['id_ebay_profiles']))
+                $res[$ebay_profile->id_shop]['id_ebay_profiles'][] = $ebay_profile->id;
             
             $res[$ebay_profile->id_shop]['id_products'][] = $product['id_product'];
         }
