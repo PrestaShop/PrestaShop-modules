@@ -53,7 +53,7 @@
 				<input type="submit" name="submit_order_state"  value="{l s='Save' mod='mondialrelay'}" class="button" />
 			</div>
 		</fieldset>
-		<input type="hidden" name="MR_action_name" value="{l s='Settings'}" />
+		<input type="hidden" name="MR_action_name" value="{l s='Settings' mod='mondialrelay'}" />
 	</form>
 </div>
 

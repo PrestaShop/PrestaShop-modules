@@ -25,7 +25,7 @@
 
 {if $MR_error_list|count}
 <div class="alert error">
-	{$MR_error_list|count} {l s='error(s)'}
+	{$MR_error_list|count} {l s='error(s)' mod='mondialrelay'}
 	<ul>
 		{foreach from=$MR_error_list key=error_num item=error_message}
 			<li>{$error_message}</li>

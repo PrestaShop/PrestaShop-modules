@@ -62,7 +62,7 @@
 </div>
 
 <div id="MR_error_account" class="PS_MRFormType MR_error">
-{l s='Please set your Mondial Relay account settings'}
+{l s='Please set your Mondial Relay account settings' mod='mondialrelay'}
 </div>
 
 {if $MR_upgrade_detail|count}
