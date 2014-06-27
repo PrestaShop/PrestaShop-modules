@@ -67,20 +67,21 @@
 					}
 				});
 			}
-			//============================================================
-			
+			//============================================================			
 			// prevent propagation
-			$('input[name=id_carrier], input.delivery_option_radio').off("change");
-			
+			updateExtraCarrier = function(){
+				return false;
+			};
 			// Handle input click of the other input to hide the previous relay point list displayed
 			$('input[name=id_carrier], input.delivery_option_radio').click(function(e){
+				
 				if ( e.isPropagationStopped() ) {
 					return false;
 				}
 				// refreshDeliveryOptions();
 				overrideUpdateExtraCarrier($(this).val(), id_address);
 				hideRelaySelectedBox($(this)); 
-				e.stopPropagation();
+				e.stopPropagation(); 
 			});
 			
 			// 1.5 OPC Validation - Warn user to select a relay point
@@ -124,7 +125,8 @@
 		else {  
 			PS_MRSelectedRelayPoint['carrier_id'] = _this.val();
 			PS_MRDisplayWidget(_this.val());
-		} 
+		}
+		return false;
 	}
 	
 	function PS_MRDisplayWidget(carrier_id) {
@@ -146,6 +148,7 @@
 			else
 				displayPickupPlace(0);
 		}
+		return false;
 	}
 	
 	
@@ -171,7 +174,7 @@
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
 			url: url + '?rand=' + new Date().getTime(),
-			async: true,
+			async: false,
 			cache: false,
 			dataType : "json",
 			data: 'ajax=true'
@@ -184,8 +187,10 @@
 			success: function(jsonData)
 			{				
 				$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
+				return false;
 			}
 		});
+		return false;
 	}
 	
 	function displayPickupPlace(info) {
@@ -210,6 +215,7 @@
 		else {
 			$('<div id="'+id+'"><h3>'+relay_point_selected_box_label+'</h3>'+info+'</div>').insertAfter(block_carrier);
 		}
+		return false;
 	}
 	
 	function PS_MRAddSelectedCarrierInDB(id_carrier)
@@ -224,6 +230,8 @@
 				'mrtoken' : mrtoken},
 			success: function(json)
 			{
+				return false;
 			} 
 		});
+		return false;
 	}
