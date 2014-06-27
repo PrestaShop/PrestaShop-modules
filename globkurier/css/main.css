@@ -364,6 +364,18 @@ div.gk-order-errors {
 	float: left;
 	width: 100%;
 }
+div.gk-order-errors div.conf{
+    background: #CFEBA6;
+    padding: 5px;
+    border: 1px solid #89B165;
+    color: #385C11;
+}
+div.gk-order-errors div.error{
+    background: #FFC8C8;
+    padding: 5px;
+    border: 1px solid #B30A0A;
+    color: #770A0A;
+}
 div.gk-pricing {
 	float: left;
 	width: 300px;

@@ -40,6 +40,7 @@ class GlobKurierSaveOrder extends ObjectModel {
 	private $int_id_customer;
 	private $str_secure_key;
 	private $str_shop_key;
+        private $str_host;
 	private $str_date;
 	private $str_pickup_date;
 	private $str_pickup_time_from;
@@ -69,6 +70,15 @@ class GlobKurierSaveOrder extends ObjectModel {
 	private $str_recipient_country;
 	private $str_recipient_phone;
 	private $str_recipient_mail;
+        
+        private $str_custom_lp_name;
+        private $str_custom_lp_street;
+        private $str_custom_lp_home;
+        private $str_custom_lp_local;
+        private $str_custom_lp_city;
+        private $str_custom_lp_zip_code;
+        private $str_custom_lp_phone;
+    
 	private $str_content;
 	private $flo_length;
 	private $flo_width;
@@ -201,6 +211,16 @@ class GlobKurierSaveOrder extends ObjectModel {
 	protected function getStrShopKey()
 	{
 		return $this->str_shop_key;
+	}
+        
+        public function setStrHost($str_host)
+	{
+		$this->str_host = $str_host;
+	}
+
+	protected function getStrHost()
+	{
+		return $this->str_host;
 	}
 
 	public function setStrDate($str_date)
@@ -472,6 +492,62 @@ class GlobKurierSaveOrder extends ObjectModel {
 	{
 		return $this->str_recipient_mail;
 	}
+        
+        public function setStrCustomLpName($str_custom_lp_name) {
+            $this->str_custom_lp_name = $str_custom_lp_name;
+        }
+
+        public function getStrCustomLpName() {
+            return $this->str_custom_lp_name;
+        }
+
+        public function setStrCustomLpStreet($str_custom_lp_street) {
+            $this->str_custom_lp_street = $str_custom_lp_street;
+        }
+
+        public function getStrCustomLpStreet() {
+            return $this->str_custom_lp_street;
+        }
+
+        public function setStrCustomLpHome($str_custom_lp_home) {
+            $this->str_custom_lp_home = $str_custom_lp_home;
+        }
+
+        public function getStrCustomLpHome() {
+            return $this->str_custom_lp_home;
+        }
+
+        public function setStrCustomLpLocal($str_custom_lp_local) {
+            $this->str_custom_lp_local = $str_custom_lp_local;
+        }
+
+        public function getStrCustomLpLocal() {
+            return $this->str_custom_lp_local;
+        }
+
+        public function setStrCustomLpCity($str_custom_lp_city) {
+            $this->str_custom_lp_city = $str_custom_lp_city;
+        }
+
+        public function getStrCustomLpCity() {
+            return $this->str_custom_lp_city;
+        }
+
+        public function setStrCustomLpPostalCode($str_custom_lp_zip_code) {
+            $this->str_custom_lp_zip_code = $str_custom_lp_zip_code;
+        }
+
+        public function getStrCustomLpPostalCode() {
+            return $this->str_custom_lp_zip_code;
+        }
+
+        public function setStrCustomLpPhone($str_custom_lp_phone) {
+            $this->str_custom_lp_phone = $str_custom_lp_phone;
+        }
+
+        public function getStrCustomLpPhone() {
+            return $this->str_custom_lp_phone;
+        }
 
 	public function setStrContent($str_content)
 	{
@@ -564,6 +640,7 @@ class GlobKurierSaveOrder extends ObjectModel {
 						<id_customer>'.$this->getIntIdCustomer().'</id_customer>
 						<shop_key>'.$this->getStrShopKey().'</shop_key>
 						<secure_key>'.$this->getStrSecureKey().'</secure_key>
+                                                <host>'.$this->getStrHost().'</host>
 						<reference>'.$this->getStrReference().'</reference>
 						<order_number>'.$this->getStrOrderNumber().'</order_number>
 						<sent_date>'.$this->getStrPickupDate().'</sent_date>
@@ -613,6 +690,15 @@ class GlobKurierSaveOrder extends ObjectModel {
 							<phone>'.$this->getStrRecipientPhone().'</phone>
 							<email>'.$this->getStrRecipientMail().'</email>
 						</receiver>
+                                                <custom_lp>
+                                                    <name>'.$this->getStrCustomLpName().'</name>
+                                                    <street>'.$this->getStrCustomLpStreet().'</street>
+                                                    <house_number>'.$this->getStrCustomLpHome().'</house_number>
+                                                    <apartment_number>'.$this->getStrCustomLpLocal().'</apartment_number>
+                                                    <postal_code>'.$this->getStrCustomLpPostalCode().'</postal_code>
+                                                    <city>'.$this->getStrCustomLpCity().'</city>
+                                                    <phone>'.$this->getStrCustomLpPhone().'</phone>
+                                                </custom_lp>
 					</order>
 				</orders>
 				<token>'.$this->getStrToken().'</token>

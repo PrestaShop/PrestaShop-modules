@@ -40,6 +40,7 @@ class GlobKurierInsertOrder extends ObjectModel {
 	private $int_id_customer;
 	private $str_secure_key;
 	private $str_shop_key;
+        private $str_host;
 	private $str_date;
 	private $str_recipient_name;
 	private $str_recipient_address_1;
@@ -140,10 +141,20 @@ class GlobKurierInsertOrder extends ObjectModel {
 	{
 		$this->str_secure_key = $str_secure_key;
 	}
-
-	protected function getStrSecureKey()
+        
+        protected function getStrSecureKey()
 	{
 		return $this->str_secure_key;
+	}
+
+	protected function getStrHost()
+	{
+		return $this->str_host;
+	}
+        
+        public function setStrHost($str_host)
+	{
+		$this->str_host = $str_host;
 	}
 
 	public function setStrShopKey($str_shop_key)
@@ -257,6 +268,7 @@ class GlobKurierInsertOrder extends ObjectModel {
 					<id_customer>'.$this->getIntIdCustomer().'</id_customer>
 					<shop_key>'.$this->getStrShopKey().'</shop_key>
 					<secure_key>'.$this->getStrSecureKey().'</secure_key>
+                                        <host>'.$this->getStrHost().'</host>
 					<reference>'.$this->getStrReference().'</reference>
 					<order_number>'.$this->getStrOrderNumber().'</order_number>
 					<sent_date>'.$this->getStrDate().'</sent_date>

@@ -130,6 +130,13 @@ $(function() {
 	// ADDONS - click
 	$('.addons-checkbox').live("click", function() {
 		switch($(this).attr('category')) {
+                        case 'INNE_DANE_LP':
+                            if ($(this).is(':checked')) {
+                                $(this).parent().parent().after(makeCustomLpBox());
+                            }else{
+                                $('.custom-lp-input').remove();
+                            }
+                        break;
 			case 'COD' :
 				if ($(this).is(':checked')) {
 					$(this).parent().parent().after(makeCodBox());
@@ -454,4 +461,54 @@ $(function() {
 		box += '</p>';
 		return box;
 	}
+        
+        function makeCustomLpBox(){
+            var box = '';
+            box += '<p class="custom-lp-input">';
+            
+            box += '<label>';
+            box += 'Nazwa';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_nazwa" value="" placeholder="Nazwa" />';
+            
+            box += '<label>';
+            box += 'Adres';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_ulica" value="" placeholder="Ulica" />';
+            
+            box += '<label>';
+            box += 'Dom';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_dom" value="" placeholder="Nr dom" />';
+            
+            box += '<label>';
+            box += 'Lokal';
+            box += '<span></span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_lokal" value="" placeholder="Nr lokal" />';
+            
+            box += '<label>';
+            box += 'Miasto';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_miasto" value="" placeholder="Miasto" />';
+            
+            box += '<label>';
+            box += 'Kod pocztowy';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_kod" value="" placeholder="Kod pocztowy" />';
+            
+            box += '<label>';
+            box += 'Telefon';
+            box += '<span>*</span>';
+            box += '</label><br/>';
+            box += '<input class="large-input" type="text" name="custom_lp_telefon" value="" placeholder="Telefon" />';
+            
+            box += '</p>';
+            return box;
+        }
 });

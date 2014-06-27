@@ -108,12 +108,12 @@ class GlobKurierLogin {
 			$fp = fopen($url, 'rb', false, $sctxt);
 
 			if (!$fp)
-				throw new GlobKurierException("Problem with $url, $php_errormsg");
+				throw new GlobKurierException("Problem with $url, $php_errormsg check your php settings(allow_url_include, allow_url_fopen must be set ON)");
 
 			$response = stream_get_contents($fp);
 
 			if (!$response)
-				throw new GlobKurierException("Problem reading data from $url, $php_errormsg");
+				throw new GlobKurierException("Problem reading data from $url, $php_errormsg check your php settings(allow_url_include, allow_url_fopen must be set ON)");
 		}
 		return $response;
 	}
