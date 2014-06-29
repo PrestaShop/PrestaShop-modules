@@ -21,7 +21,7 @@
  *
  *  @author PrestaShop SA <contact@prestashop.com>
  *  @author Quadra Informatique <modules@quadra-informatique.fr>
- *  @copyright  2007-2014 PrestaShop SA / 1997-2013 Quadra Informatique
+ *  @copyright  2007-2014 PrestaShop SA / 1997-2014 Quadra Informatique
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ require_once(_PS_MODULE_DIR_.'socolissimo/classes/SCFields.php');
 
 /* Init the Context (inherit Socolissimo and handle error) */
 if (!Tools::getValue('DELIVERYMODE'))
-	$so = new SCFields(Tools::getValue('deliveryMode')); /* api 3.0 mobile */
+	$so = new SCFields(Tools::getValue('deliveryMode')); /* api 4.0 mobile */
 else
 	$so = new SCFields(Tools::getValue('DELIVERYMODE')); /* api 4.0 */
 
@@ -61,10 +61,21 @@ if (!$so->checkErrors($errors_codes, SCError::REQUIRED))
 				$return[strtoupper($key)] = stripslashes($val);
 
 	/* GET parameter, the only one */
-	$return['TRRETURNURLKO'] = Tools::getValue('trReturnUrlKo'); /* api 3.0 mobile */
+	$return['TRRETURNURLKO'] = Tools::getValue('trReturnUrlKo'); /* api 4.0 mobile */
 	if (!$return['TRRETURNURLKO'])
 		$return['TRRETURNURLKO'] = Tools::getValue('TRRETURNURLKO'); /* api 4.0 */
-
+	else
+	{
+		/* Treating parameters for api 4.0 mobile */		
+		if (empty($return['TRINTER']))
+			$return['TRINTER'] = 0; /* 0 by default */
+		if (empty($return['CELANG']))
+			$return['CELANG'] = 'fr_FR'; /* fr_FR by default */
+		if (!empty($return['PRPAYS']))
+			unset($return['PRPAYS']);
+		if (!empty($return['CODERESEAU']))
+			unset($return['CODERESEAU']);
+	}
 	foreach ($so->getFields(SCFields::REQUIRED) as $field)
 		if (!isset($return[$field]))
 			$errors_list[] = $so->l('This key is required for Socolissimo:').$field;
@@ -83,7 +94,7 @@ if (empty($errors_list))
 		if (count($trparamplus) > 1)
 		{
 			$so->context->cart->id_carrier = (int)$trparamplus[0];
-			if ($trparamplus[1] == 'checked' || $trparamplus[1] == 1) /* value can be "undefined" or "not checked" */
+			if ($trparamplus[1] == 'checked' || $trparamplus[1] == 1 || $trparamplus[1] == 'true') /* value can be "undefined" or "not checked" */
 				$so->context->cart->gift = 1;
 			else
 				$so->context->cart->gift = 0;

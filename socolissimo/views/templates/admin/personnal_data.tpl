@@ -64,8 +64,9 @@
 				</select>
 			</dd><br>
 
-			<dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod='socolissimo'} :</label></dt>
-			<dd><input type="text" value="{$siret|escape:'htmlall':'UTF-8'}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" /></dd>
+			<dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod='socolissimo'}* :</label></dt>
+			<dd><input type="text" value="{$siret|escape:'htmlall':'UTF-8'}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" />
+			&nbsp;&nbsp;{if isset($siret_error) && $siret_error}<em style="font-size: .8em;  color: red;">({l s='Siret is mandatory' mod='socolissimo'})</em>{/if}</dd>
 		</dl>
 
 		<input type="submit" class="button" name="submitPersonalSave" value="{l s='Confirm' mod='socolissimo'}" style="float: right; margin-top: 30px; padding: 10px 20px" />

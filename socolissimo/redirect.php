@@ -21,7 +21,7 @@
  *
  *  @author Prestashop SA <contact@prestashop.com>
  *  @author Quadra Informatique <modules@quadra-informatique.fr>
- *  @copyright  2007-2014 PrestaShop SA / 1997-2013 Quadra Informatique
+ *  @copyright  2007-2014 PrestaShop SA / 1997-2014 Quadra Informatique
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registred Trademark & Property of PrestaShop SA
  */
@@ -39,6 +39,9 @@ $fields = $so->getFields();
 $inputs = array();
 foreach ($_GET as $key => $value)
 	if (in_array($key, $fields))
+		if(($key == "cePhoneNumber") && (Tools::substr(trim($value),0,3) == "324")) // for belgium number specific format
+			$inputs[$key] = str_replace('324','+324',trim($value));
+	else
 		$inputs[$key] = Tools::getValue($key);
 
 $param_plus = array(
