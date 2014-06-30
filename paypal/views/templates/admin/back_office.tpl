@@ -147,26 +147,26 @@
 
 			<div id="signup">
 				{* Use cases 1 - 3 *}
-				<a href="{$PayPal_content.u1->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				<a href="{$PayPal_content.u2->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				<a href="{$PayPal_content.u3->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
+				<a href="{$PayPal_content.u1->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1->signUpCallButton|escape:'UTF-8'}</a>
+				<a href="{$PayPal_content.u2->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2->signUpCallButton|escape:'UTF-8'}</a>
+				<a href="{$PayPal_content.u3->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3->signUpCallButton|escape:'UTF-8'}</a>
 
 				{* Use cases 4 - 6 *}
-				{*<a href="{$PayPal_content.u4->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
-				<a href="{$PayPal_content.u5->signUpRedirectLink|escape:'htmlall':'UTF-8'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				{*<a href="{$PayPal_content.u6->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
+				{*<a href="{$PayPal_content.u4->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4->signUpCallButton|escape:'UTF-8'}</a>*}
+				<a href="{$PayPal_content.u5->signUpRedirectLink|escape:'UTF-8'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5->signUpCallButton|escape:'UTF-8'}</a>
+				{*<a href="{$PayPal_content.u6->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6->signUpCallButton|escape:'UTF-8'}</a>*}
 
 				<br /><br />
 
 				{* Use cases 1 - 3 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3->content|escape:'UTF-8'}</span>
 
 				{* Use cases 4 - 6 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6->content|escape:'UTF-8'}</span>
 
 			</div>
 
