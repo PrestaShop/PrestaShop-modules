@@ -411,6 +411,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var array<string, mixed> Additional shop system specific settings that cannot (or should not) be generalized and thus be defined by a plugin itself.
 	 */
 	protected $additionalSettings = array();
+	
+	/**
+	 * @var array<int, string> an array with a list of get params which are allowed to passthrough to the mobile device on redirect
+	 */
+	protected $redirectable_get_params = array();
 
 
 	###################################################
@@ -503,6 +508,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->redirect_skip_keyword_cache_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'skip_redirect_keywords.txt';
 
 		$this->is_shopgate_adapter = false;
+		$this->redirectable_get_params = array('gclid','utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content');
 
 		// call possible sub class' startup()
 		if (!$this->startup()) {
@@ -1227,6 +1233,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getIsShopgateAdapter() {
 		return $this->is_shopgate_adapter;
 	}
+	
+	public function getRedirectableGetParams() {
+		return $this->redirectable_get_params;
+	}
 
 	###############
 	### Setters ###
@@ -1633,6 +1643,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 	public function setEnableRegisterCustomer($value) {
 		$this->enable_register_customer = $value;
+	}
+
+	public function setRedirectableGetParams($value) {
+		return $this->redirectable_get_params = $value;
 	}
 
 	###############

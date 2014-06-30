@@ -1105,6 +1105,10 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				$this->config->getCategoriesCsvPath(),
 				$this->config->getReviewsCsvPath(),
 				
+				# xml files
+				$this->config->getItemsXmlPath(),
+				$this->config->getCategoriesXmlPath(),
+				
 				# log files
 				$this->config->getAccessLogPath(),
 				$this->config->getRequestLogPath(),

@@ -1,23 +1,25 @@
 <?php
-/**
-* Shopgate GmbH
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file AFL_license.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/AFL-3.0
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to interfaces@shopgate.com so we can send you a copy immediately.
-*
-* @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
-* @copyright  Shopgate GmbH
-* @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
-*/
+
+/*
+ * Shopgate GmbH
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file AFL_license.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to interfaces@shopgate.com so we can send you a copy immediately.
+ *
+ * @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
+ * @copyright Shopgate GmbH
+ * @license http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ */
 
 include_once dirname(__FILE__).'/../vendors/shopgate_library/shopgate.php';
+
 
 class ShopgateConfigPresta extends ShopgateConfig {
 	/**
@@ -62,6 +64,25 @@ class ShopgateConfigPresta extends ShopgateConfig {
 			$this->setEnableCheckCart(true);
 			$this->setEnableRedeemCoupons(true);
 		}
+
+		/**
+		 * set supported_fields_check_cart
+		 */
+		$this->supported_fields_check_cart = array(
+			'customer',
+			'external_coupons',
+			'shipping_methods',
+			'items',
+			'payment_methods'
+		);
+
+		/**
+		 * set supported_fields_get_settings
+		 */
+		$this->supported_fields_get_settings = array(
+			'customer_groups',
+			'tax'
+		);
 	}
 
 	public function getLanguage() {
@@ -172,7 +193,11 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	}
 
 	public function load(array $settings = null) {
-		$this->loadArray( Configuration::get('SHOPGATE_CONFIG') ? unserialize(Configuration::get('SHOPGATE_CONFIG')) : null);
+		if($settings) {
+			$this->loadArray($settings);
+		} else {
+			$this->loadArray(Configuration::get('SHOPGATE_CONFIG') ? unserialize(Configuration::get('SHOPGATE_CONFIG')) : null);
+		}
 	}
 
 	/**
@@ -192,6 +217,24 @@ class ShopgateConfigPresta extends ShopgateConfig {
 		$newConfig = array_merge(parent::toArray(), $saveFields);
 
 		Configuration::updateValue('SHOPGATE_CONFIG', serialize($newConfig));
+	}
+
+	/**
+	 * delete the config file
+	 *
+	 * @throws ShopgateLibraryException
+	 */
+	public function deleteFile()
+	{
+		$configFile = $this->config_folder_path.DS.'myconfig.php';
+
+		if($configFile && is_file($configFile)) {
+			try {
+				unlink($configFile);
+			} catch (Exception $e) {
+				throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'The configuration file "'.$configFile.'" could not be deleted.');
+			}
+		}
 	}
 
 	/**

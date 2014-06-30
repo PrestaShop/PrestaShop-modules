@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Shopgate GmbH
  *
  * NOTICE OF LICENSE
@@ -13,9 +13,9 @@
  * obtain it through the world-wide-web, please send an email
  * to interfaces@shopgate.com so we can send you a copy immediately.
  *
- * @author     Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
- * @copyright  Shopgate GmbH
- * @license    http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ * @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
+ * @copyright Shopgate GmbH
+ * @license http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  *
  * User: awesselburg
  * Date: 28.01.14
@@ -560,6 +560,15 @@ class PSShopgateCheckCart {
 		$_resultAddress->postcode = $address->getZipcode();
 		$_resultAddress->city = $address->getCity();
 		$_resultAddress->country = $address->getCountry();
+		$_resultAddress->phone = $address->getPhone();
+
+		/**
+		 * check is state iso code available
+		 */
+		if($address->getState() != '') {
+			$_resultAddress->id_state =
+				$this->_getStateIdByIsoCode($address->getState());
+		}
 
 		$_resultAddress->company = $address->getCompany();
 
@@ -578,6 +587,35 @@ class PSShopgateCheckCart {
 			return $countryId;
 		} else {
 			$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, ' invalid or empty iso code #'.$isoCode);
+		}
+	}
+
+	/**
+	 * returns the state id by iso code (US-FL|FL)
+	 *
+	 * @param $isoCode
+	 *
+	 * @return int
+	 */
+	protected function _getStateIdByIsoCode($isoCode) {
+		if($isoCode) {
+			$stateParts = explode('-', $isoCode);
+			if(is_array($stateParts)) {
+				if(count($stateParts) == 2) {
+					$stateId = State::getIdByIso(
+						$stateParts[1],
+						$this->_getCountryIdByIsoCode($stateParts[0])
+					);
+				} else {
+					$stateId = State::getIdByIso($stateParts[0]);
+				}
+			}
+
+			if($stateId) {
+				return $stateId;
+			} else {
+				$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, ' invalid or empty iso code #'.$isoCode);
+			}
 		}
 	}
 
