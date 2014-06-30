@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-var PS_MRObject = (function($, undifened) {
+var PS_MRObject = (function($, undefined) {
 
 	var toggle_status_order_list = false;
 	var toggle_history_order_list = false;
@@ -713,9 +713,9 @@ var PS_MRObject = (function($, undifened) {
 	 */
 	function PS_MRFetchRelayPoint(carrierSelected)
 	{
-		carrier_id = carrierSelected.val();
+		carrier_id = carrierSelected.val().replace(',', ''); 
 		// Block is an input, we need the 'tr' element
-		blockTR = carrierSelected.closest('tr');
+		blockTR =$('#MR_PR_list_'+carrier_id+' tr');
 		// Add a new line to the table after the clicked parent element
 		blockTR.after(' \
 		<tr class="PS_MRSelectedCarrier" id="PS_MRSelectedCarrier_' + carrier_id + '"> \
@@ -757,7 +757,7 @@ var PS_MRObject = (function($, undifened) {
 	 */
 	function PS_MRGetRelayPoint(carrierSelected)
 	{
-		carrier_id = carrierSelected.val();
+		carrier_id = carrierSelected.val().replace(',','');
 
 		// Init back the inital view, hide existing element, (keep cached)
 		element = 0;
@@ -1077,47 +1077,70 @@ var PS_MRObject = (function($, undifened) {
 		if (typeof PS_MRData != 'undefined')
 		{
 			PS_MRSelectedRelayPoint['relayPointNum'] = PS_MRData.pre_selected_relay;
-			// PS_VERSION < '1.5'
-			if (PS_MRData.PS_VERSION < '1.5')
-			{
-				// Bind id_carrierX to an ajax call
-				$.each(PS_MRData.carrier_list, function(i, carrier) {
-					$('#id_carrier' + carrier.id_carrier).click(function(){
-						PS_MRCarrierSelectedProcess($(this), carrier.id_carrier, carrier.dlv_mode);
-					});
-					PS_MRCarrierMethodList[carrier.id_carrier] = carrier.id_mr_method;
-					if ($('#id_carrier' + carrier.id_carrier).attr('checked')){
-						PS_MRCarrierSelectedProcess($('#id_carrier' + carrier.id_carrier), carrier.id_carrier, carrier.dlv_mode);
-					}	
-				});
-			}
-			else if (PS_MRData.PS_VERSION >= '1.5' && PS_MRData.carrier)
-			{ // 1.5 way
-				var selected_id_carrier = $('input[class=delivery_option_radio]:checked').val().replace(',', '');
- 				if (PS_MRData.PS_VERSION < '1.6')
- 					var carrier_block = $('input[class=delivery_option_radio]:checked').parent('div.delivery_option');
- 				else 
-					var carrier_block = $('input[class=delivery_option_radio]:checked').closest('div.delivery_option').children('div');
-				
-				PS_MRCarrierMethodList[PS_MRData.carrier.id] = PS_MRData.carrier.id_mr_method;	
-				PS_MRSelectedRelayPoint['carrier_id'] = PS_MRData.carrier.id;
-				// Simulate 1.4 table to store the relay point fetched
-				$(carrier_block).append(
-					'<div><table width="' + $(carrier_block).width() + '"><tr>'
-						+	  '<td><input type="hidden" id="id_carrier' + PS_MRData.carrier.id + '" value="'+PS_MRData.carrier.id+'" /></td>'
-						+ '</tr></table></div>');
-	
-				PS_MRCarrierMethodList[PS_MRData.carrier.id_carrier] = PS_MRData.carrier.id_mr_method;
-				PS_MRCarrierSelectedProcess($('#id_carrier' + PS_MRData.carrier.id), PS_MRData.carrier.id, PS_MRData.carrier.mr_dlv_mode);
-			}
-			
+		  
 			// Handle input click of the other input to hide the previous relay point list displayed
-			$('input[name=id_carrier], .delivery_option_radio').click(function(){
+			$('input[name=id_carrier], .delivery_option_radio').click(function(){ 
 				// Hide MR input if one of them is not selected
-				if (PS_MRCarrierMethodList[$(this).val()] == undefined){
-					PS_MRHideLastRelayPointList();
+				var carrier_list = PS_MRData.carrier_list;
+				for(i in carrier_list){
+					var MR_carrier = carrier_list[i];
+					var value = $(this).val().replace(",", "");  
+					if(MR_carrier.id_carrier == value) {
+						PS_MRCarrierMethodList[MR_carrier.id_carrier] = MR_carrier.id_mr_method;
+						PS_MRSelectedRelayPoint['carrier_id'] = MR_carrier.id_carrier;
+						PS_MRCarrierSelectedProcess($(this), MR_carrier.id_carrier, MR_carrier.mr_dlv_mode);
+					}
+					else { 
+						PS_MRSelectedRelayPoint['carrier_id'] = 0;
+						PS_MRSelectedRelayPoint['relayPointNum'] = 0;
+						PS_MRHideLastRelayPointList();
+					}
 				}
 			});
+			if (PS_MRData.PS_VERSION < '1.5') {
+				$('input[name="id_carrier"]').each(function(i, e){
+					var parent_element = $(e).closest('tr');
+					var new_element = 'MR_PR_list_'+$(e).val().replace(',', '');
+					if($('#'+new_element).length > 0) {
+						;// if the element already exist
+					}
+					else {
+						var MR_idcarrier = $(e).val().replace(',', '');
+						if( isMRCarrier(MR_idcarrier) ) {
+							$(parent_element).after(
+							'<tr><td colspan="10" style="border:0;"><div><table width="98%" id="'+new_element+'"><tr>'
+							+	'<td style="border:0;"></td>'
+							+'</tr></table></div>'
+							+'</td></tr>'
+							);
+						}
+					}
+					
+					if($(e).prop('checked') == true) {
+						$(e).click();
+					}
+				});
+			}
+			else {
+				$('input.delivery_option_radio').each(function(i, e){
+					var parent_element = $(e).parents('.delivery_option');
+					var new_element = 'MR_PR_list_'+$(e).val().replace(',', '');
+					if($('#'+new_element).length > 0) {
+						;// if the element already exist
+					}
+					else {
+						$(parent_element).append(
+						'<div><table width="98%" id="'+new_element+'"><tr>'
+						+	'<td></td>'
+						+'</tr></table></div>');
+					}
+					
+					if($(e).prop('checked') == true) {
+						$(e).click();
+					}
+				});
+			}
+			
 			
 			// 1.5 OPC Validation - Warn user to select a relay point
 			$('.payment_module a').live('click', function() {
@@ -1129,7 +1152,26 @@ var PS_MRObject = (function($, undifened) {
 					return _return;
 				}
 			});
+			
+			// If MR carrier selected, check MR relay point is selected too
+			$('input[name=processCarrier], button[name=processCarrier]').click(function(){
+				var _return = !(PS_MRSelectedRelayPoint['carrier_id'] && !PS_MRSelectedRelayPoint['relayPointNum']);
+				if (!_return)
+					alert(PS_MRTranslationList['errorSelection']);
+				return _return;
+			});
 		}
+	}
+	
+	function isMRCarrier(id_carrier){
+		var carrier_list = PS_MRData.carrier_list;
+		for(i in carrier_list){
+			var MR_carrier = carrier_list[i];
+			if(MR_carrier.id_carrier == id_carrier) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	$(document).ready(function()

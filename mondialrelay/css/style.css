@@ -270,29 +270,31 @@ tr.PS_MRSelectedCarrier > td
 
 .PS_MRFloatRelayPointSelecteIt a.PS_MRSelectRelayPointButton
 {
-	float:right;
-	display: block;
-	width: 60px;
-	height: 20px;
-	padding: 5px 20px 0px 25px;
-	color:#666666;
-	text-decoration: none;
-	margin-top: 8px;
-	background:url(../img/selectRelayPoint.png) no-repeat 0px 0px;
+	background: url("../img/selectRelayPoint.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #666666;
+    display: block;
+    float: right;
+    height: 25px;
+    margin-top: 8px;
+    padding: 5px 20px 0 25px;
+    text-decoration: none;
+    width: 90px;
+	line-height: 25px;
 }
 
 .PS_MRFloatRelayPointSelected a.PS_MRSelectRelayPointButton
 {
-	font-size: 10px;
-	float:right;
-	display: block;
-	width: 60px;
-	height: 20px;
-	padding: 7px 20px 0px 25px;
-	text-decoration: none;
-	margin-top: 8px;
-	color:#333333;
-	background:url(../img/selectRelayPoint.png) no-repeat 0px -25px;
+	background: url("../img/selectRelayPoint.png") no-repeat scroll 0 -25px rgba(0, 0, 0, 0);
+    color: #333333;
+    display: block;
+    float: right;
+    font-size: 10px;
+    height: 25px;
+    margin-top: 8px;
+    padding: 7px 20px 0 25px;
+    text-decoration: none;
+    width: 90px;
+	line-height: 25px;
 }
 
 a.PS_MRSelectRelayPointButton:hover
