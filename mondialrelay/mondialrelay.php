@@ -648,8 +648,8 @@ class MondialRelay extends Module
 		}
 		
 		if(Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && Tools::strtolower($_SERVER['HTTPS']) != 'off'))
-			$ssl = true;
-		else $ssl = false;		
+			$ssl = 'true';
+		else $ssl = 'false';		
 		
 		$this->context->smarty->assign(array(
 			'address' => $address,
