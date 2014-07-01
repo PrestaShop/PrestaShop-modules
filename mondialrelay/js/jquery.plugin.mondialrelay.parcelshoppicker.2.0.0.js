@@ -426,7 +426,7 @@ var Widgets = Widgets || function () {
                 MapScrollWheel: false,              // (Facultatif) Maps : Activation de la molette de la souris pour effectuer un Zoom
                 MapStreetView: false,
                 ShowResultsOnMap: true,
-                UseSSL: false,
+                UseSSL: ssl,
                 ServiceUrl: 'widget.mondialrelay.com',
                 OnParcelShopSelected: null
             }, prms);
