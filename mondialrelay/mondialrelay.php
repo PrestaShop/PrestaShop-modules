@@ -647,15 +647,9 @@ class MondialRelay extends Module
 			$carrier->mr_dlv_mode = $method['dlv_mode'];
 		}
 		
-		if( version_compare(_PS_VERSION_, '1.5', '<') ) {
-			if( defined('_PS_SSL_ENABLED_') )
-				$ssl = (_PS_SSL_ENABLED_ || Tools::usingSecureMode()) ? 'true' : 'false';
-			else 
-				$ssl = (Tools::usingSecureMode()) ? 'true' : 'false';
-		}
-		else {
-			$ssl = ((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? "true" : "false");
-		}		
+		if(Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && Tools::strtolower($_SERVER['HTTPS']) != 'off'))
+			$ssl = true;
+		else $ssl = false;		
 		
 		$this->context->smarty->assign(array(
 			'address' => $address,
