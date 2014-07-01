@@ -954,7 +954,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_pages_csv
 	 */
 	protected function getPagesCsv() {
-		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsv($this->trace_id);
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseTextCsvExport($this->trace_id);
 		$this->responseData = $this->config->getPagesCsvPath();
 	}
 	

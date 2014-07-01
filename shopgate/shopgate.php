@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Shopgate GmbH
  *
  * NOTICE OF LICENSE
@@ -12,9 +12,9 @@
  * obtain it through the world-wide-web, please send an email
  * to interfaces@shopgate.com so we can send you a copy immediately.
  *
- * @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
+ * @author    Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
  * @copyright Shopgate GmbH
- * @license http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  */
 
 if (!defined('_PS_VERSION_')) exit;
@@ -63,7 +63,7 @@ class ShopGate extends PaymentModule {
 			$this->tab = 'mobile';
 		}
 		
-		$this->version = SHOPGATE_PLUGIN_VERSION;
+		$this->version = '2.6.17';
 		$this->author = 'Shopgate';
 		$this->module_key = "";
 	
@@ -399,19 +399,19 @@ class ShopGate extends PaymentModule {
 			$shopgateCarrierId = (int)$carrier[0]['id_carrier'];
 			
 			// delete delivery options
-			$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'delivery` WHERE `id_carrier` = '.$shopgateCarrierId);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'delivery` WHERE `id_carrier` = '.$shopgateCarrierId);
 			
 			// delete price ranges
-			$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'range_price` WHERE `id_carrier` = '.$shopgateCarrierId);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'range_price` WHERE `id_carrier` = '.$shopgateCarrierId);
 
 			// delete weight ranges
-			$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'range_weight` WHERE `id_carrier` = '.$shopgateCarrierId);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'range_weight` WHERE `id_carrier` = '.$shopgateCarrierId);
 			
 			// delete carrier languages
-			$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'carrier_lang` WHERE `id_carrier` = '.$shopgateCarrierId);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'carrier_lang` WHERE `id_carrier` = '.$shopgateCarrierId);
 			
 			// delete carrier zones
-			$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'carrier_zone` WHERE `id_carrier` = '.$shopgateCarrierId);
+			Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'carrier_zone` WHERE `id_carrier` = '.$shopgateCarrierId);
 			
 			// dont delete carrier
 			//$result = Db::getInstance()->Execute('DELETE FROM `'._DB_PREFIX_.'carrier` WHERE `id_carrier` = '.$shopgateCarrierId);

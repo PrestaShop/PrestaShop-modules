@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Shopgate GmbH
  *
  * NOTICE OF LICENSE
@@ -12,11 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to interfaces@shopgate.com so we can send you a copy immediately.
  *
- * @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
+ * @author    Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
  * @copyright Shopgate GmbH
- * @license http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  */
-
 
 class PSShopgatePlugin extends ShopgatePlugin
 {
@@ -30,7 +29,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	const prefix = 'BD';
 
 	const PS_CONST_IMAGE_TYPE_LARGE = "large";
-	const PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT = "category_default";
+	const PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT = "category%sdefault";
 
 	/**
 	 * default no taxable class name
@@ -1662,7 +1661,7 @@ class PSShopgatePlugin extends ShopgatePlugin
                 $categoryInfo->id_category,
 				version_compare(_PS_VERSION_, '1.5.0.0', '<')
 					? PSShopgatePlugin::PS_CONST_IMAGE_TYPE_LARGE
-					: PSShopgatePlugin::PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT
+					: sprintf(PSShopgatePlugin::PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT, '_')
             );
 
             version_compare(_PS_VERSION_, '1.5.0.0', '<')
