@@ -106,6 +106,17 @@
 		return false;
 	}
 	
+	function isMRCarrier(id_carrier){
+		var carrier_list = PS_MRData.carrier_list;
+		for(i in carrier_list){
+			var MR_carrier = carrier_list[i];
+			if(MR_carrier.id_carrier == id_carrier) {
+				return MR_carrier;
+			}
+		}
+		return false;
+	}
+	
 	function hideRelaySelectedBox(_this){
 		// Hide MR input if one of them is not selected
 		if (PS_MRCarrierMethodList[_this.val()] == undefined){
@@ -154,17 +165,18 @@
 	
 	function overrideUpdateExtraCarrier(id_delivery_option, id_address)
 	{
+		if(PS_MRData.PS_VERSION < '1.5')
+			return false;
+		
 		var url = "";
 		var method = 'updateExtraCarrier';
 		var params = '';
-		if(typeof(orderOpcUrl) !== 'undefined') {
-			if(PS_MRData.PS_VERSION >= '1.5') {
-				method = 'updateCarrierAndGetPayments';
-				params += '&recyclable='+(($('#recyclable:checked').val() != undefined)? 1:0);
-				params += '&gift='+(($('#gift:checked').val() != undefined)? 1:0);
-				params += '&gift_message='+$('#gift_message').val();
-				params += '&delivery_option['+id_address+']='+id_delivery_option;
-			}
+		if(typeof(orderOpcUrl) !== 'undefined') {			
+			method = 'updateCarrierAndGetPayments';
+			params += '&recyclable='+(($('#recyclable:checked').val() != undefined)? 1:0);
+			params += '&gift='+(($('#gift:checked').val() != undefined)? 1:0);
+			params += '&gift_message='+$('#gift_message').val();
+			params += '&delivery_option['+id_address+']='+id_delivery_option;			
 			url = orderOpcUrl;
 		}
 		else
@@ -185,8 +197,8 @@
 				+'&token='+static_token
 				+'&allow_refresh=1',
 			success: function(jsonData)
-			{				
-				$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);
+			{
+				//$('#HOOK_EXTRACARRIER_'+id_address).html(jsonData['content']);				
 				return false;
 			}
 		});

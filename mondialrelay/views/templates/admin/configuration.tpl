@@ -219,11 +219,11 @@
 			</legend>
 			
 			<ul>
-				<li>
+				<!--li>
 					<label for="MR_name" class="shipLabel">{l s='Mode:' mod='mondialrelay'}</label>
 					<input type="radio" name="mode" value="widget" {if $MR_MONDIAL_RELAY_MODE == 'widget'}checked="checked"{/if} /> {l s='Widget' mod='mondialrelay'}
 					<input type="radio" name="mode" value="normal" {if $MR_MONDIAL_RELAY_MODE == 'normal'}checked="checked"{/if} /> {l s='Normal' mod='mondialrelay'}
-				</li>
+				</li-->
 			
 				<li>
 					{l s='URL Cron Task:' mod='mondialrelay'} 

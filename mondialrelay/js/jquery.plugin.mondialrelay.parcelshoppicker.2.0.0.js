@@ -452,7 +452,7 @@ var Widgets = Widgets || function () {
                 private.MR_loadjscssfile(private.protocol + private.sw_url + "/" + private.w_name + "/css/style.min.css", "css");
             }
             private.container = Div;
-            private.loadhtml(private.container, "http://" + private.sw_url + "/" + private.w_name + "/services/widget.v2.0.0.aspx?allowedCountries=" + settings.AllowedCountries + "&Country=" + settings.Country + "&UseSSL=" + settings.UseSSL,
+            private.loadhtml(private.container, private.protocol + private.sw_url + "/" + private.w_name + "/services/widget.v2.0.0.aspx?allowedCountries=" + settings.AllowedCountries + "&Country=" + settings.Country + "&UseSSL=" + settings.UseSSL,
 				function () { private.MR_Widget_Init(private.container, settings); });
 
             return this;

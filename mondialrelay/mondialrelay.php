@@ -147,7 +147,7 @@ class MondialRelay extends Module
 		{
 			Configuration::updateValue('MONDIAL_RELAY', $this->version);
 			Configuration::updateValue('MONDIAL_RELAY_SECURE_KEY', md5(time().rand(0,10)));
-			Configuration::updateValue('MONDIAL_RELAY_MODE', 'normal');
+			Configuration::updateValue('MONDIAL_RELAY_MODE', 'widget');
 		}
 		else
 		{
@@ -571,6 +571,7 @@ class MondialRelay extends Module
 	*/
 	public function hookHeader($params)
 	{
+		Configuration::updateValue('MONDIAL_RELAY_MODE', 'widget');
 		if (!($file = basename(Tools::getValue('controller'))))
 			$file = str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
 
@@ -763,7 +764,7 @@ class MondialRelay extends Module
 
 		
 		if(Tools::isSubmit('submitAdvancedSettings')) { 
-			Configuration::updateValue('MONDIAL_RELAY_MODE', Tools::getValue('mode'));
+			Configuration::updateValue('MONDIAL_RELAY_MODE', Tools::getValue('mode', 'widget'));
 		}
 		
 		else if (Tools::isSubmit('submit_account_detail'))
