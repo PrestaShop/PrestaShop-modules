@@ -25,7 +25,7 @@
 *}
 
 <script type="text/javascript">
-
+	{assign var=MR_Data value=$MR_Data|json_decode:1}
 	// Global JS Value
 	var PS_MRData = {$MR_Data};
 	
