@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>sofortbanking</name>
+	<displayName><![CDATA[Przelew w SOFORT Banking]]></displayName>
+	<version><![CDATA[2.1]]></version>
+	<description><![CDATA[SOFORT Banking - Twoja korzystna metoda płatności. Polecana przez sprzedawc&oacute;w.]]></description>
+	<author><![CDATA[touchdesign]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[Jesteś pewien, ze chcesz wykasować cały moduł ze wszystkimi szczegółami?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
