@@ -24,10 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	// Global JS Value 
+	// Global JS Value
+	
 	var PS_MRData = {$MR_Data};
 	var id_address = '{$address->id}';
-	var ssl = {$ssl};
 	var weight = {$cart->getTotalWeight()|floatval} * 1000; // en Kg
 	if( weight == 0 ) weight = 100;
 	//var weight = 999999; // en Kg
@@ -50,8 +50,7 @@
                 Target: "#Retour_Widget",  // selecteur jquery ou renvoyer l'ID du relais selectionné    
                 Brand: enseigne,  // votre code client
 				PostCode: "{$address->postcode|escape:'htmlall':'UTF-8'}",
-                Country: iso_code,  /* pays*/  
-				UseSSL: ssl,
+                Country: iso_code,  /* pays*/  				
 				OnParcelShopSelected: function PS_MRAddSelectedRelayPointInDB_Widget(data) {
 					var str = '';
 					str += data.Nom+"\n";

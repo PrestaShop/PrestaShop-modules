@@ -645,23 +645,12 @@ class MondialRelay extends Module
 			/*  Add dynamically a new field */
 			$carrier->id_mr_method = $method['id_mr_method'];
 			$carrier->mr_dlv_mode = $method['dlv_mode'];
-		}
-		
-		if( version_compare(_PS_VERSION_, '1.5', '<') ) {
-			if( defined('_PS_SSL_ENABLED_') )
-				$ssl = (_PS_SSL_ENABLED_ || Tools::usingSecureMode()) ? 'true' : 'false';
-			else 
-				$ssl = (Tools::usingSecureMode()) ? 'true' : 'false';
-		}
-		else {
-			$ssl = ((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? "true" : "false");
-		}		
+		} 
 		
 		$this->context->smarty->assign(array(
 			'address' => $address,
 			'account_shop' => $this->account_shop,
 			'country' => $country,
-			'ssl' => $ssl,
 			'MR_Data'=> MRTools::jsonEncode(array(
 				'carrier_list' => $carriersList,
 				'carrier' => $carrier,				

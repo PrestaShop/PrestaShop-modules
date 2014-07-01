@@ -276,7 +276,7 @@ tr.PS_MRSelectedCarrier > td
     float: right;
     height: 25px;
     margin-top: 8px;
-    padding: 0 20px 0 25px;
+    padding: 5px 20px 0 25px;
     text-decoration: none;
     width: 90px;
 	line-height: 25px;
@@ -291,7 +291,7 @@ tr.PS_MRSelectedCarrier > td
     font-size: 10px;
     height: 25px;
     margin-top: 8px;
-    padding: 0 20px 0 25px;
+    padding: 7px 20px 0 25px;
     text-decoration: none;
     width: 90px;
 	line-height: 25px;
@@ -400,7 +400,7 @@ div#PS_MRPersonalizedFields
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-image: initial;
-	height: 130px;
+	height: 110px;
 }
 
 #MR_config_menu ul
