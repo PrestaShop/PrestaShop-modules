@@ -24,11 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-	{assign var=MR_Data value=$MR_Data|json_decode:1}
+<script type="text/javascript">	
 	// Global JS Value
 	var PS_MRData = {$MR_Data};
-	
+	{assign var=MR_Data value=$MR_Data|json_decode:1}
 	// literal for smarty v2 compatibility
 	$(document).ready(function() {literal}{{/literal}
 		PS_MRObject.initFront();
