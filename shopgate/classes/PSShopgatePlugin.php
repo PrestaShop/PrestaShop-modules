@@ -26,10 +26,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected $shopgateModule = null;
 	protected $shippingServiceList = array();
 
-	const prefix = 'BD';
+	const PREFIX = 'BD';
 
-	const PS_CONST_IMAGE_TYPE_LARGE = "large";
-	const PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT = "category%sdefault";
+	const PS_CONST_IMAGE_TYPE_LARGE = 'large';
+	const PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT = 'category%sdefault';
 
 	/**
 	 * default no taxable class name
@@ -39,15 +39,15 @@ class PSShopgatePlugin extends ShopgatePlugin
 	public function startup()
 	{
 		//Set configs that depends on prestashop settings
-		require_once(dirname(__FILE__) . '/PSShopgateConfig.php');
+		require_once(dirname(__FILE__).'/PSShopgateConfig.php');
 		include_once dirname(__FILE__).'/../backward_compatibility/backward.php';
-		
+
 		$this->id_lang = Configuration::get('SHOPGATE_LANGUAGE_ID');
 
 		/**
 		 * read config from db
 		 */
-		$this->config =  new ShopgateConfigPresta(
+		$this->config = new ShopgateConfigPresta(
 			Configuration::get('SHOPGATE_CONFIG') ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
 				array()
@@ -57,7 +57,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$config = $this->config->toArray();
 		$this->id_currency = $this->context->cookie->id_currency = Currency::getIdByIsoCode($config['currency']);
 		$this->setCurrencyIso();
-		$this->config->setUseStock( ! ((bool)Configuration::get('PS_ORDER_OUT_OF_STOCK')));
+		$this->config->setUseStock(!((bool)Configuration::get('PS_ORDER_OUT_OF_STOCK')));
 		$this->shippingServiceList = array
 		(
 			'OTHER',
@@ -85,16 +85,16 @@ class PSShopgatePlugin extends ShopgatePlugin
 			'Plugin' => 'standard'
 		);
 	}
-	
+
 	protected function setCurrencyIso()
 	{
 		$this->currency_iso = Tools::strtoupper(Db::getInstance()->getValue('
 			SELECT
 				`iso_code`
 			FROM
-				`' . _DB_PREFIX_ . 'currency`
+				`'._DB_PREFIX_.'currency`
 			WHERE
-				`id_currency` = ' . (int)$this->id_currency)
+				`id_currency` = '.(int)$this->id_currency)
 		);
 	}
 
@@ -140,9 +140,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$shopgateCustomer->setNewsletterSubscription($customer->newsletter);
 
 		$addresses = array();
-		foreach ($customer->getAddresses($this->id_lang) as $a) {
+		foreach ($customer->getAddresses($this->id_lang) as $a)
+		{
 			$address = new ShopgateAddress();
-			 
+
 			$address->setId($a['id_address']);
 			$address->setFirstName($a['firstname']);
 			$address->setLastName($a['lastname']);
@@ -150,7 +151,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$address->setStreet1($a['address1']);
 			$address->setStreet2($a['address2']);
 			$address->setCity($a['city']);
-			$address->setZipcode($a['postcode']) ;
+			$address->setZipcode($a['postcode']);
 			$address->setCountry($a['country']);
 			$address->setState($a['state']);
 			$address->setPhone($a['phone']);
@@ -166,8 +167,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		 */
 		$customerGroups = array();
 
-		if(is_array($customer->getGroups())) {
-			foreach ($customer->getGroups() as $customerGroupId) {
+		if (is_array($customer->getGroups()))
+		{
+			foreach ($customer->getGroups() as $customerGroupId)
+			{
 				$groupItem = new Group(
 					$customerGroupId,
 					$this->id_lang,
@@ -183,10 +186,9 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$shopgateCustomer->setCustomerGroups($customerGroups);
 
 
-
 		return $shopgateCustomer;
 	}
-	
+
 	/**
 	 * @param CustomerCore $customer
 	 * @param ShopgateAddress $shopgateAddress
@@ -198,30 +200,25 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		// Get country
 		$id_country = Country::getByIso($shopgateAddress->getCountry());
-		if (!$id_country) {
+		if (!$id_country)
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_UNKNOWN_COUNTRY_CODE, 'Invalid country code:'.$id_country, true);
-		}
-		
+
 		// Get state
 		$id_state = 0;
-		if ($shopgateAddress->getState()) {
+		if ($shopgateAddress->getState())
 			$id_state = (int)Db::getInstance()->getValue('SELECT `id_state` FROM `'._DB_PREFIX_.'state` WHERE `id_country` = '.$id_country.' AND `iso_code` = \''.pSQL(Tools::substr($shopgateAddress->getState(), 3, 2)).'\'');
-		}
-		
+
 		// Create alias
-		$alias = Tools::substr('Shopgate_'.$customer->id.'_'.sha1($customer->id.'-'.$shopgateAddress->getFirstName().
-			'-'.$shopgateAddress->getLastName().'-'.$shopgateAddress->getCompany().
-			'-'.$shopgateAddress->getStreet1().'-'.$shopgateAddress->getStreet2().
-			'-'.$shopgateAddress->getZipcode().'-'. $shopgateAddress->getCity())
-		, 0, 32);
-		
+		$alias = Tools::substr('Shopgate_'.$customer->id.'_'.sha1($customer->id.'-'.$shopgateAddress->getFirstName().'-'.$shopgateAddress->getLastName().'-'.$shopgateAddress->getCompany().'-'.$shopgateAddress->getStreet1().'-'.$shopgateAddress->getStreet2().'-'.$shopgateAddress->getZipcode().'-'.$shopgateAddress->getCity()), 0, 32);
+
 		// Try getting address id by alias
 		$id_address = Db::getInstance()->getValue('SELECT `id_address` FROM `'._DB_PREFIX_.'address` WHERE `alias` = \''.pSQL($alias).'\' AND `id_customer`='.$customer->id);
-		
+
 		// Get or create address
 		/** @var AddressCore $address */
 		$address = new Address($id_address ? $id_address : null);
-		if(!$address->id){
+		if (!$address->id)
+		{
 			$address->id_customer = $customer->id;
 			$address->id_country = $id_country;
 			$address->id_state = $id_state;
@@ -250,7 +247,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function getProductIdentifiers(ShopgateOrderItem $item)
 	{
-		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(self::prefix)));
+		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(self::PREFIX)));
 	}
 
 	/**
@@ -271,23 +268,23 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function setShippingCosts($shippingCosts)
 	{
 		$deliveryZones = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'delivery` WHERE `id_carrier` = '.(int)Configuration::get('SHOPGATE_CARRIER_ID'));
-		
+
 		// create for each zone delivery options
-		foreach ($deliveryZones as $deliveryZone) {
+		foreach ($deliveryZones as $deliveryZone)
+		{
 			/** @var DeliveryCore $deliveryRange */
 			$deliveryRange = new Delivery($deliveryZone['id_delivery']);
-			
+
 			// PS_SHIPPING_HANDLING is a fix to decrease the shipping for the amount that is set up in the shipping configuration
 			$deliveryRange->price = $shippingCosts;
 
-			if (!$deliveryRange->update()) {
+			if (!$deliveryRange->update())
 				return false;
-			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * @param ShopgateOrder $order
 	 *
@@ -296,15 +293,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	public function addOrder(ShopgateOrder $order)
 	{
-		$this->log("PS start add_order", ShopgateLogger::LOGTYPE_DEBUG);
-		
+		$this->log('PS start add_order', ShopgateLogger::LOGTYPE_DEBUG);
+
 		$shopgateOrder = PSShopgateOrder::instanceByOrderNumber($order->getOrderNumber());
-		if ($shopgateOrder->id) {
+		if ($shopgateOrder->id)
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DUPLICATE_ORDER, 'external_order_id: '.$shopgateOrder->id_order, true);
-		}
-		
+
 		$comments = array();
-		
+
 		// generate products array
 		$products = $this->insertOrderItems($order);
 
@@ -312,13 +308,12 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$id_customer = Customer::customerExists($order->getMail(), true, false);
 		/** @var CustomerCore $customer */
 		$customer = new Customer($id_customer ? $id_customer : (int)$order->getExternalCustomerId());
-		if(!$customer->id) {
+		if (!$customer->id)
 			$customer = $this->createCustomer($customer, $order);
-		}
-		
+
 		// prepare addresses: company has to be shorten. add mobile phone / telephone
 		$this->prepareAddresses($order);
-		
+
 		//Get invoice and delivery addresses
 		$invoiceAddress = $this->getPSAddress($customer, $order->getInvoiceAddress());
 		$deliveryAddress = ($order->getInvoiceAddress() == $order->getDeliveryAddress())
@@ -326,98 +321,105 @@ class PSShopgatePlugin extends ShopgatePlugin
 			: $this->getPSAddress($customer, $order->getDeliveryAddress());
 
 		//Creating currency
-		$this->log("PS setting currency", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('PS setting currency', ShopgateLogger::LOGTYPE_DEBUG);
 		$id_currency = $order->getCurrency() ? Currency::getIdByIsoCode($order->getCurrency()) : $this->id_currency;
 		/** @var CurrencyCore $currency */
 		$currency = new Currency($id_currency ? $id_currency : $this->id_currency);
 
 		//Creating new cart
-		$this->log("PS set cart variables", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('PS set cart variables', ShopgateLogger::LOGTYPE_DEBUG);
 		$cart = new Cart();
 		$cart->id_lang = $this->id_lang;
 		$cart->id_currency = $currency->id;
 		$cart->id_address_delivery = $deliveryAddress->id;
 		$cart->id_address_invoice = $invoiceAddress->id;
 		$cart->id_customer = $customer->id;
-		
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=')) {
+
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '>='))
+		{
 			// id_guest is a connection to a ps_guest entry which includes screen width etc.
 			// is_guest field only exists in Prestashop 1.4.1.0 and higher
 			$cart->id_guest = $customer->is_guest;
 		}
-		
+
 		$cart->recyclable = 0;
 		$cart->gift = 0;
 		$cart->id_carrier = (int)Configuration::get('SHOPGATE_CARRIER_ID');
 		$internalShippingInfo = $order->getShippingInfos()->getInternalShippingInfo();
-		if ($internalShippingInfo) {
+		if ($internalShippingInfo)
+		{
 			$internalShippingInfo = unserialize($internalShippingInfo);
-			if (array_key_exists('carrierId', $internalShippingInfo)) {
+			if (array_key_exists('carrierId', $internalShippingInfo))
 				$cart->id_carrier = $internalShippingInfo['carrierId'];
-			}
 		}
 		$cart->secure_key = $customer->secure_key;
-		
-		$this->log("PS try to create cart", ShopgateLogger::LOGTYPE_DEBUG);
-		if (!$cart->add()) {
+
+		$this->log('PS try to create cart', ShopgateLogger::LOGTYPE_DEBUG);
+		if (!$cart->add())
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create cart', true);
-		}
-		
+
 		//Adding items to cart
-		$this->log("PS adding items to cart", ShopgateLogger::LOGTYPE_DEBUG);
-		foreach ($products as $p) {
-			$this->log("PS cart updateQty product id: ".  $p['id_product'], ShopgateLogger::LOGTYPE_DEBUG);
-			$this->log("PS cart updateQty product quantity: ".  $p['quantity'], ShopgateLogger::LOGTYPE_DEBUG);
-			$this->log("PS cart updateQty product quantity_difference: ".  $p['quantity_difference'], ShopgateLogger::LOGTYPE_DEBUG);
-			$this->log("PS cart updateQty product id_product_attribute: ".  $p['id_product_attribute'], ShopgateLogger::LOGTYPE_DEBUG);
-			$this->log("PS cart updateQty product delivery address: ".  $deliveryAddress->id, ShopgateLogger::LOGTYPE_DEBUG);
-			
+		$this->log('PS adding items to cart', ShopgateLogger::LOGTYPE_DEBUG);
+		foreach ($products as $p)
+		{
+			$this->log('PS cart updateQty product id: '.$p['id_product'], ShopgateLogger::LOGTYPE_DEBUG);
+			$this->log('PS cart updateQty product quantity: '.$p['quantity'], ShopgateLogger::LOGTYPE_DEBUG);
+			$this->log('PS cart updateQty product quantity_difference: '.$p['quantity_difference'], ShopgateLogger::LOGTYPE_DEBUG);
+			$this->log('PS cart updateQty product id_product_attribute: '.$p['id_product_attribute'], ShopgateLogger::LOGTYPE_DEBUG);
+			$this->log('PS cart updateQty product delivery address: '.$deliveryAddress->id, ShopgateLogger::LOGTYPE_DEBUG);
+
 			//TODO deal with customizations
 			$id_customization = false;
-			
-			if ($p['quantity'] - $p['quantity_difference'] > 0) {
+
+			if ($p['quantity'] - $p['quantity_difference'] > 0)
+			{
 				// only if the result of $p['quantity'] - $p['quantity_difference'] is higher then 0
 				$cart->updateQty($p['quantity'] - $p['quantity_difference'], $p['id_product'], $p['id_product_attribute'], $id_customization, 'up', $deliveryAddress->id);
 			}
-			
-			if ($p['quantity_difference'] > 0) {
-				$this->log("PS try to add cart message ", ShopgateLogger::LOGTYPE_DEBUG);
+
+			if ($p['quantity_difference'] > 0)
+			{
+				$this->log('PS try to add cart message ', ShopgateLogger::LOGTYPE_DEBUG);
 				/** @var MessageCore $message */
 				$message = new Message();
 				$message->id_cart = $cart->id;
 				$message->private = 1;
-				$message->message = 'Warning, wanted quantity for product "' . $p['name'] . '" was ' . $p['quantity'] . ' unit(s), however, the amount in stock is ' . $p['quantity_in_stock'] . ' unit(s). Only ' . $p['quantity_in_stock'] . ' unit(s) were added to the order';
-				
+				$message->message = 'Warning, wanted quantity for product "'.$p['name'].'" was '.$p['quantity'].' unit(s), however, the amount in stock is '.$p['quantity_in_stock'].' unit(s). Only '.$p['quantity_in_stock'].' unit(s) were added to the order';
+
 				$message->save();
 			}
 		}
 
-		$this->log("Add Coupons", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('Add Coupons', ShopgateLogger::LOGTYPE_DEBUG);
 		$coupons = $order->getExternalCoupons();
-		if (!empty($coupons)) {
-			foreach ($coupons as $coupon) {
+		if (!empty($coupons))
+		{
+			foreach ($coupons as $coupon)
+			{
 				/** @var $coupon ShopgateExternalCoupon */
 				$code = $coupon->getCode();
 				$this->context = Context::getContext();
 				$this->context->cart = $cart;
-				if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule)) {
+				if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
+				{
 					/** @var CartRuleCore $cartRule */
-					if ($cartRule->checkValidity($this->context, false, true)) {
-						$this->log("Coupon not valid ".$code, ShopgateLogger::LOGTYPE_DEBUG);
-					} else {
+					if ($cartRule->checkValidity($this->context, false, true))
+						$this->log('Coupon not valid '.$code, ShopgateLogger::LOGTYPE_DEBUG);
+					else
 						$cart->addCartRule($cartRule->id);
-					}
 				}
 			}
 		}
 
 		$shopgate = new ShopGate();
 		$payment_name = $shopgate->getTranslation('Mobile Payment');
-		
-		$this->log("PS map payment method", ShopgateLogger::LOGTYPE_DEBUG);
-		if (!$order->getIsShippingBlocked()) {
+
+		$this->log('PS map payment method', ShopgateLogger::LOGTYPE_DEBUG);
+		if (!$order->getIsShippingBlocked())
+		{
 			$id_order_state = $this->getOrderStateId('PS_OS_PAYMENT');
-			switch ($order->getPaymentMethod()) {
+			switch ($order->getPaymentMethod())
+			{
 				case 'SHOPGATE':
 					$payment_name = $shopgate->getTranslation('Shopgate');
 					break;
@@ -435,10 +437,13 @@ class PSShopgatePlugin extends ShopgatePlugin
 				default:
 					break;
 			}
-		} else {
+		}
+		else
+		{
 			$id_order_state = $this->getOrderStateId('PS_OS_SHOPGATE');
-			
-			switch ($order->getPaymentMethod()) {
+
+			switch ($order->getPaymentMethod())
+			{
 				case 'SHOPGATE':
 					$payment_name = $shopgate->getTranslation('Shopgate');
 					break;
@@ -457,148 +462,151 @@ class PSShopgatePlugin extends ShopgatePlugin
 					break;
 			}
 		}
-		
+
 		$shippingCosts = $order->getAmountShipping() + $order->getAmountShopPayment();
-		
+
 		//Creates shopgate order record and save shipping cost for future use
-		$this->log("PS set PSShopgateOrder object variables", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('PS set PSShopgateOrder object variables', ShopgateLogger::LOGTYPE_DEBUG);
 		$shopgateOrder = new PSShopgateOrder();
 		$shopgateOrder->order_number = $order->getOrderNumber();
 		$shopgateOrder->shipping_cost = $shippingCosts;
 		$shippingService = Configuration::get('SHOPGATE_SHIPPING_SERVICE');
-		if (in_array($order->getShippingGroup(), $this->shippingServiceList)) {
+		if (in_array($order->getShippingGroup(), $this->shippingServiceList))
 			$shippingService = $order->getShippingGroup();
-		}
 		$shopgateOrder->shipping_service = $shippingService;
 		$shopgateOrder->id_cart = $cart->id;
 		$shopgateOrder->shop_number = $this->config->getShopNumber();
 		$shopgateOrder->comments = $this->jsonEncode($comments);
-		
-		if (version_compare(_PS_VERSION_, '1.4.0.2', '<')) {
-			$this->log("PS lower 1.4.0.2: ", ShopgateLogger::LOGTYPE_DEBUG);
+
+		if (version_compare(_PS_VERSION_, '1.4.0.2', '<'))
+		{
+			$this->log('PS lower 1.4.0.2: ', ShopgateLogger::LOGTYPE_DEBUG);
 			// Fix: sets in database ps_delivery all zones of passed shippingCosts
 			$this->setShippingCosts(0);
 		}
-		
-		$this->log("PS try creating PSShopgateOrder object", ShopgateLogger::LOGTYPE_DEBUG);
-		if (!$shopgateOrder->add()) {
+
+		$this->log('PS try creating PSShopgateOrder object', ShopgateLogger::LOGTYPE_DEBUG);
+		if (!$shopgateOrder->add())
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create shopgate order', true);
-		}
-		
+
 		//PS 1.5 compatibility
-		if (version_compare(_PS_VERSION_, '1.5.0.0', '>=')) {
-			$this->log("PS 1.5.x.x: set cart context", ShopgateLogger::LOGTYPE_DEBUG);
+		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			$this->log('PS 1.5.x.x: set cart context', ShopgateLogger::LOGTYPE_DEBUG);
 			$this->context = Context::getContext();
 			$this->context->cart = $cart;
-			
+
 			$this->log("PS 1.5.x.x: \$cart->setDeliveryOption(array(\$cart->id_address_delivery => \$cart->id_carrier.','))\n\n==============", ShopgateLogger::LOGTYPE_DEBUG);
 			$cart->setDeliveryOption(array($cart->id_address_delivery => $cart->id_carrier.','));
-			
-			$this->log("PS 1.5.x.x: \$cart->update()", ShopgateLogger::LOGTYPE_DEBUG);
+
+			$this->log('PS 1.5.x.x: $cart->update()', ShopgateLogger::LOGTYPE_DEBUG);
 			$cart->update();
 		}
 
 		$amountPaid = $order->getAmountComplete();
-		if (version_compare(_PS_VERSION_, '1.4.0.2', '<')) {
+		if (version_compare(_PS_VERSION_, '1.4.0.2', '<'))
+		{
 			//subtracts the shipping costs.
 			$amountPaid -= $shippingCosts;
 		}
-		
-		$this->log("\$shopgate->validateOrder(\$cart->id, \$id_order_state, \$amountPaid, \$payment_name, NULL, array(), NULL, false, \$cart->secure_key", ShopgateLogger::LOGTYPE_DEBUG);
+
+		$this->log('$shopgate->validateOrder($cart->id, $id_order_state, $amountPaid, $payment_name, NULL, array(), NULL, false, $cart->secure_key', ShopgateLogger::LOGTYPE_DEBUG);
 		$this->log(
-			 "\$cart->id = ".var_export($cart->id, true).
-			 "\n\$id_order_state = ".var_export($id_order_state, true).
-			 "\n\$amountPaid = ".var_export($amountPaid, true).
-			 "\n\$payment_name = ".var_export($payment_name, true).
-			 "\n\$cart->secure_key".var_export($cart->secure_key, true)."\n==============",
-			 ShopgateLogger::LOGTYPE_DEBUG);
+			'cart->id = '.var_export($cart->id, true).
+			"\n\$id_order_state = ".var_export($id_order_state, true).
+			"\n\$amountPaid = ".var_export($amountPaid, true).
+			"\n\$payment_name = ".var_export($payment_name, true).
+			"\n\$cart->secure_key".var_export($cart->secure_key, true)."\n==============",
+			ShopgateLogger::LOGTYPE_DEBUG);
 
 		try {
 			$shopgate->validateOrder(
-					 $cart->id,
-					 $id_order_state,
-					 $amountPaid,
-					 $payment_name,
-					 NULL,
-					 array(),
-					 NULL,
-					 false,
-					 $cart->secure_key
+				$cart->id,
+				$id_order_state,
+				$amountPaid,
+				$payment_name,
+				null,
+				array(),
+				null,
+				false,
+				$cart->secure_key
 			);
 		} catch (Swift_Message_MimeException $ex) {
-			$this->log("\$shopgate->validateOrder(\$cart->id, \$id_order_state, \$amountPaid, \$payment_name, NULL, array(), NULL, false, \$cart->secure_key) FAILED with Swift_Message_MimeException", ShopgateLogger::LOGTYPE_ERROR);
+			$this->log('$shopgate->validateOrder($cart->id, $id_order_state, $amountPaid, $payment_name, NULL, array(), NULL, false, $cart->secure_key) FAILED with Swift_Message_MimeException', ShopgateLogger::LOGTYPE_ERROR);
 			// catch Exception if there is a problem with sending mails
 		}
-		
-		if (version_compare(_PS_VERSION_, '1.4.0.2', '<') && (int)$shopgate->currentOrder > 0) {
-			$this->log("PS < 1.4.0.2: update shipping and payment cost", ShopgateLogger::LOGTYPE_DEBUG);
-			
+
+		if (version_compare(_PS_VERSION_, '1.4.0.2', '<') && (int)$shopgate->currentOrder > 0)
+		{
+			$this->log('PS < 1.4.0.2: update shipping and payment cost', ShopgateLogger::LOGTYPE_DEBUG);
+
 			// in versions below 1.4.0.2 the shipping and payment costs must be updated after the order
 			/** @var OrderCore $updateShopgateOrder */
 			$updateShopgateOrder = new Order($shopgate->currentOrder);
-			
+
 			$updateShopgateOrder->total_paid = $order->getAmountComplete();
 			$updateShopgateOrder->total_paid_real = $order->getAmountComplete();
 			$updateShopgateOrder->total_products_wt = $order->getAmountItems();
 			$updateShopgateOrder->total_shipping = $order->getAmountShipping() + $order->getAmountShopPayment();
 			$updateShopgateOrder->update();
 		}
-		
-		if ((int)$shopgate->currentOrder > 0) {
-			$this->log("\$shopgateOrder->update()", ShopgateLogger::LOGTYPE_DEBUG);
+
+		if ((int)$shopgate->currentOrder > 0)
+		{
+			$this->log('$shopgateOrder->update()', ShopgateLogger::LOGTYPE_DEBUG);
 			$shopgateOrder->id_order = $shopgate->currentOrder;
 			$shopgateOrder->update();
-			
+
 			return array(
 				'external_order_id' => $shopgate->currentOrder,
 				'external_order_number' => $shopgate->currentOrder
 			);
-		} else {
-			$this->log("\$shopgateOrder->delete()", ShopgateLogger::LOGTYPE_DEBUG);
+		}
+		else
+		{
+			$this->log('$shopgateOrder->delete()', ShopgateLogger::LOGTYPE_DEBUG);
 			$shopgateOrder->delete();
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create order', true);
 		}
 	}
-	
+
 	/**
 	 * @param ShopgateOrder $order
 	 */
 	protected function prepareAddresses(ShopgateOrder $order)
 	{
-		$this->log("PS start prepareAddresses", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('PS start prepareAddresses', ShopgateLogger::LOGTYPE_DEBUG);
 		$comments = array();
-		
+
 		// shorten company names in addresses if necessary and add a comment
-		if (Tools::strlen($order->getInvoiceAddress()->getCompany()) > 32) {
+		if (Tools::strlen($order->getInvoiceAddress()->getCompany()) > 32)
+		{
 			$comments['Invoice address\' company name <b>%s</b> has been shortened.'] = $order->getInvoiceAddress()->getCompany();
 			$order->getInvoiceAddress()->setCompany(Tools::substr($order->getInvoiceAddress()->getCompany(), 0, 26).'[...]');
 		}
-		if (Tools::strlen($order->getDeliveryAddress()->getCompany()) > 32) {
+		if (Tools::strlen($order->getDeliveryAddress()->getCompany()) > 32)
+		{
 			$comments['Delivery address\' company name <b>%s</b> has been shortened.'] = $order->getDeliveryAddress()->getCompany();
 			$order->getDeliveryAddress()->setCompany(Tools::substr($order->getDeliveryAddress()->getCompany(), 0, 26).'[...]');
 		}
-		
+
 		// set the customer's telephone and mobile number for addresses if necessary
 		$phone = $order->getInvoiceAddress()->getPhone();
-		if (empty($phone)) {
+		if (empty($phone))
 			$order->getInvoiceAddress()->setPhone($order->getPhone());
-		}
 		$phone = $order->getDeliveryAddress()->getPhone();
-		if (empty($phone)) {
+		if (empty($phone))
 			$order->getDeliveryAddress()->setPhone($order->getPhone());
-		}
-		
+
 		$mobile = $order->getInvoiceAddress()->getMobile();
-		if (empty($mobile)) {
+		if (empty($mobile))
 			$order->getInvoiceAddress()->setMobile($order->getMobile());
-		}
 		$mobile = $order->getDeliveryAddress()->getMobile();
-		if (empty($mobile)) {
+		if (empty($mobile))
 			$order->getDeliveryAddress()->setMobile($order->getMobile());
-		}
-		$this->log("PS end prepareAddresses", ShopgateLogger::LOGTYPE_DEBUG);
+		$this->log('PS end prepareAddresses', ShopgateLogger::LOGTYPE_DEBUG);
 	}
-	
+
 	/**
 	 * @param CustomerCore $customer
 	 * @param ShopgateOrder $order
@@ -609,7 +617,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function createCustomer($customer, ShopgateOrder $order)
 	{
 		$this->log('start createCustomer()', ShopgateLogger::LOGTYPE_DEBUG);
-		
+
 		$birthday = $order->getInvoiceAddress()->getBirthday();
 		$customer->lastname = $order->getInvoiceAddress()->getLastName();
 		$customer->firstname = $order->getInvoiceAddress()->getFirstName();
@@ -619,20 +627,20 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$customer->passwd = md5(_COOKIE_KEY_.time());
 		$customer->newsletter = Configuration::get('SHOPGATE_SUBSCRIBE_NEWSLETTER') ? true : false;
 		$customer->optin = false;
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=')) {
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '>='))
+		{
 			// guest accounts flag only exists in Prestashop 1.4.1.0 and higher
 			$customer->addGroups(array(Configuration::get('PS_GUEST_GROUP')));
 			$customer->is_guest = (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
 		}
-			
-		if (!$customer->add()) {
+
+		if (!$customer->add())
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create customer', true);
-		}
 		$this->log('end createCustomer()', ShopgateLogger::LOGTYPE_DEBUG);
-		
+
 		return $customer;
 	}
-	
+
 	/**
 	 * @param ShopgateOrder $order
 	 *
@@ -642,46 +650,50 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function insertOrderItems(ShopgateOrder $order)
 	{
 		$this->log('start insertOrderItems()', ShopgateLogger::LOGTYPE_DEBUG);
-		
+
 		$products = array();
-		
+
 		//Check product quantities
 		$settings = Configuration::getMultiple(array('SHOPGATE_MIN_QUANTITY_CHECK', 'SHOPGATE_OUT_OF_STOCK_CHECK'));
-		
+
 		// complete weight of the order
-		foreach($order->getItems() as $i) {
+		foreach ($order->getItems() as $i)
+		{
 			list($id_product, $id_product_attribute) = $this->getProductIdentifiers($i);
-				
-			if ($id_product == 0) {
+
+			if ($id_product == 0)
 				continue;
-			}
-		
+
 			$wantedQty = (int)$i->getQuantity();
 			/** @var ProductCore $product */
 			$product = new Product($id_product, true, (int)Configuration::get('PS_LANG_DEFAULT'));
-			
+
 			$minQty = 1;
-			if ((int)$id_product_attribute) {
+			if ((int)$id_product_attribute)
+			{
 				$stockQty = (int)Product::getQuantity((int)$id_product, (int)$id_product_attribute);
-				if (version_compare(_PS_VERSION_, '1.4.0.7', '>=')) {
+				if (version_compare(_PS_VERSION_, '1.4.0.7', '>='))
+				{
 					// this attribute doesn't exist before 1.4.0.7
 					$minQty = Attribute::getAttributeMinimalQty((int)$id_product_attribute);
 				}
-			} else {
-				$stockQty = (int)Product::getQuantity((int)$id_product, NULL);
-				if (version_compare(_PS_VERSION_, '1.4.0.2', '>=')) {
+			}
+			else
+			{
+				$stockQty = (int)Product::getQuantity((int)$id_product, null);
+				if (version_compare(_PS_VERSION_, '1.4.0.2', '>='))
+				{
 					// this attribute doesn't exist before 1.4.0.2
 					$minQty = (int)$product->minimal_quantity;
 				}
 			}
-				
+
 			$oos_available = Product::isAvailableWhenOutOfStock($product->out_of_stock);
 			$qtyDifference = 0;
-				
-			if (!$oos_available && $wantedQty > $stockQty) {
+
+			if (!$oos_available && $wantedQty > $stockQty)
 				$qtyDifference = $wantedQty - $stockQty;
-			}
-		
+
 			$p = array();
 			$p['id_product'] = (int)$id_product;
 			$p['id_product_attribute'] = (int)$id_product_attribute;
@@ -689,26 +701,24 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$p['quantity'] = $wantedQty;
 			$p['quantity_in_stock'] = $stockQty;
 			$p['quantity_difference'] = $qtyDifference;
-				
-			if (empty($p['name'])) {
+
+			if (empty($p['name']))
 				$p['name'] = $i->getName();
-			}
-		
-			if ($oos_available) {
+
+			if ($oos_available)
 				$stockQty = $wantedQty;
-			}
-		
+
 			if ((bool)$settings['SHOPGATE_MIN_QUANTITY_CHECK'] && $wantedQty < $minQty)
 				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Minimum quantity required', true);
-		
+
 			if ((bool)$settings['SHOPGATE_OUT_OF_STOCK_CHECK'] && $wantedQty > $stockQty)
 				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Out of stock', true);
-		
+
 			array_push($products, $p);
 		}
-		
+
 		$this->log('end insertOrderItems()', ShopgateLogger::LOGTYPE_DEBUG);
-		
+
 		return $products;
 	}
 
@@ -716,13 +726,13 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 * @param string $jobname
 	 * @param        $params
 	 * @param string $message
-	 * @param int    $errorcount
+	 * @param int $errorcount
 	 */
 	public function cron($jobname, $params, &$message, &$errorcount)
 	{
 		return;
 	}
-	
+
 	/**
 	 * @param ShopgateOrder $order
 	 *
@@ -735,7 +745,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 		if (!Validate::isLoadedObject($shopgateOrder))
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_ORDER_NOT_FOUND, 'Order not found', true);
-		
+
 		$order_states = array();
 
 		if ($order->getUpdatePayment() && $order->getIsPaid())
@@ -744,18 +754,21 @@ class PSShopgatePlugin extends ShopgatePlugin
 		if ($order->getUpdateShipping() && !$order->getIsShippingBlocked())
 			array_push($order_states, $this->getOrderStateId('PS_OS_PREPARATION'));
 
-		if (count($order_states)) {
+		if (count($order_states))
+		{
 			/** @var OrderCore $ps_order */
 			$ps_order = new Order($shopgateOrder->id_order);
-			foreach ($order_states as $id_order_state) {
-				if (version_compare(_PS_VERSION_, '1.4.1.0', '<')) {
+			foreach ($order_states as $id_order_state)
+			{
+				if (version_compare(_PS_VERSION_, '1.4.1.0', '<'))
+				{
 					/** @var OrderHIstoryCore $history */
 					$history = new OrderHistory();
-					$history->id_order = (int) ($shopgateOrder->id_order);
-					$history->changeIdOrderState((int) $id_order_state, (int) ($shopgateOrder->id_order));
-				} else {
-					$ps_order->setCurrentState($id_order_state);
+					$history->id_order = (int)($shopgateOrder->id_order);
+					$history->changeIdOrderState((int)$id_order_state, (int)($shopgateOrder->id_order));
 				}
+				else
+					$ps_order->setCurrentState($id_order_state);
 			}
 		}
 		return array(
@@ -763,7 +776,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 			'external_order_number' => $shopgateOrder->id_order
 		);
 	}
-	
+
 	/**
 	 * @param $weight
 	 *
@@ -776,47 +789,47 @@ class PSShopgatePlugin extends ShopgatePlugin
 			'kg' => 1000,
 			'lbs' => 453.59237
 		);
-		
-		if (array_key_exists($ps_weight_unit, $multipliers)) {
-			$weight*= $multipliers[$ps_weight_unit];
-		}
-		
+
+		if (array_key_exists($ps_weight_unit, $multipliers))
+			$weight *= $multipliers[$ps_weight_unit];
+
 		return $weight;
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	public static function getHighlightProducts()
 	{
 		static $prepared = null, $rootCategoryId = null;
-		
-		if (is_null($prepared)) {
+
+		if (is_null($prepared))
+		{
 			$prepared = array();
-			
-			if (empty($rootCategoryId)) {
-				if (version_compare(_PS_VERSION_, '1.5.0.0', '<')) {
+
+			if (empty($rootCategoryId))
+			{
+				if (version_compare(_PS_VERSION_, '1.5.0.0', '<'))
+				{
 					// lower than 1.5.0.0
 					$rootCategoryId = 1;
-				} else {
-					$rootCategoryId = Db::getInstance()->getValue('SELECT `id_category` FROM `' . _DB_PREFIX_ . 'category` WHERE  `is_root_category` = 1');
 				}
+				else
+					$rootCategoryId = Db::getInstance()->getValue('SELECT `id_category` FROM `'._DB_PREFIX_.'category` WHERE  `is_root_category` = 1');
 			}
 
-			$result = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `' . _DB_PREFIX_ . 'category_product` WHERE `id_category` = '.(int)$rootCategoryId);
-			
-			if ($result && sizeof($result)) {
-				foreach ($result as $product) {
+			$result = Db::getInstance()->ExecuteS('SELECT `id_product` FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$rootCategoryId);
+
+			if ($result && count($result))
+				foreach ($result as $product)
 					array_push($prepared, (int)$product['id_product']);
-				}
-			}
-			
+
 			$prepared = array_unique($prepared);
 		}
-		
+
 		return $prepared;
 	}
-	
+
 	/**
 	 * @param $array
 	 * @param $keys_to_round
@@ -825,19 +838,16 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected static function roundPricesInArray(&$array, $keys_to_round)
 	{
-		if (!is_array($keys_to_round) || !sizeof($keys_to_round)) {
+		if (!is_array($keys_to_round) || !count($keys_to_round))
 			return false;
-		}
-		
-		foreach ($keys_to_round as $round_key) {
-			if (array_key_exists($round_key, $array)) {
+
+		foreach ($keys_to_round as $round_key)
+			if (array_key_exists($round_key, $array))
 				$array[$round_key] = Tools::ps_round($array[$round_key], 2);
-			}
-		}
 	}
 
-    protected function createItemsCsv(){
-
+	protected function createItemsCsv()
+	{
 		$limit = Tools::getValue('limit', 0);
 		$offset = Tools::getValue('offset', 0);
 
@@ -851,14 +861,15 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 		$loaders = array_merge($this->getCreateItemsCsvLoaders(), $additionalLoaders);
 
-		foreach($products as $product) {
+		foreach ($products as $product)
+		{
 			/** @var ProductCore $productModel */
 			$productModel = new Product($product['id_product'], true, $this->id_lang);
 			$row = $this->buildDefaultItemRow();
-			$row = $this->executeLoaders( $loaders, $row, $productModel);
+			$row = $this->executeLoaders($loaders, $row, $productModel);
 			$this->addItemRow($row);
 		}
-    }
+	}
 
 	/**
 	 * @return array
@@ -866,20 +877,20 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function getCategoryMaxSortOrder()
 	{
 		static $maxSortOrderByCategoryNumber = null;
-		
-		if (is_null($maxSortOrderByCategoryNumber)) {
+
+		if (is_null($maxSortOrderByCategoryNumber))
+		{
 			$maxSortOrderCategories = Db::getInstance()->ExecuteS('
 				SELECT id_category, MAX(position) as max_position
 				FROM `'._DB_PREFIX_.'category_product`
 				GROUP BY `id_category`'
 			);
-			
+
 			$maxSortOrderByCategoryNumber = array();
-			foreach ($maxSortOrderCategories as $sortOrderCategory) {
+			foreach ($maxSortOrderCategories as $sortOrderCategory)
 				$maxSortOrderByCategoryNumber[$sortOrderCategory['id_category']] = $sortOrderCategory['max_position'];
-			}
 		}
-		
+
 		return $maxSortOrderByCategoryNumber;
 	}
 
@@ -891,10 +902,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportItemNumber($row, $product)
 	{
-		$row['item_number'] = self::prefix.$product->id.'_0';
+		$row['item_number'] = self::PREFIX.$product->id.'_0';
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -906,7 +917,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['item_name'] = $product->name;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -915,10 +926,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportUnitAmount($row, $product)
 	{
-		$row['unit_amount'] = Tools::ps_round($product->getPrice(true, NULL, 2), 2);
+		$row['unit_amount'] = Tools::ps_round($product->getPrice(true, null, 2), 2);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -930,7 +941,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['currency'] = $this->currency_iso;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -942,7 +953,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['tax_percent'] = $this->formatPriceNumber($product->tax_rate);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -952,7 +963,8 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function itemExportDescription($row, $product)
 	{
 		$descriptionSetting = Configuration::get('SHOPGATE_PRODUCT_DESCRIPTION');
-		switch ($descriptionSetting) {
+		switch ($descriptionSetting)
+		{
 			case ShopGate::PRODUCT_EXPORT_SHORT_DESCRIPTION:
 				$description = $product->description_short;
 				break;
@@ -968,7 +980,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['description'] = str_replace(array("\r", "\n"), '', $description);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -978,21 +990,24 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function itemExportUrlsImages($row, $product)
 	{
 		$image_urls = array();
-			
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=')) {
+
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '>='))
 			$image_ids = $product->getWsImages();
-		} else {
+		else
 			$image_ids = $product->getImages($this->id_lang);
-		}
-			
-		foreach ($image_ids as $i) {
+
+		foreach ($image_ids as $i)
+		{
 			$image_id = array_key_exists('id_image', $i) ? $i['id_image'] : $i['id'];
-			if (version_compare(_PS_VERSION_, '1.5.0.0', '>=')) {
+			if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 				array_push($image_urls, $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$image_id));
-			} elseif (version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(_PS_VERSION_, '1.4.0.0', '>=')){
+			elseif (version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+			{
 				// lower than 1.5.0.0 higher than 1.4.0.0
 				array_push($image_urls, $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$image_id));
-			} else {
+			}
+			else
+			{
 				// lower then 1.4.0.0
 				array_push($image_urls, _PS_BASE_URL_.$this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$image_id));
 			}
@@ -1000,7 +1015,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['urls_images'] = (string)implode('||', $image_urls);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1021,8 +1036,8 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 *
 	 * @return mixed
 	 */
-	protected function itemExportCategoryNumbers($row, $product) {
-
+	protected function itemExportCategoryNumbers($row, $product)
+	{
 		$categoryOrder = array();
 		$maxSortOrderByCategoryNumber = $this->getCategoryMaxSortOrder();
 
@@ -1031,25 +1046,25 @@ class PSShopgatePlugin extends ShopgatePlugin
 		/**
 		 * check version < 1.5
 		 */
-		if(version_compare(_PS_VERSION_, '1.5', '<')) {
-			foreach(Product::getIndexedCategories($product->id) as $key => $value) {
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
+		{
+			foreach (Product::getIndexedCategories($product->id) as $key => $value)
 				array_push($categoryIds, $value['id_category']);
-			}
-		} else {
-			$categoryIds = $product->getCategories();
 		}
+		else
+			$categoryIds = $product->getCategories();
 
 		foreach ($categoryIds as $categoryId)
 		{
 			$categoryModel = new Category($categoryId);
 			$maxPosition = $maxSortOrderByCategoryNumber[$categoryId];
-			array_push($categoryOrder, $categoryId .'=>'.($maxPosition - $categoryModel->position));
+			array_push($categoryOrder, $categoryId.'=>'.($maxPosition - $categoryModel->position));
 		}
 		$row['category_numbers'] = implode('||', $categoryOrder);
 
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1060,7 +1075,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1069,18 +1084,20 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportAvailableText($row, $product)
 	{
-		if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order
-			 || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $product->quantity > 0) {
+		if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $product->quantity > 0)
+		{
 			$availableText = $product->available_now;
 			$row['is_available'] = 1;
-		} else {
+		}
+		else
+		{
 			$availableText = $product->available_later;
 			$row['is_available'] = 0;
 		}
 		$row['available_text'] = $availableText;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1092,7 +1109,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['manufacturer'] = $product->manufacturer_name;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1116,7 +1133,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['url_deeplink'] = $this->context->link->getProductLink($product->id, $product->link_rewrite, $product->category, $product->ean13, $this->id_lang);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1128,7 +1145,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['item_number_public'] = !empty($product->reference) ? $product->reference : '';
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1137,11 +1154,11 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportOldUnitAmount($row, $product)
 	{
-		$reduction = (float)$product->getPrice(true, NULL, 2, NULL, true);
-		$row['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(true, NULL, 2, NULL, false, false) : 0, 2);
+		$reduction = (float)$product->getPrice(true, null, 2, null, true);
+		$row['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(true, null, 2, null, false, false) : 0, 2);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1152,13 +1169,12 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		$features = $product->getFrontFeatures($this->id_lang);
 		$properties = array();
-		foreach ($features as $f) {
+		foreach ($features as $f)
 			array_push($properties, $f['name'].'=>'.$f['value']);
-		}
 		$row['properties'] = implode('||', $properties);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1169,7 +1185,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1180,9 +1196,9 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
-	 * @param array   $row
+	 * @param array $row
 	 * @param ProductCore $product
 	 *
 	 * @return array
@@ -1190,12 +1206,11 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function itemExportAdditionalShippingCostsPerUnit($row, $product)
 	{
 		// TODO: maybe tax must to be added
-		if (property_exists($product,'additional_shipping_cost')) {
+		if (property_exists($product, 'additional_shipping_cost'))
 			$row['additional_shipping_costs_per_unit'] = Tools::ps_round($product->additional_shipping_cost, 2);
-		}
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param $product
@@ -1206,7 +1221,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1215,12 +1230,11 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportBasicPrice($row, $product)
 	{
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000) {
-			$row['basic_price'] = Tools::displayPrice($product->getPrice(true, NULL, 2)/$product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
-		}
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000)
+			$row['basic_price'] = Tools::displayPrice($product->getPrice(true, null, 2) / $product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1229,19 +1243,21 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportUseStock($row, $product)
 	{
-		if (version_compare(_PS_VERSION_, '1.5.0.0', '>=')) {
-			$return = (int)$product->out_of_stock == 2 ? (int)!(bool)Configuration::get('PS_ORDER_OUT_OF_STOCK'): (int)!(bool)$product->out_of_stock;
+		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			$return = (int)$product->out_of_stock == 2 ? (int)!(bool)Configuration::get('PS_ORDER_OUT_OF_STOCK') : (int)!(bool)$product->out_of_stock;
 			$row['use_stock'] = (int)!Configuration::get('PS_STOCK_MANAGEMENT') ? 0 : $return;
-		} else {
-			if ($product->out_of_stock == 2) {
-				$row['use_stock'] =	(int)!(bool)Configuration::get('PS_ORDER_OUT_OF_STOCK');
-			} else {
+		}
+		else
+		{
+			if ($product->out_of_stock == 2)
+				$row['use_stock'] = (int)!(bool)Configuration::get('PS_ORDER_OUT_OF_STOCK');
+			else
 				$row['use_stock'] = (int)!(bool)$product->out_of_stock;
-			}
 		}
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1253,7 +1269,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['stock_quantity'] = $product->quantity;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1264,7 +1280,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1273,12 +1289,11 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportMinimumOrderQuantity($row, $product)
 	{
-		if (version_compare(_PS_VERSION_, '1.4.0.2', '>=')) {
+		if (version_compare(_PS_VERSION_, '1.4.0.2', '>='))
 			$row['minimum_order_quantity'] = $product->minimal_quantity;
-		}
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1289,7 +1304,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1300,7 +1315,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1312,7 +1327,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['ean'] = $product->ean13;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1323,7 +1338,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1334,7 +1349,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1345,7 +1360,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1357,7 +1372,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['last_update'] = Tools::substr($product->date_upd, 0, 10);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1369,7 +1384,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['tags'] = implode(',', isset($product->tags[$this->id_lang]) ? $product->tags[$this->id_lang] : array());
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1380,7 +1395,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1392,10 +1407,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$highlights = self::getHighlightProducts();
 		$isHighlight = in_array($product->id, $highlights) || $product->on_sale;
 		$row['is_highlight'] = (int)$isHighlight;
-		
+
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1405,16 +1420,15 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function itemExportHighlightOrderIndex($row, $product)
 	{
 		static $highlightIndex = 1;
-		
+
 		$highlights = self::getHighlightProducts();
 		$isHighlight = in_array($product->id, $highlights) || $product->on_sale;
-		if ($isHighlight){
+		if ($isHighlight)
 			$row['highlight_order_index'] = $highlightIndex++;
-		}
-		
+
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1425,7 +1439,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1436,7 +1450,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1448,7 +1462,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['related_shop_item_numbers'] = Db::getInstance()->getValue('SELECT GROUP_CONCAT(`id_product_2` SEPARATOR \'||\') FROM `'._DB_PREFIX_.'accessory` WHERE `id_product_1` = '.$product->id.' GROUP BY `id_product_1`');
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1459,7 +1473,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1471,7 +1485,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['weight'] = self::convertProductWeightToGrams($product->weight);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1482,7 +1496,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1494,7 +1508,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$row['has_children'] = $product->hasAttributes() ? 1 : 0;
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1505,7 +1519,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1525,69 +1539,70 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	protected function itemExportAttributes($row, $product)
 	{
-		if ($product->hasAttributes()) {
-			if (version_compare(_PS_VERSION_, '1.5.0.10', '>=')) {
-				$attributes = $product->getAttributeCombinations($this->id_lang);	
-			} else {
-				$attributes = $product->getAttributeCombinaisons($this->id_lang);	
-			}
+		if ($product->hasAttributes())
+		{
+			if (version_compare(_PS_VERSION_, '1.5.0.10', '>='))
+				$attributes = $product->getAttributeCombinations($this->id_lang);
+			else
+				$attributes = $product->getAttributeCombinaisons($this->id_lang);
 
 			$combinations = array();
 			$attribute_groups = array();
-			foreach ($attributes as $a) {
+			foreach ($attributes as $a)
+			{
 				$combinations[$a['id_product_attribute']][$a['id_attribute_group']] = $a;
 				$attribute_groups[$a['id_attribute_group']] = $a['group_name'];
 			}
-		
+
 			$i = 1;
-			foreach ($attribute_groups as $name) {
+			foreach ($attribute_groups as $name)
 				$row['attribute_'.($i++)] = $name;
-			}
 
 			$r = $row;
-			foreach ($combinations as $id => $c) {
+			foreach ($combinations as $id => $c)
+			{
 				$combination = current($c);
-				
-				if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order && $combination['quantity'] > 0 || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $combination['quantity'] > 0){
+
+				if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order && $combination['quantity'] > 0 || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $combination['quantity'] > 0)
+				{
 					$availableText = $product->available_now;
 					$r['is_available'] = 1;
-				} else {
+				}
+				else
+				{
 					$availableText = $product->available_later;
 					$r['is_available'] = 0;
 				}
-		
-				$r['item_number'] = self::prefix.$product->id.'_'.$id;
+
+				$r['item_number'] = self::PREFIX.$product->id.'_'.$id;
 				$r['has_children'] = 0;
 				$r['parent_item_number'] = $row['item_number'];
-				$r['urls_images'] =	implode('||', $this->getImageUrls($product, $id));
-				$reduction = (float)$product->getPrice(true, (int)$id, 2, NULL, true);
-				$r['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(true, (int)$id, 2, NULL, false, false) : 0, 2);
+				$r['urls_images'] = implode('||', $this->getImageUrls($product, $id));
+				$reduction = (float)$product->getPrice(true, (int)$id, 2, null, true);
+				$r['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(true, (int)$id, 2, null, false, false) : 0, 2);
 				$r['unit_amount'] = Tools::ps_round($product->getPrice(true, (int)$id, 2), 2);
-					
-				if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000) {
-					$r['basic_price'] = Tools::displayPrice($product->getPrice(true, (int)$id, 2)/$product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
-				}
-				
+
+				if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000)
+					$r['basic_price'] = Tools::displayPrice($product->getPrice(true, (int)$id, 2) / $product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
+
 				$r['stock_quantity'] = $combination['quantity'];
 				$r['ean'] = $combination['ean13'];
 				$r['weight'] = $row['weight'] + self::convertProductWeightToGrams($combination['weight']);
-				if (version_compare(_PS_VERSION_, '1.4.0.2', '>=')) {
+				if (version_compare(_PS_VERSION_, '1.4.0.2', '>='))
 					$r['minimum_order_quantity'] = $combination['minimal_quantity'];
-				}
 				$r['available_text'] = $availableText;
 				$r['item_number_public'] = (array_key_exists('reference', $combination) && !empty($combination['reference'])) ? $combination['reference'] : '';
-				
+
 				$i = 1;
-				foreach ($attribute_groups as $id => $name) {
+				foreach ($attribute_groups as $id => $name)
 					$r['attribute_'.($i++)] = $c[$id]['attribute_name'];
-				}
-					
+
 				$this->addItem($r);
 			}
 		}
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -1597,114 +1612,116 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function itemExportInputFields($row, $product)
 	{
 		//Product customizations
-		if ($product->customizable) {
+		if ($product->customizable)
+		{
 			$row['has_input_fields'] = 1;
 			$c_fields = $product->getCustomizationFields($this->id_lang);
 			$i = 1;
-			foreach ($c_fields as $f) {
+			foreach ($c_fields as $f)
+			{
 				$row['input_field_'.$i.'_type'] = ($f['type'] == 1) ? 'text' : 'image';
 				$row['input_field_'.$i.'_label'] = $f['name'];
 				$row['input_field_'.$i.'_required'] = (bool)$f['required'];
 				$i++;
 			}
 		}
-		
+
 		return $row;
 	}
 
-    /**
-     * prepare categories
-     *
-     * @return array
-     */
-    protected function prepareCategories()
-    {
-        $categoryItems = array();
-        $result = array();
+	/**
+	 * prepare categories
+	 *
+	 * @return array
+	 */
+	protected function prepareCategories()
+	{
+		$categoryItems = array();
+		$result = array();
 
-        foreach(Category::getSimpleCategories($this->id_lang) as $category)
-        {
-            $cat = $this->buildDefaultCategoryRow();
-            /** @var CategoryCore $categoryInfo */
-            $categoryInfo = new Category($category['id_category']);
-            $categoryLinkRewrite = $categoryInfo->getLinkRewrite($categoryInfo->id_category, $this->id_lang);
+		foreach (Category::getSimpleCategories($this->id_lang) as $category)
+		{
+			$cat = $this->buildDefaultCategoryRow();
+			/** @var CategoryCore $categoryInfo */
+			$categoryInfo = new Category($category['id_category']);
+			$categoryLinkRewrite = $categoryInfo->getLinkRewrite($categoryInfo->id_category, $this->id_lang);
 
-            version_compare(_PS_VERSION_, '1.5.0.0', '<')
-                ? $isRootCategory = ($categoryInfo->id_category == 1 ? true : false)
-                : $isRootCategory = $categoryInfo->is_root_category;
+			version_compare(_PS_VERSION_, '1.5.0.0', '<')
+				? $isRootCategory = ($categoryInfo->id_category == 1 ? true : false)
+				: $isRootCategory = $categoryInfo->is_root_category;
 
-            version_compare(_PS_VERSION_, '1.5.0.0', '<')
-                ? $idShop = false
-                : $idShop = $categoryInfo->getShopID();
+			version_compare(_PS_VERSION_, '1.5.0.0', '<')
+				? $idShop = false
+				: $idShop = $categoryInfo->getShopID();
 
-            /**
-             * fix no parent category available
-             */
-            if($parentCategory = new Category($categoryInfo->id_parent, $this->id_lang, $idShop ? $idShop : false)) {
-                if(!$parentCategory->id_category && !$isRootCategory)
-                    continue;
-            }
+			/**
+			 * fix no parent category available
+			 */
+			if ($parentCategory = new Category($categoryInfo->id_parent, $this->id_lang, $idShop ? $idShop : false))
+			{
+				if (!$parentCategory->id_category && !$isRootCategory)
+					continue;
+			}
 
-            $cat['category_number'] = $categoryInfo->id_category;
-            $cat['category_name'] = $categoryInfo->getName($this->id_lang);
-            $cat['parent_id'] = $isRootCategory ? '' : $categoryInfo->id_parent;
-            $cat['is_active'] = $categoryInfo->active;
-            $cat['url_deeplink'] =
-                $this->context->link->getCategoryLink(
-                    $categoryInfo->id_category,
-                    $categoryLinkRewrite,
-                    $this->id_lang
-                );
+			$cat['category_number'] = $categoryInfo->id_category;
+			$cat['category_name'] = $categoryInfo->getName($this->id_lang);
+			$cat['parent_id'] = $isRootCategory ? '' : $categoryInfo->id_parent;
+			$cat['is_active'] = $categoryInfo->active;
+			$cat['url_deeplink'] =
+				$this->context->link->getCategoryLink(
+					$categoryInfo->id_category,
+					$categoryLinkRewrite,
+					$this->id_lang
+				);
 
-            $categoryImageUrl = $this->context->link->getCatImageLink(
-                $categoryLinkRewrite,
-                $categoryInfo->id_category,
+			$categoryImageUrl = $this->context->link->getCatImageLink(
+				$categoryLinkRewrite,
+				$categoryInfo->id_category,
 				version_compare(_PS_VERSION_, '1.5.0.0', '<')
 					? PSShopgatePlugin::PS_CONST_IMAGE_TYPE_LARGE
 					: sprintf(PSShopgatePlugin::PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT, '_')
-            );
+			);
 
-            version_compare(_PS_VERSION_, '1.5.0.0', '<')
-                ? $cat['url_image'] = _PS_BASE_URL_ . $categoryImageUrl
-                : $cat['url_image'] = $categoryImageUrl;
+			version_compare(_PS_VERSION_, '1.5.0.0', '<')
+				? $cat['url_image'] = _PS_BASE_URL_.$categoryImageUrl
+				: $cat['url_image'] = $categoryImageUrl;
 
-            version_compare(_PS_VERSION_, '1.5.0.0', '>')
-                ? $cat['order_index'] = $categoryInfo->position
-                : $cat['order_index'] = 0;
+			version_compare(_PS_VERSION_, '1.5.0.0', '>')
+				? $cat['order_index'] = $categoryInfo->position
+				: $cat['order_index'] = 0;
 
-            array_push($categoryItems, $cat);
-        }
+			array_push($categoryItems, $cat);
+		}
 
-        $categoryPositionData = array();
-        foreach ($categoryItems as $categoryItem) {
-            $key = $categoryItem['parent_id'] == '' ? 'root' : $categoryItem['parent_id'];
-            if(!array_key_exists($key, $categoryPositionData)) {
-                $categoryPositionData[$key] = 0;
-            } else {
-                $categoryPositionData[$key]++;
-            }
-        }
+		$categoryPositionData = array();
+		foreach ($categoryItems as $categoryItem)
+		{
+			$key = $categoryItem['parent_id'] == '' ? 'root' : $categoryItem['parent_id'];
+			if (!array_key_exists($key, $categoryPositionData))
+				$categoryPositionData[$key] = 0;
+			else
+				$categoryPositionData[$key]++;
+		}
 
-        $categoryNewPositionData = array();
-        foreach ($categoryItems as $categoryItem) {
-            $key = $categoryItem['parent_id'] == '' ? 'root' : $categoryItem['parent_id'];
-            if(!array_key_exists($key, $categoryNewPositionData)) {
-                $categoryNewPositionData[$key] = 0;
-            } else {
-                $categoryNewPositionData[$key]++;
-            }
-            $categoryItem['order_index'] = $categoryPositionData[$key] - $categoryNewPositionData[$key];
-            array_push($result, $categoryItem);
-        }
+		$categoryNewPositionData = array();
+		foreach ($categoryItems as $categoryItem)
+		{
+			$key = $categoryItem['parent_id'] == '' ? 'root' : $categoryItem['parent_id'];
+			if (!array_key_exists($key, $categoryNewPositionData))
+				$categoryNewPositionData[$key] = 0;
+			else
+				$categoryNewPositionData[$key]++;
+			$categoryItem['order_index'] = $categoryPositionData[$key] - $categoryNewPositionData[$key];
+			array_push($result, $categoryItem);
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
 	protected function createCategoriesCsv()
-    {
-        foreach ($this->prepareCategories() as $categoryItem) {
-            $this->addCategoryRow($categoryItem);
-        }
+	{
+		foreach ($this->prepareCategories() as $categoryItem)
+			$this->addCategoryRow($categoryItem);
 	}
 
 	protected function createReviewsCsv()
@@ -1716,14 +1733,15 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 * check cart
 	 *
 	 * @param ShopgateCart $shopgateCart
+	 *
 	 * @return array
 	 */
 	public function checkCart(ShopgateCart $shopgateCart)
 	{
-		$checkCart  = new PSShopgateCheckCart($shopgateCart);
+		$checkCart = new PSShopgateCheckCart($shopgateCart);
 		return $checkCart->createResult();
 	}
-	
+
 	/**
 	 * @param ShopgateCart $shopgateCart
 	 *
@@ -1734,9 +1752,8 @@ class PSShopgatePlugin extends ShopgatePlugin
 		//coupon redemption will be done automatically in add_order action 
 		$result = array();
 
-		foreach ($shopgateCart->getExternalCoupons() as $coupon) {
+		foreach ($shopgateCart->getExternalCoupons() as $coupon)
 			$result[] = $coupon;
-		}
 
 		return $result;
 	}
@@ -1760,8 +1777,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 		$customerGroups = array();
 
-		if(is_array($customerGroupsItems)) {
-			foreach ($customerGroupsItems as $customerGroupsItem) {
+		if (is_array($customerGroupsItems))
+		{
+			foreach ($customerGroupsItems as $customerGroupsItem)
+			{
 				$group = array();
 				$group['id'] = $customerGroupsItem['id_group'];
 				$group['name'] = $customerGroupsItem['name'];
@@ -1778,8 +1797,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$productTaxClassItems = Tax::getTaxes($this->id_lang);
 		$productTaxClasses = array();
 
-		if(is_array($productTaxClassItems)) {
-			foreach ($productTaxClassItems as $productTaxClassItem) {
+		if (is_array($productTaxClassItems))
+		{
+			foreach ($productTaxClassItems as $productTaxClassItem)
+			{
 				$taxClass = array();
 				$taxClass['id'] = $productTaxClassItem['id_tax'];
 				$taxClass['key'] = $productTaxClassItem['name'];
@@ -1792,7 +1813,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		/**
 		 * customer tax classes
 		 */
-		$result['tax']['customer_tax_classes'] = array (
+		$result['tax']['customer_tax_classes'] = array(
 			'id' => 0,
 			'key' => 'inkl. Mehrwertsteuer',
 			'is_default' => 1
@@ -1803,8 +1824,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		 */
 		$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
 		$taxRules = array();
-		foreach ($taxRuleGroups as $taxRuleGroup) {
-			foreach(TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem) {
+		foreach ($taxRuleGroups as $taxRuleGroup)
+		{
+			foreach (TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem)
+			{
 
 				/** @var TaxRuleCore $taxRuleItem */
 				$taxRuleItem = new TaxRule($taxRuleItem['id_tax_rule']);
@@ -1814,14 +1837,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 				$resultTaxRule = array();
 				$resultTaxRule['id'] = $taxRuleItem->id;
-				$resultTaxRule['key']= $taxItem->id;
+				$resultTaxRule['key'] = $taxItem->id;
 				$resultTaxRule['display_name'] = $taxItem->name;
 				$resultTaxRule['tax_percent'] = $taxItem->rate;
 				$resultTaxRule['country'] = $this->getCountryById($taxRuleItem->id_country)->iso_code;
 				$resultTaxRule['state'] = $this->getStateById($taxRuleItem->id_state)->iso_code;
 				$resultTaxRule['zipcode_type'] = 'range';
-				$resultTaxRule['zipcode_range_from'] = $taxRuleItem->zipcode_from ? $taxRuleItem->zipcode_from : NULL;
-				$resultTaxRule['zipcode_range_to'] = $taxRuleItem->zipcode_to ? $taxRuleItem->zipcode_to : NULL;
+				$resultTaxRule['zipcode_range_from'] = $taxRuleItem->zipcode_from ? $taxRuleItem->zipcode_from : null;
+				$resultTaxRule['zipcode_range_to'] = $taxRuleItem->zipcode_to ? $taxRuleItem->zipcode_to : null;
 
 				array_push($taxRules, $resultTaxRule);
 			}
@@ -1834,8 +1857,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 		 */
 		$result['tax']['tax_rules'] = array();
 		$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
-		foreach ($taxRuleGroups as $taxRuleGroup) {
-			foreach(TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem) {
+		foreach ($taxRuleGroups as $taxRuleGroup)
+		{
+			foreach (TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem)
+			{
 
 				/** @var TaxRuleCore $taxRuleItem */
 				$taxRuleItem = new TaxRule($taxRuleItem['id_tax_rule']);
@@ -1854,17 +1879,18 @@ class PSShopgatePlugin extends ShopgatePlugin
 					'key' => $taxItem->id
 				);
 
-				$rule['customer_tax_classes'] = array (
+				$rule['customer_tax_classes'] = array(
 					'id' => 0,
 					'key' => 0
 				);
 
 				$rule['tax_rates'] = array();
-				foreach(TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem) {
+				foreach (TaxRule::getTaxRulesByGroupId($this->id_lang, $taxRuleGroup['id_tax_rules_group']) as $taxRuleItem)
+				{
 					array_push(
 						$rule['tax_rates'], array(
-						'id' => $taxRuleItem['id_tax_rule'],
-						'key' => $taxRuleItem['id_tax_rule']
+							'id' => $taxRuleItem['id_tax_rule'],
+							'key' => $taxRuleItem['id_tax_rule']
 						)
 					);
 				}
@@ -1896,17 +1922,17 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		return new State($id);
 	}
-	
+
 	/**
-	 * @param string           $user
-	 * @param string           $pass
+	 * @param string $user
+	 * @param string $pass
 	 * @param ShopgateCustomer $customer
 	 */
 	public function registerCustomer($user, $pass, ShopgateCustomer $customer)
 	{
 		// TODO: Implement registerCustomer() method.
 	}
-	
+
 	/**
 	 * @return ShopgateMobileRedirect
 	 */
@@ -1959,14 +1985,19 @@ class PSShopgatePlugin extends ShopgatePlugin
 	{
 		$imageUrls = array();
 		$images = $product->getCombinationImages($this->id_lang);
-		if (isset($images[$combination]) && is_array($images[$combination])) {
-			foreach ($images[$combination] as $i) {
-				if (version_compare(_PS_VERSION_, '1.5.0.0', '>=')) {
+		if (isset($images[$combination]) && is_array($images[$combination]))
+		{
+			foreach ($images[$combination] as $i)
+			{
+				if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 					array_push($imageUrls, $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$i['id_image']));
-				} elseif (version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(_PS_VERSION_, '1.4.0.0', '>=')){
+				elseif (version_compare(_PS_VERSION_, '1.5.0.0', '<') && version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+				{
 					// lower than 1.5.0.0 higher than 1.4.0.0
 					array_push($imageUrls, $this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$i['id_image']));
-				} else {
+				}
+				else
+				{
 					// lower then 1.4.0.0
 					array_push($imageUrls, _PS_BASE_URL_.$this->context->link->getImageLink($product->link_rewrite, $product->id.'-'.$i['id_image']));
 				}
@@ -1978,71 +2009,73 @@ class PSShopgatePlugin extends ShopgatePlugin
 	/**
 	 * Loads the products of the shop system's database and passes them to the buffer.
 	 *
-	 * @param int      $limit  pagination limit; if not null, the number of exported items must be <= $limit
-	 * @param int      $offset pagination; if not null, start the export with the item at position $offset
-	 * @param string[] $uids   a list of item UIDs that should be exported
+	 * @param int $limit     pagination limit; if not null, the number of exported items must be <= $limit
+	 * @param int $offset    pagination; if not null, start the export with the item at position $offset
+	 * @param string[] $uids a list of item UIDs that should be exported
 	 *
 	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_items
 	 *
 	 * @throws ShopgateLibraryException
 	 */
-	protected function createItems($limit = null, $offset = null, array $uids = array()) {
-
+	protected function createItems($limit = null, $offset = null, array $uids = array())
+	{
 		$products = Product::getProducts($this->id_lang, $offset, $limit, 'id_product', 'DESC', false, true);
 
-		foreach($products as $product) {
+		foreach ($products as $product)
+		{
 
-			if(count($uids) > 0 && !in_array($product['id_product'], $uids))
+			if (count($uids) > 0 && !in_array($product['id_product'], $uids))
 				continue;
 
 			/** @var ProductCore $productModel */
 			$productModel = new Product($product['id_product'], true, $this->id_lang);
-            if (version_compare(_PS_VERSION_, '1.5.0.0', '>=')) {
-                $productModel->tax_name = $product['tax_name'];
-            } else {
-                $productModel->tax_name = $this->getTaxClassFromDb($product);
-            }
+			if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+				$productModel->tax_name = $product['tax_name'];
+			else
+				$productModel->tax_name = $this->getTaxClassFromDb($product);
 
 			$row = new PluginModelItemObject($this->context);
 			$this->addItemModel($row->setItem($productModel)->generateData());
 		}
 	}
 
-    /**
-     * returns the current tax class
-     *
-     * @return mixed
-     */
-    protected function getTaxClassFromDb ($product) {
-        $select = sprintf(
-            'SELECT name from %stax_lang WHERE id_tax = %s AND id_lang = %s',
-            _DB_PREFIX_,
-            $product['id_tax'],
-            $this->id_lang
-        );
+	/**
+	 * returns the current tax class
+	 *
+	 * @return mixed
+	 */
+	protected function getTaxClassFromDb($product)
+	{
+		$select = sprintf(
+			'SELECT name from %stax_lang WHERE id_tax = %s AND id_lang = %s',
+			_DB_PREFIX_,
+			$product['id_tax'],
+			$this->id_lang
+		);
 
-        return Db::getInstance()->getValue($select);
-    }
+		return Db::getInstance()->getValue($select);
+	}
 
 	/**
 	 * Loads the product categories of the shop system's database and passes them to the buffer.
 	 *
-	 * @param int      $limit  pagination limit; if not null, the number of exported categories must be <= $limit
-	 * @param int      $offset pagination; if not null, start the export with the categories at position $offset
-	 * @param string[] $uids   a list of categories UIDs that should be exported
+	 * @param int $limit     pagination limit; if not null, the number of exported categories must be <= $limit
+	 * @param int $offset    pagination; if not null, start the export with the categories at position $offset
+	 * @param string[] $uids a list of categories UIDs that should be exported
 	 *
 	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_categories
 	 *
 	 * @throws ShopgateLibraryException
 	 */
-	protected function createCategories($limit = null, $offset = null, array $uids = array()) {
-
-        foreach ($this->prepareCategories() as $categoryItem) {
-            if(count($uids) > 0 && !in_array($categoryItem['id_category'], $uids))
-                continue;
-            $row = new PluginModelCategoryObject();
-            $this->addCategoryModel($row->setItem($categoryItem)->generateData());
-        }
+	protected function createCategories($limit = null, $offset = null, array $uids = array())
+	{
+		foreach ($this->prepareCategories() as $categoryItem)
+		{
+			if (count($uids) > 0 && !in_array($categoryItem['id_category'], $uids))
+				continue;
+			$row = new PluginModelCategoryObject();
+			$this->addCategoryModel($row->setItem($categoryItem)->generateData());
+		}
 	}
 }
 
@@ -2056,13 +2089,14 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 	 */
 	protected function itemExportBasicPrice($row, $product)
 	{
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000) {
+		if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000)
+		{
 			//TODO:? getPrice(false...) then we get only the net amount
-			$row['basic_price'] = Tools::displayPrice($product->getPrice(true, NULL, 2)/$product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
+			$row['basic_price'] = Tools::displayPrice($product->getPrice(true, null, 2) / $product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
 		}
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -2075,13 +2109,12 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 		$p['tax_class_active'] = $product->tax_class_active;
 		$p['tax_class_name'] = $product->tax_class_name;
 		$p['tax_class_id'] = $product->tax_class_id;
-		if (!empty($p['tax_class_active']) && !empty($p['tax_class_name']) && !empty($p['tax_class_id'])) {
+		if (!empty($p['tax_class_active']) && !empty($p['tax_class_name']) && !empty($p['tax_class_id']))
 			$row['tax_class'] = $p['tax_class_id'].'=>'.$p['tax_class_name'];
-		}
-	
+
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -2093,7 +2126,7 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 		$row['unit_amount_net'] = $product->getPrice(false, null, 2);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -2102,11 +2135,11 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 	 */
 	protected function itemExportOldUnitAmountNet($row, $product)
 	{
-		$reduction = (float)$product->getPrice(false, NULL, 2, NULL, true);
-		$row['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(false, NULL, 2, NULL, false, false) : 0, 2);
+		$reduction = (float)$product->getPrice(false, null, 2, null, true);
+		$row['old_unit_amount'] = Tools::ps_round($reduction != 0 ? $product->getPrice(false, null, 2, null, false, false) : 0, 2);
 		return $row;
 	}
-	
+
 	/**
 	 * @param $row
 	 * @param ProductCore $product
@@ -2115,68 +2148,71 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 	 */
 	protected function itemExportAttributes($row, $product)
 	{
-		if ($product->hasAttributes()) {
-			if (version_compare(_PS_VERSION_, '1.5.0.10', '>=')) {
+		if ($product->hasAttributes())
+		{
+			if (version_compare(_PS_VERSION_, '1.5.0.10', '>='))
 				$attributes = $product->getAttributeCombinations($this->id_lang);
-			} else {
+			else
 				$attributes = $product->getAttributeCombinaisons($this->id_lang);
-			}
+
 			$combinations = array();
 			$attribute_groups = array();
-			foreach ($attributes as $a) {
+			foreach ($attributes as $a)
+			{
 				$combinations[$a['id_product_attribute']][$a['id_attribute_group']] = $a;
 				$attribute_groups[$a['id_attribute_group']] = $a['group_name'];
 			}
-		
+
 			$i = 1;
-			foreach ($attribute_groups as $name) {
+			foreach ($attribute_groups as $name)
 				$row['attribute_'.($i++)] = $name;
-			}
 
 			$r = $row;
-			foreach ($combinations as $id => $c) {
+			foreach ($combinations as $id => $c)
+			{
 				$combination = current($c);
-				
-				if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order && $combination['quantity'] > 0 || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $combination['quantity'] > 0) {
+
+				if ((version_compare(_PS_VERSION_, '1.4.0.2', '>=') && $product->available_for_order && $combination['quantity'] > 0 || version_compare(_PS_VERSION_, '1.4.0.2', '<')) && $combination['quantity'] > 0)
+				{
 					$availableText = $product->available_now;
 					$r['is_available'] = 1;
-				} else {
+				}
+				else
+				{
 					$availableText = $product->available_later;
 					$r['is_available'] = 0;
 				}
-				
-				$r['item_number'] = self::prefix.$product->id.'_'.$id;
+
+				$r['item_number'] = self::PREFIX.$product->id.'_'.$id;
 				$r['has_children'] = 0;
-				$r['parent_item_number'] = 	$row['item_number'];
-				$r['urls_images'] =	implode('||', $this->getImageUrls($product, $id));
-				$reduction = (float)$product->getPrice(false, (int)$id, 2, NULL, true);
-				$r['old_unit_amount_net'] = Tools::ps_round($reduction != 0 ? $product->getPrice(false, (int)$id, 2, NULL, false, false) : 0, 2);
+				$r['parent_item_number'] = $row['item_number'];
+				$r['urls_images'] = implode('||', $this->getImageUrls($product, $id));
+				$reduction = (float)$product->getPrice(false, (int)$id, 2, null, true);
+				$r['old_unit_amount_net'] = Tools::ps_round($reduction != 0 ? $product->getPrice(false, (int)$id, 2, null, false, false) : 0, 2);
 				$r['unit_amount_net'] = Tools::ps_round($product->getPrice(false, (int)$id, 2), 2);
-					
-				if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000) {
-					$r['basic_price'] = Tools::displayPrice($product->getPrice(false, (int)$id, 2)/$product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
-				}
-				
+
+				if (version_compare(_PS_VERSION_, '1.4.1.0', '>=') && !empty($product->unity) && $product->unit_price_ratio > 0.000000)
+					$r['basic_price'] = Tools::displayPrice($product->getPrice(false, (int)$id, 2) / $product->unit_price_ratio).' '.$this->shopgateModule->l('per').' '.$product->unity;
+
 				$r['stock_quantity'] = $combination['quantity'];
 				$r['ean'] = $combination['ean13'];
 				$r['weight'] = $row['weight'] + self::convertProductWeightToGrams($combination['weight']);
-				if (version_compare(_PS_VERSION_, '1.4.0.2', '>=')) {
+				if (version_compare(_PS_VERSION_, '1.4.0.2', '>='))
 					$r['minimum_order_quantity'] = $combination['minimal_quantity'];
-				}
+
 				$r['available_text'] = $availableText;
 				$r['item_number_public'] = (array_key_exists('reference', $combination) && !empty($combination['reference'])) ? $combination['reference'] : '';
-				
+
 				$i = 1;
-				foreach ($attribute_groups as $id => $name) {
+				foreach ($attribute_groups as $id => $name)
 					$r['attribute_'.($i++)] = $c[$id]['attribute_name'];
-				}
-					
+
 				$this->addItem($r);
 			}
 		}
 		return $row;
 	}
-	
+
 	/**
 	 * @return array|mixed[]
 	 */
@@ -2187,7 +2223,7 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 			'Plugin' => 'US'
 		);
 	}
-	
+
 	/**
 	 * @return array|string[]
 	 */
@@ -2196,19 +2232,19 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 		$row = parent::buildDefaultItemRow();
 
 		// remove old fields
-		unset($row["unit_amount"]);
-		unset($row["old_unit_amount"]);
-		unset($row["tax_percent"]);
-	
+		unset($row['unit_amount']);
+		unset($row['old_unit_amount']);
+		unset($row['tax_percent']);
+
 		$newFields = array(
-			"tax_class" => "", /** $this->itemExportTaxClass */
-			"unit_amount_net" => "0", /** $this->itemExportUnitAmountNet */
-			"old_unit_amount_net" => "", /** $this->itemExportOldUnitAmountNet */
+			'tax_class' => '', /** $this->itemExportTaxClass */
+			'unit_amount_net' => '0', /** $this->itemExportUnitAmountNet */
+			'old_unit_amount_net' => '',/** $this->itemExportOldUnitAmountNet */
 		);
-	
+
 		$row = array_slice($row, 0, 3, true) +
-			   $newFields +
-			   array_slice($row, 3, count($row)-3, true);
+			$newFields +
+			array_slice($row, 3, count($row) - 3, true);
 
 		return $row;
 	}

@@ -19,7 +19,8 @@
 
 include_once dirname(__FILE__).'/../vendors/shopgate_library/shopgate.php';
 
-class ShopgateConfigPresta extends ShopgateConfig {
+class ShopgateConfigPresta extends ShopgateConfig
+{
 	/**
 	 * request url
 	 */
@@ -31,7 +32,8 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	protected $language;
 	protected $use_stock;
 
-	public function startup() {
+	public function startup()
+	{
 		// overwrite some library defaults
 		$this->plugin_name = 'prestashop';
 		$this->enable_redirect_keyword_update = 24;
@@ -58,7 +60,8 @@ class ShopgateConfigPresta extends ShopgateConfig {
 		// initialize plugin specific stuff
 		$this->use_stock = 1;
 		$this->currency = 'EUR';
-		if(version_compare(_PS_VERSION_, '1.4.0.0', '>=')) {
+		if (version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+		{
 			$this->setEnableCheckCart(true);
 			$this->setEnableRedeemCoupons(true);
 		}
@@ -83,32 +86,38 @@ class ShopgateConfigPresta extends ShopgateConfig {
 		);
 	}
 
-	public function getLanguage() {
+	public function getLanguage()
+	{
 		return $this->language;
 	}
 
-	public function getCurrency() {
+	public function getCurrency()
+	{
 		return $this->currency;
 	}
 
-	public function getUseStock() {
+	public function getUseStock()
+	{
 		return $this->use_stock;
 	}
 
-	public function setLanguage($value) {
+	public function setLanguage($value)
+	{
 		$this->language = $value;
 	}
 
-	public function setCurrency($value) {
+	public function setCurrency($value)
+	{
 		$this->currency = $value;
 	}
 
-	public function setUseStock($value) {
+	public function setUseStock($value)
+	{
 		$this->use_stock = $value;
 	}
 
-	public function registerPlugin() {
-
+	public function registerPlugin()
+	{
 		try {
 			$data = array(
 				'action' => 'interface_install',
@@ -135,31 +144,37 @@ class ShopgateConfigPresta extends ShopgateConfig {
 			curl_close($ch);
 
 		} catch (Exception $e) {
-
+			// do nothing // prestashop validator
+			$exeption = $e;
 		}
 	}
 
-	protected function getShopUrl() {
+	protected function getShopUrl()
+	{
 		return $_SERVER['HTTP_HOST'];
 	}
 
-	protected function getUniqueId() {
+	protected function getUniqueId()
+	{
 		return defined(_RIJNDAEL_KEY_) ? md5(_RIJNDAEL_KEY_.self::DEFAULT_SHOP_SYSTEM_ID) : md5(_COOKIE_KEY_.self::DEFAULT_SHOP_SYSTEM_ID);
 	}
 
-	protected function getStatsUniqueVisits() {
+	protected function getStatsUniqueVisits()
+	{
 		$sql = 'SELECT COUNT(DISTINCT(ip_address)) FROM '._DB_PREFIX_.'connections;';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsAcs() {
+	protected function getStatsAcs()
+	{
 		$sql = 'SELECT AVG(total_paid_tax_incl) FROM '._DB_PREFIX_.'orders';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsItems() {
+	protected function getStatsItems()
+	{
 		$sql = 'SELECT COUNT(pa.`id_product_attribute`)
 				FROM `'._DB_PREFIX_.'product_attribute` pa
 
@@ -174,43 +189,45 @@ class ShopgateConfigPresta extends ShopgateConfig {
 
 	}
 
-	protected function getStatsCategories() {
+	protected function getStatsCategories()
+	{
 		return count(Category::getSimpleCategories((int)Configuration::get('PS_LANG_DEFAULT')));
 	}
 
-	protected function getStatsOrders() {
-		$sql = 'SELECT COUNT(id_order) FROM `'._DB_PREFIX_.'orders` WHERE `date_add` > "'.date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s")."-1 months")).'"';
+	protected function getStatsOrders()
+	{
+		$sql = 'SELECT COUNT(id_order) FROM `'._DB_PREFIX_.'orders` WHERE `date_add` > "'.date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'-1 months')).'"';
 
 		return Db::getInstance()->getValue($sql);
 	}
 
-	protected function getStatsCurrency() {
+	protected function getStatsCurrency()
+	{
 		$currencyItem = Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
 		return $currencyItem['iso_code'];
 	}
 
-	public function load(array $settings = null) {
-		if($settings) {
+	public function load(array $settings = null)
+	{
+		if ($settings)
 			$this->loadArray($settings);
-		} else {
+		else
 			$this->loadArray(Configuration::get('SHOPGATE_CONFIG') ? unserialize(Configuration::get('SHOPGATE_CONFIG')) : null);
-		}
 	}
 
 	/**
 	 * store config
 	 *
 	 * @param array $fieldList
-	 * @param bool  $validate
+	 * @param bool $validate
 	 */
-	public function save(array $fieldList, $validate = true) {
-
+	public function save(array $fieldList, $validate = true)
+	{
 		$saveFields = array();
 		$currentConfig = parent::toArray();
-		foreach ($fieldList as $field) {
+		foreach ($fieldList as $field)
 			$saveFields[$field] = (isset($currentConfig[$field])) ? $currentConfig[$field] : null;
-		}
 
 		$newConfig = array_merge(parent::toArray(), $saveFields);
 
@@ -226,7 +243,8 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	{
 		$configFile = $this->config_folder_path.DS.'myconfig.php';
 
-		if($configFile && is_file($configFile)) {
+		if ($configFile && is_file($configFile))
+		{
 			try {
 				unlink($configFile);
 			} catch (Exception $e) {
@@ -238,8 +256,8 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	/**
 	 * init folders
 	 */
-	public function initFolders() {
-
+	public function initFolders()
+	{
 		/**
 		 * tmp folder
 		 */
@@ -263,14 +281,15 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	 * create folder by path
 	 *
 	 * @param      $path
-	 * @param int  $mode
+	 * @param int $mode
 	 * @param bool $recursive
 	 *
 	 * @throws ShopgateLibraryException
 	 */
-	protected function createFolder($path, $mode = 0777, $recursive = true) {
-
-		if(!is_dir($path)) {
+	protected function createFolder($path, $mode = 0777, $recursive = true)
+	{
+		if (!is_dir($path))
+		{
 			try {
 				mkdir($path, $mode, $recursive);
 			} catch (ShopgateLibraryException $e) {
@@ -285,28 +304,29 @@ class ShopgateConfigPresta extends ShopgateConfig {
 	/**
 	 * returns the path by shop number and type
 	 *
-	 * @param int   $shopNumber
+	 * @param int $shopNumber
 	 * @param mixed $type
 	 *
 	 * @return string
 	 */
-	public function getPathByShopNumber($shopNumber, $type = false) {
-
+	public function getPathByShopNumber($shopNumber, $type = false)
+	{
 		$tempFolder = sprintf(
 			SHOPGATE_BASE_DIR.DS.'%s'.DS.$shopNumber,
 			'temp'
 		);
 
-		switch ($type) {
+		switch ($type)
+		{
 			case 'logs' :
-                $tempFolder = sprintf(
+				$tempFolder = sprintf(
 					'%s/%s',
 					$tempFolder,
 					'logs'
 				);
 				break;
 			case 'cache' :
-                $tempFolder = sprintf(
+				$tempFolder = sprintf(
 					'%s/%s',
 					$tempFolder,
 					'cache'
@@ -314,7 +334,7 @@ class ShopgateConfigPresta extends ShopgateConfig {
 				break;
 		}
 
-        return $tempFolder;
+		return $tempFolder;
 	}
 
 }

@@ -23,7 +23,8 @@
  * File: PSShopgateCheckCart.php
  */
 
-class PSShopgateCheckCart {
+class PSShopgateCheckCart
+{
 
 	/**
 	 * default dummy first name
@@ -106,7 +107,8 @@ class PSShopgateCheckCart {
 	/**
 	 * @param ShopgateCart $shopgateCart
 	 */
-	public function __construct(ShopgateCart $shopgateCart) {
+	public function __construct(ShopgateCart $shopgateCart)
+	{
 		$this->_context = Context::getContext();
 		$this->_shopgateCart = $shopgateCart;
 	}
@@ -165,7 +167,8 @@ class PSShopgateCheckCart {
 	/**
 	 * set currency for items
 	 */
-	protected function _setItemCurrencyId() {
+	protected function _setItemCurrencyId()
+	{
 		$this->_itemCurrencyId = $this->_context->cart->id_currency;
 		$this->_currentCurrency = $this->_context->currency->iso_code;
 	}
@@ -173,8 +176,10 @@ class PSShopgateCheckCart {
 	/**
 	 * create external coupon
 	 */
-	protected function _createExternalCoupons() {
-		foreach ($this->_shopgateCart->getExternalCoupons() as $coupon) {
+	protected function _createExternalCoupons()
+	{
+		foreach ($this->_shopgateCart->getExternalCoupons() as $coupon)
+		{
 
 			$resultExternalCouponItem = $this->_createResultExternalCoupon($coupon);
 
@@ -184,7 +189,8 @@ class PSShopgateCheckCart {
 			$cartRule = new CartRule(CartRule::getIdByCode($coupon->getCode()));
 
 			/** @var CartRuleCore $cartRule */
-			if ($cartRule && Validate::isLoadedObject($cartRule)) {
+			if ($cartRule && Validate::isLoadedObject($cartRule))
+			{
 
 				/**
 				 * set defaults
@@ -192,16 +198,17 @@ class PSShopgateCheckCart {
 				$resultExternalCouponItem->setName($cartRule->getFieldByLang('name'), $this->_context->language->id);
 				$resultExternalCouponItem->setDescription($cartRule->description);
 
-				switch ($cartRule->reduction_tax) {
+				switch ($cartRule->reduction_tax)
+				{
 
 					case 1 :
 						$resultExternalCouponItem->setTaxType(TranslateCore::getAdminTranslation('not_taxable'));
-						$resultExternalCouponItem->setAmountNet($cartRule->getContextualValue(false,  $this->_context));
+						$resultExternalCouponItem->setAmountNet($cartRule->getContextualValue(false, $this->_context));
 						break;
 
 					case 0 :
 						$resultExternalCouponItem->setTaxType(TranslateCore::getAdminTranslation('auto'));
-						$resultExternalCouponItem->setAmountGross($cartRule->getContextualValue(true,  $this->_context));
+						$resultExternalCouponItem->setAmountGross($cartRule->getContextualValue(true, $this->_context));
 						break;
 				}
 
@@ -210,13 +217,15 @@ class PSShopgateCheckCart {
 				/**
 				 * validate coupon
 				 */
-				if ($validateException = $cartRule->checkValidity($this->_context, false, true)) {
-
+				if ($validateException = $cartRule->checkValidity($this->_context, false, true))
+				{
 					$resultExternalCouponItem->setIsValid(false);
 					$resultExternalCouponItem->setNotValidMessage($validateException);
 				}
 
-			} else {
+			}
+			else
+			{
 
 				/**
 				 * invalid code
@@ -232,8 +241,10 @@ class PSShopgateCheckCart {
 	/**
 	 * create delivery address
 	 */
-	protected function _createDeliveryAddress() {
-		if ($this->_shopgateCart->getDeliveryAddress()) {
+	protected function _createDeliveryAddress()
+	{
+		if ($this->_shopgateCart->getDeliveryAddress())
+		{
 
 			$this->_deliveryAddress = $this->_createAddress($this->_shopgateCart->getDeliveryAddress());
 			$this->_deliveryAddress->id_customer = $this->_context->customer->id;
@@ -255,8 +266,10 @@ class PSShopgateCheckCart {
 	/**
 	 * create invoice address
 	 */
-	protected function _createInvoiceAddress() {
-		if ($this->_shopgateCart->getInvoiceAddress()) {
+	protected function _createInvoiceAddress()
+	{
+		if ($this->_shopgateCart->getInvoiceAddress())
+		{
 
 			$this->_invoiceAddress = $this->_createAddress($this->_shopgateCart->getInvoiceAddress());
 			$this->_invoiceAddress->id_customer = $this->_context->customer->id;
@@ -278,7 +291,8 @@ class PSShopgateCheckCart {
 	/**
 	 * create dummy customer
 	 */
-	protected function _createCustomer() {
+	protected function _createCustomer()
+	{
 		$this->_context->customer = new Customer();
 
 		$this->_context->customer->lastname = self::DEFAULT_CUSTOMER_LAST_NAME;
@@ -295,23 +309,24 @@ class PSShopgateCheckCart {
 	/**
 	 * create carriers
 	 */
-	protected function _createCarriers() {
-		if ($this->_deliveryAddress) {
+	protected function _createCarriers()
+	{
+		if ($this->_deliveryAddress)
+		{
 			/** @var CarrierCore $carrierModel */
 			$carrierModel = new Carrier();
-			foreach ($carrierModel->getCarriersForOrder(Address::getZoneById($this->_deliveryAddress->id), null, $this->_context->cart) as $carrier) {
+			foreach ($carrierModel->getCarriersForOrder(Address::getZoneById($this->_deliveryAddress->id), null, $this->_context->cart) as $carrier)
 				array_push($this->_resultCarriers, $this->_createResultCarrier($carrier));
-			}
 		}
 	}
 
 	/**
 	 * create payments
 	 */
-	protected function _createPayments() {
-		foreach (PaymentModule::getPaymentModules() as $payment) {
+	protected function _createPayments()
+	{
+		foreach (PaymentModule::getPaymentModules() as $payment)
 			array_push($this->_resultPayments, $this->_createResultPayment($payment));
-		}
 	}
 
 	/**
@@ -321,7 +336,8 @@ class PSShopgateCheckCart {
 	 * @param                  $code
 	 * @param                  $message
 	 */
-	protected function _addItemException(ShopgateCartItem $item, $code, $message) {
+	protected function _addItemException(ShopgateCartItem $item, $code, $message)
+	{
 		$item->setError($code);
 		$item->setErrorText($message);
 	}
@@ -331,24 +347,28 @@ class PSShopgateCheckCart {
 	 *
 	 * @return array
 	 */
-	protected function getProductIdentifiers(ShopgateOrderItem $item) {
-		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::prefix)));
+	protected function getProductIdentifiers(ShopgateOrderItem $item)
+	{
+		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::PREFIX)));
 	}
 
 	/**
 	 * validate cart items
 	 */
-	protected function _validateCartItems() {
+	protected function _validateCartItems()
+	{
 		/** @var ShopgateOrderItem $sGItem */
 
-		foreach ($this->_shopgateCart->getItems() as $sGItem) {
+		foreach ($this->_shopgateCart->getItems() as $sGItem)
+		{
 
 			$identifiers = $this->getProductIdentifiers($sGItem);
 
 			$productId = false;
 			$attributeId = null;
 
-			if (is_array($identifiers)) {
+			if (is_array($identifiers))
+			{
 				$productId = array_key_exists(0, $identifiers) ? $identifiers[0] : false;
 				$attributeId = array_key_exists(1, $identifiers) ? $identifiers[1] : null;
 			}
@@ -366,21 +386,24 @@ class PSShopgateCheckCart {
 			/** @var ShopgateCartItem $_resultItem */
 			$resultItem = $this->_createResultCartItem($pSProduct, $sGItem, $attributeId);
 
-			if ($attributeId === false) {
+			if ($attributeId === false)
+			{
 				$this->_addItemException($resultItem, ShopgateLibraryException::UNKNOWN_ERROR_CODE, 'attribute ID not available');
 				$resultItem->setIsBuyable(0);
 				array_push($this->_resultItems, $resultItem);
 				continue;
 			}
 
-			if ($pSProduct->id) {
+			if ($pSProduct->id)
+			{
 				$resultItem->setIsBuyable((int)$this->_context->cart->updateQty($sGItem->getQuantity(), $pSProduct->id, $attributeId == 0 ? false : $attributeId, false, 'up', ($this->_deliveryAddress && $this->_deliveryAddress->id) ? $this->_deliveryAddress->id : 0));
 
-				if (!$resultItem->getIsBuyable()) {
+				if (!$resultItem->getIsBuyable())
 					$this->_addItemException($resultItem, ShopgateLibraryException::CART_ITEM_OUT_OF_STOCK, 'qty not available');
-				}
 
-			} else {
+			}
+			else
+			{
 				/**
 				 * product not available
 				 */
@@ -396,7 +419,8 @@ class PSShopgateCheckCart {
 	/**
 	 * create empty cart
 	 */
-	protected function _createCart() {
+	protected function _createCart()
+	{
 		$this->_context->cart = new Cart();
 
 		$this->_context->cart->id_currency = $this->_itemCurrencyId;
@@ -408,14 +432,14 @@ class PSShopgateCheckCart {
 	/**
 	 * create result cart items
 	 *
-	 * @param Product           $product
+	 * @param Product $product
 	 * @param ShopgateOrderItem $sGItem
-	 * @param bool              $id_product_attribute
+	 * @param bool $id_product_attribute
 	 *
 	 * @return ShopgateCartItem
 	 */
-	protected function _createResultCartItem(Product $product, ShopgateOrderItem $sGItem, $id_product_attribute = false) {
-
+	protected function _createResultCartItem(Product $product, ShopgateOrderItem $sGItem, $id_product_attribute = false)
+	{
 		$resultItem = new ShopgateCartItem();
 
 		$availableQty = $product->getQuantity($product->id, $id_product_attribute);
@@ -440,7 +464,8 @@ class PSShopgateCheckCart {
 	 *
 	 * @return stdClass
 	 */
-	protected function _createResultPayment(array $payment) {
+	protected function _createResultPayment(array $payment)
+	{
 		$_resultPayment = new ShopgatePaymentMethod();
 
 		$_resultPayment->setId($payment['name']);
@@ -457,7 +482,8 @@ class PSShopgateCheckCart {
 	 *
 	 * @return ShopgateExternalCoupon
 	 */
-	protected function _createResultExternalCoupon(ShopgateExternalCoupon $coupon) {
+	protected function _createResultExternalCoupon(ShopgateExternalCoupon $coupon)
+	{
 		$_resultExternalCoupon = new ShopgateExternalCoupon();
 
 		$_resultExternalCoupon->setIsValid(true);
@@ -473,7 +499,8 @@ class PSShopgateCheckCart {
 	 *
 	 * @return stdClass
 	 */
-	protected function _createResultCarrier(array $carrier) {
+	protected function _createResultCarrier(array $carrier)
+	{
 		/** @var CarrierCore $_carrier */
 		$_carrier = new Carrier($carrier['id_carrier']);
 
@@ -485,9 +512,8 @@ class PSShopgateCheckCart {
 		$resultCarrier->setId($carrier['id_carrier']);
 		$resultCarrier->setTitle($carrier['name']);
 		$shippinggroupMapping = Configuration::get('SHOPGATE_CARRIER_MAPPING_'.$carrier['id_carrier']);
-		if ($shippinggroupMapping) {
-			$resultCarrier->setShippingGroup($shippinggroupMapping);	
-		}
+		if ($shippinggroupMapping)
+			$resultCarrier->setShippingGroup($shippinggroupMapping);
 		$resultCarrier->setDescription($carrier['delay']);
 		$resultCarrier->setSortOrder($carrier['position']);
 		$resultCarrier->setAmount($carrier['price_tax_exc']);
@@ -506,14 +532,15 @@ class PSShopgateCheckCart {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function createResult() {
+	public function createResult()
+	{
 		try {
-			$this->_run();	
+			$this->_run();
 		} catch (Exception $e) {
 			$this->__destruct();
 			throw $e;
 		}
-		
+
 		return array(
 			'items' => (array)$this->_resultItems,
 			'shipping_methods' => (array)$this->_resultCarriers,
@@ -530,11 +557,10 @@ class PSShopgateCheckCart {
 	 *
 	 * @return bool
 	 */
-	protected function _validateAttributeId($productId, $attributeId) {
-
-		if ($this->_inArrayR($attributeId, Product::getProductAttributesIds($productId))) {
+	protected function _validateAttributeId($productId, $attributeId)
+	{
+		if ($this->_inArrayR($attributeId, Product::getProductAttributesIds($productId)))
 			return $attributeId;
-		}
 
 		return false;
 
@@ -547,7 +573,8 @@ class PSShopgateCheckCart {
 	 *
 	 * @return AddressCore
 	 */
-	protected function _createAddress(ShopgateAddress $address) {
+	protected function _createAddress(ShopgateAddress $address)
+	{
 		/** @var AddressCore $_resultAddress */
 		$_resultAddress = new Address();
 
@@ -565,10 +592,8 @@ class PSShopgateCheckCart {
 		/**
 		 * check is state iso code available
 		 */
-		if($address->getState() != '') {
-			$_resultAddress->id_state =
-				$this->_getStateIdByIsoCode($address->getState());
-		}
+		if ($address->getState() != '')
+			$_resultAddress->id_state = $this->_getStateIdByIsoCode($address->getState());
 
 		$_resultAddress->company = $address->getCompany();
 
@@ -582,12 +607,12 @@ class PSShopgateCheckCart {
 	 *
 	 * @return int
 	 */
-	protected function _getCountryIdByIsoCode($isoCode) {
-		if ($isoCode && $countryId = Country::getByIso($isoCode)) {
+	protected function _getCountryIdByIsoCode($isoCode)
+	{
+		if ($isoCode && $countryId = Country::getByIso($isoCode))
 			return $countryId;
-		} else {
+		else
 			$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, ' invalid or empty iso code #'.$isoCode);
-		}
 	}
 
 	/**
@@ -597,72 +622,73 @@ class PSShopgateCheckCart {
 	 *
 	 * @return int
 	 */
-	protected function _getStateIdByIsoCode($isoCode) {
-		if($isoCode) {
+	protected function _getStateIdByIsoCode($isoCode)
+	{
+		if ($isoCode)
+		{
 			$stateParts = explode('-', $isoCode);
-			if(is_array($stateParts)) {
-				if(count($stateParts) == 2) {
+			if (is_array($stateParts))
+			{
+				if (count($stateParts) == 2)
+				{
 					$stateId = State::getIdByIso(
 						$stateParts[1],
 						$this->_getCountryIdByIsoCode($stateParts[0])
 					);
-				} else {
-					$stateId = State::getIdByIso($stateParts[0]);
 				}
+				else
+					$stateId = State::getIdByIso($stateParts[0]);
 			}
 
-			if($stateId) {
+			if ($stateId)
 				return $stateId;
-			} else {
+			else
 				$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, ' invalid or empty iso code #'.$isoCode);
-			}
 		}
 	}
 
 	/**
 	 * add exception
 	 *
-	 * @param int  $errorCoded
+	 * @param int $errorCoded
 	 * @param bool $message
 	 * @param bool $writeLog
 	 *
 	 * @throws ShopgateLibraryException
 	 */
-	protected function _addException($errorCoded = ShopgateLibraryException::UNKNOWN_ERROR_CODE, $message = false, $writeLog = false) {
+	protected function _addException($errorCoded = ShopgateLibraryException::UNKNOWN_ERROR_CODE, $message = false, $writeLog = false)
+	{
 		throw new ShopgateLibraryException($errorCoded, $message, true, $writeLog);
 	}
 
 	/**
 	 * remove data from database
 	 */
-	public function __destruct() {
+	public function __destruct()
+	{
 		/**
 		 * delete customer
 		 */
-		if ($this->_context->customer->id) {
+		if ($this->_context->customer->id)
 			$this->_context->customer->delete();
-		}
 
 		/**
 		 * delete delivery address
 		 */
-		if ($this->_deliveryAddress && $this->_deliveryAddress->id) {
+		if ($this->_deliveryAddress && $this->_deliveryAddress->id)
 			$this->_deliveryAddress->delete();
-		}
 
 		/**
 		 * delete invoice address
 		 */
-		if ($this->_invoiceAddress && $this->_invoiceAddress->id) {
+		if ($this->_invoiceAddress && $this->_invoiceAddress->id)
 			$this->_invoiceAddress->delete();
-		}
 
 		/**
 		 * delete cart
 		 */
-		if ($this->_context->cart->id) {
+		if ($this->_context->cart->id)
 			$this->_context->cart->delete();
-		}
 	}
 
 	/**
@@ -674,12 +700,12 @@ class PSShopgateCheckCart {
 	 *
 	 * @return bool
 	 */
-	protected function _inArrayR($needle, $haystack, $strict = false) {
-		foreach ($haystack as $item) {
-			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->_inArrayR($needle, $item, $strict))
-			) {
+	protected function _inArrayR($needle, $haystack, $strict = false)
+	{
+		foreach ($haystack as $item)
+		{
+			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->_inArrayR($needle, $item, $strict)))
 				return true;
-			}
 		}
 
 		return false;

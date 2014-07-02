@@ -27,61 +27,70 @@
  */
 
 class PluginModelCategoryObject
-	extends Shopgate_Model_Catalog_Category {
+	extends Shopgate_Model_Catalog_Category
+{
 
 	/**
 	 * set uid
 	 */
-	public function setUid () {
+	public function setUid()
+	{
 		parent::setUid($this->item['category_number']);
 	}
 
 	/**
 	 * set name
 	 */
-	public function setName () {
+	public function setName()
+	{
 		parent::setName($this->item['category_name']);
 	}
 
 	/**
 	 * set parent uid
 	 */
-	public function setParentUid () {
+	public function setParentUid()
+	{
 		parent::setParentUid($this->item['parent_id']);
 	}
 
 	/**
 	 * set sort order
 	 */
-	public function setSortOrder () {
+	public function setSortOrder()
+	{
 		parent::setSortOrder($this->item['order_index']);
 	}
 
 	/**
 	 * set deep link
 	 */
-	public function setDeeplink () {
+	public function setDeeplink()
+	{
 		parent::setDeeplink($this->item['url_deeplink']);
 	}
 
 	/**
 	 * set is anchor
 	 */
-	public function setIsAnchor () {
+	public function setIsAnchor()
+	{
 		parent::setIsAnchor(false);
 	}
 
 	/**
 	 * set is active
 	 */
-	public function setIsActive () {
+	public function setIsActive()
+	{
 		parent::setIsActive($this->item['is_active']);
 	}
 
 	/**
 	 * set image
 	 */
-	public function setImage () {
+	public function setImage()
+	{
 		$imageItem = new Shopgate_Model_Media_Image();
 		$imageItem->setUid($this->item['category_number']);
 		$imageItem->setUrl($this->item['url_image']);
