@@ -146,7 +146,7 @@ class MondialRelay extends Module
 		if (!Configuration::get('MONDIAL_RELAY'))
 		{
 			Configuration::updateValue('MONDIAL_RELAY', $this->version);
-			Configuration::updateValue('MONDIAL_RELAY_SECURE_KEY', md5(time().rand(0,10)));
+			Configuration::updateValue('MONDIAL_RELAY_SECURE_KEY', _COOKIE_KEY_);
 			Configuration::updateValue('MONDIAL_RELAY_MODE', 'widget');
 		}
 		else
