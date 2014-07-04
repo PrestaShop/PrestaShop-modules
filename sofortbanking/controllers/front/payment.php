@@ -1,17 +1,14 @@
 <?php
 /**
- * $Id$
- *
  * sofortbanking Module
  *
  * Copyright (c) 2009 touchdesign
  *
- * @category Payment
- * @version 2.0
+ * @category  Payment
+ * @author    Christin Gruber, <www.touchdesign.de>
  * @copyright 19.08.2009, touchdesign
- * @author Christin Gruber, <www.touchdesign.de>
- * @link http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *
  * Description:
  *
@@ -28,7 +25,6 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@touchdesign.de so we can send you a copy immediately.
- *
  */
 
 class SofortbankingPaymentModuleFrontController extends ModuleFrontController
@@ -36,7 +32,7 @@ class SofortbankingPaymentModuleFrontController extends ModuleFrontController
 	public $ssl = true;
 
 	/** @var string Supported languages */
-	private $languages = array('en','de','es','fr','it','nl','pl','gb');
+	private $languages = array('en','de','es','fr','it','nl','pl','gb','hu','cs','sk');
 
 	/**
 	 * Check supported languages
@@ -71,7 +67,6 @@ class SofortbankingPaymentModuleFrontController extends ModuleFrontController
 		$customer = new Customer((int)$cart->id_customer);
 		$currency = $this->context->currency;
 		$country = new Country((int)$address->id_country);
-		$lang = Language::getIsoById((int)$cart->id_lang);
 
 		if (!Configuration::get('SOFORTBANKING_USER_ID'))
 			die($this->module->l($this->module->displayName.' Error: (invalid or undefined userId)'));

@@ -1,17 +1,14 @@
 <?php
 /**
- * $Id$
- *
  * sofortbanking Module
  *
  * Copyright (c) 2009 touchdesign
  *
- * @category Payment
- * @version 2.0
+ * @category  Payment
+ * @author    Christin Gruber, <www.touchdesign.de>
  * @copyright 19.08.2009, touchdesign
- * @author Christin Gruber, <www.touchdesign.de>
- * @link http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.touchdesign.de/loesungen/prestashop/sofortueberweisung.htm
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *
  * Description:
  *
@@ -28,7 +25,6 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@touchdesign.de so we can send you a copy immediately.
- *
  */
 
 require dirname(__FILE__).'/../../config/config.inc.php';
@@ -67,21 +63,37 @@ if (class_exists('Context'))
 
 $sofortbanking = new Sofortbanking();
 
-/* Validate submited post vars */
-if (Tools::getValue('hash') != sha1(implode('|', $request)))
-	die($sofortbanking->l('Fatal Error (1)'));
-elseif (!is_object($cart) || !$cart)
-	die($sofortbanking->l('Fatal Error (2)'));
-else
+/* If valid hash, set order state as accepted */
+if (is_object($cart) && Tools::getValue('hash') == sha1(implode('|', $request)))
 	$order_state = Configuration::get('SOFORTBANKING_OS_ACCEPTED');
 
-$customer = new Customer((int)$cart->id_customer);
+$customer = new Customer($cart->id_customer);
 
-/* Validate this card in store */
-$sofortbanking->validateOrder($cart->id, $order_state, (float)number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
-	$sofortbanking->displayName, $sofortbanking->l('Directebanking transaction id: ').Tools::getValue('transaction'),
-	null, null, false, $customer->secure_key, null);
-
-Configuration::updateValue('SOFORTBANKING_CONFIGURATION_OK', true);
+/* Validate this card in store if needed */
+if (($order_state == Configuration::get('SOFORTBANKING_OS_ACCEPTED') && Configuration::get('SOFORTBANKING_OS_ACCEPTED_IGNORE') != 'Y')
+	|| ($order_state == Configuration::get('SOFORTBANKING_OS_ERROR') && Configuration::get('SOFORTBANKING_OS_ERROR_IGNORE') != 'Y'))
+{
+	if (!Order::getOrderByCartId($cart->id))
+		$sofortbanking->validateOrder($cart->id, $order_state, (float)number_format($cart->getOrderTotal(true, 3), 2, '.', ''),
+			$sofortbanking->displayName, $sofortbanking->l('Directebanking transaction id: ').Tools::getValue('transaction'),
+			null, null, false, $customer->secure_key, null);
+	else
+	{
+		$order = new Order(Order::getOrderByCartId($cart->id));
+		if ($order->getCurrentState() != $order_state)
+		{
+			$history = new OrderHistory();
+			$history->id_order = $order->id;
+			$history->changeIdOrderState($order_state, $order->id);
+			$history->addWithemail(true);
+			/* Add private order message for seller */
+			$message = new Message();
+			$message->message = $sofortbanking->l('Change order state by SOFORT notification for transaction id: ').Tools::getValue('transaction');
+			$message->private = 1;
+			$message->id_order = $order->id;
+			$message->add();
+		}
+	}
+}
 
 ?>
