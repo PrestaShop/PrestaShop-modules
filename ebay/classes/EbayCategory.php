@@ -276,4 +276,10 @@ class EbayCategory
 		return $row['is_multi_sku']; // RArbuz: shall we not return the category default in this case?
 	}
 
+	public static function areCategoryLoaded()
+	{
+		if(Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'ebay_category') == 0)
+			return true;
+	}
+
 }

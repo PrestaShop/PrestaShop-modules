@@ -1552,7 +1552,7 @@ class Ebay extends Module
 		}
 
 		// Display eBay Categories
-		if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED'])
+		if (!isset($configs['EBAY_CATEGORY_LOADED']) || !$configs['EBAY_CATEGORY_LOADED'] || !EbayCategory::areCategoryLoaded())
 		{
 			$ebay = new EbayRequest();
 			EbayCategory::insertCategories($ebay->getCategories(), $ebay->getCategoriesSkuCompliancy());
