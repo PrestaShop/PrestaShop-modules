@@ -608,6 +608,11 @@ class PayPal extends PaymentModule
 		}
 	}
 
+	public function setPayPalAsConfigured()
+	{
+		Configuration::updateValue('PAYPAL_CONFIGURATION_OK', true);
+	}
+
 	public function hookAdminOrder($params)
 	{
 		if (Tools::isSubmit('submitPayPalCapture'))
@@ -1357,6 +1362,8 @@ class PayPal extends PaymentModule
 
 			if (count($transaction) > 0)
 				PayPalOrder::saveOrder((int)$this->currentOrder, $transaction);
+
+			$this->setPayPalAsConfigured();
 		}
 	}
 
