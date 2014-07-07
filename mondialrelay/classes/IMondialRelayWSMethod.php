@@ -20,13 +20,13 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 14011 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 require_once(dirname(__FILE__).'/../errorCode.php');
 require_once(realpath(dirname(__FILE__).'/../mondialrelay.php'));
-require_once(realpath(dirname(__FILE__).'/../lib/nusoap/nusoap.php'));
 
 /*
  * This method allow to create any method object to dial more 

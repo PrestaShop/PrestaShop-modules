@@ -40,7 +40,7 @@
 					{if $order_state.id_order_state == $MR_order_state.id_order_state}
 						{assign var='selected_option' value='selected="selected"'}
 					{/if}
-					<option value="{$order_state.id_order_state}" style="background-color:{$order_state.color};" {$selected_option}>{$order_state.name}</option>
+					<option value="{$order_state.id_order_state}" style="background-color:{$order_state.color};" {$selected_option}>{$order_state.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
 				</select>
 				<p>
@@ -53,7 +53,7 @@
 				<input type="submit" name="submit_order_state"  value="{l s='Save' mod='mondialrelay'}" class="button" />
 			</div>
 		</fieldset>
-		<input type="hidden" name="MR_action_name" value="{l s='Settings'}" />
+		<input type="hidden" name="MR_action_name" value="{l s='Settings' mod='mondialrelay'}" />
 	</form>
 </div>
 

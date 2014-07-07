@@ -38,7 +38,7 @@
 {/if}
 {if $MR_errors_type.warn|count}
 <div class="MR_warn">
-	{l s="Please take a look to this following warning, maybe the ticket won't be generated"}
+	{l s="Please take a look to this following warning, maybe the ticket won't be generated"  mod='mondialrelay'}
 	<ul>
 		{foreach from=$MR_errors_type.warn key=name item=message}
 			<li>{$name}: {$message}</li>

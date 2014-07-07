@@ -27,12 +27,11 @@
 
 	// Global JS Value
 	var PS_MRData = {$MR_Data};
-	{assign var=MR_Data value=$MR_Data|json_decode:1}
+	{assign var=MR_Data value=$MR_Data|json_decode:1}	
 	
-	// literal for smarty v2 compatibility
-	$(document).ready(function() {literal}{{/literal}
+	$(document).ready(function()  {ldelim}
 		PS_MRObject.initFront();
-	{literal}}{/literal});
+	 {rdelim});
 
 </script>
 

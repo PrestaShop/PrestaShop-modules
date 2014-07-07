@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 7086 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,7 +35,7 @@ require_once(dirname(__FILE__).'/IMondialRelayWSMethod.php');
  */
 class MRGetRelayPoint implements IMondialRelayWSMethod
 {
-	// Params is required if you use a pointer function
+	/*Params is required if you use a pointer function*/
 	private $_fields = array(
 		'list' => array(
 			'Enseigne'			=> array(
@@ -48,7 +49,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			'Ville'					=> array(
 						'required'				=> false,
 						'value'						=> '',
-						'regexValidation' => '#^[A-Z_\-\' ]{2,25}\s*#'),
+						'regexValidation' => '#^[A-Z_\-\' 0-9]{2,25}$#'),
 			'CP'						=> array(
 						'required'				=> false,
 						'value'						=> '',
@@ -74,7 +75,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private $_id_address_delivery = 0;
 	private $_weight = 0;
 	private $_webServiceKey = '';
-	private $_mondialRelay = NULL;
+	private $_mondialRelay = null;
 	private $_id_carrier = 0;
 	private $_id_delivery_country = 0;
 	
@@ -82,7 +83,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 		'error' => array(),
 		'success' => array());
 	
-	private $_webserviceURL = 'http://www.mondialrelay.fr/webservice/Web_Services.asmx?WSDL';
+	private $_webserviceURL;
 	
 	public function __construct($params, $object)	
 	{
@@ -91,11 +92,12 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 		$this->_id_carrier = (int)($params['id_carrier']);
 		$this->_weight = (float)($params['weight']);	
 		$this->_webServiceKey = $this->_mondialRelay->account_shop['MR_KEY_WEBSERVICE'];
+		$this->_webserviceURL = MondialRelay::MR_URL.'webservice/Web_Services.asmx?WSDL';
 	}
 	
 	public function __destruct()
 	{
-		 unset($this->_mondialRelay);
+		unset($this->_mondialRelay);
 	}
 	
 	public function init()
@@ -123,27 +125,24 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _generateMD5SecurityKey()
 	{
 		$concatenationValue = '';
-		foreach($this->_fields['list'] as $paramName => &$valueDetailed)
+		foreach ($this->_fields['list'] as $paramName => &$valueDetailed)
 			if ($paramName != 'Texte' && $paramName != 'Security')
 			{
 				// Mac server make an empty string instead of a cleaned string
 				// TODO : test on windows and linux server
 				$cleanedString = MRTools::removeAccents($valueDetailed['value']);
-				$valueDetailed['value'] = !empty($cleanedString) ? strtoupper($cleanedString) : strtoupper($valueDetailed['value']);
+				$valueDetailed['value'] = !empty($cleanedString) ? Tools::strtoupper($cleanedString) : Tools::strtoupper($valueDetailed['value']);
 
-				$valueDetailed['value'] = strtoupper($valueDetailed['value']);
+				$valueDetailed['value'] = Tools::strtoupper($valueDetailed['value']);
 				// Call a pointer function if exist to do different test
-				if (isset($valueDetailed['methodValidation']) &&
-						method_exists('MRTools', $valueDetailed['methodValidation']) && 
-						isset($valueDetailed['params']) && 
-						MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
+				if (isset($valueDetailed['methodValidation']) && method_exists('MRTools', $valueDetailed['methodValidation']) && isset($valueDetailed['params']) && MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
 					$concatenationValue .= $valueDetailed['value'];
 				// Use simple Regex test given by MondialRelay
 				else if (isset($valueDetailed['regexValidation']) &&
 						preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 					$concatenationValue .= $valueDetailed['value'];
 				// If the key is required, we set an error, else it's skipped 
-				else if ((!strlen($valueDetailed['value']) && $valueDetailed['required']) || strlen($valueDetailed['value']))
+				elseif ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
 				{
 					$error = $this->_mondialRelay->l('This key').' ['.$paramName.'] '.
 						$this->_mondialRelay->l('hasn\'t a valide value format').' : '.$valueDetailed['value'];
@@ -151,7 +150,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 				}
 			}
 			$concatenationValue .= $this->_webServiceKey;
-			$this->_fields['list']['Security']['value'] = strtoupper(md5($concatenationValue));	
+			$this->_fields['list']['Security']['value'] = Tools::strtoupper(md5($concatenationValue));	
 	}
 
 	/*
@@ -162,7 +161,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	{
 		$params = array();
 		
-		foreach($fields as $keyName => $valueDetailed)
+		foreach ($fields as $keyName => $valueDetailed)
 			$params[$keyName] = $valueDetailed['value'];
 		return $params;
 	}
@@ -173,14 +172,11 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _getRelayPointDetails($relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach($relayPointList as $num => $relayPoint)
+		foreach ($relayPointList as $num => $relayPoint)
 			$relayPointNumList[] = $relayPoint['Num'];
-			
-		$MRRelayDetail = new MRRelayDetail(array(
-			'relayPointNumList' => $relayPointNumList,
-			'id_address_delivery' => $this->_id_address_delivery));
- 		$MRRelayDetail->init();
- 		$MRRelayDetail->send();
+		$MRRelayDetail = new MRRelayDetail(array('relayPointNumList' => $relayPointNumList, 'id_address_delivery' => $this->_id_address_delivery));
+		$MRRelayDetail->init();
+		$MRRelayDetail->send();
  		return $MRRelayDetail->getResult();
 	}
 	
@@ -190,14 +186,14 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _addLinkHoursDetail(&$relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach($relayPointList as $num => $relayPoint)
-			$relayPointNumList[] = $relayPoint['Num'];
+		foreach ($relayPointList as $num => $relayPoint)
+			$relayPointNumList[] = $relayPoint->Num;
 		$permaList = MRRelayDetail::getPermaLink($relayPointNumList, $this->_id_address_delivery);
-		foreach($relayPointList as $num => &$relayPoint)
+		foreach ($relayPointList as $num => &$relayPoint)
 		{
-			$relayPoint['permaLinkDetail'] = '';
-			if (array_key_exists($relayPoint['Num'], $permaList))
-				$relayPoint['permaLinkDetail'] = $permaList[$relayPoint['Num']];
+			$relayPoint->permaLinkDetail = '';
+			if (array_key_exists($relayPoint->Num, $permaList))
+				$relayPoint->permaLinkDetail = $permaList[$relayPoint->Num];
 		}
 		return $relayPointList;
 	}
@@ -209,14 +205,9 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _parseResult($client, $result, $params)
 	{
 		$errors = array();
-		$success = array();
-		
-		if ($client->fault)
-			$errors[$errorTotal++] = $this->_mondialRelay->l('It seems the request isn\'t valid:').
-				$result;
-		
-		$result = $result['WSI2_RecherchePointRelaisResult'];
-		if (($errorNumber = $result['STAT']) != 0)
+		$success = array();		
+		$result = $result->WSI2_RecherchePointRelaisResult;
+		if (($errorNumber = $result->STAT) != 0)
 		{
 			$errors[] = $this->_mondialRelay->l('There is an error number : ').$errorNumber;
 			$errors[] = $this->_mondialRelay->l('Details : ').
@@ -224,17 +215,17 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 		}
 		else
 		{
-			unset($result['STAT']);
+			unset($result->STAT);
 			
 			// Clean Content
-			foreach($result as $num => $relayPoint)
+			foreach ($result as $num => $relayPoint)
 			{
 				$totalEmptyFields = 0;
 				foreach ($relayPoint as $key => &$value)
 				{
- 					$value = trim($value);
- 					if (empty($value))
- 						++$totalEmptyFields;
+					$value = trim($value);
+					if (empty($value))
+						++$totalEmptyFields;
  				}
  				if ($totalEmptyFields == count($relayPoint))
  					unset($result[$num]);
@@ -260,18 +251,13 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	*/
 	public function send()
 	{
-		if ($client = new nusoap_client($this->_webserviceURL, true))
+		if ($client = new SoapClient($this->_webserviceURL))
 		{
 			$client->soap_defencoding = 'UTF-8';
 			$client->decode_utf8 = false;
 			
 			$params = $this->_getSimpleParamArray($this->_fields['list']);
-			$result = $client->call(
-				'WSI2_RecherchePointRelais', 
-				$params, 
-				'http://www.mondialrelay.fr/webservice/', 
-				'http://www.mondialrelay.fr/webservice/WSI2_RecherchePointRelais');
-				
+			$result = $client->WSI2_RecherchePointRelais($params);				
 			$this->_parseResult($client, $result, $params);
 			unset($client);
 		}

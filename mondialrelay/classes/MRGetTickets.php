@@ -20,6 +20,7 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 16117 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,24 +56,25 @@ class MRGetTickets implements IMondialRelayWSMethod
 	
 	private $_detailedExpeditionList = array();
 	private $_webServiceKey = '';
-	private $_mondialrelay = NULL;
+	private $_mondialrelay = null;
 	
 	private $_resultList = array(
 		'error' => array(),
 		'success' => array());
 	
-	private $_webserviceURL = 'http://www.mondialrelay.fr/webservice/Web_Services.asmx?WSDL';
+	private $_webserviceURL;
 	
 	public function __construct($params, $object)	
 	{
 		$this->_mondialrelay = $object;
 		$this->_detailedExpeditionList = $params['detailedExpeditionList'];
 		$this->_webServiceKey = $this->_mondialrelay->account_shop['MR_KEY_WEBSERVICE'];
+		$this->_webserviceURL = MondialRelay::MR_URL.'webservice/Web_Services.asmx?WSDL';
 	}
 	
 	public function __destruct()
 	{
-		 unset($this->_mondialrelay);
+		unset($this->_mondialrelay);
 	}
 	
 	public function init()
@@ -99,16 +101,16 @@ class MRGetTickets implements IMondialRelayWSMethod
 	{
 		// RootCase is the array case where the main information are stored
 		// it's an array containing id_mr_selected and an array with the necessary fields
-		foreach($this->_fieldsList as &$rootCase)
+		foreach ($this->_fieldsList as &$rootCase)
 		{
 			$concatenationValue = '';
-			foreach($rootCase['list'] as $paramName => &$valueDetailed)
+			foreach ($rootCase['list'] as $paramName => &$valueDetailed)
 				if ($paramName != 'Texte' && $paramName != 'Security')
 				{
-					$valueDetailed['value'] = strtoupper($valueDetailed['value']);
+					$valueDetailed['value'] = Tools::strtoupper($valueDetailed['value']);
 					if (preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 						$concatenationValue .= $valueDetailed['value'];
-					else if ((!strlen($valueDetailed['value']) && $valueDetailed['required']) || strlen($valueDetailed['value']))
+					elseif ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
 					{
 						$error = $this->_mondialrelay->l('This key').' ['.$paramName.'] '.$this->_mondialrelay->l('hasn\'t a valide value format').' : '.$valueDetailed['value'];
 						$id_order = $this->_getOrderIdWithExpeditionNumber($rootCase['list']['Expeditions']['value']);
@@ -116,7 +118,7 @@ class MRGetTickets implements IMondialRelayWSMethod
 					}
 				}
 			$concatenationValue .= $this->_webServiceKey;
-			$rootCase['list']['Security']['value'	] = strtoupper(md5($concatenationValue));	
+			$rootCase['list']['Security']['value'] = Tools::strtoupper(md5($concatenationValue));	
 		}
 	}
 
@@ -128,7 +130,7 @@ class MRGetTickets implements IMondialRelayWSMethod
 	{
 		$params = array();
 		
-		foreach($fields as $keyName => $valueDetailed)
+		foreach ($fields as $keyName => $valueDetailed)
 			$params[$keyName] = $valueDetailed['value'];
 		return $params;
 	}
@@ -178,12 +180,8 @@ class MRGetTickets implements IMondialRelayWSMethod
 		$success = array();
 		
 		$id_order = $this->_getOrderIdWithExpeditionNumber($params['Expeditions']);
-		if ($client->fault)
-			$errors[$errorTotal++] = $this->_mondialrelay->l('It seems the request isn\'t valid:').
-				$result;
-				
-		$result = $result['WSI2_GetEtiquettesResult'];
-		if (($errorNumber = $result['STAT']) != 0)
+		$result = $result->WSI2_GetEtiquettesResult;
+		if (($errorNumber = $result->STAT) != 0)
 		{
 			$errors[] = $this->_mondialrelay->l('There is an error number : ').$errorNumber;
 			$errors[] = $this->_mondialrelay->l('Details : ').
@@ -192,8 +190,8 @@ class MRGetTickets implements IMondialRelayWSMethod
 		else
 		{
 			$baseURL = 'http://www.mondialrelay.fr';
-			$URLPDF_A4 = $baseURL.$result['URL_PDF_A4'];
-			$URLPDF_A5 = $baseURL.$result['URL_PDF_A5'];
+			$URLPDF_A4 = $baseURL.$result->URL_PDF_A4;
+			$URLPDF_A5 = $baseURL.$result->URL_PDF_A5;
 			
 			$success['id_order'] = $id_order;
 			$success['expeditionNumber'] = $params['Expeditions'];
@@ -210,7 +208,7 @@ class MRGetTickets implements IMondialRelayWSMethod
 	 */
 	private function _getOrderIdWithExpeditionNumber($expeditionNumber)
 	{
-		foreach($this->_detailedExpeditionList as $detailedExpedition)
+		foreach ($this->_detailedExpeditionList as $detailedExpedition)
 			if ($detailedExpedition['expeditionNumber'] == $expeditionNumber)
 				return $detailedExpedition['id_order'];
 		return 0;
@@ -221,20 +219,15 @@ class MRGetTickets implements IMondialRelayWSMethod
 	*/
 	public function send()
 	{
-		if ($client = new nusoap_client($this->_webserviceURL, true))
+		if ($client = new SoapClient($this->_webserviceURL))
 		{
 			$client->soap_defencoding = 'UTF-8';
 			$client->decode_utf8 = false;
 			
-			foreach($this->_fieldsList as $rootCase)
+			foreach ($this->_fieldsList as $rootCase)
 			{
 				$params = $this->_getSimpleParamArray($rootCase['list']);
-				$result = $client->call(
-					'WSI2_GetEtiquettes', 
-					$params, 
-					'http://www.mondialrelay.fr/webservice/', 
-					'http://www.mondialrelay.fr/webservice/WSI2_GetEtiquettes');
-				
+				$result = $client->WSI2_GetEtiquettes($params);
 				$this->_parseResult($client, $result, $params);
 			}
 			unset($client);
