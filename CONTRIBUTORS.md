@@ -82,6 +82,7 @@
 - OliverMuellerShopgate 
 - PaymentSense-Developer 
 - Peter Schaeffer 
+- philong 
 - prestachris 
 - PrestaEdit 
 - PrestanceDesign 
@@ -104,6 +105,7 @@
 - Thoma Biguères 
 - Thoma Bigueres 
 - Thomas 
+- Thomas N 
 - Thomas Nabord 
 - tNabord 
 - Tomasz 
@@ -116,6 +118,7 @@
 - Vincent Augagneur 
 - Vincent Terenti 
 - Wanted85 
+- Webincolor 
 - Xavier 
 - Yann 
 - Yann CYRILLE 
