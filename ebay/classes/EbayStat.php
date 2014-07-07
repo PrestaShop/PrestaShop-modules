@@ -44,7 +44,7 @@ class EbayStat
           'id' => sha1($this->_getDefaultShopUrl()),
           'profile' => $ebay_profile->id,
           'ebay_username' => sha1(Configuration::get('EBAY_IDENTIFIER')),
-          'ebay_site' => $ebay_profile->getConfiguration('EBAY_SHOP'),
+          'ebay_site' => $ebay_profile->ebay_site_id,
           'is_multishop' => (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
           'install_date' => Configuration::get('EBAY_INSTALL_DATE'),
           'nb_listings' => EbayProduct::getNbProducts($ebay_profile->id),
@@ -84,7 +84,7 @@ class EbayStat
         $data = array(
           'id_ebay_profile' => $this->id_ebay_profile,
           'version'  => $this->stats_version,
-          'data'     => pSQL(json_encode($this->data)),
+          'data'     => pSQL(Tools::jsonEncode($this->data)),
           'date_add' => $this->date_add  
         );
         Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_stat', $data, 'INSERT');

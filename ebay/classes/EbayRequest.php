@@ -226,7 +226,7 @@ class EbayRequest
 	{
 		$response = $this->_makeRequest('GetSuggestedCategories', array(
 			'version' => $this->compatibility_level,
-			'query' => substr(strtolower($query), 0, 350)
+			'query' => Tools::substr(strtolower($query), 0, 350)
 		));
 
 		if ($response === false)
@@ -372,7 +372,7 @@ class EbayRequest
 
 		$vars = array(
 			'sku' => 'prestashop-'.$data['id_product'],
-			'title' => substr(self::prepareTitle($data), 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'description' => $data['description'],
 			'category_id' => $data['categoryId'],
@@ -418,7 +418,7 @@ class EbayRequest
 			'price_update' => !isset($data['noPriceUpdate']),
 			'start_price' => $data['price'],
 			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
-			'title' => substr(self::prepareTitle($data), 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
@@ -469,7 +469,7 @@ class EbayRequest
 			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
 			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
-			'title' => substr(self::prepareTitle($data), 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'return_policy' => $this->_getReturnPolicy(),
 			'price_update' => !isset($data['noPriceUpdate']),
@@ -530,7 +530,7 @@ class EbayRequest
 			'value' => htmlentities($data['brand']),
 			'return_policy' => $this->_getReturnPolicy(),
 			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
-			'title' => substr(self::prepareTitle($data), 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),

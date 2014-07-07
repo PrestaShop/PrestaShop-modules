@@ -1,6 +1,6 @@
-Bonjour,
+Hello,
 
-Un problème lors de l'importation a eu lieu. Voici les messages relevés :
+There was a problem while importing orders from eBay to PrestaShop : 
 
 {errors_email}
 

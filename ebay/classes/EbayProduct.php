@@ -52,7 +52,7 @@ class EbayProduct
             $sql = 'SELECT `id_product` 
                 FROM `'._DB_PREFIX_.'product`';    
         $results = Db::getInstance()->executeS($sql);
-        $id_shop_products = array_map(function($a) {return (int)$a['id_product']; }, $results);
+        $id_shop_products = array_map(array('EbayProduct', 'getProductsIdFromTable'), $results);
 
         $nb_shop_products = count($id_shop_products);
         
@@ -62,6 +62,11 @@ class EbayProduct
         $nb_synchronized_products = Db::getInstance()->getValue($sql2);
         
         return number_format($nb_synchronized_products / $nb_shop_products * 100.0, 2);
+    }
+
+    public static function getProductsIdFromTable($a)
+    {
+    	return (int)$a['id_product'];
     }
 
 	public static function getNbProducts($id_ebay_profile)

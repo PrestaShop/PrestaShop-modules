@@ -121,7 +121,8 @@ class EbayCategorySpecific
 	public static function atLeastOneOptionalSpecificIsConfigured($id_ebay_profile)
 	{
 		$optional_items = EbayCategorySpecific::getAllOptional($id_ebay_profile);
-		foreach ($optional_items as $item) {
+		foreach ($optional_items as $item) 
+		{
 			if(EbayCategorySpecific::isConfigured($item))
 				return true;
 		}
@@ -131,7 +132,8 @@ class EbayCategorySpecific
 	public static function allMandatorySpecificsAreConfigured($id_ebay_profile)
 	{
 		$mandatory_items = EbayCategorySpecific::getAllMandatory($id_ebay_profile);
-		foreach ($mandatory_items as $item) {
+		foreach ($mandatory_items as $item) 
+		{
 			if(!EbayCategorySpecific::isConfigured($item))
 				return false;
 		}

@@ -92,10 +92,10 @@ class EbayOrder
 				$this->phone = '0100000000';
 		else
 			$this->phone = $phone;
-        
-        $this->id_orders = array();
+		
+		$this->id_orders = array();
 
-		$date = substr((string)$order_xml->CreatedTime, 0, 10).' '.substr((string)$order_xml->CreatedTime, 11, 8);
+		$date = Tools::substr((string)$order_xml->CreatedTime, 0, 10).' '.Tools::substr((string)$order_xml->CreatedTime, 11, 8);
 		$this->date = $date;
 		$this->date_add = $date;
 
@@ -130,10 +130,10 @@ class EbayOrder
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `active` = 1
 			AND `email` = \''.pSQL($this->email).'\'
-            AND `id_shop` = '.(int)$ebay_profile->id_shop.'
-			AND `deleted` = 0'.(substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
+			AND `id_shop` = '.(int)$ebay_profile->id_shop.'
+			AND `deleted` = 0'.(Tools::substr(_PS_VERSION_, 0, 3) == '1.3' ? '' : ' AND `is_guest` = 0'));
 
-        $format = new TotFormat();
+		$format = new TotFormat();
 
 		// Add customer if he doesn't exist
 		//if ($id_customer < 1) RAPH
@@ -150,7 +150,7 @@ class EbayOrder
 			$customer->lastname = $format->formatName(EbayOrder::_formatFamilyName($this->familyname));
 			$customer->firstname = $format->formatName(pSQL($this->firstname));
 			$customer->active = 1;
-            $customer->id_shop = (int)$ebay_profile->id_shop;
+			$customer->id_shop = (int)$ebay_profile->id_shop;
 			$customer->add();
 			$id_customer = $customer->id;
 		}
@@ -176,7 +176,7 @@ class EbayOrder
 			$address->id_customer = (int)$this->id_customers[$ebay_profile->id_shop];
 		}
 
-        $format = new TotFormat();
+		$format = new TotFormat();
 
 		$address->id_country = (int)Country::getByIso($this->country_iso_code);
 		$address->alias = 'eBay';
@@ -210,54 +210,54 @@ class EbayOrder
 	 */
 	private function _formatFamilyName($family_name)
 	{
-		return str_replace(array('(', ')'), '', substr(pSQL($family_name), 0, 32));
+		return str_replace(array('(', ')'), '', Tools::substr(pSQL($family_name), 0, 32));
 	}
-    
-    public function getProductIds()
-    {
+	
+	public function getProductIds()
+	{
 		return array_map(create_function('$product', 'return (int)$product[\'id_product\'];'), $this->product_list);
-    }
+	}
 	
 	public function getProductsAndProfileByShop()
 	{
-        $res = array();
-        foreach($this->product_list as $product) {
-            if ($product['id_ebay_profile'])
-                $ebay_profile = new EbayProfile((int)$product['id_ebay_profile']);
-            else {
-        		$sql = 'SELECT epr.`id_ebay_profile`
-        		FROM `'._DB_PREFIX_.'ebay_product` epr
-        		WHERE epr.`id_product` = '.(int)$product['id_product'];
-                $id_ebay_profile = (int)Db::getInstance()->getValue($sql);
-                if ($id_ebay_profile) {
-                    $ebay_profile = new EbayProfile($id_ebay_profile);
-                } else {
-                    // case where the row in ebay_product has disappeared like if the product has been removed from eBay before sync
-                    if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()) {
-                        $sql = 'SELECT `id_ebay_profile`
-                            FROM `'._DB_PREFIX_.'ebay_profile` ep
-                            LEFT JOIN `'._DB_PREFIX_.'product_shop` ps
-                            ON ep.`id_shop` = ps.`id_shop`
-                            AND ps.`id_product` = '.(int)$product['id_product'];
-                        $id_ebay_profile = (int)Db::getInstance()->getValue($sql);
-                        $ebay_profile = new EbayProfile($id_ebay_profile);
-                    } else {
-                        $ebay_profile = EbayProfile::getCurrent();                        
-                    }
-                }
-            }
-            
-            if (!isset($res[$ebay_profile->id_shop])) {
-                $res[$ebay_profile->id_shop] = array(
-                    'id_ebay_profiles' => array($ebay_profile->id),
-                    'id_products'      => array()
-                );
-            } elseif (!in_array($ebay_profile->id, $res[$ebay_profile->id_shop]['id_ebay_profiles']))
-                $res[$ebay_profile->id_shop]['id_ebay_profiles'][] = $ebay_profile->id;
-            
-            $res[$ebay_profile->id_shop]['id_products'][] = $product['id_product'];
-        }
-        
+		$res = array();
+		foreach($this->product_list as $product) {
+			if ($product['id_ebay_profile'])
+				$ebay_profile = new EbayProfile((int)$product['id_ebay_profile']);
+			else {
+				$sql = 'SELECT epr.`id_ebay_profile`
+				FROM `'._DB_PREFIX_.'ebay_product` epr
+				WHERE epr.`id_product` = '.(int)$product['id_product'];
+				$id_ebay_profile = (int)Db::getInstance()->getValue($sql);
+				if ($id_ebay_profile) {
+					$ebay_profile = new EbayProfile($id_ebay_profile);
+				} else {
+					// case where the row in ebay_product has disappeared like if the product has been removed from eBay before sync
+					if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()) {
+						$sql = 'SELECT `id_ebay_profile`
+							FROM `'._DB_PREFIX_.'ebay_profile` ep
+							LEFT JOIN `'._DB_PREFIX_.'product_shop` ps
+							ON ep.`id_shop` = ps.`id_shop`
+							AND ps.`id_product` = '.(int)$product['id_product'];
+						$id_ebay_profile = (int)Db::getInstance()->getValue($sql);
+						$ebay_profile = new EbayProfile($id_ebay_profile);
+					} else {
+						$ebay_profile = EbayProfile::getCurrent();                        
+					}
+				}
+			}
+			
+			if (!isset($res[$ebay_profile->id_shop])) {
+				$res[$ebay_profile->id_shop] = array(
+					'id_ebay_profiles' => array($ebay_profile->id),
+					'id_products'      => array()
+				);
+			} elseif (!in_array($ebay_profile->id, $res[$ebay_profile->id_shop]['id_ebay_profiles']))
+				$res[$ebay_profile->id_shop]['id_ebay_profiles'][] = $ebay_profile->id;
+			
+			$res[$ebay_profile->id_shop]['id_products'][] = $product['id_product'];
+		}
+		
 		return $res;
 	}
 
@@ -300,7 +300,7 @@ class EbayOrder
 		$cart->recyclable = 0;
 		$cart->gift = 0;
 		$cart->add();
-        
+		
 		$this->carts[$ebay_profile->id_shop] = $cart;
 
 		return $cart;
@@ -317,25 +317,25 @@ class EbayOrder
 		$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
 		$cart_nb_products = 0;
 
-        $products_by_shop = $this->getProductsAndProfileByShop();
-        
-        if(isset($products_by_shop[$ebay_profile->id_shop]))
-        	$product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
-        else
-        	$product_list = array();
+		$products_by_shop = $this->getProductsAndProfileByShop();
+		
+		if(isset($products_by_shop[$ebay_profile->id_shop]))
+			$product_list = $products_by_shop[$ebay_profile->id_shop]['id_products'];
+		else
+			$product_list = array();
 
 		foreach ($product_list as $id_product)
 		{
-            foreach($this->product_list as $product)
-                if ($id_product == $product['id_product'])
-                    break;
+			foreach($this->product_list as $product)
+				if ($id_product == $product['id_product'])
+					break;
 			// check if product is in this cart
 //			if (!count($this->carts[$ebay_profile->id_shop]->getProducts(false, $product['id_product'])))
 //				continue;
 			
 			$prod = new Product($product['id_product'], false, $id_lang);
 			$minimal_quantity = empty($product['id_product_attribute']) ? $prod->minimal_quantity : (int)Attribute::getAttributeMinimalQty($product['id_product_attribute']);
-            
+			
 			if ($product['quantity'] >= $minimal_quantity)
 			{
 				$id_product_attribute = empty($product['id_product_attribute']) ? null : $product['id_product_attribute'];
@@ -390,7 +390,7 @@ class EbayOrder
 			$customer->secure_key,
 			version_compare(_PS_VERSION_, '1.5', '>') ? new Shop((int)$id_shop) : null
 		);
-        
+		
 		$this->id_orders[$id_shop] = $paiement->currentOrder;
 
 		// Fix on date
@@ -544,9 +544,9 @@ class EbayOrder
 		$id_ebay_order = EbayOrder::insert(array(
 			'id_order_ref' => pSQL($this->id_order_ref),
 		));		
-            
-        if(is_array($this->id_orders))
-        {
+			
+		if(is_array($this->id_orders))
+		{
 			foreach ($this->id_orders as $id_shop => $id_order)
 			{
 				if (version_compare(_PS_VERSION_, '1.5', '>'))
@@ -563,7 +563,7 @@ class EbayOrder
 					), 'INSERT');
 
 			}
-        }
+		}
 	}
 
 	public function addErrorMessage($message)
@@ -618,10 +618,10 @@ class EbayOrder
 		if (isset($data[1]))
 			$id_product = $data[1];
 		if (isset($data[2])) {
-            $data2 = explode('_', $data[2]);
+			$data2 = explode('_', $data[2]);
 			$id_product_attribute = $data2[0];
-            if (isset($data2[1]))
-                $id_ebay_profile = (int)$data2[1];
+			if (isset($data2[1]))
+				$id_ebay_profile = (int)$data2[1];
 		}
 
 		return array($id_product, $id_product_attribute, $id_ebay_profile);
@@ -632,8 +632,8 @@ class EbayOrder
 		$name = str_replace(array('_', ',', '  '), array('', '', ' '), (string)$name);
 		$name = preg_replace('/\-?\d+/', '', $name);
 		$name = explode(' ', $name, 2);
-		$firstname = trim(substr(trim($name[0]), 0, 32));
-		$familyname = trim(isset($name[1]) ? substr(trim($name[1]), 0, 32) : substr(trim($name[0]), 0, 32));
+		$firstname = trim(Tools::substr(trim($name[0]), 0, 32));
+		$familyname = trim(isset($name[1]) ? Tools::substr(trim($name[1]), 0, 32) : Tools::substr(trim($name[0]), 0, 32));
 
 		if (!$familyname)
 				$familyname = $firstname;
@@ -670,7 +670,7 @@ class EbayOrder
 		{
 			$id_product = 0;
 			$id_product_attribute = 0;
-            $id_ebay_profile = 0;
+			$id_ebay_profile = 0;
 			$quantity = (string)$transaction->QuantityPurchased;
 
 			if (isset($transaction->Item->SKU))
@@ -687,12 +687,12 @@ class EbayOrder
 				FROM `'._DB_PREFIX_.'product_attribute`
 				WHERE `id_product` = '.(int)$id_product.'
 				AND `id_product_attribute` = '.(int)$id_product_attribute);
-            
+			
 			if ($id_product)
 				$products[] = array(
 					'id_product' => $id_product,
 					'id_product_attribute' => $id_product_attribute,
-                    'id_ebay_profile' => $id_ebay_profile,
+					'id_ebay_profile' => $id_ebay_profile,
 					'quantity' => $quantity,
 					'price' => (string)$transaction->TransactionPrice);
 			else
@@ -709,7 +709,7 @@ class EbayOrder
 						$products[] = array(
 							'id_product' => $id_product,
 							'id_product_attribute' => 0,
-                            'id_ebay_profile' => 0,
+							'id_ebay_profile' => 0,
 							'quantity' => $quantity,
 							'price' => (string)$transaction->TransactionPrice);
 					else
@@ -722,14 +722,14 @@ class EbayOrder
 							$products[] = array(
 								'id_product' => (int)$row['id_product'],
 								'id_product_attribute' => (int)$row['id_product_attribute'],
-                                'id_ebay_profile' => 0,
+								'id_ebay_profile' => 0,
 								'quantity' => $quantity,
 								'price' => (string)$transaction->TransactionPrice);
 					}
 				}
 			}
 		}
-        
+		
 		return $products;
 	}
 
