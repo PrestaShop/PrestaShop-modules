@@ -159,19 +159,19 @@
 			<ul>
 				<li>
 					<label for="MR_enseigne_webservice" class="mrLabel">{l s='Webservice Enseigne:' mod='mondialrelay'}</label>
-					<input id="MR_enseigne_webservice" class="mrInput" type="text" name="MR_enseigne_webservice" value="{$MR_enseigne_webservice|escape:all}" />
+					<input id="MR_enseigne_webservice" class="mrInput" type="text" name="MR_enseigne_webservice" value="{$MR_enseigne_webservice|escape:'htmlall':'UTF-8'}" />
 					<sup>*</sup>
 				</li>
 				<li>
 					<label for="MR_code_marque" class="mrLabel">
 					{l s='Code marque:' mod='mondialrelay'}
 					</label>
-					<input id="MR_code_marque" class="mrInput" type="text" name="MR_code_marque" value="{$MR_code_marque|escape:all}" />
+					<input id="MR_code_marque" class="mrInput" type="text" name="MR_code_marque" value="{$MR_code_marque|escape:'htmlall':'UTF-8'}" />
 					<sup>*</sup>
 				</li>
 				<li>
 					<label for="MR_webservice_key" class="mrLabel">{l s='Webservice Key:' mod='mondialrelay'}</label>
-					<input id="MR_webservice_key" class="mrInput" type="text" name="MR_webservice_key" value="{$MR_webservice_key}" />
+					<input id="MR_webservice_key" class="mrInput" type="text" name="MR_webservice_key" value="{$MR_webservice_key|escape:'htmlall':'UTF-8'}" />
 					<sup>*</sup>
 				</li>
 				<li>
@@ -191,7 +191,7 @@
 				</li>
 				<li>
 					<label for="MR_weight_coefficient" class="mrLabel">{l s='Weight Coefficient:' mod='mondialrelay'}</label>
-					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient}"/>
+					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient|escape:'htmlall':'UTF-8'}"/>
 					<sup>*</sup>
 					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}</span>
 				</li>
