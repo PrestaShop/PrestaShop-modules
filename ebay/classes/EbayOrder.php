@@ -476,11 +476,12 @@ class EbayOrder
 		{
 			$order = new Order((int)$this->id_orders[$ebay_profile->id_shop]);
 			$data_old = $data;
+			
 			$data = array_merge(
 				$data, 
 				array(
 					'total_paid_tax_incl' => (float)$this->amount,
-					'total_paid_tax_excl' => (float)($total_price_tax_excl + $order->total_shipping_tax_excl),
+					'total_paid_tax_excl' => (float)($total_price_tax_excl + $total_shipping_tax_excl),
 					'total_shipping_tax_incl' => (float)$total_shipping_tax_incl,
 					'total_shipping_tax_excl' => (float)$total_shipping_tax_excl
 				)
