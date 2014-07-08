@@ -8,10 +8,10 @@
 	{if $products_ebay_listings}
 		{foreach from=$products_ebay_listings item=product name=loop}
 			<tr class="row_hover{if $smarty.foreach.loop.index % 2} alt_row{/if}">
-				<td style="text-align:center">{$product.id_product}</td>
-				<td style="text-align:center">{$product.quantity}</td>
-				<td><a href="{$product.link}">{$product.prestashop_title}</a></td>
-				<td><a href="{$product.link_ebay}">{$product.ebay_title} ({$product.reference_ebay})</a></td>
+				<td style="text-align:center">{$product.id_product|escape:'htmlall':'UTF-8'}</td>
+				<td style="text-align:center">{$product.quantity|escape:'htmlall':'UTF-8'}</td>
+				<td><a href="{$product.link|escape:'htmlall':'UTF-8'}">{$product.prestashop_title|escape:'htmlall':'UTF-8'}</a></td>
+				<td><a href="{$product.link_ebay|escape:'htmlall':'UTF-8'}">{$product.ebay_title|escape:'htmlall':'UTF-8'} ({$product.reference_ebay|escape:'htmlall':'UTF-8'})</a></td>
 			</tr>
 		{/foreach}
 	{/if}

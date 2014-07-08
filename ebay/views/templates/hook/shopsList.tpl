@@ -36,8 +36,8 @@
 		<tbody>
 		{foreach from=$shops item='shop'}
 			<tr>
-				<td><a href="{$url_base}{$shop.id_shop}">{$shop.name}</a></td>
-				<td>{{$shop.nb_products_synchronized}}</td>
+				<td><a href="{$url_base|escape:'htmlall':'UTF-8'}{$shop.id_shop|escape:'htmlall':'UTF-8'}">{$shop.name|escape:'htmlall':'UTF-8'}</a></td>
+				<td>{{$shop.nb_products_synchronized|escape:'htmlall':'UTF-8'}}</td>
 			</tr>
 		{/foreach}
 		</tbody>

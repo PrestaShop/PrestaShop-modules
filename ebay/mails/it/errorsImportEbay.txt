@@ -1,7 +1,5 @@
-Bonjour,
-
-Un problème lors de l'importation a eu lieu. Voici les messages relevés :
+Ciao, 
+Un problema durante l'importazione ha avuto luogo. Ecco i messaggi identificati: <br/>
 
 {errors_email}
-
 {shop_name}
