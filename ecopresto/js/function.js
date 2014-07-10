@@ -454,6 +454,8 @@ function insertCatalogPS2(nb,tot,sup)
 $(document).ready(function()
 {   
 
+	$('.display_tr').hide();	
+
     $('.NoSendCom').live('click',function(){    
         $('#orderMan'+$(this).attr('rel')).hide();
         var XHR = new XHRConnection();
