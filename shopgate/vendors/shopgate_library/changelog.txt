@@ -1,5 +1,126 @@
 '''Deutsch'''
 
+'''Version 2.6.5'''
+* Fehler in der mobilen Weiterleitung behoben
+
+'''Version 2.6.4'''
+* Performance Steigerung bei Nutzung der mobilen Weiterleitung
+
+'''Version 2.6.3'''
+* Konstruktor refaktoriert
+
+'''Version 2.6.2'''
+* neuen default Datentype "datetime" hinzugefügt
+
+'''Version 2.6.1'''
+* Kategorien können nun in Chunks abgerufen werden
+
+'''Version 2.6.0'''
+* XML Export für Produkte und Kategorien hinzugefügt.
+
+'''Version 2.5.7'''
+* Feld display_name zu ShopgateShippingInfo hinzugefügt
+* Felder supported_fields_get_settings und supported_fields_check_cart in ShopgateConfig hinzugefügt
+
+'''Version 2.5.6'''
+* Standardwert für "enable_default_redirect" in der ShopgateConfig Klasse geändert
+* Einbinden von Vary Header für Seiten die auf mobile Endgeräte weitergeleitet werden können
+* Implementierung von ShopgateCartCustomer und ShopgateCartCustomerGroup für checkCart
+
+'''Version 2.5.5'''
+* Encoding-Funktionen um Parameter zur Nutzung von iconv() anstatt mb_convert_encoding() erweitert
+
+'''Version 2.5.4'''
+* Die Methode Ping um einen zusätzlichen Informationskontainer erweitert ('shop_info')
+
+'''Version 2.5.3'''
+* Klasse ShopgateOrderItem um ein Feld namens "parent_item_number" erweitert
+
+'''Version 2.5.2'''
+* ShopgateOrderItem::$order_item_id inkl. Getter und Setter eingefügt
+* Funktion getErrorType() im globalen Kontext umbenannt in shopgateGetErrorType()
+
+'''Version 2.5.1'''
+* Fehler in den Setter-Methoden mancher von ShopgateContainer abgeleiteten Klassen behoben
+
+'''Version 2.5.0'''
+* Medienexport zu Produkten implementiert
+* Die Methode check_stock eingeführt und den Bestand der übermittelten Produkte zu prüfen
+* Validierung der Individualisierungsoption(text), falls eingegebener Text zu lang ist
+
+'''Version 2.4.16'''
+* ShopgateCart::$internal_cart_info inkl. Getter und Setter eingefügt
+* in der Rückgabe von ShopgatePlugin::checkCart() wird jetzt der Index "internal_cart_info" zurückgegeben
+* ShopgateShippingInfo::$internal_shipping_info inkl. Getter und Setter eingefügt
+* "s" am Ende von ShopgateShippingMethod::$internal_shipping_infos und den Gettern und Settern entfernt
+
+'''Version 2.4.15'''
+* Schalter für Steuerklassen implementiert
+
+'''Version 2.4.14'''
+* Korrektur für custom_fields
+* Eine neue Hilfsmethode wurde hinzugefügt, mit welcher ein Kreuzprodukt über mehrere Arrays durchgeführt wird, die in einem übergeordneten Array angeordnet sind.
+
+'''Version 2.4.13'''
+* Die Währung wird bei check_cart nun global für den kompletten Warenkorb gültig übergeben
+
+'''Version 2.4.12'''
+* Füge Visitor Methoden für Shipping, Payment und CartItem Klassen ein (array visitor)
+
+'''Version 2.4.11'''
+* Fehler im Logging behoben
+
+'''Version 2.4.10'''
+* Füge Visitor Methoden für Shipping, Payment und CartItem Klassen ein (utf8 visitor)
+
+'''Version 2.4.9'''
+* Die Methode check_cart gibt nun neben den Coupons auch Warenkorbprodukte mit Lagerinformationen sowie Versand- und Zahlmethoden zurück, welche für gegebene Adresse verfügbar sind
+
+'''Version 2.4.8'''
+* Error codes für get_customer hinzugefügt
+
+'''Version 2.4.7'''
+* Error code für register_customer implementiert
+
+'''Version 2.4.6'''
+* Konstanten für weitere Zahlungsarten in Klasse ShopgateCartBase hinzugefügt
+
+'''Version 2.4.5'''
+* Verbessertes Logging zur Analyse von schweren Fehlern
+
+'''Version 2.4.4'''
+* Funktionalität implementiert um den Inhalt eines ShopgateContainers auf Gleichheit zu prüfen
+
+'''Version 2.4.3'''
+* Kompatibilität mit PHP-Versionen unter 5.3 wiederhergestellt
+
+'''Version 2.4.2'''
+* zusätzliche Benutzerangaben für Bestellungen und Adressen eingefügt (ShopgateCartBase::$custom_fields, ShopgateAddress::$custom_fields)
+* Optimierung des Speicherverbrauchs und der CPU-Nutzung durch die Behebung eines Fehlers
+
+'''Version 2.4.1'''
+* neuen Fehlercode hinzugefügt (90 - error sending mail)
+
+'''Version 2.4.0'''
+* Die Actions register_customer, get_debug_info und set_settings wurden hinzugefügt
+* Der <link>-Tag wird nur noch bei einem freigeschalteten Shop in den <head>-Tag ausgegeben
+
+'''Version 2.3.10'''
+* Beim Item Export besteht die Möglichkeit beliebig viele Optionen, Inputs und Attribute zu exportieren
+
+'''Version 2.3.9'''
+* Die ShopgateObject Klasse enthält nun eine Methode zur Ausgabe von Objekten mit interner Rekursion (u_print_r).
+* Die ShopgatePlugin Klasse beinhaltet nun eine Hilfsmethode zur Ermittlung des verbrauchten Arbeitsspeichers inkl. Umrechnung auf die benötigte Einheit.
+* Bei der Ausführung von "executeLoaders" kann nun das Logging des verbrauchten Arbeitsspeichers vor und nach jeder ausgeführten Methode aktiviert werden.
+* Funktion splitStreetData() in Klasse ShopgateAddress verbessert, da diese Straße und Hausnr. in manchen Fällen falsch aufgeteilt hat.
+
+'''Version 2.3.8'''
+* Unterstützung für erweiterte Informationen zum Versand, die jetzt durch check_cart und redeem_coupon zur Verfügung gestellt werden
+* Konstanten zur Umrechnung von Gewichten
+
+'''Version 2.3.7'''
+* das in der ShopgateConfig hinterlegte Encoding wird jetzt auch beim Export berücksichtigt
+
 '''Version 2.3.6'''
 * shopgate_license.txt hinzugefügt
 
@@ -139,12 +260,133 @@
 * Bei Plugin-API-Anfragen wird jetzt auch die Plugin-Version zurückgegeben, falls gesetzt.
 
 '''Version 2.1.5'''
-* Fehler in der Verwendung der alten Konfiguaration behoben
+* Fehler in der Verwendung der alten Konfiguration behoben
 * changelog.txt hinzugefügt
 
 
 
 '''English'''
+
+'''Version 2.6.5'''
+* bugfix in mobile redirect
+
+'''Version 2.6.4'''
+* Performance increased for the mobile redirect
+
+'''Version 2.6.3'''
+* Refactored constructor
+
+'''Version 2.6.2'''
+* New default data type "datetime" added
+
+'''Version 2.6.1'''
+* added feature to get categories in chunks
+
+'''Version 2.6.0'''
+* Added - Functionality XML export for products and categories.
+
+'''Version 2.5.7'''
+* added field display_name to class ShopgateShippingInfo
+* added fields supported_fields_get_settings and supported_fields_check_cart in ShopgateConfig
+
+'''Version 2.5.6'''
+* modifed default value for "enable_default_redirect" in class ShopgateConfig
+* embedding of Vary Header for pages which are potentially redirected to mobile devices
+* implemented ShopgateCartCustomer and ShopgateCartCustomerGroup for checkCart
+
+'''Version 2.5.5'''
+* added a parameter to all encoding functions allowing to use iconv() instead of mb_convert_encoding()
+
+'''Version 2.5.4'''
+* extended the method ping with an additional information container ('shop_info')
+
+'''Version 2.5.3'''
+* added field "parent_item_number" to class ShopgateOrderItem
+
+'''Version 2.5.2'''
+* added ShopgateOrderItem::$order_item_id incl. getters and setters
+* renamed function getErrorType() which is in global context to shopgateGetErrorType()
+
+'''Version 2.5.1'''
+* fixed a bug in the setter methods of some classes derived from ShopgateContainer
+
+'''Version 2.5.0'''
+* implemented media export for products
+* implemented method check_stock to be able to check stock in realtime
+* add error 303 for input field validation to check if input text is too long
+
+'''Version 2.4.16'''
+* added ShopgateCart::$internal_cart_info including getter and setter methods
+* the field "internal_cart_info" is now processed when returned by ShopgatePlugin::checkCart()
+* added ShopgateShippingInfo::$internal_cart_info including getter and setter methods
+* removed the trailing "s" in ShopgateShippingMethod::$internal_cart_infos and its getter and setter methods
+
+'''Version 2.4.15'''
+* implemented switch for the use of tax classes
+
+'''Version 2.4.14'''
+* bugfix for custom_fields
+* added a helper method "arrayCross" to create a cross product over multiple arrays, organized inside of a containing array
+
+'''Version 2.4.13'''
+* the currency in check_cart response now is transferred in whole cart scope
+
+'''Version 2.4.12'''
+* insert Visitor methods for Shipping, Payment and CartItem classes (array visitor)
+
+'''Version 2.4.11'''
+* fixed an error in the logging routine
+
+'''Version 2.4.10'''
+* insert Visitor methods for Shipping, Payment and CartItem classes (utf8 visitor)
+
+'''Version 2.4.9'''
+* method check_cart now also returns cart item stock information and shipping and payment methods which are available for cart address
+
+'''Version 2.4.8'''
+* added new error codes for get_customer method
+
+'''Version 2.4.7'''
+* error code for function register_customer implemented
+
+'''Version 2.4.6'''
+* added constants for more payment types in class ShopgateCartBase
+
+'''Version 2.4.5'''
+* improved logging for analyzing of fatal errors
+
+'''Version 2.4.4'''
+* implemented function to check if the values of two ShopgateContainer objects are equal
+
+'''Version 2.4.3'''
+* restored compatibility for PHP versions below 5.3
+
+'''Version 2.4.2'''
+* added custom input fields for user details to orders and addresses (ShopgateOrder::$custom_fields, ShopgateAddress::$custom_fields)
+* fixed an error and decreased memory and CPU time consumption by a significant amount
+
+'''Version 2.4.1'''
+* added new error code (90 - error sending mail)
+
+'''Version 2.4.0'''
+* actions register_customer, get_debug_info and set_settings was added
+* the <link> tag is now displayed in the <head> tag on activated shops only
+
+'''Version 2.3.10'''
+* it's possible to export any number of options, inputs and attributes while exporting item csv files
+
+'''Version 2.3.9'''
+* the ShopgateObject class now features a method for dumping objects that can't be dumped using var_dump, because of internal recursion (u_print_r).
+* the ShopgatePlugin class now contains a helper method to retrieve the used ram that is also converted into the desired size-unit.
+* when executing loaders using the "executeLoaders" method the logging of used ram can be activated so the ram before and after each called method is logged.
+* Improved function splitStreetData() in class ShopgateAddress, because street and number were not split correctly in some cases.
+
+'''Version 2.3.8'''
+* handle extended shipping information that is provided in check_cart and redeem_coupon now
+* constant values to use for converting weights
+
+'''Version 2.3.7'''
+* ShopgateConfig's "encoding" setting is now used for exporting products as well
 
 '''Version 2.3.6'''
 * added shopgate_license.txt
