@@ -449,7 +449,7 @@ class ecopresto extends Module{
 					$sscat = $resu['ss_category_1'];
 				}
 
-				$html .= '<tr class="row_hover" style="display:none" id='.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'>
+				$html .= '<tr class="row_hover display_tr" id='.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'>
 									<td><input type="checkbox" id="check'.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'" '.(isset($pdt_sel[$resu['reference']])?'checked="checked"':'').' rel="'.Tools::safeOutput($resu['reference']).'" name="check'.Tools::safeOutput($resu['reference']).'" value="'.$ncat.'___'.$nsscat.'___'.Tools::safeOutput($resu['reference']).'" class="checBB checBB'.$ncat.' checBB'.$ncat.'___'.$nsscat.' pdtI"></td>
 									<td class="ssceza"><span class="catdisplay3">'.Tools::safeOutput($resu['category_1']).'</span></td>
 									<td class="ssceza"><span class="sscatdisplay3">'.Tools::safeOutput($resu['ss_category_1']).'</span></td>
