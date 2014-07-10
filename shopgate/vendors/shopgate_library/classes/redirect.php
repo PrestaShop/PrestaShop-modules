@@ -76,6 +76,11 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @var string path to the shopgate javascript template
 	 */
 	protected $jsHeaderTemplatePath;
+	
+	/**
+	 * @var string path to the shopgate link tag template
+	 */
+	protected $linkTagTemplatePath;
 
 	/**
 	 * @var string expiration date of the cookie as defined in http://www.ietf.org/rfc/rfc2109.txt
@@ -147,13 +152,16 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @var string searchQuery used for creating a mobile search url  / mobile head js
 	 */
 	protected $searchQuery;
+	
+	/**
+	 * @var boolean determines if for a specific case the mobile redirect should be suppressed
+	 */
+	protected $suppressRedirect;
 
-	
-	
 	/**
 	 * Instantiates the Shopgate mobile redirector.
 	 *
-	 * @param string $shopgateConfig An instance of the ShopgateConfig
+	 * @param ShopgateConfig $shopgateConfig An instance of the ShopgateConfig
 	 * @param ShopgateMerchantApiInterface $merchantApi An instance of the ShopgateMerchantApi required for keyword updates or null.
 	 */
 	public function __construct(ShopgateConfig $shopgateConfig, ShopgateMerchantApiInterface $merchantApi = null) {
@@ -167,7 +175,9 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		} else {
 			$this->disableKeywordUpdate();
 		}
-		
+
+		$this->enableDefaultRedirect = $this->config->getEnableDefaultRedirect();
+		$this->suppressRedirect = false;
 		$this->redirectKeywordCacheTime = ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME;
 		$this->buttonParent = 'body';
 		$this->buttonPrepend = true;
@@ -177,6 +187,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		// mobile header options
 		$this->mobileHeaderTemplatePath = dirname(__FILE__).'/../assets/mobile_header.html';
 		$this->jsHeaderTemplatePath = dirname(__FILE__).'/../assets/js_header.html';
+		$this->linkTagTemplatePath = dirname(__FILE__).'/../assets/link_tag.html';
 		$this->cookieLife = gmdate('D, d-M-Y H:i:s T', time());
 		$this->buttonDescription = 'Mobile Webseite aktivieren';
 	}
@@ -204,6 +215,10 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	public function setParentElement($identifier, $prepend = true) {
 		$this->buttonParent = $identifier;
 		$this->buttonPrepend = $prepend;
+	}
+	
+	public function suppressRedirect() {
+		$this->suppressRedirect = true;
 	}
 	
 	public function enableKeywordUpdate($cacheTime = ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME) {
@@ -277,6 +292,11 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 			return false;
 		}
 		
+		// if the plugin wants to suppress the redirect
+		if($this->suppressRedirect) {
+			return false;
+		}
+		
 		return empty($_COOKIE[ShopgateMobileRedirectInterface::COOKIE_NAME]) ? true : false;
 	}
 
@@ -284,6 +304,8 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		if (!$this->config->getShopNumber()) {
 			return '';
 		}
+		
+		$url .= $this->processQueryString($url);
 
 		if(!$this->isRedirectAllowed() || !$this->isMobileRequest() || !$autoRedirect || (($this->redirectType == 'default') && !$this->enableDefaultRedirect)) {
 			return $this->getJsHeader($url);
@@ -307,14 +329,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 			return '';
 		}
 		
-		if (!file_exists($this->mobileHeaderTemplatePath)) {
-			return '';
-		}
-		
-		$html = @file_get_contents($this->mobileHeaderTemplatePath);
-		if (empty($html)) {
-			return '';
-		}
+		$html = $this->loadTemplate($this->mobileHeaderTemplatePath);
 		
 		// set parameters
 		$this->buttonOnImageSource = (($this->useSecureConnection) ? ShopgateMobileRedirectInterface::SHOPGATE_STATIC_SSL : ShopgateMobileRedirectInterface::SHOPGATE_STATIC).'/api/mobile_header/button_on.png';
@@ -330,13 +345,14 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	}
 
 	protected function getJsHeader($mobileRedirectUrl = null) {
-		if (!file_exists($this->jsHeaderTemplatePath)) {
+		$html = $this->loadTemplate($this->jsHeaderTemplatePath);
+		if (empty($html)) {
 			return '';
 		}
 		
-		$html = @file_get_contents($this->jsHeaderTemplatePath);
-		if (empty($html)) {
-			return '';
+		$linkTag = '';
+		if ($this->config->getShopIsActive()) {
+			$linkTag = $this->loadTemplate($this->linkTagTemplatePath);
 		}
 		
 		if (!$this->config->getShopNumber()) {
@@ -409,6 +425,10 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 			$additionalParameters .= '_shopgate.is_default_redirect_disabled = '.((!$this->enableDefaultRedirect) ? 'true' : 'false').';';
 		}
 		
+		if($this->suppressRedirect) {
+			$additionalParameters .= "\n    " . '_shopgate.redirect_to_webapp = false;';
+		}
+		
 		switch($this->config->getServer()){
 			default: // fall through to 'live'
 			case 'live':
@@ -430,6 +450,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		}
 		
 		// set parameters
+		$html = str_replace('{$link_tag}', $linkTag, $html);
 		$html = str_replace('{$mobile_url}', $mobileRedirectUrl, $html);
 		$html = str_replace('{$shop_number}', $this->config->getShopNumber(), $html);
 		$html = str_replace('{$redirect_code}', $redirectCode, $html);
@@ -443,6 +464,19 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	###############
 	### helpers ###
 	###############
+	
+	protected function loadTemplate($filePath) {
+		if (!file_exists($filePath)) {
+			return '';
+		}
+		
+		$html = @file_get_contents($filePath);
+		if (empty($html)) {
+			return '';
+		}
+		
+		return $html;
+	}
 	
 	/**
 	 * Generates the root mobile Url for the redirect
@@ -529,7 +563,9 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 *
 	 * @param string[] $keywords The list of keywords to write to the file.
 	 * @param string $file The path to the file.
+	 * @param null $timestamp 
 	 */
+
 	protected function saveKeywordsToFile($keywords, $file, $timestamp = null) {
 		if(is_null($timestamp)){
 			$timestamp = time();
@@ -571,6 +607,30 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 				'keywords' => $keywordsFromFile,
 			);
 	}
+	
+	/**
+	 * Sets additional http headers like Vary
+	 * 
+	 * @return void
+	 */
+	protected function setAdditionalHttpHeaders() {
+		header('Vary: User-Agent');
+	}
+	
+	/**
+	 * Passes allowed get params to the url as querystring
+	 * 
+	 * @param string $url
+	 * @return string $url
+	 */
+	protected function processQueryString($url) {
+		$queryDataKeys = array_intersect($this->config->getRedirectableGetParams(), array_keys($_GET));
+		$queryData = array_intersect_key($_GET, array_flip($queryDataKeys));
+		
+		$connector = preg_match('/\?/', $url) ? "&" : "?";
+		
+		return count($queryData) ? $connector .http_build_query($queryData) : "";
+	}
 
 	#############################
 	### mobile url generation ###
@@ -579,48 +639,62 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	
 	public function buildScriptDefault($autoRedirect = true) {
 		$this->redirectType = 'default';
-		$this->enableDefaultRedirect = $this->config->getEnableDefaultRedirect();
+		
 		return $this->redirect($this->getShopUrl(), $autoRedirect);
 	}
 	
 	public function buildScriptShop($autoRedirect = true){
 		$this->redirectType = 'start';
+		
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getShopUrl(), $autoRedirect);
 	}
 	
 	public function buildScriptItem($itemNumber, $autoRedirect = true){
 		$this->itemNumber = $itemNumber;
 		$this->redirectType = 'item';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getItemUrl($itemNumber), $autoRedirect);
 	}
 	
 	public function buildScriptItemPublic($itemNumberPublic, $autoRedirect = true){
 		$this->itemNumberPublic = $itemNumberPublic;
 		$this->redirectType = 'itempublic';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getItemPublicUrl($itemNumberPublic), $autoRedirect);
 	}
 	
 	public function buildScriptCategory($categoryNumber, $autoRedirect = true){
 		$this->categoryNumber = $categoryNumber;
 		$this->redirectType = 'category';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getCategoryUrl($categoryNumber), $autoRedirect);
 	}
 	
 	public function buildScriptCms($cmsPage, $autoRedirect = true){
 		$this->cmsPage = $cmsPage;
 		$this->redirectType = 'cms';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getCmsUrl($cmsPage), $autoRedirect);
 	}
 	
 	public function buildScriptBrand($manufacturerName, $autoRedirect = true){
 		$this->manufacturerName = $manufacturerName;
 		$this->redirectType = 'brand';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getBrandUrl($manufacturerName), $autoRedirect);
 	}
 	
 	public function buildScriptSearch($searchQuery, $autoRedirect = true){
 		$this->searchQuery = $searchQuery;
 		$this->redirectType = 'search';
+
+		$this->setAdditionalHttpHeaders();
 		return $this->redirect($this->getSearchUrl($searchQuery), $autoRedirect);
 	}
 	
@@ -820,7 +894,6 @@ interface ShopgateMobileRedirectInterface {
 	 *
 	 * @deprecated
 	 * @param string $url the URL to redirect to
-	 * @param bool $setCookie true to set the redirection cookie and activate redirection
 	 * @return false if the passed $url parameter is no valid URL
 	 */
 	public function redirect($url);

@@ -45,9 +45,10 @@ and its complete content, including all sub-directories and all files excluding 
 
 The files
 
-/logo.gif 
-/logo.png 
-/img/logo_web.png 
+/logo.png
+/img/logo.png
+/img/logo_web.png
+/img/shopgate_logo.png
 
 are also subject to copyright of the Shopgate GmbH and protected. For details please refer to the "/vendors/shopgate_library/shopgate_license.txt".
 

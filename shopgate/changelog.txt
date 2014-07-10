@@ -1,5 +1,143 @@
 '''Deutsch'''
 
+'''Version 2.6.19'''
+* Füllen der Daten beim Ping für supported_fields_check_cart und supported_fields_get_settings
+
+'''Version 2.6.18'''
+* Fix: state und phone für check cart hinzugefügt
+
+'''Version 2.6.17'''
+* Fix: löschen der "myconfig.php" beim de deinstallieren
+
+'''Version 2.6.16'''
+* Fix set_settings für Multistore
+
+'''Version 2.6.15'''
+* Fix Comments Standards für Prestashop
+
+'''Version 2.6.14'''
+* Fix Coding Standards für Prestashop
+
+'''Version 2.6.13'''
+* XML Item Export / Export Price ohne Discount
+
+'''Version 2.6.12'''
+* XML Item Export / Prozentangabe für Staffelpreise korrigiert
+
+'''Version 2.6.11'''
+* fix Konfiguration beim deinstallieren löschen / get_settings erweitert
+
+'''Version 2.6.10'''
+* fix Kategorie sortierung
+
+'''Version 2.6.9'''
+* fix admin order hook
+
+'''Version 2.6.8'''
+* fix Abwärtskompatibilität
+
+'''Version 2.6.7'''
+* fix shop id für version > 1.5
+
+'''Version 2.6.6'''
+* get settings als default 1 gesetzt
+
+'''Version 2.6.5'''
+* fix Configurationsdaten aus Datenbank
+
+'''Version 2.6.4'''
+* Fix PluginModelCategoryObject
+
+'''Version 2.6.3'''
+* vermisste PluginModelCategoryObject eingebunden
+
+'''Version 2.6.2'''
+* API Funktion XML Export für Produkte und Kategorien
+
+'''Version 2.6.1'''
+* API Funktion get_settings hinzugefüget
+
+'''Version 2.6.0'''
+* Problem mit nicht existierenden Eltern Kategorien behoben
+
+'''Version 2.5.11'''
+* Problem mit Root Kategorie für Version 1.4.x behoben
+
+'''Version 2.5.10'''
+* fix product category id export
+
+'''Version 2.5.9'''
+* fix product category id export
+
+'''Version 2.5.8'''
+* fix product category id export
+
+'''Version 2.5.7'''
+* enable_default_redirect = false (0)
+
+'''Version 2.5.6'''
+* verbesserter Bilder Export für US Plugin
+* multisore Funktionalität
+
+'''Version 2.5.5'''
+* verbesserte Kundenerstellung beim Bestellimport
+* neue Logos und neues Design der Shopgate Konfiguration
+* deutsche, englische und französische Übersetzungen aktualisiert
+* bei Verwendung der Plugin Versandmethode wird diese korrekt bei der Bestellung importiert
+
+'''Version 2.5.4'''
+* Produktbilder in Prestashop < 1.4.1.0 werden nun ebenfalls in korrekter Reihenfolge exportiert
+* Neue Konfiguration zur Newsletteranmeldung neuer Mobile Kunden
+* veralteter Methodenaufruf entfernt für Prestashop >= 1.5.0.10
+* ermöglicht den Export von Kategorien ohne Eltern für Prestashop >= 1.5.0.0
+
+'''Version 2.5.3'''
+* exportiert nun originale Produktbilder und nicht mehr "Thickbox" 
+
+'''Version 2.5.2'''
+* neue Konfiguration für den Export der Produkt (Kurz-)Beschreibung
+* erweiterte Kompatibilität der "Dropdown" Konfigurationen für Prestashop >=1.3 
+
+'''Version 2.5.1'''
+* Feature: Nutzung der Shopcoupons möglich für Prestashop >= 1.4
+* Feature: La Poste als Versandservice hinzugefügt
+* nutzt die Shopgate Library 2.5.3
+* Actions check_cart und redeem_coupon aktiviert für Prestashop >= 1.4
+
+'''Version 2.5.0'''
+* update config layout
+* nutzt die Shopgate Library 2.5.1
+
+'''Version 2.4.6'''
+* fix not tax class available
+
+'''Version 2.4.5'''
+* fix deep link for no indexed products
+
+'''Version 2.4.4'''
+* Smarty Bug in admin_order.tpl gefixt and check is array
+
+'''Version 2.4.3'''
+* Smarty Bug in admin_order.tpl gefixt
+
+'''Version 2.4.2'''
+* Kompatibilitätsproblem (class loader) mit Prestashop version 1.3.x.x behoben
+
+'''Version 2.4.1'''
+* Kompatibilitätsproblem mit Prestashop Version 1.3.x.x behoben
+
+'''Version 2.4.0'''
+* nutzt die Shopgate Library 2.4.0
+
+'''Version 2.3.7'''
+* Problem beim Produktexport (tax) bei Prestashop Versionen vor 1.4.1.0 behoben
+* nutzt die Shopgate Library 2.3.9
+
+'''Version 2.3.6'''
+* Probleme beim Produktexport bei Produkten ohne Steuerzuweisung behoben
+* französische Übersetzung hinzugefügt
+* Bestellstatus von bezahlter Paypal Bestellung geändert
+
 '''Version 2.3.5'''
 * Problem beim Bestellungsimport behoben (Exception Swift_Message_MimeException)
 
@@ -122,6 +260,144 @@
 
 '''English'''
 
+'''Version 2.6.19'''
+* fill data on ping for supported_fields_check_cart and supported_fields_get_settings
+
+'''Version 2.6.18'''
+* Fix: added state und phone for check cart
+
+'''Version 2.6.17'''
+* Fix: delete "myconfig.php" on deinstall
+
+'''Version 2.6.16'''
+* Fix set_settings for Multistore
+
+'''Version 2.6.15'''
+* Fix comment standards for Prestashop
+
+'''Version 2.6.14'''
+* Fix coding standards for Prestashop
+
+'''Version 2.6.13'''
+* XML Item Export / Export Price without discount
+
+'''Version 2.6.12'''
+* XML Item Export / fix Percent for tier prices
+
+'''Version 2.6.11'''
+* fix remove configuration data on deinstall / extend get_settings
+
+'''Version 2.6.10'''
+* fix category sorting
+
+'''Version 2.6.9'''
+* fix admin order hook
+
+'''Version 2.6.8'''
+* Fix backwards compatibility
+
+'''Version 2.6.7'''
+* fix shop id for version > 1.5
+
+'''Version 2.6.6'''
+* enable get settings as default
+
+'''Version 2.6.5'''
+* fix configuration data from database
+
+'''Version 2.6.4'''
+* Fix PluginModelCategoryObject
+
+'''Version 2.6.3'''
+* added missing PluginModelCategoryObject
+
+'''Version 2.6.2'''
+* API function XML export for products and categories
+
+'''Version 2.6.1'''
+* added API function - get_settings
+
+'' 'Version 2.6.0'''
+* Fixed problem with non-existing parent categories
+
+'''Version 2.5.11'''
+* fix bug root category for version 1.4.x
+
+'''Version 2.5.10'''
+* fix product category id export
+
+'''Version 2.5.9'''
+* fix product category id export
+
+'''Version 2.5.8'''
+* fix product category id export
+
+'''Version 2.5.7'''
+* enable_default_redirect = false (0)
+
+'''Version 2.5.6'''
+* improved picture export for US plugin
+* multistore functionality
+
+'''Version 2.5.6'''
+* improved creation of customer at order import
+* new logos and design of shopgate configuration
+* improved german, english and french translations
+* if plugin shipping method is used it gets imported well while adding the order
+
+'''Version 2.5.4'''
+* product images in Prestashop < 1.4.1.0 get exported in correct sort order as well
+* new configuration for newsletter subscription of new mobile customer
+* remove call of deprecated method for Prestashop >= 1.5.0.10
+* fix export of categories with no parent selected for Prestashop >= 1.5.0.0
+
+'''Version 2.5.3'''
+* exports original product images instead of thickbox
+
+'''Version 2.5.2'''
+* new configuration for product export (short-)description
+* extended compatibility of dropdown options in module configuration for Prestashop >=1.3
+
+'''Version 2.5.1'''
+* feature: enabled mobile use of shop coupons for Prestashop >= 1.4
+* feature: added La Poste as shipping provider
+* uses Shopgate Library 2.5.3
+* enabled check_cart und redeem_coupon action for Prestashop >= 1.4
+
+'''Version 2.5.0'''
+* update config layout
+* uses Shopgate Library 2.5.1
+
+'''Version 2.4.6'''
+* fix not tax class available
+
+'''Version 2.4.5'''
+* fix deep link for no indexed products
+
+'''Version 2.4.4'''
+* Smarty Bug in admin_order.tpl gefixt and check is array
+
+'''Version 2.4.3'''
+* fix Smarty bug in admin_order.tpl
+
+'''Version 2.4.2'''
+* fixed issue with compatibility in Prestashop version 1.3.x.x (class loader)
+
+'''Version 2.4.1'''
+* fixed issue with compatibility in Prestashop version 1.3.x.x
+
+'''Version 2.4.0'''
+* uses Shopgate Library 2.4.0
+
+'''Version 2.3.7'''
+* fixed issue with product export (tax) in Prestashop version 1.4.1.0
+* uses Shopgate Library 2.3.9
+
+'''Version 2.3.6'''
+* fixed issue of products without tax classes on product export
+* added french translation
+* changed paypal status for paid order
+
 '''Version 2.3.5'''
 * fixed issue in order import (exception Swift_Message_MimeException)
 
@@ -238,4 +514,3 @@
 * 2.0.18 - Shopgate library version
 * Module configuration error catch
 * Deactivates shopgate shop on uninstall
-
