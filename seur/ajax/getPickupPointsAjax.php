@@ -35,7 +35,7 @@ if (class_exists('SeurLib') == false)
 	include_once(_PS_MODULE_DIR_.'seur/classes/SeurLib.php');
 
 $context = Context::getContext();
-	
+
 if (version_compare(_PS_VERSION_, '1.5', '>='))
 {
 	if (!$context->customer->isLogged())
@@ -44,7 +44,7 @@ if (version_compare(_PS_VERSION_, '1.5', '>='))
 else
 {
 	$cookie = $context->cookie;
-	
+
 	if (!$cookie->isLogged())
 		exit;
 }
@@ -55,13 +55,13 @@ if (Tools::getValue('id_address_delivery'))
 {
 	if (Tools::getToken(SEUR_MODULE_NAME.Tools::getValue('id_address_delivery')) != Tools::getValue('token'))
 		exit;
-	
+
 	try
 	{
-		$address_delivery = new Address((int)Tools::getValue('id_address_delivery'), (int)($cookie->id_lang));
+		$address_delivery = new Address((int)Tools::getValue('id_address_delivery'), (int)$cookie->id_lang);
 
 		$sc_options = array(
-			'connection_timeout' => 30 
+			'connection_timeout' => 30
 		);
 
 		$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
@@ -83,22 +83,23 @@ if (Tools::getValue('id_address_delivery'))
 		$xml = simplexml_load_string( utf8_decode($response->out));
 		$centro = array();
 		$num = (int)$xml->attributes()->NUM[0];
-		
+
 		$module_instance = Module::getInstanceByName(SEUR_MODULE_NAME);
 		$filename = 'getPickupPointsAjax';
 
-		for($i = 1; $i <= $num; $i++)
+		for ($i = 1; $i <= $num; $i++)
 		{
-			$name ='REG'.$i;
+			$name = 'REG'.$i;
 			$centro[] = array(
 				'company' => (string)$xml->$name->NOM_CENTRO_SEUR,
-				'address' => (string)$xml->$name->COD_TIPO_VIA .'/ '. (string)$xml->$name->NOM_CORTO .', '. (string)$xml->$name->NUM_VIA,
-				'address2' => sprintf($module_instance->l('Nº Centro: %1$s - Nº Vía: %2$s', $filename), (string)$xml->$name->COD_CENTRO_SEUR, (string)$xml->$name->COD_VIA),
+				'address' => (string)$xml->$name->COD_TIPO_VIA.'/ '.(string)$xml->$name->NOM_CORTO.', '.(string)$xml->$name->NUM_VIA,
+				'address2' => sprintf($module_instance->l('Nº Centro: %1$s - Nº Vía: %2$s', $filename),
+					(string)$xml->$name->COD_CENTRO_SEUR, (string)$xml->$name->COD_VIA),
 				'codCentro' => (string)$xml->$name->COD_CENTRO_SEUR,
 				'city' => (string)$xml->$name->NOM_POBLACION,
 				'post_code' => (string)$xml->$name->CODIGO_POSTAL,
 				'phone' => (string)$xml->$name->TELEFONO_1,
-				'gMapDir' => (string)$xml->$name->COD_TIPO_VIA .'/ '. $xml->$name->NOM_CORTO .', '. $xml->$name->NUM_VIA .', '. $xml->$name->NOM_POBLACION,
+				'gMapDir' => (string)$xml->$name->COD_TIPO_VIA.'/ '.$xml->$name->NOM_CORTO.', '.$xml->$name->NUM_VIA.', '.$xml->$name->NOM_POBLACION,
 				'position' => array('lat' => (float)$xml->$name->LATITUD, 'lng' => (float)$xml->$name->LONGITUD),
 				'timetable' => (string)$xml->$name->HORARIO
 			);
@@ -108,16 +109,16 @@ if (Tools::getValue('id_address_delivery'))
 	catch (PrestaShopException $e)
 	{
 		$e->displayMessage();
-	} 
+	}
 }
 
-if(Tools::getValue('usr_id_address'))
+if (Tools::getValue('usr_id_address'))
 {
 	if (Tools::getToken(SEUR_MODULE_NAME.Tools::getValue('usr_id_address')) != Tools::getValue('token'))
 		exit;
-	
+
 	$usrAddress = new Address((int)Tools::getValue('usr_id_address'), (int)$cookie->id_lang );
-	$gMapUsrDir = $usrAddress->address1 . ' ' . $usrAddress->postcode . ',' . $usrAddress->city . ',' . $usrAddress->country;
+	$gMapUsrDir = $usrAddress->address1.' '.$usrAddress->postcode.','.$usrAddress->city.','.$usrAddress->country;
 	echo $gMapUsrDir;
 }
 
@@ -125,41 +126,44 @@ if (Tools::getValue('savepos') && Tools::getValue('id_seur_pos'))
 {
 	if (Tools::getToken(SEUR_MODULE_NAME.Tools::getValue('chosen_address_delivery')) != Tools::getValue('token'))
 		exit;
-	
+
 	$id_cart = (int)$context->cart->id;
 	$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `id_cart`
 		FROM `'._DB_PREFIX_.'seur_order_pos` 
 		WHERE `id_cart` = "'.(int)$id_cart.'"
 	');
-	if($result !== FALSE)
+	if ($result !== false)
 	{
-		echo '{"result":"'.Db::getInstance(_PS_USE_SQL_SLAVE_)->execute("
-			UPDATE `"._DB_PREFIX_."seur_order_pos` 
+		echo '{"result":"'.Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+			UPDATE `'._DB_PREFIX_.'seur_order_pos` 
 			SET 
-				`id_seur_pos` = '".(int)Tools::getValue('id_seur_pos')."', 
-				`company` = '".pSQL(Tools::getValue('company'))."', 
-				`address` = '".pSQL(Tools::getValue('address'))."', 
-				`city` = '".pSQL(Tools::getValue('city'))."', 
-				`postal_code` = '".pSQL(Tools::getValue('post_code'))."', 
-				`timetable` = '".pSQL(Tools::getValue('timetable'))."', 
-				`phone` = '".pSQL(Tools::getValue('phone'))."' 
-			WHERE `id_cart` = ".(int)$id_cart
-		).'"}';
+				`id_seur_pos` = "'.(int)Tools::getValue('id_seur_pos').'", 
+				`company` = "'.pSQL(urldecode(Tools::getValue('company'))).'", 
+				`address` = "'.pSQL(urldecode(Tools::getValue('address'))).'", 
+				`city` = "'.pSQL(urldecode(Tools::getValue('city'))).'", 
+				`postal_code` = "'.pSQL(urldecode(Tools::getValue('post_code'))).'", 
+				`timetable` = "'.pSQL(urldecode(Tools::getValue('timetable'))).'", 
+				`phone` = "'.pSQL(urldecode(Tools::getValue('phone'))).'"
+			WHERE `id_cart` = "'.(int)$id_cart.'"
+		').'"}';
 	}
 	else
 	{
-		echo '{"result":"'. Db::getInstance(_PS_USE_SQL_SLAVE_)->execute( "
-			INSERT INTO `"._DB_PREFIX_."seur_order_pos`
+		echo '{"result":"'.Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
+			INSERT INTO `"'._DB_PREFIX_.'seur_order_pos`
 				(`id_cart`, `id_seur_pos`, `company`, `address`, `city`, `postal_code`, `timetable`, `phone`) 
-				VALUES ('".(int)$id_cart."', '".
-						   (int)Tools::getValue('id_seur_pos')."', '".
-						   pSQL(Tools::getValue('company'))."', '".
-						   pSQL(Tools::getValue('address'))."', '".
-						   pSQL(Tools::getValue('city'))."', '".
-						   pSQL(Tools::getValue('post_code'))."', '".
-						   pSQL(Tools::getValue('timetable'))."', '".
-						   pSQL(Tools::getValue('phone'))."')"
-		).'"}';
+			VALUES
+				(
+					"'.(int)$id_cart.'",
+					"'.(int)Tools::getValue('id_seur_pos').'",
+					"'.pSQL(urldecode(Tools::getValue('company'))).'",
+					"'.pSQL(urldecode(Tools::getValue('address'))).'",
+					"'.pSQL(urldecode(Tools::getValue('city'))).'",
+					"'.pSQL(urldecode(Tools::getValue('post_code'))).'",
+					"'.pSQL(urldecode(Tools::getValue('timetable'))).'",
+					"'.pSQL(urldecode(Tools::getValue('phone'))).'"
+				)
+		').'"}';
 	}
 }

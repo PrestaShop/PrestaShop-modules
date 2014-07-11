@@ -43,7 +43,7 @@ $current_expedition_number = preg_replace('#[^0-9]#', '', $current_expedition_nu
 try
 {
 	$sc_options = array(
-		"connection_timeout" => 30 
+		'connection_timeout' => 30
 	);
 
 	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_A'), $sc_options);
@@ -58,14 +58,15 @@ try
 		'in6' => SEUR_WS_PASSWORD,
 		'in7' => 'S'
 	);
-	
+
 	$response = $soap_client->consultaAlbaranes($data_delivery_note);
 	$string_xml = htmlspecialchars_decode((($response->out)));
 	$xml = simplexml_load_string($string_xml);
 
 	if ($xml->DESCRIPCION)
 	{
-		$url = urlencode(Tools::getValue('back')).'&token='.urlencode(Tools::getValue('token')).'&codigo='.urlencode($xml->CODIGO).'&error='.urlencode((string)$xml->DESCRIPCION);
+		$url = urlencode(Tools::getValue('back')).'&token='.urlencode(Tools::getValue('token')).
+			'&codigo='.urlencode($xml->CODIGO).'&error='.urlencode((string)$xml->DESCRIPCION);
 		die(Tools::redirect($url));
 	}
 
@@ -73,12 +74,12 @@ try
 	{
 		$image = strip_tags($string_xml);
 		$image = base64_decode($image);
-		
+
 		header('Content-type: application/octet-stream');
 		header("Content-Disposition: attachment; filename=\"{$current_expedition_number}.png\"\n");
 		ob_end_clean();
 		echo $image;
-		
+
 		file_put_contents('../files/deliveries_notes/'.$current_expedition_number.'.png', $image);
 	}
 }

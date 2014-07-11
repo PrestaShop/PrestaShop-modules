@@ -32,46 +32,43 @@ class Range extends ObjectModel
 {
 	/* countries */
 	protected static $spain;
-	
+
 	protected static $portugal_country;
-	
-	
+
 	/* zones */
 	protected static $provincia;
-	
+
 	protected static $peninsula;
-	
+
 	protected static $portugal;
-	
+
 	protected static $baleares;
-	
+
 	protected static $canarias;
-	
+
 	protected static $ceuta_melilla;
-	
+
 	protected static $array_isos_zones;
-	
-	
+
 	/* carriers */
 	protected static $carrier_seur;
-	
+
 	protected static $carrier_pos;
-	
+
 	protected static $carrier_canarias_48;
-	
+
 	protected static $carrier_canarias_m;
-	
+
 	protected static $array_ids_carriers;
-	
-	
+
 	/* ranges */
-	
+
 	protected static $ranges;
 
 	public static function setRanges()
 	{
 		self::init();
-		
+
 		if (!self::createZones())
 			return false;
 		if (!self::asignCarriersToZones())
@@ -82,14 +79,14 @@ class Range extends ObjectModel
 			return false;
 		if (!self::createDefaultRanges())
 			return false;
-		
+
 		return true;
 	}
 
 	private static function init()
 	{
 		self::$ranges = array(0 => 2, 2 => 3, 3 => 5, 5 => 10, 10 => 11, 11 => 12, 12 => 13, 13 => 14, 14 => 15);
-		
+
 		$historyTable = SeurLib::getSeurCarriers();
 
 		if (!empty($historyTable))
@@ -98,22 +95,22 @@ class Range extends ObjectModel
 			{
 				switch ($historyCarrier['type'])
 				{
-					case 'SEN': 
+					case 'SEN':
 					self::$carrier_seur = new Carrier((int)$historyCarrier['id']);
 					self::$carrier_seur->active = 1;
 					self::$carrier_seur->deleted = 0;
 					break;
-					case 'SEP': 
+					case 'SEP':
 					self::$carrier_pos = new Carrier((int)$historyCarrier['id']);
 					self::$carrier_pos->active = 0;
 					self::$carrier_pos->deleted = 0;
 					break;
-					case 'SCN': 
+					case 'SCN':
 					self::$carrier_canarias_m = new Carrier((int)$historyCarrier['id']);
 					self::$carrier_canarias_m->active = 1;
 					self::$carrier_canarias_m->deleted = 0;
 					break;
-					case 'SCE': 
+					case 'SCE':
 					self::$carrier_canarias_48 = new Carrier((int)$historyCarrier['id']);
 					self::$carrier_canarias_48->active = 1;
 					self::$carrier_canarias_48->deleted = 0;
@@ -123,24 +120,24 @@ class Range extends ObjectModel
 			}
 		}
 	}
-	
+
 	private static function disableCountries()
 	{
 		$spain_ant = new Country(Country::getByIso('ES'));
 		$portugal_ant = new Country(Country::getByIso('PT'));
-		
+
 		if (!Validate::isLoadedObject($spain_ant) || !Validate::isLoadedObject($portugal_ant))
 				return false;
-		
+
 		$spain_ant->active = false;
 		$portugal_ant->active = false;
-		
+
 		if (!$spain_ant->update() || !$portugal_ant->update())
 			return false;
-		
+
 		return true;
 	}
-	
+
 	private static function createZones()
 	{
 		$id_provincia = Zone::getIdByName(SeurLib::$seur_zones[0]);
@@ -215,11 +212,11 @@ class Range extends ObjectModel
 			self::$ceuta_melilla->name = html_entity_decode(SeurLib::$seur_zones[5]);
 		}
 
-		if (!self::$provincia->save() || 
-			!self::$peninsula->save() || 
-			!self::$portugal->save() || 
-			!self::$baleares->save() || 
-			!self::$canarias->save() || 
+		if (!self::$provincia->save() ||
+			!self::$peninsula->save() ||
+			!self::$portugal->save() ||
+			!self::$baleares->save() ||
+			!self::$canarias->save() ||
 			!self::$ceuta_melilla->save())
 			return false;
 
@@ -228,18 +225,18 @@ class Range extends ObjectModel
 
 	private static function asignCarriersToZones()
 	{
-		if (!self::$carrier_seur->addZone(self::$provincia->id) || 
+		if (!self::$carrier_seur->addZone(self::$provincia->id) ||
 			!self::$carrier_seur->addZone(self::$peninsula->id) ||
-			!self::$carrier_seur->addZone(self::$portugal->id) || 
+			!self::$carrier_seur->addZone(self::$portugal->id) ||
 			!self::$carrier_seur->addZone(self::$baleares->id) ||
 			!self::$carrier_seur->addZone(self::$ceuta_melilla->id))
 			return false;
 
 		if (self::$carrier_seur->id != self::$carrier_pos->id)
-			if (!self::$carrier_pos->addZone(self::$provincia->id) || 
+			if (!self::$carrier_pos->addZone(self::$provincia->id) ||
 				!self::$carrier_pos->addZone(self::$peninsula->id) ||
-				!self::$carrier_pos->addZone(self::$portugal->id) || 
-				!self::$carrier_pos->addZone(self::$baleares->id) || 
+				!self::$carrier_pos->addZone(self::$portugal->id) ||
+				!self::$carrier_pos->addZone(self::$baleares->id) ||
 				!self::$carrier_pos->addZone(self::$ceuta_melilla->id))
 				return false;
 
@@ -270,17 +267,17 @@ class Range extends ObjectModel
 			{
 				self::$spain = new Country();
 				self::$spain->name = array (1 => 'Spain', 2 => 'Espagne',3 => 'España');
-				self::$spain->id_zone = self::$peninsula->id; 
+				self::$spain->id_zone = self::$peninsula->id;
 				self::$spain->id_currency = $currency->id;
-				self::$spain->iso_code ='ES';
-				self::$spain->contains_states= true;
-				self::$spain->need_identification_number= true;
+				self::$spain->iso_code = 'ES';
+				self::$spain->contains_states = true;
+				self::$spain->need_identification_number = true;
 
 				if (!self::$spain->save())
 					return false;
 
 				foreach ($modulos as $modulo)
-					$values[] = '('.(int)($modulo->id).', '.(int)self::$spain->id.')';
+					$values[] = '('.(int)$modulo->id.', '.(int)self::$spain->id.')';
 
 				if (!empty($values))
 					Db::getInstance()->Execute('
@@ -298,14 +295,14 @@ class Range extends ObjectModel
 				self::$portugal_country->id_zone = self::$portugal->id;
 				self::$portugal_country->id_currency = $currency->id;
 				self::$portugal_country->iso_code = 'PT';
-				self::$portugal_country->contains_states= false;
-				self::$portugal_country->need_identification_number= false;
+				self::$portugal_country->contains_states = false;
+				self::$portugal_country->need_identification_number = false;
 
 				if (!self::$portugal_country->save())
 					return false;
 
 				foreach ($modulos as $modulo)
-					$values[] = '('.(int)($modulo->id).', '.(int)self::$portugal_country->id.')';
+					$values[] = '('.(int)$modulo->id.', '.(int)self::$portugal_country->id.')';
 
 				if (!empty($values))
 					Db::getInstance()->Execute('
@@ -338,18 +335,18 @@ class Range extends ObjectModel
 	{
 		$ps_state_iso_code_max_length = 7;
 
-		if(version_compare(_PS_VERSION_, "1.5", "<"))
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$ps_state_iso_code_max_length = 4;
 
 		foreach (SeurLib::$baleares_states as $iso_code => $state_name)
 		{
 			if ((Tools::strlen($iso_code) > $ps_state_iso_code_max_length))
 			{
-				$tmpArray = explode("-", $iso_code);
+				$tmpArray = explode('-', $iso_code);
 				$iso_code = $tmpArray[0];
 
-				if(count($tmpArray) > 0)
-					$iso_code = "E".$tmpArray[1];
+				if (count($tmpArray) > 0)
+					$iso_code = 'E'.$tmpArray[1];
 			}
 
 			$exists_id = State::getIdByIso($iso_code);
@@ -381,11 +378,11 @@ class Range extends ObjectModel
 		{
 			if ((Tools::strlen($iso_code) > $ps_state_iso_code_max_length))
 			{
-				$tmpArray = explode("-", $iso_code);
+				$tmpArray = explode('-', $iso_code);
 				$iso_code = $tmpArray[0];
 
-				if(count($tmpArray) > 0)
-					$iso_code = "E".$tmpArray[1];
+				if (count($tmpArray) > 0)
+					$iso_code = 'E'.$tmpArray[1];
 			}
 
 			$exists_id = State::getIdByIso($iso_code);
@@ -413,15 +410,15 @@ class Range extends ObjectModel
 			}
 		}
 
-		foreach (SeurLib::$ceuta_melilla_states as $iso_code => $state_name) 
+		foreach (SeurLib::$ceuta_melilla_states as $iso_code => $state_name)
 		{
 			if ((Tools::strlen($iso_code) > $ps_state_iso_code_max_length))
 			{
-				$tmpArray = explode("-", $iso_code);
+				$tmpArray = explode('-', $iso_code);
 				$iso_code = $tmpArray[0];
 
-				if(count($tmpArray) > 0)
-					$iso_code = "E".$tmpArray[1];
+				if (count($tmpArray) > 0)
+					$iso_code = 'E'.$tmpArray[1];
 			}
 
 			$exists_id = State::getIdByIso($iso_code);
@@ -453,11 +450,11 @@ class Range extends ObjectModel
 		{
 			if ((Tools::strlen($iso_code) > $ps_state_iso_code_max_length))
 			{
-				$tmpArray = explode("-", $iso_code);
+				$tmpArray = explode('-', $iso_code);
 				$iso_code = $tmpArray[0];
 
-				if(count($tmpArray) > 0)
-					$iso_code = "E".$tmpArray[1];
+				if (count($tmpArray) > 0)
+					$iso_code = 'E'.$tmpArray[1];
 			}
 
 			$exists_id = State::getIdByIso($iso_code);
@@ -529,7 +526,7 @@ class Range extends ObjectModel
 				$range_pos->delimiter2 = $to;
 				$range_pos->save();
 				$ids_ranges_pos[$from] = $range_pos->id;
-				
+
 			}
 
 		if (self::$carrier_canarias_48->id != self::$carrier_seur->id &&
@@ -568,13 +565,13 @@ class Range extends ObjectModel
 		self::$carrier_canarias_48->deleteDeliveryPrice($range_table_48);
 		self::$carrier_canarias_m->deleteDeliveryPrice($range_table_m);
 
-		if(version_compare(_PS_VERSION_, "1.5", ">="))
+		if (version_compare(_PS_VERSION_, '1.5', '>='))
 		{
 			$priceListSeur = array();
 			$priceListPos = array();
 			$priceListC_48 = array();
 			$priceListSeurC_M = array();
-			
+
 			foreach (self::$ranges as $from => $to)
 			{
 				/*
@@ -612,7 +609,6 @@ class Range extends ObjectModel
 					'id_zone' => (int)self::$ceuta_melilla->id,
 					'price' => 0);
 
-				
 				/*
 				 * carrier_pos
 				 */
@@ -623,25 +619,25 @@ class Range extends ObjectModel
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
 						'id_carrier' => (int)self::$carrier_pos->id,
 						'id_zone' => (int)self::$provincia->id,
-						'price' => 0); 
+						'price' => 0);
 					$priceListPos[] = array(
 						'id_range_price' =>'NULL',
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
 						'id_carrier' => (int)self::$carrier_pos->id,
 						'id_zone' => (int)self::$peninsula->id,
-						'price' => 0); 
+						'price' => 0);
 					$priceListPos[] = array(
 						'id_range_price' =>'NULL',
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
 						'id_carrier' => (int)self::$carrier_pos->id,
 						'id_zone' => (int)self::$portugal->id,
-						'price' => 0); 
+						'price' => 0);
 					$priceListPos[] = array(
 						'id_range_price' =>'NULL',
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
 						'id_carrier' => (int)self::$carrier_pos->id,
 						'id_zone' => (int)self::$baleares->id,
-						'price' => 0); 
+						'price' => 0);
 					$priceListPos[] = array(
 						'id_range_price' =>'NULL',
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
@@ -649,23 +645,23 @@ class Range extends ObjectModel
 						'id_zone' => (int)self::$ceuta_melilla->id,
 						'price' => 0);
 				}
-				
+
 				/*
 				 * carrier_canarias_48
 				 */
-				
+
 				$priceListC_48[] = array(
 					'id_range_price' =>'NULL',
 					'id_range_weight' => (int)$ids_ranges_seur[$from],
 					'id_carrier' => (int)self::$carrier_canarias_48->id,
 					'id_zone' => (int)self::$canarias->id,
-					'price' => 0); 
+					'price' => 0);
 
 				/*
 				 * carrier_canarias_m
 				 */
 				if (self::$carrier_canarias_48->id != self::$carrier_canarias_m->id)
-				{ 
+				{
 					$priceListSeurC_M[] = array(
 						'id_range_price' =>'NULL',
 						'id_range_weight' => (int)$ids_ranges_seur[$from],
@@ -673,8 +669,7 @@ class Range extends ObjectModel
 						'id_zone' => (int)self::$canarias->id,
 						'price' => 0);
 				}
-				
-				
+
 			}
 			self::$carrier_seur->addDeliveryPrice($priceListSeur);
 
@@ -698,12 +693,12 @@ class Range extends ObjectModel
 				self::$carrier_seur->addDeliveryPrice('(NULL, '.(int)$ids_ranges_seur[$from].', '.(int)self::$carrier_seur->id.', '.(int)self::$portugal->id.', 0)');
 				self::$carrier_seur->addDeliveryPrice('(NULL, '.(int)$ids_ranges_seur[$from].', '.(int)self::$carrier_seur->id.', '.(int)self::$baleares->id.', 0)');
 				self::$carrier_seur->addDeliveryPrice('(NULL, '.(int)$ids_ranges_seur[$from].', '.(int)self::$carrier_seur->id.', '.(int)self::$ceuta_melilla->id.', 0)');
-				
+
 				/*
 				 * self::$carrier_pos
 				 */
 				if (self::$carrier_seur->id != self::$carrier_pos->id)
-				{ 
+				{
 					self::$carrier_pos->addDeliveryPrice('(NULL, '.(int)$ids_ranges_pos[$from].', '.(int)self::$carrier_pos->id.', '.(int)self::$provincia->id.', 0)');
 					self::$carrier_pos->addDeliveryPrice('(NULL, '.(int)$ids_ranges_pos[$from].', '.(int)self::$carrier_pos->id.', '.(int)self::$peninsula->id.', 0)');
 					self::$carrier_pos->addDeliveryPrice('(NULL, '.(int)$ids_ranges_pos[$from].', '.(int)self::$carrier_pos->id.', '.(int)self::$portugal->id.', 0)');
@@ -722,8 +717,8 @@ class Range extends ObjectModel
 					self::$carrier_canarias_m->addDeliveryPrice('(NULL, '.(int)$ids_ranges_canarias_m[$from].', '.(int)self::$carrier_canarias_m->id.', '.(int)self::$canarias->id.', 0)');
 			}
 		}
-		
-		return true; 
+
+		return true;
 	}
 
 }

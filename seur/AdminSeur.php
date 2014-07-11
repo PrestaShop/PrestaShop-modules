@@ -38,18 +38,18 @@ class AdminSeur extends AdminTab {
 	private $ps14_tab = '&tab=AdminSeur';
 	private $current_controller = 'AdminSeur';
 	private $ps14 = true;
-	
+
 	public $module_enabled_and_configured = false;
-	
+
 	public function __construct($ps14 = true)
 	{
 		$this->table = 'seur_configuration';
-	 	$this->className = 'seur_configuration';
-		
+		$this->className = 'seur_configuration';
+
 		$this->lang = true;
-	 	$this->edit = true;
-	 	$this->delete = true;
-		
+		$this->edit = true;
+		$this->delete = true;
+
 		$this->context = Context::getContext();
 		$this->module_instance = Module::getInstanceByName('seur');
 		if (!$ps14)
@@ -58,38 +58,38 @@ class AdminSeur extends AdminTab {
 			$this->ps14_tab = '';
 			$this->current_controller = 'AdminSeur15';
 		}
-		
+
 		if (!isset($this->fields_list))
 			$this->fields_list = array();
-		
+
 		if (Configuration::get('SEUR_Configured'))
 			$this->module_enabled_and_configured = true;
 
 		parent::__construct();
 	}
-	
+
 	public function displayModuleConfigurationWarning()
 	{
 		if ($this->ps14)
 			$this->context->smarty->assign('ps_14', true);
-		
+
 		if (!version_compare(_PS_VERSION_, '1.6', '<'))
 			$this->context->smarty->assign('ps_16', true);
-		
+
 		$this->context->smarty->assign(array(
 			'seur_warning_message' => $this->module_instance->l('Please, first configure your SEUR module as a merchant.', self::FILENAME),
 			'module_instance' => $this->module_instance
 		));
 		$this->content = $this->context->smarty->fetch(_PS_MODULE_DIR_.'seur/views/templates/admin/warning_message.tpl');
 	}
-	
+
 	public function display()
 	{
 		if (!$this->module_enabled_and_configured)
 			$this->displayModuleConfigurationWarning();
 		else
 			$this->initContent();
-		
+
 		echo $this->content;
 	}
 
@@ -104,7 +104,7 @@ class AdminSeur extends AdminTab {
 		elseif (Tools::getValue('createPickup'))
 		{
 			$error_response = Pickup::createPickup();
-			
+
 			if (!empty($error_response))
 				$this->tpl_view_vars = array('datos' => $this->displayFormDeliveries(null, null, $error_response));
 			else
@@ -118,28 +118,28 @@ class AdminSeur extends AdminTab {
 		else
 			$this->tpl_view_vars = array('datos' => $this->displayFormDeliveries());
 	}
-	
+
 	public function getExpeditionData()
 	{
 		$expedition_data = array();
-		
+
 		Tools::safePostVars();
-		
+
 		if (Tools::isSubmit('start_date'))
 			$expedition_data['start_date'] = Tools::getValue('start_date');
-		
+
 		if (Tools::isSubmit('end_date'))
 			$expedition_data['end_date'] = Tools::getValue('end_date');
-		
+
 		if (Tools::isSubmit('expedition_number'))
 			$expedition_data['expedition_number'] = Tools::getValue('expedition_number');
-		
+
 		if (Tools::isSubmit('reference_number'))
 			$expedition_data['reference_number'] = sprintf('%06d', Tools::getValue('reference_number'));
-		
+
 		if (Tools::isSubmit('order_state'))
 			$expedition_data['order_state'] = Tools::getValue('order_state');
-		
+
 		return $expedition_data;
 	}
 
@@ -147,7 +147,7 @@ class AdminSeur extends AdminTab {
 	{
 		$token = Tools::getValue('token');
 		$back = Tools::safeOutput($_SERVER['REQUEST_URI']);
-		
+
 		$seur_order_states = array(
 			'' => $this->module_instance->l('All', self::FILENAME),
 			'1' => $this->module_instance->l('Delivered', self::FILENAME),
@@ -158,9 +158,9 @@ class AdminSeur extends AdminTab {
 			'6' => $this->module_instance->l('Sinister', self::FILENAME),
 			'7' => $this->module_instance->l('Canceled', self::FILENAME)
 		);
-		
+
 		Tools::safePostVars();
-		
+
 		if (empty($_POST))
 		{
 			$delivery_valuend_data = date('d-m-Y');
@@ -172,23 +172,23 @@ class AdminSeur extends AdminTab {
 			$start_data = Tools::getValue('start_date');
 			$delivery_valuend_data = Tools::getValue('end_date');
 		}
-		
+
 		if ($response == null && $detail == null)
 			$tab_view = 'deliveries';
 		elseif ($response == true && $detail == null)
 			$tab_view = 'deliveries';
 		elseif ($response == true && $detail == true)
 			$tab_view = 'deliveries';
-		
+
 		$ps_version = 'ps'.(version_compare(_PS_VERSION_, '1.5', '>=') > 1.4 ? '5' : '4');
 		$img_dir = __PS_BASE_URI__.'modules/seur/img/';
-		
+
 		if (!empty($error))
 			$this->content .= $this->module_instance->displayError($error);
-		
+
 		if (Tools::getValue('error'))
 			$this->content .= $this->module_instance->displayError(Tools::getValue('codigo').' => '.Tools::getValue('error'));
-		
+
 		$this->content .= "<div id='contenttab'>
 			<fieldset>
 				<legend>
@@ -197,8 +197,8 @@ class AdminSeur extends AdminTab {
 				<div id='seur_module' class='$ps_version'>
 					<ul class='configuration_menu'>
 						<li class='button btnTab".($tab_view == 'deliveries' ? ' active' : '' )."' tab='deliveries'>
-							<img src='$img_dir/config.png' alt=".$this->module_instance->l('Shipments', self::FILENAME)." title=".$this->module_instance->l('Shipments', self::FILENAME)." />
-							".$this->module_instance->l('Shipments', self::FILENAME)."
+							<img src='$img_dir/config.png' alt=".$this->module_instance->l('Shipments', self::FILENAME).' title='.$this->module_instance->l('Shipments', self::FILENAME).' />
+							'.$this->module_instance->l('Shipments', self::FILENAME)."
 						</li>
 						<li class='button btnTab".($tab_view == 'packing_list' ? ' active' : '' )."' tab='packing_list'>
 							<img src='$img_dir/manifest.png' alt='".$this->module_instance->l('Packing List', self::FILENAME)."' title='".$this->module_instance->l('Packing List', self::FILENAME)."' />
@@ -211,14 +211,14 @@ class AdminSeur extends AdminTab {
 					</ul>
 					<ul class='configuration_tabs'>
 						<li id='deliveries'".($tab_view == 'deliveries' ? ' class="default"' : '').">
-							<form action='index.php?controller=".$this->current_controller."&submitFilter=1&token=".$token.$this->ps14_tab."' method='post'>
+							<form action='index.php?controller=".$this->current_controller.'&submitFilter=1&token='.$token.$this->ps14_tab."' method='post'>
 								<table id='deliveriesTable' class='table' cellpadding='0' cellspacing='0'>
 									<thead>
 										<tr> 
-											<th>".$this->module_instance->l('Reference number', self::FILENAME)."</th>
-											<th>".$this->module_instance->l('Expedition number', self::FILENAME)."</th>
-											<th>".$this->module_instance->l('Start date', self::FILENAME)."</th>
-											<th>".$this->module_instance->l('End date', self::FILENAME)."</th>
+											<th>".$this->module_instance->l('Reference number', self::FILENAME).'</th>
+											<th>'.$this->module_instance->l('Expedition number', self::FILENAME).'</th>
+											<th>'.$this->module_instance->l('Start date', self::FILENAME).'</th>
+											<th>'.$this->module_instance->l('End date', self::FILENAME)."</th>
 											<th colspan='5'>".$this->module_instance->l('Estate', self::FILENAME)."</th>
 										</tr>
 										<tr class='filtros'>
@@ -240,7 +240,7 @@ class AdminSeur extends AdminTab {
 		if (($response == true) && ($detail == null))
 		{
 			$string_xml = htmlspecialchars_decode($response->out);
-			$string_xml = str_replace("&", "&amp; ", $string_xml);
+			$string_xml = str_replace('&', '&amp; ', $string_xml);
 			$xml = simplexml_load_string($string_xml);
 
 			if ($xml->DESCRIPCION)
@@ -250,8 +250,8 @@ class AdminSeur extends AdminTab {
 				if ($xml->attributes()->NUM[0] != 0)
 				{
 					$deliveries_data = array();
-					
-					foreach ( $xml->EXPEDICION as $delivery)
+
+					foreach ($xml->EXPEDICION as $delivery)
 					{
 						$headers = array(
 							'order' => $this->module_instance->l('Order/Reference', self::FILENAME),
@@ -262,13 +262,13 @@ class AdminSeur extends AdminTab {
 							'delivery' => $this->module_instance->l('Delivery', self::FILENAME),
 							'details' => $this->module_instance->l('Details', self::FILENAME)
 							);
-						
+
 						$headersOcultas = array('EXPEDICION','DESTINA_PAIS' => (string)$delivery->DESTINA_PAIS);
-						
+
 						$deliveries_data[] = array(
 							'Pedido/Referencia' => (string)$delivery->REMITE_REF,
 							'Expedicion' => (string)$delivery->EXPEDICION_NUM,
-							'Nombre' => (string)$delivery->DESTINA_NOMBRE,  
+							'Nombre' => (string)$delivery->DESTINA_NOMBRE,
 							'Descripcion' => (string)$delivery->DESCRIPCION_PARA_CLIENTE,
 							'date' => (string)$delivery->FECHA_CAPTURA,
 							'EXPEDICION' => (string)$delivery->EXPEDICION_NUM,
@@ -278,55 +278,55 @@ class AdminSeur extends AdminTab {
 
 					$this->content .= "<tbody>
 						<tr class='bold'>";
-					
+
 					foreach ($headers as $key => $header)
 						$this->content .= '<th '.($key == 'delivery' || $key == 'details' ? 'colspan="2"' : '' ).'>'.$header.'</th>';
-					
+
 					$this->content .= '</tr>';
 					$line = 1;
 					$countryTo = '';
-					
-					foreach ( $deliveries_data as $delivery_data )
+
+					foreach ($deliveries_data as $delivery_data)
 					{
 						$this->content .= '<tr '.(($line % 2 != 0) ? 'class="alternate"' : '').'>';
 						$delivered = false;
-						
-						foreach ( $delivery_data as $key => $delivery_value )
-						{
-							if( $key == 'Expedicion') 
-								$delivery_number = $delivery_value;
-							
-							$this->content .= '<td class='.$key.' '.($key =='EXPEDICION' || $key =='Detalles' ? 'colspan="2"' : '' ).'>'.( !in_array($key, $headersOcultas) ? $delivery_value : '' );
 
-							if( $key == 'Descripcion' && $delivery_value == 'ENTREGA EFECTUADA' ) 
-								$delivered = TRUE;
-							
-							if( $key == 'EXPEDICION' && ($countryTo == 'ES' || $countryTo == '-' || $countryTo == '') && $delivered )
+						foreach ($delivery_data as $key => $delivery_value)
+						{
+							if ($key == 'Expedicion')
+								$delivery_number = $delivery_value;
+
+							$this->content .= '<td class='.$key.' '.($key == 'EXPEDICION' || $key == 'Detalles' ? 'colspan="2"' : '' ).'>'.( !in_array($key, $headersOcultas) ? $delivery_value : '' );
+
+							if ($key == 'Descripcion' && $delivery_value == 'ENTREGA EFECTUADA')
+								$delivered = true;
+
+							if ($key == 'EXPEDICION' && ($countryTo == 'ES' || $countryTo == '-' || $countryTo == '') && $delivered)
 							{
 								$this->content .= '<a href="../modules/seur/ajax/createDeliveryNote.php?back='.$back.'&token='.Tools::getValue('token').'&expedition_number='.$delivery_value.'&token='.$token.'&id_employee='.(int)$this->context->cookie->id_employee.'">
 										<img src="'.$img_dir.'/png_ico.png" alt="'.$this->module_instance->l('Delivery', self::FILENAME).'" title="'.$this->module_instance->l('Delivery', self::FILENAME).'" />
 									</a>
 									<!--a class="verDetalles" href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&verDetalle=1&token='.$token.'&expedition_number='.$delivery_value.'&id_employee='.(int)$this->context->cookie->id_employee.'"-->';
 							}
-									
-							if( $key == 'Detalles')
+
+							if ($key == 'Detalles')
 								$this->content .= '<a class="verDetalles" href="'.__PS_BASE_URI__.'modules/seur/ajax/getExpeditionAjax.php?expedition_number='.$delivery_number.'&token='.$token.'&id_employee='.(int)$this->context->cookie->id_employee.'">
 										<img src="'.$img_dir.'/details.png" alt="'.$this->module_instance->l('See details', self::FILENAME).'" title="'.$this->module_instance->l('See details', self::FILENAME).'" />
 									</a>';
 							$this->content .= '</td>';
 
-					    }
-					   $this->content .= '</tr>';
-					   $line++;
+						}
+						$this->content .= '</tr>';
+						$line++;
 					}
 				}
 				else
 					$this->content .= $this->module_instance->displayError($this->module_instance->l('No results.', self::FILENAME));
-				
+
 				$this->content .= ' </tbody>';
 			}
 		}
-		
+
 		$this->content .= '</table>
 				</form>
 			</li>
@@ -354,14 +354,14 @@ class AdminSeur extends AdminTab {
 
 		$pickup_data = Pickup::getLastPickup();
 		$steady_pickup = false;
-		
+
 		if ($pickup_data)
-			$pickup_date = explode(' ',$pickup_data['date']);
-		
+			$pickup_date = explode(' ', $pickup_data['date']);
+
 		if (SeurLib::getConfigurationField('pickup') == 1)
 			$steady_pickup = true;
-		
-		if ( !empty($pickup_data) && strtotime( date('Y-m-d') ) == strtotime($pickup_date[0]) && !$steady_pickup)
+
+		if (!empty($pickup_data) && strtotime(date('Y-m-d')) == strtotime($pickup_date[0]) && !$steady_pickup)
 		{
 			$this->content .= '<tr>
 						<th>'.$this->module_instance->l('Localizer', self::FILENAME).'</th>
@@ -375,7 +375,7 @@ class AdminSeur extends AdminTab {
 					</tr>
 				</tbody>';
 		}
-		elseif ( (int)date('H') < (int)(14) && !$steady_pickup)
+		elseif ((int)date('H') < 14 && !$steady_pickup)
 		{
 			$this->content .= '<tr>
 					<td class="createpickup">
@@ -389,13 +389,13 @@ class AdminSeur extends AdminTab {
 					<th>'.$this->module_instance->l('Fixed pickup.', self::FILENAME).'</th>
 					</tr>';
 		}
-		elseif ( (int)date('H') >= (int)(14) )
+		elseif ((int)date('H') >= 14)
 		{
 			$this->content .= '<tbody>
 						<tr>
 							<td>
 							<p><img src="../img/admin/help2.png" /> 
-							   '.$this->module_instance->l('14H is past, to create a pickup please contact SEUR on 902101010 or via ', self::FILENAME). '
+							   '.$this->module_instance->l('14H is past, to create a pickup please contact SEUR on 902101010 or via ', self::FILENAME).'
 							</p>
 							<p><a href="http://www.seur.com" target="_blank">www.seur.com</a></p>
 							<p>'.$this->module_instance->l('Thank you.', self::FILENAME).'</p>
@@ -403,7 +403,7 @@ class AdminSeur extends AdminTab {
 						</tr>
 						</tbody>';
 		}
-		
+
 		$this->content .= '</thead>
 					</table>
 				</li>

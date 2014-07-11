@@ -83,12 +83,12 @@ class SeurLib
 
 	public static function displayErrors($error = null)
 	{
-		if(!empty($error))
+		if (!empty($error))
 		{
-			if(version_compare(_PS_VERSION_, "1.5", ">="))
-				echo('<div class="error"><p>'.$error.'</p></div>');
+			if (version_compare(_PS_VERSION_, '1.5', '>='))
+				echo '<div class="error"><p>'.$error.'</p></div>';
 			else
-				echo('<div class="error"><p><img src="../img/admin/warning.gif" border="0" alt="Error Icon" /> '.$error.'</p></div>'); // echo ??
+				echo '<div class="error"><p><img src="../img/admin/warning.gif" border="0" alt="Error Icon" /> '.$error.'</p></div>'; // @TODO echo ??
 		}
 	}
 
@@ -110,7 +110,7 @@ class SeurLib
 		);
 	}
 
-	public static function setConfigurationField($campo,$valor)
+	public static function setConfigurationField($campo, $valor)
 	{
 		return Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'seur_configuration`
@@ -146,7 +146,7 @@ class SeurLib
 		);
 	}
 
-	public static function setMerchantField($campo,$valor)
+	public static function setMerchantField($campo, $valor)
 	{
 		return Db::getInstance()->Execute('
 			UPDATE `'._DB_PREFIX_.'seur_merchant`
@@ -157,7 +157,7 @@ class SeurLib
 
 	public static function isPricesConfigured()
 	{
-		return  Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT( * )
 			FROM  `'._DB_PREFIX_.'delivery`
 			WHERE  `price` != 0
@@ -171,7 +171,7 @@ class SeurLib
 
 	public static function getSeurCarrier($type)
 	{
-		return  Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `id_seur_carrier` AS `id`, `type`, `active`
 			FROM `'._DB_PREFIX_.'seur_history`
 			WHERE `active` = 1 AND `type` = "'.pSQL($type).'"'
@@ -180,7 +180,7 @@ class SeurLib
 
 	public static function getSeurCarriers($active = true)
 	{
-		return  Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT `id_seur_carrier` AS `id`, `type`, `active`
 			FROM `'._DB_PREFIX_.'seur_history`
 			'.($active ? 'WHERE `active` = 1' : '')
@@ -212,7 +212,7 @@ class SeurLib
 		{
 			foreach ($new_carriers_seur as $key_new => $new_carrier_seur)
 			{
-				if ( ($new_carrier_seur['id'] == $old_carrier['id']) && ($new_carrier_seur['type'] == $old_carrier['type']) )
+				if (($new_carrier_seur['id'] == $old_carrier['id']) && ($new_carrier_seur['type'] == $old_carrier['type']))
 				{
 					if ($old_carrier['active'] == 0)
 					{
@@ -231,18 +231,18 @@ class SeurLib
 			$sql_disable .= '`type` ="'.pSQL($new_carrier_seur['type']).'" OR ';
 		}
 
-		$sql_disable= trim($sql_disable, 'OR ');
-		$sql_disable .=';';
+		$sql_disable = trim($sql_disable, 'OR ');
+		$sql_disable .= ';';
 
-		$sql_enable= trim($sql_enable, 'OR ');
-		$sql_enable .=';';
+		$sql_enable = trim($sql_enable, 'OR ');
+		$sql_enable .= ';';
 
 		if (!empty($new_carriers_seur))
 		{
 			Db::getInstance()->Execute($sql_disable);
 
 			$sql_new_carriers = trim($sql_new_carriers, ',');
-			$sql_new_carriers .=';';
+			$sql_new_carriers .= ';';
 			Db::getInstance()->Execute($sql_new_carriers);
 		}
 
@@ -256,14 +256,14 @@ class SeurLib
 
 	public static function getSeurOrder($id_order)
 	{
-		return  Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'seur_order`
 			WHERE `id_order` ='.(int)$id_order
 			);
 	}
 
-	public static function setSeurOrder($id_order,$bultos,$peso,$imprimido = false)
+	public static function setSeurOrder($id_order, $bultos, $peso, $imprimido = false)
 	{
 		$exists = self::getSeurOrder($id_order);
 
@@ -289,39 +289,39 @@ class SeurLib
 		{
 			if ($module->tab == 'payments_gateways')
 			{
-				if($module->id)
+				if ($module->id)
 				{
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 						$module->country = array();
 
 					$countries = DB::getInstance()->ExecuteS('
 						SELECT `id_country`
 						FROM `'._DB_PREFIX_.'module_country`
-						WHERE `id_module` = '.(int)($module->id)
+						WHERE `id_module` = '.(int)$module->id
 					);
 
 					foreach ($countries as $country)
 						$module->country[] = (int)$country['id_country'];
 
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 						$module->currency = array();
 
 					$currencies = DB::getInstance()->ExecuteS('
 						SELECT `id_currency`
 						FROM `'._DB_PREFIX_.'module_currency`
-						WHERE `id_module` = "'.(int)($module->id).'"
+						WHERE `id_module` = "'.(int)$module->id.'"
 					');
 
 					foreach ($currencies as $currency)
 						$module->currency[] = (int)$currency['id_currency'];
 
-					if(!get_class($module) == 'SimpleXMLElement')
+					if (!get_class($module) == 'SimpleXMLElement')
 
 						$module->group = array();
 					$groups = DB::getInstance()->ExecuteS('
 						SELECT `id_group`
 						FROM `'._DB_PREFIX_.'module_group`
-						WHERE `id_module` = "'.(int)($module->id).'"
+						WHERE `id_module` = "'.(int)$module->id.'"
 					');
 
 					foreach ($groups as $group)
@@ -330,9 +330,9 @@ class SeurLib
 				}
 				else
 				{
-					$module->country = NULL;
-					$module->currency = NULL;
-					$module->group = NULL;
+					$module->country = null;
+					$module->currency = null;
+					$module->group = null;
 				}
 				$paymentModules[] = $module;
 			}

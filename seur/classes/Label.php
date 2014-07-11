@@ -41,9 +41,9 @@ class Label
 				$module_instance = Module::getInstanceByName('seur');
 				return SeurLib::displayErrors($label_data['pedido'].' '.$module_instance->l('could not be used as file name', 'Label'));
 			}
-			
+
 			$sc_options = array(
-				"connection_timeout" => 30
+				'connection_timeout' => 30
 			);
 
 			$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_ET'), $sc_options);
@@ -58,7 +58,8 @@ class Label
 			$claveReembolso = '';
 			$valorReembolso = '';
 
-			if (SeurLib::getConfigurationField('international_orders')== 1 && ($label_data['iso'] != 'ES' && $label_data['iso'] != 'PT' && $label_data['iso'] != 'AD'))
+			if (SeurLib::getConfigurationField('international_orders') == 1 && ($label_data['iso'] != 'ES' &&
+				$label_data['iso'] != 'PT' && $label_data['iso'] != 'AD'))
 			{
 				$servicio = 77;
 				$producto = 70;
@@ -89,7 +90,7 @@ class Label
 			$cont = 0;
 			$xml = '<?xml version="1.0" encoding="ISO-8859-1"?><root><exp>';
 
-			for ($i = 0; $i <= (float)$total_packages-1; $i++)
+			for ($i = 0; $i <= (float)$total_packages - 1; $i++)
 			{
 				$cont++;
 
@@ -109,7 +110,7 @@ class Label
 							<pesoBulto>'.pSQL($pesoBulto).'</pesoBulto>
 							<observaciones>'.pSQL($label_data['info_adicional']).'</observaciones>
 							<referencia_expedicion>'.pSQL($label_data['pedido']).'</referencia_expedicion>
-							<ref_bulto>'.pSQL($label_data['pedido'].sprintf('%03d', (string)((int)$i+1))).'</ref_bulto>
+							<ref_bulto>'.pSQL($label_data['pedido'].sprintf('%03d', (int)$i + 1)).'</ref_bulto>
 							<clavePortes>F</clavePortes>
 							<clavePod></clavePod>
 							<claveReembolso>'.pSQL($claveReembolso).'</claveReembolso>
@@ -131,7 +132,7 @@ class Label
 				$xml .= '   <pais_consignatario>'.pSQL($label_data['iso']).'</pais_consignatario>
 							<codigo_pais_origen>'.pSQL($label_data['iso_merchant']).'</codigo_pais_origen>
 							<email_consignatario>'.pSQL($label_data['email_consignatario']).'</email_consignatario>
-							<sms_consignatario>'.((int)$notification ? pSQL($label_data['movil']) : "" ).'</sms_consignatario>
+							<sms_consignatario>'.((int)$notification ? pSQL($label_data['movil']) : '' ).'</sms_consignatario>
 							<test_sms>'.((int)$notification ? 'S' : 'N').'</test_sms>
 							<test_preaviso>'.((int)$advice_checkbox ? 'S' : 'N').'</test_preaviso>
 							<test_reparto>'.((int)$distribution_checkbox ? 'S' : 'N').'</test_reparto>
@@ -154,10 +155,10 @@ class Label
 
 			if (!empty($pickup_data))
 			{
-				$datepickup = explode(' ',$pickup_data['date']);
+				$datepickup = explode(' ', $pickup_data['date']);
 				$datepickup = $datepickup[0];
 
-				if ( strtotime( date('Y-m-d') ) != strtotime($datepickup))
+				if (strtotime( date('Y-m-d')) != strtotime($datepickup))
 					$make_pickup = true;
 
 				if (SeurLib::getConfigurationField('pickup') == 0)
@@ -180,7 +181,7 @@ class Label
 
 				if ($response->out == 'ERROR')
 					return SeurLib::displayErrors ((string)$response->out);
-				
+
 				if ($response->out->mensaje != 'OK')
 					return SeurLib::displayErrors ((string)$response->out->mensaje);
 				else
@@ -189,14 +190,14 @@ class Label
 
 					if (is_writable(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'))
 						file_put_contents(_PS_MODULE_DIR_.'seur/files/deliveries_labels/'.$label_name.'.pdf', $pdf);
-					
+
 					SeurLib::setSeurOrder($label_data['pedido'], $total_packages, $total_weight, 'PDF');
 
 					if ($make_pickup && $auto)
 						Pickup::createPickup();
 				}
 			}
-			elseif($tipo == 'zebra')
+			elseif ($tipo == 'zebra')
 			{
 				$data = array(
 					'in0' => pSQL($merchant_data['user']),

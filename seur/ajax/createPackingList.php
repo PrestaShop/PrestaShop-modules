@@ -48,10 +48,10 @@ try
 	$sc_options = array(
 		'connection_timeout' => 30
 	);
-	
+
 	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_M'), $sc_options);
 	$merchant_data = SeurLib::getMerchantData();
-	
+
 	$data = array(
 		'in0' => $merchant_data['nif_dni'],
 		'in1' => $merchant_data['franchise'],

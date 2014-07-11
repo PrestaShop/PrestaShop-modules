@@ -31,7 +31,7 @@ if (!defined('_PS_VERSION_'))
 class User
 {
 	const FILENAME = 'User';
-	
+
 	public static function newUser()
 	{
 		try
@@ -78,13 +78,13 @@ class User
 			$string_xml = htmlspecialchars_decode((($response->out)));
 			$xml = simplexml_load_string($string_xml);
 
-			if(!empty($xml->REG1->DESCRIPCION_ERROR))
+			if (!empty($xml->REG1->DESCRIPCION_ERROR))
 			{
 				$user = Tools::isSubmit('user_cfg') ? Tools::getValue('user_cfg') : '';
 				$pass = Tools::isSubmit('pass_cfg') ? Tools::getValue('pass_cfg') : '';
 				$ccc = Tools::isSubmit('ccc_cfg') ? Tools::getValue('ccc_cfg') : '';
 				$cit = Tools::isSubmit('ci') ? Tools::getValue('ci') : '';
-				if(!SeurLib::setMerchantField('user', $user) ||
+				if (!SeurLib::setMerchantField('user', $user) ||
 					!SeurLib::setMerchantField('pass', $pass) ||
 					!SeurLib::setMerchantField('ccc', $ccc ||
 					!SeurLib::setMerchantField('cit', $cit)))
@@ -97,11 +97,10 @@ class User
 			$ccc = (string)$xml->REG1->COD_CLIENTE_CCC;
 			$cit = (int)$xml->REG1->COD_CLIENTE_CIT;
 
-			if((Tools::strlen($user) > 0)
+			if ((Tools::strlen($user) > 0)
 				&& (Tools::strlen($pass) > 0)
 				&& (Tools::strlen($ccc) > 0)
-				&& ($cit > 0)
-			)
+				&& ($cit > 0))
 				$success = true;
 
 			if ($success == false)
@@ -110,11 +109,11 @@ class User
 		catch (PrestaShopException $e)
 		{
 			$e->displayMessage();
-		} 
+		}
 
 		$ccc = explode('-', $ccc);
 
-		if(!SeurLib::setMerchantField('user', $user) ||
+		if (!SeurLib::setMerchantField('user', $user) ||
 			!SeurLib::setMerchantField('pass', $pass) ||
 			!SeurLib::setMerchantField('ccc', $ccc[0]) ||
 			!SeurLib::setMerchantField('cit', $cit))
@@ -148,8 +147,9 @@ class User
 		$emailTemplate = _PS_MODULE_DIR_.'/seur/mails/';
 		$email = 'operaciones.ggcc@seur.net';
 		$id_email_language = self::getIdEmailLanguage();
-		
-		if ($id_email_language && !Mail::Send((int)$id_email_language, 'seur', $emailSubject, $emailData, $email, null, null, null, null, null, $emailTemplate))
+
+		if ($id_email_language && !Mail::Send((int)$id_email_language, 'seur',
+			$emailSubject, $emailData, $email, null, null, null, null, null, $emailTemplate))
 		{
 			$module_instance = Module::getInstanceByName('seur');
 			Context::getContext()->smarty->assign(array(
@@ -157,10 +157,10 @@ class User
 				'module_instance' => $module_instance
 			));
 		}
-		
+
 		return 1;
 	}
-	
+
 	public static function getIdEmailLanguage()
 	{
 		$available_iso_codes = self::getAvailableEmailLanguagesIsoCodes();
@@ -168,44 +168,44 @@ class User
 		$id_admin_language = (int)Context::getContext()->language->id;
 		$id_default_language = (int)Configuration::get('PS_LANG_DEFAULT');
 		$id_email_language = 0;
-		
+
 		if (in_array($id_admin_language, $available_language_ids))
 			$id_email_language = (int)$id_admin_language;
 		elseif (in_array($id_default_language, $available_language_ids))
 			$id_email_language = (int)$id_default_language;
-		
+
 		return $id_email_language;
 	}
-	
+
 	private static function getAvailableEmailLanguagesIsoCodes()
 	{
 		$path = _PS_MODULE_DIR_.'seur/mails';
 		$folders = scandir($path);
 		$iso_codes = array();
-		
+
 		foreach ($folders as $folder)
 		{
-			if ($folder === '.' or $folder === '..')
+			if ($folder === '.' || $folder === '..')
 				continue;
-			
-			if (is_dir($path . '/' . $folder))
+
+			if (is_dir($path.'/'.$folder))
 				$iso_codes[] = $folder;
 		}
-		
+
 		return $iso_codes;
 	}
-	
+
 	private static function getLanguagesIdsByIsoCodes(array $available_iso_codes)
 	{
 		$language_ids = array();
-		
+
 		if (empty($available_iso_codes))
 			return array();
-		
+
 		foreach ($available_iso_codes as $iso_code)
 			if ($language_id = Language::getIdByIso($iso_code))
 				$language_ids[] = (int)$language_id;
-		
+
 		return $language_ids;
 	}
 }

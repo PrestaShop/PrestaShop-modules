@@ -37,7 +37,7 @@ var carrierTable;
 var carrierTableInput;
 var carrierTableInputContainer;
 
-var currentCarrierId
+var currentCarrierId;
 var map;
 
 var id_seur_RESTO_array;

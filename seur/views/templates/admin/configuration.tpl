@@ -181,9 +181,9 @@
 				</li>
 
 				{if $configuration_table.international_orders eq 0}
-					<li id="message_international_orders" class="invisible warn">
+					<li id="message_international_orders" class="invisible warn alertaconfiguracion">
 				{else}
-					<li id="message_international_orders" class="warn">
+					<li id="message_international_orders" class="warn alertaconfiguracion">
 				{/if}
 					{l s='International shipments are to Europe excluding Spain, Portugal and Andorra' mod='seur'}
 				</li>
@@ -231,7 +231,7 @@
 					<label>{l s='By price' mod='seur'}</label>
 					<input type="text" name="precio_gratis" value="{$seur_free_price|escape:'htmlall':'UTF-8'}" size="3"/> {$currency->sign|escape:'htmlall':'UTF-8'}
 				</li>
-				<li id="msgenviosgratis" class="warn">
+				<li id="msgenviosgratis" class="warn alertaconfiguracion">
 					{l s='Put 0 value to disable.' mod='seur'}
 				</li>
 
@@ -516,7 +516,7 @@
 	<li id="webservices">
 		<span><strong>{l s='SOAP Web Service URLs' mod='seur'}</strong></span>
 		<br/><br/>
-		<div class="warn">
+		<div class="warn alertaconfiguracion">
 		   {l s='Caution: If you change this setting the module may stop working. Only changed if SEUR tell you.' mod='seur'}
 		</div>
 		<br /><br/>
