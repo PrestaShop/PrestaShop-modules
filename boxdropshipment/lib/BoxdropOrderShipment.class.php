@@ -209,12 +209,11 @@
 		 */
 		public function setupShipmentMode()
 		{
-			$economy_id = BoxdropHelper::getCarrierId(BoxdropShipment::CONF_MODE_DIRECT_ECONOMY);
-			$express_id = BoxdropHelper::getCarrierId(BoxdropShipment::CONF_MODE_DIRECT_EXPRESS);
-			if ($this->order_carrier->id_carrier == $economy_id)
-				$mode = BoxdropShipment::SHIP_MODE_ECONOMY;
-			elseif ($this->order_carrier->id_carrier == $express_id)
+			$carrier = new Carrier($this->order_carrier->id_carrier);
+			if (strstr($carrier->name, 'xpress') !== false)
 				$mode = BoxdropShipment::SHIP_MODE_EXPRESS;
+			else 
+				$mode = BoxdropShipment::SHIP_MODE_ECONOMY;
 			$this->shipment_mode = $mode;
 			$this->save();
 		}

@@ -139,7 +139,7 @@
 				return false;
 			}
 
-			if (!$this->registerHook('actionValidateOrder') || !$this->registerHook('displayCarrierList'))
+			if (!$this->registerHook('actionValidateOrder') || !$this->registerHook('displayCarrierList') || !$this->registerHook('updateCarrier'))
 			{
 				$this->_errors[] = $this->l('Could not register hooks');
 				return false;
@@ -181,7 +181,7 @@
 				return false;
 			}
 
-			if (!$this->unregisterHook('actionValidateOrder') || !$this->unregisterHook('displayCarrierList'))
+			if (!$this->unregisterHook('actionValidateOrder') || !$this->unregisterHook('displayCarrierList') || !$this->unregisterHook('updateCarrier'))
 			{
 				$this->_errors[] = $this->l('Could not delete hooks');
 				return false;
@@ -510,5 +510,22 @@
 				}
 			}
 			return true;
+		}
+
+
+		/**
+		 * Updates carrier IDs upon change
+		 * 
+		 * @author sweber <sw@boxdrop.com>
+		 * @param  array  $params
+		 * @return void
+		 */
+		public function hookActionCarrierUpdate($params)
+		{
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY))
+				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY, (int)$params['carrier']->id);
+
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS))
+				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS, (int)$params['carrier']->id);
 		}
 	}
