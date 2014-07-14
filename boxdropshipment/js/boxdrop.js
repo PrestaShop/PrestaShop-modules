@@ -71,6 +71,7 @@ var bShipment = {
                '<div class="bshp-products"></div>'+
                '<div class="bshp-clr"></div>'+
                '<input type="button" class="button bshp-fr btn btn-default" name="submit" value="'+bTranslation.btnCreateShipment+'" />'+
+               '<div class="clear"></div>'+
              '</div>'+
              '<div class="clear"></div>'+
            '</form>';
@@ -243,7 +244,6 @@ var bShipment = {
   updateParcelWrapperHeight: function() {
 
     min_height = Math.max(this.parcel_wrapper.height(), this.product_wrapper.parent().height());
-
     boxdrop.modalBox.box.height(min_height);
     boxdrop.modalBox.align();
   },
@@ -460,6 +460,7 @@ var bShipmentOrderAdminDetail = {
     boxdrop.modalBox.show();
     boxdrop.modalBox.align();
     boxdrop.shipment.updateParcelWrapperHeight();
+    window.setTimeout(function() {boxdrop.shipment.updateParcelWrapperHeight()}, 200);
   }
 };
 
