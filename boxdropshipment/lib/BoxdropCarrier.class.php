@@ -411,32 +411,31 @@
 		 */
 		public static function getUsedCarrierIds($type = self::TYPE_ALL, $with_current = true)
 		{
-
 			$ids = array();
 
-			if ($type & self::TYPE_ECONOMY == self::TYPE_ECONOMY) {
-				
+			if ($type & self::TYPE_ECONOMY == self::TYPE_ECONOMY)
+			{
 				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_ECONOMY));
 				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_ECONOMY));
 				$ids = array_merge($ids, $direct_ids);
 				$ids = array_merge($ids, $dropoff_ids);
 
-				if ($with_current) {
-
+				if ($with_current)
+				{
 					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_ECONOMY));
 					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_ECONOMY));
 				}
 			}
 
-			if ($type & self::TYPE_ECONOMY == self::TYPE_EXPRESS) {
-
+			if ($type & self::TYPE_ECONOMY == self::TYPE_EXPRESS)
+			{
 				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_EXPRESS));
 				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_EXPRESS));
 				$ids = array_merge($ids, $direct_ids);
 				$ids = array_merge($ids, $dropoff_ids);
 
-				if ($with_current) {
-
+				if ($with_current)
+				{
 					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_EXPRESS));
 					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_EXPRESS));
 				}
@@ -458,7 +457,6 @@
 		{
 			$old_ids = BoxdropHelper::explodeString(';', Configuration::get($type));
 			array_push($old_ids, $id);
-
 			Configuration::updateValue($type, implode(';', $old_ids));
 		}
 	}

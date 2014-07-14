@@ -242,7 +242,7 @@ var bShipment = {
    */
   updateParcelWrapperHeight: function() {
 
-    min_height = Math.max(this.parcel_wrapper.height(), this.product_wrapper.height());
+    min_height = Math.max(this.parcel_wrapper.height(), this.product_wrapper.parent().height());
 
     boxdrop.modalBox.box.height(min_height);
     boxdrop.modalBox.align();

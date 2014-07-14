@@ -529,14 +529,14 @@
 		 */
 		public function hookActionCarrierUpdate($params)
 		{
-			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY)) {
-				
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY))
+			{
 				BoxdropCarrier::updateUsedCarriers(self::OLD_CARRIER_IDS_DIRECT_ECONOMY, (int)$params['id_carrier']);
 				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY, (int)$params['carrier']->id);
 			}
 
-			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS)) {
-				
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS))
+			{
 				BoxdropCarrier::updateUsedCarriers(self::OLD_CARRIER_IDS_DIRECT_EXPRESS, (int)$params['id_carrier']);
 				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS, (int)$params['carrier']->id);
 			}
