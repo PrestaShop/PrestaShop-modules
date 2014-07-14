@@ -209,10 +209,12 @@
 		 */
 		public function setupShipmentMode()
 		{
-			$carrier = new Carrier($this->order_carrier->id_carrier);
-			if (strstr($carrier->name, 'xpress') !== false)
+			$carrier_id = $this->order_carrier->id_carrier;
+			$express_ids = BoxdropCarrier::getUsedCarrierIds(BoxdropCarrier::TYPE_EXPRESS);
+
+			if (in_array($carrier_id, $express_ids))
 				$mode = BoxdropShipment::SHIP_MODE_EXPRESS;
-			else 
+			else
 				$mode = BoxdropShipment::SHIP_MODE_ECONOMY;
 			$this->shipment_mode = $mode;
 			$this->save();
