@@ -154,26 +154,26 @@
 
 			<div id="signup">
 				{* Use cases 1 - 3 *}
-				<a href="{$PayPal_content.u1->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1->signUpCallButton|escape:'UTF-8'}</a>
-				<a href="{$PayPal_content.u2->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2->signUpCallButton|escape:'UTF-8'}</a>
-				<a href="{$PayPal_content.u3->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3->signUpCallButton|escape:'UTF-8'}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u1->signUpRedirectLink)}{$PayPal_content.u1->signUpRedirectLink|escape:'UTF-8'}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{if Validate::isCleanHTML($PayPal_content.u1->signUpCallButton)}{$PayPal_content.u1->signUpCallButton|escape:'UTF-8'}{/if}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u2->signUpRedirectLink)}{$PayPal_content.u2->signUpRedirectLink|escape:'UTF-8'}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{if Validate::isCleanHTML($PayPal_content.u2->signUpCallButton)}{$PayPal_content.u2->signUpCallButton|escape:'UTF-8'}{/if}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u3->signUpRedirectLink)}{$PayPal_content.u3->signUpRedirectLink|escape:'UTF-8'}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{if Validate::isCleanHTML($PayPal_content.u3->signUpCallButton)}{$PayPal_content.u3->signUpCallButton|escape:'UTF-8'}{/if}</a>
 
 				{* Use cases 4 - 6 *}
-				{*<a href="{$PayPal_content.u4->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4->signUpCallButton|escape:'UTF-8'}</a>*}
-				<a href="{$PayPal_content.u5->signUpRedirectLink|escape:'UTF-8'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5->signUpCallButton|escape:'UTF-8'}</a>
-				{*<a href="{$PayPal_content.u6->signUpRedirectLink|escape:'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6->signUpCallButton|escape:'UTF-8'}</a>*}
+				{*<a href="{if Validate::isCleanHTML($PayPal_content.u4->signUpRedirectLink)}{$PayPal_content.u4->signUpRedirectLink|escape:'UTF-8'}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{if Validate::isCleanHTML($PayPal_content.u4->signUpCallButton)}{$PayPal_content.u4->signUpCallButton|escape:'UTF-8'}{/if}</a>*}
+				<a href="{if Validate::isCleanHTML($PayPal_content.u5->signUpRedirectLink)}{$PayPal_content.u5->signUpRedirectLink|escape:'UTF-8'}{/if}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{if Validate::isCleanHTML($PayPal_content.u5->signUpCallButton)}{$PayPal_content.u5->signUpCallButton|escape:'UTF-8'}{/if}</a>
+				{*<a href="{if Validate::isCleanHTML($PayPal_content.u6->signUpRedirectLink)}{$PayPal_content.u6->signUpRedirectLink|escape:'UTF-8'}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{if Validate::isCleanHTML($PayPal_content.u6->signUpCallButton)}{$PayPal_content.u6->signUpCallButton|escape:'UTF-8'}{/if}</a>*}
 
 				<br /><br />
 
 				{* Use cases 1 - 3 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1->content|escape:'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2->content|escape:'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u1">{if Validate::isCleanHTML($PayPal_content.u1->content)}{$PayPal_content.u1->content|escape:'UTF-8'}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u2">{if Validate::isCleanHTML($PayPal_content.u2->content)}{$PayPal_content.u2->content|escape:'UTF-8'}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u3">{if Validate::isCleanHTML($PayPal_content.u3->content)}{$PayPal_content.u3->content|escape:'UTF-8'}{/if}</span>
 
 				{* Use cases 4 - 6 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4->content|escape:'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5->content|escape:'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6->content|escape:'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u4">{if Validate::isCleanHTML($PayPal_content.u4->content)}{$PayPal_content.u4->content|escape:'UTF-8'}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u5">{if Validate::isCleanHTML($PayPal_content.u5->content)}{$PayPal_content.u5->content|escape:'UTF-8'}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u6">{if Validate::isCleanHTML($PayPal_content.u6->content)}{$PayPal_content.u6->content|escape:'UTF-8'}{/if}</span>
 
 			</div>
 
