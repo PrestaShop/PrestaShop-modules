@@ -57,9 +57,9 @@ class PaypalLib
 			'SIGNATURE' => Configuration::get('PAYPAL_API_SIGNATURE')
 		);
 
-		$data = array_merge($data, $params);
+		$request = http_build_query($params, '', '&');
+		$request .= '&'.(!is_array($data) ? $data : http_build_query($data, '', '&'));
 		
-		$request = http_build_query($data, '', '&');
 		// Making connection
 		$result = $this->makeSimpleCall($host, $script, $request, true);
 		$response = explode('&', $result);
