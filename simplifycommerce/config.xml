@@ -2,7 +2,7 @@
 <module>
 	<name>simplifycommerce</name>
 	<displayName><![CDATA[Simplify Commerce]]></displayName>
-	<version><![CDATA[1.0.3]]></version>
+	<version><![CDATA[1.0.4]]></version>
 	<description><![CDATA[Payments made easy - Start securely accepting credit card payments instantly.]]></description>
 	<author><![CDATA[MasterCard]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
