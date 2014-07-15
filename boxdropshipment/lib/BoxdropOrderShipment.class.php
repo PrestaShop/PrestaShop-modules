@@ -210,9 +210,7 @@
 		public function setupShipmentMode()
 		{
 			$carrier_id = $this->order_carrier->id_carrier;
-			$express_ids = BoxdropCarrier::getUsedCarrierIds(BoxdropCarrier::TYPE_EXPRESS);
-
-			if (in_array($carrier_id, $express_ids))
+			if (in_array($carrier_id, BoxdropCarrier::getUsedCarrierIds(BoxdropCarrier::TYPE_EXPRESS)))
 				$mode = BoxdropShipment::SHIP_MODE_EXPRESS;
 			else
 				$mode = BoxdropShipment::SHIP_MODE_ECONOMY;

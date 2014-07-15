@@ -422,8 +422,8 @@
 
 				if ($with_current)
 				{
-					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_ECONOMY));
-					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_ECONOMY));
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_ECONOMY);
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_ECONOMY);
 				}
 			}
 
@@ -436,8 +436,8 @@
 
 				if ($with_current)
 				{
-					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_EXPRESS));
-					array_push($ids, Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_EXPRESS));
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_EXPRESS);
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_EXPRESS);
 				}
 			}
 
