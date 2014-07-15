@@ -98,6 +98,7 @@
 - seanmacdomhnall 
 - sjousse 
 - Sparer lilian 
+- Sven Weber 
 - Talha Umer Syed 
 - Thibaud Chauviere 
 - Thoma 
