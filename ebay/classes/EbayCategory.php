@@ -279,7 +279,8 @@ class EbayCategory
 	public static function areCategoryLoaded()
 	{
 		if(Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'ebay_category') == 0)
-			return true;
+			return false;
+		return true;
 	}
 
 }
