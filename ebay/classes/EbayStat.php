@@ -27,7 +27,7 @@
 
 class EbayStat
 {
-    private static $server = 'http://tracking.202-ecommerce.com';
+    private static $server = 'http://stats.202-ecommerce.com';
     private static $key = 'ejf3!2kclReRZsx311212iKUj!IGer21';
     
     private $stats_version;
