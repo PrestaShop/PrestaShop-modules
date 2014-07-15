@@ -453,7 +453,12 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			
 		$history = new OrderHistory();
 		$history->id_order = (int)$params['NDossier'];
-		$history->changeIdOrderState((int)$orderState, (int)($params['NDossier']));
+		if( version_compare(_PS_VERSION_, '1.5.2', '>=') ) {
+			$history->changeIdOrderState((int)$orderState, new Order($history->id_order));
+		}
+		else {
+			$history->changeIdOrderState((int)$orderState, (int)($params['NDossier']));
+		}
 		$history->id_employee = (int)Context::getContext()->employee->id;
 		$history->addWithemail(true, $templateVars);
 
@@ -513,7 +518,6 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$this->_parseResult($client, $result, $params, $rootCase['id_mr_selected']);
 			}
 			unset($client);
-			Configuration::updateValue('MONDIAL_RELAY_CONFIGURATION_OK', true);
 		}
 		else
 			throw new Exception($this->_mondialrelay->l('The Mondial Relay webservice is not currently reliable', $this->class_name));

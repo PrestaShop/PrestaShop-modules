@@ -145,7 +145,7 @@ class MondialRelay extends Module
 		/* If module isn't installed, set default value */
 		if (!Configuration::get('MONDIAL_RELAY'))
 		{
-			Configuration::updateValue('MONDIAL_RELAY', $this->version);			
+			Configuration::updateValue('MONDIAL_RELAY', $this->version);
 			Configuration::updateValue('MONDIAL_RELAY_SECURE_KEY', md5( _COOKIE_KEY_. time()));
 			Configuration::updateValue('MONDIAL_RELAY_MODE', 'widget');
 		}
@@ -431,6 +431,7 @@ class MondialRelay extends Module
 		if (Tools::getValue('tab') == 'AdminMondialRelay' 
 			|| Tools::getValue('module_name') == 'mondialrelay' 
 			|| Tools::getValue('controller') == 'AdminMondialRelay' 
+			|| Tools::getValue('controller') == 'adminmondialrelay' // for 1.5.2
 			|| Tools::getValue('configure') == 'mondialrelay'
 		)
 		{ 
@@ -649,7 +650,7 @@ class MondialRelay extends Module
 		
 		if(Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && Tools::strtolower($_SERVER['HTTPS']) != 'off'))
 			$ssl = 'true';
-		else $ssl = 'false';		
+		else $ssl = 'false';
 		
 		$this->context->smarty->assign(array(
 			'address' => $address,
