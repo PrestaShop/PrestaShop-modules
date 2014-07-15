@@ -40,7 +40,7 @@ class PaymentSense extends PaymentModule
 	{
 		$this->name = 'paymentsense';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.9.6';
+		$this->version = '1.9.11';
 		$this->author = 'PaymentSense';
 		$this->module_key = '1e631b52ed3d1572df477b9ce182ccf9';
 
@@ -51,6 +51,7 @@ class PaymentSense extends PaymentModule
 		$this->displayName = $this->l('PaymentSense');
 		$this->description = $this->l('Process transactions through the PaymentSense gateway.');
 		$this->confirmUninstall = $this->l('Are you sure?');
+
 	}
 
 	public function install()
@@ -257,7 +258,7 @@ class PaymentSense extends PaymentModule
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Merchant ID').'</b> - Your Gateway Merchant ID should contain 
 					<strong>the first 6 characters of the company name followed by a hyphen (-) and 7 numbers</strong>';
 
-				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) <= 10)
+				if (Tools::strlen(Tools::getValue('PAYMENTSENSE_GATEWAYPASS')) < 10)
 					$errors .= '<li><b>'.$this->l('Invalid Gateway Password').'</b> - 
 					Your gateway password is too short, this should contain 10 characters including 3 numbers. 
 					This password does <strong>NOT</strong> contain a symbol';
@@ -397,10 +398,6 @@ class PaymentSense extends PaymentModule
 		$HashString .= '&Password='.$paymentsense_gatewaypass;
 		$HashString .= '&Amount='.$amount;
 		$HashString .= '&CurrencyCode='.$this->getCurrencyISO($currencyps);
-		$HashString .= '&EchoAVSCheckResult=True';
-		$HashString .= '&EchoCV2CheckResult=True';
-		$HashString .= '&EchoThreeDSecureAuthenticationCheckResult=True';
-		$HashString .= '&EchoCardType=True';
 		$HashString .= '&OrderID='.$gatewayorderID;
 		$HashString .= '&TransactionType='.$paymentsense_transactiontype;
 		$HashString .= '&TransactionDateTime='.$datestamp;
@@ -428,19 +425,12 @@ class PaymentSense extends PaymentModule
 		$HashString .= '&ResultDeliveryMethod=SERVER';
 		$HashString .= '&ServerResultURL='.$module_url.'callback.php';
 		$HashString .= '&PaymentFormDisplaysResult=False';
-		$HashString .= '&ServerResultURLCookieVariables='.'';
-		$HashString .= '&ServerResultURLFormVariables=orderTotal='.$orderTotal;
-		$HashString .= '&ServerResultURLQueryStringVariables=';
 		$HashDigest = sha1($HashString);
 
 		$parameters['HashDigest'] = $HashDigest;
 		$parameters['MerchantID'] = $this->getSetting('PAYMENTSENSE_GATEWAYID');
 		$parameters['Amount'] = $amount;
 		$parameters['CurrencyCode'] = $this->getCurrencyISO($currencyps);
-		$parameters['EchoAVSCheckResult'] = 'True';
-		$parameters['EchoCV2CheckResult'] = 'True';
-		$parameters['EchoThreeDSecureAuthenticationCheckResult'] = 'True';
-		$parameters['EchoCardType'] = 'True';
 		$parameters['OrderID'] = $gatewayorderID;
 		$parameters['TransactionType'] = $paymentsense_transactiontype;
 		$parameters['TransactionDateTime'] = $datestamp;
@@ -468,12 +458,6 @@ class PaymentSense extends PaymentModule
 		$parameters['ResultDeliveryMethod'] = 'SERVER';
 		$parameters['ServerResultURL'] = $module_url.'callback.php';
 		$parameters['PaymentFormDisplaysResult'] = 'False';
-		$parameters['ServerResultURLCookieVariables'] = '';
-		$parameters['ServerResultURLFormVariables'] = 'orderTotal='.$orderTotal;
-		$parameters['ServerResultURLQueryStringVariables'] = '';
-
-		$parameters['ThreeDSecureCompatMode'] = 'false';
-		$parameters['ServerResultCompatMode'] = 'false';
 
 		$form_target = 'https://mms.paymentsensegateway.com/Pages/PublicPages/PaymentForm.aspx';
 

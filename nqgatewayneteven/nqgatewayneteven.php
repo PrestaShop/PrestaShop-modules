@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,24 +27,26 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-if(strpos(dirname(__FILE__), 'nqgatewayneteven') !== false)
+if (strpos(dirname(__FILE__), 'nqgatewayneteven') !== false)
 	include_once(dirname(__FILE__).'/classes/Gateway.php');
 
 class NqGatewayNeteven extends Module
 {
-	private $_html = '';
-	private $gateway = NULL;
+	private $html = '';
+	private $gateway = null;
 
 	public function __construct()
 	{
 		$this->name = 'nqgatewayneteven';
-		
+
+        $tab_name = 'Tools';
+
 		if (constant('_PS_VERSION_') >= 1.4)
-			$this->tab = 'market_place';
-		else
-			$this->tab = 'Tools';
+            $tab_name = 'market_place';
+
+        $this->tab = $tab_name;
 		
-		$this->version = '2';
+		$this->version = '2.10';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -52,28 +54,31 @@ class NqGatewayNeteven extends Module
 		$this->displayName = $this->l('NetEven');
 		$this->description = $this->l('Vendez sur toutes les marketplaces depuis votre PrestaShop');
 
+
 		$this->feature_url = '/script/set-neteven-categories.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME'));
 		$this->order_url = '/script/import-order.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
 		$this->product_url = '/script/update-product.php?token='.Tools::encrypt(Configuration::get('PS_SHOP_NAME')).'&active=1';
 		
 		if (!$this->getSOAP())
 			$this->warning = $this->l('SOAP should be installed for this module');
-		
-		if (_PS_VERSION_ < '1.5')
+
+        if (version_compare(_PS_VERSION_, '1.5', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
 
-        $this->unInstallHookByVersion();
-        $this->installHookByVersion();
-        $this->installCarrier();
-	}
-
+        if (Module::isInstalled($this->name))
+        {
+            $this->unInstallHookByVersion();
+            $this->installHookByVersion();
+            $this->installCarrier();
+        }
+    }
 
 	public function install()
 	{
-		if (!parent::install() OR
-			!$this->registerHook('updateOrderStatus') OR
-            !$this->registerHook('updateCarrier') OR
-			!$this->installDB() OR
+		if (!parent::install() ||
+			!$this->registerHook('updateOrderStatus') ||
+            !$this->registerHook('updateCarrier') ||
+			!$this->installDB() ||
 			!$this->installConfig())
 			return false;
 		return true;
@@ -87,22 +92,26 @@ class NqGatewayNeteven extends Module
 			return false;
 		
 		// Uninstalling the module
-		if (!Configuration::deleteByName('neteven_date_export_product') OR !$this->uninstallDB() OR !parent::uninstall())
+		if (!Configuration::deleteByName('neteven_date_export_product') || !$this->uninstallDB() || !parent::uninstall())
 			return false;
 		
 		return true;
 	}
 
 	public function installConfig()
-	{		
+	{
+        $rand_letters = range('a','z');
+        shuffle($rand_letters);
+
 		// Creation of employee NetEven
 		$new_employe = new Employee();
-		$new_employe->lastname = 'Bot';
+		$new_employe->lastname = 'Employee';
 		$new_employe->firstname = 'NetEven';
 		$new_employe->id_lang = (int)$this->context->language->id;
-		$new_employe->email = 'neteven@newquest.fr';
-		$new_employe->passwd = '$&-$&-$&-$&';
-		$new_employe->id_profile = 1;
+		$new_employe->email = 'empl'.rand(0, 100).$rand_letters[0].rand(0, 100).'@neteven.com';
+		$new_employe->passwd = $rand_letters[0].'$&-$&-$&-$&'.rand(0, 1000);
+		$new_employe->id_profile = 3;
+        $new_employe->active = 0;
 		$new_employe->add();
 		Gateway::updateConfig('ID_EMPLOYEE_NETEVEN', (int)$new_employe->id);
 
@@ -110,8 +119,10 @@ class NqGatewayNeteven extends Module
 		$new_customer = new Customer();
 		$new_customer->lastname	= 'Client';
 		$new_customer->firstname = 'NetEven';
-		$new_customer->passwd = '$&-$&-$&-$&';
-		$new_customer->email = 'neteven@newquest.fr';
+		$new_customer->passwd = $rand_letters[0].'$&-$&-$&-$&'.rand(0, 1000);
+		$new_customer->email = 'cust'.rand(0, 100).$rand_letters[0].rand(0, 100).'@neteven.com';
+        $new_customer->newsletter = 0;
+        $new_customer->optin = 0;
 		$new_customer->add();
 		Gateway::updateConfig('ID_CUSTOMER_NETEVEN', (int)$new_customer->id);
 
@@ -159,8 +170,8 @@ class NqGatewayNeteven extends Module
 
     private function installCarrier(){
 
-        $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
-        if(!empty($id_carrier_neteven))
+        $id_carrier_neteven = Gateway::getConfig('CARRIER_NETEVEN');
+        if (!empty($id_carrier_neteven))
             return;
 
         $id_carrier = $this->addCarrier('NetEven carrier');
@@ -171,8 +182,8 @@ class NqGatewayNeteven extends Module
         if ($this->version < 2)
             return;
 
-        $is_unregister =  Gateway::getConfig('REGISTER_HOOK');
-        if(!empty($is_unregister))
+        $is_unregister = Gateway::getConfig('REGISTER_HOOK');
+        if (!empty($is_unregister))
             return;
 
         $this->registerHook('updateCarrier');
@@ -262,9 +273,8 @@ class NqGatewayNeteven extends Module
 			PRIMARY KEY (`id_order_gateway_feature`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
 
-		foreach ($queries as $query) {
+		foreach ($queries as $query)
 			$result &= Db::getInstance()->Execute($query);
-		}
 
 		if (!$result)
 			return false;
@@ -305,8 +315,8 @@ class NqGatewayNeteven extends Module
         if ($this->version < 2)
             return;
 
-        $is_unregister =  Gateway::getConfig('UNREGISTER_HOOK');
-        if(!empty($is_unregister))
+        $is_unregister = Gateway::getConfig('UNREGISTER_HOOK');
+        if (!empty($is_unregister))
             return;
 
         $this->unregisterHook('addProduct');
@@ -321,8 +331,8 @@ class NqGatewayNeteven extends Module
     {
         if ((int)($params['id_carrier']) != (int)($params['carrier']->id))
         {
-            $id_carrier_neteven =  Gateway::getConfig('CARRIER_NETEVEN');
-            if($params['id_carrier'] != $id_carrier_neteven)
+            $id_carrier_neteven = Gateway::getConfig('CARRIER_NETEVEN');
+            if ($params['id_carrier'] != $id_carrier_neteven)
                 return;
 
             Gateway::updateConfig('CARRIER_NETEVEN', $params['carrier']->id);
@@ -352,7 +362,7 @@ class NqGatewayNeteven extends Module
 
 	public function getContent()
 	{
-		$this->_html = '';
+		$this->html = '';
 
 		if (Tools::isSubmit('submitNetEven'))
 		{
@@ -365,11 +375,12 @@ class NqGatewayNeteven extends Module
 				Gateway::updateConfig('IMAGE_TYPE_NAME', Tools::getValue('IMAGE_TYPE_NAME'));
 				Gateway::updateConfig('SYNCHRONISATION_ORDER', (int)Tools::getValue('SYNCHRONISATION_ORDER'));
 				Gateway::updateConfig('SYNCHRONISATION_PRODUCT', (int)Tools::getValue('SYNCHRONISATION_PRODUCT'));
+                Gateway::updateConfig('TYPE_SKU', (string)Tools::getValue('TYPE_SKU'));
 				
-				$this->_html .= $this->displayConfirmation($this->l('Les paramètres ont bien été mis à jour'));
+				$this->html .= $this->displayConfirmation($this->l('Les paramètres ont bien été mis à jour'));
 			}
 			else
-				$this->_html .= $this->displayError($this->l('Les login et mot de passe NetEven sont obligatoire'));
+				$this->html .= $this->displayError($this->l('Les login et mot de passe NetEven sont obligatoire'));
 
 		}
 		elseif (Tools::isSubmit('submitNetEvenShipping'))
@@ -386,7 +397,7 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('SHIPPING_ZONE_INTERNATIONAL', Tools::getValue('SHIPPING_ZONE_INTERNATIONAL'));
 
 
-			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
+			$this->html .= $this->displayConfirmation($this->l('Les paramètres de livraison ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitDev'))
 		{
@@ -396,7 +407,7 @@ class NqGatewayNeteven extends Module
 			Gateway::updateConfig('DEBUG', (int)Tools::getValue('DEBUG'));
 			Gateway::updateConfig('SEND_REQUEST_BY_EMAIL', (int)Tools::getValue('SEND_REQUEST_BY_EMAIL'));
 			
-			$this->_html .= $this->displayConfirmation($this->l('Les paramètres de maintenance ont bien été mis à jour'));
+			$this->html .= $this->displayConfirmation($this->l('Les paramètres de maintenance ont bien été mis à jour'));
 		}
 		elseif (Tools::isSubmit('submitCustomizableFeilds'))
 		{
@@ -438,11 +449,11 @@ class NqGatewayNeteven extends Module
 		}
 		
 		if ($this->getSOAP())
-			$this->_html .= $this->displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories);
+			$this->html .= $this->displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories);
 		else
-			$this->_html .= $this->displayError($this->l('This module requires the SOAP extension to run'));
+			$this->html .= $this->displayError($this->l('This module requires the SOAP extension to run'));
 
-		return $this->_html;
+		return $this->html;
 	}
 
 	public function displayForm($order_states, $features, $attribute_groups, $neteven_feature_categories)
@@ -490,13 +501,14 @@ class NqGatewayNeteven extends Module
 			'NETEVEN_NS' => Tools::safeOutput(Tools::getValue('NETEVEN_NS', Gateway::getConfig('NETEVEN_NS'))),
 			'MAIL_LIST_ALERT' => Tools::safeOutput(Tools::getValue('MAIL_LIST_ALERT', Gateway::getConfig('MAIL_LIST_ALERT'))),
 			'DEBUG' => (int)Gateway::getConfig('DEBUG'),
-			'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL')
+			'SEND_REQUEST_BY_EMAIL' => (int)Gateway::getConfig('SEND_REQUEST_BY_EMAIL'),
+            'TYPE_SKU' => (int)(Gateway::getConfig('TYPE_SKU') !== false)?Gateway::getConfig('TYPE_SKU'):'reference'
 		));
 			
 		return $this->display(__FILE__, 'views/templates/admin/nqgatewayneteven.tpl');
 	}
 	
-	public function getL($key = NULL)
+	public function getL($key = null)
 	{
 		$translations = array(
 			'Send email to' => $this->l('Send email to'),

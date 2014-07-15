@@ -19,7 +19,7 @@
 <br />
 <form action="" method="post">
 <fieldset style="width: 400px;float: left;">
-	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/logo.gif">{l s='Shopgate information' mod='shopgate'}</legend>
+	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/img/logo.png">{l s='Shopgate information' mod='shopgate'}</legend>
 	
 	{if $shopgate_error}<span style="color:red; font-weight:bold;">{$shopgate_error|escape:'htmlall':'UTF-8'}</span>{/if}
 	
@@ -67,11 +67,11 @@
 		<h4 style="border-bottom:1px solid #E0D0B1">{l s='Payment information' mod='shopgate'}</h4>
 		{if count($sOrderPaymentInfos)}
 			{foreach key="key" from=$sOrderPaymentInfos item="paymentInfos"}
-				<label>{if isset($paymentInfoStrings[$key])}{{$paymentInfoStrings[$key]|escape:'htmlall':'UTF-8'}}{else}{{$key|escape:'htmlall':'UTF-8'}}{/if}:</label>
+                <label>{if isset($paymentInfoStrings[$key])}{$paymentInfoStrings[$key]|escape:'htmlall':'UTF-8'}{else}{$key|escape:'htmlall':'UTF-8'}{/if}:</label>
 				<div class="margin-form">
 					{if is_bool($paymentInfos)}<img src="../img/admin/{if $data}enabled{else}disabled{/if}.gif">{else} {$paymentInfos|escape:'htmlall':'UTF-8'} {/if}
 				</div>
-			{/foreach}	
+			{/foreach}
 		{/if}
 		
 		<h4 style="border-bottom:1px solid #E0D0B1">{l s='Delivery notes' mod='shopgate'}</h4>
@@ -100,7 +100,7 @@
 	
 		<label>{l s='Shipping service' mod='shopgate'}:</label>
 		<div class="margin-form">
-			{html_options name='shopgateOrder[shipping_service]' options=$shipping_service_list selected={$shopgateOrder->shipping_service|escape:'htmlall':'UTF-8'}}
+			{html_options name='shopgateOrder[shipping_service]' options=$shipping_service_list selected=$shopgateOrder->shipping_service|escape:'htmlall':'UTF-8'}
 		</div>
 		<label>{l s='Tracking number' mod='shopgate'}:</label>
 		<div class="margin-form">

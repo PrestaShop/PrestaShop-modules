@@ -1,18 +1,43 @@
 <?php
+/*
+* 2007-2014 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author PrestaShop SA <contact@prestashop.com>
+*  @copyright  2007-2014 PrestaShop SA
+*  @version  Release: $Revision: 16986 $
+*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
-// File Example for upgrade
+/*  File Example for upgrade */
 
 if (!defined('_PS_VERSION_'))
 	exit;
 
-// object module ($this) available
+/*  object module ($this) available */
 function upgrade_module_1_8_0($object)
 {
 	$upgrade_version = '1.8.0';
 
 	$object->upgrade_detail[$upgrade_version] = array();
 
-	// Add new table to handle multi-shop for a carrier
+	/*  Add new table to handle multi-shop for a carrier */
 	$query = '
 		CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'mr_method_shop` (
 		`id_mr_method_shop` int(10) unsigned NOT NULL auto_increment,
@@ -24,7 +49,7 @@ function upgrade_module_1_8_0($object)
 	if (!Db::getInstance()->execute($query))
 		$object->upgrade_detail[$upgrade_version][] = $object->l('Can\'t create method shop table');
 
-	// Refacto name
+	/*  Refacto name */
 	$query = '
 		ALTER TABLE  `'._DB_PREFIX_.'mr_method` CHANGE  `id_mr_method`  `id_mr_method` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 		CHANGE  `mr_Name`  `name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -92,7 +117,7 @@ function upgrade_module_1_8_0($object)
 						FROM `'._DB_PREFIX_.'mr_method`)');
 	}
 
-	// Try to register the new hook since 1.7
+	/*  Try to register the new hook since 1.7 */
 	if (!$object->isRegisteredInHook('newOrder'))
 		$object->registerHook('newOrder');
 	if (!$object->isRegisteredInHook('BackOfficeHeader'))

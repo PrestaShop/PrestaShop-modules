@@ -2,7 +2,7 @@
 <module>
 	<name>prediggo</name>
 	<displayName><![CDATA[Prediggo]]></displayName>
-	<version><![CDATA[1.2]]></version>
+	<version><![CDATA[1.5]]></version>
 	<description><![CDATA[Offers interactive products recommendations in the front office]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ if (!in_array('Ebay', get_declared_classes()))
 class EbayCountrySpec
 {
 	public $country;
-	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl', 'be');
+	public $accepted_isos = array('it', 'gb', 'es', 'fr', 'nl', 'pl', 'be', 'de');
 	protected $ebay_iso;
 
 	private $dev;
@@ -40,6 +40,7 @@ class EbayCountrySpec
 	private static $country_data = array(
 		'it' => array(
 			'site_id'        => 101,
+			'documentation'  => 'it',
 			'language'       => 'it_IT',
 			'currency'       => 'EUR',
 			'site_name'      => 'Italy',
@@ -51,6 +52,7 @@ class EbayCountrySpec
 		),
 		'gb' => array(
 			'site_id'        => 3,
+			'documentation'  => 'en',
 			'language'       => 'en_GB',
 			'currency'       => 'GBP',
 			'site_name'      => 'UK',
@@ -62,6 +64,7 @@ class EbayCountrySpec
 		),
 		'es' => array(
 			'site_id'        => 186,
+			'documentation'  => 'es',
 			'language'       => 'es_ES',
 			'currency'       => 'EUR',
 			'site_name'      => 'Spain',
@@ -73,6 +76,7 @@ class EbayCountrySpec
 		),
 		'fr' => array(
 			'site_id'        => 71,
+			'documentation'  => 'fr',
 			'language'       => 'fr_FR',
 			'currency'       => 'EUR',
 			'site_name'      => 'France',
@@ -84,6 +88,7 @@ class EbayCountrySpec
 		),
 		'nl' => array(
 			'site_id'        => 146,
+			'documentation'  => 'nl',
 			'language'       => 'nl_NL',
 			'currency'       => 'EUR',
 			'site_name'      => 'Netherlands',
@@ -95,6 +100,7 @@ class EbayCountrySpec
 		),
 		'pl' => array(
 			'site_id'        => 212,
+			'documentation'  => 'pl',
 			'language'       => 'pl_PL',
 			'currency'       => 'PLN',
 			'site_name'      => 'Poland',
@@ -106,6 +112,7 @@ class EbayCountrySpec
 		),
 		'be-fr' => array(
 			'site_id'        => 23,
+			'documentation'  => 'befr',
 			'language'       => 'fr_BE',
 			'currency'       => 'EUR',
 			'site_name'      => 'Belgium_French',
@@ -118,6 +125,7 @@ class EbayCountrySpec
 		),
 		'be-nl' => array(
 			'site_id'        => 123,
+			'documentation'  => 'benl',
 			'language'       => 'nl_BE',
 			'currency'       => 'EUR',
 			'site_name'      => 'Belgium_Dutch',
@@ -127,7 +135,44 @@ class EbayCountrySpec
 			'iso_code'       => 'be',
 			'signin'         => 'https://signin.benl.ebay.be/ws/eBayISAPI.dll',
 			'signin_sandbox' => 'https://signin.sandbox.benl.ebay.be/ws/eBayISAPI.dll'
-		)
+		),
+		'de' => array(
+			'site_id'        => 77,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'EUR',
+			'site_name'      => 'Germany',
+			'site_extension' => 'de',
+			'img_stats'      => null,
+			'iso_code'       => 'de',
+			'signin'         => 'https://signin.ebay.de/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.de/ws/eBayISAPI.dll'
+		),
+		'ch' => array(
+			'site_id'        => 193,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'CHF',
+			'site_name'      => 'Switzerland',
+			'site_extension' => 'ch',
+			'img_stats'      => null,
+			'iso_code'       => 'ch',
+			'signin'         => 'https://signin.ebay.ch/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.ch/ws/eBayISAPI.dll'
+		),
+		'at' => array(
+			'site_id'        => 16,
+			'documentation'  => 'de',
+			'language'       => 'de_DE',
+			'currency'       => 'EUR',
+			'site_name'      => 'Austria',
+			'site_extension' => 'at',
+			'img_stats'      => null,
+			'iso_code'       => 'at',
+			'signin'         => 'https://signin.ebay.at/ws/eBayISAPI.dll',
+			'signin_sandbox' => 'https://signin.sandbox.ebay.at/ws/eBayISAPI.dll'
+		),
+
 	);
 
 	public function __construct(Country $country = null)
@@ -141,6 +186,11 @@ class EbayCountrySpec
 	public function getSiteID()
 	{
 		return $this->_getCountryData('site_id');
+	}
+
+	public function getDocumentationLang()
+	{
+		return $this->_getCountryDATA('documentation');
 	}
 
 	public function getLanguage()
@@ -276,7 +326,7 @@ class EbayCountrySpec
 
 		$ebay_country = new EbayCountrySpec(new Country($id_country));
 		$ebay_country->setDev($dev);
-		$ebay_country->ebay_iso = $key;
+		$ebay_country->ebay_iso = is_numeric($key) ? self::getKeyForEbayCountry() : $key;
 
 		return $ebay_country;
 	}

@@ -39,6 +39,9 @@ $fields = $so->getFields();
 $inputs = array();
 foreach ($_GET as $key => $value)
 	if (in_array($key, $fields))
+		if(($key == "cePhoneNumber") && (Tools::substr(trim($value),0,3) == "324")) // for belgium number specific format
+			$inputs[$key] = str_replace('324','+324',trim($value));
+	else
 		$inputs[$key] = Tools::getValue($key);
 
 $param_plus = array(

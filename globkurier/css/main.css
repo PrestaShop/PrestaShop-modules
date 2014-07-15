@@ -1,5 +1,5 @@
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,12 +28,12 @@
 form.gk-form p {
 	text-align: center;
 	float: left;
-	width:100%;
+	width: 100%;
 }
 form.gk-form p span {
 	margin-left: 10px;
 }
-table.form-table tr td label{
+table.form-table tr td label {
 	width: 100%;
 	float: right;
 	margin-top: -6px;
@@ -43,7 +43,8 @@ table.form-table tr td label{
 	font-size: 19px;
 	color: black;
 }
-.font2{font-size: 17px;
+.font2 {
+	font-size: 17px;
 	color: rgb(88, 90, 105);
 	margin-top: 0;
 	padding-top: 5px;
@@ -219,9 +220,145 @@ div.gk-orderdetails {
 	width: 100%;
 	height: auto;
 }
-div.gk-order thead td {
-	font-size: 12px;
+p.main-label {
+	float: left;
+	width: 100%;
+	font-size: 15px;
 	font-weight: bold;
+}
+div.gk-orderdetails div.gk-orderdetails-box1 {
+	float: left;
+	width: 100%;
+	margin-left: 5px;
+}
+div.gk-orderdetails div.weight, div.gk-orderdetails div.lenght, div.gk-orderdetails div.width, div.gk-orderdetails div.height, div.gk-orderdetails div.parcel_count, div.gk-orderdetails div.content, div.parcel_pickup {
+	float: left;
+	padding-right: 10px;
+	padding-top: 5px
+}
+p.product-label {
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	margin-bottom: 5px;
+}
+div.parcel_pickup span{
+	margin-right: 5px;
+}
+div.gk-orderdetails input, div.gk-orderdetails p, div.gk-orderdetails span, div.parcel_pickup input{
+	padding: 3px;
+	font-size: 14px;
+}
+input.small-input {
+	width: 55px;
+}
+input.medium-input {
+	width: 80px;
+}
+input.large-input{
+	width: 268px;
+}
+div.gk-orderdetails div.product-loading, div.addons-loading {
+	width: 43%;
+	text-align: center;
+	padding: 14px;
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.15);
+}
+div.gk-orderdetails div.pricing-button {
+	float: left;
+	margin-top: 25px;
+	margin-left: 60px;
+}
+div.gk-message-box, div.gk-addons-message-box {
+	float: left;
+	width: 100%;
+	margin-top: 20px;
+}
+div.gk-products {
+	float: left;
+	width: 100%;
+}
+div.gk-addons, div.gk-datetime, div.gk-payment, div.gk-process {
+	float: left;
+	width: 100%;
+}
+div.gk-addons-domestic, div.gk-addons-international {
+	float: left;
+	width: 100%;
+}
+div.gk-addons-domestic label {
+	float: left;
+	width: 100%;
+	text-align: left;
+}
+div.addons-box p.input {
+	float: left;
+	padding: 5px;
+}
+div.addons-box p.name {
+	padding: 5px;
+	float: left;
+	width: 90%;
+	text-align: left;
+}
+div.addons-box p.name span {
+	margin-left: 5px;
+	font-weight: bold;
+	font-size: 14px;
+}
+/* product - box */
+div.products label {
+	float: left;
+}
+div.product-box {
+	float: left;
+	width: 203px;
+	height: 110px;
+	padding: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #C0C0C0;
+	background-color: #F8F8F8;
+	cursor: pointer;
+	text-align: center;
+	margin: 10px;
+	margin-top: 20px;
+}
+div.product-box p.name {
+	padding: 0px;
+	font-size: 12px;
+	margin: 0px;
+}
+div.product-box p.price_net {
+	font-size: 12px;
+	margin: 1px;
+	padding: 0px;
+}
+div.product-box p.img {
+	margin: 1px;
+	padding: 0px;
+}
+div.product-box p.input {
+	margin-top: 5px;
+}
+
+div.gk-order thead td {
+	font-size: 15px;
+	font-weight: bold;
+}
+div.gk-order tbody td {
+	font-size: 15px;
+}
+div.gk-order tbody td input {
+	font-size: 15px;
+	padding: 3px;
+}
+div.gk-order tbody td select {
+	font-size: 15px;
+	padding: 3px;
+	width: 180px;
 }
 div.gk-order-errors {
 	float: left;
@@ -233,9 +370,22 @@ div.gk-pricing {
 	text-align: center;
 	margin-top: 70px;
 }
+/* Addons */
+p.dodatek label {
+	float: left;
+	text-align: left;
+	width: 100%;
+}
+p.dodatek input {
+	float: left;
+	text-align: left;
+	padding: 5px;
+	width: 300px;
+	font-size: 15px;
+}
 input.price_me {
-	width: 120px;
-	height: 50px;
+	width: 140px;
+	height: 35px;
 	cursor: pointer;
 	-moz-box-shadow: inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow: inset 0px 1px 0px 0px #ffffff;
@@ -287,7 +437,8 @@ div.product_all, div.header, div.product_normal, div.show_btn {
 div.product_all, div.header {
 	width: 100%;
 }
-div.product_normal {}
+div.product_normal {
+}
 div.gk-order-products {
 	float: left;
 	width: 100%;
@@ -437,7 +588,7 @@ div.gk-order-payment {
 	cursor: pointer;
 }
 p.gk-label {
-	padding: 10px;
+	padding: 3px;
 	font-size: 15px;
 	font-weight: bold;
 	-webkit-border-radius: 5px;
@@ -448,8 +599,7 @@ p.gk-label {
 }
 /* Btn */
 div.gk-process {
-	width: 100%
-	float: left;
+	width: 100% float : left;
 	text-align: right;
 }
 input.process_me {

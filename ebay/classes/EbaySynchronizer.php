@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,6 +52,11 @@ class EbaySynchronizer
 		$product_ids = array_map(array('EbaySynchronizer', 'getIdProduct'), $products);
 		$products_configuration = EbayProductConfiguration::getByProductIds($product_ids);
 
+		if(method_exists('Cache', 'clean'))
+		{
+			 Cache::clean('StockAvailable::getQuantityAvailableByProduct_*');
+		}
+		
 		foreach ($products as $p)
 		{
 			$product = new Product((int)$p['id_product'], true, $id_lang);
@@ -682,9 +687,6 @@ class EbaySynchronizer
 			else // Shipping by price
 				$price = $carrier->getDeliveryPriceByPrice($product->price, $zone);
 
-			if ($carrier->shipping_handling) //Add shipping handling fee
-				$price += Configuration::get('PS_SHIPPING_HANDLING');
-
 		}
 		else if ($carrier->shipping_method == 1)
 		{ // Shipping by weight
@@ -699,6 +701,9 @@ class EbaySynchronizer
 			// return 0 if is an other shipping method
 			return 0;
 		}
+
+		if ($carrier->shipping_handling) //Add shipping handling fee
+				$price += Configuration::get('PS_SHIPPING_HANDLING');
 
 		$price += $price * Tax::getCarrierTaxRate($carrier_id) / 100;
 

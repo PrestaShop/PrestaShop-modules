@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,11 +27,11 @@
 
 	// Global JS Value
 	var PS_MRData = {$MR_Data};
+	{assign var=MR_Data value=$MR_Data|json_decode:1}	
 	
-	// literal for smarty v2 compatibility
-	$(document).ready(function() {literal}{{/literal}
+	$(document).ready(function()  {ldelim}
 		PS_MRObject.initFront();
-	{literal}}{/literal});
+	 {rdelim});
 
 </script>
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,7 +50,7 @@ class PagSeguro extends PaymentModule
 	{
 		$this->name = 'pagseguro';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.4';
+		$this->version = '1.7';
 		$this->author = 'PagSeguro Internet LTDA.';
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
@@ -58,6 +58,7 @@ class PagSeguro extends PaymentModule
 		$this->displayName = $this->l('PagSeguro');
 		$this->description = $this->l('Receba pagamentos por cartão de crédito, transferência bancária e boleto.');
 		$this->confirmUninstall = $this->l('Tem certeza que deseja remover este módulo ?');
+
 	}
 
 	/**
@@ -464,6 +465,8 @@ class PagSeguro extends PaymentModule
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
 				'status' => 'ok',
 				'id_order' => (int)$params['objOrder']->id));
+
+			Configuration::updateValue('PAGSEGURO_CONFIGURATION_OK', true);
 
 			if (isset($params['objOrder']->reference) && !empty($params['objOrder']->reference))
 				$this->smarty->assign('reference', $params['objOrder']->reference);

@@ -1,7 +1,7 @@
 <?php
 
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 * @author PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2013 PrestaShop SA
+* @copyright 2007-2014 PrestaShop SA
 * @license http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
 * International Registered Trademark & Property of PrestaShop SA
 */
@@ -62,7 +62,7 @@ class Prediggo extends Module
 	{
 		$this->name = 'prediggo';
 		$this->tab = 'advertising_marketing';
-		$this->version = '1.2';
+		$this->version = '1.5';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->_html = '';
@@ -72,6 +72,7 @@ class Prediggo extends Module
 
 		$this->displayName = $this->l('Prediggo');
 		$this->description = $this->l('Offers interactive products recommendations in the front office');
+
 
 		$this->_warnings = array();
 		$this->_confirmations = array();
@@ -493,6 +494,9 @@ class Prediggo extends Module
 	private function checkWebSiteId()
 	{
 		$this->oPrediggoConfig->web_site_id_checked = (int)$this->oPrediggoCallController->checkWebSiteId();
+		if($this->oPrediggoConfig->web_site_id_checked == true)
+			Configuration::updateValue('PREDIGGO_CONFIGURATION_OK', true);
+
 		if(!$this->oPrediggoConfig->save())
 			$this->_errors[] = $this->l('An error occurred while updating the main configuration settings');
 	}

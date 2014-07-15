@@ -39,7 +39,7 @@ class FerBuy extends PaymentModule
 	{
 		$this->name = 'ferbuy';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.3';
+		$this->version = '1.5';
 		$this->author = 'FerBuy';
 
 		parent::__construct();
@@ -48,6 +48,7 @@ class FerBuy extends PaymentModule
 		$this->displayName = 'FerBuy';
 		$this->description = $this->l('Accept payments with FerBuy.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your settings?');
+
 
 		// Module settings
 		$this->setModuleSettings();

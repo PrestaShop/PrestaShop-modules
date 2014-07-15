@@ -70,7 +70,7 @@ $_MODULE['<{ebay}prestashop>form_9a5c99bf25e84cd8fe7c500f7ec698f2'] = 'Enregistr
 $_MODULE['<{ebay}prestashop>form_f09ea5dca3d187c50a634239778a5a3c'] = 'Accepter url fopen';
 $_MODULE['<{ebay}prestashop>form_c7760f2c36d4e647e8a254cef51cbae8'] = 'Activer cURL';
 $_MODULE['<{ebay}prestashop>form_dc6b67778fcb0e138653294a81208971'] = 'Créer un compte business afin de configurer le module';
-$_MODULE['<{ebay}prestashop>form_dce6375a36dee618ed3102418ec15d67'] = 'Connexion à eBay';
+$_MODULE['<{ebay}prestashop>form_dce6375a36dee618ed3102418ec15d67'] = 'Connexion à eBay.';
 $_MODULE['<{ebay}prestashop>form_78a1949268ace1fc7465c3ccd5782138'] = 'Télécharger la documentation';
 $_MODULE['<{ebay}prestashop>formconfig_8af703b2bf59cc9742883ae7f4cb0e5b'] = 'Paramètres';
 $_MODULE['<{ebay}prestashop>formconfig_0dc0fd7c3581a948e896865f8f13717e'] = 'Catégories';
@@ -116,7 +116,7 @@ $_MODULE['<{ebay}prestashop>formitemsspecifics_287234a1ff35a314b5b6bc4e5828e745'
 $_MODULE['<{ebay}prestashop>formitemsspecifics_98f770b0af18ca763421bac22b4b6805'] = 'Caractéristiques';
 $_MODULE['<{ebay}prestashop>formitemsspecifics_cf3084f540215d39b4c5083c1dbd35d4'] = 'Specifications eBay';
 $_MODULE['<{ebay}prestashop>formitemsspecifics_1be6f9eb563f3bf85c78b4219bf09de9'] = 'Marque';
-$_MODULE['<{ebay}prestashop>formparameters_aade7c22bbc1c3e4a63bb6b898a9c993'] = 'Vous devez regénérer votre jeton d\'authentification';
+$_MODULE['<{ebay}prestashop>formparameters_aade7c22bbc1c3e4a63bb6b898a9c993'] = 'Vous devez regénérer votre jeton d authentification';
 $_MODULE['<{ebay}prestashop>formparameters_459a6f79ad9b13cbcb5f692d2cc7a94d'] = 'Jeton d\'authentification';
 $_MODULE['<{ebay}prestashop>formparameters_8bc212f48680748479bbd322d4d73d3f'] = 'Détails du compte';
 $_MODULE['<{ebay}prestashop>formparameters_9b2fa2b9d09c506b0fd3e3c1b6a047f8'] = 'Afin d\'exporter vos produits sur eBay vous avez besoin de créer';

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -44,7 +44,7 @@ class Hipay extends PaymentModule
 	{
 		$this->name = 'hipay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.6.1';
+		$this->version = '1.6.4';
 		$this->module_key = 'e25bc8f4f9296ef084abf448bca4808a';
 
 		$this->currencies = true;
@@ -55,6 +55,7 @@ class Hipay extends PaymentModule
 		
 		$this->displayName = $this->l('Hipay');
 		$this->description = $this->l('Secure payement with Visa, Mastercard and European solutions.');
+
 
 		$request = '
 			SELECT iso_code
@@ -312,6 +313,8 @@ class Hipay extends PaymentModule
 				/* Paiement capturé sur Hipay = Paiement accepté sur Prestashop */
 				$orderMessage = $operation.': '.$status.'\ndate: '.$date.' '.$time.'\ntransaction: '.$transid.'\namount: '.(float)$amount.' '.$currency.'\nid_cart: '.(int)$id_cart;
 				$this->validateOrder((int)$id_cart, Configuration::get('PS_OS_PAYMENT'), (float)$amount, $this->displayName, $orderMessage, array(), NULL, false, $cart->secure_key);
+
+				Configuration::updateValue('HIPAY_CONFIGURATION_OK', true);
 			}
 			elseif (trim($operation) == 'refund' AND trim(strtolower($status)) == 'ok')
 			{

@@ -1,0 +1,46 @@
+/*====================================================
+	- HTML Table Filter Generator 
+	- Columns Visibility Manager Extension
+	- do not hesitate to edit classes below to 
+	change extension appearance
+=====================================================*/
+
+span.showHideColsSpan{ text-align:left; }
+
+span.showHideColsSpan a.showHideCols{
+	margin:0 5px 0 5px;
+}
+div.showHideColsCont{
+	position:absolute;
+	display:none;
+	border:1px solid #ccc;
+	height:auto; width:250px;
+	background:#fff;
+	margin:18px 0 0 0; z-index:10000;
+	padding:10px 10px 10px 10px;
+	text-align:left; font-size:12px;
+	border-radius:4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	box-shadow:3px 3px 2px #888;
+	-moz-box-shadow:3px 3px 2px #888;
+	-webkit-box-shadow:3px 3px 2px #888;
+}
+div.showHideColsCont p{ margin:6px auto 6px auto; }
+
+ul.cols_checklist{ padding:0; margin:0; list-style: none; }
+li.cols_checklist_item{ 
+	padding:1px; margin:0; font-size:11px;
+	border-bottom:1px solid #fff;
+}
+li.cols_checklist_item:hover{
+	background-color:#fff;
+	color:#fff;
+}
+.cols_checklist_slc_item{
+	background-color:#fff;
+	color:#fff;
+}
+
+ul.cols_checklist label{ display:block; color:#000;text-align:left; }
+ul.cols_checklist input{ vertical-align:middle; margin:2px 5px 2px 1px; }

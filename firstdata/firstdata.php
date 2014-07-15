@@ -1,7 +1,7 @@
 <?php
 /*
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision: 1.2 $
 *
 *  International Registered Trademark & Property of PrestaShop SA
@@ -19,12 +19,13 @@ class Firstdata extends PaymentModule
 	{
 		$this->name = 'firstdata';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.1';
+		$this->version = '1.2.5';
 
 		parent::__construct();
 
 		$this->displayName = $this->l('First Data');
 		$this->description = $this->l('Accept Credit card payments today with First Data (Visa, Mastercard, Amex, Discover, etc.)');
+
 		
 		/* Backward compatibility */
 		if (_PS_VERSION_ < 1.5)
@@ -200,11 +201,13 @@ class Firstdata extends PaymentModule
 		$cart = $this->context->cart;
 		if (Validate::isLoadedObject($cart) && !Order::getOrderByCartId((int)Tools::getValue('cart')))
 		{
-			$json_result = json_decode($this->_firstDataCall('{"gateway_id": "'.Configuration::get('FIRSTDATA_GATEWAY_ID').'", "password": "'.Configuration::get('FIRSTDATA_PASSWORD').'", "transaction_type": "00", "amount": "'.(float)$cart->getOrderTotal().'", "cc_number": "'.Tools::safeOutput(Tools::getValue('x_card_num')).'", "cc_expiry": "'.(Tools::getValue('x_exp_date_m') < 10 ? '0'.(int)Tools::getValue('x_exp_date_m') : (int)Tools::getValue('x_exp_date_m')).(int)Tools::getValue('x_exp_date_y').'", "cardholder_name": "'.Tools::safeOutput(Tools::getValue('firstdata_card_holder')).'"}'));
+			$result = $this->_firstDataCall('{"gateway_id": "'.Configuration::get('FIRSTDATA_GATEWAY_ID').'", "password": "'.Configuration::get('FIRSTDATA_PASSWORD').'", "transaction_type": "00", "amount": "'.(float)$cart->getOrderTotal().'", "cc_number": "'.Tools::safeOutput(Tools::getValue('x_card_num')).'", "cc_expiry": "'.(Tools::getValue('x_exp_date_m') < 10 ? '0'.(int)Tools::getValue('x_exp_date_m') : (int)Tools::getValue('x_exp_date_m')).(int)Tools::getValue('x_exp_date_y').'", "cardholder_name": "'.Tools::safeOutput(Tools::getValue('firstdata_card_holder')).'"}');
+			$json_result = Tools::jsondecode($result);
 			if (isset($json_result->transaction_approved) && $json_result->transaction_approved)
 			{
 				$this->_insertTransaction(array('id_cart' => (int)$cart->id, 'authorization_num' => pSQL($json_result->authorization_num), 'transaction_tag' => (int)$json_result->transaction_tag, 'date_add' => date('Y-m-d H:i:s')));
 				$this->validateOrder((int)$cart->id, (int)Configuration::get('PS_OS_PAYMENT'), (float)$json_result->amount, $this->displayName, pSQL($json_result->ctr), array(), null, false, $cart->secure_key);
+				Configuration::updateValue('FIRSTDATA_CONFIGURATION_OK', true);
 
 				/** @since 1.5.0 Attach the First Data Transaction ID to this Order */
 				if (version_compare(_PS_VERSION_, '1.5', '>='))

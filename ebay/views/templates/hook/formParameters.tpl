@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -104,7 +104,7 @@
 		<legend>{l s='Returns policy' mod='ebay'}</legend>
 		<label>{l s='Please define your returns policy' mod='ebay'} : </label>
 		<div class="margin-form">
-			<select name="ebay_returns_accepted_option" data-dialoghelp="#returnsAccepted" data-inlinehelp="{l s='eBay business sellers must accept returns under the Distance Selling Regulations.' mod='ebay'}">
+			<select name="ebay_returns_accepted_option" data-dialoghelp="#returnsAccepted" data-inlinehelp="{l s='eBay business sellers must accept returns under the Distance Selling Regulations.' mod='ebay'}" class="ebay_select">
 			{foreach from=$policies item=policy}
 				<option value="{$policy.value}" {if $returnsConditionAccepted == $policy.value} selected="selected"{/if}>{$policy.description}</option>
 			{/foreach}							   
@@ -113,7 +113,7 @@
 		<div style="clear:both;"></div>
 		<label>{l s='Returns within' mod='ebay'} :</label>
 		<div class="margin-form">
-			<select name="returnswithin" data-inlinehelp="{l s='eBay business sellers must offer a minimum of 14 days for buyers to return their items.' mod='ebay'}">
+			<select name="returnswithin" data-inlinehelp="{l s='eBay business sellers must offer a minimum of 14 days for buyers to return their items.' mod='ebay'}" class="ebay_select">
 					{if isset($within_values) && $within_values && sizeof($within_values)}
 						{foreach from=$within_values item='within_value'}
 							<option value="{$within_value.value}"{if isset($within) && $within == $within_value.value} selected{/if}>{$within_value.description}</option>
@@ -124,7 +124,7 @@
 		<div style="clear:both;"></div>
 		<label>{l s='Who pays' mod='ebay'} :</label>
 		<div class="margin-form">
-			<select name="returnswhopays">
+			<select name="returnswhopays" class="ebay_select">
 				{if isset($whopays_values) && $whopays_values && sizeof($whopays_values)}
 					{foreach from=$whopays_values item='whopays_value'}
 						<option value="{$whopays_value.value}"{if isset($whopays) && $whopays == $whopays_value.value} selected{/if}>{$whopays_value.description}</option>
@@ -147,7 +147,7 @@
 		</label>
 		<div class="margin-form">
 
-			<select name="listingdurations" data-dialoghelp="http://pages.ebay.com/help/sell/duration.html" data-inlinehelp="{l s='The listing duration is the length of time that your listing is active on eBay.co.uk. You can have it last 1, 3, 5, 7, 10, 30 days or Good \'Til Cancelled. Good \'Til Cancelled listings renew automatically every 30 days unless all of the items sell, you end the listing, or the listing breaches an eBay policy. Good \'Til Cancelled is the default setting here to save you time relisting your items.' mod='ebay'}">
+			<select name="listingdurations" data-dialoghelp="http://pages.ebay.com/help/sell/duration.html" data-inlinehelp="{l s='The listing duration is the length of time that your listing is active on eBay.co.uk. You can have it last 1, 3, 5, 7, 10, 30 days or Good \'Til Cancelled. Good \'Til Cancelled listings renew automatically every 30 days unless all of the items sell, you end the listing, or the listing breaches an eBay policy. Good \'Til Cancelled is the default setting here to save you time relisting your items.' mod='ebay'}" class="ebay_select">
 				{foreach from=$listingDurations item=listing key=key}
 					<option value="{$key}" {if $ebayListingDuration == $key}selected="selected" {/if}>{$listing|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
@@ -165,7 +165,7 @@
 			{l s='Default photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizedefault" data-inlinehelp="{l s='This will be the main photo and will appear on the search result and item pages.' mod='ebay'}">
+			<select name="sizedefault" data-inlinehelp="{l s='This will be the main photo and will appear on the search result and item pages.' mod='ebay'}" class="ebay_select">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizedefault} selected{/if}>{$size.name}</option>
@@ -179,7 +179,7 @@
 			{l s='Main photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizebig" data-inlinehelp="{l s='This photo will appear as default photo in your listing\'s description.' mod='ebay'}">
+			<select name="sizebig" data-inlinehelp="{l s='This photo will appear as default photo in your listing\'s description.' mod='ebay'}" class="ebay_select">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizebig} selected{/if}>{$size.name}</option>
@@ -193,7 +193,7 @@
 			{l s='Small photo' mod='ebay'}
 		</label>
 		<div class="margin-form">
-			<select name="sizesmall" data-inlinehelp="{l s='This photo will appear as thumbnail in your listing\'s description.' mod='ebay'}">
+			<select name="sizesmall" data-inlinehelp="{l s='This photo will appear as thumbnail in your listing\'s description.' mod='ebay'}" class="ebay_select">
 				{if isset($sizes) && $sizes && sizeof($sizes)}
 					{foreach from=$sizes item='size'}
 						<option value="{$size.id_image_type}"{if $size.id_image_type == $sizesmall} selected{/if}>{$size.name}</option>

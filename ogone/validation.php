@@ -73,6 +73,7 @@ if (Validate::isLoadedObject($cart))
 			case 9:
 				/* Payment OK */
 				$ogone->validate((int)$_GET['orderID'], Configuration::get('PS_OS_PAYMENT'), (float)$_GET['amount'], $ogone->l('Payment authorized / OK').$params, Tools::safeOutput($_GET['secure_key']));
+				Configuration::updateValue('OGONE_CONFIGURATION_OK', true);
 				break;
 			case 6:
 			case 7:

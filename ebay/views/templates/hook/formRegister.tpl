@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -81,7 +81,7 @@
 
 		<label for="ebay_countries">{l s='Choose ebay site you want to listen' mod='ebay'}</label>
 		<div class="margin-form">
-			<select name="ebay_country" id="ebay_countries">
+			<select name="ebay_country" id="ebay_countries" class="ebay_select">
 				{if isset($ebay_countries) && $ebay_countries && sizeof($ebay_countries)}
 					{foreach from=$ebay_countries item='country' key='key'}
 						<option value="{$key}" data-signin="{$country.signin}" {if $key == $default_country} selected{/if}>{if $country.subdomain}{$country.subdomain}.{/if}ebay.{$country.site_extension}</option>

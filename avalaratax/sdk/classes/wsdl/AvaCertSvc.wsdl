@@ -700,10 +700,10 @@
   </wsdl:binding>
   <wsdl:service name="AvaCertSvc">
     <wsdl:port name="AvaCertSvcSoap" binding="tns:AvaCertSvcSoap">
-      <soap:address location="http://localhost/avatax.branches.5.9.0/AvaCert/AvaCertSvc.wsdl" />
+      <soap:address location="http://localhost/avatax.branches.11.2.0/AvaCert/AvaCertSvc.wsdl" />
     </wsdl:port>
     <wsdl:port name="AvaCertSvcSoap12" binding="tns:AvaCertSvcSoap12">
-      <soap12:address location="http://localhost/avatax.branches.5.9.0/AvaCert/AvaCertSvc.wsdl" />
+      <soap12:address location="http://localhost/avatax.branches.11.2.0/AvaCert/AvaCertSvc.wsdl" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

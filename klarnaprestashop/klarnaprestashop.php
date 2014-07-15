@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision: 15821 $
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.4';
+		$this->version = '1.7.8';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -73,6 +73,7 @@ class KlarnaPrestaShop extends PaymentModule
 
 		$this->displayName = $this->l('Klarna Payment');
 		$this->description = $this->l('Klarna provides a revolutionary payment solution for online merchants.');
+
 
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.$this->moduleName.'/backward_compatibility/backward.php');
@@ -438,6 +439,7 @@ class KlarnaPrestaShop extends PaymentModule
 
 					if (!$error)
 					{
+						Configuration::updateValue('KLARNA_CONFIGURATION_OK', true);
 						Configuration::updateValue('KLARNA_STORE_ID_'.$country['name'], $storeId);
 						Configuration::updateValue('KLARNA_SECRET_'.$country['name'], $secret);
 						Configuration::updateValue('KLARNA_INVOICE_FEE_'.$country['name'], (float)Tools::getValue('klarnaInvoiceFee'.$country['name']));

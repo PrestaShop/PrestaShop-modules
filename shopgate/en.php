@@ -1,6 +1,6 @@
 <?php
-/*
- * Shopgate GmbH
+/**
+* Shopgate GmbH
 *
 * NOTICE OF LICENSE
 *

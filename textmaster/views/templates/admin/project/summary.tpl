@@ -66,7 +66,7 @@
     
     <label>{l s='Project will be done by:' mod='textmaster'}</label>
     <div class="margin-form">
-    {if $summary->getProjectData($ctype|cat:'_same_author_must_do_entire_project') === 0}
+    {if $summary->getProjectData($ctype|cat:'_same_author_must_do_entire_project') == 0}
         {l s='Multiple authors' mod='textmaster'}
     {else}
         {l s='One author only' mod='textmaster'}

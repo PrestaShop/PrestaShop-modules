@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -80,7 +80,7 @@ class Ebay extends Module
 	{
 		$this->name = 'ebay';
 		$this->tab = 'market_place';
-		$this->version = '1.6';
+		$this->version = '1.6.7';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -91,6 +91,7 @@ class Ebay extends Module
 		$this->displayName = $this->l('eBay');
 		$this->description = $this->l('Easily export your products from PrestaShop to eBay, the biggest market place, to acquire new customers and realize more sales.');
 		$this->module_key = '7a6b007a219bab59c1611254347f21d5';
+
 
 		// Checking Extension
 		$this->_checkExtensionsLoading();
@@ -707,14 +708,6 @@ class Ebay extends Module
 			EbayCategory::updateCategoryTable($ebay->getCategoriesSkuCompliancy());
 		}
 
-		// Checking Country
-		if (Tools::getValue('ebay_country_default_fr') == 'ok')
-			$this->setConfiguration('EBAY_COUNTRY_DEFAULT', 8);
-
-		// Check the country
-		if (!$this->ebay_country->checkCountry())
-				return $this->html.'<center>'.$this->displayError($this->l('The eBay module currently works for eBay.fr, eBay.it, eBay.co.uk and eBay.es').'.<br /><a href="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'&ebay_country_default_fr=ok">'.$this->l('Continue anyway ?').'</a>').'</center>';
-
 		// Checking Extension
 		if (!extension_loaded('curl') || !ini_get('allow_url_fopen'))
 		{
@@ -778,6 +771,7 @@ class Ebay extends Module
 			'path' => $this->_path,
 			'multishop' => (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive()),
 			'site_extension' => $this->ebay_country->getSiteExtension(),
+			'documentation_lang' => $this->ebay_country->getDocumentationLang(),
 			'is_version_one_dot_five' => version_compare(_PS_VERSION_, '1.5', '>'),
 			'is_version_one_dot_five_dot_one' => (version_compare(_PS_VERSION_, '1.5.1', '>=') && version_compare(_PS_VERSION_, '1.5.2', '<')),
 			'css_file' => $this->_path . 'views/css/ebay_back.css',
@@ -1233,7 +1227,8 @@ class Ebay extends Module
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
 						'percent' => pSQL($percentValue),
-						'date_upd' => pSQL($date)
+						'date_upd' => pSQL($date),
+						'sync' => 0
 					);
 
 				if (EbayCategoryConfiguration::getIdByCategoryId($id_category))
@@ -1938,10 +1933,10 @@ class Ebay extends Module
 	 **/
 	private function _displayHelp()
 	{
-		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getIsoCode()).'.html';
+		$help_file = dirname(__FILE__).'/help/help-'.strtolower($this->ebay_country->getDocumentationLang()).'.html';
 
 		if (!file_exists($help_file))
-			$help_file = dirname(__FILE__).'/help/help-gb.html';
+			$help_file = dirname(__FILE__).'/help/help-en.html';
 
 		return Tools::file_get_contents($help_file);
 	}

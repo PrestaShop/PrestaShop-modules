@@ -1,5 +1,5 @@
 {*
- * 2007-2013 PrestaShop
+ * 2007-2014 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2013 PrestaShop SA
+ *  @copyright  2007-2014 PrestaShop SA
  *  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  *}
@@ -179,7 +179,7 @@
 				{/if}
 	 			<form class="gk-form" action="" method="post">
 	 				<p class="font2">{l s='Have an account? Enter your email address, we will send you an API key to activate the module.' mod='globkurier'}</p>
-	 				<table class="form-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+	 				<table class="form-table" border="0" cellpadding="0" cellspacing="0" width="100%" style="float:left;">
 						<tr align="center">
 							<td><label class="font2">{l s='Email (Login)' mod='globkurier'}:</label></td>
 							<td align="left"><input class="gk-input-txt" type="text" name="gk_api_email" value="{$gk_api_email|escape:'htmlall':'UTF-8'}" /></td>

@@ -30,7 +30,7 @@ class CacheTools
 	{
 		$result = Db::getInstance()->ExecuteS('SELECT ac.`tax_rate`, ac.`update_date`
 		FROM `'._DB_PREFIX_.'avalara_product_cache` ac
-		WHERE ac.`id_product` IN ('.pSQL($ids_product).')	AND ac.`region` = \''.pSQL($region).'\' AND ac.`id_address` = '.(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		WHERE ac.`id_product` IN ('.pSQL($ids_product).') AND ac.`region` = \''.pSQL($region).'\' AND ac.`id_address` = '.(int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
 		if (count($result) == count($cart->getProducts()))
 		{
@@ -38,7 +38,7 @@ class CacheTools
 			date_default_timezone_set(@date_default_timezone_get());
 			$date2 = time();
 			foreach ($result as $line)
-				if (abs($date2 - strtotime($line['update_date'])) > 3600)
+				if (abs($date2 - strtotime($line['update_date'])) > Configuration::get('AVALARA_CACHE_MAX_LIMIT'))
 					return true;
 			return false;
 		}
@@ -61,14 +61,15 @@ class CacheTools
 		$result = Db::getInstance()->getRow('
 		SELECT `cart_hash`, `update_date`
 		FROM `'._DB_PREFIX_.'avalara_carrier_cache`
-		WHERE `cart_hash` = \''.pSQL(md5(serialize($tmp))).'\'');
+		WHERE `cart_hash` = \''.pSQL(md5(serialize($tmp))).'\'
+		ORDER BY update_date DESC');
 
 		if (!$result)
 			return true;
 
 		// Compare date/time
 		date_default_timezone_set(@date_default_timezone_get());
-		if (abs(time() - strtotime($result['update_date'])) > 3600)
+		if (abs(time() - strtotime($result['update_date'])) > Configuration::get('AVALARA_CACHE_MAX_LIMIT'))
 			return true;
 
 		return false;
@@ -136,9 +137,27 @@ class CacheTools
 			}
 		}
 	}
-
+	
 	public static function getCarrierTaxAmount(Cart $cart)
 	{
-		return (float)Db::getInstance()->getValue('SELECT `amount` FROM `'._DB_PREFIX_.'avalara_carrier_cache` WHERE `id_cart` = '.(int)$cart->id.' AND `id_carrier` = '.(int)$cart->id_carrier);
+		$region = null;
+
+		$id_address = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+		if ($id_address)
+		{
+			$address = new Address((int)$id_address);
+			if (Validate::isLoadedObject($address) && isset($address->id_state) && $address->id_state)
+			{
+				$state = new State((int)$address->id_state);
+				if (Validate::isLoadedObject($state) && isset($state->iso_code) && !empty($state->iso_code))
+					$region = $state->iso_code;
+			}
+		}
+
+		return (float)Db::getInstance()->getValue('
+		SELECT `amount`
+		FROM `'._DB_PREFIX_.'avalara_carrier_cache`
+		WHERE `id_cart` = '.(int)$cart->id.' AND `id_carrier` = '.(int)$cart->id_carrier.(!empty($region) ? ' AND region = \''.pSQL($region).'\'' : '').'
+		ORDER BY update_date DESC');
 	}
 }

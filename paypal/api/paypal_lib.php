@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,21 +19,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 include_once(_PS_MODULE_DIR_.'paypal/api/paypal_connect.php');
 
-define('PAYPAL_API_VERSION', '94.0');
+define('PAYPAL_API_VERSION', '106.0');
 
 class PaypalLib
 {
+
+	private $enable_log = false;
 	private $_logs = array();
-
 	protected $paypal = null;
-
 	public function __construct()
 	{
 		$this->paypal = new PayPal();
@@ -44,25 +44,35 @@ class PaypalLib
 		return $this->_logs;
 	}
 
-	public function makeCall($host, $script, $methodName, $data, $method_version = '')
+	public function makeCall($host, $script, $method_name, $data, $method_version = '')
 	{
 		// Making request string
 		$method_version = (!empty($method_version)) ? $method_version : PAYPAL_API_VERSION;
 
 		$params = array(
-			'METHOD' => $methodName,
-			'VERSION' => $method_version,
-			'PWD' => Configuration::get('PAYPAL_API_PASSWORD'),
-			'USER' => Configuration::get('PAYPAL_API_USER'),
+			'METHOD'    => $method_name,
+			'VERSION'   => $method_version,
+			'PWD'       => Configuration::get('PAYPAL_API_PASSWORD'),
+			'USER'      => Configuration::get('PAYPAL_API_USER'),
 			'SIGNATURE' => Configuration::get('PAYPAL_API_SIGNATURE')
 		);
 
-		$request = http_build_query($params, '', '&');
-		$request .= '&'.(!is_array($data) ? $data : http_build_query($data, '', '&'));
-
+		$data = array_merge($data, $params);
+		
+		$request = http_build_query($data, '', '&');
 		// Making connection
 		$result = $this->makeSimpleCall($host, $script, $request, true);
 		$response = explode('&', $result);
+		
+		if ($this->enable_log === true)
+		{
+			$handle = fopen(dirname(__FILE__) . '/Results.txt', 'a+');
+			fwrite($handle, 'Host : '.print_r($host, true)."\r\n");
+			fwrite($handle, 'Request : '.print_r($request, true)."\r\n");
+			fwrite($handle, 'Result : '.print_r($result, true)."\r\n");
+			fwrite($handle, 'Logs : '.print_r($this->_logs, true."\r\n"));
+			fclose($handle);
+		}
 
 		foreach ($response as $value)
 		{
@@ -73,12 +83,12 @@ class PaypalLib
 		if (!Configuration::get('PAYPAL_DEBUG_MODE'))
 			$this->_logs = array();
 
-		$toExclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
+		$to_exclude = array('TOKEN', 'SUCCESSPAGEREDIRECTREQUESTED', 'VERSION', 'BUILD', 'ACK', 'CORRELATIONID');
 		$this->_logs[] = '<b>'.$this->paypal->l('PayPal response:').'</b>';
 
 		foreach ($return as $key => $value)
 		{
-			if (!Configuration::get('PAYPAL_DEBUG_MODE') && in_array($key, $toExclude))
+			if (!Configuration::get('PAYPAL_DEBUG_MODE') && in_array($key, $to_exclude))
 				continue;
 			$this->_logs[] = $key.' -> '.$value;
 		}

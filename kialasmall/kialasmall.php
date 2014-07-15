@@ -65,7 +65,7 @@ class Kialasmall extends Module
 	{
 		$this->name = 'kialasmall';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.4.1';
+		$this->version = '1.4.3';
 		$this->compatibility_mode = version_compare(_PS_VERSION_, '1.5.0.0', '<');
 		$this->author = 'PrestaShop';
 		$this->need_instance = false;
@@ -76,6 +76,7 @@ class Kialasmall extends Module
 		$this->page = basename(__FILE__, '.php');
 		$this->displayName = $this->l('Kiala Light webservice integration');
 		$this->description = $this->l('Offer delivery choice and savings to your customers. Activate the Kiala collection Point delivery option.');
+
 		$this->register_link = 'http://www.kiala.com';
 		$this->ws_url = 'http://packandship-ws.kiala.com/psws/order?wsdl';
 	}

@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2014 PrestaShop SA
+ *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * Certissim main class: gives all the methods to access the Certissim webservices
@@ -9,7 +33,7 @@ class CertissimSac extends CertissimService
 {
 
 	const PRODUCT_NAME = 'sac';
-	const IDSEPARATOR = '^'; //séparateur des refid pour la méthode getvalidstack
+	const IDSEPARATOR = '^'; /*séparateur des refid pour la méthode getvalidstack*/
 	const CONSULT_MODE_MINI = 'mini';
 	const CONSULT_MODE_FULL = 'full';
 
@@ -74,14 +98,14 @@ class CertissimSac extends CertissimService
 	 * @param bool $repFT display FT answer or not
 	 * @return string script response
 	 */
-	public function getValidation($refid, $mode = 'mini', $repFT = '0')
+	public function getValidation($refid, $mode = 'mini', $rep_ft = '0')
 	{
 		$data = array(
 			'SiteID' => $this->getSiteId(),
 			'Pwd' => $this->getPassword(),
 			'RefID' => $refid,
 			'Mode' => $mode,
-			'RepFT' => $repFT
+			'RepFT' => $rep_ft
 		);
 		$con = new CertissimFianetSocket($this->getUrlgetvalidation(), 'POST', $data);
 		return new CertissimXMLElement($con->send());
@@ -96,14 +120,14 @@ class CertissimSac extends CertissimService
 	 * @param string $urlback URL whereto send the response
 	 * @return string script response
 	 */
-	public function getRedirectValidation($refid, $mode = Sac::CONSULT_MODE_MINI, $urlback = null, $repFT = '0')
+	public function getRedirectValidation($refid, $mode = Sac::CONSULT_MODE_MINI, $urlback = null, $rep_ft = '0')
 	{
 		$data = array(
 			'SiteID' => $this->getSiteId(),
 			'Pwd' => $this->getPassword(),
 			'RefID' => $refid,
 			'Mode' => $mode,
-			'RepFT' => $repFT,
+			'RepFT' => $rep_ft,
 			'urlBack' => (!is_null($urlback) ? $urlback : $this->getUrldefaultredirectvaildationurlback()),
 		);
 		$con = new CertissimFianetSocket($this->getUrlredirectvalidation(), 'POST', $data);
@@ -118,15 +142,15 @@ class CertissimSac extends CertissimService
 	 * @param bool $repFT display FT answer or not
 	 * @return string script response
 	 */
-	public function getValidstackByReflist(array $listId, $mode = Sac::CONSULT_MODE_MINI, $repFT = '0')
+	public function getValidstackByReflist(array $list_id, $mode = Sac::CONSULT_MODE_MINI, $rep_ft = '0')
 	{
-		$list = implode(CertissimSac::IDSEPARATOR, $listId);
+		$list = implode(CertissimSac::IDSEPARATOR, $list_id);
 
 		$data = array(
 			'SiteID' => $this->getSiteId(),
 			'Pwd' => $this->getPassword(),
 			'Mode' => $mode,
-			'RepFT' => $repFT,
+			'RepFT' => $rep_ft,
 			'ListID' => $list,
 			'Separ' => CertissimSac::IDSEPARATOR
 		);
@@ -142,13 +166,13 @@ class CertissimSac extends CertissimService
 	 * @param bool $repFT display FT answer or not
 	 * @return string script response
 	 */
-	public function getValidstackByDate($date, $numpage, $mode = Sac::CONSULT_MODE_MINI, $repFT = '0')
+	public function getValidstackByDate($date, $numpage, $mode = Sac::CONSULT_MODE_MINI, $rep_ft = '0')
 	{
 		//checks the date format
 		if (!preg_match('#^[0-9]{2}/[0-1][0-9]/[0-9]{4}$#', $date))
 		{
 			$msg = "La date '$date' n'est pas au bon format. Format attendu : dd/mm/YYYY";
-			CertissimLogger::insertLog(__METHOD__." : ".__LINE__, $msg);
+			CertissimLogger::insertLog(__METHOD__.' : '.__LINE__, $msg);
 			throw new Exception($msg);
 		}
 
@@ -156,7 +180,7 @@ class CertissimSac extends CertissimService
 			'SiteID' => $this->getSiteId(),
 			'Pwd' => $this->getPassword(),
 			'Mode' => $mode,
-			'RepFT' => $repFT,
+			'RepFT' => $rep_ft,
 			'DtStack' => $date,
 			'Ind' => $numpage
 		);
@@ -183,14 +207,14 @@ class CertissimSac extends CertissimService
 	 * @param int $repFT display FT answer or not
 	 * @return CertissimXMLElement
 	 */
-	public function getAlert($mode = 'new', $output = 'mini', $repFT = 0)
+	public function getAlert($mode = 'new', $output = 'mini', $rep_ft = 0)
 	{
 		$data = array(
 			'SiteID' => $this->getSiteId(),
 			'Pwd' => $this->getPassword(),
 			'Mode' => $mode,
 			'Output' => $output,
-			'RepFT' => $repFT,
+			'RepFT' => $rep_ft,
 		);
 		$con = new CertissimFianetSocket($this->getUrlgetalert(), 'POST', $data);
 		return new CertissimXMLElement($con->send());
