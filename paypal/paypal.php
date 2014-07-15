@@ -83,7 +83,7 @@ class PayPal extends PaymentModule
 	{
 		$this->name = 'paypal';
 		$this->tab = 'payments_gateways';
-		$this->version = '3.7.1';
+		$this->version = '3.7.2';
 		$this->author = 'PrestaShop';
 
 		$this->currencies = true;
@@ -606,6 +606,11 @@ class PayPal extends PaymentModule
 				return false;
 			Tools::redirect('modules/'.$this->name.'/express_checkout/submit.php?confirm=1&token='.$this->context->cookie->paypal_token.'&payerID='.$this->context->cookie->paypal_payer_id);
 		}
+	}
+
+	public function setPayPalAsConfigured()
+	{
+		Configuration::updateValue('PAYPAL_CONFIGURATION_OK', true);
 	}
 
 	public function hookAdminOrder($params)
@@ -1357,6 +1362,8 @@ class PayPal extends PaymentModule
 
 			if (count($transaction) > 0)
 				PayPalOrder::saveOrder((int)$this->currentOrder, $transaction);
+
+			$this->setPayPalAsConfigured();
 		}
 	}
 

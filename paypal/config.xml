@@ -2,7 +2,7 @@
 <module>
 	<name>paypal</name>
 	<displayName><![CDATA[PayPal]]></displayName>
-	<version><![CDATA[3.7.1]]></version>
+	<version><![CDATA[3.7.2]]></version>
 	<description><![CDATA[Accepts payments by credit cards (CB, Visa, MasterCard, Amex, Aurore, Cofinoga, 4 stars) with PayPal.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

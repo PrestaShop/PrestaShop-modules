@@ -288,7 +288,7 @@ class PaypalExpressCheckout extends Paypal
 			if (isset($product['attributes']) && (empty($product['attributes']) === false))
 				$fields['L_PAYMENTREQUEST_0_NAME'.$index] .= ' - '.$product['attributes'];
 
-			$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($product['description_short']), 0, 100).'...';
+			$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($product['description_short']), 0, 50).'...';
 
 			$fields['L_PAYMENTREQUEST_0_AMT'.$index] = Tools::ps_round($product['price_wt'], $this->decimals);
 			$fields['L_PAYMENTREQUEST_0_QTY'.$index] = $product['quantity'];
@@ -308,7 +308,7 @@ class PaypalExpressCheckout extends Paypal
 
 				$fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
 				if (isset($discount['description']) && !empty($discount['description']))
-					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 100).'...';
+					$fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
 
 				/* It is a discount so we store a negative value */
 				$fields['L_PAYMENTREQUEST_0_AMT'.$index] = - 1 * Tools::ps_round($discount['value_real'], $this->decimals);
