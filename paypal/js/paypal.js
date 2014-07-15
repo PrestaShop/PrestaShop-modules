@@ -43,7 +43,6 @@ $(document).ready( function() {
 	function displayExpressCheckoutShortcut() {
 		var id_product = $('input[name="id_product"]').val();
 		var id_product_attribute = $('input[name="id_product_attribute"]').val();
-
 		$.ajax({
 			type: "GET",
 			url: baseDir+'/modules/paypal/express_checkout/ajax.php',
@@ -127,7 +126,14 @@ $(document).ready( function() {
 
 	var modulePath = 'modules/paypal';
 	var subFolder = '/integral_evolution';
-	var fullPath = baseDir + modulePath + subFolder;
+	{/literal}
+	{if Configuration::get('PS_SSL_ENABLED')}
+		var baseDirPP = baseDir.replace('http', 'https');
+	{else}
+		var baseDirPP = baseDir;
+	{/if}
+	{literal}
+	var fullPath = baseDirPP + modulePath + subFolder;
 	var confirmTimer = false;
 		
 	if ($('form[target="hss_iframe"]').length == 0) {
@@ -145,6 +151,8 @@ $(document).ready( function() {
 
 	{/literal}{if isset($id_cart)}{literal}
 	function getOrdersCount() {
+
+
 		$.get(
 			fullPath + '/confirm.php',
 			{ id_cart: '{/literal}{$id_cart}{literal}' },
