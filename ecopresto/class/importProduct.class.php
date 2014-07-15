@@ -60,13 +60,16 @@ class importerProduct
 
 	public function deleteProduct($idP, $ref)
 	{
-		$product = new Product($idP);
-		$product->delete();
-		self::deleteAttributePdt($ref);
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported`=2 WHERE `reference`="'.pSQL($ref).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
-
-		if (Db::getInstance()->execute('SELECT `reference` FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted` WHERE `reference`="'.pSQL($ref).'"'))
-			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_deleted` SET status=1 WHERE `reference`="'.pSQL($ref).'"');
+		if ($idP != '')
+		{
+			$product = new Product($idP);
+			$product->delete();
+			self::deleteAttributePdt($ref);
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_shop` SET `imported`=2 WHERE `reference`="'.pSQL($ref).'" AND `id_shop`='.(int)self::getInfoEco('ID_SHOP'));
+	
+			if (Db::getInstance()->execute('SELECT `reference` FROM `'._DB_PREFIX_.'ec_ecopresto_product_deleted` WHERE `reference`="'.pSQL($ref).'"'))
+				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'ec_ecopresto_product_deleted` SET status=1 WHERE `reference`="'.pSQL($ref).'"');
+		}
 	}
 
 	public static function getInfoEco($name)
