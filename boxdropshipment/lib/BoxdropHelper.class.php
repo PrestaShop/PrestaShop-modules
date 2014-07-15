@@ -239,4 +239,22 @@
 			}
 			return $sdk;
 		}
+
+
+		/**
+		 * Returns an array out of the given string. 
+		 * Wrapped explode, to avoid creating an array with an empty value upon empty $input 
+		 * 
+		 * @author sweber <sw@boxdrop.com>
+		 * @param  string $delimiter
+		 * @param  string $input
+		 * @return array 
+		 */
+		public static function explodeString($delimiter, $input)
+		{
+			if (empty($input)) 
+				return array();
+			else 
+				return explode($delimiter, $input);
+		}
 	}
