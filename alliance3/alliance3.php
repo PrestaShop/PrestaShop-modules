@@ -31,7 +31,7 @@ class alliance3 extends PaymentModule
 {
 	private $_postErrors = array();
 	private $_warnings = array();
-	
+
 	/**
 	 * @brief Constructor
 	 */
@@ -39,10 +39,10 @@ class alliance3 extends PaymentModule
 	{
 		$this->name = 'alliance3';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.7';
+		$this->version = '1.2.8';
 		$this->author = 'go4.fi';
 		$this->className = 'alliance3';
-		
+
 		parent::__construct();
 
 		$this->displayName = $this->l('Alliance Processing');
@@ -56,7 +56,7 @@ class alliance3 extends PaymentModule
 			$this->_warnings[] = $this->l('In order to use your module, please activate OpenSsl (PHP extension)');
 		if (!function_exists('curl_init'))
 			$this->_warnings[] = $this->l('In order to use your module, please activate cURL (PHP extension)');
-		
+
 		/* Backward compatibility */
 		require(_PS_MODULE_DIR_.'alliance3/backward_compatibility/backward.php');
 		$this->context->smarty->assign('base_dir', __PS_BASE_URI__);
@@ -113,10 +113,10 @@ class alliance3 extends PaymentModule
 	public function getContent()
 	{
 		$html = '';
-		
+
 		if (count($this->_warnings))
 			$html .= $this->_displayWarning();
-		
+
 		if (Tools::isSubmit('submitMerchantWare') || Tools::isSubmit('submitLayoutMerchantWare') || Tools::isSubmit('subscribeMerchantWare'))
 		{
 			$this->_postValidation();
@@ -181,7 +181,7 @@ class alliance3 extends PaymentModule
 				'states' => State::getStatesByIdCountry(Country::getByIso('US'))
 			)
 		);
-		
+
 		return $this->display(__FILE__, 'views/templates/admin/intro.tpl');
 	}
 
@@ -195,22 +195,22 @@ class alliance3 extends PaymentModule
 		$orderStates = OrderState::getOrderStates((int)$this->context->cookie->id_lang);
 		if(Configuration::get('ALLIANCE_CARD_DISCOVER')!='off')
 			$ALLIANCE_CARD_DISCOVER='on';
-		else 
+		else
 			$ALLIANCE_CARD_DISCOVER=Configuration::get('ALLIANCE_CARD_DISCOVER');
-		
+
 		if(Configuration::get('ALLIANCE_CARD_VISA')!='off')
 			$ALLIANCE_CARD_VISA='on';
-		else 
+		else
 			$ALLIANCE_CARD_VISA=Configuration::get('ALLIANCE_CARD_VISA');
-		
+
 		if(Configuration::get('ALLIANCE_CARD_MASTERCARD')!='off')
 			$ALLIANCE_CARD_MASTERCARD='on';
-		else 
+		else
 			$ALLIANCE_CARD_MASTERCARD=Configuration::get('ALLIANCE_CARD_MASTERCARD');
-		
+
 		if(Configuration::get('ALLIANCE_CARD_AX')!='off')
 			$ALLIANCE_CARD_AX='on';
-		else 
+		else
 			$ALLIANCE_CARD_AX=Configuration::get('ALLIANCE_CARD_AX');
 
 		$this->context->smarty->assign(
@@ -240,7 +240,7 @@ class alliance3 extends PaymentModule
 				)
 			)
 		);
-		
+
 		return $this->display(__FILE__, 'views/templates/admin/credential.tpl');
 	}
 
@@ -264,7 +264,7 @@ class alliance3 extends PaymentModule
 				'ALLIANCEACH_DRIVER'=>Configuration::get('ALLIANCEACH_DRIVER'),
 			)
 		);
-		
+
 		return $this->display(__FILE__, 'views/templates/admin/layout.tpl');
 	}
 
@@ -293,7 +293,7 @@ class alliance3 extends PaymentModule
 
 		Configuration::updateValue('ALLIANCEACH_IDENTITY', Tools::getvalue('allianceach_identity'));
 		Configuration::updateValue('ALLIANCEACH_DRIVER', Tools::getvalue('allianceach_driver'));
-		
+
 		$this->displayConfirmation($this->l('Checking Settings Updated'));
 	}
 
@@ -306,7 +306,7 @@ class alliance3 extends PaymentModule
 	{
 
 		$url="https://aurora.visionpayments.com/aurora/lead_post.php";
-		$postFields="agent_id=4774&source_id=0&campaign_id=0&lead_post_key=d1c5e2d2b3d056c6df1a37d46861d656&";
+		$postFields="agent_id=4774&source_id=48&campaign_id=0&lead_post_key=d1c5e2d2b3d056c6df1a37d46861d656&";
 		$postFields.="return_url=http://alliance-processing.com&firstname=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&lastname=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&legal_name=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&legal_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&Email=".urlencode(Tools::safeOutput(Tools::getValue('email')));
 		$postFields.="&legal_address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&legal_city=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&legal_state=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&legal_zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')));
 		$postFields.="&mobile_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone2')));
@@ -336,22 +336,22 @@ class alliance3 extends PaymentModule
 			$authorizeaim_card_discover = 'off';
 		else
 			$authorizeaim_card_discover = Tools::getvalue('authorizeaim_card_discover');
-			
+
 		if (Tools::getvalue('authorizeaim_card_mastercard') == '')
 			$authorizeaim_card_mastercard = 'off';
 		else
 			$authorizeaim_card_mastercard = Tools::getvalue('authorizeaim_card_mastercard');
-		
+
 		if (Tools::getvalue('authorizeaim_card_visa') == '')
 			$authorizeaim_card_visa = 'off';
 		else
 			$authorizeaim_card_visa = Tools::getvalue('authorizeaim_card_visa');
-			
+
 		if(Tools::getvalue('authorizeaim_card_ax') == '')
 			$authorizeaim_card_ax = 'off';
 		else
 			$authorizeaim_card_ax = Tools::getvalue('authorizeaim_card_ax');
-			
+
 		Configuration::updateValue('ALLIANCE_ENABLE', Tools::getvalue('authorizeaim_enable'));
 		Configuration::updateValue('ALLIANCE_LOGIN_ID', Tools::getvalue('authorizeaim_login_id'));
 		Configuration::updateValue('ALLIANCE_KEY', Tools::getvalue('authorizeaim_key'));
@@ -389,12 +389,12 @@ class alliance3 extends PaymentModule
 	public function hookPayment($params)
 	{
 		$currency = Currency::getCurrencyInstance($this->context->cookie->id_currency);
-		
+
 		if (!Validate::isLoadedObject($currency) || $currency->iso_code != 'USD')
 			return false;
-		
+
 		$demo = 1;
-		
+
 		if ($demo == 1 || Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && Tools::strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$isFailed = Tools::getValue('aimerror');
@@ -424,7 +424,7 @@ class alliance3 extends PaymentModule
 			$this->context->smarty->assign('midtype', $midtype);
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
-			
+
 			return $this->display(__FILE__, 'views/templates/front/allianceaim.tpl');
 		}
 	}
@@ -448,7 +448,7 @@ class alliance3 extends PaymentModule
 		if ($order->getCurrentState() == Configuration::get('PS_OS_CANCELED') && $tokenTransaction->getStatus() != 'CANCEL')
 		{
 			$call = new Call();
-			
+
 			try
 			{
 				$result = $call->voidTransaction($token);
@@ -457,7 +457,7 @@ class alliance3 extends PaymentModule
 			{
 				$this->context->smarty->assign('error', Tools::safeOutput($e->getMessage()));
 			}
-			
+
 			if (isset($result->VoidResult->ApprovalStatus) && strrpos($result->VoidResult->ApprovalStatus, 'APPROVED') !== false)
 			{
 				$tokenTransaction->setStatus('CANCEL');
@@ -470,7 +470,7 @@ class alliance3 extends PaymentModule
 		if ($order->getCurrentState() == Configuration::get('PS_OS_REFUND') && $tokenTransaction->getStatus() != 'REFUND')
 		{
 			$call = new Call();
-			
+
 			try
 			{
 				$result = $call->refundTransaction($token, $order->total_paid_real);
@@ -505,7 +505,7 @@ class alliance3 extends PaymentModule
 		if (Validate::isLoadedObject($this->context->cart))
 		{
 			$call = new Call();
-			
+
 			try
 			{
 				$result = $call->getTransaction($token);
@@ -514,7 +514,7 @@ class alliance3 extends PaymentModule
 			{
 				Logger::AddLog('[MerchantWare] Problem to verify a payment. Cart id: '.$id_cart.', token: '.$token.'.', 2);
 			}
-			
+
 			if (isset($result->TransactionsByReferenceResult->TransactionReference4->ApprovalStatus))
 			{
 				if ($result->TransactionsByReferenceResult->TransactionReference4->ApprovalStatus == 'APPROVED')
@@ -534,14 +534,14 @@ class alliance3 extends PaymentModule
 			Logger::AddLog('[MerchantWare] The Shopping cart #'.(int)$id_cart.' was not found during the payment validation step.', 2);
 
 		$url = 'index.php?controller=order-confirmation&';
-		
+
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
 			$url = 'order-confirmation.php?';
 
 		Tools::redirect('location:'.__PS_BASE_URI__.$url.'id_module='.(int)$this->id.'&id_cart='.(int)$this->context->cart->id.'&key='.$this->context->customer->secure_key);
 		exit;
 	}
-	
+
 	public function setTransactionDetail($response)
 	{
 		// If Exist we can store the details
