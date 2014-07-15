@@ -413,7 +413,7 @@
 		{
 			$ids = array();
 
-			if ($type & self::TYPE_ECONOMY == self::TYPE_ECONOMY)
+			if (($type & self::TYPE_ECONOMY) == self::TYPE_ECONOMY)
 			{
 				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_ECONOMY));
 				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_ECONOMY));
@@ -427,7 +427,7 @@
 				}
 			}
 
-			if ($type & self::TYPE_ECONOMY == self::TYPE_EXPRESS)
+			if (($type & self::TYPE_EXPRESS) == self::TYPE_EXPRESS)
 			{
 				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_EXPRESS));
 				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_EXPRESS));
@@ -456,7 +456,7 @@
 		public static function updateUsedCarriers($type, $id)
 		{
 			$old_ids = BoxdropHelper::explodeString(';', Configuration::get($type));
-			array_push($old_ids, $id);
+			$old_ids[] = $id;
 			Configuration::updateValue($type, implode(';', $old_ids));
 		}
 	}
