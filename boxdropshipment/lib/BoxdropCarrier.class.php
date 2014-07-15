@@ -24,6 +24,11 @@
 	 */
 	class BoxdropCarrier
 	{
+		
+		const TYPE_ECONOMY = 1;
+		const TYPE_EXPRESS = 2;
+		const TYPE_ALL = 4;
+		
 		/**
 		 * @var $default_ranges array with default pricings for shippings.
 		 *
@@ -393,5 +398,65 @@
 
 			}
 			return true;
+		}
+		
+		
+		/**
+		 * Returns all previously used carrier IDs for the given mode
+		 * 
+		 * @author sweber  <sw@boxdrop.com>
+		 * @param  string  $type
+		 * @param  boolean $with_current
+		 * @return array
+		 */
+		public static function getUsedCarrierIds($type = self::TYPE_ALL, $with_current = true)
+		{
+			$ids = array();
+
+			if (($type & self::TYPE_ECONOMY) == self::TYPE_ECONOMY)
+			{
+				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_ECONOMY));
+				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_ECONOMY));
+				$ids = array_merge($ids, $direct_ids);
+				$ids = array_merge($ids, $dropoff_ids);
+
+				if ($with_current)
+				{
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_ECONOMY);
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_ECONOMY);
+				}
+			}
+
+			if (($type & self::TYPE_EXPRESS) == self::TYPE_EXPRESS)
+			{
+				$direct_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DIRECT_EXPRESS));
+				$dropoff_ids = BoxdropHelper::explodeString(';', Configuration::get(BoxdropShipment::OLD_CARRIER_IDS_DROPOFF_EXPRESS));
+				$ids = array_merge($ids, $direct_ids);
+				$ids = array_merge($ids, $dropoff_ids);
+
+				if ($with_current)
+				{
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DIRECT_EXPRESS);
+					$ids[] = Configuration::get(BoxdropShipment::CONF_MODE_DROPOFF_EXPRESS);
+				}
+			}
+
+			return $ids;
+		}
+
+
+		/**
+		 * Updates the previously used carrier IDs
+		 * 
+		 * @author sweber  <sw@boxdrop.com>
+		 * @param  string  $type
+		 * @param  integer $id
+		 * @return void
+		 */
+		public static function updateUsedCarriers($type, $id)
+		{
+			$old_ids = BoxdropHelper::explodeString(';', Configuration::get($type));
+			$old_ids[] = $id;
+			Configuration::updateValue($type, implode(';', $old_ids));
 		}
 	}
