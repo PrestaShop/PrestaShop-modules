@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 16117 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -570,7 +570,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			{
 				if (version_compare(_PS_VERSION_, '1.4', '>='))
 				{
-					if (!($zipcodeError = MRTools::checkZipcodeByCountry($tab['value'], array(
+					if (!(MRTools::checkZipcodeByCountry($tab['value'], array(
 						'id_country' => Configuration::get('PS_SHOP_COUNTRY_ID')))))
 						$errorList['error'][$name] = $tab['error'];
 				}

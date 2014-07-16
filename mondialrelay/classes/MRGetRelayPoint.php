@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 7086 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -172,7 +172,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _getRelayPointDetails($relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach ($relayPointList as $num => $relayPoint)
+		foreach ($relayPointList as $relayPoint)
 			$relayPointNumList[] = $relayPoint['Num'];
 		$MRRelayDetail = new MRRelayDetail(array('relayPointNumList' => $relayPointNumList, 'id_address_delivery' => $this->_id_address_delivery));
 		$MRRelayDetail->init();
@@ -186,10 +186,10 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _addLinkHoursDetail(&$relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach ($relayPointList as $num => $relayPoint)
+		foreach ($relayPointList as $relayPoint)
 			$relayPointNumList[] = $relayPoint->Num;
 		$permaList = MRRelayDetail::getPermaLink($relayPointNumList, $this->_id_address_delivery);
-		foreach ($relayPointList as $num => &$relayPoint)
+		foreach ($relayPointList as &$relayPoint)
 		{
 			$relayPoint->permaLinkDetail = '';
 			if (array_key_exists($relayPoint->Num, $permaList))
@@ -221,7 +221,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			foreach ($result as $num => $relayPoint)
 			{
 				$totalEmptyFields = 0;
-				foreach ($relayPoint as $key => &$value)
+				foreach ($relayPoint as &$value)
 				{
 					$value = trim($value);
 					if (empty($value))

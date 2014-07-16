@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 6839 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -206,6 +206,7 @@ class MRTools
 			$chars['out'] = 'EfSZszYcYuAAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy';
 
 			$string = strtr($string, $chars['in'], $chars['out']);
+			$double_chars = array();
 			$double_chars['in'] = array(chr(140), chr(156), chr(198), chr(208), chr(222), chr(223), chr(230), chr(240), chr(254));
 			$double_chars['out'] = array('OE', 'oe', 'AE', 'DH', 'TH', 'ss', 'ae', 'dh', 'th');
 			$string = str_replace($double_chars['in'], $double_chars['out'], $string);
