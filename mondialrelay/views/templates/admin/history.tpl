@@ -39,21 +39,21 @@
 						<th>{l s='Print stick 10x15' mod='mondialrelay'}</th>
 					</tr>
 				{foreach from=$MR_histories key=num_history item=history}
-					<tr id="detailHistory_{$history.order}">
+					<tr id="detailHistory_{$history.order|intval}">
 						<td>
-							<input type="checkbox" id="PS_MRHistoryId_{$history.id}" class="history_id_list" name="history_id_list[]" value="{$history.id}" />
+							<input type="checkbox" id="PS_MRHistoryId_{$history.id|intval}" class="history_id_list" name="history_id_list[]" value="{$history.id|intval}" />
 						</td>
-						<td>{$history.order}</td>
-						<td id="expeditionNumber_{$history.order}">
-							{$history.exp}
+						<td>{$history.order|intval}</td>
+						<td id="expeditionNumber_{$history.order|intval}">
+							{$history.exp|escape:'htmlall':'UTF-8'}
 						</td>
-						<td id="URLA4_{$history.order}">
+						<td id="URLA4_{$history.order|intval}">
 							<a href="{$history.url_a4|escape:'htmlall':'UTF-8'}" target="a4"><img width="20" src="{$new_base_dir|escape:'htmlall':'UTF-8'}img/pdf_icon.jpg" /></a>
 						</td>
-						<td id="URLA5_{$history.order}">
+						<td id="URLA5_{$history.order|intval}">
 							<a href="{$history.url_a5|escape:'htmlall':'UTF-8'}" target="a5"><img width="20" src="{$new_base_dir|escape:'htmlall':'UTF-8'}img/pdf_icon.jpg" /></a>
 						</td>
-						<td id="URL10x15_{$history.order}">
+						<td id="URL10x15_{$history.order|intval}">
 							<a href="{$history.url_10x15|escape:'htmlall':'UTF-8'}" target="a5"><img width="20" src="{$new_base_dir|escape:'htmlall':'UTF-8'}img/pdf_icon.jpg" /></a>
 						</td>
 					</tr>

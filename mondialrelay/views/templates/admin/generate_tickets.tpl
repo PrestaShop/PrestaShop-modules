@@ -27,7 +27,7 @@
 {if $MR_errors_type.error|count}
 <div class="MR_error">
 	{l s='Please kindly correct the following errors on' mod='mondialrelay'}
-	<a href="index.php?tab={$MR_token_admin_contact.controller_name}&token={$MR_token_admin_contact.token}" style="color:#f00;">
+	<a href="index.php?tab={$MR_token_admin_contact.controller_name|escape:'htmlall':'UTF-8'}&token={$MR_token_admin_contact.token|escape:'htmlall':'UTF-8'}" style="color:#f00;">
 		{l s='the contact page:' mod='mondialrelay'}
 	</a>
 	<ul>
@@ -80,8 +80,8 @@
 				<td><input type="checkbox" class="order_id_list" name="order_id_list[]" id="order_id_list" value="{$order.id_order|intval}" /></td>
 				<td>{$order.id_order|intval}</td>
 				<td>{$order.customer|escape:'htmlall':'UTF-8'}</td>
-				<td>{$order.display_total_price}</td>
-				<td>{$order.display_shipping_price}</td>
+				<td>{$order.display_total_price|floatval}</td>
+				<td>{$order.display_shipping_price|floatval}</td>
 				<td>{$order.display_date|escape:'htmlall':'UTF-8'}</td>
 				<td>
 					<input type="text" name="weight_{$order.id_order|intval}" id="weight_{$order.id_order|intval}" size="7" value="{$order.weight}" />
@@ -98,11 +98,11 @@
 				</td>
 				<td>{$order.MR_Selected_Num|escape:'htmlall':'UTF-8'}</td>
 				<td>{$order.MR_Selected_Pays|escape:'htmlall':'UTF-8'}</td>
-				<td>{$order.exp_number}</td>
+				<td>{$order.exp_number|escape:'htmlall':'UTF-8'}</td>
 
 				<td class="center">
 					<a href="index.php?tab=AdminOrders&id_order={$order.id_order|intval}&vieworder&token={$MR_token_admin_orders}">
-						<img border="0" title="{l s='View' mod='mondialrelay'}" alt="{l s='View' mod='mondialrelay'}" src="{$new_base_dir}img/details.gif"/>
+						<img border="0" title="{l s='View' mod='mondialrelay'}" alt="{l s='View' mod='mondialrelay'}" src="{$new_base_dir|escape:'htmlall':'UTF-8'}img/details.gif"/>
 					</a>
 				</td>
 			</tr>

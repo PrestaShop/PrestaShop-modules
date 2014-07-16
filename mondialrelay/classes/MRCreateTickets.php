@@ -269,10 +269,8 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 * Build a correct weight format (NNNNN)
 	 */
 	private function _weightFormat($weight)
-	{
-		while (Tools::strlen($weight) < 5)
-			$weight = '0'.$weight;
-		return $weight;
+	{		
+		return sprintf("%05s",  $weight);
 	}
 
 	/*

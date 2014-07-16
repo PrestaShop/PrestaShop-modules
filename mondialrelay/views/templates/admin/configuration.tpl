@@ -193,7 +193,7 @@
 					<label for="MR_weight_coefficient" class="mrLabel">{l s='Weight Coefficient:' mod='mondialrelay'}</label>
 					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient|escape:'htmlall':'UTF-8'}"/>
 					<sup>*</sup>
-					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}</span>
+					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used|floatval}</span>
 				</li>
 				<li class="PS_MRSubmit">
 					<input type="button" name="check_connexion" value="{l s='Check connexion' mod='mondialrelay'}" class="button" style="margin:0 60px 0 0;" onclick="return mr_checkConnexion();"/> 
@@ -357,7 +357,7 @@
 							</td>
 							<td align="center">						
 								<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}&MR_tab_name=supplier_form" method="post">
-									<input type="hidden" name="delete_mr" value="{$carrier.id_mr_method}" >
+									<input type="hidden" name="delete_mr" value="{$carrier.id_mr_method|intval}" >
 									<a class="send_disable_carrier_form" href="javascript:void(0)">
 										<img src="../img/admin/disabled.gif" alt="{l s='Delete' mod='mondialrelay'}" title="{l s='Delete' mod='mondialrelay'}" />
 									</a>

@@ -882,9 +882,9 @@ class MondialRelay extends Module
 			if (trim($simpleresul[0]['exp_number']) != '') 
 				$html .= $this->l('Nb expedition:').$simpleresul[0]['exp_number'].'<br>';
 			if (trim($simpleresul[0]['url_etiquette']) != '') 
-				$html .= "<a href='".$simpleresul[0]['url_etiquette']."' target='etiquette".$simpleresul[0]['url_etiquette']."'>".$this->l('Label URL')."</a><br>";
+				$html .= '<a href="'.$simpleresul[0]['url_etiquette'].'" target="etiquette'.$simpleresul[0]['url_etiquette'].'">'.$this->l('Label URL').'</a><br>';
 			if (trim($simpleresul[0]['url_suivi']) != '')
-				$html .= "<a href='".$simpleresul[0]['url_suivi']."' target='suivi".$simpleresul[0]['exp_number']."'>".$this->l('Follow-up URL')."</a><br>";
+				$html .= '<a href="'.$simpleresul[0]['url_suivi'].'" target="suivi'.$simpleresul[0]['exp_number'].'">'.$this->l('Follow-up URL').'</a><br>';
 			if (trim($simpleresul[0]['MR_Selected_Num']) != '')
 				$html .= $this->l('Nb Point Relay :').$simpleresul[0]['MR_Selected_Num'].'<br>';
 			if (trim($simpleresul[0]['MR_Selected_LgAdr1']) != '')
