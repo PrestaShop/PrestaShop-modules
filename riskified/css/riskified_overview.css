@@ -1,0 +1,221 @@
+.riskified-text {
+	height: 450px;
+	margin-bottom: 280px;
+	width: 90%;
+}
+
+.riskified-h1 {
+	font-size: 22px;
+	color: #9bc474;
+	font-weight: 300;
+	text-decoration: none;
+	border-bottom: none;
+	margin-top: 13px;
+	padding-left: 0px;
+}
+#riskified_overview > ul > li {
+	color: #393536;
+	margin-bottom: 10px;
+	font-weight: 300;
+}
+.riskified-h2 {
+	color: #9bc474;
+	font-weight: 300;
+	font-size: 20px;
+	text-decoration: none;
+	border-bottom: none;
+}
+#riskified-desc 
+{
+	width: 58%;
+	font-family: "Roboto", "ariel", sans-serif;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 23px;
+	padding-right: 40px;
+	margin-bottom: 40px;
+}
+
+#riskified-desc .dashboard-image {
+	display: inline-block;
+	margin-left: 40px;
+	float: right;
+	margin-bottom: 20px;
+}
+
+#riskbutton 
+{
+	position:absolute;
+	margin-left: 60%;		
+	margin-top:0.5em;
+	text-align: center;
+	z-index: 999;
+	font-family: Arial,Verdana,Helvetica,sans-serif;
+	cursor:pointer;
+	font-size: 11px;
+	background-color:#F9F9F9;
+	border: 1px solid #CCCCCC;
+	width: 50px;
+} 
+
+#desc-order-riski {
+	padding: 7px;
+	margin: 10px;
+	background-color: #9bc474;
+	border: 1px solid #547009;
+	font-size: 14px;
+	font-weight: 500;
+	color: #ffffff;
+	text-shadow: none;
+}
+
+#desc-order-riski:hover {
+	background-color: #B3D692;
+}
+
+.container-command #riskbutton {
+	display:none;
+}
+
+#riskbutton:hover
+{
+	background-color: #FFFFFF;
+	border: 1px inset #CCCCCC;
+	border-radius: 3px 3px 3px 3px;	
+}
+
+#modalContainer 
+{
+	background-color:#F2F5F6 transparent;
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	z-index:10000;
+	/* required by MSIE to prevent actions on lower z-index elements */
+}
+
+#alertBox 
+{
+	position:relative;
+	width:300px;
+	min-height:100px;
+	margin-top:200px;
+	border:2px solid #CCCCCC;
+	background-color:#F2F5F6;
+	background-repeat:no-repeat;
+	background-position:20px 30px;
+}
+
+#modalContainer > #alertBox 
+{
+	position:fixed;
+}
+
+#alertBox h1 
+{
+	margin:0;
+	font:bold 14px verdana,arial;
+	background-color:#9EBD79;
+	color:#FFF;
+	border-bottom:1px solid #000;
+	padding:2px 0 2px 5px;
+}
+
+#alertBox p 
+{
+	font: 12px verdana,arial;
+	height: 35px;
+	margin: 20px auto auto;
+	padding-left: 5px;
+	text-align: center;
+}
+
+#alertBox #closeBtn 
+{
+	display:block;
+	position:relative;
+	margin:5px auto;
+	padding:3px;
+	border:2px solid #CCCCCC;
+	width:70px;
+	font:13px verdana,arial;
+	text-transform:uppercase;
+	text-align:center;
+	color:#FFF;
+	background-color:#9EBD79;
+	text-decoration:none;
+}
+
+/* unrelated styles */
+#mContainer 
+{
+	position:relative;
+	width:600px;
+	margin:auto;
+	padding:5px;
+	border-top:2px solid #000;
+	border-bottom:2px solid #000;
+	font:0.7em verdana,arial;
+}
+
+#credits 
+{
+	position:relative;
+	margin:25px auto 0px auto;
+	width:350px;
+	font:0.7em verdana;
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;
+	height:90px;
+	padding-top:4px;
+}
+
+#credits img 
+{
+	float:left;
+	margin:5px 10px 5px 0px;
+	border:1px solid #000000;
+	width:80px;
+	height:79px;
+}
+
+.important 
+{
+	background-color:#F5FCC8;
+	padding:2px;
+}
+
+.riskifed code span 
+{
+	color:green;
+}
+
+.riskified-button {
+	font-family: Helvetica\ Neue;
+	font-size: 23px;
+	line-height: 25px;
+	color: #fff;
+	background-color: #9bc47f;
+	background: #9bc47f;
+	padding: 5px 10px;
+	border: 1px solid #828282;
+	display: inline-block;
+	text-decoration: none;
+	width: 294px;
+	text-align: center;
+	font-weight: 300;
+	letter-spacing: .05em;
+	margin-top: 20px;
+}
+
+#riskified_mode {
+  padding:0 0 0 0;
+}
+
+
+#riskified_mode label {
+  width:280px;
+  text-align:left;
+}
