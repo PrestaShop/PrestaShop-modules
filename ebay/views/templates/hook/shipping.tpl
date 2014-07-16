@@ -70,7 +70,7 @@
 		// end carrier Prestashop
 
 		// Carrier eBay
-		createSelecstShipping += "<td class='linked "+ (currentName == 'domesticShipping' ? '' : 'big-linked') +"'' style='visibility:hidden'><p  class='label' data-validate='{l s='Linked to eBay'}'>{l s='Link' mod='ebay'}<strong>"+(hasValues ? valuePSCarrier : '')+"</strong>{l s='with eBay carrier' mod='ebay'}</p><div><select name='"+ (currentName == 'domesticShipping' ? 'ebayCarrier' : 'ebayCarrier_international') +"[" + lastId + "]' class='eBayCarrier'><option value=''>{l s='Select eBay carrier' mod='ebay'}</option>";
+		createSelecstShipping += "<td class='linked "+ (currentName == 'domesticShipping' ? '' : 'big-linked') +"'' style='visibility:hidden'><p  class='label' data-validate='{l s='Linked to eBay' mod='ebay'}'>{l s='Link' mod='ebay'}<strong>"+(hasValues ? valuePSCarrier : '')+"</strong>{l s='with eBay carrier' mod='ebay'}</p><div><select name='"+ (currentName == 'domesticShipping' ? 'ebayCarrier' : 'ebayCarrier_international') +"[" + lastId + "]' class='eBayCarrier'><option value=''>{l s='Select eBay carrier' mod='ebay'}</option>";
 		{foreach from=$eBayCarrier item=carrier}
 			if (('{$carrier.InternationalService}' !== 'true' && currentName == 'domesticShipping') || ('{$carrier.InternationalService}' == 'true' && currentName == 'internationalShipping'))
 				createSelecstShipping += "<option "+ ((typeof(idEbayCarrier) != "undefined"  && idEbayCarrier == "{$carrier.shippingService}")? 'selected="selected"' : '')  +" value='{$carrier.shippingService}'>{$carrier.description}</option>";
@@ -670,7 +670,7 @@
 		- <b>{$carrier.name}</b><br/>
 	{/foreach}
 	</p>
-	<div class="fancyboxeBayClose"  style="text-align:center; margin-top:10px;font-weight:bold;cursor:pointer;">{l s='Close' mod='eBay'}</div>
+	<div class="fancyboxeBayClose"  style="text-align:center; margin-top:10px;font-weight:bold;cursor:pointer;">{l s='Close' mod='ebay'}</div>
 </div>
 <!--script type="text/javascript" src="../js/jquery/jquery.fancybox-1.3.4.js"></script-->
 <script>
@@ -707,7 +707,7 @@
 </fieldset>
 
 <fieldset style="margin-top:10px">
-	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='To configure international shipping you must select countries to ship to' mod='module'}">{l s='International shipping' mod='ebay'}</span></legend>
+	<legend><span data-dialoghelp="#DomShipp" data-inlinehelp="{l s='To configure international shipping you must select countries to ship to' mod='ebay'}">{l s='International shipping' mod='ebay'}</span></legend>
 	<div id="internationalShipping"></div>
 	<a id="internationalShippingButton" class="button bold"><img src="../img/admin/add.gif">{l s='Add new international carrier' mod='ebay'}</a>
 </fieldset>

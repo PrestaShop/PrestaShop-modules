@@ -46,7 +46,7 @@
 		<br />
 		{l s='You can adjust the price that you sell your items for on eBay in relation to your PrestaShop price by a fixed amount or percentage.' mod='ebay'}
 		{l s='You might want to increase your selling price to take into account the' mod='ebay'} <a href="{l s='http://sellercentre.ebay.co.uk/final-value-fees-business-sellers' mod='ebay'}">{l s='fees for selling on eBay.' mod='ebay'}</a> {l s='Or, reduce your price to be competitive.' mod='ebay'}
-		{l s='Take a look at what similar items are selling for on' mod='ebay'} <a href="{l s='eBay.co.uk' mod='ebay'}">{l s='eBay site' mod='module'}</a>.
+		{l s='Take a look at what similar items are selling for on' mod='ebay'} <a href="{l s='eBay.co.uk' mod='ebay'}">{l s='eBay site' mod='ebay'}</a>.
 	</p>
 	<!---------------------------->
 	<p>
@@ -58,7 +58,7 @@
 <br />
 
 {if $nb_categorie > 0}
-	<p id="textPagination">{l s='Page'} <span>1</span> {l s='of %s' sprintf=(($nb_categorie / 20)|round:"0" + 1) mod='ebay'}</p>
+	<p id="textPagination">{l s='Page' mod='ebay'} <span>1</span> {l s='of %s' sprintf=(($nb_categorie / 20)|round:"0" + 1) mod='ebay'}</p>
 	<ul id="pagination">
 		<li class="prev"><</li>
 		{for $i=0 to ($nb_categorie / 20)|round:"0"}
