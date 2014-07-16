@@ -1,0 +1,247 @@
+.information {
+	border:1px solid!important;
+}
+.information_prestastats{
+	background: #EBEDF4;
+	border: 1px solid #CCCED7;
+	font-size: 1.1em;
+	text-align: center;
+	padding: 1em;
+}
+
+.prestastats-wrap .secure-account {
+    padding: 20px 0;
+    font-size: 13px;
+}
+.prestastats-wrap { clear: both; margin: 0px auto; width:100%; overflow: hidden; padding: 20px; background-color: #ffffff; }
+
+.prestastats-intro p { color: #7ba84b; font-size: 18px; line-height: 22px; overflow: hidden; }
+a.prestastats-logo { display: inline-block; padding-bottom: 20px; }
+p.prestastats-intro a.prestastats-link { float: right; margin: 4px 0px 0px 30px; }
+
+.prestastats-video { overflow: hidden; position: relative; }
+.prestastats-content { border-bottom: #e70079 solid 1px; border-top: #e70079 solid 1px; clear: both; overflow: hidden; padding: 20px 0; }
+.prestastats-content h1 { color: #7ba84b; font-size: 20px; font-weight: normal; line-height: 20px; margin: 0px 0px 15px 0px;}
+.prestastats-content p { color: #555555; font-size: 13px; line-height: 18px; margin-bottom: 15px; }
+
+.prestastats-content ul { list-style: none; margin: 0px 0px 15px 0px; padding: 0px; }
+.prestastats-content ul li { background: url(../img/bullet.gif) 0 8px no-repeat; color: #7ba84b; font-size: 15px; line-height: 24px; margin: 0px; padding: 0px 0px 0px 15px; }
+img.prestastats-badge { float: right; margin: 5px 40px 0px 0px; }
+
+.pw-offset-1 {
+    margin-left: 4%;
+    float: left;
+}
+
+a.prestastats-help
+{
+    color: #FFF;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 6px 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px #A95336;
+    border: 1px solid #EBEDF4;
+    -moz-border-radius:5px; border-radius:5px;
+    background-color: #7ba84b;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.14, #7ba84b), color-stop(0.57, #7ba84b), color-stop(0.99, #7ba84b));
+}
+
+a.prestastats-url
+{
+    color: #FFF;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 6px 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px #A95336;
+    border: 1px solid #EBEDF4;
+    -moz-border-radius:5px; border-radius:5px;
+    background-color: #f0a20b;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.14, #f0a20b), color-stop(0.57, #f0a20b), color-stop(0.99, #f0a20b));
+}
+
+.reg-button { text-decoration:underline; font-weight:bold; }
+.margin-left-93{
+    margin-left: -93px;
+}
+
+#content .panel {
+    border: 1px solid #CCCED7;
+    margin: 0 auto;
+    padding: 0 0 20px 20px;
+    width: 100%;
+}
+
+/* help boxes */
+.hint {
+    position: relative;
+    left: 0px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    border: 1px solid #50B0EC;
+    padding: 8px 6px 8px 34px ;
+    color: #383838;
+    background: #DDE9F7 url(../img/help_support_question_mark.png) no-repeat 6px 5px;
+}
+
+/* The pointer image is added by using another span */
+.hint .hint-pointer {
+    position: absolute;
+    left: -10px;
+    top: 5px;
+    width: 10px;
+    height: 19px;
+}
+
+.bootstrap .page-head h2.page-title {
+    position: relative;
+    padding: 24px 0 0 280px;
+    margin: 0;
+    font: 300 18px/1em "Open Sans", Helvetica, Arial, sans-serif;
+    color: white;
+}
+
+a.prestastats-link {
+    color: #FFF;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 6px 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 1px #A95336;
+    border: 1px solid #e70079;
+    -moz-border-radius:5px; border-radius:5px;
+    background-color: #e70079;
+    background-image: linear-gradient(bottom, #e70079 14%, #FF9933 57%, #FE8114 99%);
+    background-image: -o-linear-gradient(bottom, #e70079 14%, #FF9933 57%, #FE8114 99%);
+    background-image: -moz-linear-gradient(bottom, #e70079 14%, #FF9933 57%, #FE8114 99%);
+    background-image: -webkit-linear-gradient(bottom, #e70079 14%, #FF9933 57%, #FE8114 99%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.14, #e70079), color-stop(0.57, #e70079), color-stop(0.99, #e70079));
+}
+a.prestastats-link:hover {
+    color: #FFF; text-decoration: none;
+    text-shadow: 1px 1px 1px #A95336;
+    background-color: #FF6633;
+    background-image: none;
+}
+
+a.prestastats-video-btn { display: block; height: 195px; position: relative; width: 360px; }
+img.video-icon { position: absolute; left: 130px; top: 58px; }
+
+.prestastats-wrap form { margin: 0px 0px 14px 0px;}
+.prestastats-wrap fieldset h4 { margin-top: 0px; }
+.prestastats-wrap label { width: 160px; }
+.margin-form { padding-left: 0; }
+
+.prestastats-wrap input[type="text"] {
+    width: 260px;
+    display: inline-block;
+}
+
+img.icon-connection { border-left: solid 1px #585A69; margin: 0px 2px 0px 20px; padding-left: 10px; vertical-align: middle; }
+.right-fieldset { float: right; text-align: center; width: 245px; }
+.right-fieldset p { text-align: left; }
+.left-form { padding-right: 285px; }
+.form-half { float: left; width: 50%; }
+.MR7 { margin-right: 7px; }
+.ML7 { margin-left: 7px; }
+.sep { border-top: solid 1px #CCCED7; clear: both; height: 1px; margin: 0px 0px 10px 0px; }
+.prestastats-info { color: #7F7F7F; display: block; font-size: 0.85em; margin-bottom: 4px; }
+.reset-label fieldset h4 { margin-bottom: 0px; }
+.reset-label label { width: 300px; }
+.reset-label .margin-form { padding-left: 310px; }
+
+table.prestastats-table { border: #CCCED7 solid 1px; background-color: #FFFFFF; color: #585A69; font-size: 12px; text-shadow: 0 1px 0 #FFFFFF; }
+table.prestastats-table th { background-color: #F7FBFF; border-bottom: #CCCED7 solid 1px; padding: 5px 25px 5px 8px; text-align: left; }
+table.prestastats-table td.prestastatstax_column { font-weight: bold; }
+table.prestastats-table td { border-bottom: #CCCED7 solid 1px; padding: 5px 25px 5px 8px; }
+table.prestastats-table td.last { border-bottom: none; }
+
+.prestastats-wrap form sup {
+    font-size: 15px;
+    top: 5px;
+    color: #CC0000;
+    vertical-align: text-top;
+    font-size: 10px;
+}
+
+.prestastats-wrap fieldset {
+    background-color: #EBEDF4;
+    border: 1px solid #CCCED7;
+    color: #585A69;
+    font-size: 1.1em;
+    margin: 0;
+    padding: 1em;
+}
+
+.prestastats-wrap legend {
+    background: #EBEDF4;
+    border: 1px solid #CCCED7;
+    font-weight: 700;
+    margin: 0;
+    padding: .2em .5em;
+    text-align: left;
+    width: auto;
+}
+
+.prestastats-wrap .button {
+    background: #e3e3e3;
+    background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear, center top ,center bottom, from(#F9F9F9), to(#E3E3E3)) repeat scroll 0 0 transparent;
+    border-color: #CCCCCC #BBBBBB #A0A0A0;
+    border-left: 1px solid #BBBBBB;
+    border-radius: 3px 3px 3px 3px;
+    border-right: 1px solid #BBBBBB;
+    border-style: solid;
+    border-width: 1px;
+    color: #000000;
+    margin: 0;
+    outline: medium none;
+    padding: 3px 8px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.prestastats-wrap .in-active{
+    pointer-events: none;
+    cursor: default;
+    background: #f8f8f8;
+    color: #b0b0b0;
+}
+
+.prestastats-wrap .margin-form {
+    margin-bottom: 4px;
+}
+
+@media (min-width: 480px) and (max-width: 1199px) {
+    .pw-offset-1 {
+        margin-left: 0;
+    }
+
+    .toolbarBox {
+        background-color: #71b238;
+    }
+    .prestastats-wrap {
+        margin-top: 40px;
+    }
+
+    .bootstrap .page-head h2.page-title {
+        font: 300 15px/0.9em "Open Sans", Helvetica, Arial, sans-serif;
+    }
+
+    img.prestastats-badge {
+        margin-right: -7px;
+    }
+
+    .margin-left-93 {
+        margin-left: 0;
+    }
+}
