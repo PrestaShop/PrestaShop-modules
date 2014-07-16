@@ -434,11 +434,10 @@ class MondialRelay extends Module
 	{		 
 		if (Tools::getValue('tab') == 'AdminMondialRelay' 
 			|| Tools::getValue('module_name') == 'mondialrelay' 
-			|| Tools::getValue('controller') == 'AdminMondialRelay' 
-			|| Tools::getValue('controller') == 'adminmondialrelay' // for 1.5.2
+			|| Tools::strtolower(Tools::getValue('controller')) == 'adminmondialrelay'  
 			|| Tools::getValue('configure') == 'mondialrelay'
 		)
-		{ 
+		{
 			$this->context->smarty->assign(array(
 			'MR_token' => MondialRelay::$MRBackToken, 'MR_local_path' => MondialRelay::$modulePath,
 			'MR_account_set' => MondialRelay::isAccountSet(), 'new_base_dir' => MondialRelay::$moduleURL));

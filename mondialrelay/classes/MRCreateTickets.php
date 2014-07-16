@@ -454,7 +454,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 		$history = new OrderHistory();
 		$history->id_order = (int)$params['NDossier'];
 		if( version_compare(_PS_VERSION_, '1.5.2', '>=') ) {
-			$history->changeIdOrderState((int)$orderState, new Order($history->id_order));
+			$history->changeIdOrderState((int)$orderState, $order);
 		}
 		else {
 			$history->changeIdOrderState((int)$orderState, (int)($params['NDossier']));
