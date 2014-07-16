@@ -40,9 +40,9 @@ LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_cart` = ms.`id_cart`)
 WHERE `exp_number` != 0');
 
 if (empty($expeditions))
-	die("No order");
+	die('No order');
 else
-	echo "Start progress<br/>";
+	echo 'Start progress<br/>';
 	
 $params = array(
 'Enseigne' => $account_shop['MR_ENSEIGNE_WEBSERVICE'],
@@ -86,4 +86,4 @@ foreach ($expeditions as $expedition)
 	
 	echo '<p>'.$i.'<p>';
 }
-echo "End progress<br/>";
+echo 'End progress<br/>';

@@ -32,7 +32,7 @@
  */
 
 /* 
-* 	Clean displayed content for Admin ajax query 
+* 	Clean displayed content for Admin ajax query
 */
 ob_clean();
 
@@ -55,7 +55,7 @@ require_once(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
 require_once(dirname(__FILE__).'/classes/MRRelayDetail.php');
 require_once(dirname(__FILE__).'/classes/MRManagement.php');
 require_once(dirname(__FILE__).'/classes/MRDownloadPDF.php');
- 
+
 /* Can't use Tools at this time... Need to know if _PS_ADMIN_DIR_ has to be defined */
 $method = Tools::getValue('method');
 $token = Tools::getValue('mrtoken');
@@ -75,7 +75,7 @@ $accessPageList = array(
 		'MRDownloadPDF'
 	)
 );
- 
+
 $params = array();
 $result = array();
 
@@ -139,8 +139,7 @@ try
 		}
 		unset($obj);
 	}
-	else if (($management = new MRManagement($params)) &&
-		method_exists($management, $method))
+	else if (($management = new MRManagement($params)) && method_exists($management, $method))
 		$result = $management->{$method}();
 	else
 		throw new Exception('Method Class : '.$method.' can\'t be found');

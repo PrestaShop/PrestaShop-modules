@@ -54,7 +54,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 						'value'						=> '',
 						'regexValidation' => '#^[0-9A-Z]{32}$#')));
 	
-	private $_relayPointNumList = array(); 
+	private $_relayPointNumList = array();
 	private $_id_address_delivery = 0;
 	private $_webServiceKey = '';
 	private $_mondialrelay = null;
@@ -66,7 +66,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 	
 	private $_webserviceURL = '';
 	
-	public function __construct($params, $object)	
+	public function __construct($params, $object)
 	{
 		$this->_mondialrelay = $object;
 
@@ -129,13 +129,13 @@ class MRRelayDetail implements IMondialRelayWSMethod
 					// Use simple Regex test given by MondialRelay
 					else if (isset($valueDetailed['regexValidation']) && preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 						$concatenationValue .= $valueDetailed['value'];
-					// If the key is required, we set an error, else it's skipped 
+					// If the key is required, we set an error, else it's skipped
 					elseif ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
 					{
 						if (empty($valueDetailed['value']))
 							$error = $this->_mondialrelay->l('This key').' ['.$paramName.'] '.$this->_mondialrelay->l('is empty and need to be filled');
 						else
-							$error = 'This key ['.$paramName.'] hasn\'t a valid value format : '.$valueDetailed['value']; 
+							$error = 'This key ['.$paramName.'] hasn\'t a valid value format : '.$valueDetailed['value'];
 						$this->_resultList['error'][$rootCase['list']['Num']['value']] = $error;
 					}
 				}
@@ -198,7 +198,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 			}
 			$result->orderedDate = $orderedDate;
 			$this->_resultList['success'][$result->Num] = $result;
-		}	
+		}
 		$this->_resultList['error'][] = $errors;
 	}
 	
@@ -215,7 +215,7 @@ class MRRelayDetail implements IMondialRelayWSMethod
 			foreach ($this->_fieldsList as $rootCase)
 			{
 				$params = $this->_getSimpleParamArray($rootCase['list']);
-				$result = $client->WSI2_DetailPointRelais($params);				
+				$result = $client->WSI2_DetailPointRelais($params);
 				$this->_parseResult($client, $result, $params);
 			}
 			unset($client);

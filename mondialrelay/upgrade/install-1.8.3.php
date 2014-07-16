@@ -28,7 +28,9 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-// object module ($this) available
+/** 
+* object module available
+*/
 function upgrade_module_1_8_3($object)
 {
 	$upgrade_version = '1.8.3';

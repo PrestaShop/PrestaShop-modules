@@ -42,11 +42,6 @@ class MRManagement extends MondialRelay
 		parent::__construct();
 	}
 	
-	public function __destruct()
-	{
-		
-	}
-	
 	/*
 	** This method fill the database with the selected carrier
 	*/
@@ -57,7 +52,7 @@ class MRManagement extends MondialRelay
 		$sql = 'SELECT insurance FROM '._DB_PREFIX_.'mr_method WHERE id_mr_method = '.(int)$this->_params['id_mr_method'];
 		$insurance = $db->getValue($sql);
 	
-		$query = 'SELECT `id_mr_selected` FROM `' ._DB_PREFIX_.'mr_selected` WHERE `id_cart` = '.(int)$this->_params['id_cart'].' ';
+		$query = 'SELECT `id_mr_selected` FROM `'._DB_PREFIX_.'mr_selected` WHERE `id_cart` = '.(int)$this->_params['id_cart'].' ';
 
 		// Not exist and needed for database
 		unset($this->_params['relayPointInfo']['permaLinkDetail']);
@@ -94,8 +89,8 @@ class MRManagement extends MondialRelay
 					'.(int)$this->_params['id_customer'].',
 					'.(int)$this->_params['id_mr_method'].',
 					'.(int)$this->_params['id_cart'].', 
-					'.(int)$insurance.', '
-			;
+					'.(int)$insurance.', ';
+
 			if (is_array($this->_params['relayPointInfo']))
 				foreach ($this->_params['relayPointInfo'] as $nameKey => $value)
 					$query .= '"'.pSQL($value).'", ';
@@ -108,7 +103,7 @@ class MRManagement extends MondialRelay
 	{
 		$html = '';
 		
-		switch($this->_params['action'])
+		switch ($this->_params['action'])
 		{
 			case 'showFancy':
 				$html .= '

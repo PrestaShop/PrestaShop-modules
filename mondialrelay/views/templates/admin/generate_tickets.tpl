@@ -76,18 +76,18 @@
 				<th>{l s='Detail' mod='mondialrelay'}</th>
 			</tr>
 		{foreach from=$MR_orders key=case_num item=order}
-			<tr id="PS_MRLineOrderInformation-{$order.id_order}">
-				<td><input type="checkbox" class="order_id_list" name="order_id_list[]" id="order_id_list" value="{$order.id_order}" /></td>
-				<td>{$order.id_order}</td>
+			<tr id="PS_MRLineOrderInformation-{$order.id_order|intval}">
+				<td><input type="checkbox" class="order_id_list" name="order_id_list[]" id="order_id_list" value="{$order.id_order|intval}" /></td>
+				<td>{$order.id_order|intval}</td>
 				<td>{$order.customer|escape:'htmlall':'UTF-8'}</td>
 				<td>{$order.display_total_price}</td>
 				<td>{$order.display_shipping_price}</td>
 				<td>{$order.display_date|escape:'htmlall':'UTF-8'}</td>
 				<td>
-					<input type="text" name="weight_{$order.id_order}" id="weight_{$order.id_order}" size="7" value="{$order.weight}" />
+					<input type="text" name="weight_{$order.id_order|intval}" id="weight_{$order.id_order|intval}" size="7" value="{$order.weight}" />
 				</td>
 				<td>
-					<select name="MR_insurance_{$order.id_order}" id="insurance_{$order.id_order}" style="width:200px">
+					<select name="MR_insurance_{$order.id_order|intval}" id="insurance_{$order.id_order|intval}" style="width:200px">
 						<option value="0" {if $order.mr_insurance == 0}selected="selected"{/if}>0 : {l s='No insurance' mod='mondialrelay'}</option>
 						<option value="1" {if $order.mr_insurance == 1}selected="selected"{/if}>1 : {l s='Complementary Insurance Lv1' mod='mondialrelay'}</option>
 						<option value="2" {if $order.mr_insurance == 2}selected="selected"{/if}>2 : {l s='Complementary Insurance Lv2' mod='mondialrelay'}</option>
@@ -101,18 +101,18 @@
 				<td>{$order.exp_number}</td>
 
 				<td class="center">
-					<a href="index.php?tab=AdminOrders&id_order={$order.id_order}&vieworder&token={$MR_token_admin_orders}">
+					<a href="index.php?tab=AdminOrders&id_order={$order.id_order|intval}&vieworder&token={$MR_token_admin_orders}">
 						<img border="0" title="{l s='View' mod='mondialrelay'}" alt="{l s='View' mod='mondialrelay'}" src="{$new_base_dir}img/details.gif"/>
 					</a>
 				</td>
 			</tr>
-			<tr class="PS_MRErrorList error" id="errorCreatingTicket_{$order.id_order}" style="display:none;">
+			<tr class="PS_MRErrorList error" id="errorCreatingTicket_{$order.id_order|intval}" style="display:none;">
 				<td colspan="12" style="background: #f2dede">
 					<span></span>
 				</td>
 			</tr>
-			<tr class="PS_MRSuccessList" id="successCreatingTicket_{$order.id_order}" style="display:none;">
-				<td>{$order.id_order}</td>
+			<tr class="PS_MRSuccessList" id="successCreatingTicket_{$order.id_order|intval}" style="display:none;">
+				<td>{$order.id_order|intval}</td>
 				<td colspan="11" style="background: #DFFAD3;">
 					{l s='Operation successful' mod='mondialrelay'}
 					<span></span>

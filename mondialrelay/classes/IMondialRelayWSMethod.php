@@ -29,8 +29,7 @@ require_once(dirname(__FILE__).'/../errorCode.php');
 require_once(realpath(dirname(__FILE__).'/../mondialrelay.php'));
 
 /*
- * This method allow to create any method object to dial more 
- * easyly with the Mondial Reelay WebService
+ * This method allow to create any method object to dial more easyly with the Mondial Reelay WebService
  */
 interface IMondialRelayWSMethod
 {
@@ -55,5 +54,4 @@ interface IMondialRelayWSMethod
 	 */
 	public function getResult();
 }
-
 ?>
