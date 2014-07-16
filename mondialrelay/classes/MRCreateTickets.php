@@ -518,6 +518,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$this->_parseResult($client, $result, $params, $rootCase['id_mr_selected']);
 			}
 			unset($client);
+			Configuration::updateValue('MONDIAL_RELAY_CONFIGURATION_OK', true);
 		}
 		else
 			throw new Exception($this->_mondialrelay->l('The Mondial Relay webservice is not currently reliable', $this->class_name));
