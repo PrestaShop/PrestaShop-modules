@@ -139,6 +139,7 @@
 						'shipments' => BoxdropOrderShipment::getByOrderId($order->id),
 						'status' => 'success'
 					);
+					Configuration::updateValue('BDSHIP_CONFIGURATION_OK', true);
 				}
 				else
 				{

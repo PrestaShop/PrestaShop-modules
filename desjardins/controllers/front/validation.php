@@ -57,7 +57,11 @@ class DesjardinsValidationModuleFrontController extends ModuleFrontController
 
 			// Payment approved (or TEST mode is on)
 			if (in_array(Tools::getValue('code-retour'), array('paiement', 'payetest')))
+			{
 				$order_result = array('status' => (int)Configuration::get('PS_OS_PAYMENT'), 'code' => 'VALID');
+				if (Tools::getValue('code-retour') == 'paiement')
+					Configuration::updateValue('DESJARDINS_CONFIGURATION_OK', true);
+			}
 			// Payment declined
 			else
 				$order_result = array('status' => (int)Configuration::get('PS_OS_ERROR'), 'code' => 'NOT VALID');

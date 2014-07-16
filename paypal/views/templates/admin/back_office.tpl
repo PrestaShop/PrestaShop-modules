@@ -45,6 +45,13 @@
 	{l s='Download the ' mod='paypal'}<a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-54"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
 		
 	</div>
+	{else}
+	<div class="clear"></div><hr />
+	<div class="box">
+	{l s='Download the ' mod='paypal'}<a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-169"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
+		
+	</div>
+
 	{/if}
 	<div class="clear"></div><hr>
 
@@ -147,26 +154,26 @@
 
 			<div id="signup">
 				{* Use cases 1 - 3 *}
-				<a href="{$PayPal_content.u1->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{$PayPal_content.u1->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				<a href="{$PayPal_content.u2->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{$PayPal_content.u2->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				<a href="{$PayPal_content.u3->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{$PayPal_content.u3->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u1->signUpRedirectLink)}{$PayPal_content.u1->signUpRedirectLink}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{if Validate::isCleanHTML($PayPal_content.u1->signUpCallButton)}{$PayPal_content.u1->signUpCallButton}{/if}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u2->signUpRedirectLink)}{$PayPal_content.u2->signUpRedirectLink}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{if Validate::isCleanHTML($PayPal_content.u2->signUpCallButton)}{$PayPal_content.u2->signUpCallButton}{/if}</a>
+				<a href="{if Validate::isCleanHTML($PayPal_content.u3->signUpRedirectLink)}{$PayPal_content.u3->signUpRedirectLink}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{if Validate::isCleanHTML($PayPal_content.u3->signUpCallButton)}{$PayPal_content.u3->signUpCallButton}{/if}</a>
 
 				{* Use cases 4 - 6 *}
-				{*<a href="{$PayPal_content.u4->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{$PayPal_content.u4->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
-				<a href="{$PayPal_content.u5->signUpRedirectLink|escape:'htmlall':'UTF-8'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{$PayPal_content.u5->signUpCallButton|escape:'htmlall':'UTF-8'}</a>
-				{*<a href="{$PayPal_content.u6->signUpRedirectLink|escape:'htmlall':'UTF-8'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{$PayPal_content.u6->signUpCallButton|escape:'htmlall':'UTF-8'}</a>*}
+				{*<a href="{if Validate::isCleanHTML($PayPal_content.u4->signUpRedirectLink)}{$PayPal_content.u4->signUpRedirectLink}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u4">{if Validate::isCleanHTML($PayPal_content.u4->signUpCallButton)}{$PayPal_content.u4->signUpCallButton}{/if}</a>*}
+				<a href="{if Validate::isCleanHTML($PayPal_content.u5->signUpRedirectLink)}{$PayPal_content.u5->signUpRedirectLink}{/if}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{if Validate::isCleanHTML($PayPal_content.u5->signUpCallButton)}{$PayPal_content.u5->signUpCallButton}{/if}</a>
+				{*<a href="{if Validate::isCleanHTML($PayPal_content.u6->signUpRedirectLink)}{$PayPal_content.u6->signUpRedirectLink}{/if}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u6">{if Validate::isCleanHTML($PayPal_content.u6->signUpCallButton)}{$PayPal_content.u6->signUpCallButton}{/if}</a>*}
 
 				<br /><br />
 
 				{* Use cases 1 - 3 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u1">{$PayPal_content.u1->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u2">{$PayPal_content.u2->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u3">{$PayPal_content.u3->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u1">{if Validate::isCleanHTML($PayPal_content.u1->content)}{$PayPal_content.u1->content}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u2">{if Validate::isCleanHTML($PayPal_content.u2->content)}{$PayPal_content.u2->content}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u3">{if Validate::isCleanHTML($PayPal_content.u3->content)}{$PayPal_content.u3->content}{/if}</span>
 
 				{* Use cases 4 - 6 *}
-				<span class="paypal-signup-content" id="paypal-signup-content-u4">{$PayPal_content.u4->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u5">{$PayPal_content.u5->content|escape:'htmlall':'UTF-8'}</span>
-				<span class="paypal-signup-content" id="paypal-signup-content-u6">{$PayPal_content.u6->content|escape:'htmlall':'UTF-8'}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u4">{if Validate::isCleanHTML($PayPal_content.u4->content)}{$PayPal_content.u4->content}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u5">{if Validate::isCleanHTML($PayPal_content.u5->content)}{$PayPal_content.u5->content}{/if}</span>
+				<span class="paypal-signup-content" id="paypal-signup-content-u6">{if Validate::isCleanHTML($PayPal_content.u6->content)}{$PayPal_content.u6->content}{/if}</span>
 
 			</div>
 
@@ -253,7 +260,7 @@
 					<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_shortcut" value="0" {if $PayPal_express_checkout_shortcut == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_shortcut">{$PayPal_content.no|escape:'htmlall':'UTF-8'}</label>
 				</div>
 								<div>
-					<p>{l s='Use the PayPal Login functionnality' mod='paypal'}{if $default_lang_iso == 'fr'}{l s='(*see the ' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-96"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'}){/if}</p>
+					<p>{l s='Use the PayPal Login functionnality' mod='paypal'}{if $default_lang_iso == 'fr'}{l s='(*see the ' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-96"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'}){else}{l s='(*see the ' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-170"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'}){/if}</p>
 					<p class="description">
 						{l s='This function allows to your clients to connect with their PayPal credentials to shorten the check out' mod='paypal'}
 					</p>

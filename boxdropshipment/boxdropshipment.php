@@ -33,7 +33,7 @@
 	 *
 	 * @author  sweber <sw@boxdrop.com>
 	 * @package BoxdropShipment
-	 * @version 1.0
+	 * @version 1.0.1
 	 */
 	class BoxdropShipment extends CarrierModule
 	{
@@ -49,6 +49,10 @@
 		const CONF_MODE_DIRECT_EXPRESS = 'BDSHIP_CARRIER_MD_DIRCT_EXP';
 		const CONF_MODE_DROPOFF_ECONOMY = 'BDSHIP_CARRIER_MD_DROFF_ECO';
 		const CONF_MODE_DROPOFF_EXPRESS = 'BDSHIP_CARRIER_MD_DROFF_EXP';
+		const OLD_CARRIER_IDS_DIRECT_ECONOMY = 'BDSHIP_OCIDS_DIRCT_ECO';
+		const OLD_CARRIER_IDS_DIRECT_EXPRESS = 'BDSHIP_OCIDS_DIRCT_EXPRESS';
+		const OLD_CARRIER_IDS_DROPOFF_ECONOMY = 'BDSHIP_OCIDS_DROFF_ECO';
+		const OLD_CARRIER_IDS_DROPOFF_EXPRESS = 'BDSHIP_OCIDS_DROFF_EXPRESS';
 		const SHIP_MODE_ECONOMY = 'economy';
 		const SHIP_MODE_EXPRESS = 'express';
 		const SHIP_MODE_EXPRESS12 = 'express12';
@@ -80,7 +84,7 @@
 		{
 			$this->name = 'boxdropshipment';
 			$this->tab = 'shipping_logistics';
-			$this->version = '1.0';
+			$this->version = '1.0.1';
 			$this->author = 'boxdrop Group AG';
 			$this->need_instance = 0;
 			$this->dependencies = array('blockcart');
@@ -106,8 +110,8 @@
 			!Configuration::get('PS_SHOP_CITY') || !Configuration::get('PS_SHOP_PHONE') || !Configuration::get('PS_SHOP_EMAIL'))
 				$this->warning .=
 				'<br />'.$this->l('Please complete your shop address data in the "boxdropshipment" module or the general store address configuration');
-
 		}
+
 		/**
 		 * install handler
 		 *
@@ -139,7 +143,7 @@
 				return false;
 			}
 
-			if (!$this->registerHook('actionValidateOrder') || !$this->registerHook('displayCarrierList'))
+			if (!$this->registerHook('actionValidateOrder') || !$this->registerHook('displayCarrierList') || !$this->registerHook('updateCarrier'))
 			{
 				$this->_errors[] = $this->l('Could not register hooks');
 				return false;
@@ -159,6 +163,7 @@
 
 			return true;
 		}
+
 		/**
 		 * Uninstall handler - cleans all our inserted stuff
 		 *
@@ -175,13 +180,15 @@
 
 			if (!Configuration::deleteByName(self::CONF_API_COUNTRY) || !Configuration::deleteByName(self::CONF_API_HMAC_KEY) ||
 			!Configuration::deleteByName(self::CONF_API_PASS) || !Configuration::deleteByName(self::CONF_API_TEST_MODE) ||
-			!Configuration::deleteByName(self::CONF_API_USER_ID) || !Configuration::deleteByName(self::CONF_API_VERSION))
+			!Configuration::deleteByName(self::CONF_API_USER_ID) || !Configuration::deleteByName(self::CONF_API_VERSION) ||
+			!Configuration::deleteByName(self::OLD_CARRIER_IDS_DIRECT_ECONOMY) || !Configuration::deleteByName(self::OLD_CARRIER_IDS_DIRECT_EXPRESS) ||
+			!Configuration::deleteByName(self::OLD_CARRIER_IDS_DROPOFF_ECONOMY) || !Configuration::deleteByName(self::OLD_CARRIER_IDS_DROPOFF_EXPRESS))
 			{
 				$this->_errors[] = $this->l('Could not delete configuration variables');
 				return false;
 			}
 
-			if (!$this->unregisterHook('actionValidateOrder') || !$this->unregisterHook('displayCarrierList'))
+			if (!$this->unregisterHook('actionValidateOrder') || !$this->unregisterHook('displayCarrierList') || !$this->unregisterHook('updateCarrier'))
 			{
 				$this->_errors[] = $this->l('Could not delete hooks');
 				return false;
@@ -510,5 +517,28 @@
 				}
 			}
 			return true;
+		}
+
+
+		/**
+		 * Updates carrier IDs upon change
+		 * 
+		 * @author sweber <sw@boxdrop.com>
+		 * @param  array  $params
+		 * @return void
+		 */
+		public function hookActionCarrierUpdate($params)
+		{
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY))
+			{
+				BoxdropCarrier::updateUsedCarriers(self::OLD_CARRIER_IDS_DIRECT_ECONOMY, (int)$params['id_carrier']);
+				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_ECONOMY, (int)$params['carrier']->id);
+			}
+
+			if ((int)$params['id_carrier'] == (int)BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS))
+			{
+				BoxdropCarrier::updateUsedCarriers(self::OLD_CARRIER_IDS_DIRECT_EXPRESS, (int)$params['id_carrier']);
+				BoxdropHelper::getCarrierId(self::CONF_MODE_DIRECT_EXPRESS, (int)$params['carrier']->id);
+			}
 		}
 	}
