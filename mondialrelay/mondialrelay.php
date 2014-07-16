@@ -361,7 +361,11 @@ class MondialRelay extends Module
 		$customer = new Customer($order->id_customer);
 		$carrier = new Carrier($order->id_carrier);		
 		$invoice = new Address((int)($order->id_address_invoice));
-		$order_date_text = Tools::displayDate($order->date_add, (int)($id_lang));
+		
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
+			$order_date_text = Tools::displayDate($order->date_add, (int)($id_lang));
+		else
+			$order_date_text = Tools::displayDate($order->date_add, null);
 		
 		DB::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'mr_selected`
@@ -905,13 +909,14 @@ class MondialRelay extends Module
 		$html = '<p>';
 		$simpleresul = Db::getInstance()->executeS('
 			SELECT * FROM ' . _DB_PREFIX_ . 'mr_selected 
-			WHERE id_cart='.(int)($id_cart));
+			WHERE id_cart='.(int)($id_cart)); 
+			
 		if(isset($simpleresul[0])) {
-			if (trim($simpleresul[0]['exp_number']) != '0') 
+			if (trim($simpleresul[0]['exp_number']) != '') 
 				$html .= $this->l('Nb expedition:').$simpleresul[0]['exp_number']."<br>";
-			if (trim($simpleresul[0]['url_etiquette']) != '0') 
+			if (trim($simpleresul[0]['url_etiquette']) != '') 
 				$html .= "<a href='".$simpleresul[0]['url_etiquette']."' target='etiquette".$simpleresul[0]['url_etiquette']."'>".$this->l('Label URL')."</a><br>";
-			if (trim($simpleresul[0]['url_suivi']) != '0')
+			if (trim($simpleresul[0]['url_suivi']) != '')
 				$html .= "<a href='".$simpleresul[0]['url_suivi']."' target='suivi".$simpleresul[0]['exp_number']."'>".$this->l('Follow-up URL')."</a><br>";
 			if (trim($simpleresul[0]['MR_Selected_Num']) != '')
 				$html .= $this->l('Nb Point Relay :').$simpleresul[0]['MR_Selected_Num']."<br>";

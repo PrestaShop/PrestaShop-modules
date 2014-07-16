@@ -90,6 +90,8 @@ var PS_MRObject = (function($, undefined) {
 								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#URLA5_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A5 + '">\
 								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
+								$('#URL10x15_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A5 + '">\
+								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#expeditionNumber_' + id_order).html(json.success[id_order].expeditionNumber);
 								$('#detailHistory_' + id_order).children('td').children('input').attr('value', json.success[id_order].id_mr_history);
 								$('#detailHistory_' + id_order).children('td').children('input').attr('id', 'PS_MRHistoryId_' + json.success[id_order].id_mr_history);
@@ -177,12 +179,14 @@ var PS_MRObject = (function($, undefined) {
 								<td id="expeditionNumber_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
 								<td id="URLA4_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
 								<td id="URLA5_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
+								<td id="URL10x15_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
 							</tr>');
 						}
 						else
 						{
 							$('#detailHistory_' + id_order).children('#URLA4_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
 							$('#detailHistory_' + id_order).children('#URLA5_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URL10x15_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
 							$('#detailHistory_' + id_order).children('#expeditionNumber_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
 						}
 					}
