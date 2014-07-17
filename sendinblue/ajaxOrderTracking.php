@@ -35,7 +35,10 @@ $sendin = new Sendinblue();
 
 if (Configuration::get('Sendin_order_tracking_Status') == 0)
 {
-	
+	$handle = fopen(_PS_MODULE_DIR_.'sendinblue/csv/ImportOldOrdersToSendinblue.csv', 'w+');
+	$key_value[] = 'EMAIL,ORDER_ID,ORDER_PRICE,ORDER_DATE';
+
+	fputcsv($handle, $key_value, $blank_val = 0);
 	$customer_detail = $sendin->getAllCustomers();
 	foreach ($customer_detail as $customer_value)
 	{
@@ -58,8 +61,6 @@ if (Configuration::get('Sendin_order_tracking_Status') == 0)
 				$order_id = $orders_data['id_order'];
 
 				$order_price = Tools::safeOutput($orders_data['total_paid']);
-				$tracking = $sendin->trackingResult();
-				$site_id = Tools::safeOutput($tracking->result->tracking_data->site_id);
 				$date_value = $sendin->getApiConfigValue();
 
 				if ($date_value->date_format == 'dd-mm-yyyy')
@@ -67,24 +68,28 @@ if (Configuration::get('Sendin_order_tracking_Status') == 0)
 				else
 					$date = date('m-d-Y', strtotime($orders_data['date_add']));
 
-				$list = str_replace('|', ',', Configuration::get('Sendin_Selected_List_Data'));
-					if (preg_match('/^[0-9,]+$/', $list))
-						$list = $list;
-					else
-						$list = '';
-								
-				$data = array();
-				$data['key'] = Configuration::get('Sendin_Api_Key');
-				$data['webaction'] = 'USERCREADIT';
-				$data['email'] = $customer_value['email'];
-				$data['blacklisted'] = '';
-				$data['attributes_name'] = 'ID|FIRST_NAME|LAST_NAME|ORDER_ID|ORDER_PRICE|ORDER_DATE';        
-				$data['attributes_value'] = $site_id.'|'.$customer_value['firstname'].'|'.$customer_value['lastname'].'|'.$order_id.'|'.$order_price.'|'.$date;
-				$data['listid'] = $list;
-				$sendin->curlRequest($data);
+				$order_data = array();
+				$order_data[] = array($customer_value['email'],$order_id,$order_price,$date);
+				foreach ($order_data as $line)
+				fputcsv($handle, $line);
 
 			}
 		}
 	}
-	Configuration::updateValue('Sendin_order_tracking_Status', 1);
+	fclose($handle);
+	$list = str_replace('|', ',', Configuration::get('Sendin_Selected_List_Data'));
+		if (preg_match('/^[0-9,]+$/', $list))
+			$list = $list;
+		else
+			$list = '';
+
+	$import_data = array();		
+	$import_data['webaction'] = 'IMPORTUSERS';
+	$import_data['key'] = Configuration::get('Sendin_Api_Key');
+	$import_data['url'] = $sendin->path.$sendin->name.'/csv/ImportOldOrdersToSendinblue.csv';
+	$import_data['listids'] = $list;
+	// List id should be optional
+	$sendin->curlRequestAsyc($import_data);
+
+	Configuration::updateValue('Sendin_order_tracking_Status', 1);exit;
 }

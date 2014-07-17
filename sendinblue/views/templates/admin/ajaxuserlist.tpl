@@ -28,11 +28,11 @@
 {foreach from=$result item=sourceInfo}
 	{assign var=counter value=$counter+1}
 	<tr>
-		<td>
+		<td class="{$cl_version}">
 			<div style="word-wrap:break-word; width:350px">{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}</div>
 		</td>
 		{assign var="emailtest" value=$sourceInfo.email}
-		<td>
+		<td class="{$cl_version}">
 			{if $sourceInfo.id_customer!= "Nclient"}
 				yes
 			{else}
@@ -40,7 +40,7 @@
 			{/if}
 			
 		</td>
-		<td>
+		<td class="{$cl_version}">
 			
             {foreach from=$smsdata key=jk item=smsInfo}
             	{if $jk == $sourceInfo.phone_mobile}
@@ -53,9 +53,9 @@
 			
 			{assign var=emailid value=$sourceInfo.email}
 			
-			{if isset($data[$emailid]) && $data[$emailid] ===1}
+			{if isset($data[$emailid].email_bl) && $data[$emailid].email_bl ===1}
 				{assign var=pstatus value=1}
-			{elseif isset($data[$emailid]) && $data[$emailid] ===0}
+			{elseif isset($data[$emailid].email_bl) && $data[$emailid].email_bl ===0}
 				{assign var=pstatus value=0}
 			{else}
 				{assign var=pstatus value=1}
@@ -76,6 +76,31 @@
 			<img  class="imgstatus" src="../img/admin/disabled.gif" />
 			{/if}
 		</td>
+                <td class="tipTd">
+
+			{assign var=emailid value=$sourceInfo.email}
+
+			{if isset($data[$emailid].sms_bl) && $data[$emailid].sms_bl ===1}
+				{assign var=pstatus value=1}
+			{elseif isset($data[$emailid].sms_bl) && $data[$emailid].sms_bl ===0}
+				{assign var=pstatus value=0}
+			{else}
+				{assign var=pstatus value=1}
+			{/if}
+			{if isset($sourceInfo.phone_mobile) && $sourceInfo.phone_mobile !=''}
+			
+                            {if $pstatus==1 && isset($data[$emailid].sms_exist) && $data[$emailid].sms_exist !=''}
+                                <a href="javascript:void(0)" class="ajax_sms_href" email="{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}"><img class="toolTip1 imgstatus" title="{l s='Subscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter|intval}" src="../img/admin/disabled.gif" /></a>
+                            {elseif $pstatus==0 && isset($data[$emailid].sms_exist) && $data[$emailid].sms_exist !=''}
+                                <a href="javascript:void(0)" class="ajax_sms_href" email="{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}"><img class="toolTip1 imgstatus" title="{l s='Unsubscribe the contact' mod='sendinblue'}" id="ajax_contact_status_{$counter|intval}" src="../img/admin/enabled.gif" /></a>
+                            
+                            {else}
+                               {l s='Not synchronized' mod='sendinblue'}
+                            {/if}
+			
+                        {/if}
+		</td>
+                
 	</tr>
 {/foreach}
 

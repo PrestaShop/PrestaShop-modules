@@ -343,3 +343,10 @@ nobootstrap {
     min-width: 1180px!important;
 }
 .form-data em{ font-style:italic;}
+.ver_5{
+	color:#585A69!important;	
+}
+
+.ver_4{
+	color:#996633!important;	
+}

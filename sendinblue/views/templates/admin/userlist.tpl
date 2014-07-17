@@ -32,7 +32,7 @@
 	<tbody>
 	
 		<tr>
-			<td style="border-bottom:none;">{$middlelable|escape:"htmlentity"}
+			<td style="border-bottom:none;" class="{$cl_version}">{$middlelable|escape:"htmlentity"}
 			</td>
 		</tr>
 		<tr id="userDetails" style="display:none;">
@@ -45,6 +45,7 @@
 							<th width="20%">{l s='SMS' mod='sendinblue'}</th>
 							<th width="20%">{l s='Newsletter SendinBlue Status' mod='sendinblue'}<span class="toolTip" title="{l s='Click on the icon to subscribe / unsubscribe the contact from SendinBlue and PrestaShop.' mod='sendinblue'}">&nbsp;</span></th>
 							<th width="20%">{l s='Newsletter PrestaShop Status' mod='sendinblue'}</th>
+                                                        <th width="20%">{l s='SMS SendinBlue Status' mod='sendinblue'}<span class="toolTip" title="{l s='Click on the icon to subscribe / unsubscribe the SMS from SendinBlue.' mod='sendinblue'}">&nbsp;</span></th>
 						</tr>
 					</thead>
 					<tbody class="midleft"> 
