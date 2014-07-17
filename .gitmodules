@@ -418,3 +418,6 @@
 [submodule "seur/backward_compatibility"]
 	path = seur/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "gsitemap"]
+	path = gsitemap
+	url = https://github.com/PrestaShop/gsitemap.git
