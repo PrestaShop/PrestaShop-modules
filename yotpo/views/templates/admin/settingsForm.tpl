@@ -6,18 +6,18 @@
 				{if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
 					<a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
 				{else}
-					<a class="y-href" href="https://www.yotpo.com/?login=true" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
+					<a class="y-href" href="https://my.yotpo.com/?login=true" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
 				{/if}
 			{/if}
 		{if $yotpo_allreadyUsingYotpo}<div class="y-settings-title">{l s='To get your api key and secret token' mod='yotpo'} 
-		<a class="y-href" href="https://www.yotpo.com/?login=true" target="_blank">{l s='log in here' mod='yotpo'}</a>{l s=', And go to your account settings.' mod='yotpo'}</div>{/if}
+		<a class="y-href" href="https://my.yotpo.com/?login=true" target="_blank">{l s='log in here' mod='yotpo'}</a>{l s=', And go to your account settings.' mod='yotpo'}</div>{/if}
 
 		{if $yotpo_finishedRegistration}<div class="y-settings-title">{l s='All set! The Yotpo widget is now properly installed on your shop.' mod='yotpo'}<br />
 			{l s='To customize the look and feel of the widget, and to edit your Mail After Purchase settings, just head to the' mod='yotpo'} 
 			{if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
 				<a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
 			{else}
-				<a class="y-href" href="https://www.yotpo.com/?login=true" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
+				<a class="y-href" href="https://my.yotpo.com/?login=true" target="_blank">{l s='Yotpo Dashboard.' mod='yotpo'}</a></div> 
 			{/if}
 		{/if}
 
@@ -26,7 +26,7 @@
                <input type="checkbox" name="yotpo_rich_snippets" value="1" {if $yotpo_rich_snippets}checked="checked"{/if} />
             </div> 
             {if $yotpo_appKey && $yotpo_appKey != '' && $yotpo_oauthToken && $yotpo_oauthToken != ''}
-            	<p class="y-notification"> * In order to activate Rich Snippets you will also need to check the Rich Snippet tick box in your <a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}&redirect=/customize/seo&utm_source=customers_prestashop_admin&utm_medium=link&utm_campaign=prestashop_rich_snippets" target="_blank">{l s='Yotpo admin.' mod='yotpo'}</a> </p>				 
+            	<p class="y-notification"> * In order to activate Rich Snippets you will also need to check the Rich Snippet tick box in your <a class="y-href" href="https://api.yotpo.com/users/b2blogin?app_key={$yotpo_appKey|escape:'htmlall':'UTF-8'}&secret={$yotpo_oauthToken|escape:'htmlall':'UTF-8'}&redirect=/features/rich-snippets&utm_source=customers_prestashop_admin&utm_medium=link&utm_campaign=prestashop_rich_snippets" target="_blank">{l s='Yotpo admin.' mod='yotpo'}</a> </p>				 
 			{/if}
                    
 	        <div class="y-label">{l s='For multipule-language sites, mark this check box. This will choose the language according to the user\'s site language' mod='yotpo'}
