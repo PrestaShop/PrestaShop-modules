@@ -251,7 +251,53 @@ class Ebay extends Module
 		// Init
 		$this->setConfiguration('EBAY_VERSION', $this->version);
 
+		$this->verifyAndFixDataBaseFor1_7();
+
 		return true;
+	}
+
+	public function verifyAndFixDataBaseFor1_7()
+	{
+		if(!Configuration::get('EBAY_UPGRADE_17'))
+		{
+			if(count(Db::getInstance()->ExecuteS("SHOW COLUMNS FROM "._DB_PREFIX_."ebay_category LIKE 'id_ebay_category'")) != 0)
+			{
+				//Check if column id_ebay_profile exists on each table already existing in 1.6
+				$sql = array(
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_category_configuration`',
+					// TODO: that would be better to remove the previous indexes if possible
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` ADD INDEX `ebay_category` (`id_ebay_profile` ,  `id_ebay_category`)',
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_category_configuration` ADD INDEX `category` (`id_ebay_profile` ,  `id_category`)',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping_zone_excluded` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_zone_excluded`',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping_international_zone` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_zone`',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_category_condition` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_category_condition`',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_category_condition_configuration` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_category_condition_configuration`',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_product` 
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `id_ebay_product`',
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping`
+						ADD `id_ebay_profile` INT( 16 ) NOT NULL AFTER `international`',
+
+
+					'ALTER TABLE `'._DB_PREFIX_.'ebay_shipping`
+						ADD `id_zone` INT( 16 ) NOT NULL AFTER `id_ebay_shipping`',
+				);
+				foreach ($sql as $q) {
+					Db::getInstance()->Execute($q);
+				}
+			}
+			Configuration::updateValue('EBAY_UPGRADE_17', true);
+		}
 	}
 	
 	public function createDefaultProfilesAndReturnsPolicies()
