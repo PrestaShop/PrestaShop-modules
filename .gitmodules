@@ -421,3 +421,6 @@
 [submodule "seur/backward_compatibility"]
 	path = seur/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "prestastats/backward_compatibility"]
+	path = prestastats/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
