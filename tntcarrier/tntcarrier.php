@@ -1223,8 +1223,7 @@ class TntCarrier extends CarrierModule
 						 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B');
 	  $city =  mb_strtoupper($city);
 		$city = strtr($city, $table);
-		$old = array("SAINT", "-");
-		$new = array("ST", " ");
-		return (str_replace($old, $new, $city));
+		$city = str_replace('-', ' ', $city);
+		return preg_replace('/SAINT\s+/', 'ST ', $city);
 	}
 }
