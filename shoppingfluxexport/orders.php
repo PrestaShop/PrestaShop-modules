@@ -34,6 +34,6 @@ ini_set('display_errors', 'off');
 $f = new ShoppingFluxExport();
 
 if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
-    die("Invalid Token");
+	die('Invalid Token');
 
 echo $f->hookbackOfficeTop(false);
