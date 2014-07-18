@@ -1,0 +1,84 @@
+#syspay_wrapper {
+    width: 1024px;
+    margin: 0 auto;
+}
+
+#syspay_header h1, #syspay_header img { float: left; }
+#syspay_header img { padding-top: 10px; }
+#syspay_header h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 70px;
+    margin-left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: 1px solid #b9d7ec;
+}
+
+#syspay_adv { padding: 20px 0; }
+
+#syspay_adv #bloc-left span.adv-title {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 33px;
+    font-weight: 600;
+    display: block;
+}
+#syspay_adv #bloc-left span.adv-subtitle {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    display: block;
+}
+
+#bloc-left, #bloc-right { float: left; }
+
+#bloc-right { background: url('../img/bg_blue.jpg'); width: 303px; height: 424px; }
+
+#adv-trial { font-family: 'Open Sans', sans-serif; padding: 15px; color: white; text-align: center; }
+#adv-trial a#trial-activate {
+    width: 201px;
+    height: 48px;
+    background: url('../img/btn_activate.jpg') no-repeat;
+    display: block;
+    margin: 0 auto;
+    margin-top: 80px;
+    margin-bottom: 45px;
+    color: white;
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    padding-top: 8px;
+}
+
+#adv-trial span.trial-title { font-size: 53px; font-weight: 600; }
+#adv-trial span.trial-subtitle { font-size: 16px; }
+#adv-trial span.trial-subtitle a:hover { text-decoration: underline; color: #cae6fd!important; }
+
+#cb-test { font-weight: bold }
+
+#bloc-left { padding-left: 125px; margin-right: 85px; }
+
+div.adv { margin: 14px 0; padding-left: 105px; }
+
+#adv1 { background: url('../img/img_bo_1.jpg') no-repeat left; }
+#adv2 { background: url('../img/img_bo_2.jpg') no-repeat left; }
+#adv3 { background: url('../img/img_bo_3.jpg') no-repeat left; height: 75px; }
+#adv4 { background: url('../img/img_bo_4.jpg') no-repeat left; height: 120px; }
+
+
+
+.bb { border-bottom: 1px solid #ddd; padding-bottom: 20px; }
+.bl { border-left: 1px solid #ddd; }
+.pt { padding-top: 20px; }
+.split { float: left; width: 310px; padding: 0 5px; }
+.bb label {  margin-right: 25px; font-weight: bold!important; font-size: 12px!important }
+.bb .split label { width: 120px!important; margin-right: 0 }
+.split label.credentials { width: auto!important; margin-right: 0 }
+.split input[type=text] { width: 260px; }
+.bb.pt select { width: 285px; display: inline-block }
+
+h4 { font-weight: bold }
+
+input.syspay-btn { padding: 10px!important; font-weight: bold; background: #8FC04D }
+div.pt.save { text-align: center }
+
+span.help { color: red!important; font-weight: bold }

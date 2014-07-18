@@ -424,3 +424,6 @@
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
+[submodule "syspay/backward_compatibility"]
+	path = syspay/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

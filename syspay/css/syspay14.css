@@ -1,0 +1,182 @@
+#syspay_admin {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#syspay-conf { margin-top: 20px; }
+
+label { width: 445px; }
+
+#syspay-header h1, #syspay-header img {
+    float: left;
+}
+
+#syspay-header img {
+    padding-top: 10px;
+}
+
+#syspay-header h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 70px;
+    margin-left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: 1px solid #b9d7ec;
+}
+
+#syspay-adv {
+    padding: 20px 0;
+}
+
+#syspay-adv #bloc-left span.adv-title {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 33px;
+    font-weight: 600;
+    display: block;
+}
+
+#syspay-adv #bloc-left span.adv-subtitle {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    display: block;
+}
+
+#bloc-left, #bloc-right {
+    float: left;
+}
+
+#bloc-right {
+    background: url('../img/bg_blue.jpg');
+    width: 303px;
+    height: 424px;
+}
+
+#adv-trial {
+    font-family: 'Open Sans', sans-serif;
+    padding: 15px;
+    color: white;
+    text-align: center;
+}
+
+#adv-trial a#trial-activate {
+    width: 201px;
+    height: 48px;
+    background: url('../img/btn_activate.jpg') no-repeat;
+    display: block;
+    margin: 0 auto;
+    margin-top: 80px;
+    margin-bottom: 75px;
+    color: white;
+    font-size: 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    padding-top: 8px;
+}
+
+#adv-trial span.trial-title {
+    font-size: 53px;
+    font-weight: 600;
+}
+
+#adv-trial span.trial-subtitle {
+    font-size: 16px;
+}
+
+#adv-trial span.trial-subtitle a:hover {
+    text-decoration: underline;
+    color: #cae6fd!important;
+}
+
+#bloc-left {
+    padding-left: 125px;
+    margin-right: 85px;
+}
+
+div.adv {
+    margin: 14px 0;
+    padding-left: 105px;
+}
+
+#adv1 {
+    background: url('../img/img_bo_1.jpg') no-repeat left;
+}
+
+#adv2 {
+    background: url('../img/img_bo_2.jpg') no-repeat left;
+}
+
+#adv3 {
+    background: url('../img/img_bo_3.jpg') no-repeat left;
+    height: 75px;
+}
+
+#adv4 {
+    background: url('../img/img_bo_4.jpg') no-repeat left;
+    height: 120px;
+}
+
+.bb {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+}
+
+.bl {
+    border-left: 1px solid #ddd;
+}
+
+.pt {
+    padding-top: 20px;
+}
+
+.split {
+    float: left;
+    width: 435px;
+    padding: 0 5px;
+}
+
+.split label.credentials {
+    width: 170px!important;
+}
+
+.split input[type=text] {
+    width: 180px;
+}
+
+#cb-test {
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#wrapper {
+    margin-top: 20px;
+}
+
+#wrapper-left, #wrapper-right {
+    float: left;
+}
+
+#wrapper-left {
+    width: 575px;
+    margin-right: 30px;
+}
+
+#wrapper-left label {
+    width: 400px;
+}
+
+#wrapper-left select {
+    width: 250px;
+}
+
+#wrapper-left input[type=submit] {
+    display: block;
+    margin: 0 auto;
+}
+
+#wrapper-right {
+    width: 320px;
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; }
+code > span.dt { color: #204a87; }
+code > span.dv { color: #0000cf; }
+code > span.bn { color: #0000cf; }
+code > span.fl { color: #0000cf; }
+code > span.ch { color: #4e9a06; }
+code > span.st { color: #4e9a06; }
+code > span.co { color: #8f5902; font-style: italic; }
+code > span.ot { color: #8f5902; }
+code > span.al { color: #ef2929; }
+code > span.fu { color: #000000; }
+code > span.er { font-weight: bold; }
+  </style>
+  <style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+  body{
+    color:#444;
+    font-family:Helvetica, arial, freesans, clean, sans-serif;
+    font-size:12px;
+    line-height:1.5em;
+    background:#fefefe;
+    width: 990px;
+    margin: 10px auto;
+    padding: 1em;
+    outline: 1300px solid #FAFAFA;
+  }
+
+  a{ color: #0645ad; text-decoration:none;}
+  a:visited{ color: #0b0080; }
+  a:hover{ color: #06e; }
+  a:active{ color:#faa700; }
+  a:focus{ outline: thin dotted; }
+  a:hover, a:active{ outline: 0; }
+
+  span.backtick {
+    border:1px solid #EAEAEA;
+    border-radius:3px;
+    background:#F8F8F8;
+    padding:0 3px 0 3px;
+  }
+
+  ::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+  ::selection{background:rgba(255,255,0,0.3);color:#000}
+
+  a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+  a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+  p{
+  margin:1em 0;
+  }
+
+  img{
+  max-width:100%;
+  }
+
+  h1,h2,h3,h4,h5,h6{
+  font-weight:normal;
+  color:#111;
+  line-height:1em;
+  }
+  h4,h5,h6{ font-weight: bold; }
+  h1{ font-size:2.5em; }
+  h2{ font-size:2em; border-bottom:1px solid silver; padding-bottom: 5px; }
+  h3{ font-size:1.5em; }
+  h4{ font-size:1.2em; }
+  h5{ font-size:1em; }
+  h6{ font-size:0.9em; }
+
+  blockquote{
+  color:#666666;
+  margin:0;
+  padding-left: 3em;
+  border-left: 0.5em #EEE solid;
+  }
+  hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+
+
+  pre , code, kbd, samp {
+    color: #000;
+    font-family: Monaco, 'Andale Mono', 'Lucida Console', 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+    font-size: 0.88em;
+    line-height: 1.4em;
+    border-radius:3px;
+    background-color: #F8F8F8;
+    border: 1px solid #CCC;
+    overflow: auto;
+    word-wrap: normal;
+    white-space: pre;
+  }
+  pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px 0px;}
+  pre code { border: 0px !important; padding: 0;}
+  code { padding: 1px 3px 1px 3px; }
+
+  b, strong { font-weight: bold; }
+
+  dfn { font-style: italic; }
+
+  ins { background: #ff9; color: #000; text-decoration: none; }
+
+  mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+  sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+  sup { top: -0.5em; }
+  sub { bottom: -0.25em; }
+
+  ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+  li p:last-child { margin:0 }
+  dd { margin: 0 0 0 2em; }
+
+  img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+  table { border-collapse: collapse; border-spacing: 0; }
+  td { vertical-align: top; }
+
+  @media only screen and (min-width: 480px) {
+  body{font-size:14px;}
+  }
+
+  @media only screen and (min-width: 768px) {
+  body{font-size:14px;}
+  }
+
+  @media print {
+    * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+    body{font-size:12pt; max-width:100%; outline:none;}
+    a, a:visited { text-decoration: underline; }
+    hr { height: 1px; border:0; border-bottom:1px solid black; }
+    a[href]:after { content: " (" attr(href) ")"; }
+    abbr[title]:after { content: " (" attr(title) ")"; }
+    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+    pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+    tr, img { page-break-inside: avoid; }
+    img { max-width: 100% !important; }
+    @page :left { margin: 15mm 20mm 15mm 10mm; }
+    @page :right { margin: 15mm 10mm 15mm 20mm; }
+    p, h2, h3 { orphans: 3; widows: 3; }
+    h2, h3 { page-break-after: avoid; }
+  }
+  </style>
+</head>
+<body>
+<h1 id="syspay-php-merchant-sdk">Syspay PHP Merchant SDK</h1>
+<h2 id="api-documentation">API Documentation</h2>
+<p>An online version of the API documentation can be found <a href="https://app.syspay.com/docs/merchant-sdk-php/index.html">on our site</a></p>
+<h2 id="installation">Installation</h2>
+<p>This library requires php 5.2+ along with the <code>json</code> and the <code>curl</code> extensions.</p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">require_once</span><span class="ot">(</span><span class="st">&#39;/path/to/loader.php&#39;</span><span class="ot">);</span></code></pre>
+<h2 id="requesting-the-api">Requesting the API</h2>
+<p>Implementation reference: <a href="https://app.syspay.com/docs/api/merchant_api.html">SysPay Processing API</a></p>
+<h3 id="create-a-client">Create a client</h3>
+<p>All operations are requested via an instance of a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Client.html">Client object</a>.</p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$client</span> = <span class="kw">new</span> Syspay_Merchant_Client<span class="ot">(</span><span class="kw">$username</span><span class="ot">,</span> <span class="kw">$secret</span><span class="ot">[,</span> <span class="kw">$baseUrl</span><span class="ot">]);</span></code></pre>
+<p>To call against the sandbox environment, the <code>$baseUrl</code> can be set to <code>Syspay_Merchant_Client::BASE_URL_SANDBOX</code>.</p>
+<h3 id="creditcard-payment-request">Creditcard payment request</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_PaymentRequest.html">Syspay_Merchant_PaymentRequest</a></p>
+<p>You request a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Payment.html">payment</a> for a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Customer.html">customer</a> on a given <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Creditcard.html">creditcard</a>:</p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$paymentRequest</span> = <span class="kw">new</span> Syspay_Merchant_PaymentRequest<span class="ot">(</span>Syspay_Merchant_PaymentRequest::<span class="kw">FLOW_API</span><span class="ot">);</span>
+    <span class="kw">$paymentRequest</span>-&gt;setPaymentMethod<span class="ot">(</span>Syspay_Merchant_PaymentRequest::<span class="kw">METHOD_CREDITCARD</span><span class="ot">);</span>
+    <span class="kw">$paymentRequest</span>-&gt;setBillingAgreement<span class="ot">(</span><span class="kw">true</span><span class="ot">);</span> <span class="co">// true means you want to be able to rebill this customer later. Defaults to false</span>
+
+    <span class="kw">$customer</span> = <span class="kw">new</span> Syspay_Merchant_Entity_Customer<span class="ot">();</span>
+    <span class="kw">$customer</span>-&gt;setEmail<span class="ot">(</span><span class="st">&#39;foo@bar.baz&#39;</span><span class="ot">);</span> <span class="co">// Customer&#39;s email</span>
+    <span class="kw">$customer</span>-&gt;setLanguage<span class="ot">(</span><span class="st">&#39;en&#39;</span><span class="ot">);</span> <span class="co">// Optional, used to send notifications in the correct language</span>
+    <span class="kw">$customer</span>-&gt;setIp<span class="ot">(</span><span class="st">&#39;1.2.3.4&#39;</span><span class="ot">);</span> <span class="co">// Customer IP address</span>
+    <span class="kw">$paymentRequest</span>-&gt;setCustomer<span class="ot">(</span><span class="kw">$customer</span><span class="ot">);</span>
+
+    <span class="kw">$creditcard</span> = <span class="kw">new</span> Syspay_Merchant_Entity_Creditcard<span class="ot">();</span>
+    <span class="kw">$creditcard</span>-&gt;setHolder<span class="ot">(</span><span class="st">&#39;John Doe&#39;</span><span class="ot">);</span>
+    <span class="kw">$creditcard</span>-&gt;setNumber<span class="ot">(</span><span class="st">&#39;4556267280522645&#39;</span><span class="ot">);</span>
+    <span class="kw">$creditcard</span>-&gt;setCvc<span class="ot">(</span><span class="st">&#39;123&#39;</span><span class="ot">);</span>
+    <span class="kw">$creditcard</span>-&gt;setExpMonth<span class="ot">(</span><span class="st">&#39;01&#39;</span><span class="ot">);</span>
+    <span class="kw">$creditcard</span>-&gt;setExpYear<span class="ot">(</span><span class="st">&#39;2014&#39;</span><span class="ot">);</span>
+    <span class="kw">$paymentRequest</span>-&gt;setCreditcard<span class="ot">(</span><span class="kw">$creditcard</span><span class="ot">);</span>
+
+    <span class="kw">$payment</span> = <span class="kw">new</span> Syspay_Merchant_Entity_Payment<span class="ot">();</span>
+    <span class="kw">$payment</span>-&gt;setReference<span class="ot">(</span><span class="st">&#39;1234567&#39;</span><span class="ot">);</span> <span class="co">// Your own reference for this payment</span>
+    <span class="kw">$payment</span>-&gt;setPreauth<span class="ot">(</span><span class="kw">true</span><span class="ot">);</span> <span class="co">// By default, we will process a DIRECT payment. Set this to true to PREAUTH only, it will then need to be confirmed later</span>
+    <span class="kw">$payment</span>-&gt;setAmount<span class="ot">(</span><span class="dv">1000</span><span class="ot">);</span> <span class="co">// Amount in *cents*</span>
+    <span class="kw">$payment</span>-&gt;setCurrency<span class="ot">(</span><span class="st">&#39;EUR&#39;</span><span class="ot">);</span> <span class="co">// Currency</span>
+    <span class="kw">$payment</span>-&gt;setDescription<span class="ot">(</span><span class="st">&#39;some description&#39;</span><span class="ot">);</span> <span class="co">// An optional description</span>
+    <span class="kw">$payment</span>-&gt;setExtra<span class="ot">(</span><span class="fu">json_encode</span><span class="ot">(</span><span class="kw">$someInformation</span><span class="ot">));</span> <span class="co">// An optional information that will given back to you on notifications</span>
+    <span class="kw">$paymentRequest</span>-&gt;setPayment<span class="ot">(</span><span class="kw">$payment</span><span class="ot">);</span>
+
+    <span class="kw">$payment</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$paymentRequest</span><span class="ot">);</span>
+    <span class="co">// $payment is an instance of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="confirm-an-authorized-payment">Confirm an AUTHORIZED payment</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_ConfirmRequest.html">Syspay_Merchant_ConfirmRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$confirmRequest</span> = <span class="kw">new</span> Syspay_Merchant_ConfirmRequest<span class="ot">();</span>
+    <span class="kw">$confirmRequest</span>-&gt;setPaymentId<span class="ot">(</span><span class="kw">$originalPaymentId</span><span class="ot">);</span> <span class="co">// Returned to you on the initial payment request</span>
+
+    <span class="kw">$confirm</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$confirmRequest</span><span class="ot">);</span>
+    <span class="co">// $confirm is an instance of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="void-an-authorized-payment">Void an AUTHORIZED payment</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_VoidRequest.html">Syspay_Merchant_VoidRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$voidRequest</span> = <span class="kw">new</span> Syspay_Merchant_VoidRequest<span class="ot">();</span>
+    <span class="kw">$voidRequest</span>-&gt;setPaymentId<span class="ot">(</span><span class="kw">$originalPaymentId</span><span class="ot">);</span> <span class="co">// Returned to you on the initial payment request</span>
+
+    <span class="kw">$void</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$voidRequest</span><span class="ot">);</span>
+    <span class="co">// $void is an instance of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="get-information-about-a-payment">Get information about a payment</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_PaymentInfoRequest.html">Syspay_Merchant_PaymentInfoRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$infoRequest</span> = <span class="kw">new</span> Syspay_Merchant_PaymentInfoRequest<span class="ot">(</span><span class="kw">$paymentId</span><span class="ot">);</span>
+
+    <span class="kw">$payment</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$infoRequest</span><span class="ot">);</span>
+    <span class="co">// $payment is an instance of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="export-a-list-of-payments">Export a list of payments</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_PaymentListRequest.html">Syspay_Merchant_PaymentListRequest</a> The list of available filters can be found in our <a href="https://app.syspay.com/bundles/emiuser/doc/merchant_api.html#get-a-list-of-payments">api documentation</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$paymentListRequest</span> = <span class="kw">new</span> Syspay_Merchant_PaymentListRequest<span class="ot">();</span>
+    <span class="co">// Optionally set filters (refer to the API documentation for an exhaustive list)</span>
+    <span class="kw">$paymentListRequest</span>-&gt;addFilter<span class="ot">(</span><span class="st">&#39;start_date&#39;</span><span class="ot">,</span> <span class="kw">$someTimestamp</span><span class="ot">);</span>
+    <span class="kw">$paymentListRequest</span>-&gt;addFilter<span class="ot">(</span><span class="st">&#39;end_date&#39;</span><span class="ot">,</span> <span class="kw">$someOtherTimestamp</span><span class="ot">);</span>
+
+    <span class="kw">$payments</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$paymentListRequest</span><span class="ot">);</span>
+    <span class="co">// $payments is an array of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="refund-a-payment">Refund a payment</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_RefundRequest.html">Syspay_Merchant_RefundRequest</a></p>
+<p>You request a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Refund.html">refund</a> on a given <em>payment id</em>:</p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$refund</span> = <span class="kw">new</span> Syspay_Merchant_Entity\Refund<span class="ot">();</span>
+    <span class="kw">$refund</span>-&gt;setReference<span class="ot">(</span><span class="st">&#39;1234567&#39;</span><span class="ot">);</span> <span class="co">// Your own reference for this refund</span>
+    <span class="kw">$refund</span>-&gt;setAmount<span class="ot">(</span><span class="dv">1000</span><span class="ot">);</span> <span class="co">// The amount to refund in *cents*</span>
+    <span class="kw">$refund</span>-&gt;setCurrency<span class="ot">(</span><span class="st">&#39;EUR&#39;</span><span class="ot">);</span> <span class="co">// The currency of the refund. It must match the one of the original payment</span>
+    <span class="kw">$refund</span>-&gt;setDescription<span class="ot">(</span><span class="st">&#39;some description&#39;</span><span class="ot">);</span> <span class="co">// An optional description for this refund</span>
+    <span class="kw">$refund</span>-&gt;setExtra<span class="ot">(</span><span class="fu">json_encode</span><span class="ot">(</span><span class="kw">$someInformation</span><span class="ot">));</span> <span class="co">// An optional information that will be given back to you on notifications</span>
+
+    <span class="kw">$refundRequest</span> = <span class="kw">new</span> Syspay_Merchant_RefundRequest<span class="ot">();</span>
+    <span class="kw">$refundRequest</span>-&gt;setPaymentId<span class="ot">(</span><span class="kw">$paymentId</span><span class="ot">);</span> <span class="co">// The payment id to refund</span>
+    <span class="kw">$refundRequest</span>-&gt;setRefund<span class="ot">(</span><span class="kw">$refund</span><span class="ot">);</span>
+
+    <span class="kw">$refund</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$refundRequest</span><span class="ot">);</span>
+    <span class="co">// $refund is an instance of Syspay_Merchant_Entity_Refund</span></code></pre>
+<h3 id="get-information-about-a-refund">Get information about a refund</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_RefundInfoRequest.html">Syspay_Merchant_RefundInfoRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$infoRequest</span> = <span class="kw">new</span> Syspay_Merchant_RefundInfoRequest<span class="ot">(</span><span class="kw">$refundId</span><span class="ot">);</span>
+
+    <span class="kw">$refund</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$infoRequest</span><span class="ot">);</span>
+    <span class="co">// $refund is an instance of Syspay_Merchant_Entity_Refund</span></code></pre>
+<h3 id="export-a-list-of-refunds">Export a list of refunds</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_RefundListRequest.html">Syspay_Merchant_RefundListRequest</a> The list of available filters can be found in our <a href="https://app.syspay.com/bundles/emiuser/doc/merchant_api.html#get-a-list-of-refunds">api documentation</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$refundListRequest</span> = <span class="kw">new</span> Syspay_Merchant_RefundListRequest<span class="ot">();</span>
+    <span class="co">// Optionally set filters (refer to the API document for an exhaustive list)</span>
+    <span class="kw">$paymentListRequest</span>-&gt;addFilter<span class="ot">(</span><span class="st">&#39;status&#39;</span><span class="ot">,</span> <span class="st">&#39;SUCCESS&#39;</span><span class="ot">);</span>
+
+    <span class="kw">$refunds</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$refundListRequest</span><span class="ot">);</span>
+    <span class="co">// $refunds is an array of Syspay_Merchant_Entity_Refund</span></code></pre>
+<h3 id="rebill-on-a-given-billing-agreement">Rebill on a given billing agreement</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_RebillRequest.html">Syspay_Merchant_RebillRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="co">// The billing agreement id returned from the initial payment request must be used</span>
+    <span class="kw">$rebillRequest</span> = <span class="kw">new</span> Syspay_Merchant_RebillRequest<span class="ot">(</span><span class="kw">$billingAgreementId</span><span class="ot">);</span>
+    <span class="kw">$rebillRequest</span>-&gt;setAmount<span class="ot">(</span><span class="dv">1000</span><span class="ot">);</span> <span class="co">// Amount in *cents*</span>
+    <span class="kw">$rebillRequest</span>-&gt;setCurrency<span class="ot">(</span><span class="st">&#39;EUR&#39;</span><span class="ot">);</span> <span class="co">// This is used as security and must match the currency that was used to create the billing agreement</span>
+    <span class="kw">$rebillRequest</span>-&gt;setReference<span class="ot">(</span><span class="st">&#39;123456&#39;</span><span class="ot">);</span> <span class="co">// Your own reference for this payment</span>
+    <span class="kw">$rebillRequest</span>-&gt;setDescription<span class="ot">(</span><span class="st">&#39;some description&#39;</span><span class="ot">);</span> <span class="co">// An optional description</span>
+    <span class="kw">$rebillRequest</span>-&gt;setExtra<span class="ot">(</span><span class="fu">json_encode</span><span class="ot">(</span><span class="kw">$someInformation</span><span class="ot">));</span> <span class="co">// An optional information that will given back to you on notifications</span>
+    <span class="kw">$rebillRequest</span>-&gt;setEmsUrl<span class="ot">(</span><span class="st">&#39;https://foo.bar/baz&#39;</span><span class="ot">);</span> <span class="co">// An optional EMS url the notifications will be posted to if you don&#39;t want to use the default one</span>
+
+    <span class="kw">$payment</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$rebillRequest</span><span class="ot">);</span>
+    <span class="co">// $payment is an instance of Syspay_Merchant_Entity_Payment</span></code></pre>
+<h3 id="get-information-about-a-billing-agreement">Get information about a billing agreement</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_BillingAgreementInfoRequest.html">Syspay_Merchant_BillingAgreementInfoRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$infoRequest</span> = <span class="kw">new</span> Syspay_Merchant_BillingAgreementInfoRequest<span class="ot">(</span><span class="kw">$billingAgreementId</span><span class="ot">);</span>
+
+    <span class="kw">$billingAgreement</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$infoRequest</span><span class="ot">);</span>
+    <span class="co">// $billingAgreement is an instance of Syspay_Merchant_Entity_BillingAgreement</span></code></pre>
+<h3 id="cancel-a-billing-agreement">Cancel a billing agreement</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_BillingAgreementCancellationRequest.html">Syspay_Merchant_BillingAgreementCancellationRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$cancellationRequest</span> = <span class="kw">new</span> Syspay_Merchant_BillingAgreementCancellationRequest<span class="ot">(</span><span class="kw">$billingAgreemntId</span><span class="ot">);</span>
+
+    <span class="kw">$billingAgreement</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$cancellationRequest</span><span class="ot">);</span>
+    <span class="co">// $billingAgreement is an instance of Syspay_Merchant_Entity_BillingAgreement</span></code></pre>
+<h3 id="export-a-list-of-billing-agreements">Export a list of billing agreements</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_BillingAgreementListRequest.html">Syspay_Merchant_BillingAgreementListRequest</a> The list of available filters can be found in our <a href="https://app.syspay.com/bundles/emiuser/doc/merchant_api.html#get-a-list-of-billing-agreements">api documentation</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$billingAgreementsRequest</span> = <span class="kw">new</span> Syspay_Merchant_BillingAgreementListRequest<span class="ot">();</span>
+    <span class="co">// Optionally set filters (refer to the API document for an exhaustive list)</span>
+    <span class="kw">$billingAgreementsRequest</span>-&gt;addFilter<span class="ot">(</span><span class="st">&#39;status&#39;</span><span class="ot">,</span> <span class="st">&#39;ACTIVE&#39;</span><span class="ot">);</span>
+
+    <span class="kw">$billingAgreements</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$billingAgreementsRequest</span><span class="ot">);</span>
+    <span class="co">// $billingAgreements is an array of Syspay_Merchant_Entity_BillingAgreement</span></code></pre>
+<h3 id="get-information-about-a-chargeback">Get information about a chargeback</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_ChargebackInfoRequest.html">Syspay_Merchant_ChargebackInfoRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$infoRequest</span> = <span class="kw">new</span> Syspay_Merchant_ChargebackInfoRequest<span class="ot">(</span><span class="kw">$chargebackId</span><span class="ot">);</span>
+
+    <span class="kw">$chargeback</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$infoRequest</span><span class="ot">);</span>
+    <span class="co">// $chargeback is an instance of Syspay_Merchant_Entity_Chargeback</span></code></pre>
+<h3 id="export-a-list-of-chargebacks">Export a list of chargebacks</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_ChargebackListRequest.html">Syspay_Merchant_ChargebackListRequest</a> The list of available filters can be found in our <a href="https://app.syspay.com/bundles/emiuser/doc/merchant_api.html#get-a-list-of-chargebacks">api documentation</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$chargebackListRequest</span> = <span class="kw">new</span> Syspay_Merchant_ChargebackListRequest<span class="ot">();</span>
+    <span class="co">// Optionally set filters (refer to the API document for an exhaustive list)</span>
+    <span class="kw">$paymentListRequest</span>-&gt;addFilter<span class="ot">(</span><span class="st">&#39;email&#39;</span><span class="ot">,</span> <span class="st">&#39;foo@bar.baz&#39;</span><span class="ot">);</span>
+
+    <span class="kw">$chargebacks</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$chargebackListRequest</span><span class="ot">);</span>
+    <span class="co">// $chargebacks is an array of Syspay_Merchant_Entity_Chargeback</span></code></pre>
+<h3 id="get-the-syspay-ip-addresses">Get the Syspay IP addresses</h3>
+<p>Request class: <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_IpAddressesRequest.html">Syspay_Merchant_IpAddressesRequest</a></p>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+    <span class="kw">$ipRequest</span> = <span class="kw">new</span> Syspay_Merchant_IpAddressesRequest<span class="ot">();</span>
+
+    <span class="kw">$ips</span> = <span class="kw">$client</span>-&gt;request<span class="ot">(</span><span class="kw">$ipRequest</span><span class="ot">);</span>
+    <span class="co">// $ips is an array of strings (ips)</span></code></pre>
+<h2 id="handling-hosted-payment-pages-and-3ds-redirections">Handling hosted payment pages and 3DS redirections</h2>
+<p>When a payment requires a redirection (either during a server-to-server payment that needs a 3DS verification, or when using the hosted payment page flow), you will not know synchronously the result of the transaction.</p>
+<p>Instead, once the transaction will be processed, the customer will be redirected back to your site (either to your default redirect url, or to the one you set upon request) along with extra parameters that will inform you about the result of the transaction.</p>
+<p>To make it easy for you to validate these extra parameters and extract the information, you can use the <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Redirect.html">Syspay_Merchant_Redirect</a> handler. It will check that the parameters haven’t been tampered with and return a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Payment.html">payment</a> object.</p>
+<p>NOTE: Should the customer not come back to your site (e.g, he closes his browser on the hosted payment confirmation page), you will still be notified about the payment status using our EMS system (described in the <a href="#receiving-ems-notifications">next chapter</a>)</p>
+<h3 id="sample-handler">Sample handler</h3>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+
+    <span class="kw">require</span> <span class="st">&#39;/path/to/merchant-sdk-php/loader.php&#39;</span><span class="ot">;</span>
+
+    <span class="co">// You might have multiple merchant credentials that all point to the same EMS url</span>
+    <span class="kw">$secrets</span> = <span class="fu">array</span><span class="ot">(</span>
+        <span class="st">&#39;login_1&#39;</span> =&gt; <span class="st">&#39;secret_1&#39;</span><span class="ot">,</span>
+        <span class="st">&#39;login_2&#39;</span> =&gt; <span class="st">&#39;secret_2&#39;</span>
+    <span class="ot">);</span>
+
+    <span class="kw">try</span> {
+        <span class="co">// The getResult method takes an array as input. This array must contain the &#39;result&#39;, &#39;merchant&#39; and &#39;checksum&#39; request parameters</span>
+        <span class="kw">$payment</span> = <span class="kw">$redirect</span>-&gt;getResult<span class="ot">(</span><span class="kw">$_REQUEST</span><span class="ot">);</span>
+    } <span class="kw">catch</span> <span class="ot">(</span>Syspay_Merchant_RedirectException <span class="kw">$e</span><span class="ot">)</span> {
+        <span class="co">// If an error status is sent, syspay will try again to deliver the message several times.</span>
+        <span class="fu">header</span><span class="ot">(</span><span class="st">&#39;:&#39;</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="dv">500</span><span class="ot">);</span>
+        <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Something went wrong while processing the message: (%d) %s</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">,</span>
+                    <span class="kw">$e</span>-&gt;getCode<span class="ot">(),</span> <span class="kw">$e</span>-&gt;getMessage<span class="ot">());</span>
+    }</code></pre>
+<h2 id="receiving-ems-notifications">Receiving EMS notifications</h2>
+<p>Implementation reference: <a href="https://app.syspay.com/bundles/emiuser/doc/merchant_ems.html">SysPay Event Messaging System</a></p>
+<p>The <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_EMS.html">Syspay_Merchant_EMS</a> class will automatically validate the HTTP headers and parse the event to return the relevant object.</p>
+<p>The currently supported events are:</p>
+<ul>
+<li>Payments (<a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Payment.html">Syspay_Merchant_Entity_Payment</a>)</li>
+<li>Refunds (<a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Refund.html">Syspay_Merchant_Entity_Refund</a>)</li>
+<li>Billing agreements (<a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_BillingAgreement.html">Syspay_Merchant_Entity_BillingAgreement</a>)</li>
+<li>Chargebacks (<a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_Entity_Chargeback.html">Syspay_Merchant_Entity_Chargeback</a>)</li>
+</ul>
+<p>If an error occurs, a <a href="https://app.syspay.com/docs/merchant-sdk-php/class-Syspay_Merchant_EMSException.html">Syspay_Merchant_EMSException</a> will be thrown and will contain one of the following codes:</p>
+<ul>
+<li><code>Syspay_Merchant_EMSException::CODE_MISSING_HEADER</code>: The <em>X-Merchant</em> and/or the <em>X-Checksum</em> headers could not be found</li>
+<li><code>Syspay_Merchant_EMSException::CODE_INVALID_CHECKSUM</code>: The <em>X-Checksum</em> header doesn’t validate against the provided keys</li>
+<li><code>Syspay_Merchant_EMSException::CODE_INVALID_CONTENT</code>: The request content could not be parsed</li>
+<li><code>Syspay_Merchant_EMSException::CODE_UNKNOWN_MERCHANT</code>: The <em>X-Merchant</em> header is there but cannot be found in the array passed to the constructor</li>
+</ul>
+<h3 id="sample-listener">Sample listener</h3>
+<pre class="sourceCode php"><code class="sourceCode php">    <span class="kw">&lt;?php</span>
+
+    <span class="kw">require</span> <span class="st">&#39;/path/to/merchant-sdk-php/loader.php&#39;</span><span class="ot">;</span>
+
+    <span class="co">// You might have multiple merchant credentials that all point to the same EMS url</span>
+    <span class="kw">$secrets</span> = <span class="fu">array</span><span class="ot">(</span>
+        <span class="st">&#39;login_1&#39;</span> =&gt; <span class="st">&#39;secret_1&#39;</span><span class="ot">,</span>
+        <span class="st">&#39;login_2&#39;</span> =&gt; <span class="st">&#39;secret_2&#39;</span>
+    <span class="ot">);</span>
+
+    <span class="kw">$ems</span> = <span class="kw">new</span> Syspay_Merchant_EMS<span class="ot">(</span><span class="kw">$secrets</span><span class="ot">);</span>
+
+    <span class="kw">try</span> {
+        <span class="kw">$event</span> = <span class="kw">$ems</span>-&gt;getEvent<span class="ot">();</span>
+        <span class="kw">switch</span> <span class="ot">(</span><span class="kw">$event</span>-&gt;<span class="fu">getType</span><span class="ot">())</span> {
+            <span class="kw">case </span><span class="st">&#39;payment&#39;</span><span class="ot">:</span>
+                <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Payment %d received, status: %s</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">,</span> <span class="kw">$event</span>-&gt;getId<span class="ot">(),</span> <span class="kw">$event</span>-&gt;getStatus<span class="ot">());</span>
+                <span class="kw">break</span><span class="ot">;</span>
+            <span class="kw">case </span><span class="st">&#39;refund&#39;</span><span class="ot">:</span>
+                <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Refund %d received, status: %s</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">,</span> <span class="kw">$event</span>-&gt;getId<span class="ot">(),</span> <span class="kw">$event</span>-&gt;getStatus<span class="ot">());</span>
+                <span class="kw">break</span><span class="ot">;</span>
+            <span class="kw">case </span><span class="st">&#39;chargeback&#39;</span><span class="ot">:</span>
+                <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Chargeback %d received, status: %s</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">,</span> <span class="kw">$event</span>-&gt;getId<span class="ot">(),</span> <span class="kw">$event</span>-&gt;getStatus<span class="ot">());</span>
+                <span class="kw">break</span><span class="ot">;</span>
+            <span class="kw">case </span><span class="st">&#39;billing_agreement&#39;</span><span class="ot">:</span>
+                <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Billing Agreement %d received, status: %s</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">,</span> <span class="kw">$event</span>-&gt;getId<span class="ot">(),</span> <span class="kw">$event</span>-&gt;getStatus<span class="ot">());</span>
+                <span class="kw">break</span><span class="ot">;</span>
+        }
+    } <span class="kw">catch</span> <span class="ot">(</span>Syspay_Merchant_EMSException <span class="kw">$e</span><span class="ot">)</span> {
+        <span class="co">// If an error status is sent, syspay will try again to deliver the message several times</span>
+        <span class="fu">header</span><span class="ot">(</span><span class="st">&#39;:&#39;</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="dv">500</span><span class="ot">);</span>
+        <span class="fu">printf</span><span class="ot">(</span><span class="st">&quot;Something went wrong while processing the message: (%d) %s&quot;</span><span class="ot">,</span>
+                    <span class="kw">$e</span>-&gt;getCode<span class="ot">(),</span> <span class="kw">$e</span>-&gt;getMessage<span class="ot">());</span>
+    }</code></pre>
+</body>
+</html>
