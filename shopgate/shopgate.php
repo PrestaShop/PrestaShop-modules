@@ -17,12 +17,13 @@
  * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  */
 
-if (!defined('_PS_VERSION_')) exit;
+if (!defined('_PS_VERSION_'))
+	exit;
 /*
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.6.19');
+define('SHOPGATE_PLUGIN_VERSION', '2.7.1');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
@@ -47,6 +48,7 @@ class ShopGate extends PaymentModule
 		'SHOPGATE_OUT_OF_STOCK_CHECK' => 0,
 		'SHOPGATE_PRODUCT_DESCRIPTION' => self::PRODUCT_EXPORT_DESCRIPTION,
 		'SHOPGATE_SUBSCRIBE_NEWSLETTER' => 0,
+		'SHOPGATE_EXPORT_ROOT_CATEGORIES' => 0
 	);
 
 	const PRODUCT_EXPORT_DESCRIPTION = 'DESCRIPTION';
@@ -64,7 +66,7 @@ class ShopGate extends PaymentModule
 		else
 			$this->tab = 'mobile';
 
-		$this->version = '2.6.19';
+		$this->version = '2.7.1';
 		$this->author = 'Shopgate';
 		$this->module_key = '';
 
@@ -754,6 +756,7 @@ class ShopGate extends PaymentModule
 			'SHOPGATE_OUT_OF_STOCK_CHECK',
 			'SHOPGATE_PRODUCT_DESCRIPTION',
 			'SHOPGATE_SUBSCRIBE_NEWSLETTER',
+			'SHOPGATE_EXPORT_ROOT_CATEGORIES'
 		);
 		$carriers = array();
 

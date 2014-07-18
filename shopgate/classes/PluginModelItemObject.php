@@ -147,6 +147,7 @@ class PluginModelItemObject
 
 				$tierPriceItem = new Shopgate_Model_Catalog_TierPrice();
 
+				$tierPriceItem->setAggregateChildren(true);
 				$tierPriceItem->setFromQuantity($tierPrice['from_quantity']);
 				$tierPriceItem->setReductionType($this->mapTierPriceType($tierPrice['reduction_type']));
 

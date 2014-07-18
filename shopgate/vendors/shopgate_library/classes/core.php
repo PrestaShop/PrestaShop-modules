@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.6.5');
+define('SHOPGATE_LIBRARY_VERSION', '2.7.2');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -153,9 +153,13 @@ class ShopgateLibraryException extends Exception {
 	
 	const PLUGIN_API_UNKNOWN_SHOP_NUMBER = 24;
 	
+	const PLUGIN_API_INVALID_ACTION = 25;
+	const PLUGIN_API_ADMIN_LOGIN_REQUIRED = 26;
+	
 	const PLUGIN_API_NO_ORDER_NUMBER = 30;
 	const PLUGIN_API_NO_CART = 31;
 	const PLUGIN_API_NO_ITEMS = 32;
+	const PLUGIN_API_NO_AUTHORIZATION_CODE = 33;
 	const PLUGIN_API_NO_USER = 35;
 	const PLUGIN_API_NO_PASS = 36;
 	const PLUGIN_API_NO_USER_DATA = 37;
@@ -178,6 +182,7 @@ class ShopgateLibraryException extends Exception {
 	const PLUGIN_WRONG_USERNAME_OR_PASSWORD = 71;
 	const PLUGIN_CUSTOMER_ACCOUNT_NOT_CONFIRMED =72;
 	const PLUGIN_CUSTOMER_UNKNOWN_ERROR =73;
+	const PLUGIN_MISSING_ACCOUNT_PERMISSIONS = 74;
 	
 	const PLUGIN_FILE_DELETE_ERROR = 79;
 	const PLUGIN_FILE_NOT_FOUND = 80;
@@ -196,7 +201,11 @@ class ShopgateLibraryException extends Exception {
 	const MERCHANT_API_INVALID_RESPONSE = 101;
 	const MERCHANT_API_ERROR_RECEIVED = 102;
 	
-	// Authentification errors
+	// OAuth errors
+	const SHOPGATE_OAUTH_NO_CONNECTION = 115;
+	const SHOPGATE_OAUTH_MISSING_ACCESS_TOKEN = 116;
+	
+	// Authentication errors
 	const AUTHENTICATION_FAILED = 120;
 	
 	// File errors
@@ -218,6 +227,8 @@ class ShopgateLibraryException extends Exception {
 	const CART_ITEM_PRODUCT_NOT_FOUND = 301;
 	const CART_ITEM_REQUESTED_QUANTITY_NOT_AVAILABLE = 302;
 	const CART_ITEM_INPUT_VALIDATION_FAILED = 303;
+	const CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY = 304;
+	const CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY = 305;
 	
 	// extended error code format that contains information on multiple errors
 	const MULTIPLE_ERRORS = 998;
@@ -242,6 +253,9 @@ class ShopgateLibraryException extends Exception {
 		self::PLUGIN_API_WRONG_RESPONSE_FORMAT => 'wrong response format',
 		
 		self::PLUGIN_API_UNKNOWN_SHOP_NUMBER => 'unknown shop number received',
+		
+		self::PLUGIN_API_INVALID_ACTION => 'invalid action call',
+		self::PLUGIN_API_ADMIN_LOGIN_REQUIRED => 'login/access rights required',
 		
 		self::PLUGIN_API_NO_ORDER_NUMBER => 'parameter "order_number" missing',
 		self::PLUGIN_API_NO_CART => 'parameter "cart" missing',
@@ -268,6 +282,7 @@ class ShopgateLibraryException extends Exception {
 		self::PLUGIN_WRONG_USERNAME_OR_PASSWORD => 'wrong username or password',
 		self::PLUGIN_CUSTOMER_ACCOUNT_NOT_CONFIRMED => 'customer account not confirmed',
 		self::PLUGIN_CUSTOMER_UNKNOWN_ERROR => 'unknown error while customer login',
+		self::PLUGIN_MISSING_ACCOUNT_PERMISSIONS => 'missing account permissions',
 		
 		self::PLUGIN_FILE_DELETE_ERROR => 'cannot delete file(s)',
 		self::PLUGIN_FILE_NOT_FOUND => 'file not found',
@@ -285,6 +300,10 @@ class ShopgateLibraryException extends Exception {
 		self::MERCHANT_API_NO_CONNECTION => 'no connection to server',
 		self::MERCHANT_API_INVALID_RESPONSE => 'error parsing response',
 		self::MERCHANT_API_ERROR_RECEIVED => 'error code received',
+
+		// OAuth errors
+		self::SHOPGATE_OAUTH_NO_CONNECTION => 'no connection to shopgate server',
+		self::SHOPGATE_OAUTH_MISSING_ACCESS_TOKEN => 'no oauth access token received',
 		
 		// File errors
 		self::FILE_READ_WRITE_ERROR => 'error reading or writing file',
@@ -306,7 +325,7 @@ class ShopgateLibraryException extends Exception {
 		self::CART_ITEM_REQUESTED_QUANTITY_NOT_AVAILABLE => 'less stock available than requested',
 		self::CART_ITEM_INPUT_VALIDATION_FAILED => 'cart item input validation failed',
 		
-		// Authentification errors
+		// Authentication errors
 		self::AUTHENTICATION_FAILED => 'authentication failed',
 		
 		self::MULTIPLE_ERRORS => '',
@@ -860,9 +879,39 @@ class ShopgateBuilder {
 		}
 		
 		// instantiate API stuff
-		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey());
-		$merchantApi = new ShopgateMerchantApi($authService, $this->config->getShopNumber(), $this->config->getApiUrl());
-		$pluginApi = new ShopgatePluginApi($this->config, $authService, $merchantApi, $plugin);
+		// -> MerchantAPI auth service (needs to be initialized first, since the config still can change along with the authentication information
+		switch($this->config->getSmaAuthServiceClassName()) {
+			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE:
+				$smaAuthService = new ShopgateAuthenticationServiceShopgate($this->config->getCustomerNumber(), $this->config->getApikey());
+				$smaAuthService->setup($this->config);
+				$merchantApi = new ShopgateMerchantApi($smaAuthService, $this->config->getShopNumber(), $this->config->getApiUrl());
+				break;
+			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH:
+				$smaAuthService = new ShopgateAuthenticationServiceOAuth($this->config->getOauthAccessToken());
+				$smaAuthService->setup($this->config);
+				$merchantApi = new ShopgateMerchantApi($smaAuthService, null, $this->config->getApiUrl());
+				break;
+			default:
+				// undefined auth service
+				trigger_error('Invalid SMA-Auth-Service defined - this should not happen with valid plugin code', E_USER_ERROR);
+				break;
+		}
+		// -> PluginAPI auth service (currently the plugin API supports only one auth service)
+		$spaAuthService = new ShopgateAuthenticationServiceShopgate($this->config->getCustomerNumber(), $this->config->getApikey());
+//		switch($spaAuthServiceClassName = $this->config->getSpaAuthServiceClassName()) {
+//			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE:
+//				$spaAuthService = new $spaAuthServiceClassName($this->config->getCustomerNumber(), $this->config->getApikey());
+//				$spaAuthService->setup($this->config);
+//				break;
+//			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH:
+//				$spaAuthService = new $spaAuthServiceClassName($this->config->getOauthAccessToken());
+//				$spaAuthService->setup($this->config);
+//				break;
+//			default:
+//				// undefined auth service
+//				break;
+//		}
+		$pluginApi = new ShopgatePluginApi($this->config, $spaAuthService, $merchantApi, $plugin);
 		
 		// instantiate export file buffer
 		if (!empty($_REQUEST['action']) && (($_REQUEST['action'] == 'get_items') || ($_REQUEST['action'] == 'get_categories'))) {
@@ -908,8 +957,23 @@ class ShopgateBuilder {
 	 * @return ShopgateMerchantApi
 	 */
 	public function buildMerchantApi() {
-		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey());
-		$merchantApi = new ShopgateMerchantApi($authService, $this->config->getShopNumber(), $this->config->getApiUrl());
+		$merchantApi = null;
+		switch($smaAuthServiceClassName = $this->config->getSmaAuthServiceClassName()) {
+			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE:
+				$smaAuthService = new ShopgateAuthenticationServiceShopgate($this->config->getCustomerNumber(), $this->config->getApikey());
+				$smaAuthService->setup($this->config);
+				$merchantApi = new ShopgateMerchantApi($smaAuthService, $this->config->getShopNumber(), $this->config->getApiUrl());
+				break;
+			case ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH:
+				$smaAuthService = new ShopgateAuthenticationServiceOAuth($this->config->getOauthAccessToken());
+				$smaAuthService->setup($this->config);
+				$merchantApi = new ShopgateMerchantApi($smaAuthService, null, $this->config->getApiUrl());
+				break;
+			default:
+				// undefined auth service
+				trigger_error('Invalid SMA-Auth-Service defined - this should not happen with valid plugin code', E_USER_ERROR);
+				break;
+		}
 		
 		return $merchantApi;
 	}
@@ -1351,6 +1415,38 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	public final function handleRequest($data = array()) {
 		return $this->pluginApi->handleRequest($data);
+	}
+	
+	/**
+	 * Wrapper method to fetch OAuth url from ShopgatePluginApi
+	 *
+	 * @param string $shopgateOAuthActionName
+	 * @return string
+	 */
+	public function buildShopgateOAuthUrl($shopgateOAuthActionName) {
+		return $this->pluginApi->buildShopgateOAuthUrl($shopgateOAuthActionName);
+	}
+
+	/**
+	 * Checks the config for every 'enabled_<action-name>' setting and returns all active as an indexed list 
+	 * @return array
+	 */
+	public function getEnabledPluginActions() {
+		$enabledActionsList = array();
+		
+		$configValues = $this->config->toArray();
+		
+		// find all settings that start with "enable_" in the config-value-name and collect all active ones
+		$searchKeyPart = 'enable_';
+		foreach($configValues as $key => $val) {
+			if(substr($key, 0, strlen($searchKeyPart)) == $searchKeyPart) {
+				if($val) {
+					$enabledActionsList[$key] = $val;
+				}
+			}
+		}
+		
+		return $enabledActionsList;
 	}
 
 	/**
@@ -1960,6 +2056,17 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	public abstract function startup();
 
 	/**
+	 * Callback method for the PluginAPI to be able to retrieve the correct URI directing to a specific PluginAPI-action
+	 * Override this method if the plugin does not have its own entry point (e.g. MVC-implementations that only provide a controller and controller-action as entry point)
+	 * 
+	 * @param $pluginApiActionName
+	 * @return string URL
+	 */
+	public function getActionUrl($pluginApiActionName) {
+		return 'http'.(!empty($_SERVER['HTTPS']) ? 's' : '').'://'. trim($_SERVER['HTTP_HOST'], '/') . '/' . trim($_SERVER['SCRIPT_NAME'], '/');
+	}
+
+	/**
 	 * Executes a cron job with parameters.
 	 *
 	 * @param string $jobname The name of the job to execute.
@@ -2371,7 +2478,9 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 		$this->buffer = array();
 		
 		if (empty($this->fileHandle)) {
-			$filePath = $this->filePath.".tmp";
+			if (!preg_match("/^php/", $filePath)) {
+				$filePath = $this->filePath.".tmp";
+			}
 			$this->log('Trying to create "'.basename($filePath).'". ', 'access');
 			
 			$this->fileHandle = @fopen($filePath, 'w');
@@ -2445,12 +2554,14 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 		
 		fclose($this->fileHandle);
 		$this->fileHandle = null;
-
-		// FIX for Windows Servers
-		if (file_exists($this->filePath)) {
-			unlink($this->filePath);
+		
+		if (!preg_match("/^php/", $this->filePath)) {
+			// FIX for Windows Servers
+			if (file_exists($this->filePath)) {
+				unlink($this->filePath);
+			}
+			rename($this->filePath.".tmp", $this->filePath);
 		}
-		rename($this->filePath.".tmp", $this->filePath);
 
 		$this->log('Fertig, '.basename($this->filePath).' wurde erfolgreich erstellt', "access");
 		$duration = time() - $this->timeStart;
@@ -3075,15 +3186,11 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		$this->iterateSimpleProperties($properties);
 
 		// create new object with utf-8 en- / decoded data
-        /**
 		try {
 			$this->object = new ShopgateOptionValue($properties);
 		} catch (ShopgateLibraryException $e) {
 			$this->object = null;
 		}
-        */
-
-        $this->object = null;
 	}
 
 	public function visitItemInput(ShopgateItemInput $i) {

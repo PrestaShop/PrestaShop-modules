@@ -1,21 +1,4 @@
 <?php
-/**
-* Shopgate GmbH
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file AFL_license.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/AFL-3.0
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to interfaces@shopgate.com so we can send you a copy immediately.
-*
-* @author Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
-* @copyright  Shopgate GmbH
-* @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
-*/
 
 global $_MODULE;
 $_MODULE = array();
@@ -60,8 +43,9 @@ $_MODULE['<{shopgate}prestashop>shopgate_902b0d55fddef6f8d651fe1035b7d4bd'] = 'F
 $_MODULE['<{shopgate}prestashop>shopgate_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
 $_MODULE['<{shopgate}prestashop>shopgate_a5fedb0f74accd822564fb0aa51aff1e'] = 'Sandbox';
 $_MODULE['<{shopgate}prestashop>shopgate_90589c47f06eb971d548591f23c285af'] = 'Benutzerdefiniert';
-$_MODULE['<{shopgate}prestashop>shopgate_1cab5c872974015d91579c9467742ca4'] = 'Der Firmenname der Rechnungsadresse (<b>%s</b>) wurde gekürzt.';
-$_MODULE['<{shopgate}prestashop>shopgate_fe8b7c75893f5d6d27752e4c05889ab0'] = 'Der Firmenname der Lieferadresse (<b>%s</b>) wurde gekürzt.';
+$_MODULE['<{shopgate}prestashop>psshopgateplugin_e859ee483b8b453693b931fb6fd0a1c8'] = 'Standart Lieferadresse';
+$_MODULE['<{shopgate}prestashop>psshopgateplugin_7a1920d61156abc05a60135aefe8bc67'] = 'Standart';
+$_MODULE['<{shopgate}prestashop>psshopgateplugin_c51fd9d21def1ff1a5065f50258fddf3'] = 'Standart Rechnungsadresse';
 $_MODULE['<{shopgate}prestashop>admin_order_761f7b1f38afb9011b823160ea1810a1'] = 'Shopgate Information';
 $_MODULE['<{shopgate}prestashop>admin_order_ff4fca87e9be302a84a7db7aa2a2b325'] = 'Shopnummer';
 $_MODULE['<{shopgate}prestashop>admin_order_4049d979b8e6b7d78194e96c3208a5a5'] = 'Bestellnummer';
@@ -99,10 +83,9 @@ $_MODULE['<{shopgate}prestashop>configurations_80a95926118d1caad58fc17248113ccb'
 $_MODULE['<{shopgate}prestashop>configurations_45e5ec7c109bb144e5a0f7ebfe12103f'] = 'SEO Optimiert';
 $_MODULE['<{shopgate}prestashop>configurations_25ee82971d81143f166acee0168ce5cf'] = 'Push Marketing';
 $_MODULE['<{shopgate}prestashop>configurations_b15379cb2fcb28fb523618a8f0bfe815'] = 'Barcode & QR-Scanner';
-$_MODULE['<{shopgate}prestashop>configurations_32ea7e90118df0d1221372693cd06d1d'] = 'Jetzt registrieren';
+$_MODULE['<{shopgate}prestashop>configurations_c00fde11f32c833a28ae11fc2946effe'] = 'Jetzt registrieren';
 $_MODULE['<{shopgate}prestashop>configurations_0ec0305a18fce08b3072b1b46798ff6f'] = 'Haben Sie noch Fragen?';
 $_MODULE['<{shopgate}prestashop>configurations_977e2391c15a3880e2785e3182b0ed7e'] = 'Rufen Sie uns an: 06033 / 7470-100';
-$_MODULE['<{shopgate}prestashop>configurations_c00fde11f32c833a28ae11fc2946effe'] = 'Jetzt registrieren';
 $_MODULE['<{shopgate}prestashop>configurations_1c5237b8c4f5661d478e8e4509a1090f'] = 'Shopgate';
 $_MODULE['<{shopgate}prestashop>configurations_88f131ffa1d3dbd1d2de1a01911b3a7c'] = 'Erstellen Sie schnell und einfach einen eigenen mobilen Shop.  Shopgate entwickelt für Sie ab 19,-€ eine mobile Webseite und echte Apps für iPhone, Android, iPad und weitere mobile Systeme. Über das Modul werden Produkte und Bestände mit dem mobile Shop synchronisiert  und Bestellungen automatisiert von dem mobilen Shop in Ihren Prestashop übertragen. Weitere Infos dazu finden Sie unter';
 $_MODULE['<{shopgate}prestashop>configurations_254f642527b45bc260048e30704edb39'] = 'Konfiguration';
