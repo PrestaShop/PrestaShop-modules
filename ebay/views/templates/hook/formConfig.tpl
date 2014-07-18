@@ -29,7 +29,7 @@
 	<li id="menuTab8" class="menuTabButton {$itemSpecificValidator.indicator}">3. {l s='Item specifics' mod='ebay'}</li>
 	<li id="menuTab3" class="menuTabButton {$shippingValidator.indicator}">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
 	<li id="menuTab4" class="menuTabButton {$templateValidator.indicator}">5. {l s='Template manager' mod='ebay'}</li>
-	<li id="menuTab5" class="menuTabButton {$listingValidator.indicator}">6. {l s='List products' mod='ebay'}</li>
+	<li id="menuTab5" class="menuTabButton ">6. {l s='List products' mod='ebay'}</li>
 	<li id="menuTab9" class="menuTabButton">7. {l s='eBay listings' mod='ebay'}</li>
 	<li id="menuTab7" class="menuTabButton">9. {l s='Help' mod='ebay'}</li>
 	<li id="menuTab6" class="menuTabButton">8. {l s='Order history' mod='ebay'}</li>
