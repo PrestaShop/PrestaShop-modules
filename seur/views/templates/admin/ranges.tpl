@@ -30,9 +30,9 @@
 				<img src="{$img_path|escape:'htmlall':'UTF-8'}tarifas.png" alt="{l s='Ranges' mod='seur'}" title="{l s='Ranges' mod='seur'}" /> {l s='Configurate ranges' mod='seur'}
 			</legend>
 			<p class="alertatarifa">{l s='Did you install the rangues that are set up by default?' mod='seur'}</p>
-			<div class="alerta">
-				<p class="avisoalerta">
-					{l s='NOTICE' mod='seur'}:<br /><br />
+			<div>
+				<p class="alertaconfiguracion">
+					{l s='NOTICE' mod='seur'}:<br />
 					{l s='If you click on install rates, deactivate all zones, transporters and ranges of weight that have configured in your shop to install those SEUR provides default, if you work with other carriers might not work.' mod='seur'}</p>
 			</div>
 			<ul>

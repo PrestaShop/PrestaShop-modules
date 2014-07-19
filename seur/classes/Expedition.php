@@ -30,21 +30,21 @@ if (!defined('_PS_VERSION_'))
 
 class Expedition
 {
-	public static function getExpeditions($expedition_data = NULL)
+	public static function getExpeditions($expedition_data = null)
 	{
 		$response = false;
 
 		try
 		{
 			$sc_options = array(
-				"connection_timeout" => 30 
+				'connection_timeout' => 30
 			);
 
 			$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_E'), $sc_options);
 
 			if (!isset($expedition_data['start_date']) || !isset($expedition_data['end_date']))
 				$new_date = strtotime('-15 days', strtotime(date('Y-m-d')));
-			
+
 			$data = array(
 				'in0' => 'S',
 				'in1' => (isset($expedition_data['expedition_number']) ? $expedition_data['expedition_number'] : ''),
@@ -57,7 +57,7 @@ class Expedition
 				'in8' => '',
 				'in9' => '',
 				'in10' => '',
-				'in11' => '', 
+				'in11' => '',
 				'in12' => SEUR_WS_USERNAME,
 				'in13' => SEUR_WS_PASSWORD,
 				'in14' => 'N'
@@ -71,8 +71,8 @@ class Expedition
 		catch (PrestaShopException $e)
 		{
 			$e->displayMessage();
-		} 
-		
+		}
+
 		return $response;
 	}
 }

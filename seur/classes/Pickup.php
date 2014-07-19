@@ -37,7 +37,7 @@ class Pickup extends ObjectModel
 			try
 			{
 				$sc_options = array(
-					"connection_timeout" => 30
+					'connection_timeout' => 30
 				);
 
 				$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_R'), $sc_options);
@@ -161,7 +161,7 @@ class Pickup extends ObjectModel
 			catch (PrestaShopException $e)
 			{
 				$e->displayMessage();
-			} 
+			}
 		}
 		else
 		{
@@ -169,8 +169,8 @@ class Pickup extends ObjectModel
 			$module_instance->adminDisplayWarning($module_instance->l('Pickups after 2pm cannot be arranged via module, contact us by phone to arrange it manually.'));
 		}
 	}
-        
-	private static function insertPickup($localizer,$numPickup,$tasacion)
+
+	private static function insertPickup($localizer, $numPickup, $tasacion)
 	{
 		return Db::getInstance()->Execute('
 			INSERT INTO `'._DB_PREFIX_.'seur_pickup`
@@ -186,7 +186,7 @@ class Pickup extends ObjectModel
 			SELECT *
 			FROM `'._DB_PREFIX_.'seur_pickup`
 			ORDER BY `id_seur_pickup` DESC
-		'); 
+		');
 
 		return ($pickup_data ? $pickup_data : '');
 	}

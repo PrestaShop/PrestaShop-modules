@@ -42,7 +42,9 @@ include_once(_PS_MODULE_DIR_.'seur/classes/Pickup.php');
 include_once(_PS_MODULE_DIR_.'seur/classes/Expedition.php');
 include_once(_PS_MODULE_DIR_.'seur/classes/Label.php');
 
-class Seur extends CarrierModule {
+class Seur extends CarrierModule
+{
+	const DEFAULT_PUDO_MOBILE = '666666666';
 
 	private $configured;
 	private $stateConfigured;
@@ -50,7 +52,7 @@ class Seur extends CarrierModule {
 	public function __construct()
 	{
 		$this->name = 'seur';
-		$this->version = '0.6.2';
+		$this->version = '0.6.4';
 		$this->author = 'www.invertus.eu';
 		$this->need_instance = 0;
 		$this->tab = 'shipping_logistics';
@@ -84,10 +86,10 @@ class Seur extends CarrierModule {
 	public function install()
 	{
 		if (!extension_loaded('soap') || !class_exists('SoapClient'))
- 		{
- 			$this->_errors[] = $this->l('SOAP extension should be enabled on your server to use this module.');
+		{
+			$this->_errors[] = $this->l('SOAP extension should be enabled on your server to use this module.');
 			return false;
- 		}
+		}
 
 		/* Check SoapClient extension before cotinues */
 		if ($this->active == 1)
@@ -95,7 +97,7 @@ class Seur extends CarrierModule {
 
 		if (!parent::install() || !$this->registerHook('adminOrder') ||
 			!$this->registerHook('orderDetail') ||
-			!$this->registerHook('extraCarrier') || !$this->registerHook('updateCarrier') ||
+			!$this->registerHook('extraCarrier') || !$this->registerHook('updateCarrier') || !$this->registerHook('displayOrderConfirmation') ||
 			!$this->registerHook('header') || !$this->registerHook('backOfficeHeader'))
 			return false;
 		
@@ -110,9 +112,7 @@ class Seur extends CarrierModule {
 				return false;
 		}
 
-		if(!$this->createDatabases() || !$this->createCarriers()
-		   || !$this->createAdminTab() || !$this->installSeurCashOnDelivery()
-		)
+		if (!$this->createDatabases() || !$this->createCarriers() || !$this->createAdminTab() || !$this->installSeurCashOnDelivery())
 		{
 			$this->uninstall();
 			return false;
@@ -143,30 +143,29 @@ class Seur extends CarrierModule {
 			}
 		}
 
-		if(!$this->uninstallTab()
-		   || !$this->setCarriersGroups(0, true)
-		   || !$this->deleteTables()
-		   || !$this->deleteSettings()
-		   || !$this->uninstallSeurCashOnDelivery()
-		)
+		if (!$this->uninstallTab() ||
+			!$this->setCarriersGroups(0, true) ||
+			!$this->deleteTables() ||
+			!$this->deleteSettings() ||
+			!$this->uninstallSeurCashOnDelivery())
 			return false;
 
 		return parent::uninstall();
 	}
 
- 	private function uninstallSeurCashOnDelivery()
- 	{
+	private function uninstallSeurCashOnDelivery()
+	{
 		if ($module = Module::getInstanceByName('seurcashondelivery'))
- 		{
+		{
 			if (Module::isInstalled($module->name) && !$module->uninstall())
 				return false;
 
 			$module_dir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), $module->name);
 			$this->recursiveDeleteOnDisk($module_dir);
- 		}
+		}
 		
 		return true;
- 	}
+	}
 	
 	private function recursiveDeleteOnDisk($dir)
 	{
@@ -190,7 +189,7 @@ class Seur extends CarrierModule {
 
 	private function installSeurCashOnDelivery()
 	{
-		if($this->moveFiles())
+		if ($this->moveFiles())
 		{
 			$cash_on_delivery = Module::GetInstanceByName('seurcashondelivery');
 			return $cash_on_delivery->install();
@@ -206,7 +205,7 @@ class Seur extends CarrierModule {
 			$module_dir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), 'seurcashondelivery');
 			$this->recursiveDeleteOnDisk($module_dir);
 		}
-		$dir = _PS_MODULE_DIR_ . $this->name . '/install/seurcashondelivery';
+		$dir = _PS_MODULE_DIR_.$this->name.'/install/seurcashondelivery';
 		if (!is_dir($dir))
 			return false;
 
@@ -217,27 +216,27 @@ class Seur extends CarrierModule {
 
 	private function copyDirectory($source, $target)
 	{
-        if (!is_dir($source))
+		if (!is_dir($source))
 		{
-            copy($source, $target);
-            return null;
-        }
+			copy($source, $target);
+			return null;
+		}
 
-        @mkdir($target);
+		@mkdir($target);
 		chmod($target, 0755);
-        $d = dir($source);
-        $nav_folders = array('.', '..');
-        while (false !== ($file_entry=$d->read() ))
+		$d = dir($source);
+		$nav_folders = array('.', '..');
+		while (false !== ($file_entry = $d->read() ))
 		{
-            if (in_array($file_entry, $nav_folders) )
-                continue;
+			if (in_array($file_entry, $nav_folders))
+				continue;
 
-            $s = "$source/$file_entry";
-            $t = "$target/$file_entry";
-            self::copyDirectory($s, $t);
-        }
-        $d->close();
-    }
+			$s = "$source/$file_entry";
+			$t = "$target/$file_entry";
+			self::copyDirectory($s, $t);
+		}
+		$d->close();
+	}
 
 	private function deleteSettings()
 	{
@@ -489,7 +488,7 @@ class Seur extends CarrierModule {
 	public function getContent()
 	{
 		if (!extension_loaded('soap') || !class_exists('SoapClient'))
- 			return $this->displayError($this->l('SOAP extension should be enabled on your server to use this module.'));
+			return $this->displayError($this->l('SOAP extension should be enabled on your server to use this module.'));
 
 		$output = '';
 		$this->configured = Configuration::get('SEUR_Configured');
@@ -546,7 +545,8 @@ class Seur extends CarrierModule {
 			Configuration::updateValue('SEUR_Configured', 1);
 			Configuration::updateValue('SEUR_REMCAR_CARGO', (float)Tools::getValue('contra_porcentaje'));
 			Configuration::updateValue('SEUR_REMCAR_CARGO_MIN', (float)Tools::getValue('contra_minimo'));
-			Configuration::updateValue('SEUR_PRINTER_NAME', (Tools::getValue('printer_name') ? pSQL(Tools::getValue('printer_name')) : 'Generic / Text Only')); // @TODO check if must be translatable text
+			Configuration::updateValue('SEUR_PRINTER_NAME', (Tools::getValue('printer_name') ?
+				pSQL(Tools::getValue('printer_name')) : 'Generic / Text Only'));
 			Configuration::updateValue('SEUR_FREE_WEIGTH', (float)Tools::getValue('peso_gratis'));
 			Configuration::updateValue('SEUR_FREE_PRICE', (float)Tools::getValue('precio_gratis'));
 
@@ -558,12 +558,10 @@ class Seur extends CarrierModule {
 			$carrier_seur = new Carrier((int)$seur_carriers['SEN']);
 			$carrier_pos = new Carrier((int)$seur_carriers['SEP']);
 
-			if (
-				Tools::getValue('international_orders') &&
+			if (Tools::getValue('international_orders') &&
 				SeurLib::getConfigurationField('international_orders') != Tools::getValue('international_orders') &&
 				SeurLib::getConfigurationField('tarifa') &&
-				Validate::isLoadedObject($carrier_seur)
-			)
+				Validate::isLoadedObject($carrier_seur))
 			{
 				if (Tools::getValue('international_orders') && Tools::getValue('international_orders') == 1)
 				{
@@ -717,24 +715,24 @@ class Seur extends CarrierModule {
 	}
 	
 	private function getModuleLink($tab)
-    {
-        # the ps15 way
-        if (method_exists($this->context->link, 'getAdminLink'))
-            return $this->context->link->getAdminLink($tab).'&configure='.$this->name;
+	{
+	# the ps15 way
+		if (method_exists($this->context->link, 'getAdminLink'))
+			return $this->context->link->getAdminLink($tab).'&configure='.$this->name;
 
-        # the ps14 way
-        return 'index.php?tab='.$tab.'&configure='.$this->name.'&token='.Tools::getAdminToken($tab.(int)(Tab::getIdFromClassName($tab)).(int)$this->context->cookie->id_employee);
-    }
+		# the ps14 way
+	return 'index.php?tab='.$tab.'&configure='.$this->name.'&token='.Tools::getAdminToken($tab.(int)(Tab::getIdFromClassName($tab)).(int)$this->context->cookie->id_employee);
+	}
 
 	public function hookAdminOrder($params)
 	{
-		$versionSpecialClass = "";
+		$versionSpecialClass = '';
 
 		if (!file_exists(_PS_MODULE_DIR_.'seur/img/logonew_32.png') && file_exists(_PS_MODULE_DIR_.'seur/img/logonew.png'))
 			ImageManager::resize(_PS_MODULE_DIR_.'seur/img/logonew.png', _PS_MODULE_DIR_.'seur/img/logonew_32.png', 32, 32, 'png');
 
-		if (version_compare(_PS_VERSION_, "1.5", "<"))
-			$versionSpecialClass = "ver14";
+		if (version_compare(_PS_VERSION_, '1.5', '<'))
+			$versionSpecialClass = 'ver14';
 		
 		$this->displayWarning();
 		
@@ -752,6 +750,15 @@ class Seur extends CarrierModule {
 				$ids_seur_carriers[] = (int)$value['id'];
 
 			$order = new Order((int)$params['id_order']);
+			
+			$address_saved = DB::getInstance()->getValue('
+				SELECT `id_address_delivery`
+				FROM `'._DB_PREFIX_.'seur_order`
+				WHERE `id_order` = "'.(int)$order->id.'"
+			');
+
+			if ($address_saved === '0')
+				$this->context->smarty->assign('pickup_point_warning', true);
 			
 			if (!Validate::isLoadedObject($order))
 				return false;
@@ -788,9 +795,9 @@ class Seur extends CarrierModule {
 				if ((!$international_orders && ($iso_country == 'ES' || $iso_country == 'PT' || $iso_country == 'AD')) || $international_orders)
 				{
 					if (!SeurLib::getSeurOrder((int)$order->id))
-						SeurLib::setSeurOrder((int)$order->id, 1, $order_weigth, NULL);
+						SeurLib::setSeurOrder((int)$order->id, 1, $order_weigth, null);
 					elseif (Tools::getValue('numBultos') && Tools::getValue('pesoBultos'))
-						SeurLib::setSeurOrder((int)$order->id, (int)Tools::getValue('numBultos'), str_replace(',', '.', Tools::getValue('pesoBultos')), NULL);
+						SeurLib::setSeurOrder((int)$order->id, (int)Tools::getValue('numBultos'), str_replace(',', '.', Tools::getValue('pesoBultos')), null);
 
 					$order_data = SeurLib::getSeurOrder((int)$order->id);
 					$response_post_code = Town::getTowns($post_code);
@@ -827,7 +834,7 @@ class Seur extends CarrierModule {
 						'back' => $back
 					);
 
-					$order_messages_str = "";
+					$order_messages_str = '';
 					$info_adicional_str = $address_delivery->other;
 					$order_messages = Message::getMessagesByOrderId((int)$params['id_order']);
 
@@ -837,7 +844,7 @@ class Seur extends CarrierModule {
 							$order_messages_str .= "\n".$order_messag_tmp['message'];
 
 						if (substr_count($order_messages_str, "\n") > 5)
-							$order_messages_str = str_replace(array("\r", "\n"), " | ", $order_messages_str);
+							$order_messages_str = str_replace(array("\r", "\n"), ' | ', $order_messages_str);
 
 						if (Tools::strlen($order_messages_str) > 250)
 							$order_messages_str = Tools::substr($order_messages_str, 0, 247).'...';
@@ -889,7 +896,7 @@ class Seur extends CarrierModule {
 								'pedido' => sprintf('%06d', (int)$order->id),
 								'total_bultos' => $order_data['numero_bultos'],
 								'total_kilos' => (float)$order_weigth,
-								'direccion_consignatario' => $datospos['address'],
+								'direccion_consignatario' => $direccion,
 								'consignee_town' => $datospos['city'],
 								'codPostal_consignatario' => $datospos['postal_code'],
 								'telefono_consignatario' => (!empty($address_delivery->phone_mobile) ? $address_delivery->phone_mobile : $address_delivery->phone),
@@ -919,18 +926,36 @@ class Seur extends CarrierModule {
 
 					if (Tools::getValue('submitLabel'))
 					{
-						$success = Label::createLabels($label_data, 'pdf');
-						if($success === true)
-							$this->printLabel((int)$order->id, 'pdf');
+						if ($this->isPrinted((int)$order->id))
+							$success = true;
+						else
+							$success = Label::createLabels($label_data, 'pdf');
+
+						if ($success === true)
+						{
+							if (!$this->setAsPrinted((int)$order->id))
+								$this->context->smarty->assign('error', $this->l('Could not set printed value for this order'));
+							else
+								$this->printLabel((int)$order->id, 'pdf');
+						}
 						else
 							$this->context->smarty->assign('error', $success);
 					}
 
 					if (Tools::getValue('submitPrint'))
 					{
-						$success = Label::createLabels($label_data, 'zebra');
-						if($success === true)
-							$this->printLabel((int)$order->id, 'txt');
+						if ($this->isPrinted((int)$order->id, true))
+							$success = true;
+						else
+							$success = Label::createLabels($label_data, 'zebra');
+
+						if ($success === true)
+						{
+							if (!$this->setAsPrinted((int)$order->id, true))
+								$this->context->smarty->assign('error', $this->l('Could not set printed value for this order'));
+							else
+								$this->printLabel((int)$order->id, 'txt');
+						}
 						else
 							$this->context->smarty->assign('error', $success);
 					}
@@ -946,7 +971,7 @@ class Seur extends CarrierModule {
 					}
 
 					$address_error = 0;
-					if (!empty($towns) && !in_array(mb_strtoupper($address_delivery->city, "UTF-8"), $towns))
+					if (!empty($towns) && !in_array(mb_strtoupper($this->replaceAccentedChars($address_delivery->city), 'UTF-8'), $towns))
 						$address_error = 1;
 					$pickup_s = 0;
 					if ($pickup && strtotime(date('Y-m-d')) == strtotime($pickup_date))
@@ -959,7 +984,7 @@ class Seur extends CarrierModule {
 					else
 					{
 						$string_xml = htmlspecialchars_decode($state->out);
-						$string_xml = str_replace("&", "&amp; ", $string_xml);
+						$string_xml = str_replace('&', '&amp; ', $string_xml);
 						$xml_s = simplexml_load_string($string_xml);
 					}
 					$rate_data_ajax = Tools::jsonEncode($rate_data);
@@ -990,9 +1015,11 @@ class Seur extends CarrierModule {
 						'file' => $file,
 						'datospos' => $datospos,
 						'versionSpecialClass' => $versionSpecialClass,
-						'configured' => (int)Configuration::get('SEUR_Configured')
+						'configured' => (int)Configuration::get('SEUR_Configured'),
+						'printed' => (bool)($this->isPrinted((int)$order->id) || $this->isPrinted((int)$order->id, true))
 					));
-					$this->display(__FILE__, 'views/templates/admin/orders.tpl');
+
+					return $this->display(__FILE__, 'views/templates/admin/orders.tpl');
 				}
 			}
 		}
@@ -1003,10 +1030,129 @@ class Seur extends CarrierModule {
 				'path' => $this->_path,
 				'configuration_warning_message' => $this->l('Please, first configure your SEUR module as a merchant.')
 			));
-			$this->display(__FILE__, 'views/templates/admin/orders.tpl');
+
+			return $this->display(__FILE__, 'views/templates/admin/orders.tpl');
 		}
 	}
 	
+	private function isPrinted($id_order, $label = false)
+	{
+		$field = $label ? 'printed_label' : 'printed_pdf';
+
+		return DB::getInstance()->getValue('
+			SELECT `'.bqSQL($field).'`
+			FROM `'._DB_PREFIX_.'seur_order`
+			WHERE `id_order` = "'.(int)$id_order.'"
+		');
+	}
+
+	private function setAsPrinted($id_order, $label = false)
+	{
+		$field = $label ? 'printed_label' : 'printed_pdf';
+
+		return DB::getInstance()->Execute('
+			UPDATE `'._DB_PREFIX_.'seur_order`
+			SET `'.bqSQL($field).'` = 1
+			WHERE `id_order` = "'.(int)$id_order.'"
+		');
+	}
+
+	private function replaceAccentedChars($text)
+	{
+		if (version_compare(_PS_VERSION_, '1.4.5.1', '>='))
+			return Tools::replaceAccentedChars($text);
+
+		$patterns = array(
+			/* Lowercase */
+			/* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}]/u',
+			/* b  */ '/[\x{0431}]/u',
+			/* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
+			/* d  */ '/[\x{010F}\x{0111}\x{0434}]/u',
+			/* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}]/u',
+			/* f  */ '/[\x{0444}]/u',
+			/* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
+			/* h  */ '/[\x{0125}\x{0127}]/u',
+			/* i  */ '/[\x{00EC}\x{00ED}\x{00EE}\x{00EF}\x{0129}\x{012B}\x{012D}\x{012F}\x{0131}\x{0438}\x{0456}]/u',
+			/* j  */ '/[\x{0135}\x{0439}]/u',
+			/* k  */ '/[\x{0137}\x{0138}\x{043A}]/u',
+			/* l  */ '/[\x{013A}\x{013C}\x{013E}\x{0140}\x{0142}\x{043B}]/u',
+			/* m  */ '/[\x{043C}]/u',
+			/* n  */ '/[\x{00F1}\x{0144}\x{0146}\x{0148}\x{0149}\x{014B}\x{043D}]/u',
+			/* o  */ '/[\x{00F2}\x{00F3}\x{00F4}\x{00F5}\x{00F6}\x{00F8}\x{014D}\x{014F}\x{0151}\x{043E}]/u',
+			/* p  */ '/[\x{043F}]/u',
+			/* r  */ '/[\x{0155}\x{0157}\x{0159}\x{0440}]/u',
+			/* s  */ '/[\x{015B}\x{015D}\x{015F}\x{0161}\x{0441}]/u',
+			/* ss */ '/[\x{00DF}]/u',
+			/* t  */ '/[\x{0163}\x{0165}\x{0167}\x{0442}]/u',
+			/* u  */ '/[\x{00F9}\x{00FA}\x{00FB}\x{00FC}\x{0169}\x{016B}\x{016D}\x{016F}\x{0171}\x{0173}\x{0443}]/u',
+			/* v  */ '/[\x{0432}]/u',
+			/* w  */ '/[\x{0175}]/u',
+			/* y  */ '/[\x{00FF}\x{0177}\x{00FD}\x{044B}]/u',
+			/* z  */ '/[\x{017A}\x{017C}\x{017E}\x{0437}]/u',
+			/* ae */ '/[\x{00E6}]/u',
+			/* ch */ '/[\x{0447}]/u',
+			/* kh */ '/[\x{0445}]/u',
+			/* oe */ '/[\x{0153}]/u',
+			/* sh */ '/[\x{0448}]/u',
+			/* shh*/ '/[\x{0449}]/u',
+			/* ya */ '/[\x{044F}]/u',
+			/* ye */ '/[\x{0454}]/u',
+			/* yi */ '/[\x{0457}]/u',
+			/* yo */ '/[\x{0451}]/u',
+			/* yu */ '/[\x{044E}]/u',
+			/* zh */ '/[\x{0436}]/u',
+
+			/* Uppercase */
+			/* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
+			/* B  */ '/[\x{0411}]]/u',
+			/* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
+			/* D  */ '/[\x{010E}\x{0110}\x{0414}]/u',
+			/* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
+			/* F  */ '/[\x{0424}]/u',
+			/* G  */ '/[\x{011C}\x{011E}\x{0120}\x{0122}\x{0413}\x{0490}]/u',
+			/* H  */ '/[\x{0124}\x{0126}]/u',
+			/* I  */ '/[\x{0128}\x{012A}\x{012C}\x{012E}\x{0130}\x{0418}\x{0406}]/u',
+			/* J  */ '/[\x{0134}\x{0419}]/u',
+			/* K  */ '/[\x{0136}\x{041A}]/u',
+			/* L  */ '/[\x{0139}\x{013B}\x{013D}\x{0139}\x{0141}\x{041B}]/u',
+			/* M  */ '/[\x{041C}]/u',
+			/* N  */ '/[\x{00D1}\x{0143}\x{0145}\x{0147}\x{014A}\x{041D}]/u',
+			/* O  */ '/[\x{00D3}\x{014C}\x{014E}\x{0150}\x{041E}]/u',
+			/* P  */ '/[\x{041F}]/u',
+			/* R  */ '/[\x{0154}\x{0156}\x{0158}\x{0420}]/u',
+			/* S  */ '/[\x{015A}\x{015C}\x{015E}\x{0160}\x{0421}]/u',
+			/* T  */ '/[\x{0162}\x{0164}\x{0166}\x{0422}]/u',
+			/* U  */ '/[\x{00D9}\x{00DA}\x{00DB}\x{00DC}\x{0168}\x{016A}\x{016C}\x{016E}\x{0170}\x{0172}\x{0423}]/u',
+			/* V  */ '/[\x{0412}]/u',
+			/* W  */ '/[\x{0174}]/u',
+			/* Y  */ '/[\x{0176}\x{042B}]/u',
+			/* Z  */ '/[\x{0179}\x{017B}\x{017D}\x{0417}]/u',
+			/* AE */ '/[\x{00C6}]/u',
+			/* CH */ '/[\x{0427}]/u',
+			/* KH */ '/[\x{0425}]/u',
+			/* OE */ '/[\x{0152}]/u',
+			/* SH */ '/[\x{0428}]/u',
+			/* SHH*/ '/[\x{0429}]/u',
+			/* YA */ '/[\x{042F}]/u',
+			/* YE */ '/[\x{0404}]/u',
+			/* YI */ '/[\x{0407}]/u',
+			/* YO */ '/[\x{0401}]/u',
+			/* YU */ '/[\x{042E}]/u',
+			/* ZH */ '/[\x{0416}]/u');
+
+			// ö to oe
+			// å to aa
+			// ä to ae
+
+		$replacements = array(
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch',
+			'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+			'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH'
+		);
+
+		return preg_replace($patterns, $replacements, $text);
+	}
+
 	public function hookDisplayOrderDetail($params)
 	{
 		return $this->hookOrderDetailDisplayed($params);
@@ -1071,7 +1217,7 @@ class Seur extends CarrierModule {
 			$httpsStr = 0;
 			if (version_compare(_PS_VERSION_, '1.5', '>='))
 			{
-				$page = (Tools::getValue('controller') ? Tools::getValue('controller') : NULL);
+				$page = (Tools::getValue('controller') ? Tools::getValue('controller') : null);
 				if (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode())
 					$httpsStr = 1;
 			}
@@ -1079,7 +1225,7 @@ class Seur extends CarrierModule {
 			{
 				$page = explode('/', $_SERVER['SCRIPT_NAME']);
 				$page = end($page);
-				if (Configuration::get('PS_SSL_ENABLED') || (isset($_SERVER["HTTPS"]) && (Tools::strtolower($_SERVER["HTTPS"]) == "on")))
+				if (Configuration::get('PS_SSL_ENABLED') || (isset($_SERVER['HTTPS']) && (Tools::strtolower($_SERVER['HTTPS']) == 'on')))
 					$httpsStr = 1;
 			}
 			
@@ -1146,7 +1292,7 @@ class Seur extends CarrierModule {
 				)
 			);
 
-			return($this->display(__FILE__, 'views/templates/hook/seur.tpl'));
+			return $this->display(__FILE__, 'views/templates/hook/seur.tpl');
 		}
 	}
 
@@ -1182,81 +1328,49 @@ class Seur extends CarrierModule {
 
 	public function getOrderShippingCost($params, $shipping_cost)
 	{
-		/*$id_carrier = (int)$this->id_carrier;
-		if (!$this->id_carrier)
-			return false;
-		
-        $seur_carriers = SeurLib::getSeurCarriers();
-        $is_in_carriers = false;
-
-        foreach ($seur_carriers as $carrier)
-        {
-            if (in_array((int)$id_carrier, $carrier))
-            {
-                $is_in_carriers = true;
-                break;
-            }
-        }
-
-        if ($id_carrier == NULL || !$is_in_carriers)
-        	return parent::getPackageShippingCost();
-
-		$configuration = Configuration::getMultiple(array(
-			'SEUR_FREE_PRICE',
-			'SEUR_FREE_WEIGTH'
-		));
-		// Free fees
-		if (isset($configuration['SEUR_FREE_PRICE']))
-			$free_fees_price = Tools::convertPrice((float)$configuration['SEUR_FREE_PRICE'], Currency::getCurrencyInstance((int)$this->id_currency));
-		else
-			$free_fees_price = 0;
-
-		$orderTotalwithDiscounts = $this->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, null, null, false);*/
-
 		return $shipping_cost;
 	}
 
 	public function getOrderShippingCostExternal($params)
-    {
-        return null;
-    }
+	{
+		return null;
+	}
 
 	private function printLabel($id_order, $type)
 	{
 		$name = sprintf('%06d', (int)$id_order);
-		$pattern = '/^'.$name.'/';
 		$directory = _PS_MODULE_DIR_.'seur/files/deliveries_labels/';
 
-		if ($handle = opendir($directory))
+		if ($type == 'txt')
 		{
-			while (false !== ($file = readdir($handle)))
+			if (file_exists($directory.$name.'.txt') && ($fp = Tools::file_get_contents($directory.$name.'.txt')))
 			{
-				if (preg_match($pattern, $file))
-				{
-					if ($fp = Tools::file_get_contents($directory.$file))
-					{
-						closedir($handle);
+				ob_end_clean();
+				header('Content-type: text/plain');
+				header('Content-Disposition: attachment; filename='.$name.'.txt');
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
 
-						if ($type == 'txt')
-						{
-							ob_clean();
-							header('Content-type: text/plain');
-							header('Content-Disposition: attachment; filename='.$name.'.txt');
-							header('Content-Transfer-Encoding: binary');
-							header('Accept-Ranges: bytes');
-							echo $fp;
-						}
-
-						if ($type == 'pdf')
-						{
-							ob_clean();
-							echo $fp;
-						}
-					}
-					exit;
-				}
+				echo $fp;
+				exit;
 			}
 		}
+		elseif ($type == 'pdf')
+		{
+			if (file_exists($directory.$name.'.pdf') && ($fp = Tools::file_get_contents($directory.$name.'.pdf')))
+			{
+				ob_end_clean();
+				header('Content-type: application/pdf');
+				header('Content-Disposition: inline; filename='.$name.'.pdf');
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
+
+				echo $fp;
+				exit;
+			}
+		}
+		
+		$this->context->smarty->assign('error', $this->l('Document was already printed, but is missing in module directory'));
 	}
 	
 	public function hookBackOfficeHeader($params)
@@ -1288,5 +1402,64 @@ class Seur extends CarrierModule {
 			if (Tools::getValue('configure') == 'seur' && $tab == 'adminmodules')
 				$this->context->controller->addJS($this->_path.'js/seurToolsConfig.js');
 		}
+	}
+	
+	public function hookDisplayOrderConfirmation($params)
+	{
+		$carrier_pos = SeurLib::getSeurCarrier('SEP');
+
+		if ($carrier_pos['id'] != (int)$params['objOrder']->id_carrier) //check if COD carrier with pickup points
+			return '';
+
+		if (Db::getInstance()->getValue('
+			SELECT `id_address_delivery`
+			FROM `'._DB_PREFIX_.'seur_order`
+			WHERE `id_order` = "'.(int)$params['objOrder']->id.'"
+		'))
+			return;
+
+		$customer_address = new Address((int)$params['objOrder']->id_address_delivery);
+		$pickup_point_info = SeurLib::getOrderPos((int)$params['objOrder']->id_cart);
+		$pickup_point_address = new Address();
+		$pickup_point_address->id_country = $customer_address->id_country;
+		$pickup_point_address->id_state = $customer_address->id_state;
+		$pickup_point_address->alias = $customer_address->alias;
+		$pickup_point_address->company = urldecode($pickup_point_info['company']);
+		$pickup_point_address->lastname = $customer_address->lastname;
+		$pickup_point_address->firstname = $customer_address->firstname;
+		$pickup_point_address->address1 = urldecode($pickup_point_info['address']);
+		$pickup_point_address->postcode = urldecode($pickup_point_info['postal_code']);
+		$pickup_point_address->city = urldecode($pickup_point_info['city']);
+		$pickup_point_address->phone = $customer_address->phone_mobile ? $customer_address->phone_mobile : self::DEFAULT_PUDO_MOBILE;
+
+		$order = new Order((int)$params['objOrder']->id);
+
+		$products = $order->getProductsDetail();
+		$order_weigth = 0;
+
+		foreach ($products as $product)
+			$order_weigth += (float)$product['product_weight'] * (float)$product['product_quantity'];
+
+		$order_weigth = $order_weigth > 1 ? $order_weigth : 1;
+		if ($pickup_point_address->save())
+		{
+			$order->id_address_delivery = (int)$pickup_point_address->id;
+			
+			if ($order->save())
+				Db::getInstance()->Execute('
+					INSERT INTO `'._DB_PREFIX_.'seur_order`
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "'.(int)$pickup_point_address->id.'");'
+				);
+			else
+				Db::getInstance()->Execute('
+					INSERT INTO `'._DB_PREFIX_.'seur_order`
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+				);
+		}
+		else
+			Db::getInstance()->Execute('
+				INSERT INTO `'._DB_PREFIX_.'seur_order`
+				VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+			);
 	}
 }

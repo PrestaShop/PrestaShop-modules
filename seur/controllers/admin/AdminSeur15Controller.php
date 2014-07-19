@@ -35,41 +35,41 @@ class AdminSeur15Controller extends ModuleAdminController {
 	public function initContent()
 	{
 		$admin_seur = new AdminSeur(false);
-		
+
 		if (!$admin_seur->module_enabled_and_configured)
 		{
 			$admin_seur->displayModuleConfigurationWarning();
 			$this->content = $admin_seur->content;
 			return parent::initContent();
 		}
-		
+
 		$this->display = 'view';
 		$this->module_instance = Module::getInstanceByName('seur');
-		
+
 		Context::getContext()->controller->addJqueryUI('ui.datepicker');
-		
+
 		if (Tools::getValue('verDetalle'))
 		{
 			$response = Expedition::getExpeditions($admin_seur->getExpeditionData());
-			$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries($response,true));
+			$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries($response, true));
 		}
 		elseif (Tools::getValue('createPickup'))
 		{
 			$error_response = Pickup::createPickup();
 
 			if (!empty($error_response))
-				$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries(null,null,$error_response));
+				$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries(null, null, $error_response));
 			else
 				$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries());
 		}
 		elseif (Tools::getValue('submitFilter'))
 		{
 			$response = Expedition::getExpeditions($admin_seur->getExpeditionData());
-			$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries($response,false));
+			$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries($response, false));
 		}
 		else
 			$this->tpl_view_vars = array('datos' => $admin_seur->displayFormDeliveries());
-		
+
 		$this->content = $admin_seur->content;
 		$this->fields_list = $admin_seur->fields_list;
 

@@ -48,15 +48,15 @@ try
 
 	if (Tools::isSubmit('reembolso') && (in_array($iso, $iso_list) == true))
 		$serviciosComplementarios = '30;P;'.Tools::getValue('reembolso');
-	
-	if(Tools::isSubmit('cod_centro') && (in_array($iso, $iso_list) == true))
+
+	if (Tools::isSubmit('cod_centro') && (in_array($iso, $iso_list) == true))
 	{
 		$servicio = 1;
 		$producto = 48;
 	}
 
 	$sc_options = array(
-		"connection_timeout" => 30 
+		'connection_timeout' => 30
 	);
 
 	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
@@ -84,21 +84,21 @@ try
 	$data = array('in0' => $plano);
 	$response = $soap_client->tarificacionPrivadaStr($data);
 
-	if(empty($response->out) || (isset($response->error) && !empty($response->error)))
+	if (empty($response->out) || (isset($response->error) && !empty($response->error)))
 		return false;
 	else
 	{
 		$delivery = array();
 		$total = 0;
 
-		foreach(simplexml_load_string($response->out) as $key => $price)
+		foreach (simplexml_load_string($response->out) as $key => $price)
 		{
-			if((string)$price->NOM_CONCEPTO_IMP != 'IVA')
+			if ((string)$price->NOM_CONCEPTO_IMP != 'IVA')
 				$delivery[] = array('concepto' => utf8_decode( (string)$price->NOM_CONCEPTO_IMP ), 'importe' => (string)$price->VALOR);
 			else
 			{
 				$iva = array(
-					'concepto' => (string)$price->NOM_CONCEPTO_IMP, 
+					'concepto' => (string)$price->NOM_CONCEPTO_IMP,
 					'importe' => (string)$price->VALOR
 				);
 			}
@@ -107,7 +107,7 @@ try
 
 		$delivery[] = $iva;
 		$delivery[] = array(
-			'concepto' => 'Total', 
+			'concepto' => 'Total',
 			'importe' => (string)$total
 		);
 

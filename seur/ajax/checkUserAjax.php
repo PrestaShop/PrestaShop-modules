@@ -32,26 +32,26 @@ $token = Tools::getValue('token');
 $admin_token = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)Tools::getValue('id_employee'));
 
 if ($token != $admin_token)
-    exit;
+	exit;
 
 try
 {
-    $sc_options = array(
-        'connection_timeout' => 30 
-    );
-    $soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
+	$sc_options = array(
+		'connection_timeout' => 30
+	);
+	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
 
-    $data = array(
-        'in0' => Tools::getValue('user'),
-        'in1' => Tools::getValue('pass'),
-    );
+	$data = array(
+		'in0' => Tools::getValue('user'),
+	'in1' => Tools::getValue('pass'),
+	);
 
-    $response = $soap_client->validaUsuarioStr($data);
+	$response = $soap_client->validaUsuarioStr($data);
 
-    echo $response->out;
+	echo $response->out;
 }
 catch (SoapFault $fault)
 {
-    $url = urlencode(Tools::getValue('back')).'&token='.urlencode(Tools::getValue('token')).'&codigo=Error&error='.urlencode($fault->getMessage());
-    die(Tools::redirect($url));
+	$url = urlencode(Tools::getValue('back')).'&token='.urlencode(Tools::getValue('token')).'&codigo=Error&error='.urlencode($fault->getMessage());
+	die(Tools::redirect($url));
 }
