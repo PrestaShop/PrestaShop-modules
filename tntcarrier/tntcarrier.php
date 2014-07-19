@@ -51,7 +51,7 @@ class TntCarrier extends CarrierModule
 	{
 		$this->name = 'tntcarrier';
 		$this->tab = 'shipping_logistics';
-		$this->version = '1.9.10';
+		$this->version = '1.9.11';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr');
 		$this->module_key = 'd4dcfde9937b67002235598ac35cbdf8';
@@ -1223,8 +1223,7 @@ class TntCarrier extends CarrierModule
 						 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B');
 	  $city =  mb_strtoupper($city);
 		$city = strtr($city, $table);
-		$old = array("SAINT", "-");
-		$new = array("ST", " ");
-		return (str_replace($old, $new, $city));
+		$city = str_replace('-', ' ', $city);
+		return preg_replace('/SAINT\s+/', 'ST ', $city);
 	}
 }
