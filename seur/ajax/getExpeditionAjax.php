@@ -42,17 +42,17 @@ $module_instance = Module::getInstanceByName('seur');
 try
 {
 	$sc_options = array(
-		'connection_timeout' => 30 
+		'connection_timeout' => 30
 	);
 	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_E'), $sc_options);
-	
+
 	$nuevadate = strtotime('-15 days', strtotime(date('Y-m-d')));
 	$data_merchant = SeurLib::getMerchantData();
 	$data = array(
 		'in0' => 'S',
-		'in1' => ( Tools::getValue('expedition_number') ? pSQL(Tools::getValue('expedition_number')) :'' ), //numero expedicion
+		'in1' => ( Tools::getValue('expedition_number') ? pSQL(Tools::getValue('expedition_number')) :'' ), /*numero expedicion*/
 		'in2' => '',
-		'in3' => ( Tools::getValue('reference_number') ? pSQL(Tools::getValue('reference_number')) :'' ), //numero referencia
+		'in3' => ( Tools::getValue('reference_number') ? pSQL(Tools::getValue('reference_number')) :'' ), /*numero referencia*/
 		'in4' => pSQL($data_merchant['ccc']).'-'.pSQL($data_merchant['franchise']),
 		'in5' => ( !Tools::getValue('start_date') ? date('d-m-Y', $nuevadate) : Tools::getValue('start_date')),
 		'in6' => ( !Tools::getValue('end_date') ? date('d-m-Y', $nuevadate) : Tools::getValue('end_date')),
@@ -60,20 +60,20 @@ try
 		'in8' => '',
 		'in9' => '',
 		'in10' => '',
-		'in11' => '', 
+		'in11' => '',
 		'in12' => SEUR_WS_USERNAME,
 		'in13' => SEUR_WS_PASSWORD,
 		'in14' => 'N'
 	);
 
 	$response = $soap_client->consultaListadoExpedicionesStr($data);
-	
-	if ( empty($response->out) )
+
+	if (empty($response->out))
 	{
 		echo SeurLib::displayErrors ($module_instance->l('No results.', 'getExpeditionAjax'));
 		return false;
 	}
-	
+
 	$string_xml = htmlspecialchars_decode( $response->out );
 	$xml = simplexml_load_string( $string_xml );
 	$delivery = $xml->EXPEDICION;

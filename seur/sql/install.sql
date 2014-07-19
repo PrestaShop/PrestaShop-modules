@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS `PREFIX_seur_order` (
 `numero_bultos` int(10) NOT NULL,
 `peso_bultos` float(10) NOT NULL,
 `imprimido` varchar(5),
+`printed_label` int(1) NOT NULL,
+`printed_pdf` int(1) NOT NULL,
+`id_address_delivery` varchar(10),
 PRIMARY KEY (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 

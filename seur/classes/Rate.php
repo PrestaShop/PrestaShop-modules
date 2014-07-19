@@ -48,7 +48,7 @@ class Rate
 			}
 
 			$sc_options = array(
-				"connection_timeout" => 30 
+				'connection_timeout' => 30
 			);
 
 			$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
@@ -76,7 +76,7 @@ class Rate
 			$data = array('in0' => $plano);
 			$response = $soap_client->tarificacionPrivadaStr($data);
 
-			if(empty($response->out) || (isset($response->error) && !empty($response->error)))
+			if (empty($response->out) || (isset($response->error) && !empty($response->error)))
 				return false;
 			else
 			{
@@ -89,6 +89,6 @@ class Rate
 		catch (PrestaShopException $e)
 		{
 			$e->displayMessage();
-		} 
+		}
 	}
 }

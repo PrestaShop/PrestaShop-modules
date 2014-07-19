@@ -37,6 +37,7 @@ var carrierTable;
 var carrierTableInput;
 var carrierTableInputContainer;
 
+var currentCarrierId;
 var map;
 
 var id_seur_RESTO_array;
@@ -363,7 +364,7 @@ function saveCollectorPoint(id_cart, post_codeData )
 			phone : encodeURIComponent(post_codeData.phone),
 			timetable : encodeURIComponent(post_codeData.timetable),
 			chosen_address_delivery : chosen_address_delivery,
-			token : encodeURIComponent(seur_token_[current_token])
+			token : encodeURIComponent(current_token)
 		},
 		dataType: 'json',
 		async: false,

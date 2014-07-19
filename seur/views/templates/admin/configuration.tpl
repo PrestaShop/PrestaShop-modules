@@ -181,9 +181,9 @@
 				</li>
 
 				{if $configuration_table.international_orders eq 0}
-					<li id="message_international_orders" class="invisible warn">
+					<li id="message_international_orders" class="invisible warn alertaconfiguracion">
 				{else}
-					<li id="message_international_orders" class="warn">
+					<li id="message_international_orders" class="warn alertaconfiguracion">
 				{/if}
 					{l s='International shipments are to Europe excluding Spain, Portugal and Andorra' mod='seur'}
 				</li>
@@ -231,7 +231,7 @@
 					<label>{l s='By price' mod='seur'}</label>
 					<input type="text" name="precio_gratis" value="{$seur_free_price|escape:'htmlall':'UTF-8'}" size="3"/> {$currency->sign|escape:'htmlall':'UTF-8'}
 				</li>
-				<li id="msgenviosgratis" class="warn">
+				<li id="msgenviosgratis" class="warn alertaconfiguracion">
 					{l s='Put 0 value to disable.' mod='seur'}
 				</li>
 
@@ -452,7 +452,7 @@
 				</li>
 				<li class="required">
 					<label>{l s='CIT' mod='seur'}</label>
-					<input type="text" name="ci" class="onlyNumbers" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="ci" class="onlyNumbers" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<sup name="ci">*</sup>
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
@@ -472,14 +472,14 @@
 				</li>
 				<li>
 					<label>{l s='User' mod='seur'}</label>
-					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="id_employee_cfg" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
 				<li>
 					<label>{l s='Password' mod='seur'}</label>
-					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}"/>
+					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}" disabled="disabled" />
 					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
 				<li>
@@ -516,7 +516,7 @@
 	<li id="webservices">
 		<span><strong>{l s='SOAP Web Service URLs' mod='seur'}</strong></span>
 		<br/><br/>
-		<div class="warn">
+		<div class="warn alertaconfiguracion">
 		   {l s='Caution: If you change this setting the module may stop working. Only changed if SEUR tell you.' mod='seur'}
 		</div>
 		<br /><br/>
