@@ -103,3 +103,8 @@
 2014-07-15
 ----
 1) Update plugin to show widget V2.  
+
+2014-07-17
+----
+1) Make rich snippets available via hooks for prestashop 1.5 and above.
+2) Store in db only average score and reviews count instead of the entire rich snippet div.
