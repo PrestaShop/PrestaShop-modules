@@ -40,27 +40,23 @@ class Yotpo extends Module
 
 		if (!defined('_PS_BASE_URL_'))
 			define('_PS_BASE_URL_', 'http://'.(isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']));
-		if(file_exists($this->_yotpo_module_path . '/YotpoSnippetCache.php')) {
+		if(file_exists($this->_yotpo_module_path . '/YotpoSnippetCache.php')) 
 			include_once($this->_yotpo_module_path.'/YotpoSnippetCache.php');	
-		}	
 			    /* Backward compatibility */
-		if (version_compare(_PS_VERSION_, '1.5') < 0) {
+		if (version_compare(_PS_VERSION_, '1.5') < 0) 
     		require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-    	}				
 	}
 
 	public function getAcceptedMapStatuses()
 	{
-		if(method_exists('Tools', "unSerialize")) {
+		if(method_exists('Tools', "unSerialize")) 
 			$selected_statuses = Tools::unSerialize(Configuration::get('yotpo_map_status'));	
-		}
-		else {
+		else 
 			$selected_statuses = @unserialize(Configuration::get('yotpo_map_status'));	
-		}
 		
-		if(!is_null($selected_statuses) && !empty($selected_statuses)) {
+		if(!is_null($selected_statuses) && !empty($selected_statuses)) 
 			return $selected_statuses;
-		}
+
 		if (is_null(self::$_MAP_STATUS))
 		{
 			self::$_MAP_STATUS = array();
@@ -96,10 +92,8 @@ class Yotpo extends Module
 			!$this->registerHook('header')			|| !$this->registerHook('orderConfirmation')	|| !YotpoSnippetCache::createDB()) 
 			return false;
 
-		if(version_compare(_PS_VERSION_, '1.5') >= 0 && (!$this->registerHook('yotpoProductAverageScore') ||
-		   !$this->registerHook('yotpoProductReviewCount'))) {
-		   		return false;
-		   }
+		if(version_compare(_PS_VERSION_, '1.5') >= 0 && (!$this->registerHook('yotpoProductAverageScore') || !$this->registerHook('yotpoProductReviewCount'))) 
+		   	return false;
 		/* Default language: English; Default widget location: Product page Footer; Default widget tab name: "Reviews" 
 		 * Default bottom line location: product page left column Default bottom line enabled : true*/	
 		
@@ -122,7 +116,8 @@ class Yotpo extends Module
 	public function hookheader()
 	{
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
+		if(isset($app_key) && !empty($app_key)) 
+		{
 			$smarty = $this->context->smarty;
 			$smarty->assign(array('yotpoAppkey' => $app_key, 
 								  'yotpoDomain' => $this->getShopDomain(),
@@ -135,7 +130,8 @@ class Yotpo extends Module
 	public function hookproductfooter($params)
 	{
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
+		if(isset($app_key) && !empty($app_key)) 
+		{
 			$widgetLocation = Configuration::get('yotpo_widget_location');
 			if (Configuration::get('yotpo_widget_location') == 'footer')
 				return $this->showWidget($params['product']);
@@ -155,8 +151,10 @@ class Yotpo extends Module
 	public function hookProductTab()
 	{
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
-			if ($this->parseProductId() != null && Configuration::get('yotpo_widget_location') == 'tab') {
+		if(isset($app_key) && !empty($app_key)) 
+		{
+			if ($this->parseProductId() != null && Configuration::get('yotpo_widget_location') == 'tab') 
+			{
 				$smarty = $this->context->smarty;
 				$smarty->assign(array('yotpoVersionPost16' => version_compare(_PS_VERSION_, '1.6') >= 0, 
 					 				  'yotpoWidgetTabName' => Configuration::get('yotpo_widget_tab_name')));
@@ -168,9 +166,11 @@ class Yotpo extends Module
 	public function hookProductTabContent()
 	{
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
+		if(isset($app_key) && !empty($app_key)) 
+		{
 			$product = $this->getPageProduct(null);
-			if ($product != null && Configuration::get('yotpo_widget_location') == 'tab'){
+			if ($product != null && Configuration::get('yotpo_widget_location') == 'tab')
+			{
 				$this->assignProductVars($product);
 				$smarty = $this->context->smarty;
 				$smarty->assign('yotpoContentTplPath',dirname(__FILE__).'/views/templates/front/widgetDiv2.tpl');				
@@ -183,17 +183,15 @@ class Yotpo extends Module
 	public function hookextraLeft()
 	{
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
+		if(isset($app_key) && !empty($app_key)) 
 			return $this->showBottomLine('left_column');	
-		}			
 	}
 	
 	public function hookextraRight()
 	{	
 		$app_key = Configuration::get('yotpo_app_key');
-		if(isset($app_key) && !empty($app_key)) {
-			return $this->showBottomLine('right_column');	
-		}				
+		if(isset($app_key) && !empty($app_key)) 
+			return $this->showBottomLine('right_column');			
 	}
 		
 	public function hookorderConfirmation($params)
@@ -203,7 +201,8 @@ class Yotpo extends Module
 		$order_amount = !empty($params['total_to_pay']) ? $params['total_to_pay'] : '';
 		$order_currency = !empty($params['currencyObj']) && !empty($params['currencyObj']->iso_code) ? $params['currencyObj']->iso_code : '';
 
-		if(!empty($app_key) && !is_null($order_id)) {
+		if(!empty($app_key) && !is_null($order_id)) 
+		{
 			$smarty = $this->context->smarty;
 			$conversion_params = "app_key="      .$app_key.
                  				 "&order_id="    .$order_id.
@@ -215,19 +214,19 @@ class Yotpo extends Module
 		}
 	}
 
-	public function hookyotpoProductAverageScore($params = array()) {
+	public function hookyotpoProductAverageScore($params = array()) 
+	{
 		$rich_snippet_data = $this->getRichSnippet($params['product_id']);
-		if(is_array($rich_snippet_data) && array_key_exists( 'reviews_average',$rich_snippet_data)){
+		if(is_array($rich_snippet_data) && array_key_exists( 'reviews_average',$rich_snippet_data))
 			return $rich_snippet_data['reviews_average'];
-		}
 		return 0;
 	}
 	
-	public function hookyotpoProductReviewCount($params = array()) {
+	public function hookyotpoProductReviewCount($params = array()) 
+	{
 		$rich_snippet_data = $this->getRichSnippet($params['product_id']);
-		if(is_array($rich_snippet_data) && array_key_exists( 'reviews_count',$rich_snippet_data)){
+		if(is_array($rich_snippet_data) && array_key_exists( 'reviews_count',$rich_snippet_data))
 			return $rich_snippet_data['reviews_count'];
-		}
 		return 0;
 	}
 	
@@ -558,8 +557,10 @@ class Yotpo extends Module
 	private function displaySettingsForm()
 	{
 		$db_version = Configuration::get('yotpo_db_version');		
-		if(is_bool($db_version) && !$db_version) {
-			if(!Configuration::get('yotpo_rich_snippet_cache_created')) {
+		if(is_bool($db_version) && !$db_version) 
+		{
+			if(!Configuration::get('yotpo_rich_snippet_cache_created')) 
+			{
 				YotpoSnippetCache::createDB();					
 				Configuration::updateValue('yotpo_rich_snippet_cache_created', 1);
 			}
@@ -575,19 +576,14 @@ class Yotpo extends Module
 		$all_statuses = OrderState::getOrderStates($this->getLanguageId());
 		
 			//no configuration found -- use default
-		if(Configuration::get('yotpo_map_status') == false) {
-			Configuration::updateValue('yotpo_map_status', serialize($this->getAcceptedMapStatuses()), false);			
-		}
-		
-		if(method_exists('Tools', "unSerialize")) {
+		if(Configuration::get('yotpo_map_status') == false) 
+			Configuration::updateValue('yotpo_map_status', serialize($this->getAcceptedMapStatuses()), false);					
+		if(method_exists('Tools', "unSerialize")) 
 			$selected_statuses = Tools::unSerialize(Configuration::get('yotpo_map_status'));	
-		}
-		else {
+		else 
 			$selected_statuses = @unserialize(Configuration::get('yotpo_map_status'));	
-		}
-		foreach ($all_statuses as &$status) {
+		foreach ($all_statuses as &$status) 
 			$status['selected'] = in_array($status['id_order_state'], $selected_statuses) ? '1' : '0';
-		}
 		$smarty->assign(array(
 		'yotpo_action' => $_SERVER['REQUEST_URI'],
 		'yotpo_appKey' => Tools::getValue('yotpo_app_key',Configuration::get('yotpo_app_key')),
@@ -603,9 +599,8 @@ class Yotpo extends Module
 		'yotpo_all_statuses' => $all_statuses));
 		
 		$settings_template = $this->display(__FILE__, 'views/templates/admin/settingsForm.tpl');
-		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false) {
+		if (strpos($settings_template, 'yotpo_map_enabled') != false || strpos($settings_template, 'yotpo_language_as_site') == false || strpos($settings_template, 'yotpo_rich_snippets') == false) 
 			$settings_template = $this->getNonCachedTemplate('views/templates/admin/settingsForm.tpl');	
-		}
 		$this->_html .= $settings_template;
 	}
 
@@ -754,31 +749,37 @@ class Yotpo extends Module
 		return null;
 	}
 	
-	private function getLanguage() {
+	private function getLanguage() 
+	{
 		$language = Configuration::get('yotpo_language');
-		if (Configuration::get('yotpo_language_as_site') == true) {
-			if (isset($this->context->language) && isset($this->context->language->iso_code)) {
+		if (Configuration::get('yotpo_language_as_site') == true) 
+		{
+			if (isset($this->context->language) && isset($this->context->language->iso_code)) 
 				$language = $this->context->language->iso_code;
-			}
-			else {
+			else 
 				$language = Language::getIsoById( (int)$this->context->cookie->id_lang );
-			}	
 		}
 		return $language;
 	}
 	
-	private function getRichSnippet($product_id) {
+	private function getRichSnippet($product_id) 
+	{
 		$result = null;		
-		if (Configuration::get('yotpo_app_key') != '' && Configuration::get('yotpo_oauth_token') != '' && is_int($product_id)) {
-			try {
+		if (Configuration::get('yotpo_app_key') != '' && Configuration::get('yotpo_oauth_token') != '' && is_int($product_id)) 
+		{
+			try 
+			{
 				$result = YotpoSnippetCache::getRichSnippet($product_id);
 				$should_update_row = is_array($result) && !YotpoSnippetCache::isValidCache($result); 			
-				if($result == false || $should_update_row) {			
+				if($result == false || $should_update_row) 
+				{			
 					$result = array();
 					$expiration_time = null;
 					$request_result = $this->httpClient()->makeRichSnippetRequest(Configuration::get('yotpo_app_key'), $product_id);
-					if($request_result['status_code'] == 200) {
-						if ($request_result['json'] == true) {
+					if($request_result['status_code'] == 200) 
+					{
+						if ($request_result['json'] == true) 
+						{
 							$result['ttl'] = $request_result['response']['rich_snippet']['ttl'];
 							$result['reviews_average'] = $request_result['response']['rich_snippet']['reviews_average'];
 							$result['reviews_count'] = $request_result['response']['rich_snippet']['reviews_count']; 
@@ -795,31 +796,29 @@ class Yotpo extends Module
 							$expiration_time = $matches[1];						 
 							unset($matches);
 						}	
-						if(isset($result['ttl']) && is_numeric($result['ttl']) && isset($result['reviews_average']) && isset($result['reviews_count'])) {
-							if($should_update_row) {
+						if(isset($result['ttl']) && is_numeric($result['ttl']) && isset($result['reviews_average']) && isset($result['reviews_count'])) 
+						{
+							if($should_update_row) 
 								YotpoSnippetCache::updateCahce($product_id, $result);
-							}
-							else {
-								YotpoSnippetCache::addRichSnippetToCahce($product_id, $result);	
-							}
-								
+							else 
+								YotpoSnippetCache::addRichSnippetToCahce($product_id, $result);									
 						}
 					}
 				}
 			}
-			catch (Exception $e) {
+			catch (Exception $e) 
+			{
 				error_log($e->getMessage());
 			}				
 		}
 		return $result;		
 	}
-	private function getLanguageId(){
-		if (isset($this->context->language) && isset($this->context->language->id)) {
+	private function getLanguageId()
+	{
+		if (isset($this->context->language) && isset($this->context->language->id)) 
 			return $this->context->language->id;
-		}
-		else {
+		else 
 			return $this->context->cookie->id_lang;
-		}
 	}		
 	
 
@@ -834,13 +833,16 @@ class Yotpo extends Module
     {
         $template = '';
         $smarty = $this->context->smarty;
-        if (method_exists($smarty, 'clearCompiledTemplate')) {
+        if (method_exists($smarty, 'clearCompiledTemplate')) 
+        {
             $smarty->clearCompiledTemplate();
             $template = $this->display(__FILE__, $template_path);
-        } elseif (method_exists($smarty, 'clear_compiled_tpl')) {
+        } elseif (method_exists($smarty, 'clear_compiled_tpl')) 
+        {
             $smarty->clear_compiled_tpl();
             $template = $this->display(__FILE__, $template_path);
-        } elseif (isset($smarty->force_compile)) {
+        } elseif (isset($smarty->force_compile)) 
+        {
             $value = $smarty->force_compile;
             $smarty->force_compile = true;
             $template = $this->display(__FILE__, $template_path);
