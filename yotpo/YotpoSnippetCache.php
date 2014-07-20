@@ -2,23 +2,26 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class YotpoSnippetCache {
-	public static function isValidCache($row) {
+class YotpoSnippetCache 
+{
+	public static function isValidCache($row) 
+	{
 		return strtotime($row['ttl']) > time();
 	}
 	
-	public static function getRichSnippet($product_id) {
+	public static function getRichSnippet($product_id) 
+	{
 		$db = Db::getInstance();
 		$result = $db->getRow('SELECT * 
 											 FROM `'._DB_PREFIX_.'yotposnippetcache` 
 											 WHERE id_product='.(int)$product_id, true);
-		if (is_array($result)) {			
+		if (is_array($result)) 			
 			return $result;				
-		}
 		return false;	
 	}
 	
-	public static function addRichSnippetToCahce($product_id, $row) {
+	public static function addRichSnippetToCahce($product_id, $row) 
+	{
 		$expiration_at = time() + $row['ttl'];  
 		$res = Db::getInstance()->execute(
 		'INSERT INTO `'._DB_PREFIX_.'yotposnippetcache` (`id_product`, `reviews_average`, `reviews_count`, `ttl`) 
@@ -27,7 +30,8 @@ class YotpoSnippetCache {
 		return $res;
 	}
 	
-	public static function updateCahce($product_id, $row){
+	public static function updateCahce($product_id, $row)
+	{
 		$expiration_at = time() + $row['ttl'];	
 		$res = Db::getInstance()->execute(
 		'UPDATE `'._DB_PREFIX_.'yotposnippetcache` 
@@ -37,7 +41,8 @@ class YotpoSnippetCache {
 		return $res;
 	}
 	
-	public static function createDB() {
+	public static function createDB() 
+	{
 			$engine = defined('_MYSQL_ENGINE_') ? 'ENGINE='._MYSQL_ENGINE_.'' : '';
 			$db = Db::getInstance();
 		return $db->execute('
@@ -51,7 +56,8 @@ class YotpoSnippetCache {
 			'.$engine.' DEFAULT CHARSET=utf8') &&  $db->execute('CREATE UNIQUE INDEX index_product_id ON '._DB_PREFIX_.'yotposnippetcache (id_product)');
 	}	
 
-		public static function updateDB() {			
+	public static function updateDB() 
+	{			
 		$db = Db::getInstance();			
 		return $db->execute('
 			DELETE FROM `'._DB_PREFIX_.'yotposnippetcache`') &&
@@ -62,7 +68,8 @@ class YotpoSnippetCache {
 			ADD `reviews_count` INT UNSIGNED NOT NULL');
 	}
 	
-	public static function dropDB() {
+	public static function dropDB() 
+	{
 		return Db::getInstance()->execute('DROP TABLE IF EXISTS `'._DB_PREFIX_.'yotposnippetcache`');
 	}
 }
