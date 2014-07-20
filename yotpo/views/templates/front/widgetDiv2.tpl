@@ -5,7 +5,6 @@
    data-image-url="{$yotpoProductImageUrl|escape:'htmlall':'UTF-8'}" 
    data-description="{$yotpoProductDescription|escape:'htmlall':'UTF-8'}" 
    data-lang="{$yotpoLanguage|escape:'htmlall':'UTF-8'}">
-   {$richSnippetsCode|escape:'UTF-8'}
 </div>
 
 
