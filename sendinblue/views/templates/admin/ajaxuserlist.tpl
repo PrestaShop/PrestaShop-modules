@@ -28,11 +28,11 @@
 {foreach from=$result item=sourceInfo}
 	{assign var=counter value=$counter+1}
 	<tr>
-		<td class="{$cl_version}">
+		<td class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">
 			<div style="word-wrap:break-word; width:350px">{$sourceInfo.email|escape:'htmlall':'UTF-8'|stripslashes}</div>
 		</td>
 		{assign var="emailtest" value=$sourceInfo.email}
-		<td class="{$cl_version}">
+		<td class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">
 			{if $sourceInfo.id_customer!= "Nclient"}
 				yes
 			{else}
@@ -40,7 +40,7 @@
 			{/if}
 			
 		</td>
-		<td class="{$cl_version}">
+		<td class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">
 			
             {foreach from=$smsdata key=jk item=smsInfo}
             	{if $jk == $sourceInfo.phone_mobile}

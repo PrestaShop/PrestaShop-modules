@@ -51,7 +51,7 @@
                      {/if}   
                         <br/><br/>
                        <label>{l s='You want to be notified by e-mail when you do not have enough credits?' mod='sendinblue'}</label>
-							<span class="{$cl_version}">
+							<span class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">
                            <input name="sms_credit" {if isset($sms_credit_status) && $sms_credit_status == 1}checked="checked"{/if} type="radio" value="1" class="sms_credit radio_nospaceing" />
                            {l s='Yes' mod='sendinblue'}
                            <input name="sms_credit" {if isset($sms_credit_status) && $sms_credit_status == 0}checked="checked"{/if}  type="radio" value="0" class="sms_credit radio_spaceing2" />
@@ -93,7 +93,7 @@
                            <tr>
                               <td class="row1">
                                  <label class="r_label" style="padding-top:0px;"><strong>{l s='Send SMS after order confirmation' mod='sendinblue'}</strong></label>
-                                 <div class="radio_bx {$cl_version}"> <span style="margin:0 0px 0 0;">
+                                 <div class="radio_bx {$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"> <span style="margin:0 0px 0 0;">
                                     <input name="sms_order_setting" {if isset($sms_order_status) && $sms_order_status == 1}checked="checked"{/if}  class="sms_order_setting radio_spaceing" type="radio" value="1" />
                                     {l s='Yes' mod='sendinblue'}</span> <span>
                                     <input name="sms_order_setting" class="sms_order_setting radio_spaceing2" {if isset($sms_order_status) && $sms_order_status == 0}checked="checked"{/if}  type="radio" value="0" />
@@ -110,7 +110,7 @@
 										 <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_order_form">
 
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr><td valign="top" style="padding-left:0; width:250px" class="{$cl_version}"><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
+										<tr><td valign="top" style="padding-left:0; width:250px" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
 										<tr>
                                           <td valign="top">
                                           <label>{l s='Sender' mod='sendinblue'}</label></td>
@@ -128,7 +128,7 @@
                                              <textarea name="sender_order_message" id="sender_order_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Order_Message|escape:'htmlall':'UTF-8'}</textarea>
                                              <span class="toolTip" style="margin-top:35px;" title="{l s=' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write  SMS of 240 characters, it will be recorded using two SMS.' mod='sendinblue'}">&nbsp;</span>
                                              <div class="clear"></div>
-                                              <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_order_message_text_count">0</span>
+                                              <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_order_message_text_count">0</span>
                                              <div class="hintmsg"><em>{l s='Number of characters left: ' mod='sendinblue'}</em><span id="sender_order_message_text">160</span></div>
                                              <div class="hintmsg"><em>{l s='Attention line break is counted as a single character.' mod='sendinblue'}</em>
                                              </div><br>
@@ -181,7 +181,7 @@
                            <tr>
                               <td class="row1">
                                  <label class="r_label" style="margin-left: 7px; padding-top:0px;"><strong>{l s='Send a SMS confirmation for the shipment of the order' mod='sendinblue'}</strong></label>
-                                 <div class="radio_bx {$cl_version}"> <span>
+                                 <div class="radio_bx {$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"> <span>
                                     <input name="sms_shiping_setting" class="sms_shiping_setting radio_spaceing" {if isset($sms_shipment_status) && $sms_shipment_status == 1}checked="checked"{/if} type="radio" value="1" />
                                     {l s='Yes' mod='sendinblue'}</span> <span>
                                     <input name="sms_shiping_setting" type="radio" value="0" {if isset($sms_shipment_status) && $sms_shipment_status == 0}checked="checked"{/if}  class="sms_shiping_setting radio_spaceing2"/>
@@ -197,7 +197,7 @@
 										 
 										 <form action="{$form_url|escape:'htmlall':'UTF-8'|replace:'&amp;':'&'}" method="POST" name="sender_shipment_form">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                    <tr><td valign="top"  style="padding-left:0" class="{$cl_version}"><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
+                                    <tr><td valign="top"  style="padding-left:0" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"><h4 style="margin-top:0px;">{l s='SMS settings' mod='sendinblue'}:</h4></td><td >&nbsp</td></tr>
                                        <tr>
                                           <td style="width:250px"  valign="top"><label>{l s='Sender' mod='sendinblue'}</label></td>
                                           <td >
@@ -214,7 +214,7 @@
                                              <textarea name="sender_shipment_message" id="sender_shipment_message" cols="45" rows="5" class="textarea_bx">{$Sendin_Sender_Shipment_Message|escape:'htmlall':'UTF-8'}</textarea>
                                              <span class="toolTip" style="margin-top:35px;" title="{l s=' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write  SMS of 240 characters, it will be recorded using two SMS.' mod='sendinblue'}">&nbsp;</span>
                                                 <div class="clear"></div>                                        
-                                             <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_shipment_message_text_count">0</span>
+                                             <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_shipment_message_text_count">0</span>
                                              <div class="hintmsg"><em>{l s='Number of characters left: ' mod='sendinblue'}</em><span id="sender_shipment_message_text">160</span></div>
                                              <div class="hintmsg"><em>{l s='Attention line break is counted as a single character.' mod='sendinblue'}</em>
                                              </div><br/>
@@ -267,7 +267,7 @@
                            <tr>
                               <td class="row1">
                                  <label class="r_label"  style="margin-left: 7px; padding-top:0px;"><strong>{l s='Send a campaign SMS' mod='sendinblue'}</strong></label>
-                                 <div class="radio_bx" class="{$cl_version}"> <span>
+                                 <div class="radio_bx" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"> <span>
                                     <input name="sms_campaign_setting" class="sms_campaign_setting radio_spaceing" {if isset($sms_campaign_status) && $sms_campaign_status == 1}checked="checked"{/if} type="radio" value="1" />
                                     {l s='Yes' mod='sendinblue'}</span> <span>
                                     <input name="sms_campaign_setting" class="sms_campaign_setting radio_spaceing2" {if isset($sms_campaign_status) && $sms_campaign_status == 0}checked="checked"{/if} type="radio" value="0" />
@@ -287,7 +287,7 @@
 
                                         <tr>
                                           <td valign="top" style="width:250px"> <label> {l s='To' mod='sendinblue'}</label></td>
-                                         <td class="{$cl_version}">
+                                         <td class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">
                                              <input name="Sendin_Sms_Choice" id="r1_Sendin_Sms_Choice"  checked="checked" class="Sendin_Sms_Choice radio_nospaceing" type="radio" value="1" />
                                             {l s='A single contact' mod='sendinblue'}
                                               &nbsp;&nbsp;
@@ -298,7 +298,7 @@
                                              {l s='Only subscribed customers' mod='sendinblue'}
                                           </td>
                                        </tr>
-                                       <tr><td valign="top"  style="padding-left:0" class="{$cl_version}"><h4 style="margin-top:0px;">{l s='SMS Settings' mod='sendinblue'}:</h4></td><td>&nbsp</td></tr>
+                                       <tr><td valign="top"  style="padding-left:0" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}"><h4 style="margin-top:0px;">{l s='SMS Settings' mod='sendinblue'}:</h4></td><td>&nbsp</td></tr>
                                        <tr class="singlechoice">
                                           <td valign="top"><label>{l s='Phone number of the contact' mod='sendinblue'}</label></td>
                                           <td>
@@ -323,7 +323,7 @@
                                              <textarea name="sender_campaign_message" id="sender_campaign_message" cols="45" rows="5" class="textarea_bx"></textarea>
                                              <span class="toolTip" style=" margin-top:35px;" title="{l s=' Create the content of your SMS with the limit of 160-character.Beyond 160 characters, it will be counted as a second SMS. Thus, if you write  SMS of 240 characters, it will be recorded using two SMS.' mod='sendinblue'}">&nbsp;</span>
                                              <div class="clear"></div>
-                                             <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_campaign_message_text_count">0</span>
+                                             <span style="line-height:16px; margin-bottom:15px; width:333px;" class="{$cl_version|escape:'htmlall':'UTF-8'|stripslashes}">{l s='Number of SMS used: ' mod='sendinblue'}<span id="sender_campaign_message_text_count">0</span>
                                              <div class="hintmsg"><em>{l s='Number of characters left: ' mod='sendinblue'}</em><span id="sender_campaign_message_text">160</span></div>
                                              <div class="hintmsg"><em>{l s='Attention line break is counted as a single character.' mod='sendinblue'}</em>
                                              </div><br>

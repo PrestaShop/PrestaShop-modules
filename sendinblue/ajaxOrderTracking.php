@@ -36,6 +36,7 @@ $sendin = new Sendinblue();
 if (Configuration::get('Sendin_order_tracking_Status') == 0)
 {
 	$handle = fopen(_PS_MODULE_DIR_.'sendinblue/csv/ImportOldOrdersToSendinblue.csv', 'w+');
+	$key_value = array();
 	$key_value[] = 'EMAIL,ORDER_ID,ORDER_PRICE,ORDER_DATE';
 
 	fputcsv($handle, $key_value, $blank_val = 0);
@@ -83,13 +84,17 @@ if (Configuration::get('Sendin_order_tracking_Status') == 0)
 		else
 			$list = '';
 
-	$import_data = array();		
+	$import_data = array();
 	$import_data['webaction'] = 'IMPORTUSERS';
 	$import_data['key'] = Configuration::get('Sendin_Api_Key');
 	$import_data['url'] = $sendin->path.$sendin->name.'/csv/ImportOldOrdersToSendinblue.csv';
 	$import_data['listids'] = $list;
-	// List id should be optional
+	$import_data['notify_url'] = $sendin->path.'sendinblue/EmptyImportOldOrdersFile.php?token='.Tools::getValue('token');
+	/**
+	* List id should be optional
+	*/
 	$sendin->curlRequestAsyc($import_data);
 
-	Configuration::updateValue('Sendin_order_tracking_Status', 1);exit;
+	Configuration::updateValue('Sendin_order_tracking_Status', 1);
+	exit;
 }
