@@ -260,7 +260,7 @@ class Ebay extends Module
 	{
 		if(!Configuration::get('EBAY_UPGRADE_17'))
 		{
-			if(count(Db::getInstance()->ExecuteS("SHOW COLUMNS FROM "._DB_PREFIX_."ebay_category LIKE 'id_ebay_category'")) != 0)
+			if(count(Db::getInstance()->ExecuteS("SHOW COLUMNS FROM "._DB_PREFIX_."ebay_category_configuration LIKE 'id_ebay_category'")) != 0)
 			{
 				//Check if column id_ebay_profile exists on each table already existing in 1.6
 				$sql = array(
