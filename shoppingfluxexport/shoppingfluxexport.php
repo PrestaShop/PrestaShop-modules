@@ -238,12 +238,12 @@ class ShoppingFluxExport extends Module
 			<fieldset>
 				<legend>'.$this->l('Demandez ici votre clé d\'activation').'</legend>
 				<p style="margin-bottom:20px" >'.$this->l('Ce module vous est offert par Shopping Flux et est utilisable via une souscription mensuelle au service. Envoyez-nous simplement ce formulaire :').'</p>
-				<p><label>'.$this->l('Nom du site').' : </label><input type="text" name="site" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_NAME')).'"></p>
-				<p><label>'.$this->l('Nom').' : </label><input type="text" name="nom" value="'.Tools::safeOutput($owner->lastname).'"></p>
-				<p><label>'.$this->l('Prenom').' : </label><input type="text" name="prenom" value="'.Tools::safeOutput($owner->firstname).'"></p>
-				<p><label>'.$this->l('E-mail').' : </label><input type="text" name="email" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'"></p>
-				<p><label>'.$this->l('Téléphone').' : </label><input type="text" name="telephone" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_PHONE')).'"></p>
-				<p><label>'.$this->l('Code Prestashop (laisser vide si vous n\'en possédez pas)').' : </label><input type="text" name="code"></p>
+				<p><label>'.$this->l('Website').' : </label><input type="text" name="site" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_NAME')).'"></p>
+				<p><label>'.$this->l('First Name').' : </label><input type="text" name="nom" value="'.Tools::safeOutput($owner->lastname).'"></p>
+				<p><label>'.$this->l('Last Name').' : </label><input type="text" name="prenom" value="'.Tools::safeOutput($owner->firstname).'"></p>
+				<p><label>'.$this->l('Email').' : </label><input type="text" name="email" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'"></p>
+				<p><label>'.$this->l('Phone').' : </label><input type="text" name="telephone" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_PHONE')).'"></p>
+				<p><label>'.$this->l('Prestashop code (leave it blank if you do not have)').' : </label><input type="text" name="code"></p>
 				<input type="hidden" name="flux" value="'.Tools::safeOutput($uri).'"/>
 				<p style="text-align:center" ><input type="submit" value="'.$this->l('Envoyer la demande').'" name="send_mail" class="button"/></p>
 			</fieldset>
