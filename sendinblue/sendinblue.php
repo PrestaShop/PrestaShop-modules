@@ -754,7 +754,7 @@ class Sendinblue extends Module {
 		$key_value = array();
 		$key_value[] = 'EMAIL,CIV,NAME,SURNAME,BIRTHDAY,CLIENT,SMS';
 
-		fputcsv($handle, $key_value, '');
+		fputcsv($handle, $key_value);
 
 		$value_langauge = $this->getApiConfigValue();
 
