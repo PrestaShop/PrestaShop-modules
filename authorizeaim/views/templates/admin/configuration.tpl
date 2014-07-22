@@ -24,7 +24,7 @@
 		</ul>
 		<ul class="none" style = "display: inline; font-size: 13px;">
 			<li><a href="http://reseller.authorize.net/application/prestashop/" target="_blank" class="authorizeaim-link">{l s='Sign up Now' mod='authorizeaim'}</a></li>
-		</ul>		
+		</ul>
 	</div>
 	<div class="authorizeaim-video">
 		<p>{l s='Have you ever wondered how credit card payments work? Connecting a payment application to the credit card processing networks is difficult, expensive and beyond the resources of most businesses. Authorize.Net provides the complex infrastructure and security necessary to ensure secure, fast and reliable transactions. See How:' mod='authorizeaim'}</p>
@@ -43,7 +43,7 @@
 		{foreach from=$currencies item='currency'}
 			{if (in_array($currency.iso_code, $available_currencies))}
 				{assign var='configuration_id_name' value="AUTHORIZE_AIM_LOGIN_ID_"|cat:$currency.iso_code}
- 				{assign var='configuration_key_name' value="AUTHORIZE_AIM_KEY_"|cat:$currency.iso_code}
+				{assign var='configuration_key_name' value="AUTHORIZE_AIM_KEY_"|cat:$currency.iso_code}
 				<table>
 					<tr>
 						<td>
@@ -62,11 +62,11 @@
 		<label for="authorizeaim_mode"><a class="authorizeaim-sign-up" target="_blank" href="https://developer.authorize.net/guides/AIM/wwhelp/wwhimpl/js/html/wwhelp.htm"><img src="{$module_dir}img/help.png" alt="" /></a> {l s='Environment:' mod='authorizeaim'}</label>
 		<div class="margin-form" id="authorizeaim_mode">
 			<input type="radio" name="authorizeaim_mode" value="0" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX && !$AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
-			<span style="color: #080;">{l s='Production environment' mod='authorizeaim'}</span><br/>
+			<span>{l s='Live mode' mod='authorizeaim'}</span><br/>
 			<input type="radio" name="authorizeaim_mode" value="1" style="vertical-align: middle;" {if !$AUTHORIZE_AIM_SANDBOX && $AUTHORIZE_AIM_TEST_MODE}checked="checked"{/if} />
-			<span style="color: #080;">{l s='Production environment with Test Mode' mod='authorizeaim'}</span><br/>
+			<span>{l s='Test mode (in production server)' mod='authorizeaim'}</span><br/>
 			<input type="radio" name="authorizeaim_mode" value="2" style="vertical-align: middle;" {if $AUTHORIZE_AIM_SANDBOX}checked="checked"{/if} />
-			<span style="color: #900;">{l s='Sandbox' mod='authorizeaim'}</span><br/>
+			<span>{l s='Test mode' mod='authorizeaim'}</span><br/>
 		</div>
 		<label for="authorizeaim_cards">{l s='Cards* :' mod='authorizeaim'}</label>
 		<div class="margin-form" id="authorizeaim_cards">

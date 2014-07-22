@@ -33,7 +33,7 @@ class AuthorizeAIM extends PaymentModule
 	{
 		$this->name = 'authorizeaim';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5.2';
+		$this->version = '1.5.3';
 		$this->author = 'PrestaShop';
 		$this->aim_available_currencies = array('USD','AUD','CAD','EUR','GBP','NZD');
 
@@ -98,7 +98,7 @@ class AuthorizeAIM extends PaymentModule
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_DISCOVER');
 		Configuration::deleteByName('AUTHORIZE_AIM_CARD_AX');
 		Configuration::deleteByName('AUTHORIZE_AIM_HOLD_REVIEW_OS');
-		
+
 		/* Removing credentials configuration variables */
 		$currencies = Currency::getCurrencies(false, true);
 		foreach ($currencies as $currency)
@@ -168,14 +168,14 @@ class AuthorizeAIM extends PaymentModule
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_DISCOVER', Tools::getvalue('authorizeaim_card_discover'));
 			Configuration::updateValue('AUTHORIZE_AIM_CARD_AX', Tools::getvalue('authorizeaim_card_ax'));
 			Configuration::updateValue('AUTHORIZE_AIM_HOLD_REVIEW_OS', Tools::getvalue('authorizeaim_hold_review_os'));
-			
+
 			/* Updating credentials for each active currency */
 			foreach ($_POST as $key => $value)
 			{
 				if (strstr($key, 'authorizeaim_login_id_'))
 					Configuration::updateValue('AUTHORIZE_AIM_LOGIN_ID_'.str_replace('authorizeaim_login_id_', '', $key), $value);
 				elseif (strstr($key, 'authorizeaim_key_'))
-					Configuration::updateValue('AUTHORIZE_AIM_KEY_'.str_replace('authorizeaim_key_', '', $key), $value);		
+					Configuration::updateValue('AUTHORIZE_AIM_KEY_'.str_replace('authorizeaim_key_', '', $key), $value);
 			}
 
 			$html .= $this->displayConfirmation($this->l('Configuration updated'));
@@ -200,7 +200,7 @@ class AuthorizeAIM extends PaymentModule
 			'AUTHORIZE_AIM_CARD_AX' => Configuration::get('AUTHORIZE_AIM_CARD_AX'),
 			'AUTHORIZE_AIM_HOLD_REVIEW_OS' => (int)Configuration::get('AUTHORIZE_AIM_HOLD_REVIEW_OS'),
 		));
-				
+
 		/* Determine which currencies are enabled on the store and supported by Authorize.net & list one credentials section per available currency */
 		foreach ($currencies as $currency)
 		{
@@ -212,17 +212,17 @@ class AuthorizeAIM extends PaymentModule
 				$this->context->smarty->assign($configuration_key_name, Configuration::get($configuration_key_name));
 			}
 		}
-		
+
 		return $this->context->smarty->fetch(dirname(__FILE__).'/views/templates/admin/configuration.tpl');
 	}
 
 	public function hookPayment($params)
 	{
 		$currency = Currency::getCurrencyInstance($this->context->cookie->id_currency);
-		
+
 		if (!Validate::isLoadedObject($currency))
 			return false;
-		
+
 		if (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off'))
 		{
 			$isFailed = Tools::getValue('aimerror');
@@ -243,7 +243,7 @@ class AuthorizeAIM extends PaymentModule
 			$this->context->smarty->assign('isFailed', $isFailed);
 			$this->context->smarty->assign('new_base_dir', $url);
 			$this->context->smarty->assign('currency', $currency);
-			
+
 			return $this->display(__FILE__, 'views/templates/hook/authorizeaim.tpl');
 		}
 	}
