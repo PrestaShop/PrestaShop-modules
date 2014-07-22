@@ -39,7 +39,7 @@ class FerBuy extends PaymentModule
 	{
 		$this->name = 'ferbuy';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.5';
+		$this->version = '1.5.1';
 		$this->author = 'FerBuy';
 
 		parent::__construct();
@@ -452,9 +452,13 @@ class FerBuy extends PaymentModule
 		$result = Tools::jsonDecode($this->requestCurl($url, $data), true);
 
 		if (array_key_exists('api', $result))
-			return ((int)$result['api']['response']['code'] === 200);
-		else
-			return false;
+			if ((int)$result['api']['response']['code'] === 200)
+			{
+				Configuration::updateValue('FERBUY_CONFIGURATION_KEY', true);
+				return true;
+			}
+
+		return false;
 	}
 
 	/**
