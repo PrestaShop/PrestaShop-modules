@@ -84,7 +84,7 @@
 		{
 			$this->name = 'boxdropshipment';
 			$this->tab = 'shipping_logistics';
-			$this->version = '1.0.1';
+			$this->version = '1.0.2';
 			$this->author = 'boxdrop Group AG';
 			$this->need_instance = 0;
 			$this->dependencies = array('blockcart');
