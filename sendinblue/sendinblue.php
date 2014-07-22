@@ -284,6 +284,7 @@ class Sendinblue extends Module {
 				}
 			}
 		}
+				if (Configuration::get('Sendin_Api_Key_Status') == 1)
 				$result_id = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.
 						'sendin_newsletter WHERE `email` = \''.$this->context->cookie->email.'\'');
 				$email_id = (isset($result_id['id'])?$result_id['id']:'0');
@@ -2210,11 +2211,11 @@ class Sendinblue extends Module {
 			<td>
 			</td>
 			</tr>';
-			$this->_second_block_code .= '<td style="width:250px">
+			$this->_second_block_code .= '<td style="width:250px" class="managesubscribeBlock">
 			<label> '.$this->l('Manage follow up email for user subscription').'
 			</label>
 			</td>
-			<td class="'.$this->cl_version.'"><div class="listData" style="text-align:left;"><select name="template" class="ui-state-default" style="width: 225px; height:22px; border-radius:4px;"><option value="">'.$this->l('Select Template').'</option>
+			<td class="'.$this->cl_version.' managesubscribeBlock"><div class="listData" style="text-align:left;"><select name="template" class="ui-state-default" style="width: 225px; height:22px; border-radius:4px;"><option value="">'.$this->l('Select Template').'</option>
 			';
 			$options = '';
 			$camp = $this->templateDisplay();

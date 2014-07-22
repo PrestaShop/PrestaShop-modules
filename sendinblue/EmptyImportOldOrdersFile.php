@@ -29,7 +29,7 @@ include(dirname(__FILE__).'/../../config/config.inc.php');
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-if (!empty($_POST['proc_success']))
+if (Tools::getValue('proc_success') != '')
 {
 	$handle = fopen(_PS_MODULE_DIR_.'sendinblue/csv/ImportOldOrdersToSendinblue.csv', 'w');
 	$key_value = array();
