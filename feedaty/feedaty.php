@@ -33,7 +33,7 @@ class Feedaty extends Module
 	{
 		$this->name = 'feedaty';
 		$this->tab = 'front_office_features';
-		$this->version = '1.1.9';
+		$this->version = '1.2.0';
 		$this->author = 'Feedaty.com';
 		$this->need_instance = 0;
 
@@ -409,7 +409,10 @@ class Feedaty extends Module
 		if (is_null($data))
 			return false;
 		else
+		{
+			Configuration::updateValue('FEEDATY_CONFIGURATION_OK', true);
 			return $data;
+		}
 	}
 
 	/* fdGetTemplate is used to get data of a kind of widget only */
