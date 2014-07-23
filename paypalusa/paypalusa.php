@@ -19,7 +19,7 @@ class PayPalUSA extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.4';
+		$this->version = '1.3.5';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
 		$this->tab = 'payments_gateways';
@@ -284,6 +284,8 @@ class PayPalUSA extends PaymentModule
 			$result = $this->postToPayPal('GetBalance', '');
 			if (Tools::strtoupper($result['ACK']) != 'SUCCESS' && Tools::strtoupper($result['ACK']) != 'SUCCESSWITHWARNING')
 				$this->_error[] = $this->l('Your Paypal API crendentials are not valid, please double-check their values or contact PayPal.');
+			else
+				Configuration::updateValue('PAYPALUSA_CONFIGURATION_OK', true);
 		}
 
 		if (!count($this->_error))
