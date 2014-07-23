@@ -2,7 +2,7 @@
 <module>
 	<name>sofortbanking</name>
 	<displayName><![CDATA[SOFORT Banking]]></displayName>
-	<version><![CDATA[2.5]]></version>
+	<version><![CDATA[2.5.1]]></version>
 	<description><![CDATA[SOFORT Banking - The payment system that benefits you. Recommended by merchants.]]></description>
 	<author><![CDATA[touchdesign]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
