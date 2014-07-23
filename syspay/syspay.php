@@ -35,7 +35,7 @@ class SysPay extends PaymentModule {
 	{
 		$this->name = 'syspay';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.0';
+		$this->version = '2.0.1';
 		$this->author = 'SysPay';
 
 		parent::__construct();
@@ -334,6 +334,9 @@ class SysPay extends PaymentModule {
 		$extra_vars = array();
 		$extra_vars['transaction_id'] = $payment_ref;
 		$this->validateOrder((int)$id_cart, $id_order_state, $amount, $this->displayName, $message, $extra_vars, null, true);
+		
+		if (Configuration::get('SYSPAY_MODE') == 1)
+			Configuration::updateValue('SYSPAY_CONFIGURATION_OK', true);
 	}
 
 	public function hookAdminOrder($params)
