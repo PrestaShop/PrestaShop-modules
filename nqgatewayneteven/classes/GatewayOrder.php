@@ -63,7 +63,7 @@ class GatewayOrder extends Gateway
 			$getOrdersResponse = $this->client->GetOrders($params);
 			$neteven_orders = (array)$getOrdersResponse->GetOrdersResult->MarketPlaceOrder;
 			
-			Configuration::updateValue('NETEVEN_CONFIGURATION_OK', true);
+			Configuration::updateValue('NQGATEWAYNETEVEN_CONFIGURATION_OK', true);
 		}
 		catch (Exception $e)
 		{
