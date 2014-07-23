@@ -41,7 +41,7 @@ class PrestaFraud extends Module
 	{
 		$this->name = 'prestafraud';
 	 	$this->tab = 'payment_security';
-		$this->version = '1.1.1';
+		$this->version = '1.1.2';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->module_key = '755a646c90363062eacab8fa7c047605';
@@ -418,7 +418,10 @@ class PrestaFraud extends Module
 
 		$carrier_infos->addChild('type', $carriers_type[$carrier->id]);
 		if ($this->_pushDatas($root->asXml()) !== false)
+		{
+			Configuration::updateValue('PRESTAFRAUD_CONFIGURATION_OK', true);
 			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'prestafraud_orders (id_order) VALUES('.(int)$params['order']->id.')');
+		}
 		return true;
 	}
 	
