@@ -39,7 +39,7 @@ class PayULatam extends PaymentModule
 	{
 		$this->name = 'payulatam';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.4';
+		$this->version = '1.2.5';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -349,7 +349,7 @@ class PayULatam extends PaymentModule
 						else if ($statePol == 4)
 						{
 							$order->setCurrentState((int)Configuration::get('PS_OS_PAYMENT'));
-							Configuration::updateValue('PAYU_CONFIGURATION_OK', true);
+							Configuration::updateValue('PAYULATAM_CONFIGURATION_OK', true);
 						}
 						else
 						{
