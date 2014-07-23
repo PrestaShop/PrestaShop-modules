@@ -33,7 +33,7 @@ class Prestastats extends Module
 	{
 		$this->name = 'prestastats';
 		$this->tab = 'analytics_stats';
-		$this->version = '2.1.1';
+		$this->version = '2.1.2';
 		$this->author = 'CDL Software Ltd.';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -148,7 +148,10 @@ class Prestastats extends Module
 		}
 
 		if ($this->verifyConfiguration())
+		{
 			Configuration::updateValue('PS_PRESTASTATS_CONFIGURED', 1);
+			Configuration::updateValue('PRESTASTATS_CONFIGURATION_OK', true);
+		}
 		elseif (isset($api))
 		{
 			Configuration::updateValue('PS_PRESTASTATS_CONFIGURED', 0);
