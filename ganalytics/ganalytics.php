@@ -34,7 +34,7 @@ class GAnalytics extends Module
 	{
 		$this->name = 'ganalytics';
 		$this->tab = 'analytics_stats';
-		$this->version = '1.8.1';
+		$this->version = '1.8.2';
 		$this->author = 'PrestaShop';
 		$this->displayName = 'Google Analytics';
 		$this->module_key = 'fd2aaefea84ac1bb512e6f1878d990b8';
@@ -60,6 +60,11 @@ class GAnalytics extends Module
 		$output = '<h2>Google Analytics</h2>';
 		if (Tools::isSubmit('submitGAnalytics'))
 		{
+			if (in_array(Tools::getValue('ganalytics_id'), array('UA-1234567-1', 'UA-XXXXXXX-X')) == false)
+				Configuration::updateValue('GANALYTICS_CONFIGURATION_OK', true);
+			else
+				Configuration::deleteByName('GANALYTICS_CONFIGURATION_OK');
+			
 			Configuration::updateValue('GANALYTICS_ID', Tools::getValue('ganalytics_id'));
 			Configuration::updateValue('UGANALYTICS', Tools::getValue('universal_analytics'));
 			$output .= '
