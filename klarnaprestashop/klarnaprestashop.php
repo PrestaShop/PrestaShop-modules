@@ -64,7 +64,7 @@ class KlarnaPrestaShop extends PaymentModule
 		$this->name = 'klarnaprestashop';
 		$this->moduleName = 'klarnaprestashop';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.8';
+		$this->version = '1.7.9';
 		$this->author = 'PrestaShop';
 
 		$this->limited_countries = array('se', 'no', 'fi', 'dk', 'de', 'nl');
@@ -489,6 +489,7 @@ class KlarnaPrestaShop extends PaymentModule
 								StockAvailable::setProductOutOfStock((int)$productInvoicefee->id, true, null, 0);
 						}
 						Configuration::updateValue('KLARNA_INV_FEE_ID_'.$country['name'], $productInvoicefee->id);
+						Configuration::updateValue('KLARNAPRESTASHOP_CONFIGURATION_OK', true);
 						$this->_postValidations[] = $this->l('Your account has been updated to be used in ').$country['name'];
 					}
 					$error = false;
