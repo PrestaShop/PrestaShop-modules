@@ -23,7 +23,7 @@ class GoInterpay extends PaymentModule
 	{	
 		$this->name = 'gointerpay';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.8';
+		$this->version = '1.7.9';
 		$this->author = 'PrestaShop';
 
 		parent::__construct();
@@ -1247,6 +1247,7 @@ $env[0][2] = 'test';
 
 		if ($result['status'] == 'Pending')
 		{
+			Configuration::updateValue('GOINTERPAY_CONFIGURATION_OK', true);
 			$this->context->cart->id = (int)$result['cartId'];
 			Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'gointerpay_order_id` SET `status` = \'Pending\' WHERE `id_cart` = '.(int)$cart->id);
 

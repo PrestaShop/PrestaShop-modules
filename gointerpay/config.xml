@@ -2,7 +2,7 @@
 <module>
 	<name>gointerpay</name>
 	<displayName><![CDATA[GoInterpay]]></displayName>
-	<version><![CDATA[1.7.8]]></version>
+	<version><![CDATA[1.7.9]]></version>
 	<description><![CDATA[GoInterpay is the easiest way for merchants to sell and ship globally.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
