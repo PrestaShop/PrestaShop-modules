@@ -24,5 +24,5 @@
 *}
 <div id="widget">
 	<a target="_blank" href="http://logi118.xiti.com/go.url?xts=487123&xtor=AD-1-[{$background|escape:'htmlall'}]---[{$url_site|escape:'url'}]--[{$nom_site|escape:'htmlall'}]&url=http://www.fia-net.com/annuaire/{$siteid|intval}/fiche.html"><img height="70" border="0" width="160" title="{l s='See the opinions and comments on FIA-NET.com' mod='fianetsceau'}" alt="{l s='FIA-NET evaluation' mod='fianetsceau'}" src="http://static.fia-net.com/widgets{if $shape eq 'squared'}2{/if}/{$background|escape:'htmlall'}/{$siteid|intval}.png"> </a>
-	<script type="text/javascript"> xt_imgpub = new Image(); xtdmedpub = new Date(); xt_imgpub.src = 'http://logi118.xiti.com/go.url?xts=487123&xto=AD-1-[{$background|escape:'htmlall'}]---[{$url_site|escape:'url'}]--[{$nom_site|escape:'htmlall'}]&type=ad&hl=' + xtdmedpub.getHours() + 'x' + xtdmedpub.getMinutes() + 'x' + xtdmedpub.getSeconds(); </script>
+	<script type="text/javascript"> xt_imgpub = new Image(); xtdmedpub = new Date(); xt_imgpub.src = 'http://logi118.xiti.com/hit.xiti?xts=487123&xto=AD-1-[{$background|escape:'htmlall'}]---[{$url_site|escape:'url'}]--[{$nom_site|escape:'htmlall'}]&type=ad&hl=' + xtdmedpub.getHours() + 'x' + xtdmedpub.getMinutes() + 'x' + xtdmedpub.getSeconds(); </script>
 </div>
