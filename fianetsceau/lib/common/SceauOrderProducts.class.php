@@ -62,4 +62,13 @@ class SceauOrderProducts extends SceauXMLElement
 
 		return $product;
 	}
+	/**
+	 * create <urlwebservice>
+	 * 
+	 * @param string $url
+	 */
+	public function createUrlwebservice($url)
+	{
+		return $this->createChild('urlwebservice', $url);
+	}
 }
