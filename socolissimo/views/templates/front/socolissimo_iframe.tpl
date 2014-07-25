@@ -76,6 +76,10 @@
             $('input.delivery_option_radio').each(function() {
                 if($(this).val() == soCarrierId+',') {
                  $(this).next().children().children().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
+		// 1.6 themes
+		if($(this).next().children().children().find('div.delivery_option_price').length == 0)
+		 $(this).parent().parent().parent().parent().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
+
                 }
             });
         }
