@@ -417,11 +417,15 @@ class FianetSceau extends Module
 	const SCEAU_ORDER_TABLE_NAME = 'fianetsceau_order';
 	const SCEAU_STATE_TABLE_NAME = 'fianetsceau_state';
 	const SCEAU_CATEGORY_TABLE_NAME = 'fianetsceau_category';
+	const SCEAU_PRODUCT_COMMENTS_TABLE_NAME = 'fianetsceau_product_comments';
+	const SCEAU_COMMENTS_TABLE_NAME = 'fianetsceau_comments';
+	const SCEAU_MAX_STAR = 5;
+	const SCEAU_MAX_COMMENTS_PER_PAGE = 4;
 
 	public function __construct()
 	{
 		$this->name = 'fianetsceau';
-		$this->version = '2.7';
+		$this->version = '2.8';
 		$this->tab = 'payment_security';
 		$this->author = 'Fia-Net';
 		$this->displayName = $this->l('Fia-Net - Sceau de Confiance');
@@ -446,7 +450,6 @@ class FianetSceau extends Module
 
 		parent::__construct();
 
-
 		//check Sceau update
 		$this->checkSceauUpdate();
 	}
@@ -465,6 +468,8 @@ class FianetSceau extends Module
 		$sql = str_replace('SCEAU_ORDER_TABLE_NAME', self::SCEAU_ORDER_TABLE_NAME, $sql);
 		$sql = str_replace('SCEAU_STATE_TABLE_NAME', self::SCEAU_STATE_TABLE_NAME, $sql);
 		$sql = str_replace('SCEAU_CATEGORY_TABLE_NAME', self::SCEAU_CATEGORY_TABLE_NAME, $sql);
+		$sql = str_replace('SCEAU_COMMENTS_TABLE_NAME', self::SCEAU_COMMENTS_TABLE_NAME, $sql);
+		$sql = str_replace('SCEAU_PRODUCT_COMMENTS_TABLE_NAME', self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME, $sql);
 		$queries = preg_split("/;\s*[\r\n]+/", $sql);
 		foreach ($queries as $query)
 			if (!Db::getInstance()->Execute(trim($query)))
@@ -503,7 +508,6 @@ class FianetSceau extends Module
 		//Hook register
 		return (parent::install()
 			&& $this->registerHook('newOrder')
-			&& $this->registerHook('paymentConfirm')
 			&& $this->registerHook('adminOrder')
 			&& $this->registerHook('backOfficeHeader')
 			&& $this->registerHook('top')
@@ -512,10 +516,11 @@ class FianetSceau extends Module
 			&& $this->registerHook('rightColumn')
 			&& $this->registerHook('postUpdateOrderStatus')
 			&& $this->registerHook('paymentTop')
+			&& $this->registerHook('header')
+			&& $this->registerHook('productfooter')
 
 			);
 	}
-
 	public function uninstall()
 	{
 		if (!parent::uninstall())
@@ -550,14 +555,13 @@ class FianetSceau extends Module
 
 		return $html;
 	}
-
 	/**
-	 * insert new order into fianetsceau_order table with fields in parameters
+	 * insert info into fianetsceau table with fields in parameters
 	 *
 	 * @param array $fields
 	 * @return boolean
 	 */
-	private function insertOrder(array $fields)
+	public function insertDBElement(array $fields, $table_name)
 	{
 		$fieldnames = '';
 		$fieldvalues = '';
@@ -570,13 +574,13 @@ class FianetSceau extends Module
 		$fieldvalues = Tools::substr($fieldvalues, 0, -1);
 		$fieldnames = Tools::substr($fieldnames, 0, -1);
 
-		$sql = 'INSERT INTO `'._DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME.'` ('.$fieldnames.') VALUES ('.$fieldvalues.')';
+		$sql = 'INSERT INTO `'.$table_name.'` ('.$fieldnames.') VALUES ('.$fieldvalues.')';
 
 		$inserted = Db::getInstance()->execute($sql);
 		if (!$inserted)
 		{
-			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion $id_order failed : '.Db::getInstance()->getMsgError());
-			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion $id_order failed : '.$sql);
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion failed : '.Db::getInstance()->getMsgError());
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Insertion failed : '.$sql);
 			return false;
 		}
 
@@ -703,22 +707,25 @@ class FianetSceau extends Module
 			$id_shop = (int)$order->id_shop;
 			$fianetsceau = new Sceau($id_shop);
 		}
-
+		$token = Tools::getAdminToken($fianetsceau->getSiteid().$fianetsceau->getAuthkey().$fianetsceau->getLogin());
 		$lang = Language::getIsoById($order->id_lang) == 'fr' ? 'fr' : 'uk';
 
 		$sceaucontrol = new SceauControl();
 
 		$sceaucontrol->createCustomer('', $civility, $customer->lastname, $customer->firstname, Tools::strtolower($customer->email));
 
-		$sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order),
+		$order_details = $sceaucontrol->createOrderDetails($id_order, $fianetsceau->getSiteid(), $order->total_paid, 'EUR', $this->getCustomerIP($id_order),
 			$order->date_add, $lang);
 
 		//get default FIA-NET category
 		$default_product_type = $this->getFianetSubCategoryId(0, $id_shop);
 
 		$products = $order->getProducts();
+		$link = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'],
+				ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/fianetsceau/commentsmanager.php?token='.$token;
 
-		$productsceau = $sceaucontrol->createOrderProducts();
+		$productsceau = $order_details->createOrderProducts();
+		$productsceau->createUrlwebservice($link);
 
 		foreach ($products as $product)
 		{
@@ -736,7 +743,7 @@ class FianetSceau extends Module
 			else
 				$codeean = null;
 
-			$reference = (isset($prod->reference) && !empty($prod->reference)) ? $prod->reference : $product['product_id'];
+			$reference = $product['product_id'];
 
 			if ($product_type)//if a FIA-NET category is set: the type attribute takes the product FIA-NET type value
 				$fianet_type = $product_type;
@@ -753,14 +760,16 @@ class FianetSceau extends Module
 				else
 					$image_url = null;
 			}
-			$productsceau->createProduct($codeean, str_replace("'", '', $reference), $fianet_type, str_replace("'", '', $product['product_name']),
+			$image_url = null;
+			$product_name = str_replace("'", '', $product['product_name']);
+			$product_name = str_replace('&', '', $product_name);
+			$productsceau->createProduct($codeean, $reference, $fianet_type, $product_name,
 				(string)$product['product_price_wt'], $image_url);
 		}
 
 		$sceaucontrol->createPayment($this->getPaymentFianetType($id_order));
 
 		$fianetsceau->addCrypt($sceaucontrol);
-
 		$result = $fianetsceau->sendSendrating($sceaucontrol);
 
 		if (isXMLstringSceau($result))
@@ -772,21 +781,22 @@ class FianetSceau extends Module
 				//update fianetsceau_state 2:sent
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '2'));
 				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' sended');
+				if (Configuration::get('FIANETSCEAU_CONFIGURATION_OK') === false)
+					Configuration::updateValue('FIANETSCEAU_CONFIGURATION_OK', 1);
 				return true;
 			}
 			else
 			{
 				//update fianetsceau_state 3:error
 				$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
+				SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML send error');
 				return false;
 			}
 		}
 		else
 		{
-			//update fianetsceau_state 3:error
-			$this->updateOrder($id_order, array('id_fianetsceau_state' => '3'));
-			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML send error : '.$resxml->getDetail());
+			//result is empty
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Order '.$id_order.' XML result is empty');
 			return false;
 		}
 	}
@@ -799,17 +809,16 @@ class FianetSceau extends Module
 	public function hookPostUpdateOrderStatus($params)
 	{
 		$order_state = $params['newOrderStatus'];
-
 		$status_founded = strpos($order_state->name, 'score vert');
-		if ($status_founded === false)
-			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Statut de paiement non reconnu : '.$order_state->name);
-		else
+		if ($status_founded != false || $order_state->id == 2)
 		{
 			//send xml to FIA-NET when Kwixo payment is confirmed
 			$id_order = $params['id_order'];
 			$this->sendXML((int)$id_order);
 			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $order_state->name);
 		}
+		else
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Statut de paiement non reconnu pour envoi : '.$order_state->name);
 	}
 
 	/**
@@ -821,6 +830,7 @@ class FianetSceau extends Module
 	 */
 	public function hookAdminOrder($params)
 	{
+		//$this->sendXML($params['id_order']);
 		//check if show status option is enabled in module settings
 		if (!Configuration::get('FIANETSCEAU_SHOW_STATUS_ORDER'))
 			return false;
@@ -878,10 +888,10 @@ class FianetSceau extends Module
 	{
 		$id_cart = $params['cart']->id;
 		if ($this->checkCartID($id_cart) == false)
-			$this->insertOrder(array('id_cart' => (int)$id_cart,
+			$this->insertDBElement(array('id_cart' => (int)$id_cart,
 				'id_fianetsceau_state' => '0',
 				'customer_ip_address' => Tools::getRemoteAddr(),
-				'date' => date('Y-m-d H:i:s')));
+				'date' => date('Y-m-d H:i:s')), _DB_PREFIX_.self::SCEAU_ORDER_TABLE_NAME);
 	}
 	/**
 	 * Insert a new order on id_fianetsceau_state table when a new order arrives
@@ -899,19 +909,6 @@ class FianetSceau extends Module
 				'customer_ip_address' => Tools::getRemoteAddr(),
 				'date' => $order->date_add), true);
 	}
-
-	/**
-	 * Send xml data to FIA-NET when payment's order was confirmed
-	 * 
-	 * @param type Array 
-	 */
-	public function hookpaymentConfirm($params)
-	{
-		//send xml to FIA-NET when payment is confirmed
-		$id_order = $params['id_order'];
-		$this->sendXML((int)$id_order);
-	}
-
 	/**
 	 * Load logo or/and widget tpl with top position
 	 * 
@@ -1099,8 +1096,8 @@ class FianetSceau extends Module
 			$this->_errors[] = $this->l('You must configure a valid default product type');
 
 		//check logo and widget position
-		if (Tools::getValue('fianetsceau_logo_position') == 'nothing' && Tools::getValue('fianetsceau_widget_position') == 'nothing')
-			$this->_errors[] = $this->l('You must select a logo or a widget position');
+		/*if (Tools::getValue('fianetsceau_logo_position') == 'nothing' && Tools::getValue('fianetsceau_widget_position') == 'nothing')
+			$this->_errors[] = $this->l('You must select a logo or a widget position');*/
 
 		//payment means check
 		$shop_payments = $this->loadPaymentMethods();
@@ -1510,6 +1507,296 @@ class FianetSceau extends Module
 				if ($this->install())
 					SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Sceau module installed');
 			}
+		}
+	}
+	/**
+	 * Return html notation
+	 * 
+	 */
+	public function getStar($nb_star, $max_star)
+	{
+		$html = '';
+		$entier = $this->getDecimalEntierNote($nb_star, 'entier');
+		$decimal = $this->getDecimalEntierNote($nb_star, 'decimal');
+		if (is_null($entier))
+			$note = $nb_star;
+		else
+			$note = $entier;
+		for ($i = 0; $i < $note; $i++)
+			$html .= "<img src='".__PS_BASE_URI__.'modules/'.$this->name.'/img/star_on.png'."' alt='' />";
+		if (!is_null($decimal))
+		{
+			if (in_array($decimal, array('4', '5', '6')))
+			{
+				$html .= "<img src='".__PS_BASE_URI__.'modules/'.$this->name.'/img/star_half.png'."' alt='' />";
+				$complement = $max_star - ($note + 1);
+			}
+			elseif ($decimal > 6)
+			{
+				$html .= "<img src='".__PS_BASE_URI__.'modules/'.$this->name.'/img/star_on.png'."' alt='' />";
+				$complement = $max_star - ($note + 1);
+			}
+			else
+				$complement = $max_star - $note;
+		}
+		else
+			$complement = $max_star - $note;
+		for ($i = 0; $i < $complement; $i++)
+			$html .= "<img src='".__PS_BASE_URI__.'modules/'.$this->name.'/img/star_off.png'."' alt='' />";
+		return $html;
+	}
+	/**
+	 * Load css and javascript files
+	 * 
+	 * @param type $params
+	 */
+	public function hookHeader()
+	{
+		if (_PS_VERSION_ < '1.5')
+			Tools::addCSS($this->_path.'/css/fianetsceau.css', 'all');
+		else
+			$this->context->controller->addCSS($this->_path.'/css/fianetsceau.css', 'all');
+	}
+	public function hookProductFooter($params)
+	{
+		$product_comment = $this->getFianetProductComments($params['product']->id, 0, FianetSceau::SCEAU_MAX_COMMENTS_PER_PAGE);
+		if ($product_comment == false)
+			return false;
+		$size_array = count($product_comment);
+		$product_info = $this->getFianetProductNoteNbComments($params['product']->id);
+		$global_note = $product_info['global_note'];
+		$entier_note = $product_info['entier_note'];
+		$decimal_note = $product_info['decimal_note'];
+		$nb_comments = $this->getFianetProductNbComments($params['product']->id);
+		$view_global_note = $this->getStar($global_note, FianetSceau::SCEAU_MAX_STAR);
+		$nb_total_pages = Tools::ceilf($nb_comments / FianetSceau::SCEAU_MAX_COMMENTS_PER_PAGE);
+		$fianetsceau = new Sceau();
+		$token = Tools::getAdminToken($fianetsceau->getSiteid().$fianetsceau->getAuthkey().$fianetsceau->getLogin());
+		$current_limit_min = 0;
+		$logo_path = __PS_BASE_URI__.'modules/'.$this->name.'/img/logo_150.png';
+		$script_path = __PS_BASE_URI__.'modules/'.$this->name.'/commentsmanager.php';
+		$this->smarty->assign(array(
+			'logo_path' => $logo_path,
+			'script_path' => $script_path,
+			'product_comment' => $product_comment,
+			'global_note' => $global_note,
+			'nb_comments' => $nb_comments,
+			'view_global_note' => $view_global_note,
+			'nb_total_pages' => $nb_total_pages,
+			'token' => $token,
+			'current_limit_min' => $current_limit_min,
+			'nb_max_comments_per_page' => FianetSceau::SCEAU_MAX_COMMENTS_PER_PAGE,
+			'product_id' => $params['product']->id,
+			'size_array' => $size_array,
+			'img_loader' => __PS_BASE_URI__.'modules/'.$this->name.'/img/fianetsceauloader.gif',
+			'entier_note' => $entier_note,
+			'decimal_note' => $decimal_note,
+		));
+		return $this->display(__FILE__, '/views/templates/front/fianetsceau_productcomments.tpl');
+	}
+	/**
+	 * return all Fianet comments of the product
+	 *  
+	 * @param type $id_product
+	 * @param type $limit_start
+	 * @param type $limit_end
+	 * @return array 
+	 */
+	public function getFianetProductComments($id_product, $limit_start = null, $limit_end = null)
+	{
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME.'` c 
+			JOIN `'._DB_PREFIX_.self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME."` pc 
+				ON c.id_product = pc.id_product 
+				WHERE c.`id_product` = '".(int)$id_product."' ORDER BY date DESC";
+		if (!is_null($limit_start) && !is_null($limit_end))
+			$sql .= ' LIMIT '.$limit_start.' ,'.$limit_end;
+		$query_result = Db::getInstance()->executeS($sql);
+		if ($query_result != null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Comments founded for product : '.$id_product);
+			$product_comments = array();
+			foreach ($query_result as $value)
+			{
+				$product_comments[$value['id_comment']] = array(
+				'id_product' => $value['id_product'],
+				'note' => $value['note'],
+				'comment' => $value['comment'],
+				'firstname' => $value['firstname'],
+				'name' => $value['name'],
+				'state' => $value['state'],
+				'date' => date('d/m/Y à H:m', strtotime($value['date'])),
+				'global_note' => $value['global_note'],
+				'nb_comments' => $value['nb_comments'],
+				'view_note' => $this->getStar($value['note'], FianetSceau::SCEAU_MAX_STAR),
+				'view_global_note' => $this->getStar($value['global_note'], FianetSceau::SCEAU_MAX_STAR));
+			}
+			return $product_comments;
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'No comments founded for product : '.$id_product);
+			return false;
+		}
+	}
+	/**
+	 * return note and comment number of product
+	 * 
+	 * @param type $id_product
+	 * @return type 
+	 */
+	public function getFianetProductNoteNbComments($id_product)
+	{
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME."` c 
+			WHERE `id_product` = '".(int)$id_product."'";
+		$product_info = array();
+		$query_result = Db::getInstance()->executeS($sql);
+		if ($query_result != null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Note and comments founded for product : '.$id_product);
+			foreach ($query_result as $value)
+			{
+				$product_info['global_note'] = $value['global_note'];
+				$product_info['nb_comments'] = $value['nb_comments'];
+				$product_info['entier_note'] = $this->getDecimalEntierNote($value['global_note'], 'entier');
+				$product_info['decimal_note'] = $this->getDecimalEntierNote($value['global_note'], 'decimal');
+			}
+			return $product_info;
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'No note and comments founded for product : '.$id_product);
+			return false;
+		}
+	}
+	/**
+	 * return entier part or decimal part of the note
+	 * 
+	 * @param type $note
+	 * @param type $part
+	 * @return type 
+	 */
+	public function getDecimalEntierNote($note, $part)
+	{
+		if (strstr($note, '.'))
+		{
+			list($entier, $decimal) = explode('.', $note);
+			if ($part == 'entier')
+				if (!is_null($entier))
+					return $entier;
+				else
+					return null;
+			if ($part == 'decimal')
+				if (!is_null($decimal))
+					return $decimal;
+				else
+					return null;
+		}
+		else
+			return null;
+	}
+	/**
+	 * return Fianet product comments number
+	 * 
+	 * @param type $id_product
+	 * @return nb comment calculated from DB 
+	 */
+	public function getFianetProductNbComments($id_product)
+	{
+		$sql = 'SELECT count(*) nb_comments FROM `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME."`
+			WHERE `id_product` = '".(int)$id_product."'";
+		$nb_comments = Db::getInstance()->getValue($sql);
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $nb_comments.' comments founded for product : '.$id_product);
+		return $nb_comments;
+	}
+	/**
+	 * return average note product
+	 * 
+	 * @param type $id_product
+	 * @return average calculated from DB 
+	 */
+	public function getFianetProductAverageNote($id_product)
+	{
+		$sql = 'SELECT AVG(note) average FROM `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME."`
+			WHERE `id_product` = '".(int)$id_product."'";
+		$average = Db::getInstance()->getValue($sql);
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, ' Average note for product '.$id_product.' : '.$average);
+		return Tools::ps_round($average, 2);
+	}
+	/**
+	 * delete Fianet comment on database
+	 * 
+	 * @param type $id_comment
+	 * @return bool 
+	 */
+	public function deleteFianetComments($id_comment)
+	{
+		$sql = 'DELETE FROM `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME."`
+			WHERE `id_comment` = '".(int)$id_comment."'";
+		$query_result = Db::getInstance()->executeS($sql);
+		if ($query_result != null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $id_comment.' deleted');
+			return true;
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $id_comment.' not deleted : '.Db::getInstance()->getMsgError());
+			return false;
+		}
+	}
+	/**
+	 * update fianetsceau_order table with fields in parameters
+	 * 
+	 * @param int $id_order
+	 * @param array $fields
+	 * @return boolean 
+	 */
+	public function updateFianetComments($id, array $fields, $table_name)
+	{
+		$set_string = '';
+		foreach ($fields as $fieldname => $fieldvalue)
+			$set_string .= '`'.$this->bqSQL($fieldname)."` = '".$this->bqSQL($fieldvalue)."', ";
+		$set_string = Tools::substr($set_string, 0, '-2');
+		if ($table_name == self::SCEAU_COMMENTS_TABLE_NAME)
+			$sql = 'UPDATE `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME.'` SET '.$set_string.' WHERE `id_comment` = '.(int)$id;
+		if ($table_name == self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME)
+			$sql = 'UPDATE `'._DB_PREFIX_.self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME.'` SET '.$set_string.' WHERE `id_product` = '.(int)$id;
+		SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, $sql);
+		$updated = Db::getInstance()->execute($sql);
+		if (!$updated)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'Update $id failed : '.Db::getInstance()->getMsgError());
+			return false;
+		}
+		return true;
+	}
+	/**
+	 *Check if fianet comment or id_product exists on database
+	 * 
+	 * @param type $id
+	 * @param type $table_name
+	 * @return bool
+	 * 
+	 * 
+	 */
+	public function checkFianetComments($id, $table_name)
+	{
+		if ($table_name == self::SCEAU_COMMENTS_TABLE_NAME)
+			$sql = 'SELECT `id_comment` FROM `'._DB_PREFIX_.self::SCEAU_COMMENTS_TABLE_NAME."` WHERE `id_comment` = '".(int)$id."'";
+		if ($table_name == self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME)
+			$sql = 'SELECT `id_product` FROM `'._DB_PREFIX_.self::SCEAU_PRODUCT_COMMENTS_TABLE_NAME."` WHERE `id_product` = '".(int)$id."'";
+
+		$query_result = Db::getInstance()->getRow($sql);
+
+		if ($query_result != null)
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'id found :'.$id);
+			return true;
+		}
+		else
+		{
+			SceauLogger::insertLogSceau(__METHOD__.' : '.__LINE__, 'id not found, id added :'.$id);
+			return false;
 		}
 	}
 
