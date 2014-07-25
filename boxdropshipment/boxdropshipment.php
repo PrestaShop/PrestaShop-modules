@@ -33,7 +33,7 @@
 	 *
 	 * @author  sweber <sw@boxdrop.com>
 	 * @package BoxdropShipment
-	 * @version 1.0.1
+	 * @version 1.0.3
 	 */
 	class BoxdropShipment extends CarrierModule
 	{
@@ -84,7 +84,7 @@
 		{
 			$this->name = 'boxdropshipment';
 			$this->tab = 'shipping_logistics';
-			$this->version = '1.0.2';
+			$this->version = '1.0.3';
 			$this->author = 'boxdrop Group AG';
 			$this->need_instance = 0;
 			$this->dependencies = array('blockcart');
