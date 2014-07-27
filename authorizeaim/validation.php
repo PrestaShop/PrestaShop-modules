@@ -113,7 +113,7 @@ if (!isset($response[7]) || !isset($response[3]) || !isset($response[9]))
 }
 
 $message = $response[3];
-$payment_method = 'Authorize.net AIM';
+$payment_method = 'Authorize.net AIM (Advanced Integration Method)';
 
 switch ($response[0]) // Response code
 {
@@ -152,5 +152,6 @@ switch ($response[0]) // Response code
 $url = 'index.php?controller=order-confirmation&';
 if (_PS_VERSION_ < '1.5')
 	$url = 'order-confirmation.php?';
-
-Tools::redirect($url.'id_module='.(int)$authorizeaim->id.'&id_cart='.(int)$cart->id.'&key='.$customer->secure_key);
+	
+$auth_order = new Order($authorizeaim->currentOrder);
+Tools::redirect($url.'id_module='.(int)$authorizeaim->id.'&id_cart='.(int)$cart->id.'&key='.$auth_order->secure_key);
