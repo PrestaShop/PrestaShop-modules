@@ -28,6 +28,7 @@ class Pathfindsendinblue
 {
 	public function pathdisp()
 	{
-		return _PS_BASE_URL_.__PS_BASE_URI__.'modules/';
+		$base = Tools::getHttpHost(true);
+		return $base.__PS_BASE_URI__.'modules/';
 	}
 }

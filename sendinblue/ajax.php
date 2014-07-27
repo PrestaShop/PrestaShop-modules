@@ -30,6 +30,7 @@ if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME'
 	die('Error: Invalid Token');
 
 Configuration::updateValue('Sendin_Tracking_Status', Tools::getValue('script'));
+Configuration::updateValue('Sendin_order_tracking_Status', 0);
 
 echo 'done';
 exit;

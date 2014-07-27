@@ -24,17 +24,10 @@
 * International Registered Trademark & Property of PrestaShop SA
 */
 
-include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/sendinblue.php');
-
-if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
-	die('Error: Invalid Token');
-
-$sendin = new Sendinblue();
-$responce_arr = array('result' => false);
-
-if ($sendin->sendTestSmsCampaign(Tools::getValue('sender'), Tools::getValue('message'), Tools::getValue('number')))
-	$responce_arr = array('result' => true);
-
-echo Tools::jsonEncode($responce_arr);
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+header('Location: ../');
+exit;

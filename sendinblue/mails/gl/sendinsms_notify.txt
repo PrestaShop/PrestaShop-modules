@@ -1,0 +1,3 @@
+This email is sent to inform you that you don't have enough credits to send SMS from your PrestaShop wesbite {site_name}.
+Actually, you have {present_credit} credits sms.
+Regards,SendinBlue Team

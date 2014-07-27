@@ -25,16 +25,18 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
-include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-$sendin = new Sendinblue();
-$responce_arr = array('result' => false);
+if (Tools::getValue('proc_success') != '')
+{
+	$handle = fopen(_PS_MODULE_DIR_.'sendinblue/csv/ImportOldOrdersToSendinblue.csv', 'w');
+	$key_value = array();
+	$key_value[] = '';
+	fputcsv($handle, $key_value, '');
+	fclose($handle);
+}
 
-if ($sendin->sendTestSmsCampaign(Tools::getValue('sender'), Tools::getValue('message'), Tools::getValue('number')))
-	$responce_arr = array('result' => true);
-
-echo Tools::jsonEncode($responce_arr);
+echo 'done';
+exit;

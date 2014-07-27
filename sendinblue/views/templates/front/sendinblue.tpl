@@ -49,7 +49,7 @@
 			{/if}
 			
 			<p style="padding-top:10px;">
-                                <input type="hidden" value="0" name="action">
+                                            
 				<input type="submit" value="ok" class="button_mini" name="submitNewsletter" />
 			</p>
 		</form>

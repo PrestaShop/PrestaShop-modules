@@ -25,10 +25,8 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
 	die('Error: Invalid Token');
 
-$sendin = new Sendinblue();
 Configuration::updateValue('Sendin_Subscribe_Setting', Tools::getValue('managesubscribe'));
