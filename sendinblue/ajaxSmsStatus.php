@@ -25,16 +25,10 @@
 */
 
 include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/../../init.php');
 include(dirname(__FILE__).'/sendinblue.php');
 
 if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME')))
-	die('Error: Invalid Token');
+die('Error: Invalid Token');
 
 $sendin = new Sendinblue();
-$responce_arr = array('result' => false);
-
-if ($sendin->sendTestSmsCampaign(Tools::getValue('sender'), Tools::getValue('message'), Tools::getValue('number')))
-	$responce_arr = array('result' => true);
-
-echo Tools::jsonEncode($responce_arr);
+$sendin->updateSmsSendinStatus();

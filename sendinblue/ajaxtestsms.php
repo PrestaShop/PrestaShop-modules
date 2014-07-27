@@ -32,4 +32,9 @@ if (Tools::getValue('token') != Tools::encrypt(Configuration::get('PS_SHOP_NAME'
 	die('Error: Invalid Token');
 
 $sendin = new Sendinblue();
-$sendin->sendOrderTestSms(Tools::getValue('sender'), Tools::getValue('message'), Tools::getValue('number'));
+$responce_arr = array('result' => false);
+
+if ($sendin->sendOrderTestSms(Tools::getValue('sender'), Tools::getValue('message'), Tools::getValue('number')))
+	$responce_arr = array('result' => true);
+
+echo Tools::jsonEncode($responce_arr);
