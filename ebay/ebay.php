@@ -1720,7 +1720,7 @@ class Ebay extends Module
 				}
 				if (isset($ebay_categories[$id_category]))
 					$data = array(
-						'id_ebay_profile' => $id_ebay_profile,
+						'id_ebay_profile' => (int)$id_ebay_profile,
 						'id_country' => 8,
 						'id_ebay_category' => (int)$ebay_categories[$id_category],
 						'id_category' => (int)$id_category,
@@ -1805,12 +1805,12 @@ class Ebay extends Module
 				$data = array_combine(array_values($field_names), array(null, null, null, null));
 
 				if ($data_type)
-					$data[$field_names[$data_type]] = $value;
+					$data[$field_names[$data_type]] = pSQL($value);
 
 				if (version_compare(_PS_VERSION_, '1.5', '>'))
-					Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.$specific_id);
+					Db::getInstance()->update('ebay_category_specific', $data, 'id_ebay_category_specific = '.(int)$specific_id);
 				else
-					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.$specific_id);
+					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_specific', $data, 'UPDATE', 'id_ebay_category_specific = '.(int)$specific_id);
 			}
 		}
 
@@ -2261,7 +2261,7 @@ class Ebay extends Module
 			{
 				EbayCategoryConfiguration::updateByIdProfile($this->ebay_profile->id, array('sync' => 0));
 				foreach (Tools::getValue('category') as $id_category)
-					EbayCategoryConfiguration::updateByIdProfileAndIdCategory($this->ebay_profile->id, $id_category, array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 1));
+					EbayCategoryConfiguration::updateByIdProfileAndIdCategory((int)$this->ebay_profile->id, $id_category, array('id_ebay_profile' => $this->ebay_profile->id, 'sync' => 1));
 			}
 		}
 	}
@@ -2540,7 +2540,7 @@ class Ebay extends Module
 
 		$sql_get_cat_non_multi_sku = 'SELECT * FROM '._DB_PREFIX_.'ebay_category_configuration AS ecc
 			INNER JOIN '._DB_PREFIX_.'ebay_category AS ec ON ecc.id_ebay_category = ec.id_ebay_category
-			WHERE ecc.id_ebay_profile = '.$this->ebay_profile->id;
+			WHERE ecc.id_ebay_profile = '.(int)$this->ebay_profile->id;
 
 		foreach (Db::getInstance()->ExecuteS($sql_get_cat_non_multi_sku) as $cat)
 		{
@@ -2675,7 +2675,7 @@ class Ebay extends Module
 
 		// pictures product
 		$product = new Product($product['id_product'], false, $id_lang);
-		$pictures = EbaySynchronizer::_getPictures($product, $id_lang, $this->context, array());
+		$pictures = EbaySynchronizer::_getPictures($product, $this->ebay_profile, $id_lang, $this->context, array(), array());
 		$data['large_pictures'] = $pictures['large'];
 		$data['medium_pictures'] = $pictures['medium'];
 

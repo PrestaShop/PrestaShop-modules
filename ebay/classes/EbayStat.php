@@ -82,10 +82,10 @@ class EbayStat
             return false;
         
         $data = array(
-          'id_ebay_profile' => $this->id_ebay_profile,
-          'version'  => $this->stats_version,
+          'id_ebay_profile' => (int)$this->id_ebay_profile,
+          'version'  => pSQL($this->stats_version),
           'data'     => pSQL(Tools::jsonEncode($this->data)),
-          'date_add' => $this->date_add  
+          'date_add' => pSQL($this->date_add), 
         );
         Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_stat', $data, 'INSERT');
     }

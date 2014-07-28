@@ -81,7 +81,7 @@ class EbayProduct
 		return Db::getInstance()->ExecuteS('SELECT ep.id_product_ref, ep.id_product
 			FROM '._DB_PREFIX_.'ebay_product AS ep
 			WHERE NOW() > DATE_ADD(ep.date_upd, INTERVAL '.(int)$not_update_for_days.' DAY)
-			LIMIT '.$limit);
+			LIMIT '.(int)$limit);
 	}
     
 	public static function insert($data)

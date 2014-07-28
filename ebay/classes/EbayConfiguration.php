@@ -60,14 +60,14 @@ class EbayConfiguration
 	{
 		return Db::getInstance()->getValue('SELECT `value` 
 			FROM `'._DB_PREFIX_.'ebay_configuration` 
-			WHERE `id_ebay_profile` = '.$id_ebay_profile.'
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.'
 			AND `name` = "'.pSQL($name).'"');
 	}
 	
 	public static function set($id_ebay_profile, $name, $value, $html = false)
 	{
 		$datas = array(
-				'id_ebay_profile' => $id_ebay_profile,
+				'id_ebay_profile' => (int)$id_ebay_profile,
 				'name'						=> pSQL($name),
 				'value'						=> pSQL($value, $html)
 			);

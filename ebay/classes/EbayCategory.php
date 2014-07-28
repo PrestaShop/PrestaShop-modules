@@ -235,7 +235,7 @@ class EbayCategory
 					'id_category_ref_parent' => pSQL($category['CategoryParentID']),
 					'id_country' => '8',
 					'level' => pSQL($category['CategoryLevel']),
-					'is_multi_sku' => isset($categories_multi_sku[$category['CategoryID']]) ? $categories_multi_sku[$category['CategoryID']] : null,
+					'is_multi_sku' => isset($categories_multi_sku[$category['CategoryID']]) ? (int)$categories_multi_sku[$category['CategoryID']] : null,
 					'name' => pSQL($category['CategoryName'])
 				), 'INSERT', '', 0, true, true);
 			}
@@ -250,7 +250,7 @@ class EbayCategory
 		foreach ($categories as $category)
 		{
 			$db->autoExecute(_DB_PREFIX_.'ebay_category', array(
-				'is_multi_sku' => isset($categories_multi_sku[$category['id_category_ref']]) ? $categories_multi_sku[$category['id_category_ref']] : null,
+				'is_multi_sku' => isset($categories_multi_sku[$category['id_category_ref']]) ? (int)$categories_multi_sku[$category['id_category_ref']] : null,
 			), 'UPDATE', '`id_category_ref` = '.(int)$category['id_category_ref'], 0, true, true);
 		}
 

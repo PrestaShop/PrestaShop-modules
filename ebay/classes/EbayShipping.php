@@ -46,7 +46,7 @@ class EbayShipping
 		if ($id_product && version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
-			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.(int)$id_product);
 			if(count($shippings_product) > 0)
 			{
 				if(array_intersect_assoc($shippings, $shippings_product))
@@ -60,7 +60,7 @@ class EbayShipping
 	public static function internationalShippingsHaveZone($shippings)
 	{
 		foreach ($shippings as $shipping) {
-			if(!Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'ebay_shipping_international_zone WHERE id_ebay_shipping = '.$shipping['id_ebay_shipping']))
+			if(!Db::getInstance()->getValue('SELECT * FROM '._DB_PREFIX_.'ebay_shipping_international_zone WHERE id_ebay_shipping = '.(int)$shipping['id_ebay_shipping']))
 				return false;
 		}
 		return true;
@@ -76,7 +76,7 @@ class EbayShipping
 		if ($id_product && version_compare(_PS_VERSION_, '1.5', '>'))
 		{
 			$shippings_product = Db::getInstance()->ExecuteS('SELECT id_carrier_reference as ps_carrier
-			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.$id_product);
+			FROM '._DB_PREFIX_.'product_carrier WHERE id_product = '.(int)$id_product);
 			if(count($shippings_product) > 0)
 			{
 				if(array_intersect_assoc($shippings, $shippings_product))

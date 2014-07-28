@@ -144,11 +144,11 @@ class EbayOrder
 			$customer->id_default_group = 1;
 			$customer->secure_key = md5(uniqid(rand(), true));
 			$customer->email = $format->formatEmail($this->email);
-			$customer->passwd = md5(pSQL(_COOKIE_KEY_.rand()));
-			$customer->last_passwd_gen = pSQL(date('Y-m-d H:i:s'));
+			$customer->passwd = md5(_COOKIE_KEY_.rand());
+			$customer->last_passwd_gen = date('Y-m-d H:i:s');
 			$customer->newsletter = 0;
 			$customer->lastname = $format->formatName(EbayOrder::_formatFamilyName($this->familyname));
-			$customer->firstname = $format->formatName(pSQL($this->firstname));
+			$customer->firstname = $format->formatName($this->firstname);
 			$customer->active = 1;
 			$customer->id_shop = (int)$ebay_profile->id_shop;
 			$customer->add();
@@ -181,12 +181,12 @@ class EbayOrder
 		$address->id_country = (int)Country::getByIso($this->country_iso_code);
 		$address->alias = 'eBay';
 		$address->lastname = $format->formatName(EbayOrder::_formatFamilyName($this->familyname));
-		$address->firstname = $format->formatName(pSQL($this->firstname));
-		$address->address1 = $format->formatAddress(pSQL($this->address1));
-		$address->address2 = $format->formatAddress(pSQL($this->address2));
-		$address->postcode = $format->formatPostCode(pSQL(str_replace('.', '', $this->postalcode)));
-		$address->city = $format->formatCityName(pSQL($this->city));
-		$address->phone = $format->formatPhoneNumber(pSQL($this->phone));
+		$address->firstname = $format->formatName($this->firstname);
+		$address->address1 = $format->formatAddress($this->address1);
+		$address->address2 = $format->formatAddress($this->address2);
+		$address->postcode = $format->formatPostCode(str_replace('.', '', $this->postalcode));
+		$address->city = $format->formatCityName($this->city);
+		$address->phone = $format->formatPhoneNumber($this->phone);
 		$address->active = 1;
 
 		if ($id_address > 0 && Validate::isLoadedObject($address))
@@ -552,15 +552,15 @@ class EbayOrder
 			{
 				if (version_compare(_PS_VERSION_, '1.5', '>'))
 					Db::getInstance()->insert('ebay_order_order', array(
-						'id_ebay_order' => $id_ebay_order,
-						'id_order'      => $id_order,
-						'id_shop'       => $id_shop
+						'id_ebay_order' => (int)$id_ebay_order,
+						'id_order'      => (int)$id_order,
+						'id_shop'       => (int)$id_shop
 					));
 				else
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_order_order', array(
-						'id_ebay_order' => $id_ebay_order,
-						'id_order'      => $id_order,
-						'id_shop'       => $id_shop
+						'id_ebay_order' => (int)$id_ebay_order,
+						'id_order'      => (int)$id_order,
+						'id_shop'       => (int)$id_shop
 					), 'INSERT');
 
 			}

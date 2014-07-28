@@ -73,7 +73,7 @@ else
 foreach ($item_specifics as &$item_specific)
 	foreach ($item_specifics_values as $value)
 		if ($item_specific['id'] == $value['specific_id'])
-			$item_specific['values'][$value['id']] = $value['value'];
+			$item_specific['values'][$value['id']] = Tools::safeOutput($value['value']);
 
 echo Tools::jsonEncode(array(
 	'specifics' => $item_specifics,

@@ -330,7 +330,7 @@ class EbaySynchronizer
 		return $tab_error;
 	}
 
-	private static function _getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration, $variations)
+	public static function _getPictures($product, $ebay_profile, $id_lang, $context, $products_configuration, $variations)
 	{
 		$pictures = array();
 		$pictures_medium = array();
@@ -582,10 +582,10 @@ class EbaySynchronizer
 		return str_replace(
 			array('{MAIN_IMAGE}', '{MEDIUM_IMAGE_1}', '{MEDIUM_IMAGE_2}', '{MEDIUM_IMAGE_3}', '{PRODUCT_PRICE}', '{PRODUCT_PRICE_DISCOUNT}'),
 			array(
-				(isset($large_pictures[0]) ? '<img src="'.$large_pictures[0].'" class="bodyMainImageProductPrestashop" />' : ''),
-				(isset($medium_pictures[1]) ? '<img src="'.$medium_pictures[1].'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
-				(isset($medium_pictures[2]) ? '<img src="'.$medium_pictures[2].'" class="bodyMediumImageProductPrestashop" />' : ''),
-				(isset($medium_pictures[3]) ? '<img src="'.$medium_pictures[3].'" class="bodyMediumImageProductPrestashop" />' : ''),
+				(isset($large_pictures[0]) ? '<img src="'.Tools::safeOutput($large_pictures[0]).'" class="bodyMainImageProductPrestashop" />' : ''),
+				(isset($medium_pictures[1]) ? '<img src="'.Tools::safeOutput($medium_pictures[1]).'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
+				(isset($medium_pictures[2]) ? '<img src="'.Tools::safeOutput($medium_pictures[2]).'" class="bodyMediumImageProductPrestashop" />' : ''),
+				(isset($medium_pictures[3]) ? '<img src="'.Tools::safeOutput($medium_pictures[3]).'" class="bodyMediumImageProductPrestashop" />' : ''),
 				$product_price,
 				$product_price_discount
 			), $description
@@ -874,7 +874,7 @@ class EbaySynchronizer
 							($ebay_profile->getConfiguration('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').
 						')
 						'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
-						AND p.`id_product` >'.$ebay_sync_last_product.'
+						AND p.`id_product` >'.(int)$ebay_sync_last_product.'
 						AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')
 						'.EbaySynchronizer::_addSqlRestrictionOnLang('s').'
 						GROUP BY p.id_product
@@ -902,7 +902,7 @@ class EbaySynchronizer
 					($ebay_profile->getConfiguration('EBAY_SYNC_PRODUCTS_MODE') != 'A' ? ' AND `sync` = 1' : '').'
 				)
 				'.(Tools::getValue('option') == 1 ? EbaySynchronizer::_addSqlCheckProductInexistence('p') : '').'
-				AND p.`id_product` > '.$ebay_sync_last_product.'
+				AND p.`id_product` > '.(int)$ebay_sync_last_product.'
 				AND p.`id_product` NOT IN ('.EbayProductConfiguration::getBlacklistedProductIdsQuery().')';
 		}
 
@@ -1079,10 +1079,10 @@ class EbaySynchronizer
 				'{PRODUCT_NAME}'
 				),
 			array(
-				(isset($data['large_pictures'][0]) ? '<img src="'.$data['large_pictures'][0].'" class="bodyMainImageProductPrestashop" />' : ''),
-				(isset($data['medium_pictures'][1]) ? '<img src="'.$data['medium_pictures'][1].'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
-				(isset($data['medium_pictures'][2]) ? '<img src="'.$data['medium_pictures'][2].'" class="bodyMediumImageProductPrestashop" />' : ''),
-				(isset($data['medium_pictures'][3]) ? '<img src="'.$data['medium_pictures'][3].'" class="bodyMediumImageProductPrestashop" />' : ''),
+				(isset($data['large_pictures'][0]) ? '<img src="'.Tools::safeOutput($data['large_pictures'][0]).'" class="bodyMainImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][1]) ? '<img src="'.Tools::safeOutput($data['medium_pictures'][1]).'" class="bodyFirstMediumImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][2]) ? '<img src="'.Tools::safeOutput($data['medium_pictures'][2]).'" class="bodyMediumImageProductPrestashop" />' : ''),
+				(isset($data['medium_pictures'][3]) ? '<img src="'.Tools::safeOutput($data['medium_pictures'][3]).'" class="bodyMediumImageProductPrestashop" />' : ''),
 				$data['price'],
 				$data['price_without_reduction'],
 				$data['description_short'],
