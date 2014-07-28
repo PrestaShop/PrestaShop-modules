@@ -81,8 +81,8 @@
 			$carrier = new Carrier();
 			$carrier->name = $name;
 			// Captain obvious says: "This is my name!"
-			$carrier->active = true;
-			// We want our new carrier to be active right from the start.
+			$carrier->active = ($mode == BoxdropShipment::CONF_MODE_DIRECT_EXPRESS);
+			// We want our express carrier to be active right from the start. The economy one may be enabled by the merchant.
 			$carrier->delay = $delay;
 			// Description in the FrontOffice
 			$carrier->deleted = 0;
