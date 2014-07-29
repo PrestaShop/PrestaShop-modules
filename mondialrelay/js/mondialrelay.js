@@ -175,18 +175,18 @@ var PS_MRObject = (function($, undefined) {
 							<tr id="detailHistory_' + id_order + '">\
 								<td><input type="checkbox" class="history_id_list" name="history_id_list[]" value="' + id_order + '" /></td>\
 								<td>' + id_order + '</td>\
-								<td id="expeditionNumber_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
-								<td id="URLA4_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
-								<td id="URLA5_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
-								<td id="URL10x15_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
+								<td id="expeditionNumber_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URLA4_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URLA5_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URL10x15_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
 							</tr>');
 						}
 						else
 						{
-							$('#detailHistory_' + id_order).children('#URLA4_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
-							$('#detailHistory_' + id_order).children('#URLA5_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
-							$('#detailHistory_' + id_order).children('#URL10x15_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
-							$('#detailHistory_' + id_order).children('#expeditionNumber_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URLA4_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URLA5_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URL10x15_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#expeditionNumber_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
 						}
 					}
 			}
@@ -723,7 +723,7 @@ var PS_MRObject = (function($, undefined) {
 		blockTR.after(' \
 		<tr class="PS_MRSelectedCarrier" id="PS_MRSelectedCarrier_' + carrier_id + '"> \
 			<td colspan="4"><div> \
-				<img src="' + _PS_MR_MODULE_DIR_ + 'images/loader.gif" alt="" /> \
+				<img src="' + _PS_MR_MODULE_DIR_ + 'img/loader.gif" alt="" /> \
 			</div> \
 		</td></tr>');
 
