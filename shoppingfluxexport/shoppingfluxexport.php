@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2014 PrestaShop
  *
@@ -24,6 +23,7 @@
  * @license   http://opensource.org/licenses/afl-3.0.php Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.9.1';
+		$this->version = '3.9.2';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -55,7 +55,6 @@ class ShoppingFluxExport extends Module
 		if (!$this->registerHook('newOrder') ||
 				!$this->registerHook('footer') ||
 				!$this->registerHook('postUpdateOrderStatus') ||
-				!$this->registerHook('adminOrder') ||
 				!$this->registerHook('updateProduct') ||
 				!$this->registerHook('backOfficeTop') ||
 				!$this->registerHook('updateProductAttribute') ||
@@ -155,7 +154,7 @@ class ShoppingFluxExport extends Module
 				break;
 			case 'Prospect':
 				$this->_html .= $this->displayConfirmation($this->l('Votre enregistrement Shopping Flux est effectif, vous serez contacté sous peu.'));
-			// No break, we want the code below to be executed
+				// No break, we want the code below to be executed
 			case 'New':
 			default:
 				$this->_html .= $this->_defaultView($price);
@@ -239,12 +238,12 @@ class ShoppingFluxExport extends Module
 			<fieldset>
 				<legend>'.$this->l('Demandez ici votre clé d\'activation').'</legend>
 				<p style="margin-bottom:20px" >'.$this->l('Ce module vous est offert par Shopping Flux et est utilisable via une souscription mensuelle au service. Envoyez-nous simplement ce formulaire :').'</p>
-				<p><label>'.$this->l('Nom du site').' : </label><input type="text" name="site" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_NAME')).'"></p>
-				<p><label>'.$this->l('Nom').' : </label><input type="text" name="nom" value="'.Tools::safeOutput($owner->lastname).'"></p>
-				<p><label>'.$this->l('Prenom').' : </label><input type="text" name="prenom" value="'.Tools::safeOutput($owner->firstname).'"></p>
-				<p><label>'.$this->l('E-mail').' : </label><input type="text" name="email" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'"></p>
-				<p><label>'.$this->l('Téléphone').' : </label><input type="text" name="telephone" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_PHONE')).'"></p>
-                                <p><label>'.$this->l('Code Prestashop (laisser vide si vous n\'en possédez pas)').' : </label><input type="text" name="code"></p>
+				<p><label>'.$this->l('Website').' : </label><input type="text" name="site" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_NAME')).'"></p>
+				<p><label>'.$this->l('First Name').' : </label><input type="text" name="nom" value="'.Tools::safeOutput($owner->lastname).'"></p>
+				<p><label>'.$this->l('Last Name').' : </label><input type="text" name="prenom" value="'.Tools::safeOutput($owner->firstname).'"></p>
+				<p><label>'.$this->l('Email').' : </label><input type="text" name="email" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'"></p>
+				<p><label>'.$this->l('Phone').' : </label><input type="text" name="telephone" value="'.Tools::safeOutput(Configuration::get('PS_SHOP_PHONE')).'"></p>
+				<p><label>'.$this->l('Prestashop code (leave it blank if you do not have)').' : </label><input type="text" name="code"></p>
 				<input type="hidden" name="flux" value="'.Tools::safeOutput($uri).'"/>
 				<p style="text-align:center" ><input type="submit" value="'.$this->l('Envoyer la demande').'" name="send_mail" class="button"/></p>
 			</fieldset>
@@ -258,9 +257,9 @@ class ShoppingFluxExport extends Module
 	{
 		$this->_treatForm();
 
-		$configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TOKEN', 'SHOPPING_FLUX_TRACKING', 'SHOPPING_FLUX_BUYLINE',
+		$configuration = Configuration::getMultiple(array('SHOPPING_FLUX_TOKEN','SHOPPING_FLUX_TRACKING','SHOPPING_FLUX_BUYLINE',
 					'SHOPPING_FLUX_ORDERS', 'SHOPPING_FLUX_STATUS_SHIPPED', 'SHOPPING_FLUX_STATUS_CANCELED', 'SHOPPING_FLUX_LOGIN',
-					'SHOPPING_FLUX_STOCKS', 'SHOPPING_FLUX_INDEX', 'PS_LANG_DEFAULT', 'SHOPPING_FLUX_CARRIER', 'SHOPPING_FLUX_IMAGE',
+					'SHOPPING_FLUX_STOCKS', 'SHOPPING_FLUX_INDEX','PS_LANG_DEFAULT', 'SHOPPING_FLUX_CARRIER', 'SHOPPING_FLUX_IMAGE',
 					'SHOPPING_FLUX_SHIPPED', 'SHOPPING_FLUX_CANCELED', 'SHOPPING_FLUX_SHIPPING_MATCHING'));
 
 		$html = $this->_getFeedContent();
@@ -292,7 +291,7 @@ class ShoppingFluxExport extends Module
 					</fieldset>
 				</form>';
 	}
-
+		
 	private function _getAdvancedParametersContent($configuration)
 	{
 		if (!in_array('curl', get_loaded_extensions()))
@@ -315,7 +314,6 @@ class ShoppingFluxExport extends Module
 					<p>'.$this->l('Nous récupérons ci-dessous tous les transporteurs fournis par les places de marché. Associez les à vos transporteurs Prestashop').'</p>';
 
 		$actual_configuration = unserialize($configuration['SHOPPING_FLUX_SHIPPING_MATCHING']);
-
 
 		foreach ($sf_carriers as $sf_carrier)
 		{
@@ -406,7 +404,7 @@ class ShoppingFluxExport extends Module
 		$logo = Context::getContext()->country->iso_code == 'US' ? 'us' : 'fr';
 
 		return '
-		<img style="margin:10px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/logo_'.$logo.'.jpg" />
+		<img style="margin:10px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$logo.'.jpg" />
 		<fieldset>
 			<legend>'.$this->l('Vos flux produits').'</legend>
 			<p>
@@ -536,7 +534,7 @@ class ShoppingFluxExport extends Module
 		if (Tools::getValue('token') == '' || Tools::getValue('token') != Configuration::get('SHOPPING_FLUX_TOKEN'))
 			die("<?xml version='1.0' encoding='utf-8'?><error>Invalid Token</error>");
 
-		$configuration = Configuration::getMultiple(array('PS_TAX_ADDRESS_TYPE', 'PS_CARRIER_DEFAULT', 'PS_COUNTRY_DEFAULT',
+		$configuration = Configuration::getMultiple(array('PS_TAX_ADDRESS_TYPE', 'PS_CARRIER_DEFAULT','PS_COUNTRY_DEFAULT',
 					'PS_LANG_DEFAULT', 'PS_SHIPPING_FREE_PRICE', 'PS_SHIPPING_HANDLING', 'PS_SHIPPING_METHOD', 'PS_SHIPPING_FREE_WEIGHT', 'SHOPPING_FLUX_IMAGE'));
 
 		$no_breadcrumb = Tools::getValue('no_breadcrumb');
@@ -544,20 +542,20 @@ class ShoppingFluxExport extends Module
 		$lang = Tools::getValue('lang');
 		$configuration['PS_LANG_DEFAULT'] = !empty($lang) ? Language::getIdByIso($lang) : $configuration['PS_LANG_DEFAULT'];
 		$carrier = Carrier::getCarrierByReference((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
-
+		
 		//manage case PS_CARRIER_DEFAULT is deleted
 		$carrier = is_object($carrier) ? $carrier : new Carrier((int)Configuration::get('SHOPPING_FLUX_CARRIER'));
 		$products = $this->getSimpleProducts($configuration['PS_LANG_DEFAULT'], false, 0);
 		$link = new Link();
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<produits version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">';
+		echo '<products version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">';
 
 		foreach ($products as $productArray)
 		{
 			$product = new Product((int)($productArray['id_product']), true, $configuration['PS_LANG_DEFAULT']);
 
-			echo '<produit>';
+			echo '<'.$this->_translateField('product').'>';
 			echo $this->_getBaseData($product, $configuration, $link, $carrier);
 			echo $this->_getImages($product, $configuration, $link);
 			echo $this->_getUrlCategories($product, $configuration, $link);
@@ -581,19 +579,19 @@ class ShoppingFluxExport extends Module
 				echo '<to/>';
 			}
 
-			echo '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
-			echo '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
-			echo '<solde>'.(int)$product->on_sale.'</solde>';
-			echo '</produit>';
+			echo '<'.$this->_translateField('supplier_link').'><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></'.$this->_translateField('supplier_link').'>';
+			echo '<'.$this->_translateField('manufacturer_link').'><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></'.$this->_translateField('manufacturer_link').'>';
+			echo '<'.$this->_translateField('on_sale').'>'.(int)$product->on_sale.'</'.$this->_translateField('on_sale').'>';
+			echo '</'.$this->_translateField('product').'>';
 		}
 
-		echo '</produits>';
+		echo '</products>';
 	}
 
 	public function initFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><produits version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">');
+		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><products version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">');
 		fclose($file);
 
 		$totalProducts = $this->countProducts();
@@ -638,7 +636,7 @@ class ShoppingFluxExport extends Module
 		{
 			$product = new Product((int)($productArray['id_product']), true, $configuration['PS_LANG_DEFAULT']);
 
-			$str .= '<produit>';
+			$str .= '<'.$this->_translateField('product').'>';
 			$str .= $this->_getBaseData($product, $configuration, $link, $carrier);
 			$str .= $this->_getImages($product, $configuration, $link);
 			$str .= $this->_getUrlCategories($product, $configuration, $link);
@@ -662,10 +660,10 @@ class ShoppingFluxExport extends Module
 				$str .= '<to/>';
 			}
 
-			$str .= '<url-fournisseur><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></url-fournisseur>';
-			$str .= '<url-fabricant><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></url-fabricant>';
-			$str .= '<solde>'.(int)$product->on_sale.'</solde>';
-			$str .= '</produit>';
+			$str .= '<'.$this->_translateField('supplier_link').'><![CDATA['.$link->getSupplierLink($product->id_supplier, null, $configuration['PS_LANG_DEFAULT']).']]></'.$this->_translateField('supplier_link').'>';
+			$str .= '<'.$this->_translateField('manufacturer_link').'><![CDATA['.$link->getManufacturerLink($product->id_manufacturer, null, $configuration['PS_LANG_DEFAULT']).']]></'.$this->_translateField('manufacturer_link').'>';
+			$str .= '<'.$this->_translateField('on_sale').'>'.(int)$product->on_sale.'</'.$this->_translateField('on_sale').'>';
+			$str .= '</'.$this->_translateField('product').'>';
 		}
 
 		fwrite($file, $str);
@@ -683,7 +681,7 @@ class ShoppingFluxExport extends Module
 	private function closeFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'a+');
-		fwrite($file, '</produits>');
+		fwrite($file, '</products>');
 	}
 
 	/* Default data, in Product Class */
@@ -693,23 +691,23 @@ class ShoppingFluxExport extends Module
 
 		$titles = array(
 			0 => 'id',
-			1 => 'nom',
-			2 => 'url',
+			1 => $this->_translateField('name'),
+			2 => $this->_translateField('link'),
 			4 => 'description',
-			5 => 'description-courte',
-			6 => 'prix',
-			7 => 'prix-barre',
-			8 => 'frais-de-port',
-			9 => 'delai-livraison',
-			10 => 'marque',
-			11 => 'rayon',
-			13 => 'quantite',
+			5 => $this->_translateField('short_description'),
+			6 => $this->_translateField('price'),
+			7 => $this->_translateField('old_price'),
+			8 => $this->_translateField('shipping_cost'),
+			9 => $this->_translateField('shipping_delay'),
+			10 => $this->_translateField('brand'),
+			11 => $this->_translateField('category'),
+			13 => $this->_translateField('quantity'),
 			14 => 'ean',
-			15 => 'poids',
-			16 => 'ecotaxe',
-			17 => 'tva',
-			18 => 'ref-constructeur',
-			19 => 'ref-fournisseur',
+			15 => $this->_translateField('weight'),
+			16 => $this->_translateField('ecotax'),
+			17 => $this->_translateField('vat'),
+			18 => $this->_translateField('mpn'),
+			19 => $this->_translateField('supplier_reference'),
 			20 => 'upc',
 			21 => 'wholesale-price'
 		);
@@ -737,7 +735,7 @@ class ShoppingFluxExport extends Module
 		$data[21] = $product->wholesale_price;
 
 		foreach ($titles as $key => $balise)
-			$ret .= '<'.$balise.'><![CDATA['.$data[$key].']]></'.$balise.'>';
+			$ret .= '<'.$balise.'><![CDATA['.htmlentities($data[$key], ENT_QUOTES, 'UTF-8').']]></'.$balise.'>';
 
 		return $ret;
 	}
@@ -856,6 +854,15 @@ class ShoppingFluxExport extends Module
 			if (!empty($feature['name']))
 				$ret .= '<'.$feature['name'].'><![CDATA['.$feature['value'].']]></'.$feature['name'].'>';
 		}
+
+		$ret .= '<meta_title><![CDATA['.$product->meta_title.']]></meta_title>';
+		$ret .= '<meta_description><![CDATA['.$product->meta_description.']]></meta_description>';
+		$ret .= '<meta_keywords><![CDATA['.$product->meta_keywords.']]></meta_keywords>';
+
+		$ret .= '<width><![CDATA['.$product->width.']]></width>';
+		$ret .= '<depth><![CDATA['.$product->depth.']]></depth>';
+		$ret .= '<height><![CDATA['.$product->height.']]></height>';
+
 		$ret .= '</caracteristiques>';
 		return $ret;
 	}
@@ -900,11 +907,11 @@ class ShoppingFluxExport extends Module
 			$ret .= '<id><![CDATA['.$id.']]></id>';
 			$ret .= '<ean><![CDATA['.$combination['ean13'].']]></ean>';
 			$ret .= '<upc><![CDATA['.$combination['upc'].']]></upc>';
-			$ret .= '<quantite><![CDATA['.$combination['quantity'].']]></quantite>';
-			$ret .= '<poids><![CDATA['.$combination['weight'].']]></poids>';
-			$ret .= '<prix><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></prix>';
-			$ret .= '<prix-barre><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></prix-barre>';
-			$ret .= '<frais-de-port><![CDATA['.$this->_getShipping($product, $configuration, $carrier, $id, $combination['weight']).']]></frais-de-port>';
+			$ret .= '<'.$this->_translateField('quantity').'><![CDATA['.$combination['quantity'].']]></'.$this->_translateField('quantity').'>';
+			$ret .= '<'.$this->_translateField('weight').'><![CDATA['.$combination['weight'].']]></'.$this->_translateField('weight').'>';
+			$ret .= '<'.$this->_translateField('price').'><![CDATA['.$product->getPrice(true, $id, 2, null, false, true, 1).']]></'.$this->_translateField('price').'>';
+			$ret .= '<'.$this->_translateField('old_price').'><![CDATA['.$product->getPrice(true, $id, 2, null, false, false, 1).']]></'.$this->_translateField('old_price').'>';
+			$ret .= '<'.$this->_translateField('shipping_cost').'><![CDATA['.$this->_getShipping($product, $configuration, $carrier, $id, $combination['weight']).']]></'.$this->_translateField('shipping_cost').'>';
 			$ret .= '<images>';
 
 			$image_child = true;
@@ -941,7 +948,7 @@ class ShoppingFluxExport extends Module
 					$ret .= '<'.$attributeName.'><![CDATA['.$attributeValue.']]></'.$attributeName.'>';
 			}
 
-			$ret .= '<ref-constructeur><![CDATA['.$combination['reference'].']]></ref-constructeur>';
+			$ret .= '<'.$this->_translateField('mpn').'><![CDATA['.$combination['reference'].']]></'.$this->_translateField('mpn').'>';
 
 			$ret .= '</attributs>';
 			$ret .= '</declinaison>';
@@ -955,12 +962,12 @@ class ShoppingFluxExport extends Module
 	private function _getFilAriane($product, $configuration)
 	{
 		$category = '';
-		$ret = '<fil-ariane>';
+		$ret = '<'.$this->_translateField('category_breadcrumb').'>';
 
 		foreach ($this->_getProductFilAriane($product->id, $configuration['PS_LANG_DEFAULT']) as $categories)
 			$category .= $categories.' > ';
 
-		$ret .= '<![CDATA['.Tools::substr($category, 0, -3).']]></fil-ariane>';
+		$ret .= '<![CDATA['.Tools::substr($category, 0, -3).']]></'.$this->_translateField('category_breadcrumb').'>';
 		return $ret;
 	}
 
@@ -1128,15 +1135,15 @@ class ShoppingFluxExport extends Module
 	{
 		if (Configuration::get('SHOPPING_FLUX_BUYLINE') != '' && Configuration::get('SHOPPING_FLUX_ID') != '')
 			return '<script type="text/javascript">
-                        var sf2 = sf2 || [];
-                        sf2.push([\''.Configuration::get('SHOPPING_FLUX_ID').'\'],[escape(document.referrer)]);
-                        (function() {
-                        var sf_script = document.createElement(\'script\');
-                        sf_script.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'tag.shopping-feed.com/buyline.js\';
-                        sf_script.setAttribute(\'async\', \'true\');
-                        document.documentElement.firstChild.appendChild(sf_script);
-                        })();
-                        </script>';
+						var sf2 = sf2 || [];
+						sf2.push([\''.Configuration::get('SHOPPING_FLUX_ID').'\'],[escape(document.referrer)]);
+						(function() {
+						var sf_script = document.createElement(\'script\');
+						sf_script.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'tag.shopping-feed.com/buyline.js\';
+						sf_script.setAttribute(\'async\', \'true\');
+						document.documentElement.firstChild.appendChild(sf_script);
+						})();
+						</script>';
 		return '';
 	}
 
@@ -1211,36 +1218,8 @@ class ShoppingFluxExport extends Module
 				else
 					Db::getInstance()->autoExecute(_DB_PREFIX_.'message', array('id_order' => $order->id, 'message' => 'Statut mis à jour sur '.pSQL((string)$order->payment).' : '.pSQL((string)$responseXML->Response->Error->Message), 'date_add' => date('Y-m-d H:i:s')), 'INSERT');
 			}
+
 		}
-	}
-
-	public function hookAdminOrder($params)
-	{
-		$this->_html = '';
-
-		if (Configuration::get('SHOPPING_FLUX_BUYLINE') != '')
-		{
-			$xml = '<?xml version="1.0" encoding="UTF-8"?>';
-			$xml .= '<GetBuylineRoute>';
-			$xml .= '<Order>';
-			$xml .= (int)$params['id_order'];
-			$xml .= '</Order>';
-			$xml .= '</GetBuylineRoute>';
-
-			$routeXML = $this->_callWebService('GetBuylineRoute', $xml);
-
-			if (!empty($routeXML->Response->Route))
-			{
-				$this->_html .= '<br/>
-					<fieldset>
-						<legend>'.$this->l('Buyline').'</legend>
-						<p>'.$routeXML->Response->Route.'</p>
-					</fieldset>
-					<br/>';
-			}
-		}
-
-		return $this->_html;
 	}
 
 	public function hookupdateProductAttribute($params)
@@ -1364,7 +1343,7 @@ class ShoppingFluxExport extends Module
 		$street1 = '';
 		$street2 = '';
 		$line2 = false;
-		$streets = Explode(' ', (string)$addressNode->Street);
+		$streets = explode(' ', (string)$addressNode->Street);
 
 		foreach ($streets as $street)
 		{
@@ -1379,6 +1358,9 @@ class ShoppingFluxExport extends Module
 
 		$lastname = (string)$addressNode->LastName;
 		$firstname = (string)$addressNode->FirstName;
+
+		$lastname = preg_replace('/\-?\d+/', '', $lastname);
+		$firstname = preg_replace('/\-?\d+/', '', $firstname);
 
 		$address->id_customer = (int)$id_customer;
 		$address->id_country = (int)Country::getByIso(trim($addressNode->Country));
@@ -1408,6 +1390,9 @@ class ShoppingFluxExport extends Module
 
 		if ($id_customer)
 			return $id_customer;
+
+		$lastname = preg_replace('/\-?\d+/', '', $lastname);
+		$firstname = preg_replace('/\-?\d+/', '', $firstname);
 
 		$customer = new Customer();
 		$customer->lastname = (!empty($lastname)) ? pSQL($lastname) : '-';
@@ -1458,11 +1443,11 @@ class ShoppingFluxExport extends Module
 		}
 
 		$actual_configuration = unserialize(Configuration::get('SHOPPING_FLUX_SHIPPING_MATCHING'));
-
+		
 		$carrier_to_load = isset($actual_configuration[base64_encode(Tools::safeOutput((string)$order->ShippingMethod))]) ?
 				(int)$actual_configuration[base64_encode(Tools::safeOutput((string)$order->ShippingMethod))] :
 				(int)Configuration::get('SHOPPING_FLUX_CARRIER');
-
+		
 		$carrier = Carrier::getCarrierByReference($carrier_to_load);
 
 		//manage case PS_CARRIER_DEFAULT is deleted
@@ -1538,8 +1523,8 @@ class ShoppingFluxExport extends Module
 		$actual_configuration = unserialize(Configuration::get('SHOPPING_FLUX_SHIPPING_MATCHING'));
 
 		$carrier_to_load = isset($actual_configuration[base64_encode(Tools::safeOutput($shipping_method))]) ?
-				(int)$actual_configuration[base64_encode(Tools::safeOutput($shipping_method))] :
-				(int)Configuration::get('SHOPPING_FLUX_CARRIER');
+			(int)$actual_configuration[base64_encode(Tools::safeOutput($shipping_method))] :
+			(int)Configuration::get('SHOPPING_FLUX_CARRIER');
 
 		$carrier = Carrier::getCarrierByReference($carrier_to_load);
 
@@ -1552,8 +1537,8 @@ class ShoppingFluxExport extends Module
 		foreach ($productsNode->Product as $product)
 		{
 			$skus = explode('_', $product->SKU);
-
 			$p = new Product((int)($skus[0]), false, Configuration::get('PS_LANG_DEFAULT'), Context::getContext()->shop->id);
+
 			if (!Validate::isLoadedObject($p))
 				return false;
 
@@ -1618,7 +1603,7 @@ class ShoppingFluxExport extends Module
 		$login = Configuration::get('SHOPPING_FLUX_LOGIN');
 		$id = Configuration::get('SHOPPING_FLUX_ID');
 
-		if (empty($login) OR ! empty($id))
+		if (empty($login) || !empty($id))
 			return;
 
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -1654,6 +1639,7 @@ class ShoppingFluxExport extends Module
 			'Holosfind',
 			'Jardinermalin',
 			'Laredoute',
+			'Localismarket',
 			'Mistergooddeal',
 			'Monechelle',
 			'Nutspark',
@@ -1666,9 +1652,45 @@ class ShoppingFluxExport extends Module
 			'ToutAPorter'
 		);
 	}
+
+	private function _translateField($field)
+	{
+		$translations = array(
+			'FR' => array(
+				'product' => 'produit',
+				'supplier_link' => 'url-fournisseur',
+				'manufacturer_link' => 'url-fabricant',
+				'on_sale' => 'solde',
+				'name' => 'nom',
+				'link' => 'url',
+				'short_description' => 'description-courte',
+				'price' => 'prix',
+				'old_price' => 'prix-barre',
+				'shipping_cost' => 'frais-de-port',
+				'shipping_delay' => 'delai-livraison',
+				'brand' => 'marque',
+				'category' => 'rayon',
+				'quantity' => 'quantite',
+				'weight' => 'poids',
+				'ecotax' => 'ecotaxe',
+				'vat' => 'tva',
+				'mpn' => 'ref-constrcuteur',
+				'supplier_reference' => 'ref-fournisseur',
+				'category_breadcrumb' => 'fil-ariane',
+			)
+		);
+
+		$iso_code = Context::getContext()->country->iso_code;
+
+		if (isset($translations[$iso_code][$field]))
+			return $translations[$iso_code][$field];
+
+		return $field;
+
+	}
 }
 
 class SFPayment extends PaymentModule
 {
-	
+
 }
