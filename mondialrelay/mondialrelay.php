@@ -72,7 +72,7 @@ class MondialRelay extends Module
 	{
 		$this->name		= 'mondialrelay';
 		$this->tab		= 'shipping_logistics';
-		$this->version	= '2.0.3';
+		$this->version	= '2.0.4';
 		$this->installed_version = '';
 		$this->module_key = '366584e511d311cfaa899fc2d9ec1bd0';
 		$this->author = 'PrestaShop';
@@ -1113,7 +1113,7 @@ class MondialRelay extends Module
 				SELECT moh.`id_order_state` 
 				FROM `'._DB_PREFIX_.'order_history` moh 
 				WHERE moh.`id_order` = o.`id_order` 
-				ORDER BY moh.`date_add` DESC LIMIT 1) = '.(int)($id_order_state).'
+				ORDER BY moh.`id_order_history` DESC LIMIT 1) = '.(int)($id_order_state).'
 			AND o.`id_order` = mrs.`id_order`';
 	}
 
