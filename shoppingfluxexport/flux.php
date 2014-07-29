@@ -31,8 +31,7 @@ include(dirname(__FILE__).'/shoppingfluxexport.php');
 
 ini_set('display_errors', 'off');
 
-//xml output
-header ("Content-Type:text/xml");
+header ('Content-Type:text/xml');
 
 $f = new ShoppingFluxExport();
 echo $f->generateFeed();

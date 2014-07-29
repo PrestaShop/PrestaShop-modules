@@ -2,7 +2,7 @@
 <module>
 	<name>shoppingfluxexport</name>
 	<displayName><![CDATA[Shopping Feed Export]]></displayName>
-	<version><![CDATA[3.9.1]]></version>
+	<version><![CDATA[3.9.2]]></version>
 	<description><![CDATA[Export all your products to Google Shopping, eBay, Amazon, Rakuten, etc...]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[smart_shopping]]></tab>
