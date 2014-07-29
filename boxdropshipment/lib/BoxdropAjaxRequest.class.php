@@ -142,8 +142,8 @@
 			foreach ($carrier_ids as $mode => $carrier_id)
 			{
 				$carrier = new Carrier($carrier_id);
-				$country_zone = BoxdropCarrier::createCountryZone($mode, $id_lang);
-				BoxdropCarrier::createPricingPresetDefault($mode, $carrier, $country_zone);
+				BoxdropCarrier::createCountryZone($id_lang);
+				BoxdropCarrier::createPricingPresetDefault($mode, $carrier, $id_lang);
 			}
 			return $this->display(realpath(dirname(__FILE__).'/../').'/boxdropshipment.php', 'adminUpdateShippingPreset.tpl');
 		}
@@ -161,8 +161,8 @@
 			foreach ($carrier_ids as $mode => $carrier_id)
 			{
 				$carrier = new Carrier($carrier_id);
-				$country_zone = BoxdropCarrier::createCountryZone($mode, $id_lang);
-				BoxdropCarrier::createPricingPresetFree($mode, $carrier, $country_zone, (float)Tools::getValue('min_total'),
+				BoxdropCarrier::createCountryZone($id_lang);
+				BoxdropCarrier::createPricingPresetFree($mode, $carrier, $id_lang, (float)Tools::getValue('min_total'),
 				(float)Tools::getValue('shp_price'));
 			}
 			return $this->display(realpath(dirname(__FILE__).'/../').'/boxdropshipment.php', 'adminUpdateShippingPreset.tpl');

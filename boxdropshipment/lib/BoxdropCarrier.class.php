@@ -30,27 +30,19 @@
 		const TYPE_ALL = 4;
 		
 		/**
-		 * @var $default_ranges array with default pricings for shippings.
+		 * @var $default_ranges array with default pricings for shippings. 
+		 * (express domestic only for now)
 		 *
 		 * ex:
-		 * array(SHIPMENT_MODE => array(max_weight => price,
-		 *                              ....))
+		 * array(weight_limit1 => price,
+		 *       ....))
 		 */
 		private static $default_ranges = array(
-			BoxdropShipment::CONF_MODE_DIRECT_ECONOMY => array(
-				5 => 9.50,
-				10 => 10.50,
-				20 => 12.00,
-				30 => 14.50,
-				50 => 19.50
-			),
-			BoxdropShipment::CONF_MODE_DIRECT_EXPRESS => array(
-				5 => 12.50,
-				10 => 13.50,
-				20 => 15.00,
-				30 => 17.50,
-				50 => 22.50
-			)
+			5 => 9.50,
+			10 => 10.50,
+			20 => 12.00,
+			30 => 14.50,
+			50 => 19.50
 		);
 
 		/**
@@ -89,8 +81,8 @@
 			$carrier = new Carrier();
 			$carrier->name = $name;
 			// Captain obvious says: "This is my name!"
-			$carrier->active = true;
-			// We want our new carrier to be active right from the start.
+			$carrier->active = ($mode == BoxdropShipment::CONF_MODE_DIRECT_EXPRESS);
+			// We want our express carrier to be active right from the start. The economy one may be enabled by the merchant.
 			$carrier->delay = $delay;
 			// Description in the FrontOffice
 			$carrier->deleted = 0;
@@ -133,14 +125,29 @@
 						'id_group' => $group['id_group']
 					), 'INSERT');
 				}
-				$country_zone = self::createCountryZone($mode, $id_lang);
-				self::createPricingPresetDefault($mode, $carrier, $country_zone);
+				self::createCountryZone($id_lang);
+				self::createPricingPresetDefault($mode, $carrier, $id_lang);
 				copy(dirname(__FILE__).'/../logo.png', _PS_SHIP_IMG_DIR_.'/'.$carrier->id.'.jpg');
 				BoxdropHelper::getCarrierId($mode, $carrier->id);
 				return true;
 			}
 			return false;
 		}
+
+		/**
+		 * Returns the Zone object assigned to the Shops origin country
+		 * 
+		 * @author sweber <sw@boxdrop.com>
+		 * @param  integer $id_lang
+		 * @return Zone
+		 */
+		public static function getHomeCountryZone($id_lang)
+		{
+			$sender_country_id = Configuration::get('PS_COUNTRY_DEFAULT');
+			$sender_country = new Country($sender_country_id, $id_lang);			
+			return new Zone(Country::getIdZone($sender_country_id));
+		}
+
 
 		/**
 		 * As DHL is not offering Economy services for domestic shipments,
@@ -150,66 +157,71 @@
 		 * only, and name it accordingly.
 		 *
 		 * @author sweber  <sw@boxdrop.com>
-		 * @param  string  $mode
 		 * @param  integer $id_lang
 		 * @return Zone
 		 */
-		public static function createCountryZone($mode, $id_lang)
+		public static function createCountryZone($id_lang)
 		{
-			if ($mode == BoxdropShipment::CONF_MODE_DIRECT_ECONOMY)
+			$sender_country_id = Configuration::get('PS_COUNTRY_DEFAULT');
+			$sender_country = new Country($sender_country_id, $id_lang);
+			$sender_country_zone_id = Country::getIdZone($sender_country_id);
+			$countries_in_sender_zone = Country::getCountriesByZoneId($sender_country_zone_id, $id_lang);
+			if (count($countries_in_sender_zone) > 1)
 			{
-				$sender_country_id = Configuration::get('PS_COUNTRY_DEFAULT');
-				$sender_country = new Country($sender_country_id, $id_lang);
-				$sender_country_zone_id = Country::getIdZone($sender_country_id);
-				$countries_in_sender_zone = Country::getCountriesByZoneId($sender_country_zone_id, $id_lang);
-				if (count($countries_in_sender_zone) > 1)
+				$country_zone = new Zone();
+				$country_zone->name = $sender_country->name;
+				$country_zone->active = true;
+				$country_zone->add();
+				$sender_country->id_zone = $country_zone->id;
+				$sender_country->save();
+				/*
+				 * Because we have changed the countries zone, we need to do so as well for the assigned states.
+				 * Otherwise, the FrontOffice will display our economy carrier, as the determination is done via the id_state instead of country.
+				 */
+				$state_ids = array();
+				$states = State::getStatesByIdCountry($sender_country->id);
+				if (count($states) != 0)
 				{
-					$country_zone = new Zone();
-					$country_zone->name = $sender_country->name;
-					$country_zone->active = true;
-					$country_zone->add();
-					$sender_country->id_zone = $country_zone->id;
-					$sender_country->save();
-					/*
-					 * Because we have changed the countries zone, we need to do so as well for the assigned states.
-					 * Otherwise, the FrontOffice will display our economy carrier, as the determination is done via the id_state instead of country.
-					 */
-					$state_ids = array();
-					$states = State::getStatesByIdCountry($sender_country->id);
-					if (count($states) != 0)
-					{
-						foreach ($states as $state)
-							array_push($state_ids, $state['id_state']);
+					foreach ($states as $state)
+						array_push($state_ids, $state['id_state']);
 
-						/*
-						 * dummy object creation, as State::affectZoneToSelection() is not declared static. Oh my.
-						 */
-						$state = new State();
-						$state->affectZoneToSelection($state_ids, $country_zone->id);
-					}
-					return $country_zone;
-				}
-				else
-				{
 					/*
-					 * Our home country already offers a single zone.
+					 * dummy object creation, as State::affectZoneToSelection() is not declared static. Oh my.
 					 */
-					return new Zone($sender_country_zone_id);
+					$state = new State();
+					$state->affectZoneToSelection($state_ids, $country_zone->id);
 				}
+				return $country_zone;
+			}
+			else
+			{
+				/*
+				 * Our home country already offers a single zone.
+				 */
+				return new Zone($sender_country_zone_id);
 			}
 			return new Zone();
 		}
 
 		/**
 		 * Creates the default pricing preset (pass shipping costs to customer) for the given carrier
+		 * - only for the given country_zone -
 		 *
 		 * @author sweber  <sw@boxdrop.com>
 		 * @param  string  $mode
 		 * @param  Carrier $carrier
-		 * @param  Zone    $country_zone
+		 * @param  integer $id_lang
 		 */
-		public static function createPricingPresetDefault($mode, $carrier, $country_zone)
+		public static function createPricingPresetDefault($mode, $carrier, $id_lang)
 		{
+			/*
+			 * No prices for economy shipments in the home country
+			 */
+			if ($mode == BoxdropShipment::CONF_MODE_DIRECT_ECONOMY)
+				return;
+
+			$country_zone = self::getHomeCountryZone($id_lang);
+
 			/*
 			 * insert default range costs foreach price range all zones.
 			 * These may be adjusted afterwards by the shop.
@@ -217,13 +229,13 @@
 			$price_ranges = array();
 			$start_weight = 0;
 			$weight_ranges = array();
-			$zones = Zone::getZones(true);
+
 			$carrier->shipping_method = Carrier::SHIPPING_METHOD_WEIGHT;
 			$carrier->save();
 			self::deleteRangesByCarrier($carrier->id);
 			self::deleteDeliveriesByCarrier($carrier->id);
 			self::deleteCarrierZonesByCarrier($carrier->id);
-			foreach (self::$default_ranges[$mode] as $max_weight => $price)
+			foreach (self::$default_ranges as $max_weight => $price)
 			{
 				$range_weight = new RangeWeight();
 				$range_weight->id_carrier = $carrier->id;
@@ -239,50 +251,51 @@
 				$start_weight = $max_weight + 0.000001;
 				$weight_ranges[$max_weight] = $range_weight;
 			}
-			foreach ($zones as $z)
-			{
-				/*
-				 * No prices for economy shipments in the country only zone.
-				 */
-				if ($mode == BoxdropShipment::CONF_MODE_DIRECT_ECONOMY && $country_zone->id == $z['id_zone'])
-					continue;
 
-				/*
-				 * We are NOT using Carrier::addZone() here, as its filling the database with zeroes in the price matrix.
-				 */
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone`(`id_carrier`, `id_zone`)VALUES('.$carrier->id.', '.$z['id_zone'].')');
-				/*
-				 * We cannot use the object classes "Delivery" here, as it is not allowing to put NULL into id_shop and id_shop_group
-				 * which is needed in single shop constellations, when the price matirx query will ask for those values "IS NULL"
-				 *
-				 * So we will borrow the source from Carrier::addZone() here, to avoid selecting the zero-inserted price values and insert it directly,
-				 * as there is no documentation on Carrier::addDeliveryPrice() in direct relation with a new CarrierZone.
-				 */
-				$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) VALUES ';
-				foreach ($weight_ranges as $price => $weight_range)
-				{
-					$price = self::$default_ranges[$mode][$weight_range->delimiter2];
-					$sql .= '('.$carrier->id.', '.$price_ranges[$weight_range->delimiter2]->id.', 0, '.$z['id_zone'].', '.(float)$price.'), ';
-					$sql .= '('.$carrier->id.', 0, '.$weight_range->id.', '.$z['id_zone'].', '.(float)$price.'), ';
-				}
-				$sql = rtrim($sql, ', ');
-				Db::getInstance()->execute($sql);
+			/*
+			 * We are NOT using Carrier::addZone() here, as its filling the database with zeroes in the price matrix.
+			 */
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone`(`id_carrier`, `id_zone`)VALUES('.$carrier->id.', '.$country_zone->id.')');
+
+			/*
+			 * We cannot use the object classes "Delivery" here, as it is not allowing to put NULL into id_shop and id_shop_group
+			 * which is needed in single shop constellations, when the price matrix query will ask for those values "IS NULL"
+			 *
+			 * So we will borrow the source from Carrier::addZone() here, to avoid selecting the zero-inserted price values and insert it directly,
+			 * as there is no documentation on Carrier::addDeliveryPrice() in direct relation with a new CarrierZone.
+			 */
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) VALUES ';
+			foreach ($weight_ranges as $price => $weight_range)
+			{
+				$price = self::$default_ranges[$weight_range->delimiter2];
+				$sql .= '('.$carrier->id.', '.$price_ranges[$weight_range->delimiter2]->id.', 0, '.$country_zone->id.', '.(float)$price.'), ';
+				$sql .= '('.$carrier->id.', 0, '.$weight_range->id.', '.$country_zone->id.', '.(float)$price.'), ';
 			}
+			$sql = rtrim($sql, ', ');
+			Db::getInstance()->execute($sql);
+
 		}
 
 		/**
 		 * Creates the free shipment pricing preset for the given carrier
+		 * - only for the given country_zone -
 		 *
 		 * @author sweber  <sw@boxdrop.com>
 		 * @param  string  $mode
 		 * @param  Carrier $carrier
-		 * @param  Zone    $country_zone
+		 * @param  integer $id_lang
 		 * @param  float   $min_free_order_total
 		 * @param  float   $default_shipping_price
 		 */
-		public static function createPricingPresetFree($mode, $carrier, $country_zone, $min_free_order_total, $default_shipping_price)
+		public static function createPricingPresetFree($mode, $carrier, $id_lang, $min_free_order_total, $default_shipping_price)
 		{
-			$zones = Zone::getZones(true);
+			/*
+			 * No prices for economy shipments in the home country
+			 */
+			if ($mode == BoxdropShipment::CONF_MODE_DIRECT_ECONOMY)
+				return;
+
+			$country_zone = self::getHomeCountryZone($id_lang);
 			$carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
 			$carrier->save();
 			self::deleteRangesByCarrier($carrier->id);
@@ -303,32 +316,24 @@
 			$range_price2->delimiter1 = ($min_free_order_total + 0.01);
 			$range_price2->delimiter2 = 99999.99;
 			$range_price2->add();
-			foreach ($zones as $z)
-			{
-				/*
-				 * No prices for economy shipments in the country only zone.
-				 */
-				if ($mode == BoxdropShipment::CONF_MODE_DIRECT_ECONOMY && $country_zone->id == $z['id_zone'])
-					continue;
 
-				/*
-				 * We are NOT using Carrier::addZone() here, as its filling the database with zeroes in the price matrix.
-				 */
-				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone`(`id_carrier`, `id_zone`)VALUES('.$carrier->id.', '.$z['id_zone'].')');
-				/*
-				 * We cannot use the object classes "Delivery" here, as it is not allowing to put NULL into id_shop and id_shop_group
-				 * which is needed in single shop constellations, when the price matirx query will ask for those values "IS NULL"
-				 *
-				 * So we will borrow the source from Carrier::addZone() here, to avoid selecting the zero-inserted price values and insert it directly,
-				 * as there is no documentation on Carrier::addDeliveryPrice() in direct relation with a new CarrierZone.
-				 */
-				$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) VALUES ';
-				$sql .= '('.$carrier->id.', '.$range_price->id.', 0, '.$z['id_zone'].', '.(float)$default_shipping_price.'), ';
-				$sql .= '('.$carrier->id.', 0, '.$range_weight->id.', '.$z['id_zone'].', '.(float)$default_shipping_price.'), ';
-				$sql .= '('.$carrier->id.', '.$range_price2->id.', 0, '.$z['id_zone'].', 0), ';
-				$sql .= '('.$carrier->id.', 0, '.$range_weight->id.', '.$z['id_zone'].', 0);';
-				Db::getInstance()->execute($sql);
-			}
+			/*
+			 * We are NOT using Carrier::addZone() here, as its filling the database with zeroes in the price matrix.
+			 */
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'carrier_zone`(`id_carrier`, `id_zone`)VALUES('.$carrier->id.', '.$country_zone->id.')');
+			/*
+			 * We cannot use the object classes "Delivery" here, as it is not allowing to put NULL into id_shop and id_shop_group
+			 * which is needed in single shop constellations, when the price matirx query will ask for those values "IS NULL"
+			 *
+			 * So we will borrow the source from Carrier::addZone() here, to avoid selecting the zero-inserted price values and insert it directly,
+			 * as there is no documentation on Carrier::addDeliveryPrice() in direct relation with a new CarrierZone.
+			 */
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` (`id_carrier`, `id_range_price`, `id_range_weight`, `id_zone`, `price`) VALUES ';
+			$sql .= '('.$carrier->id.', '.$range_price->id.', 0, '.$country_zone->id.', '.(float)$default_shipping_price.'), ';
+			$sql .= '('.$carrier->id.', 0, '.$range_weight->id.', '.$country_zone->id.', '.(float)$default_shipping_price.'), ';
+			$sql .= '('.$carrier->id.', '.$range_price2->id.', 0, '.$country_zone->id.', 0), ';
+			$sql .= '('.$carrier->id.', 0, '.$range_weight->id.', '.$country_zone->id.', 0);';
+			Db::getInstance()->execute($sql);
 		}
 
 		/**
