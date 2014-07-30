@@ -85,7 +85,6 @@ class paypal_usa_validation extends PayPalUSA
 			else
 			{
 				/* Step 3 - Check the shopping cart, the currency used to place the order and the amount really paid by the customer */
-				$shop = new Shop((int)$custom[1]);
 				/*fixing cart currency 01/10/2014*/
 				global $cart;
 				$cart = new Cart((int)$custom[0]);	
@@ -122,7 +121,10 @@ class paypal_usa_validation extends PayPalUSA
 								$order = new Order((int)Order::getOrderByCartId($cart->id));
 								$new_history = new OrderHistory();
 								$new_history->id_order = (int)$order->id;
-								$new_history->changeIdOrderState((int)$order_status, $order, true);
+								if(version_compare(_PS_VERSION_, '1.5', '<'))
+									$new_history->changeIdOrderState((int)$order_status, (int)$order->id);
+								else
+									$new_history->changeIdOrderState((int)$order_status, $order, true);
 								$new_history->addWithemail(true);
 							}
 
@@ -149,11 +151,11 @@ class paypal_usa_validation extends PayPalUSA
 								verify_sign: '.Tools::getValue('verify_sign').'
 								Mode: '.(Tools::getValue('test_ipn') ? 'Test (Sandbox)' : 'Live');	
 
-								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, false, new Shop((int)$custom[1])))
+								if ($this->paypal_usa->validateOrder((int)$cart->id, (int)$order_status, (float)Tools::getValue('mc_gross'), $this->paypal_usa->displayName, $message, array(), null, false, false))
 								{
 									/* Store transaction ID and details */
 									$this->paypal_usa->addTransactionId((int)$this->paypal_usa->currentOrder, Tools::getValue('txn_id'));
-									$this->paypal_usa->addTransaction('payment', array('source' => 'standard', 'id_shop' => (int)$custom[1], 'id_customer' => (int)$this->context->cart->id_customer, 'id_cart' => (int)$this->context->cart->id,
+									$this->paypal_usa->addTransaction('payment', array('source' => 'standard', 'id_shop' => 1, 'id_customer' => (int)$this->context->cart->id_customer, 'id_cart' => (int)$this->context->cart->id,
 									'id_order' => (int)$this->paypal_usa->currentOrder, 'id_transaction' => Tools::getValue('txn_id'), 'amount' => (float)Tools::getValue('mc_gross'),
 									'currency' => Tools::getValue('mc_currency'), 'cc_type' => '', 'cc_exp' => '', 'cc_last_digits' => '', 'cvc_check' => 0, 'fee' => (float)Tools::getValue('mc_fee')));
 								}
