@@ -268,7 +268,7 @@ class GlobKurier extends Module {
 			$obj_json_save_order->setIntIdCustomer((int)$params['cart']->id_customer);
 			$obj_json_save_order->setStrShopKey((string)Configuration::get($this->name.'_SHOP_KEY'));
 			$obj_json_save_order->setStrSecureKey((string)$params['cart']->secure_key);
-                        $obj_json_save_order->setStrHost((string)$_SERVER['HTTP_HOST']);
+                        $obj_json_save_order->setStrHost((string)Tools::getShopDomain());
 			$obj_json_save_order->setStrReference((string)$obj_order->reference);
 			$obj_json_save_order->setStrOrderNumber((string)$order_number);
 			$obj_json_save_order->setStrBaseService((string)Tools::getValue('base_service'));
@@ -376,7 +376,7 @@ class GlobKurier extends Module {
 			$obj_globkurier_insert_order->setIntIdCustomer((int)$params['cart']->id_customer);
 			$obj_globkurier_insert_order->setStrSecureKey((string)$params['cart']->secure_key);
 			$obj_globkurier_insert_order->setStrShopKey(Configuration::get('GLOBKURIER_SHOP_KEY'));
-                        $obj_globkurier_insert_order->setStrHost((string)$_SERVER['HTTP_HOST']);
+                        $obj_globkurier_insert_order->setStrHost((string)Tools::getShopDomain());
 			$obj_globkurier_insert_order->setStrDate((string)$params['cart']->date_upd);
 			$obj_globkurier_insert_order->setStrRecipientName((string)$obj_delivery_address->company.' '.$obj_delivery_address->lastname.' '.$obj_delivery_address->firstname);
 			$obj_globkurier_insert_order->setStrRecipientAddress1((string)$obj_delivery_address->address1);
@@ -450,6 +450,7 @@ class GlobKurier extends Module {
 				Configuration::updateValue($this->name.'_AD_INSURANCE', GlobKurierConfig::PS_GK_AD_INSURANCE);
 				Configuration::updateValue($this->name.'_AD_COD', GlobKurierConfig::PS_GK_AD_COD);
 				Configuration::updateValue($this->name.'_AD_COD3', GlobKurierConfig::PS_GK_AD_COD3);
+                                Configuration::updateValue('GLOBKURIER_CONFIGURATION_OK', true);
 			}
 		}
 		if ($login && $password && $apikey)
