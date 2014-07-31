@@ -34,7 +34,7 @@ class AddressServiceSoap extends AvalaraSoapClient
 									'ValidateResult' => 'ValidateResult',
 									'BaseResult' => 'BaseResult',
 									'SeverityLevel' => 'SeverityLevel',
-									'Message' => 'Message',
+									'Message' => 'AvalaraMessage',
 									'Profile' => 'Profile',
 									'Ping' => 'Ping',						
 									'PingResult' => 'PingResult',
