@@ -606,7 +606,7 @@ class FedexCarrier extends CarrierModule
 					</div>
 				</fieldset>
 				
-				<div class="margin-form"><input class="button" name="submitSave" type="submit" value="'.$this->l('Configure').'"></div>
+				<div class="margin-form"><input class="button" name="submitSave" type="submit" value="'.$this->l('Save').'"></div>
 			</form>
 
 			<script>
