@@ -1419,10 +1419,11 @@ else
 	*/
 	public function fixPOST()
 	{
+		$address = new Address(isset($_POST['id_address']) ? (int)$_POST['id_address'] : null);
+		
 		/* Validate address only in the U.S. and Canada - if the Address Validation feature has been turned on in the module's configuration */
 		if (($address->id_country == Country::getByIso('US') || $address->id_country == Country::getByIso('CA')) && $this->tax('isAuthorized') && Configuration::get('AVALARATAX_ADDRESS_VALIDATION'))
 		{
-			$address = new Address(isset($_POST['id_address']) ? (int)$_POST['id_address'] : null);
 			$address->address1 = isset($_POST['address1']) ? $_POST['address1'] : null;
 			$address->address2 = isset($_POST['address2']) ? $_POST['address2'] : null;
 			$address->city = isset($_POST['city']) ? $_POST['city'] : null;
