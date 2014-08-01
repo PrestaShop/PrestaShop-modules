@@ -21,7 +21,7 @@
 		<input type="hidden" name="charset" value="utf8" />
 		<input type="hidden" name="business" value="{$paypal_usa_business_account|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="currency_code" value="{$currency->iso_code|escape:'htmlall':'UTF-8'}" />
-		<input type="hidden" name="custom" value="{$cart->id|intval};{$cart->id_shop|intval}" />
+		<input type="hidden" name="custom" value="{$cart->id|intval};{if isset($cart->id_shop)}{$cart->id_shop|intval}{else}0{/if}" />
 		<input type="hidden" name="amount" value="{$cart->getOrderTotal(true)|floatval}" />
 		<input type="hidden" name="first_name" value="{$paypal_usa_billing_address->firstname|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="last_name" value="{$paypal_usa_billing_address->lastname|escape:'htmlall':'UTF-8'}" />
