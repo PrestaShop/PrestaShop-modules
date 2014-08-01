@@ -427,3 +427,6 @@
 [submodule "syspay/backward_compatibility"]
 	path = syspay/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "cronjobs"]
+	path = cronjobs
+	url = https://github.com/PrestaShop/cronjobs

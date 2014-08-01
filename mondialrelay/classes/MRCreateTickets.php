@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 16117 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -269,10 +269,8 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	 * Build a correct weight format (NNNNN)
 	 */
 	private function _weightFormat($weight)
-	{
-		while (Tools::strlen($weight) < 5)
-			$weight = '0'.$weight;
-		return $weight;
+	{		
+		return sprintf("%05s",  $weight);
 	}
 
 	/*
@@ -330,16 +328,15 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				foreach ($this->_weightList as $orderWeightInfos)
 				{
 					$detail = explode('-', $orderWeightInfos);
-					if (count($detail) == 2 && $detail[1] == $orderDetail['id_order']) {
+					if (count($detail) == 2 && $detail[1] == $orderDetail['id_order'])
 						$tmp['Poids']['value'] = (float)$this->_weightFormat($detail[0]);
-					}
 				}
 				foreach ($this->_insuranceList as $insurance)
 				{
 					$detail = explode('-', $insurance);
 					if (count($detail) == 2 && $detail[1] == $orderDetail['id_order'])
 						$tmp['Assurance']['value'] = (int)($detail[0]);
-					else 
+					else
 						$tmp['Assurance']['value'] = $orderDetail['mr_ModeAss'];
 				}
 				$dest_tel = (!empty($deliveriesAddress->phone)) ? MRTools::getFormatedPhone($deliveriesAddress->phone) : '';
@@ -360,7 +357,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 				$tmp['Dest_Tel1']['value'] = $dest_tel;
 				$tmp['Dest_Tel2']['value'] = $dest_tel2;
 				$tmp['Dest_Mail']['value'] = $customer->email;
-				if ($orderDetail['mr_ModeLiv'] != 'LD1' && $orderDetail['mr_ModeLiv'] != 'LDS' && $orderDetail['mr_ModeLiv'] != 'HOM')
+				if ($orderDetail['mr_ModeLiv'] != 'LD1' && $orderDetail['mr_ModeLiv'] != 'LDS' && $orderDetail['mr_ModeLiv'] != 'HOM') 
 				{
 					$tmp['LIV_Rel_Pays']['value'] = $orderDetail['MR_Selected_Pays'];
 					$tmp['LIV_Rel']['value'] = $orderDetail['MR_Selected_Num'];
@@ -385,11 +382,11 @@ class MRCreateTickets implements IMondialRelayWSMethod
 	{
 		// RootCase is the array case where the main information are stored
 		// it's an array containing id_mr_selected and an array with the necessary fields
-		foreach ($this->_fieldsList as &$rootCase)
+		foreach ($this->_fieldsList as &$rootCase) 
 		{
 			$concatenationValue = '';
 			foreach ($rootCase['list'] as $paramName => &$valueDetailed)
-				if ($paramName != 'Texte' && $paramName != 'Security')
+				if ($paramName != 'Texte' && $paramName != 'Security') 
 				{
 					// Mac server make an empty string instead of a cleaned string
 					// TODO : test on windows and linux server
@@ -397,17 +394,13 @@ class MRCreateTickets implements IMondialRelayWSMethod
 					$valueDetailed['value'] = !empty($cleanedString) ? Tools::strtoupper($cleanedString) : Tools::strtoupper($valueDetailed['value']);
 
 					// Call a pointer function if exist to do different test
-					if (isset($valueDetailed['methodValidation']) &&
-						method_exists('MRTools', $valueDetailed['methodValidation']) &&
-						isset($valueDetailed['params']) &&
-						MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
+					if (isset($valueDetailed['methodValidation']) && method_exists('MRTools', $valueDetailed['methodValidation']) && isset($valueDetailed['params']) && MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
 						$concatenationValue .= $valueDetailed['value'];
 					// Use simple Regex test given by MondialRelay
-					else if (isset($valueDetailed['regexValidation']) &&
-						preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
+					else if (isset($valueDetailed['regexValidation']) && preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 						$concatenationValue .= $valueDetailed['value'];
 					// If the key is required, we set an error, else it's skipped
-					else if ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
+					else if ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value'])) 
 					{
 						if (empty($valueDetailed['value']))
 							$error = $this->_mondialrelay->l('This key', $this->class_name).' ['.$paramName.'] '.$this->_mondialrelay->l('is empty and need to be filled', $this->class_name);
@@ -416,10 +409,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 						$this->_resultList['error'][$rootCase['list']['NDossier']['value']][] = $error;
 					}
 				}
-			$concatenationValue .= $this->_webServiceKey;
-			
-// echo $concatenationValue.'<br/>';
-			
+			$concatenationValue .= $this->_webServiceKey;			
 			$rootCase['list']['Security']['value'] = Tools::strtoupper(md5($concatenationValue));
 		}
 	}
@@ -453,10 +443,12 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			
 		$history = new OrderHistory();
 		$history->id_order = (int)$params['NDossier'];
-		$history->changeIdOrderState((int)$orderState, (int)($params['NDossier']));
+		if (version_compare(_PS_VERSION_, '1.5.2', '>=')) 
+			$history->changeIdOrderState((int)$orderState, $order);
+		else 
+			$history->changeIdOrderState((int)$orderState, (int)($params['NDossier']));
 		$history->id_employee = (int)Context::getContext()->employee->id;
 		$history->addWithemail(true, $templateVars);
-
 		unset($order);
 		unset($history);
 	}
@@ -565,7 +557,7 @@ class MRCreateTickets implements IMondialRelayWSMethod
 			{
 				if (version_compare(_PS_VERSION_, '1.4', '>='))
 				{
-					if (!($zipcodeError = MRTools::checkZipcodeByCountry($tab['value'], array(
+					if (!(MRTools::checkZipcodeByCountry($tab['value'], array(
 						'id_country' => Configuration::get('PS_SHOP_COUNTRY_ID')))))
 						$errorList['error'][$name] = $tab['error'];
 				}

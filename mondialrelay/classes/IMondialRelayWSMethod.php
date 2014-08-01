@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 14011 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -29,8 +29,7 @@ require_once(dirname(__FILE__).'/../errorCode.php');
 require_once(realpath(dirname(__FILE__).'/../mondialrelay.php'));
 
 /*
- * This method allow to create any method object to dial more 
- * easyly with the Mondial Reelay WebService
+ * This method allow to create any method object to dial more easyly with the Mondial Reelay WebService
  */
 interface IMondialRelayWSMethod
 {
@@ -55,5 +54,4 @@ interface IMondialRelayWSMethod
 	 */
 	public function getResult();
 }
-
 ?>

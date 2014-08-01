@@ -1,4 +1,27 @@
-
+/**
+* 2007-2014 Mondial relay
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to Mondial relay so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade Mondial relay to newer
+* versions in the future. If you wish to customize Mondial relay for your
+* needs please refer to Mondial relay for more information.
+*
+*     @author Mondial relay
+*     @copyright  2007-2014 Mondial relay
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of Mondial relay
+*/
 var Widgets = Widgets || function () {
 
     var private = {
@@ -10,6 +33,7 @@ var Widgets = Widgets || function () {
         bounds: null,
         map: null,
         overlays: [],
+		infowindows: [],
         InfoWindow: null,
         container: null,
         callback: null,
@@ -162,6 +186,7 @@ var Widgets = Widgets || function () {
             private.map = new google.maps.Map(document.getElementById('MRW-Map'), myOptions);
             private.bounds = new google.maps.LatLngBounds();
             private.overlays = [];
+			private.infowindows = [];
         },
         MR_clearOverlays: function () {
             for (var n = 0, overlay; overlay = private.overlays[n]; n++) {
@@ -169,6 +194,7 @@ var Widgets = Widgets || function () {
             }
             // Clear overlays from collection
             private.overlays = [];
+			private.infowindows = [];
             private.bounds = new google.maps.LatLngBounds();
         },
         MR_FocusOnMaker: function (id) {
@@ -195,15 +221,18 @@ var Widgets = Widgets || function () {
             // Add clickListener
             google.maps.event.addListener(marker, 'click', function () {
                 // Fermeture de la fenêtre précédente
-                if (private.InfoWindow != null) { private.InfoWindow.close(); }
+                for(i in private.infowindows)
+					if(private.infowindows[i] != null)
+						private.infowindows[i].close();
 
-                private.InfoWindow = new google.maps.InfoWindow(
-			{
-			    content: private.MR_BuildparcelShopDetails(PRI)
-			}
-		);
-
+				private.InfoWindow = new google.maps.InfoWindow({
+					content: private.MR_BuildparcelShopDetails(PRI)
+				});	
+				
                 private.InfoWindow.open(private.map, marker);
+				
+				private.infowindows.push(private.InfoWindow);
+				
                 private.map.setCenter(marker.getPosition());
             });
 
@@ -213,7 +242,7 @@ var Widgets = Widgets || function () {
             });
 
             // Add Marker to Overlays collection
-            private.overlays.push(marker);
+            private.overlays.push(marker); 
 
             // Redimentionne la carte
             private.bounds.extend(latLng);
