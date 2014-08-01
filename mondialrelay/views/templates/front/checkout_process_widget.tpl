@@ -26,7 +26,7 @@
 <script type="text/javascript">
 	// Global JS Value 
 	var PS_MRData = {$MR_Data};
-	var id_address = '{$address->id}';
+	var id_address = '{$address->id|intval}';
 	var ssl = {$ssl};
 	var weight = {$cart->getTotalWeight()|floatval} * 1000; // en Kg
 	if( weight == 0 ) weight = 100;

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,10 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 7086 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -66,7 +66,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			'Action'				=> array(
 						'required'				=> false,
 						'value'						=> '',
-						'regexValidation' => '#^(REL|24R|ESP|DRI)$#'),			
+						'regexValidation' => '#^(REL|24R|ESP|DRI)$#'),
 			'Security'			=> array(
 						'required'				=> true,
 						'value'						=> '',
@@ -85,12 +85,12 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	
 	private $_webserviceURL;
 	
-	public function __construct($params, $object)	
+	public function __construct($params, $object)
 	{
 		$this->_mondialRelay = $object;
 		$this->_id_address_delivery = (int)($params['id_address_delivery']);
 		$this->_id_carrier = (int)($params['id_carrier']);
-		$this->_weight = (float)($params['weight']);	
+		$this->_weight = (float)($params['weight']);
 		$this->_webServiceKey = $this->_mondialRelay->account_shop['MR_KEY_WEBSERVICE'];
 		$this->_webserviceURL = MondialRelay::MR_URL.'webservice/Web_Services.asmx?WSDL';
 	}
@@ -138,10 +138,9 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 				if (isset($valueDetailed['methodValidation']) && method_exists('MRTools', $valueDetailed['methodValidation']) && isset($valueDetailed['params']) && MRTools::$valueDetailed['methodValidation']($valueDetailed['value'], $valueDetailed['params']))
 					$concatenationValue .= $valueDetailed['value'];
 				// Use simple Regex test given by MondialRelay
-				else if (isset($valueDetailed['regexValidation']) &&
-						preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
+				else if (isset($valueDetailed['regexValidation']) && preg_match($valueDetailed['regexValidation'], $valueDetailed['value'], $matches))
 					$concatenationValue .= $valueDetailed['value'];
-				// If the key is required, we set an error, else it's skipped 
+				// If the key is required, we set an error, else it's skipped
 				elseif ((!Tools::strlen($valueDetailed['value']) && $valueDetailed['required']) || Tools::strlen($valueDetailed['value']))
 				{
 					$error = $this->_mondialRelay->l('This key').' ['.$paramName.'] '.
@@ -172,24 +171,24 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _getRelayPointDetails($relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach ($relayPointList as $num => $relayPoint)
+		foreach ($relayPointList as $relayPoint)
 			$relayPointNumList[] = $relayPoint['Num'];
 		$MRRelayDetail = new MRRelayDetail(array('relayPointNumList' => $relayPointNumList, 'id_address_delivery' => $this->_id_address_delivery));
 		$MRRelayDetail->init();
 		$MRRelayDetail->send();
- 		return $MRRelayDetail->getResult();
+		return $MRRelayDetail->getResult();
 	}
-	
+
 	/*
 	** Generate a perman link to view relay detail on their website
 	*/
 	private function _addLinkHoursDetail(&$relayPointList)
 	{
 		$relayPointNumList = array();
-		foreach ($relayPointList as $num => $relayPoint)
+		foreach ($relayPointList as $relayPoint)
 			$relayPointNumList[] = $relayPoint->Num;
 		$permaList = MRRelayDetail::getPermaLink($relayPointNumList, $this->_id_address_delivery);
-		foreach ($relayPointList as $num => &$relayPoint)
+		foreach ($relayPointList as &$relayPoint)
 		{
 			$relayPoint->permaLinkDetail = '';
 			if (array_key_exists($relayPoint->Num, $permaList))
@@ -205,7 +204,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 	private function _parseResult($client, $result, $params)
 	{
 		$errors = array();
-		$success = array();		
+		$success = array();
 		$result = $result->WSI2_RecherchePointRelaisResult;
 		if (($errorNumber = $result->STAT) != 0)
 		{
@@ -221,25 +220,25 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			foreach ($result as $num => $relayPoint)
 			{
 				$totalEmptyFields = 0;
-				foreach ($relayPoint as $key => &$value)
+				foreach ($relayPoint as &$value)
 				{
 					$value = trim($value);
 					if (empty($value))
 						++$totalEmptyFields;
- 				}
- 				if ($totalEmptyFields == count($relayPoint))
- 					unset($result[$num]);
- 			}
- 			if (!count($result))
- 				$errors[] = $this->_mondialRelay->l('MondialRelay can\'t find any relay point near your address. Maybe your address isn\'t properly filled ?');
- 			else
- 			{
- 				$this->_addLinkHoursDetail($result);
- 				
- 				// Fetch detail info using webservice (not used anymore)
- 				// $this->_generateLinkHoursDetail($result);
- 				// $result = (count($relayDetail['success'])) ? $relayDetail['success'] : $result;
- 			}
+				}
+				if ($totalEmptyFields == count($relayPoint))
+					unset($result[$num]);
+			}
+			if (!count($result))
+				$errors[] = $this->_mondialRelay->l('MondialRelay can\'t find any relay point near your address. Maybe your address isn\'t properly filled ?');
+			else
+			{
+				$this->_addLinkHoursDetail($result);
+
+				// Fetch detail info using webservice (not used anymore)
+				// $this->_generateLinkHoursDetail($result);
+				// $result = (count($relayDetail['success'])) ? $relayDetail['success'] : $result;
+			}
 			$success = $result;
 		}
 		$this->_resultList['error'] = $errors;
@@ -257,7 +256,7 @@ class MRGetRelayPoint implements IMondialRelayWSMethod
 			$client->decode_utf8 = false;
 			
 			$params = $this->_getSimpleParamArray($this->_fields['list']);
-			$result = $client->WSI2_RecherchePointRelais($params);				
+			$result = $client->WSI2_RecherchePointRelais($params);
 			$this->_parseResult($client, $result, $params);
 			unset($client);
 		}

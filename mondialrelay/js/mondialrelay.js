@@ -1,5 +1,5 @@
-/*
-* 2007-2014 PrestaShop
+/**
+* 2007-2014 Mondial relay
 *
 * NOTICE OF LICENSE
 *
@@ -9,19 +9,18 @@
 * http://opensource.org/licenses/afl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
+* to Mondial relay so we can send you a copy immediately.
 *
 * DISCLAIMER
 *
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
+* Do not edit or add to this file if you wish to upgrade Mondial relay to newer
+* versions in the future. If you wish to customize Mondial relay for your
+* needs please refer to Mondial relay for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 16986 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*     @author Mondial relay
+*     @copyright  2007-2014 Mondial relay
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of Mondial relay
 */
 var PS_MRObject = (function($, undefined) {
 
@@ -89,6 +88,8 @@ var PS_MRObject = (function($, undefined) {
 								$('#URLA4_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A4 + '">\
 								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#URLA5_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A5 + '">\
+								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
+								$('#URL10x15_' + id_order).html('<a href="' + json.success[id_order].URLPDF_A5 + '">\
 								<img width="20" src="' + _PS_MR_MODULE_DIR_ + 'img/pdf_icon.jpg" alt="download pdf"" /></a>');
 								$('#expeditionNumber_' + id_order).html(json.success[id_order].expeditionNumber);
 								$('#detailHistory_' + id_order).children('td').children('input').attr('value', json.success[id_order].id_mr_history);
@@ -174,16 +175,18 @@ var PS_MRObject = (function($, undefined) {
 							<tr id="detailHistory_' + id_order + '">\
 								<td><input type="checkbox" class="history_id_list" name="history_id_list[]" value="' + id_order + '" /></td>\
 								<td>' + id_order + '</td>\
-								<td id="expeditionNumber_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
-								<td id="URLA4_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
-								<td id="URLA5_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" /></td>\
+								<td id="expeditionNumber_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URLA4_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URLA5_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
+								<td id="URL10x15_' + id_order + '"><img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" /></td>\
 							</tr>');
 						}
 						else
 						{
-							$('#detailHistory_' + id_order).children('#URLA4_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
-							$('#detailHistory_' + id_order).children('#URLA5_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
-							$('#detailHistory_' + id_order).children('#expeditionNumber_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'images/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URLA4_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URLA5_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#URL10x15_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
+							$('#detailHistory_' + id_order).children('#expeditionNumber_' + id_order).html('<img src="' + _PS_MR_MODULE_DIR_ + 'img/getTickets.gif" />');
 						}
 					}
 			}
@@ -720,7 +723,7 @@ var PS_MRObject = (function($, undefined) {
 		blockTR.after(' \
 		<tr class="PS_MRSelectedCarrier" id="PS_MRSelectedCarrier_' + carrier_id + '"> \
 			<td colspan="4"><div> \
-				<img src="' + _PS_MR_MODULE_DIR_ + 'images/loader.gif" alt="" /> \
+				<img src="' + _PS_MR_MODULE_DIR_ + 'img/loader.gif" alt="" /> \
 			</div> \
 		</td></tr>');
 

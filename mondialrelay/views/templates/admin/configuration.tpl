@@ -193,7 +193,7 @@
 					<label for="MR_weight_coefficient" class="mrLabel">{l s='Weight Coefficient:' mod='mondialrelay'}</label>
 					<input class="mrInput" type="text" name="MR_weight_coefficient" id="MR_weight_coefficient" style="width:45px; " value="{$MR_weight_coefficient|escape:'htmlall':'UTF-8'}"/>
 					<sup>*</sup>
-					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used}</span>
+					<span class="indication">{l s='grammes = 1 ' mod='mondialrelay'}{$MR_unit_weight_used|floatval}</span>
 				</li>
 				<li class="PS_MRSubmit">
 					<input type="button" name="check_connexion" value="{l s='Check connexion' mod='mondialrelay'}" class="button" style="margin:0 60px 0 0;" onclick="return mr_checkConnexion();"/> 
@@ -338,10 +338,10 @@
 					{foreach from=$MR_carriers_list key=num_carrier item=carrier}
 						<tr>
 							<td width="5%" align="center">
-								{$carrier.id_mr_method}
+								{$carrier.id_mr_method|intval}
 							</td>
 							<td width="7%" align="center">
-								{$carrier.id_carrier}
+								{$carrier.id_carrier|intval}
 							</td>
 							<td width="40%">
 								{$carrier.name|escape:'htmlall':'UTF-8'} ({$carrier.col_mode|escape:'htmlall':'UTF-8'})								
@@ -357,14 +357,14 @@
 							</td>
 							<td align="center">						
 								<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}&MR_tab_name=supplier_form" method="post">
-									<input type="hidden" name="delete_mr" value="{$carrier.id_mr_method}" >
+									<input type="hidden" name="delete_mr" value="{$carrier.id_mr_method|intval}" >
 									<a class="send_disable_carrier_form" href="javascript:void(0)">
 										<img src="../img/admin/disabled.gif" alt="{l s='Delete' mod='mondialrelay'}" title="{l s='Delete' mod='mondialrelay'}" />
 									</a>
 								</form>
 							</td>
 							<td align="center">
-								<a href="index.php?tab=AdminCarriers&id_carrier={$carrier.id_carrier}&updatecarrier&token={$MR_token_admin_carriers|escape:'htmlall':'UTF-8'}">
+								<a href="index.php?tab=AdminCarriers&id_carrier={$carrier.id_carrier|intval}&updatecarrier&token={$MR_token_admin_carriers|escape:'htmlall':'UTF-8'}">
 									<img src="../img/admin/edit.gif" alt="{l s='Edit' mod='mondialrelay'}" title="{l s='Edit' mod='mondialrelay'}" />
 								</a>
 								

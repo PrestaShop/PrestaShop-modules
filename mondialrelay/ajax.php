@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -18,11 +18,10 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 16117 $
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+* @author    PrestaShop SA <contact@prestashop.com>
+* @copyright 2007-2014 PrestaShop SA
+* @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* International Registered Trademark & Property of PrestaShop SA
 */
 
 /*
@@ -33,7 +32,7 @@
  */
 
 /* 
-* 	Clean displayed content for Admin ajax query 
+* 	Clean displayed content for Admin ajax query
 */
 ob_clean();
 
@@ -56,7 +55,7 @@ require_once(dirname(__FILE__).'/classes/MRGetRelayPoint.php');
 require_once(dirname(__FILE__).'/classes/MRRelayDetail.php');
 require_once(dirname(__FILE__).'/classes/MRManagement.php');
 require_once(dirname(__FILE__).'/classes/MRDownloadPDF.php');
- 
+
 /* Can't use Tools at this time... Need to know if _PS_ADMIN_DIR_ has to be defined */
 $method = Tools::getValue('method');
 $token = Tools::getValue('mrtoken');
@@ -76,7 +75,7 @@ $accessPageList = array(
 		'MRDownloadPDF'
 	)
 );
- 
+
 $params = array();
 $result = array();
 
@@ -140,8 +139,7 @@ try
 		}
 		unset($obj);
 	}
-	else if (($management = new MRManagement($params)) &&
-		method_exists($management, $method))
+	else if (($management = new MRManagement($params)) && method_exists($management, $method))
 		$result = $management->{$method}();
 	else
 		throw new Exception('Method Class : '.$method.' can\'t be found');
