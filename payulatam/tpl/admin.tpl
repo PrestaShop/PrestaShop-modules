@@ -24,42 +24,82 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<link href="{$css|escape:'htmlall':'UTF-8'}" rel="stylesheet" type="text/css">
+<link href="{$css|escape:'htmlall':'UTF-8'}bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{$css|escape:'htmlall':'UTF-8'}style.css" rel="stylesheet" type="text/css">
 <img src="{$tracking}" alt="tracking" style="display:none"/>
-<div class="payu-module-wrapper">
-	<div class="payu-module-inner-wrap">
-		<img src="{$logo|escape:'htmlall':'UTF-8'}" alt="logo" class="payu-logo" />
-		<p class="payu-module-intro">{l s='The payment solutions offered by PayU Latam adapt to any type of company or business: big or small, beginner or experienced, local or multinational, already selling online or willing to accept payments through the web.' mod='payulatam'}<br /><br />
-		<a class="payu-button" href="http://www.latinamericanpayments.com/prestashop-{$lang}">{l s='Open your FREE account today!' mod='payulatam'}</a></p>
-		<div class="payu-module-right-col">
-			<h1>{l s='Start selling in Latin America now!' mod='payulatam'}</h1>
-			<ul>
-				<li>{l s='Accept' mod='payulatam'} <strong>{l s='different payment methods in a single platform:' mod='payulatam'}</strong> {l s='cash deposits, bank transfers and credit cards.' mod='payulatam'}</li>
-				<li>{l s='Receive payments in' mod='payulatam'} <strong>{l s='several countries in Latin America' mod='payulatam'}</strong> {l s='with a single integration.' mod='payulatam'}</li>
-				<li><strong>{l s='Multi-language' mod='payulatam'}</strong> {l s='and' mod='payulatam'} <strong>{l s='multi-currency' mod='payulatam'}</strong> {l s='options.' mod='payulatam'}</li>
-				<li>{l s='Reduce the risk of selling online by a powerful' mod='payulatam'} <strong>{l s='Anti-Fraud system' mod='payulatam'}</strong> {l s='and transactions control.' mod='payulatam'}</li>
-				<li>{l s='Prevent major investments in infrastructure, technic developments, maintenance and administration of the payment system.' mod='payulatam'}</li>
-			</ul>
-			<h2>{l s='Safety and Support' mod='payulatam'}</h2>
-			<ul class="payu-3cols">
-				<li><p class="payu-small-col1"><strong>{l s='Anti-fraud Control:' mod='payulatam'}</strong><br />{l s='Anti-fraud module for automatic validation of transactions and manual verification procedures, carried out by experts in analysis and identification of fraud.' mod='payulatam'}</p></li>
-				<li><p class="payu-small-col2"><strong>{l s='Certified PCI DSS:' mod='payulatam'}</strong><br />{l s='With this certification, PayU Latam ensures the protection, confidentiality, and integrity of the card holder information.' mod='payulatam'}</p></li>
-				<li><p class="payu-small-col3"><strong>{l s='Veracode Recognition:' mod='payulatam'}</strong><br />{l s='The unique award-winning company in Latin America thanks to its high safety standards in the development of its transactional platform and related services.' mod='payulatam'}</p></li>
-			</ul>
+<div class="md-contenedor row">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<header class="md-header">
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+					<div class="md-log"><img src="{$img|escape:'htmlall':'UTF-8'}logo.png" alt=""></div>
+					<div class="md-copy">{l s='Accept local payments on ' mod='payulatam'} <span class="md-blue-light">{l s='your website' mod='payulatam'}</span></div>
+					<div class="md-btn-action">
+						<a href="https://secure.payulatam.com/online_account/create_account.zul" target="_blank"><button class="md-btn">{l s='Open your PayU Account' mod='payulatam'}</button></a>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 md-top">
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 md-left"><img src="{$img|escape:'htmlall':'UTF-8'}{l s='ico-pago.png' mod='payulatam'}" alt=""></div>
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 md-left"><img src="{$img|escape:'htmlall':'UTF-8'}{l s='ico-credito.png' mod='payulatam'}" alt=""></div>
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 md-left"><img src="{$img|escape:'htmlall':'UTF-8'}{l s='ico-trans.png' mod='payulatam'}" alt=""></div>
+				</div>
+				<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"></div>
+			</header>
+
+			<section class="md-section">
+				<div class="md-p1">Pay<span class="md-blue-light">U</span> Latam {l s='solutions will help you to' mod='payulatam'} <br> <span class="md-blue-light">{l s='increase your online sales' mod='payulatam'}</span> </div>
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<div class="md-p2"> {l s='PayU Latam is the leading online payment service provider in Latin America with more than 20,000 clients. With more than 10 years of experience in the market, PayU Latam has the most complete anti-fraud system in the region and offers the New Generation of Payment Solutions that allows its merchants to accept more than 70 payment options in Argentina, Brazil, Chile, Colombia, Mexico, Panama and Peru.' mod='payulatam'} </div>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<iframe width="80%" height="180" src="//www.youtube-nocookie.com/embed/ZyIlxKgcWKs" frameborder="1" allowfullscreen></iframe>
+				</div>
+
+					
+			</section>
+
+			<section class="md-section">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 md-col">
+					<h4 class="md-h4">{l s='Benefits' mod='payulatam'}</h4>
+					<ul>
+						<li>{l s='Accept different payment options in one platform: cash payments, credit cards (local and international) and bank transfers.' mod='payulatam'}</li>
+						<li>{l s='With just one integration, you can receive payments in 7 countries in Latin America in local currency.' mod='payulatam'} </li>
+						<li>{l s='Take advantage of the multi-language and multi-currency platform.' mod='payulatam'}</li>
+						<li>{l s='Utilize the PayU Latam Checkout, which has been optimized to increase the number of completed transactions.' mod='payulatam'}</li>
+						<li>{l s='Avoid large investments in infrastructure, technological developments, maintenance and management of the payment system.' mod='payulatam'}</li>
+					</ul>
+				</div>
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 md-col">
+					<h4 class="md-h4">{l s='Security and Recognition' mod='payulatam'}</h4>
+					<ul>
+						<li>{l s='Anti-Fraud Control: The PayU Latam Anti-Fraud system automatically validates transactions and, when necessary, expert analysts manually verify transactions to minimize fraudulent transactions.' mod='payulatam'}   </li>
+						<li>{l s='PCI DSS Certification: With this certification, PayU Latam adheres to its standards and ensures the cardholder will have the highest level of security, confidentiality and integrity.' mod='payulatam'}</li>
+						<li>{l s='Veracode Recognition: PayU Latam is the only Latin American company recognized for its high security standards in the development of its transactional platform and associated services.' mod='payulatam'} </li>
+					</ul>
+				</div>
+			</section>
+
+			<section class="md-section">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 md-mg">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="active"><a href="#conf" role="tab" data-toggle="tab">{l s='Configuration' mod='payulatam'}</a></li>
+						<li><a href="#crendeciales" role="tab" data-toggle="tab">{l s='Credentials' mod='payulatam'}</a></li>
+					</ul>
+					
+					<!-- Tab panes -->
+					<div class="tab-content">
+						{foreach from=$tab item=div}
+							 <div id="{$div.tab|escape:'htmlall':'UTF-8'}" class="tab-pane {if $div.selected}active{/if} md-pad">
+								{$div.content}
+							</div>
+						{/foreach}
+					</div>
+				</div>
+			</section>
 		</div>
-	</div>
-	<ul id="menuTab">
-	  {foreach from=$tab item=li}
-	  <li id="menuTab{$li.tab|escape:'htmlall':'UTF-8'}" class="menuTabButton {if $li.selected}selected{/if}">{if $li.icon != ''}<img src="{$li.icon|escape:'htmlall':'UTF-8'}" alt="{$li.title|escape:'htmlall':'UTF-8'}"/>{/if} {$li.title|escape:'htmlall':'UTF-8'}</li>
-	  {/foreach}
-	</ul>
-	<div id="tabList">
-	  {foreach from=$tab item=div}
-	  <div id="menuTab{$div.tab|escape:'htmlall':'UTF-8'}Sheet" class="tabItem {if $div.selected}selected{/if}">
-	    {$div.content}
-	  </div>
-	  {/foreach}
-	</div>
+	</div>	
 </div>
 {foreach from=$script item=link}
 <script type="text/javascript" src="{$link|escape:'htmlall':'UTF-8'}"></script>

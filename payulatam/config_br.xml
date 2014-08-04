@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>payulatam</name>
-	<displayName><![CDATA[PayU Latam]]></displayName>
+	<displayName><![CDATA[PayU Latam ]]></displayName>
 	<version><![CDATA[2.0]]></version>
 	<description><![CDATA[Payment gateway for PayU Latam]]></description>
 	<author><![CDATA[PayU Latam]]></author>

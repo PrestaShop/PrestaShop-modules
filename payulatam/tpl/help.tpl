@@ -23,22 +23,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<fieldset class="tab-configure">
-	<h4 class="first">{l s='How to get a PayU Latam account:' mod='payulatam'}</h4>
-	<p>{l s='Go to' mod='payulatam'} <a href="http://www.latinamericanpayments.com/prestashop" rel="external">{l s='PayU Latam' mod='payulatam'}</a> {l s='and fill out the form to create your account.' mod='payulatam'}</p>
-	<h4>{l s='How to configure the PayU Latam module:' mod='payulatam'}</h4>
-	<ul>
-		<li class="first"><p>{l s='Enter your username and password to the Sign in  located in the upper right corner in' mod='payulatam'} <a href="http://www.payulatam.com" rel="external">{l s='www.payulatam.com' mod='payulatam'}</a><br>
-		<img alt="" class="info-img" src="{$module_dir}img/info-img1.jpg" /></p></li>
-		<li><p>{l s='In the PayU Latam administrative module go to the "Configuration" tab' mod='payulatam'}<br><br>
-		<img alt="" class="info-img" src="{$module_dir}img/info-img2.jpg" /></p>
-</li>
-		<li><p>{l s='In the "Technical information" section you will find the ApiKey and Merchant Id' mod='payulatam'}<br>
-		<img alt="" class="info-img" src="{$module_dir}img/info-img3.jpg" /></p></li>
-		<li class="last"><p>{l s='With this information, go to "Credentials" within the PrestaShop PayU Latam module and fill in the required fields' mod='payulatam'}</p><br>
-		<p>{l s='Press the "Save" button' mod='payulatam'}</p></li>
-	</ul>
-	<h4>{l s='Please consider:' mod='payulatam'}</h4>
-	<p>{l s='If you enable the "Test Mode" all transactions to be processed will not be real' mod='payulatam'} <sup>*</sup></p>
-	<p class="note"><sup>*</sup> {l s='this mode should never be active in production for real transactions' mod='payulatam'}</p>
-</fieldset>
+<h4 class="md-h4">{l s='Once you have created your PayU account:' mod='payulatam'}</h4>
+<ol class="mdn-umb">
+	<li>{l s='Enter the' mod='payulatam'} <a href="https://secure.payulatam.com/">{l s='Administrative Module' mod='payulatam'}</a> {l s='and click on the "Configuration" tab' mod='payulatam'} </li>
+	<li>{l s='You will find the API Key and Merchant idea in the section "Technical Information"' mod='payulatam'} </li>
+	<li>{l s='Then, go the "Settings and Credentials" in the Prestashop-PayU Module.' mod='payulatam'}</li>
+	<li>{l s='Fill in the necessary information in the page and then Save it.' mod='payulatam'}</li>
+</ol>
+
+<h4 class="md-h4">{l s='Remember:' mod='payulatam'}</h4>
+<p>{l s='You should disable the' mod='payulatam'} <b>{l s='"Test Mode"' mod='payulatam'}</b> {l s='in the PayU platform to process transactions. This is found in the section of "Configuration" and "Account configuration".' mod='payulatam'} </p>

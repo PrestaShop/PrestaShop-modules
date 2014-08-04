@@ -23,25 +23,32 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-<form action="{$formCredential|escape:'htmlall':'UTF-8'}" method="POST">
-	<fieldset>
-		<p>{$credentialText|escape:'htmlall':'UTF-8'}</p>
+<div class="tab-pane md-pad" id="crendeciales">
+	<form action="{$formCredential|escape:'htmlall':'UTF-8'}" method="POST">
 		<input type="hidden" name="submitPayU" value="1" />
 		{foreach from=$credentialInputVar item=input}
-		<label from="{$input.name|escape:'htmlall':'UTF-8'}">{$input.label|escape:'htmlall':'UTF-8'}</label>
-		<div class="margin-form">
-		{if $input.type == 'text'}
-			<input type="{$input.type|escape:'htmlall':'UTF-8'}" name="{$input.name|escape:'htmlall':'UTF-8'}" id="{$input.name|escape:'htmlall':'UTF-8'}" value="{$input.value|escape:'htmlall':'UTF-8'}" /> {if $input.required}<span style="color:red">*</span>{/if} {$input.desc|escape:'htmlall':'UTF-8'}
+			{if $input.type == 'text'}
+				<div class="md-item">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"><label for="{$input.name|escape:'htmlall':'UTF-8'}">{$input.label|escape:'htmlall':'UTF-8'}</label></div>
+					<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+						<input type="{$input.type|escape:'htmlall':'UTF-8'}" placeholder="{$input.label|escape:'htmlall':'UTF-8'}" name="{$input.name|escape:'htmlall':'UTF-8'}" id="{$input.name|escape:'htmlall':'UTF-8'}" value="{$input.value|escape:'htmlall':'UTF-8'}" /> {if $input.required}<span style="color:red">*</span>{/if} 
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7"><p>{$input.desc}</p></div>
+				</div>
 			{elseif $input.type == 'radio'}
-	    	{foreach from=$input.values item=val}
-	    		<input type="{$input.type|escape:'htmlall':'UTF-8'}" {if $val == $input.value}checked='checked'{/if} name="{$input.name|escape:'htmlall':'UTF-8'}" id="{$input.name|escape:'htmlall':'UTF-8'}{$val}" value="{$val|escape:'htmlall':'UTF-8'}" /> {if $input.required}<span style="color:red">*</span>{/if} {$val|escape:'htmlall':'UTF-8'}
-			{/foreach}
-		{/if}
-		</div>
+				<div class="md-item">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"><label for="{$input.name|escape:'htmlall':'UTF-8'}">{$input.label|escape:'htmlall':'UTF-8'}</label></div>
+					{foreach from=$input.values item=val}
+						<div class="md-fl-left md"><input type="{$input.type|escape:'htmlall':'UTF-8'}" {if $val == $input.value}checked='checked'{/if} name="{$input.name|escape:'htmlall':'UTF-8'}" id="{$input.name|escape:'htmlall':'UTF-8'}{$val}" value="{$val|escape:'htmlall':'UTF-8'}" /> 
+						{if $input.required}<span style="color:red">*</span>{/if}</div>
+						<div class="md-fl-left md">{$val|escape:'htmlall':'UTF-8'}</div>
+					{/foreach}
+				</div>
+			{/if}
 		{/foreach}
-		<div class="margin-form">
-			<input type="submit" class="button" value="{l s='Save' mod='payulatam'}" />
+		<div class="md-item">
+			<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2"></div>
+			<div class="col-xs-12 col-sm-12 col-md-3 col-lg-10 md-save"><input type="submit" class="md-btn" value="{l s='Save' mod='payulatam'}" /></div>
 		</div>
-	</fieldset>
-</form>
+	</form>
+</div>
