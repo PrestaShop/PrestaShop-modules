@@ -24,11 +24,11 @@ class Riskified extends Module
 	{
 		$this->name = 'riskified';
 		$this->tab = 'payment_security';
-		$this->version = '0.2.9';
+		$this->version = '0.3.0';
 		$this->author = 'Riskified.com';
 		$this->secure_key = Tools::encrypt($this->name);
 		parent::__construct();
-		$this->displayName = 'riskified';
+		$this->displayName = 'Riskified';
 		$this->description = $this->l('Riskified reviews, approves & guarantees transactions you would otherwise decline');
 		$this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 	}
