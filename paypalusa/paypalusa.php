@@ -375,7 +375,12 @@ class PayPalUSA extends PaymentModule
 				'paypal_usa_billing_address' => $billing_address,
 				'paypal_usa_total_tax' => (float)$this->context->cart->getOrderTotal(true) - (float)$this->context->cart->getOrderTotal(false),
 				'paypal_usa_cancel_url' => $this->context->link->getPageLink('order.php',''),
-				'paypal_usa_notify_url' => $this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1), Configuration::get('PS_SSL_ENABLED')), 
+				'paypal_usa_notify_url' =>
+					version_compare(_PS_VERSION_, '1.5', '<') ?
+					(Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).
+					__PS_BASE_URI__.'modules/paypalusa/validation.php?pps=1' :
+					$this->context->link->getModuleLink('paypalusa', 'validation', array('pps' => 1), Configuration::get('PS_SSL_ENABLED')), 
+				
 				'paypal_usa_return_url' => /*26/12/2013 fix for Backward compatibilies on confirmation page*/
 					version_compare(_PS_VERSION_, '1.5', '<') ?
 					(Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).
