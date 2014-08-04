@@ -2,7 +2,7 @@
         <module>
             <name>socolissimo</name>
             <displayName><![CDATA[So Colissimo]]></displayName>
-            <version><![CDATA[2.9.4]]></version>
+            <version><![CDATA[2.9.5]]></version>
             <description><![CDATA[Proposez &agrave; vos clients 5 modes de livraison via La Poste.]]></description>
             <author><![CDATA[Quadra Informatique]]></author>
             <tab><![CDATA[shipping_logistics]]></tab>
