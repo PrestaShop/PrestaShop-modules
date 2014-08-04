@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.9.2';
+		$this->version = '3.9.4';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -165,7 +165,7 @@ class ShoppingFluxExport extends Module
 			$this->_html .= '<br/><strong>'.$this->l('Vous devez installer / activer l\'extension CURL
 				pour pouvoir bénéficier de la remontée des commandes. Contactez votre administrateur pour savoir comment procéder').'</strong>';
 		else
-			Configuration::updateValue('SHOPPINGFLUXEXPORT_CONFIGURATION_OK', true);
+			Configuration::updateValue('SHOPPINGFLUXEXPORT_CONFIGURED', true); // SHOPPINGFLUXEXPORT_CONFIGURATION_OK
 
 		return $this->_html;
 	}
@@ -185,11 +185,14 @@ class ShoppingFluxExport extends Module
 		if (version_compare(_PS_VERSION_, '1.5', '>') && Shop::isFeatureActive())
 		{
 			$shop = Context::getContext()->shop;
+			$base_uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri;
 			$uri = 'http://'.$shop->domain.$shop->physical_uri.$shop->virtual_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
 		}
-		else
+		else {
+			$base_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__;
 			$uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
-
+		}
+		
 		//uri images
 		$uri_img = 'http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/screens/';
 		//owner object
@@ -199,42 +202,75 @@ class ShoppingFluxExport extends Module
 		if (isset($send_mail) && $send_mail != null)
 			$this->sendMail();
 
+		//get fieldset depending on the country
+		$country = Context::getContext()->country->iso_code == 'FR' ? 'fr' : 'us';
+		
+		$html = '<p style="text-align:center"><img style="margin:20px; width: 250px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$country.'.jpg" /></p>';
 		//first fieldset
-		$html = '<h2>'.$this->displayName.'</h2>
-		<fieldset>
-			<legend>'.$this->l('Informations').'</legend>
-			<p style="padding-bottom:10px"><b>'.$this->l('Shopping Flux est un logiciel qui rencontre un énorme succès chez les utilisateurs de PrestaShop.').'</b></p>
-			<p><b>'.$this->l('Il permet de diffuser vos produits sur plus de 1.000 réseaux et d\'augmenter ainsi le Chiffre d\'Affaires de votre boutique en ligne :').'</b></p>
-			<p style="padding-bottom:5px">
-					<ol>
-							<li style="padding-bottom:5px">1. '.$this->l('Bénéficier d\'un flux pré-formaté pour plus de 500 Comparateurs de Prix. Aussi bien des généralistes (Google Shopping, LeGuide.co, Kelkoo, etc.) que des Comparateurs de Prix spécialisés (sport, mode, animalerie, bricolage, puériculture) et donc avec une excellente rentabilité.').'</li>
-							<li style="padding-bottom:5px">2. '.$this->l('Connexion à des dizaines de Places de Marché (Amazon, eBay, Cdiscount, MisterGoodDeal, LaRedoute, PriceMinister, GodSaveTheKids, etc.), avec la possibilité de modifier le prix sur chaque Place de Marché poru otpimiser votre rentabilité.').'</li>
-							<li style="padding-bottom:5px">3. '.$this->l('Remontée et validation des commandes; mise à jour des stocks en temps réels directement depuis votre PrestaShop : vous gagnerez en temps de traitement de vos commandes et bénéficierez ainsi de bonnes notes sur ces réseaux.').'</li>
-							<li style="padding-bottom:10px">4. '.$this->l('Et enfin, une nouveauté : BuyLine, qui vous permettra de suivre le parcours externe de vos acheteurs, c\'est-à-dire tous les sites qu\'ils auront visités avant d\'acheter sur votre PrestaShop.').'</li>
-					</ol>
-			</p>';
+		if ($country == 'fr'){
+			
+			$html /= '<fieldset>
+				<legend>'.$this->l('Information(s)').'</legend>
+				<p style="padding-bottom:10px"><b>'.$this->l('Shopping Flux est un logiciel qui rencontre un énorme succès chez les utilisateurs de PrestaShop.').'</b></p>
+				<p><b>'.$this->l('Il permet de diffuser vos produits sur plus de 1.000 réseaux et d\'augmenter ainsi le Chiffre d\'Affaires de votre boutique en ligne :').'</b></p>
+				<p style="padding-bottom:5px">
+						<ol>
+								<li style="padding-bottom:5px">1. '.$this->l('Bénéficier d\'un flux pré-formaté pour plus de 500 Comparateurs de Prix. Aussi bien des généralistes (Google Shopping, LeGuide.co, Kelkoo, etc.) que des Comparateurs de Prix spécialisés (sport, mode, animalerie, bricolage, puériculture) et donc avec une excellente rentabilité.').'</li>
+								<li style="padding-bottom:5px">2. '.$this->l('Connexion à des dizaines de Places de Marché (Amazon, eBay, Cdiscount, MisterGoodDeal, LaRedoute, PriceMinister, GodSaveTheKids, etc.), avec la possibilité de modifier le prix sur chaque Place de Marché poru otpimiser votre rentabilité.').'</li>
+								<li style="padding-bottom:5px">3. '.$this->l('Remontée et validation des commandes; mise à jour des stocks en temps réels directement depuis votre PrestaShop : vous gagnerez en temps de traitement de vos commandes et bénéficierez ainsi de bonnes notes sur ces réseaux.').'</li>
+								<li style="padding-bottom:10px">4. '.$this->l('Et enfin, une nouveauté : BuyLine, qui vous permettra de suivre le parcours externe de vos acheteurs, c\'est-à-dire tous les sites qu\'ils auront visités avant d\'acheter sur votre PrestaShop.').'</li>
+						</ol>
+				</p>';
 
-		if ($price != 0)
-			$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois, ').'</b>';
-		else
-			$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de 79€ H.T/mois, ').'</b>';
+			if ($price != 0)
+				$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de ').$price.$this->l('€ H.T/mois, ').'</b>';
+			else
+				$html .= '<p style="padding-bottom:10px"><b>'.$this->l('A partir de 79€ H.T/mois, ').'</b>';
 
-		$html .= $this->l('Shopping Flux propose à tous les PrestaShop activant ce module une période de test gratuite et sans engagement. ');
+			$html .= $this->l('Shopping Flux propose à tous les PrestaShop activant ce module une période de test gratuite et sans engagement. ');
 
-		$html .= $this->l('Plus de 700 marchands utilisent déjà ce logiciel, dont l\'objectif est de multiplier par 2 votre CA en moins de 4 mois.').'</p>
-			<p>'.$this->l('N\'hésitez pas à tester ce logiciel en activant ce module, et recevez en plus leur Livre Blanc "Stratégie pour vos flux".').'</p>
-			<br/>
-			<p>'.$this->l('Voici des copies d\'écrans').' :</p>
-			<p style="text-align:center">';
+			$html .= $this->l('Plus de 700 marchands utilisent déjà ce logiciel, dont l\'objectif est de multiplier par 2 votre CA en moins de 4 mois.').'</p>
+				<p>'.$this->l('N\'hésitez pas à tester ce logiciel en activant ce module, et recevez en plus leur Livre Blanc "Stratégie pour vos flux".').'</p>
+				<br/>
+				<p>'.$this->l('Voici des copies d\'écrans').' :</p>
+				<p style="text-align:center">';
 
-		//add 6 screens
-		for ($i = 1; $i <= 6; $i++)
-			$html .= '<a href="'.$uri_img.$i.'.jpg" target="_blank"><img style="margin:10px" src="'.$uri_img.$i.'.jpg" width="250" /></a>';
-		$html .= '</p></fieldset><br/>';
+			//add 6 screens
+			for ($i = 1; $i <= 6; $i++)
+				$html .= '<a href="'.$uri_img.$i.'.jpg" target="_blank"><img style="margin:10px" src="'.$uri_img.$i.'.jpg" width="250" /></a>';
 
+			$html .= '</p></fieldset><br/>';
+		}
+		else {
+			
+			$html .= '<div style="width:50%; float:left"><fieldset>
+			<legend>'.$this->l('Information(s)').'</legend>
+			<p style="text-align:center; margin:10px 0 30px 0; font-weight: bold" ><a style="padding:10px 20px; font-size:1.5em" target="_blank" href="https://register.shopping-feed.com/sign/prestashop?email='.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'&feed='.Tools::safeOutput($uri).'&lang='.strtolower(Context::getContext()->country->iso_code).'" onclick="" value="'.$this->l('Envoyer la demande').'" class="button">'.$this->l('Register Now!').'</a></p>
+			<h2><b>'.$this->l('Shopping Feed exports your products to the largest marketplaces in the world, all from a single intuitive platform.').'</b> '.$this->l('Through our free setup and expert support, we help thousands of storefronts increase their sales and visibility.').'</h2>
+			<br/><p style="line-height:2em;">
+			<b>'.$this->l('Put your feeds to work:').' </b>'.$this->l('A single platform to manage your products and sales on the world\'s marketplaces.').'<br />
+			<b>'.$this->l('Set it and forget it:').' </b>'.$this->l('Automated order processes for each marketplace channel you sell on, quadrupling your revenue, and not your workload.').'<br />
+			<b>'.$this->l('Try Before You Buy:'). '</b> '.$this->l('Expert Channel Setup is always free on Shopping Feed, giving you risk-free access to your brand new channel before becoming a member.').' <br />
+			</p><br/>
+			<ol style="line-height:2em; list-style-type:circle; padding: 0 0 0 20px">
+			<li>'.$this->l('Optimize your channels, and calculate realtime Return On Investment for all the leading comparison shopping engines like').' <b>'.$this->l('Google Shopping').'</b>, <b>'.$this->l('Ratuken').'</b>, <b>'.$this->l('shopping.com').'</b>, <b>'.$this->l('NextTag').'</b>, <b>'.$this->l('ShopZilla').'</b>, '.$this->l('and more.').'</li>
+			<li>'.$this->l('Connect your storefront to all the major marketplaces like').' <b>'.$this->l('eBay').'</b>, <b>'.$this->l('Amazon').'</b>, <b>'.$this->l('Sears').'</b> '.$this->l('and').' <b>'.$this->l('11 Main').'</b>, '.$this->l('while managing your pricing, inventory, and merchandising through a single, intuitive platform.').'</li>
+			<li>'.$this->l('Prepare for an evolving ecosystem: New features, tools, and integrations are being created every month, at no extra cost.').'</li>
+			<li>'.$this->l('Be seen: With over 50 different marketplaces and shopping engines under one roof, Shopping Feed helps you find your right audience.').'</li>
+			</ol><br/>
+			<h3>'.$this->l('With over 1400 Members worldwide, helping them achieve over $13 Million in monthly revenue,').' <b>'.$this->l('Lets us help you put your feeds to work.').'</b></h3>
+			</fieldset></div>';
+			
+			$html .= '<div style="width:45%; float: left; padding: 10px 0 0 10px"><img src="http://'.Tools::getHttpHost().__PS_BASE_URI__.'modules/shoppingfluxexport/img/ad.png"></div>';
+			
+			$html .= '<div style="clear:both"></div>';
+		}
+		
 		//second fieldset
+		$form_display = $country == 'fr' ? 'block' : 'none';
+		
 		$html .= '
-		<form method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'">
+		<form id="form_register" method="post" action="'.Tools::safeOutput($_SERVER['REQUEST_URI']).'" style="display:'.$form_display.'">
 			<fieldset>
 				<legend>'.$this->l('Demandez ici votre clé d\'activation').'</legend>
 				<p style="margin-bottom:20px" >'.$this->l('Ce module vous est offert par Shopping Flux et est utilisable via une souscription mensuelle au service. Envoyez-nous simplement ce formulaire :').'</p>
@@ -401,10 +437,10 @@ class ShoppingFluxExport extends Module
 			$base_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__;
 
 		$uri = $base_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
-		$logo = Context::getContext()->country->iso_code == 'US' ? 'us' : 'fr';
+		$logo = Context::getContext()->country->iso_code == 'FR' ? 'fr' : 'us';
 
 		return '
-		<img style="margin:10px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$logo.'.jpg" />
+		<img style="margin:10px; width:250px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$logo.'.jpg" />
 		<fieldset>
 			<legend>'.$this->l('Vos flux produits').'</legend>
 			<p>
