@@ -18,7 +18,7 @@
  * </pre>
  *
  * @author    Avalara
- * @copyright © 2004 - 2011 Avalara, Inc.  All rights reserved.
+ * @copyright Â© 2004 - 2011 Avalara, Inc.  All rights reserved.
  * @package   Tax
  */
 
@@ -27,9 +27,9 @@ class TaxServiceSoap extends AvalaraSoapClient
 {
     static $servicePath = '/Tax/TaxSvc.asmx';
     static protected $classmap = array(
-        'BaseAddress' => 'Address',
+        'BaseAddress' => 'AvalaraAddress',
         'ValidAddress' => 'ValidAddress',
-        'Message' => 'Message',
+        'Message' => 'AvalaraMessage',
         'ValidateRequest' => 'ValidateRequest',
         'IsAuthorizedResult' => 'IsAuthorizedResult',
         'PingResult' => 'PingResult',
