@@ -1,16 +1,16 @@
 <?php
 /**
- * Message.class.php
+ * AvalaraMessage.class.php
  */
 
 /**
  * 
  *
  * @author    Avalara
- * @copyright © 2004 - 2011 Avalara, Inc.  All rights reserved.
+ * @copyright Â© 2004 - 2011 Avalara, Inc.  All rights reserved.
  * @package   Batch
  */
-class Message {
+class AvalaraMessage {
   private $Summary; // string
   private $Details; // string
   private $HelpLink; // string
