@@ -7,7 +7,7 @@
  * 
  *
  * @author    Avalara
- * @copyright © 2004 - 2011 Avalara, Inc.  All rights reserved.
+ * @copyright Â© 2004 - 2011 Avalara, Inc.  All rights reserved.
  * @package   Batch
  */
 
@@ -22,7 +22,7 @@ class BatchSvc extends SoapClient {
                                     'BatchFetchResult' => 'BatchFetchResult',
                                     'BaseResult' => 'BaseResult',
                                     'SeverityLevel' => 'SeverityLevel',
-                                    'Message' => 'Message',
+                                    'Message' => 'AvalaraMessage',
                                     'Batch' => 'Batch',
                                     'BatchFile' => 'BatchFile',
                                     'Profile' => 'Profile',
