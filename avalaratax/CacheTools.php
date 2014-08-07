@@ -90,7 +90,7 @@ class CacheTools
 			$p[] = $avalaraProducts;
 
 			// Call Avalara
-			$getTaxResult = $avalaraModule->getTax(array($avalaraProducts), array('type' => 'SalesOrder', 'DocCode' => 1, 'taxable' => $taxable), $id_address);
+			$getTaxResult = $avalaraModule->getTax(array($avalaraProducts), array('type' => 'SalesOrder', 'DocCode' => 1, 'taxable' => $taxable));
 
 			// Store the taxrate in cache
 			// If taxrate exists (but it's outdated), then update, else insert (REPLACE INTO)			
@@ -121,7 +121,7 @@ class CacheTools
 			if (count($avalaraProducts))
 			{
 				// Calculate the carrier taxes
-				$getTaxResult = $avalaraModule->getTax($avalaraProducts, array('cart' => $cart), (int)$id_address);
+				$getTaxResult = $avalaraModule->getTax($avalaraProducts, array('cart' => $cart));
 				$amount = (float)(isset($getTaxResult['TaxLines']['Shipping']['GetTax']) ? (float)$getTaxResult['TaxLines']['Shipping']['GetTax'] : 0);
 				$total_tax = (float)(isset($getTaxResult['TotalTax']) ? $getTaxResult['TotalTax'] : 0);
 				$total_amount = (float)(isset($getTaxResult['TotalAmount']) ? $getTaxResult['TotalAmount'] : 0);
