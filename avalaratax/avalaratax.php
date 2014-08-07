@@ -39,7 +39,7 @@ class AvalaraTax extends Module
 	{
 		$this->name = 'avalaratax';
 		$this->tab = 'billing_invoicing';
-		$this->version = '3.5.1';
+		$this->version = '3.5.2';
 		$this->author = 'PrestaShop';
 		parent::__construct();
 
@@ -1356,7 +1356,7 @@ else
 			$taxable = false;
 
 		$cart = new Cart((int)$order->id_cart);
-		$getTaxResult = $this->getTax($products, array('type' => 'SalesInvoice', 'cart' => $cart, 'id_order' => isset($_POST['id_order']) ? (int)$_POST['id_order'] : (int)$params['id_order'], 'taxable' => $taxable), $params['address']->id);
+		$getTaxResult = $this->getTax($products, array('type' => 'SalesInvoice', 'cart' => $cart, 'id_order' => isset($_POST['id_order']) ? (int)$_POST['id_order'] : (int)$params['id_order'], 'taxable' => $taxable));
 
 
 		$commitResult = $this->tax('post', array('DocCode' => (isset($_POST['id_order']) ? (int)$_POST['id_order'] : (int)$params['id_order']),
