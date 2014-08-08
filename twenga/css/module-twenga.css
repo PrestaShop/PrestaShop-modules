@@ -1,0 +1,65 @@
+/* Module twenga page de presentation */
+
+.module-twenga a { text-decoration: underline; }
+.module-twenga a:hover { text-decoration: none; }
+.module-twenga fieldset { margin-bottom: 20px; }
+.module-twenga .marginBottom { margin-bottom: 10px; }
+.moduleTwenga-intro {
+	padding: 10px 15px;
+	margin-bottom: 20px;
+	min-height: 300px;
+	background-position: right center;
+	background-repeat: no-repeat;
+	background-color: #EBEDF4;	
+}
+	.moduleTwenga-intro img { margin-bottom: 15px; }
+	.moduleTwenga-intro .module-title {
+		margin-bottom: 20px;
+		text-transform: uppercase;
+		color: #558ED5;
+		font-weight: bold;
+	}
+		.moduleTwenga-intro .module-title:last-child { margin-bottom: 5px; }
+	.moduleTwenga-intro dl { color: #585A69; }
+	.moduleTwenga-intro dl dt { text-transform: uppercase; font-weight: bold; }
+	.moduleTwenga-intro dl dd { margin: 0 0 15px; }
+
+.moduleTwenga-referencement { padding: 30px 15px; }
+.moduleTwenga-referencement ol { margin: 10px 0 10px 40px; line-height: 22px; list-style-type: decimal; }
+.moduleTwenga-referencement .display { display: inline-block; font-weight: bold; }
+.moduleTwenga-referencement li a { text-decoration: underline; }
+.moduleTwenga-referencement li a:hover { text-decoration: none; }
+.moduleTwenga-referencement .rotate {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.moduleTwenga-form { margin: 40px 0 40px 50px; }
+	.moduleTwenga-form label {
+		display: inline-block;
+		width: 320px;
+		text-align: left;
+	}
+	.moduleTwenga-form .field { margin-bottom: 15px; }
+	.moduleTwenga-form .field input { padding: 8px 5px; }
+	.moduleTwenga-form .button {
+		margin-left: 326px;
+		padding: 8px;
+		width: 230px;
+	}
+.disable-twenga .button { display: block; padding: 8px; margin: 20px auto; min-width: 280px; }
+
+.banner-twenga { margin: 30px 0 20px 0; border: 1px solid #ccc; text-align: center; }
+
+.no-inscr { margin-bottom: 30px; }
+
+.feed_url > a { display: block; }
+#content .conf a { color: #4F8A10; }
+#content .conf { margin-bottom: 15px;padding: 10px 50px;background: url("../../img/admin/icon-valid.png") no-repeat scroll 6px 6px #DFF2BF;border: 1px solid #4F8A10;color: #4F8A10;}
+.moduleTwenga-activation, .moduleTwenga-activation legend { border-color: #f39c12; background-color: #FFEBD3; }
+.moduleTwenga-activation .button { display: block; margin: 20px auto; padding: 8px; min-width: 320px; }
+.moduleTwenga-activation p { color: #333; }
+.disable-twenga a, .moduleTwenga-activation a { text-decoration: underline; }
+.disable-twenga a:hover, .disable-twenga a:focus, .moduleTwenga-activation a:hover, .moduleTwenga-activation a:focus { text-decoration: none; }
