@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <module>
             <name>twenga</name>
-            <displayName><![CDATA[Module Twenga]]></displayName>
+            <displayName><![CDATA[Twenga Module]]></displayName>
             <version><![CDATA[2.0]]></version>
-            <description><![CDATA[Exportez tr&egrave;s facilement vos produits sur Twenga et captez imm&eacute;diatement de nouveaux acheteurs !]]></description>
+            <description><![CDATA[Export your products on Twenga a few clicks and gain new customers!﻿]]></description>
             <author><![CDATA[PrestaShop]]></author>
             <tab><![CDATA[smart_shopping]]></tab>
             <is_configurable>1</is_configurable>
