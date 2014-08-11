@@ -48,5 +48,8 @@
 			</div>
 		</fieldset>
 	</div>
+	<div>
+	<h2 class="riskified-h1">Having problems installing? See our simple instructions <a href="http://www.riskified.com/prestashop-instructions.html" target="_blank">here</a>.</h2>
+	</div>
 </div>
 

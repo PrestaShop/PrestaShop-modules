@@ -24,7 +24,7 @@ class Riskified extends Module
 	{
 		$this->name = 'riskified';
 		$this->tab = 'payment_security';
-		$this->version = '0.3.0';
+		$this->version = '0.3.1';
 		$this->author = 'Riskified.com';
 		$this->secure_key = Tools::encrypt($this->name);
 		parent::__construct();
@@ -309,7 +309,7 @@ class Riskified extends Module
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_getinfo($ch);
 				curl_exec($ch);
-				
+
 				if (Configuration::get('RISKIFIED_MODE') == '1')
 					Configuration::updateValue('RISKIFIED_CONFIGURATION_OK', true);
 			}
