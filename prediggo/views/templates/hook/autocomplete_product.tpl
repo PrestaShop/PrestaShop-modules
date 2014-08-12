@@ -39,5 +39,9 @@
  			<span class="reduction">(-{$specific_prices.reduction*100|floatval}%)</span>
 		{/if}
 	{/if}
-	<span class="price">{if !$priceDisplay}{displayWtPrice p=$aRecommendation.price}{else}{displayWtPrice p=$aRecommendation.price_tax_exc}{/if}</span>
+    {if $aRecommendation.price == 0}
+	    <span class="price">{if !$priceDisplay}{displayWtPrice p=$aRecommendation.orderprice}{else}{displayWtPrice p=$aRecommendation.price_tax_exc}{/if}</span>
+    {else}
+        <span class="price">{if !$priceDisplay}{displayWtPrice p=$aRecommendation.price}{else}{displayWtPrice p=$aRecommendation.price_tax_exc}{/if}</span>
+    {/if}
 </div>
