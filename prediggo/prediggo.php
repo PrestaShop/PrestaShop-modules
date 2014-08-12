@@ -670,9 +670,6 @@ class Prediggo extends Module
 		if(!extension_loaded('curl'))
 			$this->_errors[] = $this->l('Please activate the PHP extension "curl" to allow the use of the module.');
 		
-		if(!$this->oPrediggoConfig->web_site_id_checked)
-			$this->_warnings[] = $this->l('Please update the field "Web Site ID", in the "Main Configuration" tab.');
-
         if(!$this->oPrediggoConfig->server_id_checked)
             $this->_warnings[] = $this->l('Please update the fields with the one given by Prediggo in the "Main Configuration" tab.');
 			
