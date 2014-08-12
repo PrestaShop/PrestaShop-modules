@@ -3,22 +3,22 @@
 	<center>
 		<table style="width: 42%;">
 			<tr align="center">
-				<th colspan="2"><h1 style="text-align: center;">{l s='Purchase Data'}</h1></th>
+				<th colspan="2"><h1 style="text-align: center;">{l s='Purchase Data' mod='payulatam'}</h1></th>
 			</tr>
 			<tr align="left">
-				<td>{l s='Transaction State'}</td>
+				<td>{l s='Transaction State' mod='payulatam'}</td>
 				<td>{$estadoTx}</td>
 			</tr>
 			<tr align="left">
-				<td>{l s='Transaction ID'}</td>
+				<td>{l s='Transaction ID' mod='payulatam'}</td>
 				<td>{$transactionId}</td>
 			</tr>		
 			<tr align="left">
-				<td>{l s='Purchase Reference'}</td>
+				<td>{l s='Purchase Reference' mod='payulatam'}</td>
 				<td>{$reference_pol}</td>
 			</tr>		
 			<tr align="left">
-				<td>{l s='Transaction Reference'}</td>
+				<td>{l s='Transaction Reference' mod='payulatam'}</td>
 				<td>{$referenceCode}</td>
 			</tr>	
 			{if $pseBank!=null}
@@ -27,24 +27,24 @@
 					<td>{$cus}</td>
 				</tr>
 				<tr align="left">
-					<td>{l s='Bank'}</td>
+					<td>{l s='Bank' mod='payulatam'}</td>
 					<td>{$pseBank}</td>
 				</tr>
 			{/if}
 			<tr align="left">
-				<td>{l s='Total Value'}</td>
+				<td>{l s='Total Value' mod='payulatam'}</td>
 				<td>${$value}</td>
 			</tr>
 			<tr align="left">
-				<td>{l s='Currency'}</td>
+				<td>{l s='Currency' mod='payulatam'}</td>
 				<td>{$currency}</td>
 			</tr>
 			<tr align="left">
-				<td>{l s='Description'}</td>
+				<td>{l s='Description' mod='payulatam'}</td>
 				<td>{$description}</td>
 			</tr>
 			<tr align="left">
-				<td>{l s='Entity'}</td>
+				<td>{l s='Entity' mod='payulatam'}</td>
 				<td>{$lapPaymentMethod}</td>
 			</tr>
 		</table>
@@ -52,5 +52,5 @@
 		<h1>{$message}</h1>
 	</center>
 {else}
-	<h1><center>{l s='The request is incorrect! There is an error in the digital signature.'}</center></h1>
+	<h1><center>{l s='The request is incorrect! There is an error in the digital signature.' mod='payulatam'}</center></h1>
 {/if}

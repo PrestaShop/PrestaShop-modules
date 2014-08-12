@@ -13,11 +13,12 @@ class PayuLatam extends PaymentModule {
 		$this->version = '2.0';
 		$this->author = 'PayU Latam';
 		$this->need_instance = 0;
+		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
 		
 		parent::__construct();
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => '_PS_VERSION_');
+
 		
 		$this->displayName = $this->l('PayU Latam');
 		$this->description = $this->l('Payment gateway for PayU Latam');

@@ -50,7 +50,7 @@ cursor:pointer;
 <p style="font-size:15px;">{l s='You are going to be redirected to PayU\'s website for your payment.' mod='payulatam'}</p>
 <form action="{$formLink|escape:'htmlall':'UTF-8'}" method="POST" id="formPayU">
   {foreach from=$payURedirection item=value}
-  <input type="hidden" value="{$value.value}" name="{$value.name}"/>
+  <input type="hidden" value="{$value.value|escape:'htmlall':'UTF-8'}" name="{$value.name|escape:'htmlall':'UTF-8'}"/>
   {/foreach}
   <input class="payu-button" id="payuSubmit" type="button" value="{l s='Please click here' mod='payulatam'}" />
 </form>

@@ -79,7 +79,7 @@ class PayUController extends FrontController
 			array('value' => (Configuration::get('PAYU_DEMO') == 'yes' ? 1 : 0), 'name' => 'test'),
 			array('value' => Tools::safeOutput(Configuration::get('PAYU_MERCHANT_ID')), 'name' => 'merchantId'),
 			array('value' => $ref, 'name' => 'referenceCode'),
-			array('value' => substr(Configuration::get('PS_SHOP_NAME').' Order', 0, 255), 'name' => 'description'),
+			array('value' => Tools::substr(Configuration::get('PS_SHOP_NAME').' Order', 0, 255), 'name' => 'description'),
 			array('value' => (float)self::$cart->getOrderTotal(), 'name' => 'amount'),
 			array('value' => Tools::safeOutput($customer->email), 'name' => 'buyerEmail'),
 			array('value' => (float)$tax, 'name' => 'tax'),
@@ -112,7 +112,7 @@ class PayUController extends FrontController
 
 $payUController = new PayUController();
 
-if (isset($_GET['create-pending-order']))
+if (Tools::getIsset($_GET['create-pending-order']))
 	$payUController->createPendingOrder();
 else
 	$payUController->run();

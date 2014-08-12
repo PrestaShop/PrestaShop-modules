@@ -26,7 +26,7 @@
 
 <link href="{$css|escape:'htmlall':'UTF-8'}bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="{$css|escape:'htmlall':'UTF-8'}style.css" rel="stylesheet" type="text/css">
-<img src="{$tracking}" alt="tracking" style="display:none"/>
+<img src="{$tracking|escape:'htmlall':'UTF-8'}" alt="tracking" style="display:none"/>
 <div class="md-contenedor row">
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
