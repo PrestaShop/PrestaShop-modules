@@ -113,63 +113,6 @@ if (strtoupper($signature) == strtoupper($signature_md5)) {
 		)
 	);
 
-/*?>
-	<center>
-		<table style="width: 42%; margin-top: 100px;">
-			<tr align="center">
-				<th colspan="2"><?php echo $payulatam->l('Purchase Data');?></th>
-			</tr>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Transaction State');?></td>
-				<td><?php echo $estadoTx; ?></td>
-			</tr>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Transaction ID');?></td>
-				<td><?php echo $transactionId; ?></td>
-			</tr>		
-			<tr align="left">
-				<td><?php echo $payulatam->l('Purchase Reference');?></td>
-				<td><?php echo $reference_pol; ?></td>
-			</tr>		
-			<tr align="left">
-				<td><?php echo $payulatam->l('Transaction Reference');?></td>
-				<td><?php echo $referenceCode; ?></td>
-			</tr>	
-			<?php
-				if($pseBank!=null){
-			?>
-				<tr align="left">
-					<td>CUS</td>
-					<td><?php echo $cus; ?> </td>
-				</tr>
-				<tr align="left">
-					<td><?php echo $payulatam->l('Bank');?></td>
-					<td><?php echo $pseBank; ?> </td>
-				</tr>
-			<?php
-				}
-			?>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Total Value');?></td>
-				<td>$<?php echo $value; ?> </td>
-			</tr>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Currency');?></td>
-				<td><?php echo $currency; ?></td>
-			</tr>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Description');?></td>
-				<td><?php echo $description; ?></td>
-			</tr>
-			<tr align="left">
-				<td><?php echo $payulatam->l('Entity');?></td>
-				<td><?php echo $lapPaymentMethod; ?></td>
-			</tr>
-		</table>
-		<p/>
-		<h1><?php echo $message ?></h1>
-	</center>
-<?php*/
 } else {
 	Context::getContext()->smarty->assign(
 		array(
