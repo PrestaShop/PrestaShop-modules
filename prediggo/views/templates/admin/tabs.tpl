@@ -51,45 +51,36 @@
 	</ul>
 
 	<div id="prediggo_presentation">
-		<a href="http://www.prediggo.com" target="_blank" title="Prediggo">
-			<img src="{$path}/img/logo.png" title="{l s='Prediggo' mod='prediggo'}" alt="{l s='Prediggo' mod='prediggo'}" /> 
-		</a>
-		<p>{l s='Through this module, Prediggo is offering you the possibility to increase your conversion rate by 30%. How?' mod='prediggo'} <b>{l s='Sell Smarter.' mod='prediggo'}</b></p>
-		<p><span>{l s='Sell Smarter' mod='prediggo'}</span> {l s=' - Promote your products, your way.' mod='prediggo'}</p>
-		<ul>
-			<li>{l s='Present Up & Cross-Selling products, newest in stock, best sellers, etc...' mod='prediggo'}</li>
-			<li>{l s='Automatically promote the products matching the visitor’s shopping behavior.' mod='prediggo'}</li>
-			<li>{l s='Provide search and results navigation that understand shopping context.' mod='prediggo'}</li>
-			<li>{l s='Bottom line, turn buyers into shoppers!' mod='prediggo'}</li>
-		</ul>
-		<p>{l s='As Prestashop did by using this module on their ' mod='prediggo'}
-		<a href="http://addons.prestashop.com" target="_blank" title="{l s='Addons market place Addons' mod='prediggo'}">{l s='Addons market place Addons' mod='prediggo'}</a>
-		{l s=', trust Prediggo to help you Sell Smarter with our ' mod='prediggo'} <b>{l s='two business critical solutions:' mod='prediggo'}</b></p>
-		{assign var='lang_iso_forced' value='EN'}
-		{if $lang_iso == 'fr'}
-			{assign var='lang_iso_forced' value='FR'}
-		{/if}
-		<ul>
-			<li>
-				<a href="http://www.prediggo.com/tmp/addons/IntelligentSearch{$lang_iso_forced|escape:'htmlall':'UTF-8'|upper}.pdf" target="_blank" title="{l s='Very Easy & Powerful Onsite Search engine!' mod='prediggo'}">
-					<img src="{$path}/img/LienIntelligentSearch{$lang_iso_forced|escape:'htmlall':'UTF-8'|upper}.png" title="{l s='Very Easy & Powerful Onsite Search engine!' mod='prediggo'}" alt="{l s='Very Easy & Powerful Onsite Search engine!' mod='prediggo'}" /> 
-				</a>
-			</li>
-			<li>
-				<a href="http://www.prediggo.com/tmp/addons/SemanticMerchandising{$lang_iso_forced|escape:'htmlall':'UTF-8'|upper}.pdf" target="_blank" title="{l s='A Personalized eMerchandising engine' mod='prediggo'}">
-					<img src="{$path}/img/LienSemanticMerchandising{$lang_iso_forced|escape:'htmlall':'UTF-8'|upper}.png" title="{l s='A Personalized eMerchandising engine' mod='prediggo'}" alt="{l s='A Personalized eMerchandising engine' mod='prediggo'}" /> 
-				</a>
-			</li>
-		</ul>
-		<p>{l s='To inquire about our solutions and set up the module, it could not be easier!' mod='prediggo'}</p>
-		<ol>
-			<li>
-				{l s='Contact us through our website ' mod='prediggo'} <a href="http://www.prediggo.com" target="_blank" title="{l s='Contact us through our website ' mod='prediggo'}">{l s='>> HERE <<' mod='prediggo'}</a>
-			</li>
-			<li>
-				{l s='Or give us a call +41 (0) 21 550 51 35' mod='prediggo'}
-			</li>
-		</ol>
+        <a href="http://www.prediggo.com" target="_blank" title="Prediggo">
+            <img src="{$path}/img/logo.png" title="{l s='Prediggo' mod='prediggo'}" alt="{l s='Prediggo' mod='prediggo'}" />
+        </a>
+        <p><span>{l s='Prediggo is the Agile Alternative for comprehensive Merchandising ' mod='prediggo'}</span></p>
+
+        <p>{l s=' As Prestashop users are constantly looking for agility, we wanted to offer our Onsite Search and Recommendation Engine solutions as a Prestashop module' mod='prediggo'}</p>
+
+        <p><span>{l s=' Both solutions require a fee. Do not hesitate to contact us for a quotation. ' mod='prediggo'}</span></p>
+
+        <ol>
+            <li><span>{l s='High performance have been proven by A/B testing' mod='prediggo'}</span></li>
+            <div><span>{l s='Our patented semantic technology represents the next generation in e-merchandising. It powers the selling strategies that increase sales by 30&#37; through increased conversion and average order value' mod='prediggo'}</span></div>
+            <p></p>
+            <li><span>{l s='Prediggo is a flexible solution that is easy-to-use' mod='prediggo'}</span></li>
+            <div><span>{l s=' Our intuitive back-office makes it easy to automate and optimise the most complex merchandising  !' mod='prediggo'}</span></div>
+            <p></p>
+            <li><span>{l s='Only a few days integration needed ' mod='prediggo'}</span></li>
+            <div><span>{l s=' Prediggo is the only “complete” solution that does not require integration with your ERP, Cookies or Javascript. Our solutions work on a data export, so they integrate in days, not weeks.  !' mod='prediggo'}</span></div>
+            <p></p>
+            <li><span>{l s='A superior service ' mod='prediggo'}</span></li>
+            <div><span>{l s=' Since we started in 2008, customer service has been one of our core values. So it is no wonder that our customer&#146;s have reported a 100&#37; satisfaction rate in our 2012 and 2013 surveys!' mod='prediggo'}</span></div>
+        </ol>
+        <ol>
+            <li>
+            {l s='Contact us through our website and ask for a demo ! ' mod='prediggo'} <a href="http://www.prediggo.com/fr/prestashop/?lang=en" id="here" target="_blank" title="{l s='Contact us through our website ' mod='prediggo'}">{l s='>> HERE <<' mod='prediggo'}</a>
+            </li>
+            <li>
+                {l s='Or give us a call +41 (0) 21 550 51 35' mod='prediggo'}
+            </li>
+        </ol>
 	</div>
 	<div id="main_conf"></div>
 	<div id="export_conf"></div>

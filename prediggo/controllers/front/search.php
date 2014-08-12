@@ -54,7 +54,7 @@ class PrediggoSearchModuleFrontController extends ModuleFrontController
 	
 		$this->sRepositoryPath = _PS_MODULE_DIR_.'prediggo/logs/';
 	
-		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_search);
+		$this->oPrediggoCall = new PrediggoCall($this->oPrediggoConfig->web_site_id, $this->oPrediggoConfig->server_url_recommendations);
 		$this->sQuery = Tools::getValue('q');
 		$this->sRefineOption = Tools::getValue('refineOption');
 	}
@@ -64,7 +64,6 @@ class PrediggoSearchModuleFrontController extends ModuleFrontController
 	 */
 	public function initContent()
 	{
-		
 		if($oPrediggoResult = $this->launchSearch((int)$this->oPrediggoConfig->search_nb_items))
 		{
 			if(isset($this->context->cookie->id_compare))
@@ -87,7 +86,6 @@ class PrediggoSearchModuleFrontController extends ModuleFrontController
 				'bRewriteEnabled'				=> (int)Configuration::get('PS_REWRITING_SETTINGS'),
 			));
 		}
-		
 		parent::initContent();
 
 		$this->setTemplate('search.tpl');

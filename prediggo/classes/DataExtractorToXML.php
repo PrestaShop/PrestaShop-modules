@@ -43,7 +43,7 @@ abstract class DataExtractorToXML
 	public $sEntityRoot;
 
 	/** @var array list of extraction logs */
-	private $_logs;
+	protected $_logs;
 
 	/** @var array list of errors */
 	public $_errors;

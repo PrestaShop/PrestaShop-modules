@@ -50,22 +50,38 @@
 				{elseif isset($product.reduction) && $product.reduction && isset($product.show_price) && $product.show_price && !$PS_CATALOG_MODE}<span class="discount">{l s='Reduced price!' mod='prediggo'}</span>{/if}
 				{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 				<div class="content_price">
-					{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}<span class="price" style="display: inline;">{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}</span><br />{/if}
-					{if isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}<span class="availability">{if ($product.allow_oosp || $product.quantity > 0)}{l s='Available' mod='prediggo'}{elseif (isset($product.quantity_all_versions) && $product.quantity_all_versions > 0)}{l s='Product available with different options' mod='prediggo'}{else}{l s='Out of stock' mod='prediggo'}{/if}</span>{/if}
-				</div>
-				{if isset($product.online_only) && $product.online_only}<span class="online_only">{l s='Online only!' mod='prediggo'}</span>{/if}
-				{/if}
-				{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
-					{if ($product.allow_oosp || $product.quantity > 0)}
-						{if isset($static_token)}
-							<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", true)}" title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
-						{else}
-							<a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}", true)} title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
-						{/if}						
-					{else}
-						<span class="exclusive"><span></span>{l s='Add to cart' mod='prediggo'}</span><br />
+                    {if $product.price == 0}
+                        {if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}<span class="price" style="display: inline;">{if !$priceDisplay}{convertPrice price=$product.orderprice}{else}{convertPrice price=$product.price_tax_exc}{/if}</span><br />{/if}
+                    {else}
+                        {if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}<span class="price" style="display: inline;">{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}</span><br />{/if}
 					{/if}
-				{/if}
+                    {if isset($product.available_for_order) && $product.available_for_order && !isset($restricted_country_mode)}<span class="availability">{if ($product.allow_oosp || $product.quantity > 0)}{l s='Available' mod='prediggo'}{elseif (isset($product.quantity_all_versions) && $product.quantity_all_versions > 0)}{l s='Product available with different options' mod='prediggo'}{else}{l s='Out of stock' mod='prediggo'}{/if}</span>{/if}
+				</div>
+                    {if isset($product.online_only) && $product.online_only}<span class="online_only">{l s='Online only!' mod='prediggo'}</span>{/if}
+                {/if}
+                {if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
+                    {if ($product.quantity == 0)}
+                        {if ($product.allow_oosp || $product.quantity_all_versions > 0)}
+                            {if isset($static_token)}
+                                <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", true)}" title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
+                            {else}
+                                <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}", true)} title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
+                            {/if}
+                        {else}
+                            <span class="exclusive"><span></span>{l s='Add to cart' mod='prediggo'}</span><br />
+                        {/if}
+                    {else}
+                        {if ($product.allow_oosp || $product.quantity > 0)}
+                            {if isset($static_token)}
+                                <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", true)}" title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
+                            {else}
+                                <a class="button ajax_add_to_cart_button exclusive" rel="ajax_id_product_{$product.id_product|intval}" href="{$link->getPageLink('cart',false, NULL, "add&amp;id_product={$product.id_product|intval}", true)} title="{l s='Add to cart' mod='prediggo'}"><span></span>{l s='Add to cart' mod='prediggo'}</a>
+                            {/if}
+                        {else}
+                            <span class="exclusive"><span></span>{l s='Add to cart' mod='prediggo'}</span><br />
+                        {/if}
+                    {/if}
+                {/if}
 				<a class="button lnk_view" href="{$product.link|escape:'htmlall':'UTF-8'}" title="{l s='View' mod='prediggo'}">{l s='View' mod='prediggo'}</a>
 			</div>
 		</li>

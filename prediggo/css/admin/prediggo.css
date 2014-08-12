@@ -44,9 +44,30 @@ fieldset{
 	color:#000;
 }
 
-#prediggo_presentation > p:nth-child(3) > span{
-	font-weight:bold;
+#prediggo_presentation > p:nth-child(1){
+    list-style:disc;
+    color:#000;
+    margin-left: 15px;
 }
+
+
+#prediggo_presentation > p:nth-child(3){
+    margin-left: 20px;
+}
+
+#prediggo_presentation > p > span{
+    margin-bottom: 5px;
+    font-weight:bold;
+}
+
+#prediggo_presentation > ol > li > span{
+    font-weight:bold;
+}
+
+#prediggo_presentation > ol > div {
+    margin-top: 5px;
+    margin-left: 10px;
+   }
 
 #prediggo_presentation > ul > li{
 	color:#000;
@@ -55,16 +76,12 @@ fieldset{
 #prediggo_presentation > ul:nth-child(4){
 	list-style:disc outside none;
 	margin-left:15px;
-	margin-bottom:10px;
+	margin-bottom:5px;
 }
 
 	#prediggo_presentation > ul:nth-child(4) > li{
 		margin-bottom:5px;
 	}
-
-#prediggo_presentation > ul:nth-child(6){
-	
-}
 
 	#prediggo_presentation > ul:nth-child(6) > li{
 		float:left;
@@ -78,9 +95,16 @@ fieldset{
 			#prediggo_presentation > ul:nth-child(6) > li > a > img{
 				border-width:0;
 			}
+
+#here{
+    color: #0000ff;
+    text-decoration: underline;
+}
+
 			
 #prediggo_presentation > ol{
-	list-style:decimal;
+    margin-top: 10px;
+	list-style:disc;
 	color:#000;
 	margin-left:20px;
 }

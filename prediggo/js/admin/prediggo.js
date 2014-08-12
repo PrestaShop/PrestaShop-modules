@@ -36,13 +36,13 @@ $(document).ready(function(){
 	$('fieldset#fieldset_prediggo_presentation')
 	.appendTo('div#prediggo_presentation');
 	
-	$('fieldset#fieldset_main_conf')
+	$('fieldset#fieldset_main_conf, fieldset#fieldset_server_conf')
 	.appendTo('div#main_conf');
 	
 	$('fieldset#fieldset_export_conf, fieldset#fieldset_attributes_selection, fieldset#fieldset_black_list_reco, fieldset#fieldset_black_list_search, fieldset#fieldset_htaccess_conf')
 	.appendTo('div#export_conf');
 	
-	$('fieldset#fieldset_recommendation_conf, fieldset#fieldset_home_reco_conf, fieldset#fieldset_error_reco_conf, fieldset#fieldset_product_reco_conf, fieldset#fieldset_category_reco_conf, fieldset#fieldset_customer_reco_conf, fieldset#fieldset_cart_reco_conf, fieldset#fieldset_blocklayered_reco_conf')
+	$('fieldset#fieldset_recommendation_conf, fieldset#fieldset_hook_configuration, fieldset#fieldset_home_reco_conf, fieldset#fieldset_error_reco_conf, fieldset#fieldset_product_reco_conf, fieldset#fieldset_product_reco_conf_one, fieldset#fieldset_product_reco_conf_two, fieldset#fieldset_product_reco_conf_th, fieldset#fieldset_product_reco_conf_fo, fieldset#fieldset_category_reco_conf, fieldset#fieldset_category_reco_conf_o, fieldset#fieldset_category_reco_conf_tw, fieldset#fieldset_category_reco_conf_th, fieldset#fieldset_category_reco_conf_fo, fieldset#fieldset_customer_reco_conf, fieldset#fieldset_cart_reco_conf, fieldset#fieldset_blocklayered_reco_conf')
 	.appendTo('div#recommendation_conf');
 	
 	$('fieldset#fieldset_search_conf, fieldset#fieldset_search_autocompletion_conf')
