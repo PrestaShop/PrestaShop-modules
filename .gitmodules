@@ -433,3 +433,6 @@
 [submodule "twenga/backward_compatibility"]
 	path = twenga/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
+[submodule "affinityitems/backward_compatibility"]
+	path = affinityitems/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility

@@ -1,0 +1,136 @@
+.ae_products_block_center {
+	width: 536px;
+	margin: auto;
+	color: #595a5e;
+}
+
+.ae_block_title_center {
+	padding: 6px 11px;
+	font-size: 12px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	text-transform: uppercase;
+	background: #383838;
+	font-weight: bold;
+}
+
+.ae_content_block_center {
+	padding: 0;
+	min-height: 16px;
+}
+
+.ae_list_products_block_center {
+	list-style: none;
+}
+
+.ae_product_block_center {
+	float: left;
+	margin-top: 0;
+	padding: 10px 0;
+	margin-right: 1px;
+	width: 133px;
+}
+
+.ae_products_name_center {
+	margin: 10px 5px 3px 5px;
+	display: block;
+	margin-top: 8px;
+	height: 2.57em;
+	color: #222;
+}
+
+.ae_products_name_center a {
+	padding-top: 5px;
+	height: 30px;
+	font-size: 12px;
+	text-decoration: none;
+	color: #222;
+	padding-bottom: 0;
+	font-weight: bold;	
+}
+
+.ae_products_block_center a:hover {
+	text-decoration: underline;
+}
+
+.ae_img_center {
+	border: 1px solid #d1d1d1;
+}
+
+.ae_price_container_center {
+	font-size: 1.1em;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.ae_price_center {
+	color: #990000;
+	font-size: 1.1em;
+	font-weight: bold;
+	white-space: nowrap;
+	margin: 1em 0;
+	display: block;
+}
+
+.ae_product_block_side {
+	padding: 10px 0;
+	border-bottom: 1px dotted #ccc;
+}
+
+
+.ae_block_title_side {
+	padding: 6px 11px;
+	font-size: 12px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	text-transform: uppercase;
+	background: #383838;
+	font-weight: bold;
+}
+
+.ae_list_products_block_side {
+	list-style-type: none;
+}
+
+.ae_product_block_side {
+	padding: 10px 0;
+	border-bottom: 1px dotted #ccc;
+}
+
+.ae_products_name_side {
+	padding: 0 0 5px 0;
+	font-size: 12px;
+	color: #333;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.ae_products_name_side a {
+	color: #333;
+	text-decoration: none;
+}
+
+.ae_products_block_side a:hover {
+	text-decoration: underline;
+}
+
+.ae_img_side {
+	float: left;
+	border: 1px solid #d1d1d1;
+	margin-right: 7px;
+}
+
+.ae_text_desc_side a {
+	text-decoration: none;
+	min-height: 35px;
+	display: block;
+}
+
+.ae_text_desc_side a:hover {
+	text-decoration: underline;
+}
+
+.ae_product_block_side .last_item {
+	padding-bottom: 0;
+	border: none;
+}

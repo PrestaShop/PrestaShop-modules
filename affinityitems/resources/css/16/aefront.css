@@ -1,0 +1,122 @@
+.ae_products_block_center {
+	display: block;
+}
+
+.ae_block_title_center {
+	font: 600 18px/22px "Open Sans", sans-serif;
+	color: #555454;
+	background: #f6f6f6;
+	border-top: 5px solid #333333;
+	text-transform: uppercase;
+	padding: 14px 5px 17px 20px;
+	margin-bottom: 20px;
+}
+
+.ae_content_block_center {
+	margin-top: 35px;
+	margin-bottom: 34px;
+}
+
+.ae_list_products_block_center {
+	list-style: none;
+}
+
+.ae_product_block_center {
+	background: white;
+	padding: 0;
+	position: relative;
+	float: left;
+	margin-left: 35px;
+}
+
+.ae_products_name_center {
+	font-size: 17px;
+	line-height: 23px;
+	color: #3a3939;
+	margin-bottom: 0;
+}
+
+.ae_product_block_center h5 {
+	text-align: center;
+}
+
+.ae_products_name_center a { }
+
+.ae_products_block_center a:hover { }
+
+.ae_img_center {
+	border: 1px solid #d6d4d4;
+	padding: 9px;
+	margin-bottom: 13px;
+	position: relative;
+	margin: 0 auto;
+}
+
+.ae_price_container_center {
+	padding-bottom: 9px;
+	line-height: 21px;
+	text-align: center;
+}
+
+.ae_price_center {
+	font: 600 21px/26px "Open Sans", sans-serif;
+	color: #333333;
+}
+
+.ae_product_block_side {
+	margin-bottom: 30px;
+}
+
+.ae_block_title_side {
+	font: 600 18px/22px "Open Sans", sans-serif;
+	color: #555454;
+	background: #f6f6f6;
+	border-top: 5px solid #333333;
+	text-transform: uppercase;
+	padding: 14px 5px 17px 20px;
+	margin-bottom: 20px;
+}
+
+.ae_list_products_block_side { }
+
+.ae_product_block_side {
+	padding: 0 0 20px 0;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #d6d4d4;
+}
+
+.ae_products_name_side {
+	margin: -3px 0 0 0;
+	font-size: 17px;
+	line-height: 23px;
+	color: #3a3939;
+	margin-bottom: 0;
+}
+
+.ae_products_name_side a { 
+	color: #3a3939;
+	margin-bottom: 0;
+}
+
+.ae_products_block_side a:hover { }
+
+.ae_img_side {
+	float: left;
+	border: 1px solid #d6d4d4;
+	margin-right: 19px;
+}
+
+.ae_text_desc_side {
+	margin-bottom: 14px;
+}
+
+.ae_text_desc_side a { }
+
+.ae_text_desc_side a:hover { }
+
+.ae_product_block_side .last_item {
+	padding-bottom: 0;
+	margin-bottom: 0;
+	border-bottom: none;
+}
+

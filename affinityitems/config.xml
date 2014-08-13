@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <module>
+            <name>affinityitems</name>
+            <displayName><![CDATA[Affinity Items]]></displayName>
+            <version><![CDATA[1.0.0]]></version>
+            <description><![CDATA[Jusqu&rsquo;&agrave; +50% de taux de transformation avec la personnalisation : montrez &agrave; chaque visiteur ce qu&rsquo;il aime]]></description>
+            <author><![CDATA[Affinity Engine]]></author>
+            <tab><![CDATA[advertising_marketing]]></tab>
+	<confirmUninstall>Etes-vous sûr de vouloir désinstaller le module ?</confirmUninstall>
+            <is_configurable>1</is_configurable>
+            <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+        </module>

@@ -1,0 +1,61 @@
+<?php
+/**
+* 2014 Affinity-Engine
+*
+* NOTICE OF LICENSE
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade AffinityItems to newer
+* versions in the future.If you wish to customize AffinityItems for your
+* needs please refer to http://www.affinity-engine.fr for more information.
+*
+*  @author    Affinity-Engine SARL <contact@affinity-engine.fr>
+*  @copyright 2014 Affinity-Engine SARL
+*  @license   http://www.gnu.org/licenses/gpl-2.0.txt GNU GPL Version 2 (GPLv2)
+*  International Registered Trademark & Property of Affinity Engine SARL
+*/
+
+$properties = array(
+	"AE_BREAK_CONTRACT" => 0,
+	"AE_CONF_HOST" => "",
+	"AE_CONF_PORT" => "",
+	"AE_LOGIN" => "",
+	"AE_PASSWORD" => "",
+	"AE_SITE_ID" => "",
+	"AE_VERSION" => $this->version,
+	"AE_SECURITY_KEY" => "",
+	"AE_LAST_SYNC_START" => "",
+	"AE_LAST_SYNC_END" => "",
+	"AE_LAST_SYNC_STEP" => "",
+	"AE_LAST_SYNC_LOCK" => 0,
+	"AE_SYNC_DIFF" => 60,
+	"AE_A_TESTING" => 50,
+	"AE_AB_TESTING_BLACKLIST" => serialize(array()),
+	"AE_HOST_LIST" => "",
+	"AE_BOT_SEO_ACTIVATION" => 0,
+	"AE_RECOMMENDATION" => 0,
+	"AE_BACKOFFICE_TOKEN" => md5(uniqid(rand(), true))
+	);
+
+$properties['AE_CONFIGURATION_CART'] = 'O:8:"stdClass":19:{s:8:"recoCart";s:1:"0";s:9:"labelCart";s:0:"";s:12:"recoSizeCart";s:1:"4";s:11:"imgSizeCart";s:12:"home_default";s:12:"parentIdCart";s:0:"";s:15:"classParentCart";s:33:"ae_products_block_center clearfix";s:14:"classTitleCart";s:21:"ae_block_title_center";s:13:"contentIdCart";s:0:"";s:16:"classContentCart";s:23:"ae_content_block_center";s:10:"listIdCart";s:0:"";s:13:"classListCart";s:29:"ae_list_products_block_center";s:17:"elementListIdCart";s:0:"";s:20:"classElementListCart";s:23:"ae_product_block_center";s:21:"classElementImageCart";s:13:"ae_img_center";s:20:"classElementNameCart";s:23:"ae_products_name_center";s:27:"classElementDescriptionCart";s:0:"";s:23:"classPriceContainerCart";s:25:"ae_price_container_center";s:14:"classPriceCart";s:15:"ae_price_center";s:4:"area";s:4:"cart";}';
+$properties['AE_CONFIGURATION_HOME'] = 'O:8:"stdClass":19:{s:8:"recoHome";s:1:"0";s:9:"labelHome";s:0:"";s:12:"recoSizeHome";s:1:"4";s:11:"imgSizeHome";s:12:"home_default";s:12:"parentIdHome";s:0:"";s:15:"classParentHome";s:33:"ae_products_block_center clearfix";s:14:"classTitleHome";s:21:"ae_block_title_center";s:13:"contentIdHome";s:0:"";s:16:"classContentHome";s:23:"ae_content_block_center";s:10:"listIdHome";s:0:"";s:13:"classListHome";s:29:"ae_list_products_block_center";s:17:"elementListIdHome";s:0:"";s:20:"classElementListHome";s:23:"ae_product_block_center";s:21:"classElementImageHome";s:13:"ae_img_center";s:20:"classElementNameHome";s:23:"ae_products_name_center";s:27:"classElementDescriptionHome";s:0:"";s:23:"classPriceContainerHome";s:25:"ae_price_container_center";s:14:"classPriceHome";s:15:"ae_price_center";s:4:"area";s:4:"home";}';
+$properties['AE_CONFIGURATION_LEFT'] = 'O:8:"stdClass":19:{s:8:"recoLeft";s:1:"0";s:9:"labelLeft";s:0:"";s:12:"recoSizeLeft";s:1:"4";s:11:"imgSizeLeft";s:13:"small_default";s:12:"parentIdLeft";s:0:"";s:15:"classParentLeft";s:21:"ae_product_block_side";s:14:"classTitleLeft";s:19:"ae_block_title_side";s:13:"contentIdLeft";s:0:"";s:16:"classContentLeft";s:0:"";s:10:"listIdLeft";s:0:"";s:13:"classListLeft";s:27:"ae_list_products_block_side";s:17:"elementListIdLeft";s:0:"";s:20:"classElementListLeft";s:30:"ae_product_block_side clearfix";s:21:"classElementImageLeft";s:11:"ae_img_side";s:20:"classElementNameLeft";s:21:"ae_products_name_side";s:27:"classElementDescriptionLeft";s:17:"ae_text_desc_side";s:23:"classPriceContainerLeft";s:0:"";s:14:"classPriceLeft";s:0:"";s:4:"area";s:4:"left";}';
+$properties['AE_CONFIGURATION_RIGHT'] = 'O:8:"stdClass":19:{s:9:"recoRight";s:1:"0";s:10:"labelRight";s:0:"";s:13:"recoSizeRight";s:1:"4";s:12:"imgSizeRight";s:13:"small_default";s:13:"parentIdRight";s:0:"";s:16:"classParentRight";s:22:"ae_product_block_side ";s:15:"classTitleRight";s:19:"ae_block_title_side";s:14:"contentIdRight";s:0:"";s:17:"classContentRight";s:0:"";s:11:"listIdRight";s:0:"";s:14:"classListRight";s:27:"ae_list_products_block_side";s:18:"elementListIdRight";s:0:"";s:21:"classElementListRight";s:30:"ae_product_block_side clearfix";s:22:"classElementImageRight";s:11:"ae_img_side";s:21:"classElementNameRight";s:21:"ae_products_name_side";s:28:"classElementDescriptionRight";s:17:"ae_text_desc_side";s:24:"classPriceContainerRight";s:0:"";s:15:"classPriceRight";s:0:"";s:4:"area";s:5:"right";}';
+$properties['AE_CONFIGURATION_PRODUCT'] = 'O:8:"stdClass":19:{s:11:"recoProduct";s:1:"0";s:12:"labelProduct";s:0:"";s:15:"recoSizeProduct";s:1:"4";s:14:"imgSizeProduct";s:12:"home_default";s:15:"parentIdProduct";s:0:"";s:18:"classParentProduct";s:33:"ae_products_block_center clearfix";s:17:"classTitleProduct";s:21:"ae_block_title_center";s:16:"contentIdProduct";s:0:"";s:19:"classContentProduct";s:23:"ae_content_block_center";s:13:"listIdProduct";s:0:"";s:16:"classListProduct";s:29:"ae_list_products_block_center";s:20:"elementListIdProduct";s:0:"";s:23:"classElementListProduct";s:23:"ae_product_block_center";s:24:"classElementImageProduct";s:13:"ae_img_center";s:23:"classElementNameProduct";s:23:"ae_products_name_center";s:30:"classElementDescriptionProduct";s:0:"";s:26:"classPriceContainerProduct";s:25:"ae_price_container_center";s:17:"classPriceProduct";s:15:"ae_price_center";s:4:"area";s:7:"product";}';
+
+
+if(version_compare(_PS_VERSION_,'1.4', '>=') && version_compare(_PS_VERSION_,'1.5', '<')) {
+	$properties['AE_CONFIGURATION_SEARCH'] = 'O:8:"stdClass":22:{s:10:"recoSearch";s:1:"0";s:11:"labelSearch";s:0:"";s:14:"recoSizeSearch";s:1:"4";s:13:"imgSizeSearch";s:4:"home";s:14:"selectorSearch";s:17:".productsSortForm";s:22:"selectorPositionSearch";s:6:"before";s:17:"bottomTitleSearch";s:34:"Liste des produits de la recherche";s:14:"parentIdSearch";s:0:"";s:17:"classParentSearch";s:24:"ae_products_block_center";s:16:"classTitleSearch";s:21:"ae_block_title_center";s:15:"contentIdSearch";s:0:"";s:18:"classContentSearch";s:23:"ae_content_block_center";s:12:"listIdSearch";s:0:"";s:15:"classListSearch";s:29:"ae_list_products_block_center";s:19:"elementListIdSearch";s:0:"";s:22:"classElementListSearch";s:23:"ae_product_block_center";s:23:"classElementImageSearch";s:13:"ae_img_center";s:22:"classElementNameSearch";s:23:"ae_products_name_center";s:29:"classElementDescriptionSearch";s:0:"";s:25:"classPriceContainerSearch";s:25:"ae_price_container_center";s:16:"classPriceSearch";s:15:"ae_price_center";s:4:"area";s:6:"search";}';
+	$properties['AE_CONFIGURATION_CATEGORY'] = 'O:8:"stdClass":22:{s:12:"recoCategory";s:1:"0";s:13:"labelCategory";s:0:"";s:16:"recoSizeCategory";s:1:"4";s:15:"imgSizeCategory";s:4:"home";s:16:"selectorCategory";s:9:".cat_desc";s:24:"selectorPositionCategory";s:6:"before";s:19:"bottomTitleCategory";s:35:"Liste des produits de la catégorie";s:16:"parentIdCategory";s:0:"";s:19:"classParentCategory";s:24:"ae_products_block_center";s:18:"classTitleCategory";s:21:"ae_block_title_center";s:17:"contentIdCategory";s:0:"";s:20:"classContentCategory";s:23:"ae_content_block_center";s:14:"listIdCategory";s:0:"";s:17:"classListCategory";s:29:"ae_list_products_block_center";s:21:"elementListIdCategory";s:0:"";s:24:"classElementListCategory";s:23:"ae_product_block_center";s:25:"classElementImageCategory";s:13:"ae_img_center";s:24:"classElementNameCategory";s:23:"ae_products_name_center";s:31:"classElementDescriptionCategory";s:0:"";s:27:"classPriceContainerCategory";s:25:"ae_price_container_center";s:18:"classPriceCategory";s:15:"ae_price_center";s:4:"area";s:8:"category";}';
+}
+else if(version_compare(_PS_VERSION_,'1.5', '>=') && version_compare(_PS_VERSION_,'1.6', '<')) {
+	$properties['AE_CONFIGURATION_SEARCH'] = 'O:8:"stdClass":22:{s:10:"recoSearch";s:1:"0";s:11:"labelSearch";s:0:"";s:14:"recoSizeSearch";s:1:"4";s:13:"imgSizeSearch";s:4:"home";s:14:"selectorSearch";s:21:".sortPagiBar.clearfix";s:22:"selectorPositionSearch";s:6:"before";s:17:"bottomTitleSearch";s:34:"Liste des produits de la recherche";s:14:"parentIdSearch";s:0:"";s:17:"classParentSearch";s:24:"ae_products_block_center";s:16:"classTitleSearch";s:21:"ae_block_title_center";s:15:"contentIdSearch";s:0:"";s:18:"classContentSearch";s:23:"ae_content_block_center";s:12:"listIdSearch";s:0:"";s:15:"classListSearch";s:29:"ae_list_products_block_center";s:19:"elementListIdSearch";s:0:"";s:22:"classElementListSearch";s:23:"ae_product_block_center";s:23:"classElementImageSearch";s:13:"ae_img_center";s:22:"classElementNameSearch";s:23:"ae_products_name_center";s:29:"classElementDescriptionSearch";s:0:"";s:25:"classPriceContainerSearch";s:25:"ae_price_container_center";s:16:"classPriceSearch";s:15:"ae_price_center";s:4:"area";s:6:"search";}';
+	$properties['AE_CONFIGURATION_CATEGORY'] = 'O:8:"stdClass":22:{s:12:"recoCategory";s:1:"0";s:13:"labelCategory";s:0:"";s:16:"recoSizeCategory";s:1:"4";s:15:"imgSizeCategory";s:4:"home";s:16:"selectorCategory";s:21:".sortPagiBar.clearfix";s:24:"selectorPositionCategory";s:6:"before";s:19:"bottomTitleCategory";s:35:"Liste des produits de la catégorie";s:16:"parentIdCategory";s:0:"";s:19:"classParentCategory";s:24:"ae_products_block_center";s:18:"classTitleCategory";s:21:"ae_block_title_center";s:17:"contentIdCategory";s:0:"";s:20:"classContentCategory";s:23:"ae_content_block_center";s:14:"listIdCategory";s:0:"";s:17:"classListCategory";s:29:"ae_list_products_block_center";s:21:"elementListIdCategory";s:0:"";s:24:"classElementListCategory";s:23:"ae_product_block_center";s:25:"classElementImageCategory";s:13:"ae_img_center";s:24:"classElementNameCategory";s:23:"ae_products_name_center";s:31:"classElementDescriptionCategory";s:0:"";s:27:"classPriceContainerCategory";s:25:"ae_price_container_center";s:18:"classPriceCategory";s:15:"ae_price_center";s:4:"area";s:8:"category";}';
+}
+else if (version_compare(_PS_VERSION_,'1.6','>=')) {
+	$properties['AE_CONFIGURATION_SEARCH'] = 'O:8:"stdClass":22:{s:10:"recoSearch";s:1:"0";s:11:"labelSearch";s:0:"";s:14:"recoSizeSearch";s:1:"4";s:13:"imgSizeSearch";s:12:"home_default";s:14:"selectorSearch";s:21:".sortPagiBar.clearfix";s:22:"selectorPositionSearch";s:6:"before";s:17:"bottomTitleSearch";s:34:"Liste des produits de la recherche";s:14:"parentIdSearch";s:0:"";s:17:"classParentSearch";s:33:"ae_products_block_center clearfix";s:16:"classTitleSearch";s:21:"ae_block_title_center";s:15:"contentIdSearch";s:0:"";s:18:"classContentSearch";s:23:"ae_content_block_center";s:12:"listIdSearch";s:0:"";s:15:"classListSearch";s:29:"ae_list_products_block_center";s:19:"elementListIdSearch";s:0:"";s:22:"classElementListSearch";s:23:"ae_product_block_center";s:23:"classElementImageSearch";s:13:"ae_img_center";s:22:"classElementNameSearch";s:23:"ae_products_name_center";s:29:"classElementDescriptionSearch";s:0:"";s:25:"classPriceContainerSearch";s:25:"ae_price_container_center";s:16:"classPriceSearch";s:15:"ae_price_center";s:4:"area";s:6:"search";}';
+	$properties['AE_CONFIGURATION_CATEGORY'] = 'O:8:"stdClass":22:{s:12:"recoCategory";s:1:"0";s:13:"labelCategory";s:0:"";s:16:"recoSizeCategory";s:1:"4";s:15:"imgSizeCategory";s:12:"home_default";s:16:"selectorCategory";s:21:".sortPagiBar.clearfix";s:24:"selectorPositionCategory";s:6:"before";s:19:"bottomTitleCategory";s:35:"Liste des produits de la catégorie";s:16:"parentIdCategory";s:0:"";s:19:"classParentCategory";s:24:"ae_products_block_center";s:18:"classTitleCategory";s:21:"ae_block_title_center";s:17:"contentIdCategory";s:0:"";s:20:"classContentCategory";s:23:"ae_content_block_center";s:14:"listIdCategory";s:0:"";s:17:"classListCategory";s:29:"ae_list_products_block_center";s:21:"elementListIdCategory";s:0:"";s:24:"classElementListCategory";s:23:"ae_product_block_center";s:25:"classElementImageCategory";s:13:"ae_img_center";s:24:"classElementNameCategory";s:23:"ae_products_name_center";s:31:"classElementDescriptionCategory";s:0:"";s:27:"classPriceContainerCategory";s:25:"ae_price_container_center";s:18:"classPriceCategory";s:15:"ae_price_center";s:4:"area";s:8:"category";}';
+}
+
+?>

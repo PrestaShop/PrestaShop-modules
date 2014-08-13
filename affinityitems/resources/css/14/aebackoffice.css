@@ -1,0 +1,42 @@
+.aewrapper {
+	width: 100%;
+	display: block;
+	margin: 0 auto;
+	position: relative;
+}
+
+.aeblock {
+	background-color: #fafafa;
+	margin-left: 4%;
+	width: 255px;	
+	padding-top: 10px;
+	height: 230px;
+	margin-bottom: 20px;
+	float: left;
+	text-align: center;
+	font-size: 1.9em;
+}
+
+#childToogle {
+	display: none;
+	background-color: #fafafa;
+	color: #585A69;
+	font-weight: bold;
+}
+
+.aedarkblue {
+	color: #1f497d;
+	height: 95px;
+}
+
+.aemodule-description object {
+	margin-left: 15px;
+	margin-top: 10px;
+}
+
+.aemodule-text-content {
+	float: left;
+	margin-top: 20px;
+	width: 50%;
+	margin-left: 0px;
+}

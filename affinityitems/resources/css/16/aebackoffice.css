@@ -1,0 +1,49 @@
+.aewrapper {
+	width: 67%;
+	display: block;
+	margin: 0 auto;
+	position: relative;
+}
+
+#aewrapper a {
+	text-decoration: none !important;
+}
+
+.aeblock {
+	background-color: #fafafa;
+	margin-left: 4%;
+	width: 292px;
+	padding-top: 10px;
+	height: 230px;
+	margin-bottom: 20px;
+	float: left;
+	text-align: center;
+	font-size: 1.9em;
+}
+
+.aedarkblue {
+	color: #1f497d;
+}
+
+#childToogle {
+	display: none;
+	background-color: #fafafa;
+	color: #585A69;
+	font-weight: bold;
+}
+
+#aeip {
+	margin-left: 10%;
+}
+
+.aemodule-description object {
+	margin-left: 45px;
+	margin-top: 10px;
+}
+
+.aemodule-text-content {
+	float: left;
+	margin-top: 20px;
+	width: 50%;
+	margin-left: 0px;
+}
