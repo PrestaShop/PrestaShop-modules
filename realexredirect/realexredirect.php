@@ -632,15 +632,7 @@ class RealexRedirect extends PaymentModule
 	*/
 	public function getAmountFormat($total)
 	{
-		$tab = explode('.', $total);
-		if (count($tab) == 1)
-			return $tab[0].'00';
-		else {
-			if (Tools::strlen(($tab[1])) == 1)
-				$total = $tab[0].$tab[1].'0';
-			else
-				$total = $tab[0].$tab[1];
-		}
+		$total=number_format($total,2,"","");
 		return $total;
 	}
 
