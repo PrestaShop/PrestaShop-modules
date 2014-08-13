@@ -1,18 +1,78 @@
-html {
-	 -webkit-font-smoothing: antialiased;
-}
-
 
 #tabList .margin-form > p > a {
 	text-decoration: underline;
 }
 
+select.ebay_select{
+	color:#000 !important;
+}
 
+#selectTagTemplate {
+	padding: 29px 0;
+	background: white;
+	height: 22px;
+	margin-left: 5px;
+	margin-top: 4px;
+	margin-bottom: 3px;
+}
+.mceIframeContainer iframe
+{
+	width: 800px !important;
+}
+
+#statsForm div.label
+{
+	width:100%;
+	margin-bottom:10px;
+	font-weight:bold;
+}
+
+#statsForm div.input
+{
+	margin-bottom:5px;
+
+}
+
+#statsForm div.input input
+{
+	margin-right:3px;
+}
+
+#statsForm div.input:last-child
+{
+	margin-bottom:10px;
+}
+
+#statsForm .primary{
+	margin-top:10px;
+}
+
+
+#fancybox-loading {
+	display: none;
+}
+
+input.primary {
+	text-shadow: none;
+	background: -webkit-gradient(linear, center top ,center bottom, from(#0055FF), to(#0055AA)) repeat scroll 0 0 transparent;
+	background: -moz-linear-gradient(center top, #0055FF, #0055AA) repeat scroll 0 0 transparent;
+	color: white;
+}
+
+.tooltip {
+	vertical-align: middle;
+	display: inline-block;
+	margin-left: 3px;
+}
+
+textarea + .tooltip {
+	vertical-align: top;
+}
 
 /* Tips */
 
 
-/* This is the default Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
+/* This is the 	 Tooltipster theme (feel free to modify or duplicate and create multiple themes!): */
 .tooltipster-default {
 	border-radius: 5px; 
 	border: 1px solid #000;
@@ -276,4 +336,127 @@ html {
 	-o-transform: scale(1.1, 1.1);
 	-ms-transform: scale(1.1, 1.1);
 	transform: scale(1.1, 1.1);
+}
+
+.warning
+{
+	background : url('../img/warning.png') no-repeat 2px 50%;
+}
+#content .warning.big.tips {
+	background : url('../img/tips.png') no-repeat 2px 50% #fff;
+}
+#content .warning.big, #content .ebay_mind.big, #content .ebay_wrong{
+	padding: 20px 20px 20px 60px;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	width: 100%;
+	background: url('../img/big-warning.png') no-repeat 17px 50% #fff;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	font-weight:bold;
+	margin-bottom:10px;
+}
+
+#content .ebay_wrong.big{
+	background : url('../img/big-error.png') no-repeat 2px 50% #fff;;
+}
+
+
+#menuTab li.success
+{
+	background : url('../img/success.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab li.wrong
+{
+	background : url('../img/error.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab li.mind
+{
+	background : url('../img/warning.png') no-repeat 2px 4px #EFEFEF;
+	padding-left: 20px;
+}
+
+#menuTab2Sheet #pagination
+{
+	overflow: hidden;
+	margin-bottom: 5px;
+	list-style: none;
+}
+
+#menuTab2Sheet #pagination li
+{
+	width: 15px;
+	height: 15px;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+	margin-left: 5px;
+}
+
+#menuTab2Sheet #pagination li:hover
+{
+	color: #0055FF;
+}
+
+#menuTab2Sheet #pagination li:first-child
+{
+	margin-left: 0;
+}
+
+
+#menuTab2Sheet #pagination li.prev,
+#menuTab2Sheet #pagination li.next
+{
+	background: #ffffff;
+	border: 1px solid #585A69;
+}
+
+#menuTab2Sheet #pagination li.current
+{
+	border: 1px solid #585A69;
+	color: #0055FF;
+}
+
+#domesticShipping td.linked, #internationalShipping td.linked
+{
+	background : url('../img/link.png') no-repeat 0 15px;
+	padding-left: 45px;
+}
+
+.shipping_destinations ul, .shipping_destinations ul li{
+	list-style:none;
+}
+
+#ebay_trash
+{
+	cursor:pointer;
+}
+
+.ebay_shipping_text, .presta_shipping_text
+{
+	text-decoration:underline;cursor:pointer;
+}
+
+.shipping_configured
+{
+	width: 100%; 
+	margin-bottom: 20px; 
+	background-color: rgb(221, 242, 219) !important;
+}
+
+.shipping_not_configured
+{
+	width:100%;
+	margin-bottom:20px;
+	background-color:#FFF;
+}
+
+#domesticShipping td.big-linked, #internationalShipping td.big-linked
+{
+	background-position: left center;
 }

@@ -66,7 +66,6 @@
 		{if isset($sku)}
 			<SKU>{$sku}</SKU>
 		{/if}
-		<DispatchTimeMax>{$dispatch_time_max}</DispatchTimeMax>
 		<ListingDuration>{$listing_duration}</ListingDuration>
 		{if isset($quantity)}
 			<Quantity>{$quantity}</Quantity>
@@ -75,6 +74,7 @@
 			<StartPrice>{$start_price}</StartPrice>
 		{/if}
 		{if $resynchronize}
+			<DispatchTimeMax>{$dispatch_time_max}</DispatchTimeMax>
 			<Title>{$title}</Title>
 			<Description><![CDATA[{$description}]]></Description>
 			<ShippingDetails>{$shipping_details}</ShippingDetails>

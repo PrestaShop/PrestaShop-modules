@@ -1,0 +1,5 @@
+Ciao, 
+Un problema durante l'importazione ha avuto luogo. Ecco i messaggi identificati: <br/>
+
+{errors_email}
+{shop_name}

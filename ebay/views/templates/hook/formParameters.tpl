@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2013 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,16 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2013 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 {if isset($relogin) && $relogin}
 	{literal}
 	<script>
 		$(document).ready(function() {
 			win = window.redirect('{$redirect_url}');
-
 		});
 	</script>
 	{/literal}
@@ -37,7 +37,7 @@
 		if(regenerate_token_show)
 		{ldelim}
 			$('.regenerate_token_button').show();
-			$('.regenerate_token_button label').css('color', 'red').html('{l s='You must regenerate your authentication token' mod='ebay'}');
+			$('.regenerate_token_button label').css('color', 'red').html("{l s='You must regenerate your authentication token' mod='ebay'}");
 			$('.regenerate_token_click').hide();
 		{rdelim}
 		$('.regenerate_token_click span').click(function()
@@ -62,7 +62,7 @@
 		<h4>{l s='To list your products on eBay, you need to create' mod='ebay'} <a href="{l s='https://scgi.ebay.co.uk/ws/eBayISAPI.dll?RegisterEnterInfo&bizflow=2' mod='ebay'}">{l s='a business seller account' mod='ebay'}</a> {l s='and' mod='ebay'} <a href="https://www.paypal.com/">{l s='a PayPal account.' mod='ebay'}</a></h4>
 		<label>{l s='eBay User ID' mod='ebay'} : </label>
 		<div class="margin-form">
-			<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}"/>
+			<input type="text" size="20" name="ebay_identifier" value="{$ebayIdentifier}" disabled />
 		</div>
 		<label>{l s='eBay Shop' mod='ebay'} : </label>
 		<div class="margin-form">
@@ -153,8 +153,8 @@
 				{/foreach}
 			</select>
 		</div>
-
-		<label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
+		
+        <label for="">{l s='Do you want to automatically relist' mod='ebay'}</label>
 		<div class="margin-form"><input type="checkbox" name="automaticallyrelist" {if $automaticallyRelist == 'on'} checked="checked" {/if} /></div>
 	</fieldset>
 
@@ -204,8 +204,74 @@
 		<div style="clear:both;"></div>
 
 	</fieldset>
-		
 
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Others' mod='ebay'}</legend>
+		{if !$is_writable && $activate_logs}<p class="warning">{l s='The log file is not writable' mod='ebay'}</p>{/if}
+		<label>
+			{l s='Activate Logs' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			<input type="checkbox" name="activate_logs" value="1"{if $activate_logs} checked="checked"{/if}>
+		</div>
+		<div class="clear both"></div>
+		{if $log_file_exists}
+			<label>
+				{l s='Download logs' mod='ebay'}
+			</label>
+			
+			<div class="margin-form">
+				<a href="../modules/ebay/log/request.txt" class="button">{l s='Download' mod='ebay'}</a>
+			</div>
+			<div class="clear both"></div>
+		{/if}
+	</fieldset>
+    
+	<fieldset style="margin-top:10px;">
+		<legend>{l s='Sync' mod='ebay'}</legend>
+		
+		<label>
+			{l s='Manually Sync Orders' mod='ebay'}
+		</label>
+		<div class="margin-form">
+			
+			<a href="{$url}&EBAY_SYNC_ORDERS=1">
+				<input type="button" class="button" value="{l s='Sync Orders from eBay' mod='ebay'}" />
+			</a>
+	        <br>
+		</div>
+		<label>
+			{l s='Sync Orders' mod='ebay'}
+		</label>
+        <div class="margin-form">
+			<input type="radio" size="20" name="sync_orders_mode" class="sync_orders_mode" value="save" {if $sync_orders_by_cron == false}checked="checked"{/if}/> {l s='every 30 minutes on page load' mod='ebay'}
+			<input type="radio" size="20" name="sync_orders_mode" class="sync_orders_mode" value="cron" {if $sync_orders_by_cron == true}checked="checked"{/if}/> {l s='by CRON task' mod='ebay'}<br>
+	        <p><a id="sync_orders_by_cron_url" href="{$sync_orders_by_cron_url}" target="_blank" style="{if $sync_orders_by_cron == false};display:none{/if}">{$sync_orders_by_cron_path}</a></p>
+        	
+        </div>
+		<label>
+			{l s='Sync Products' mod='ebay'}
+		</label>
+        <div class="margin-form">
+			<input type="radio" size="20" name="sync_products_mode" class="sync_products_mode" value="save" {if $sync_products_by_cron == false}checked="checked"{/if}/> {l s='on save' mod='ebay'}
+			<input type="radio" size="20" name="sync_products_mode" class="sync_products_mode" value="cron" {if $sync_products_by_cron == true}checked="checked"{/if}/> {l s='by CRON task' mod='ebay'}<br>
+	        <p><a id="sync_products_by_cron_url" href="{$sync_products_by_cron_url}" target="_blank" style="{if $sync_products_by_cron == false};display:none{/if}">{$sync_products_by_cron_path}</a></p>
+        	
+        </div>
+		<div class="clear both"></div>
+        
+	</fieldset>
+
+   <fieldset style="margin-top:10px;">
+		<legend>{l s='Ebay Data Usage' mod='ebay'}</legend>
+		<label>{l s='Help us improve the eBay Module by sending anonymous usage stats' mod='ebay'} : </label>
+		<div class="margin-form">
+            <input type="radio" name="stats" value="0" {if isset($stats) && !$stats}checked="checked"{/if}> No thanks&nbsp;&nbsp;
+            <input type="radio" name="stats" value="1" {if !isset($stats) || $stats}checked="checked"{/if}> I agree<br>
+		</div>
+		<div style="clear:both;"></div>
+    </fieldset>
+        
 	<div class="margin-form" id="buttonEbayParameters" style="margin-top:5px;">
 		<a href="#categoriesProgression" {if $catLoaded}id="displayFancybox"{/if}>
 			<input class="primary button" name="submitSave" type="hidden" value="{l s='Save and continue' mod='ebay'}" />
@@ -226,6 +292,22 @@
 			$('#token-btn').click(function() {
 					window.open(module_dir + 'ebay/pages/getSession.php?token={/literal}{$ebay_token}{literal}');			
 			});
+            
+            $('.sync_products_mode').change(function() {
+                if ($(this).val() == 'cron') {
+                    $('#sync_products_by_cron_url').show();
+                } else {
+                    $('#sync_products_by_cron_url').hide();
+                }
+            });
+
+            $('.sync_orders_mode').change(function() {
+                if ($(this).val() == 'cron') {
+                    $('#sync_orders_by_cron_url').show();
+                } else {
+                    $('#sync_orders_by_cron_url').hide();
+                }
+            });
 		</script>
 	{/literal}
 </form>

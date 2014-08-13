@@ -32,6 +32,10 @@ include(dirname(__FILE__).'/../classes/EbayCategoryCondition.php');
 if (!Tools::getValue('token') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	die('ERROR : INVALID TOKEN');
 
+
+$id_ebay_profile = (int)Tools::getValue('profile');
+$ebay_profile = new EbayProfile($id_ebay_profile);
+
 function loadItemsMap($row)
 {
 	return $row['id'];
@@ -42,13 +46,14 @@ sleep(1);
 
 $category = new EbayCategory((int)Tools::getValue('ebay_category'));
 
-if (!Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') || (Configuration::get('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
-{
-	$res = EbayCategorySpecific::loadCategorySpecifics();
-	$res &= EbayCategoryCondition::loadCategoryConditions();
 
+if (!$ebay_profile->getConfiguration('EBAY_SPECIFICS_LAST_UPDATE') || ($ebay_profile->getConfiguration('EBAY_SPECIFICS_LAST_UPDATE') < date('Y-m-d\TH:i:s', strtotime('-3 days')).'.000Z'))
+{
+	$time = time();
+	$res = EbayCategorySpecific::loadCategorySpecifics($id_ebay_profile);
+	$res &= EbayCategoryCondition::loadCategoryConditions($id_ebay_profile);
 	if ($res)
-		Configuration::updateValue('EBAY_SPECIFICS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'), false, 0, 0);
+		$ebay_profile->setConfiguration('EBAY_SPECIFICS_LAST_UPDATE', date('Y-m-d\TH:i:s.000\Z'), false);
 }
 
 $item_specifics = $category->getItemsSpecifics();
@@ -68,10 +73,10 @@ else
 foreach ($item_specifics as &$item_specific)
 	foreach ($item_specifics_values as $value)
 		if ($item_specific['id'] == $value['specific_id'])
-			$item_specific['values'][$value['id']] = $value['value'];
+			$item_specific['values'][$value['id']] = Tools::safeOutput($value['value']);
 
 echo Tools::jsonEncode(array(
 	'specifics' => $item_specifics,
-	'conditions' => $category->getConditionsWithConfiguration(),
+	'conditions' => $category->getConditionsWithConfiguration($id_ebay_profile),
 	'is_multi_sku' => $category->isMultiSku()
 ));

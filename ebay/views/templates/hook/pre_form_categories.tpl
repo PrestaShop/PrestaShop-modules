@@ -28,6 +28,19 @@
 </p>
 <form action="index.php?{if $isOneDotFive}controller={$controller}{else}tab={$tab}{/if}&configure={$configure}&token={$token}&tab_module={$tab_module}&module_name={$module_name}&id_tab=2&section=category" method="post" class="form">
 	<p class="center">
-		<input class="button" name="submitSave" type="submit" value="{l s='See Categories' mod='ebay'}" />
+		<input class="primary button" name="submitSave" type="submit" value="{l s='View Categories' mod='ebay'}" />
 	</p>
 </form>
+
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function(){
+		var form_categories = parseInt("{$form_categories}");
+		if (form_categories >= 1)
+			$("#menuTab2").addClass('success');
+		
+		else
+			$("#menuTab2").addClass('wrong');
+	});
+	//]]>
+</script>

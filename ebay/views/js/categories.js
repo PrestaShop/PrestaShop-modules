@@ -26,7 +26,7 @@
 function loadCategoryMatch(id_category) {
 	$.ajax({
 		async: false,
-		url: module_dir + 'ebay/ajax/loadCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&ch_cat_str=' + ebay_l['no category selected'],
+		url: module_dir + 'ebay/ajax/loadCategoryMatch.php?token=' + ebay_token + '&id_category=' + id_category + '&time=' + module_time + '&ch_cat_str=' + ebay_l['no category selected'] + "&profile=" + id_ebay_profile,
 		success: function(data) { $("#categoryPath" + id_category).html(); }
 	});
 }
@@ -87,7 +87,6 @@ function showProducts(id_category) {
 								<input name="showed_products[' + product.id + ']" type="hidden" value="1" /> \
 								<input onchange="toggleSyncProduct(this)" class="sync-product" product="' + product.id + '" name="to_synchronize[' + product.id + ']" type="checkbox" ' + (product.blacklisted == 1 ? '' : 'checked') + ' /> \
 							</td> \
-							<td align="center"><input class="extra_images" id="extra_images_' + product.id + '" name="extra_images[' + product.id + ']" type="number" value="' + product.extra_images + '" min="0" max="99" /></td> \
 						</tr>');
 					}
 					$('#loading-' + id_category).remove();
@@ -104,7 +103,7 @@ function toggleSyncProduct(obj)
 
 $(document).ready(function() {
 	$.ajax({
-		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'] + '&unselect_product=' + ebay_l['Unselect products'],
+		url: module_dir + "ebay/ajax/loadTableCategories.php?token=" + ebay_token + "&id_lang=" + id_lang + "&profile=" + id_ebay_profile + '&ch_cat_str=' + ebay_l['no category selected'] + '&ch_no_cat_str=' + ebay_l['no category found'] + '&not_logged_str=' + ebay_l['You are not logged in'] + '&unselect_product=' + ebay_l['Unselect products'],
 		success : function(data) { $("form#configForm2 table tbody #removeRow").remove(); $("form#configForm2 table tbody").html(data); }
 	});
 	
@@ -121,7 +120,10 @@ $(document).ready(function() {
 	$('#update-all-extra-images').click(function() {
 		var val = $('#all-extra-images-selection').val();
 		$('#all-extra-images-value').val(val);
-		$('.extra_images').val(val);
 	})
-
+	
+	if ($("#menuTab1").hasClass('success') && $("#menuTab2").hasClass('wrong') && $("#configForm2SuggestedCategories input[type=submit]").length == 1)
+	{
+		//$("#configForm2SuggestedCategories input[type=submit]").trigger("click");
+	}
 });

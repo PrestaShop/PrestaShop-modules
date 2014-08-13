@@ -30,6 +30,9 @@ class EbayProductConfiguration
 
 	public static function getByProductIds($product_ids)
 	{
+        if (!$product_ids)
+            return array();
+        
 		foreach ($product_ids as &$product_id)
 			$product_id = (int)$product_id;
 		

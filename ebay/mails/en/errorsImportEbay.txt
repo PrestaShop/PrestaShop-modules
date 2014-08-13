@@ -1,0 +1,7 @@
+Hello,
+
+There was a problem while importing orders from eBay to PrestaShop : 
+
+{errors_email}
+
+{shop_name}

@@ -24,34 +24,38 @@
 *}
 
 <ul id="menuTab">
-	<li id="menuTab1" class="menuTabButton selected">1. {l s='Account settings' mod='ebay'}</li>
-	<li id="menuTab2" class="menuTabButton">2. {l s='Categories and pricing' mod='ebay'}</li>
-	<li id="menuTab8" class="menuTabButton">3. {l s='Item specifics' mod='ebay'}</li>
-	<li id="menuTab3" class="menuTabButton">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
-	<li id="menuTab4" class="menuTabButton">5. {l s='Template manager' mod='ebay'}</li>
-	<li id="menuTab5" class="menuTabButton">6. {l s='List products' mod='ebay'}</li>
-	<li id="menuTab6" class="menuTabButton">7. {l s='Order history' mod='ebay'}</li>
-	<li id="menuTab7" class="menuTabButton">8. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab1" class="menuTabButton selected {$parametersValidator.indicator}">1. {l s='Account settings' mod='ebay'}</li>
+	<li id="menuTab2" class="menuTabButton {$categoryValidator.indicator}">2. {l s='Categories and pricing' mod='ebay'}</li>
+	<li id="menuTab8" class="menuTabButton {$itemSpecificValidator.indicator}">3. {l s='Item specifics' mod='ebay'}</li>
+	<li id="menuTab3" class="menuTabButton {$shippingValidator.indicator}">4. {l s='Dispatch and Shipping' mod='ebay'}</li>
+	<li id="menuTab4" class="menuTabButton {$templateValidator.indicator}">5. {l s='Template manager' mod='ebay'}</li>
+	<li id="menuTab5" class="menuTabButton ">6. {l s='List products' mod='ebay'}</li>
+	<li id="menuTab9" class="menuTabButton">7. {l s='eBay listings' mod='ebay'}</li>
+	<li id="menuTab7" class="menuTabButton">9. {l s='Help' mod='ebay'}</li>
+	<li id="menuTab6" class="menuTabButton">8. {l s='Order history' mod='ebay'}</li>
 </ul>
 <div id="tabList" class="{$class_general}">
-	<div id="menuTab1Sheet" class="tabItem selected">{$form_parameters}</div>
-	<div id="menuTab2Sheet" class="tabItem">{$form_category}</div>
-	<div id="menuTab8Sheet" class="tabItem">{$form_items_specifics}</div>
-	<div id="menuTab3Sheet" class="tabItem">{$form_shipping}</div>
-	<div id="menuTab4Sheet" class="tabItem">{$form_template_manager}</div>
-	<div id="menuTab5Sheet" class="tabItem">{$form_ebay_sync}</div>
-	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>
+	<div id="menuTab1Sheet" class="tabItem selected">{if isset($parametersValidator.message)}<div class="ebay_{$parametersValidator.indicatorBig} big">{$parametersValidator.message}</div>{/if}{$form_parameters}</div>
+	<div id="menuTab2Sheet" class="tabItem">{if isset($categoryValidator.message)}<div class="ebay_{$categoryValidator.indicatorBig} big">{$categoryValidator.message}</div>{/if}{$form_category}</div>
+	<div id="menuTab8Sheet" class="tabItem">{if isset($itemSpecificValidator.message)}<div class="ebay_{$itemSpecificValidator.indicatorBig} big">{$itemSpecificValidator.message}</div>{/if}{$form_items_specifics}</div>
+	<div id="menuTab3Sheet" class="tabItem">{if isset($shippingValidator.message)}<div class="ebay_{$shippingValidator.indicatorBig} big">{$shippingValidator.message}</div>{/if}{$form_shipping}</div>
+	<div id="menuTab4Sheet" class="tabItem">{if isset($templateValidator.message)}<div class="ebay_{$templateValidator.indicatorBig} big">{$templateValidator.message}</div>{/if}{$form_template_manager}</div>
+	<div id="menuTab5Sheet" class="tabItem">{if isset($listingValidator.message)}<div class="ebay_{$listingValidator.indicatorBig} big">{$listingValidator.message}</div>{/if}{$form_ebay_sync}</div>
+	<div id="menuTab9Sheet" class="tabItem">{$ebay_listings}</div>
 	<div id="menuTab7Sheet" class="tabItem">{$help}</div>
+	<div id="menuTab6Sheet" class="tabItem">{$orders_history}</div>
 </div>
 <br clear="left" />
 <br />
 <style>{literal}
-	#menuTab { float: left; padding: 0; margin: 0; text-align: left; }
-	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
-	#menuTab li.menuTabButton.selected { background: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
+	#menuTab { float: left; padding: 0; margin: 0; text-align: left; width: 100% }
+	#menuTab li { text-align: left; float: left; display: inline; padding: 5px; padding-right: 10px; background-color: #EFEFEF; font-weight: bold; cursor: pointer; border-left: 1px solid #EFEFEF; border-right: 1px solid #EFEFEF; border-top: 1px solid #EFEFEF; }
+	#menuTab li.menuTabButton.selected { background-color: #FFF6D3; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; }
 	#tabList { clear: left; }
 	.tabItem { display: none; }
-	.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+	.tabItem.selected { display: block; background-color: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; padding-top: 20px; }
+	#menuTab #menuTab7, #menuTab #menuTab6 { float:right;background-color:#DFDFDF; border-left: 1px solid #CFCFCF; border-right: 1px solid #CFCFCF; border-top: 1px solid #CFCFCF; }
+	#menuTab #menuTab7.menuTabButton.selected, #menuTab #menuTab6.menuTabButton.selected { background-color: #FFF6D3; border-left: 1px solid #DFDFDF; border-right: 1px solid #DFDFDF; border-top: 1px solid #DFDFDF; }
 	{/literal}
 </style>
 <script>
@@ -101,4 +105,3 @@
 	</div>
 	<div id="categoriesProgression" style="overflow: auto;width: 200px;height: 100px;text-align: center;font-size: 16px;padding-top: 30px;"></div>
 </div>
-

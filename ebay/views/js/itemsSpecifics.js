@@ -44,7 +44,7 @@ function loadCategoryItemsSpecifics(category_position)
 		async: true,
 		cache: false,
 		dataType: 'json',
-		url: module_dir + "ebay/ajax/loadItemsSpecificsAndConditions.php?token=" + ebay_token + "&ebay_category=" + category_id + "&id_lang=" + id_lang,
+		url: module_dir + "ebay/ajax/loadItemsSpecificsAndConditions.php?token=" + ebay_token + "&profile=" + id_ebay_profile + "&ebay_category=" + category_id + "&id_lang=" + id_lang,
 		success: function(data) {
 			$('#specifics-' + category_id + '-loader').hide();
 			insertCategoryRow(category_id, data);
@@ -141,7 +141,7 @@ function showOptionals(category_id)
 {
 	var nb_rows_to_add = $('tr.optional[category=' + category_id + ']').length;
 
-	var first_td = $('#specifics-' + category_id + ' td::nth-child(1)');
+	var first_td = $('#specifics-' + category_id + ' td:nth-child(1)');
 	first_td.attr('rowspan', parseInt(first_td.attr('rowspan')) + nb_rows_to_add - 1);
 
 	$('tr[category=' + category_id + ']').show();

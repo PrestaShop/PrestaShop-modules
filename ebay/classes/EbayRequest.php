@@ -44,19 +44,26 @@ class EbayRequest
 	private $apiCall;
 	private $loginUrl;
 	private $compatibility_level;
-	private $debug = false;
+	private $debug;
 	private $dev = false;
 	private $ebay_country;
 
 	private $smarty_data;
+	
+	private $ebay_profile;
 
-	public function __construct()
+	public function __construct($id_ebay_profile = null)
 	{
 		/** Backward compatibility */
 		require(dirname(__FILE__).'/../backward_compatibility/backward.php');
 
-		$this->ebay_country = EbayCountrySpec::getInstanceByKey(Configuration::get('EBAY_COUNTRY_DEFAULT'), $this->dev);
+        if ($id_ebay_profile)
+            $this->ebay_profile = new EbayProfile($id_ebay_profile);
+        else
+            $this->ebay_profile = EbayProfile::getCurrent();
+		$this->ebay_country = EbayCountrySpec::getInstanceByKey($this->ebay_profile->getConfiguration('EBAY_COUNTRY_DEFAULT'), $this->dev);
 		$this->itemConditionError = false;
+		$this->debug = (boolean)Configuration::get('EBAY_ACTIVATE_LOGS');
 
 		/**
 		 * Sandbox params
@@ -219,7 +226,7 @@ class EbayRequest
 	{
 		$response = $this->_makeRequest('GetSuggestedCategories', array(
 			'version' => $this->compatibility_level,
-			'query' => substr(strtolower($query), 0, 350)
+			'query' => Tools::substr(strtolower($query), 0, 350)
 		));
 
 		if ($response === false)
@@ -365,7 +372,7 @@ class EbayRequest
 
 		$vars = array(
 			'sku' => 'prestashop-'.$data['id_product'],
-			'title' => substr($data['name'], 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'description' => $data['description'],
 			'category_id' => $data['categoryId'],
@@ -374,10 +381,10 @@ class EbayRequest
 			'start_price' => $data['price'],
 			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'quantity' => $data['quantity'],
 			'item_specifics' => $data['item_specifics'],
 			'return_policy' => $this->_getReturnPolicy(),
@@ -405,13 +412,13 @@ class EbayRequest
 			'condition_id' => $data['condition'],
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'sku' => 'prestashop-'.$data['id_product'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'quantity' => $data['quantity'],
 			'price_update' => !isset($data['noPriceUpdate']),
 			'start_price' => $data['price'],
-			'resynchronize' => (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1),
-			'title' => substr($data['name'], 0, 80),
+			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
@@ -457,12 +464,12 @@ class EbayRequest
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'description' => $data['description'],
 			'condition_id' => $data['condition'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
-			'title' => substr($data['name'], 0, 80),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'return_policy' => $this->_getReturnPolicy(),
 			'price_update' => !isset($data['noPriceUpdate']),
@@ -512,18 +519,18 @@ class EbayRequest
 			'country' => $this->ebay_country->getIsoCode(),
 			'country_currency' => $this->ebay_country->getCurrency(),
 			'condition_id' => $data['condition'],
-			'dispatch_time_max' => Configuration::get('EBAY_DELIVERY_TIME'),
-			'listing_duration' => Configuration::get('EBAY_LISTING_DURATION'),
+			'dispatch_time_max' => $this->ebay_profile->getConfiguration('EBAY_DELIVERY_TIME'),
+			'listing_duration' => $this->ebay_profile->getConfiguration('EBAY_LISTING_DURATION'),
 			'listing_type' => 'FixedPriceItem',
 			'payment_method' => 'PayPal',
-			'pay_pal_email_address' => Configuration::get('EBAY_PAYPAL_EMAIL'),
-			'postal_code' => Configuration::get('EBAY_SHOP_POSTALCODE'),
+			'pay_pal_email_address' => $this->ebay_profile->getConfiguration('EBAY_PAYPAL_EMAIL'),
+			'postal_code' => $this->ebay_profile->getConfiguration('EBAY_SHOP_POSTALCODE'),
 			'category_id' => $data['categoryId'],
 			'pictures' => isset($data['pictures']) ? $data['pictures'] : array(),
 			'value' => htmlentities($data['brand']),
 			'return_policy' => $this->_getReturnPolicy(),
-			'resynchronize' => (Configuration::get('EBAY_SYNC_OPTION_RESYNC') != 1),
-			'title' => substr($data['name'], 0, 80),
+			'resynchronize' => ($this->ebay_profile->getConfiguration('EBAY_SYNC_OPTION_RESYNC') != 1),
+			'title' => Tools::substr(self::prepareTitle($data), 0, 80),
 			'description' => $data['description'],
 			'shipping_details' => $this->_getShippingDetails($data),
 			'buyer_requirements_details' => $this->_getBuyerRequirementDetails($data),
@@ -566,7 +573,7 @@ class EbayRequest
 				if ($this->error != '')
 					$this->error .= '<br />';
 				if ($e->ErrorCode == 932 || $e->ErrorCode == 931)
-					Configuration::updateValue('EBAY_TOKEN_REGENERATE', true);
+					Configuration::updateValue('EBAY_TOKEN_REGENERATE', true, false, 0, 0);
 				$this->error .= (string)$e->LongMessage;
 			}
 
@@ -623,11 +630,12 @@ class EbayRequest
 
 	private function _getReturnPolicy()
 	{
+		$returns_policy_configuration = $this->ebay_profile->getReturnsPolicyConfiguration();
 		$vars = array(
-			'returns_accepted_option' => Configuration::get('EBAY_RETURNS_ACCEPTED_OPTION'),
-			'description' => preg_replace('#<br\s*?/?>#i', "\n", Configuration::get('EBAY_RETURNS_DESCRIPTION')),
-			'within' => Configuration::get('EBAY_RETURNS_WITHIN'),
-			'whopays' => Configuration::get('EBAY_RETURNS_WHO_PAYS')
+			'returns_accepted_option' => $returns_policy_configuration->ebay_returns_accepted_option,
+			'description' => preg_replace('#<br\s*?/?>#i', "\n", $returns_policy_configuration->ebay_returns_description),
+			'within' => $returns_policy_configuration->ebay_returns_within,
+			'whopays' => $returns_policy_configuration->ebay_returns_who_pays
 		);
 
 		$this->smarty->assign($vars);
@@ -647,26 +655,29 @@ class EbayRequest
 
 			foreach ($data['variations'] as $key => $variation)
 			{
-				foreach ($variation['variations'] as $variation_key => $variation_element)
-					if (!isset($attribute_used[md5($variation_element['name'].$variation_element['value'])]) && isset($variation['pictures'][$variation_key]))
-					{
-						if ($last_specific_name != $variation_element['name'])
-							$variation_pictures[$key][$variation_key]['name'] = $variation_element['name'];
-
-						$variation_pictures[$key][$variation_key]['value'] = $variation_element['value'];
-						$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$variation_key];
-
-						$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
-						$last_specific_name = $variation_element['name'];
-					}
-
-				foreach ($variation['variation_specifics'] as $name => $value)
+				if(isset($variation['variations']))
 				{
-					if (!isset($variation_specifics_set[$name]))
-						$variation_specifics_set[$name] = array();
+					foreach ($variation['variations'] as $variation_key => $variation_element)
+						if (!isset($attribute_used[md5($variation_element['name'].$variation_element['value'])]) && isset($variation['pictures'][$variation_key]))
+						{
+							if ($last_specific_name != $variation_element['name'])
+								$variation_pictures[$key][$variation_key]['name'] = $variation_element['name'];
 
-					if (!in_array($value, $variation_specifics_set[$name]))
-						$variation_specifics_set[$name][] = $value;
+							$variation_pictures[$key][$variation_key]['value'] = $variation_element['value'];
+							$variation_pictures[$key][$variation_key]['url'] = $variation['pictures'][$variation_key];
+
+							$attribute_used[md5($variation_element['name'].$variation_element['value'])] = true;
+							$last_specific_name = $variation_element['name'];
+						}
+
+					foreach ($variation['variation_specifics'] as $name => $value)
+					{
+						if (!isset($variation_specifics_set[$name]))
+							$variation_specifics_set[$name] = array();
+
+						if (!in_array($value, $variation_specifics_set[$name]))
+							$variation_specifics_set[$name][] = $value;
+					}
 				}
 			}
 		}
@@ -725,7 +736,7 @@ class EbayRequest
 	private function _makeRequest($api_call, $vars, $shoppingEndPoint = false)
 	{
 		$vars = array_merge($vars, array(
-			'ebay_auth_token' => Configuration::get('EBAY_API_TOKEN'),
+			'ebay_auth_token' => Configuration::get('EBAY_API_TOKEN', null, 0, 0),
 			'error_language' => $this->ebay_country->getLanguage(),
 		));
 
@@ -755,14 +766,15 @@ class EbayRequest
 		curl_close($connection); // Close the connection
 
 		// Debug
+		
 		if ($this->debug)
 		{
-			if (!file_exists(dirname(__FILE__).'/../log/request.php'))
-				file_put_contents(dirname(__FILE__).'/../log/request.php', "<?php\n\n", FILE_APPEND | LOCK_EX);
+			if (!file_exists(dirname(__FILE__).'/../log/request.txt'))
+				file_put_contents(dirname(__FILE__).'/../log/request.txt', "<?php\n\n", FILE_APPEND | LOCK_EX);
 
-			file_put_contents(dirname(__FILE__).'/../log/request.php', date('d/m/Y H:i:s')."\n\n HEADERS : \n".print_r($this->_buildHeaders($api_call), true), FILE_APPEND | LOCK_EX);
+			file_put_contents(dirname(__FILE__).'/../log/request.txt', date('d/m/Y H:i:s')."\n\n HEADERS : \n".print_r($this->_buildHeaders($api_call), true), FILE_APPEND | LOCK_EX);
 
-			file_put_contents(dirname(__FILE__).'/../log/request.php', date('d/m/Y H:i:s')."\n\n".$request."\n\n".$response."\n\n-------------------\n\n", FILE_APPEND | LOCK_EX);
+			file_put_contents(dirname(__FILE__).'/../log/request.txt', date('d/m/Y H:i:s')."\n\n".$request."\n\n".$response."\n\n-------------------\n\n", FILE_APPEND | LOCK_EX);
 		}
 
 		// Send the request and get response
@@ -815,6 +827,38 @@ class EbayRequest
 
 	public function getDev() {
 		return $this->dev;
+	}
+
+	public static function prepareTitle($data)
+	{
+		$product = new Product($data['real_id_product'], false, $data['id_lang']);
+		$features = Feature::getFeatures($data['id_lang']);
+		$features_product = $product->getFrontFeatures($data['id_lang']);
+		$tags = array(
+			'{TITLE}',
+			'{BRAND}',
+			'{REFERENCE}',
+			'{EAN}',
+		);
+		$values = array(
+			$data['name'],
+			$data['manufacturer_name'],
+			$data['reference'],
+			$data['ean13'],
+		);
+		foreach ($features as $feature)
+		{
+			$tags[] = trim(str_replace(' ', '_', strtoupper('{FEATURE_'.$feature['name'].'}')));
+			$hasFeature = array_map(function($val) use ($feature) {
+				return ((int)$val['id_feature'] == (int)$feature['id_feature'] ? $val['value'] : false);
+			}, $features_product);
+			if (isset($hasFeature[0]) &&$hasFeature[0])
+				$values[] = $hasFeature[0];
+			else
+				$values[] = '';
+		}
+		
+		return EbaySynchronizer::fillTemplateTitle($tags, $values, $data['titleTemplate']);
 	}
 
 }

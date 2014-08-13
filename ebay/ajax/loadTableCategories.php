@@ -31,10 +31,19 @@ include_once dirname(__FILE__).'/../ebay.php';
 
 $ebay = new Ebay();
 
+$ebay_profile = new EbayProfile((int)Tools::getValue('profile'));
+
 if (!Configuration::get('EBAY_SECURITY_TOKEN') || Tools::getValue('token') != Configuration::get('EBAY_SECURITY_TOKEN'))
 	return Tools::safeOutput(Tools::getValue('not_logged_str'));
 
 $category_list = $ebay->getChildCategories(Category::getCategories(Tools::getValue('id_lang')), version_compare(_PS_VERSION_, '1.5', '>') ? 1 : 0);
+
+$offset = 20;
+$page = (int)Tools::getValue('p', 0);
+if ($page < 2)
+	$page = 1;
+$limit = $offset * ($page - 1);
+$category_list = array_slice($category_list, $limit, $offset);
 
 $ebay_category_list = Db::getInstance()->executeS('SELECT *
 	FROM `'._DB_PREFIX_.'ebay_category`
@@ -74,6 +83,7 @@ $sql = '
 	FROM `'._DB_PREFIX_.'ebay_category` AS ec
 	LEFT OUTER JOIN `'._DB_PREFIX_.'ebay_category_configuration` AS ecc
 	ON ec.`id_ebay_category` = ecc.`id_ebay_category`
+    AND ecc.`id_ebay_profile` = '.(int)$ebay_profile->id.'
 	ORDER BY `level`';
 
 foreach (Db::getInstance()->executeS($sql) as $category)
@@ -123,7 +133,8 @@ $template_vars = array(
 	'request_uri' => $_SERVER['REQUEST_URI'],
 	'noCatSelected' => Tools::getValue('ch_cat_str'),
 	'noCatFound' => Tools::getValue('ch_no_cat_str'),
-	'currencySign' => $currency->sign
+	'currencySign' => $currency->sign,
+	'p' => $page
 );
 
 $smarty->assign($template_vars);

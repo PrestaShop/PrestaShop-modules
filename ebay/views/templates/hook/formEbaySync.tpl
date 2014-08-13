@@ -60,6 +60,7 @@
 					
 					nbProducts = data;
 					nbProductsModeB = data;
+					$('#save_and_publish').val({/literal}"{l s='Save and list' mod='ebay'} "+data+" {l s='products' mod='ebay'}"{literal});
 					$('#nbproducttosync').html(data);
 				}
 			});
@@ -132,6 +133,9 @@
 <div id="resultSync" style="text-align: center; font-weight: bold; font-size: 14px;"></div>
 <form action="{$action_url}" method="post" class="form" id="configForm4">
 	<fieldset style="border: 0">
+		<div class="warning big">
+			<b data-dialoghelp="http://pages.ebay.com/help/sell/listing-variations.html" data-inlinehelp="{l s='Find out more about multi-variation listings.' mod='ebay'}">{l s='Note: If some of your categories don’t support multi-variation listings, all variations will appear as separate listings.' mod='ebay'}</b>
+		</div>
 		<h4>{l s='You\'re now ready to list your products on eBay.' mod='ebay'}</h4>
 		<label style="width: 250px;">{l s='List all products on eBay' mod='ebay'} : </label><br /><br />
 		<div class="margin-form">
@@ -146,9 +150,9 @@
 			<input type="checkbox" size="20" name="ebay_sync_option_resync" id="ebay_sync_option_resync" value="1" {if $ebay_sync_option_resync == 1}checked="checked"{/if} /> <span data-inlinehelp="{l s='All other product properties will be stay the same.' mod='ebay'}">{l s='Only synchronise price and quantity' mod='ebay'}</span>
 		</div>
 		<div class="clear both"></div>
-		<label>{l s='Sync mod' mod='module'} :	</label><br /><br />
+		<label>{l s='Sync mod' mod='ebay'} :	</label><br /><br />
 		<div class="margin-form">
-			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> <span data-inlinehelp="{l s='Any changes that you make to listings in PrestaShop will also be applied on eBay.' mod='ebat'}">{l s='Sync new products and update existing listings' mod='ebay'}</span>
+			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_2" value="2" {if $ebay_sync_mode == 2}checked="checked"{/if}/> <span data-inlinehelp="{l s='Any changes that you make to listings in PrestaShop will also be applied on eBay.' mod='ebay'}">{l s='Sync new products and update existing listings' mod='ebay'}</span>
 		</div>
 		<div class="margin-form">
 			<input type="radio" size="20" name="ebay_sync_mode" id="ebay_sync_mode_1" value="1" {if $ebay_sync_mode == 1}checked="checked"{/if}/> <span data-inlinehelp="{l s='This will only synchronisze products that are not yet listed on eBay.' mod='ebay'}">{l s='Only sync new products' mod='ebay'}</span>
@@ -195,13 +199,7 @@
 			{/if}
 		</div><br />
 		<div>
-			<b data-dialoghelp="http://pages.ebay.com/help/sell/listing-variations.html" data-inlinehelp="{l s='Find out more about multi-variation listings.' mod='ebay'}"><img src="../modules/ebay/views/img/warn.png" />{l s='Note: If some of your categories don’t support multi-variation listings, all variations will appear as separate listings.' mod='ebay'}</b>
-		</div>
-		<div class="informations margin-form">
-			{l s='You are going to list ' mod='ebay'} <span id="nbproducttosync">{$nb_products}</span> {l s='products to ebay' mod='ebay'}
-		</div>
-		<div class="margin-form">
-			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and publish' mod='ebay'}" />
+			<input type="submit" name="btnSubmitSyncAndPublish" class="primary button" value="{l s='Save and list' mod='ebay'} {$nb_products} {l s='products' mod='ebay'}" id="save_and_publish"/>
 			<input type="submit" name="btnSubmitSync" class="button" value="{l s='Save' mod='ebay'}" />
 		</div>
 	</fieldset>
