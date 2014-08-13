@@ -27,4 +27,18 @@
 <div class="error" onClick="$('#menuTab1').click();" style="cursor:pointer;">
 	<b>{l s='You have to configure "Account settings" tab before using this tab.' mod='ebay'}</b>
 </div>
+{if (isset($error_form_category) && $error_form_category)}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#menuTab2").addClass('wrong');
+		})
+	</script>
+{/if}
+{if (isset($error_form_shipping) && $error_form_shipping)}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#menuTab3").addClass('wrong');
+		})
+	</script>
+{/if}
 <!-- /ebay -->

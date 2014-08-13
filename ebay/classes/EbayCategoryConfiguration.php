@@ -35,12 +35,15 @@ class EbayCategoryConfiguration
 	 *
 	 * @param array $params hook parameters
 	 **/
-	public static function getCategoriesQuery($sync_mode)
+	public static function getCategoriesQuery($ebay_profile)
 	{
+		$sync_mode = $ebay_profile->getConfiguration('EBAY_SYNC_PRODUCTS_MODE');
+		
 		$sql = 'SELECT `id_category`
 				FROM `'._DB_PREFIX_.'ebay_category_configuration`
 				WHERE `id_category` > 0
-				AND `id_ebay_category` > 0';
+				AND `id_ebay_category` > 0
+                AND `id_ebay_profile` = '.(int)$ebay_profile->id;
 
 		if ($sync_mode == 'B')
 			$sql .= ' AND `sync` = 1';
@@ -52,7 +55,7 @@ class EbayCategoryConfiguration
 	 * Returns the product ids of all product for which the category is matched with an eBay category
 	 *
 	 */
-	public static function getAllProductIds()
+	public static function getAllProductIds($id_ebay_profile)
 	{
 		$res = Db::getInstance()->executeS('SELECT `id_product`
 			FROM `'._DB_PREFIX_.'category_product` c
@@ -60,6 +63,7 @@ class EbayCategoryConfiguration
 			IN (
 				SELECT e.`id_category`
 				FROM `'._DB_PREFIX_.'ebay_category_configuration` e
+				WHERE e.`id_ebay_profile` = '.(int)$id_ebay_profile.'
 			)');
 
 		return array_map(array('EbayCategoryConfiguration', 'getAllProductIdsMap'), $res);
@@ -74,14 +78,15 @@ class EbayCategoryConfiguration
 	 * Returns the eBay category ids
 	 *
 	 **/
-	public static function getEbayCategoryIds()
+	public static function getEbayCategoryIds($id_ebay_profile)
 	{
 		$sql = 'SELECT
 			DISTINCT(ec.`id_category_ref`) as id
 			FROM `'._DB_PREFIX_.'ebay_category_configuration` e
 			LEFT JOIN `'._DB_PREFIX_.'ebay_category` ec
 			ON e.`id_ebay_category` = ec.`id_ebay_category`
-			WHERE ec.`id_category_ref` is not null';
+			WHERE e.`id_ebay_profile` = '.(int)$id_ebay_profile.' 
+			AND ec.`id_category_ref` is not null';
 
 		$res = Db::getInstance()->executeS($sql);
 
@@ -97,7 +102,7 @@ class EbayCategoryConfiguration
 	 * Returns the eBay category id and the full name including the name of the parent and the grandparent category
 	 *
 	 **/
-	public static function getEbayCategories()
+	public static function getEbayCategories($id_ebay_profile)
 	{
 		$sql = 'SELECT
 			DISTINCT(ec1.`id_category_ref`) as id,
@@ -119,7 +124,8 @@ class EbayCategoryConfiguration
 			ON ec2.`id_category_ref_parent` = ec3.`id_category_ref`
 			AND ec2.`id_category_ref_parent` <> \'1\'
 			and ec2.level <> 1
-			WHERE ec1.`id_category_ref` is not null';
+			WHERE e.`id_ebay_profile` = '.(int)$id_ebay_profile.'
+			AND ec1.`id_category_ref` is not null';
 			
 		return Db::getInstance()->executeS($sql);
 	}
@@ -130,38 +136,56 @@ class EbayCategoryConfiguration
 		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'INSERT');
 	}
 
-	public static function updateAll($data)
+	public static function updateByIdProfile($id_profile, $data)
 	{
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE');
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_ebay_profile` = '.(int)$id_profile);
 	}
 
-	public static function updateByIdCategory($id_category, $data)
+	public static function updateByIdProfileAndIdCategory($id_profile, $id_category, $data)
 	{
-		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_category` = '.(int)$id_category);
+		Db::getInstance()->autoExecute(_DB_PREFIX_.'ebay_category_configuration', $data, 'UPDATE', '`id_ebay_profile` = '.(int)$id_profile.' AND `id_category` = '.(int)$id_category);
 	}
 
-	public static function deleteByIdCategory($id_category)
+	public static function deleteByIdCategory($id_ebay_profile, $id_category)
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ebay_category_configuration`
-			WHERE `id_category` = '.(int)$id_category);
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.' AND `id_category` = '.(int)$id_category);
 	}
 
-	public static function getEbayCategoryConfigurations()
+	public static function getEbayCategoryConfigurations($id_ebay_profile)
 	{
 		return Db::getInstance()->executeS('SELECT *
-			FROM `'._DB_PREFIX_.'ebay_category_configuration`');
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function getTotalCategoryConfigurations()
+	public static function getTotalCategoryConfigurations($id_ebay_profile)
 	{
 		return Db::getInstance()->getValue('SELECT COUNT(`id_ebay_category_configuration`)
-			FROM `'._DB_PREFIX_.'ebay_category_configuration`');
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
 	}
 
-	public static function getIdByCategoryId($id_category)
+	public static function getIdByCategoryId($id_ebay_profile, $id_category)
 	{
 		return Db::getInstance()->getValue('SELECT `id_ebay_category_configuration`
 			FROM `'._DB_PREFIX_.'ebay_category_configuration`
-			WHERE `id_category` = '.(int)$id_category);
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile.'
+			AND `id_category` = '.(int)$id_category);
 	}
+    
+	public static function getNbPrestashopCategories($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count(*)
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}    
+
+	public static function getNbEbayCategories($id_ebay_profile)
+	{
+		return Db::getInstance()->getValue('SELECT count( DISTINCT(`id_ebay_category`))
+			FROM `'._DB_PREFIX_.'ebay_category_configuration`
+			WHERE `id_ebay_profile` = '.(int)$id_ebay_profile);
+	}    
+
 }
