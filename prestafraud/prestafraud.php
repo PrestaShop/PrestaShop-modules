@@ -438,12 +438,12 @@ class PrestaFraud extends Module
 		if ($res)
 			Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'prestafraud_carts`
-			SET `ip_address` = '.ip2long($_SERVER['REMOTE_ADDR']).', `date` = \''.pSQL(date('Y-m-d H:i:s')).'\'
+			SET `ip_address` = '.(int)ip2long($_SERVER['REMOTE_ADDR']).', `date` = \''.pSQL(date('Y-m-d H:i:s')).'\'
 			WHERE `id_cart` = '.(int)$params['cart']->id.' LIMIT 1');
 		else
 			Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'prestafraud_carts` (`id_cart`, `ip_address`, `date`)
-			VALUES ('.(int)$params['cart']->id.', '.ip2long($_SERVER['REMOTE_ADDR']).',\''.date('Y-m-d H:i:s').'\')');
+			VALUES ('.(int)$params['cart']->id.', '.(int)ip2long($_SERVER['REMOTE_ADDR']).',\''.date('Y-m-d H:i:s').'\')');
 		return true;
 	}
 	
