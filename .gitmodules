@@ -430,3 +430,6 @@
 [submodule "cronjobs"]
 	path = cronjobs
 	url = https://github.com/PrestaShop/cronjobs
+[submodule "twenga/backward_compatibility"]
+	path = twenga/backward_compatibility
+	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
