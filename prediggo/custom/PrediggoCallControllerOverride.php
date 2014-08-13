@@ -77,7 +77,70 @@ class PrediggoCallControllerOverride extends PrediggoCallController
 
     }
 
-    public function variantId(){
-       return 1;
+        /**
+     * Function chooseVariantId : Choose the good variant ID
+     *
+     * @iVariantId return the variant ID
+     */
+    public function chooseVariantId($sHookName){
+
+        switch($sHookName)
+        {
+            case 'displayLeftColumn' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_left_column;
+                break;
+
+            case 'displayRightColumn' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_right_column;
+                break;
+
+            case 'displayFooter' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_footer;
+                break;
+
+            case 'displayHome' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_home;
+                break;
+
+            case 'displayFooterProduct' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_footer_product;
+                break;
+
+            case 'displayLeftColumnProduct' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_left_column_product;
+                break;
+
+            case 'displayRightColumnProduct' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_right_column_product;
+                break;
+
+            case 'displayShoppingCartFooter' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_shopping_cart_footer;
+                break;
+
+            case 'displayShoppingCart' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_shopping_cart;
+                break;
+
+            case 'displayOrderDetail' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_order_detail;
+                break;
+
+            case 'displayProductTab' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_product_tab;
+                break;
+
+            case 'displayBeforeCarrier' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_before_carrier;
+                break;
+
+            case 'displayCarrierList' :
+                $iVariantId = (int)$this->oPrediggoConfig->hook_carrier_list;
+                break;
+
+            default : break;
+        }
+
+        return $iVariantId;
     }
 }
