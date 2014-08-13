@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.9.4';
+		$this->version = '3.9.5';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -209,7 +209,7 @@ class ShoppingFluxExport extends Module
 		//first fieldset
 		if ($country == 'fr'){
 			
-			$html /= '<fieldset>
+			$html .= '<fieldset>
 				<legend>'.$this->l('Information(s)').'</legend>
 				<p style="padding-bottom:10px"><b>'.$this->l('Shopping Flux est un logiciel qui rencontre un énorme succès chez les utilisateurs de PrestaShop.').'</b></p>
 				<p><b>'.$this->l('Il permet de diffuser vos produits sur plus de 1.000 réseaux et d\'augmenter ainsi le Chiffre d\'Affaires de votre boutique en ligne :').'</b></p>
