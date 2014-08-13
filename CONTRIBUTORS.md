@@ -77,6 +77,7 @@
 - Lesley Paone 
 - lsparer 
 - Ludovic 
+- Ludovic Verrecchia 
 - Luigi Massa 
 - luisalb 
 - Mathieu 
