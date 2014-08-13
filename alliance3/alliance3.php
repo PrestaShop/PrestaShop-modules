@@ -39,7 +39,7 @@ class alliance3 extends PaymentModule
 	{
 		$this->name = 'alliance3';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.2.8';
+		$this->version = '1.2.9';
 		$this->author = 'go4.fi';
 		$this->className = 'alliance3';
 
@@ -307,7 +307,7 @@ class alliance3 extends PaymentModule
 
 		$url="https://aurora.visionpayments.com/aurora/lead_post.php";
 		$postFields="agent_id=4774&source_id=48&campaign_id=0&lead_post_key=d1c5e2d2b3d056c6df1a37d46861d656&";
-		$postFields.="return_url=http://alliance-processing.com&firstname=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&lastname=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&legal_name=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&legal_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&Email=".urlencode(Tools::safeOutput(Tools::getValue('email')));
+		$postFields.="return_url=http://alliance-processing.com&firstname=".urlencode(Tools::safeOutput(Tools::getValue('firstname')))."&lastname=".urlencode(Tools::safeOutput(Tools::getValue('lastname')))."&legal_name=".urlencode(Tools::safeOutput(Tools::getValue('company')))."&legal_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone')))."&email=".urlencode(Tools::safeOutput(Tools::getValue('email')));
 		$postFields.="&legal_address=".urlencode(Tools::safeOutput(Tools::getValue('address')))."&legal_city=".urlencode(Tools::safeOutput(Tools::getValue('city')))."&legal_state=".urlencode(Tools::safeOutput(Tools::getValue('state_id')))."&legal_zip=".urlencode(Tools::safeOutput(Tools::getValue('zipcode')));
 		$postFields.="&mobile_telephone=".urlencode(Tools::safeOutput(Tools::getValue('phone2')));
 		//plain post
