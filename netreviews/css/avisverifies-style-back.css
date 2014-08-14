@@ -1,0 +1,61 @@
+
+#avisverifies_module label{
+	
+	margin-right: 15px;
+	
+	
+}
+
+#avisverifies_module input[type=text] {
+	float:left;
+	margin-right: 20px;
+	margin-bottom: 10px;
+}
+
+
+
+#avisverifies_module  .floatleft{
+	float: left;
+}
+
+
+#avisverifies_module  #export{
+	margin-left: 10px;
+}
+
+#avisverifies_module  p.help{
+	
+	font-style: italic;
+	color:#9E9E9E;
+	font-size: 11px;
+}
+
+#avisverifies_module  p.help.withfloat{
+	float:left;
+	
+}
+
+#avisverifies_module  p.help.inline{
+	display:inline;
+	
+}
+
+#avisverifies_module #order-statut-list{
+	list-style:none;
+	float:left;
+	margin-top:0;
+	padding: 0;
+}
+
+
+#avisverifies_module .field-line{
+	margin-bottom: 10px;
+	display: block;
+}
+
+#avisverifies_module label.label-pointer{
+	float: none;
+	text-align: right;
+	font-weight: normal;
+}
+

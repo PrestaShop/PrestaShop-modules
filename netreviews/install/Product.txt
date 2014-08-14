@@ -1,0 +1,31 @@
+<?php
+/**
+ * Product.php file used to override Product class and display stars on product_list
+ *
+ * @author    NetReviews (www.avis-verifies.com) - Contact: contact@avis-verifies.com
+ * @category  override
+ * @copyright NetReviews
+ * @license   NetReviews 
+ * @date 09/04/2014
+ */
+
+class Product extends ProductCore {
+
+	public static function getProductProperties($id_lang, $row, Context $context = null)
+	{
+		// Avis vérifiés
+		$p = parent::getProductProperties($id_lang, $row, $context);
+
+		$av_model = _PS_MODULE_DIR_.'netreviews/models/NetReviewsModel.php';
+		if (!class_exists('NetReviewsModel') && file_exists($av_model))
+			require_once($av_model);
+
+		$p['av_stats'] = NetReviewsModel::getStatsProduct($p['id_product']);
+
+		if (!empty($p['av_stats']['rate']))
+			$p['av_rate'] = round($p['av_stats']['rate']);
+			$p['av_nb_reviews'] = round($p['av_stats']['nb_reviews']);
+
+		return $p;
+	}
+}
