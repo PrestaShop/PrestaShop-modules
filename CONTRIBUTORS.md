@@ -102,6 +102,7 @@
 - Robert 
 - samy-r 
 - seanmacdomhnall 
+- Shamunr 
 - sjousse 
 - Sparer lilian 
 - Sven Weber 
