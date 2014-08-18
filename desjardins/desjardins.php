@@ -35,7 +35,7 @@ class Desjardins extends PaymentModule
 	{
 		$this->name = 'desjardins';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.3.10';
+		$this->version = '0.3.11';
 		$this->author = 'PrestaShop';
 		$this->need_instance = 0;
 		$this->bootstrap = true;
@@ -208,7 +208,7 @@ class Desjardins extends PaymentModule
 		$params['lgue'] = in_array(Tools::strtoupper($this->context->language->iso_code), array('EN', 'FR')) ? Tools::strtoupper($this->context->language->iso_code) : 'EN';
 		$params['societe'] = Configuration::get('DESJARDINS_CODE_SOCIETE');
 		$params['url_retour'] = $this->context->link->getPageLink('order');
-		$params['url_retour_ok'] = version_compare(_PS_VERSION_, '1.4', '<') ? (Configuration::get('PS_SSL_ENABLED') ?
+		$params['url_retour_ok'] = version_compare(_PS_VERSION_, '1.5', '<') ? (Configuration::get('PS_SSL_ENABLED') ?
 		Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).__PS_BASE_URI__.'order-confirmation.php?id_cart='.
 		(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&key='.$this->context->customer->secure_key :
 		$this->context->link->getPageLink('order-confirmation.php', null, null,
