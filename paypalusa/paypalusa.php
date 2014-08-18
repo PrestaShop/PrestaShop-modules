@@ -772,6 +772,8 @@ class PayPalUSA extends PaymentModule
 			$link = Tools::getShopDomainSsl(true)._MODULE_DIR_.$module.'/'.$controller.'?'.http_build_query($params);
 		else
 			$link = $this->context->link->getModuleLink($module, $controller, $params, $ssl);
+			
+		return $link;
 	}
 
 }
