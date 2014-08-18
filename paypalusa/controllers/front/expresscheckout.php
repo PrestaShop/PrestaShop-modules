@@ -145,11 +145,10 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 		$result = $this->paypal_usa->postToPayPal('GetExpressCheckoutDetails', '&TOKEN='.urlencode(Tools::getValue('token')));
 		if ((Tools::strtoupper($result['ACK']) == 'SUCCESS' || Tools::strtoupper($result['ACK']) == 'SUCCESSWITHWARNING') && $result['TOKEN'] == Tools::getValue('token') && $result['PAYERID'] == Tools::getValue('PayerID'))
 		{
-			/* Checks if a customer already exists for this e-mail address */
-			if (Validate::isEmail($result['EMAIL']))
+			/* Use the already logged in customer if they are. */
+			if (Validate::isLoadedObject($this->context->customer) && !empty($this->context->customer->email))
 			{
-				$customer = new Customer();
-				$customer->getByEmail($result['EMAIL']);
+				$customer = $this->context->customer;
 			}
 
 			/* If the customer does not exist yet, create a new one */
