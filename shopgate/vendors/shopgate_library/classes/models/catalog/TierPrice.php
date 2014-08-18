@@ -38,7 +38,10 @@
  * @method			setToQuantity(int $value)
  * @method int		getToQuantity()
  *
+ * @method			setAggregateChildren(bool $value)
+ * @method bool		getAggregateChildren()
  */
+
 class Shopgate_Model_Catalog_TierPrice extends Shopgate_Model_AbstractExport {
 
 	const DEFAULT_TIER_PRICE_TYPE_PERCENT = 'percent';
@@ -55,7 +58,8 @@ class Shopgate_Model_Catalog_TierPrice extends Shopgate_Model_AbstractExport {
 		'ReductionType',
 		'Reduction',
 		'CustomerGroupUid',
-		'ToQuantity');
+		'ToQuantity',
+		'AggregateChildren');
 
 	/**
 	 * @param Shopgate_Model_XmlResultObject $itemNode
@@ -67,6 +71,7 @@ class Shopgate_Model_Catalog_TierPrice extends Shopgate_Model_AbstractExport {
 		 * @var Shopgate_Model_XmlResultObject $tierPriceNode
 		 */
 		$tierPriceNode = $itemNode->addChild('tier_price', $this->getReduction());
+		$tierPriceNode->addAttribute('aggregate_children', $this->getAggregateChildren());
 		$tierPriceNode->addAttribute('threshold', $this->getFromQuantity());
 		$tierPriceNode->addAttribute('max_quantity', $this->getToQuantity());
 		$tierPriceNode->addAttribute('type', $this->getReductionType());

@@ -1,10 +1,29 @@
 '''Deutsch'''
 
+'''Version 2.7.1'''
+* neue Lib Version eingebunden
+* ping methode erweitert
+
+'''Version 2.6.22'''
+* Fix getSettings - prüfen ob Steuer global aktiv
+* register_customer Methode hinzugefügt
+
+'''Version 2.6.21'''
+* Order Status PS_OS_PREPARATION für COD gesetzt
+* Fix getSettings - prüfen ob Steuer aktiv
+
+'''Version 2.6.20'''
+* AggregateChildren für XML Export hinzugefügt
+* Fix getSettings / Tax
+
 '''Version 2.6.19'''
-* Füllen der Daten beim Ping für supported_fields_check_cart und supported_fields_get_settings
+* Einstellung Rootkategorie exportieren hinzugefügt
+* check_cart Fehlercode für minimum und maximum Verfügbarkeit angepasst
+* quick fix Rechnungs- und Lieferadressen Telefonnummern
 
 '''Version 2.6.18'''
 * Fix: state und phone für check cart hinzugefügt
+* Füllen der Daten beim Ping für supported_fields_check_cart und supported_fields_get_settings
 
 '''Version 2.6.17'''
 * Fix: löschen der "myconfig.php" beim de deinstallieren
@@ -260,11 +279,30 @@
 
 '''English'''
 
+'''Version 2.7.1'''
+* new lib version added
+* extended ping method
+
+'''Version 2.6.22'''
+* Fix getSettings - check is global tax active
+* added register customer method
+
+'''Version 2.6.21'''
+* set order_state PS_OS_PREPARATION for COD
+* Fix getSettings - check is tax active
+
+'''Version 2.6.20'''
+* added AggregateChildren / Tierprices for XML export
+* Fix getSettings / Tax
+
 '''Version 2.6.19'''
-* fill data on ping for supported_fields_check_cart and supported_fields_get_settings
+* added config setting - export rootcategory
+* adjust exception codes for minimum and maximum stock available
+* quick fix for empty delivery and shipping address phone numbers
 
 '''Version 2.6.18'''
 * Fix: added state und phone for check cart
+* fill data on ping for supported_fields_check_cart and supported_fields_get_settings
 
 '''Version 2.6.17'''
 * Fix: delete "myconfig.php" on deinstall
