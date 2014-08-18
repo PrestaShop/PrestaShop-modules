@@ -33,7 +33,7 @@ class ShoppingFluxExport extends Module
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.9.5';
+		$this->version = '3.9.6';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -1280,7 +1280,7 @@ class ShoppingFluxExport extends Module
 
 	public function hookupdateProduct($params)
 	{
-		if (Configuration::get('SHOPPING_FLUX_STOCKS') != '')
+		if (is_object($params['product']) && Configuration::get('SHOPPING_FLUX_STOCKS') != '')
 		{
 			$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 			$xml .= '<UpdateProduct>';
