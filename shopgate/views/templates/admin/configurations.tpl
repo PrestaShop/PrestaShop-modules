@@ -250,6 +250,18 @@
             <input type="text" name="configs[cname]" value="{$configs.cname|escape:'htmlall':'UTF-8'}" size="16"/>
         </div>
 
+		<h2>{l s='Category export' mod='shopgate'}</h2>
+		<label>{l s='Should the root category be exported' mod='shopgate'}</label>
+
+		<div class="margin-form">
+			<label class="t"><input type="radio" value="1"
+									name="settings[SHOPGATE_EXPORT_ROOT_CATEGORIES]"{if $settings.SHOPGATE_EXPORT_ROOT_CATEGORIES} checked="checked"{/if}/>
+				<img title="{l s='Enabled' mod='shopgate'}" alt="{l s='Enabled' mod='shopgate'}" src="../img/admin/enabled.gif"></label>
+			<label class="t"><input type="radio" value="0"
+									name="settings[SHOPGATE_EXPORT_ROOT_CATEGORIES]"{if !$settings.SHOPGATE_EXPORT_ROOT_CATEGORIES} checked="checked"{/if}/>
+				<img title="{l s='Disabled' mod='shopgate'}" alt="{l s='Disabled' mod='shopgate'}" src="../img/admin/disabled.gif"></label>
+		</div>
+
         <h2>{l s='Product export' mod='shopgate'}</h2>
         <label>{l s='Description' mod='shopgate'}</label>
         <div class="margin-form">

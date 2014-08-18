@@ -1,5 +1,40 @@
 '''Deutsch'''
 
+'''Version 2.7.2'''
+* Bugfix für Inkonsistenz während Methodenumbenennung
+* Verschleiern des oauth_access_token bei der Ausgabe der Ping-Methode
+
+'''Version 2.7.1'''
+* Bugfix in der receive_authorization PluginAPI-Action
+* Shops mit bereits eingerichtetem Shopgate-Plugin bekommen nun automatisch ein Oauth-Access-Token zugewiesen
+
+'''Version 2.7.0'''
+* neues Attribute für XML Export tierprices (AggregateChildren) eingefügt
+* Einführung von OAuth als zusätzlicher Authentifizierungs-Service zur Shopgate MerchantAPI.
+* Unterstützung für Streaming-Ausgabe der Exporte via php://out
+
+'''Version 2.6.10'''
+* Verschwundene Konstante PLUGIN_API_NO_ITEMS wieder hinzugefügt.
+
+'''Version 2.6.9'''
+* Bugfix für das Encoding von Get Parameter beim mobilen Redirect
+* Bugfix für das Filtern von Get Parametern beim mobilen Redirect
+* Bugfix für das Encoding von unicode
+* Neue Fehler-Code-Konstante PLUGIN_MISSING_ACCOUNT_PERMISSIONS
+* Neue Fehler-Code-Konstante CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY
+* Neue Fehler-Code-Konstante CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY
+
+'''Version 2.6.8'''
+* Durchreichen von Get Parametern für den mobilen Redirect bezüglich tracking
+* Methode ping um XML Pfade erweitert
+
+'''Version 2.6.7'''
+* verbessertes Exception Handling in "loader" Methoden
+* Funktionalität nachgereicht um den mobilen redirect via javascript zu unterbinden
+
+'''Version 2.6.6'''
+* Performance Steigerung bei Nutzung der mobilen Weiterleitung rückgängig
+
 '''Version 2.6.5'''
 * Fehler in der mobilen Weiterleitung behoben
 
@@ -267,6 +302,43 @@
 
 '''English'''
 
+'''Version 2.7.2'''
+* obfuscation of the oauth_access_token on ping method output
+* bugfix for inconsistency while renaming of methods
+
+'''Version 2.7.1'''
+* fixed a bug in the receive_authorization PluginAPI action
+* shops that already have a configured Shopgate-Plugin, will now automatically get an oauth access token assigned
+
+'''Version 2.7.0'''
+* added new attribute (AggregateChildren) for xml / tierprices
+
+'''Version 2.6.11'''
+* included OAuth as an additional authentication service to connect with the Shopgate MerchantAPI.
+* supports streaming exports to php://out
+
+'''Version 2.6.10'''
+* added a missing constant PLUGIN_API_NO_ITEMS.
+* added a new constant CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY
+* added a new constant CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY
+
+'''Version 2.6.9'''
+* bugfix for the encoding of get params while redirecting mobile
+* bugfix for the filtering of get params while redirecting mobile
+* Bugfix encoding unicode
+* new error code constant PLUGIN_MISSING_ACCOUNT_PERMISSIONS
+
+'''Version 2.6.8'''
+* passthrough of get params for mobile redirect related to tracking
+* extended method ping for xml paths
+
+'''Version 2.6.7'''
+* improved exception handling in loader methods
+* implemented functionality to suppress the mobile redirect via javascript
+
+'''Version 2.6.6'''
+* Performance increased for the mobile redirect removed
+
 '''Version 2.6.5'''
 * bugfix in mobile redirect
 
@@ -513,7 +585,7 @@
 * fixed timestamp error
 
 '''Version 2.1.9'''
-* extended authentification
+* extended authentication
 * disable log entries if cache is not writeable
 
 '''Version 2.1.8'''

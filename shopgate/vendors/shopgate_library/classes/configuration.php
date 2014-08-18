@@ -82,6 +82,21 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	### basic shop information necessary for use of the APIs, mobile redirect etc. ###
 	##################################################################################
 	/**
+	 * @var string Shopgate oauth access token
+	 */
+	protected $oauth_access_token;
+	
+//	/**
+//	 * @var int Class name for the authentication service, that is used for the Shopgate PluginAPI
+//	 */
+//	protected $spa_auth_service_class_name;
+	
+	/**
+	 * @var string Class name for the authentication service, that is used for the Shopgate MerchantAPI
+	 */
+	protected $sma_auth_service_class_name;
+
+	/**
 	 * @var int Shopgate customer number (at least 5 digits)
 	 */
 	protected $customer_number;
@@ -111,6 +126,24 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 */
 	protected $server;
 
+	/**
+	 * @var string api url map for server and authentication service type
+	 */
+	protected $api_urls = array(
+		'live' => array(
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE	=> ShopgateConfigInterface::SHOPGATE_API_URL_LIVE,
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH		=> ShopgateConfigInterface::SHOPGATE_API_URL_LIVE_OAUTH,
+		),
+		'pg' => array(
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE	=> ShopgateConfigInterface::SHOPGATE_API_URL_PG,
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH		=> ShopgateConfigInterface::SHOPGATE_API_URL_PG_OAUTH,
+		),
+		'sl' => array(
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE	=> ShopgateConfigInterface::SHOPGATE_API_URL_SL,
+			ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH		=> ShopgateConfigInterface::SHOPGATE_API_URL_SL_OAUTH,
+		),
+	);
+	
 	/**
 	 * @var string If $server is set to custom, Shopgate Merchant API calls will be made to this URL (empty or a string beginning with "http://" or "https://" followed by any number of non-whitespace characters)
 	 */
@@ -278,7 +311,12 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_set_settings;
-
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_receive_authorization;
+	
 	#######################################################
 	### Options regarding shop system specific settings ###
 	#######################################################
@@ -471,7 +509,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_settings = 0;
 		$this->enable_set_settings = 1;
 		$this->enable_register_customer = 0;
+		$this->enable_receive_authorization = 0;
 
+		$this->sma_auth_service_class_name = ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE;
+		
 		$this->country = 'DE';
 		$this->language = 'de';
 		$this->currency = 'EUR';
@@ -911,7 +952,19 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getUseCustomErrorHandler() {
 		return $this->use_custom_error_handler;
 	}
-
+	
+//	public function getSpaAuthServiceClassName() {
+//		return $this->spa_auth_service_class_name;
+//	}
+	
+	public function getSmaAuthServiceClassName() {
+		return $this->sma_auth_service_class_name;
+	}
+	
+	public function getOauthAccessToken() {
+		return $this->oauth_access_token;
+	}
+	
 	public function getCustomerNumber() {
 		return $this->customer_number;
 	}
@@ -936,15 +989,17 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->server;
 	}
 
+	public function getApiUrls() {
+		return $this->api_urls;
+	}
+
 	public function getApiUrl() {
-		switch ($this->getServer()) {
+		switch($this->server) {
 			default: // fall through to 'live'
 			case 'live':
-				return ShopgateConfigInterface::SHOPGATE_API_URL_LIVE;
 			case 'sl':
-				return ShopgateConfigInterface::SHOPGATE_API_URL_SL;
 			case 'pg':
-				return ShopgateConfigInterface::SHOPGATE_API_URL_PG;
+				return $this->api_urls[$this->server][$this->sma_auth_service_class_name];
 			case 'custom':
 				return $this->api_url;
 		}
@@ -1077,7 +1132,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getEnableSetSettings() {
 		return $this->enable_set_settings;
 	}
-
+	
+	public function getEnableReceiveAuthorization() {
+		return $this->enable_receive_authorization;
+	}
+	
 	public function getCountry() {
 		return strtoupper($this->country);
 	}
@@ -1249,6 +1308,18 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->use_custom_error_handler = $value;
 	}
 
+//	public function setSpaAuthServiceClassName($value) {
+//		$this->spa_auth_service_class_name = $value;
+//	}
+
+	public function setSmaAuthServiceClassName($value) {
+		$this->sma_auth_service_class_name = $value;
+	}
+
+	public function setOauthAccessToken($value) {
+		$this->oauth_access_token = $value;
+	}
+	
 	public function setCustomerNumber($value) {
 		$this->customer_number = $value;
 	}
@@ -1345,6 +1416,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_customer = $value;
 	}
 
+	public function setEnableRegisterCustomer($value) {
+		$this->enable_register_customer = $value;
+	}
+
 	public function setEnableGetDebugInfo($value) {
 		$this->enable_get_debug_info = $value;
 	}
@@ -1400,7 +1475,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function setEnableSetSettings($value) {
 		$this->enable_set_settings = $value;
 	}
-
+	
+	public function setEnableReceiveAuthorization($value) {
+		$this->enable_receive_authorization = $value;
+	}
+	
 	public function setCountry($value) {
 		$this->country = strtoupper($value);
 	}
@@ -1639,10 +1718,6 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 	public function setIsShopgateAdapter($value) {
 		$this->is_shopgate_adapter = $value;
-	}
-
-	public function setEnableRegisterCustomer($value) {
-		$this->enable_register_customer = $value;
 	}
 
 	public function setRedirectableGetParams($value) {
@@ -2226,10 +2301,16 @@ class ShopgateConfigOld extends ShopgateObject {
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
 interface ShopgateConfigInterface {
-	const SHOPGATE_API_URL_LIVE = 'https://api.shopgate.com/merchant/';
-	const SHOPGATE_API_URL_SL = 'https://api.shopgatesl.com/merchant/';
-	const SHOPGATE_API_URL_PG = 'https://api.shopgatepg.com/merchant/';
-
+	const SHOPGATE_API_URL_LIVE			= 'https://api.shopgate.com/merchant/';
+	const SHOPGATE_API_URL_LIVE_OAUTH	= 'https://api.shopgate.com/merchant2/';
+	const SHOPGATE_API_URL_SL			= 'https://api.shopgatesl.com/merchant/';
+	const SHOPGATE_API_URL_SL_OAUTH		= 'https://api.shopgatesl.com/merchant2/';
+	const SHOPGATE_API_URL_PG			= 'https://api.shopgatepg.com/merchant/';
+	const SHOPGATE_API_URL_PG_OAUTH		= 'https://api.shopgatepg.com/merchant2/';
+	
+	const SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE	= 'ShopgateAuthenticationServiceShopgate';
+	const SHOPGATE_AUTH_SERVICE_CLASS_NAME_OAUTH	= 'ShopgateAuthenticationServiceOAuth';
+	
 	const SHOPGATE_FILE_PREFIX = 'shopgate_';
 
 	/**
@@ -2279,6 +2360,21 @@ interface ShopgateConfigInterface {
 	 */
 	public function getUseCustomErrorHandler();
 
+//	/**
+//	 * @return string $value Class name for the PluginAPI auth service
+//	 */
+//	public function getSpaAuthServiceClassName();
+
+	/**
+	 * @return string $value Class name for the MerchantAPI auth service
+	 */
+	public function getSmaAuthServiceClassName();
+
+	/**
+	 * @return string OAuth access token
+	 */
+	public function getOauthAccessToken();
+	
 	/**
 	 * @return int Shopgate customer number (at least 5 digits)
 	 */
@@ -2308,6 +2404,11 @@ interface ShopgateConfigInterface {
 	 * @return string The server to use for Shopgate Merchant API communication ("live" or "pg" or "custom")
 	 */
 	public function getServer();
+
+	/**
+	 * @return array => returns all possible fixed api urls
+	 */
+	public function getApiUrls();
 
 	/**
 	 * @return string If getServer() returns "live", ShopgateConfigInterface::SHOPGATE_API_URL_LIVE is returned.<br />
@@ -2477,6 +2578,11 @@ interface ShopgateConfigInterface {
 	 */
 	public function getEnableSetSettings();
 
+	/**
+	 * @return bool
+	 */
+	public function getEnableReceiveAuthorization();
+	
 	/**
 	 * @return string The ISO 3166 ALPHA-2 code of the country the plugin uses for export.
 	 */
@@ -2682,6 +2788,21 @@ interface ShopgateConfigInterface {
 	 */
 	public function setUseCustomErrorHandler($value);
 
+//	/**
+//	 * @param string $value Class name for the PluginAPI authentication service
+//	 */
+//	public function setSpaAuthServiceClassName($value);
+
+	/**
+	 * @param string $value Class name for the MerchantAPI authentication service
+	 */
+	public function setSmaAuthServiceClassName($value);
+
+	/**
+	 * @param string $value OAuth access token
+	 */
+	public function setOauthAccessToken($value);
+
 	/**
 	 * @param int $value Shopgate customer number (at least 5 digits)
 	 */
@@ -2876,6 +2997,11 @@ interface ShopgateConfigInterface {
 	 */
 	public function setEnableSetSettings($value);
 
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableReceiveAuthorization($value);
+	
 	/**
 	 * @param string The ISO 3166 ALPHA-2 code of the country the plugin uses for export.
 	 */

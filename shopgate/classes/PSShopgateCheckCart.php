@@ -361,7 +361,6 @@ class PSShopgateCheckCart
 
 		foreach ($this->_shopgateCart->getItems() as $sGItem)
 		{
-
 			$identifiers = $this->getProductIdentifiers($sGItem);
 
 			$productId = false;
@@ -376,6 +375,7 @@ class PSShopgateCheckCart
 			/**
 			 * load the product
 			 */
+			/** @var ProductCore $pSProduct */
 			$pSProduct = new Product($productId, true, $this->_context->language->id);
 
 			/**
@@ -398,9 +398,38 @@ class PSShopgateCheckCart
 			{
 				$resultItem->setIsBuyable((int)$this->_context->cart->updateQty($sGItem->getQuantity(), $pSProduct->id, $attributeId == 0 ? false : $attributeId, false, 'up', ($this->_deliveryAddress && $this->_deliveryAddress->id) ? $this->_deliveryAddress->id : 0));
 
-				if (!$resultItem->getIsBuyable())
-					$this->_addItemException($resultItem, ShopgateLibraryException::CART_ITEM_OUT_OF_STOCK, 'qty not available');
+				switch ($resultItem->getIsBuyable())
+				{
+					/**
+					 * requested qty lower than required minimum qty
+					 */
+					case -1 :
+						$resultItem->setIsBuyable(0);
+						$resultItem->setQtyBuyable(Attribute::getAttributeMinimalQty($attributeId));
+						$this->_addItemException(
+							$resultItem, ShopgateLibraryException::CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY,
+							'requested quantity is lower than required minimum quantity');
+						break;
 
+					/**
+					 * item available
+					 */
+					case 1 :
+						$resultItem->setIsBuyable(1);
+						$resultItem->setQtyBuyable($sGItem->getQuantity());
+						break;
+
+					/**
+					 * requested quantity is not available
+					 */
+					default :
+						$resultItem->setIsBuyable(0);
+						$resultItem->setQtyBuyable($pSProduct->getQuantity($pSProduct->id, $attributeId));
+						$this->_addItemException(
+							$resultItem,
+							ShopgateLibraryException::CART_ITEM_REQUESTED_QUANTITY_NOT_AVAILABLE, 'requested quantity is not available');
+						break;
+				}
 			}
 			else
 			{
@@ -445,7 +474,7 @@ class PSShopgateCheckCart
 		$availableQty = $product->getQuantity($product->id, $id_product_attribute);
 
 		$resultItem->setItemNumber($sGItem->getItemNumber());
-		$resultItem->setQtyBuyable($availableQty < (int)$sGItem->getQuantity() ? $availableQty : (int)$sGItem->getQuantity());
+		$resultItem->setQtyBuyable($availableQty);
 
 		$resultItem->setUnitAmount($product->getPrice(false, $id_product_attribute));
 		$resultItem->setUnitAmountWithTax($product->getPrice(true, $id_product_attribute));
@@ -587,7 +616,8 @@ class PSShopgateCheckCart
 		$_resultAddress->postcode = $address->getZipcode();
 		$_resultAddress->city = $address->getCity();
 		$_resultAddress->country = $address->getCountry();
-		$_resultAddress->phone = $address->getPhone();
+		$_resultAddress->phone = $address->getPhone() ? $address->getPhone() : 1;
+		$_resultAddress->phone_mobile = $address->getMobile() ? $address->getMobile() : 1;
 
 		/**
 		 * check is state iso code available
