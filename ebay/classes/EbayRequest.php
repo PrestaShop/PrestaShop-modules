@@ -849,9 +849,7 @@ class EbayRequest
 		foreach ($features as $feature)
 		{
 			$tags[] = trim(str_replace(' ', '_', strtoupper('{FEATURE_'.$feature['name'].'}')));
-			$hasFeature = array_map(function($val) use ($feature) {
-				return ((int)$val['id_feature'] == (int)$feature['id_feature'] ? $val['value'] : false);
-			}, $features_product);
+			$hasFeature = array_map(array('EbayRequest', 'getValueOfFeature'), $features_product, $feature);
 			if (isset($hasFeature[0]) &&$hasFeature[0])
 				$values[] = $hasFeature[0];
 			else
@@ -859,6 +857,11 @@ class EbayRequest
 		}
 		
 		return EbaySynchronizer::fillTemplateTitle($tags, $values, $data['titleTemplate']);
+	}
+
+	public static function getValueOfFeature($val, $feature)
+	{
+		return ((int)$val['id_feature'] == (int)$feature['id_feature'] ? $val['value'] : false);
 	}
 
 }
