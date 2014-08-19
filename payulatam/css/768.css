@@ -1,6 +1,6 @@
 @media only screen and (min-width : 768px) {
 
-header {  background: url("../img/header.jpg") no-repeat scroll 39% 0 #f0f0f0; height: 258px;}
+.header {  background: url("../img/header.jpg") no-repeat scroll 39% 0 #f0f0f0; height: 258px;}
 
 .logo-py { float: left; margin: 50px 400px 0 50px;}
 

@@ -83,7 +83,7 @@ class PayuLatam extends PaymentModule {
                                                 'icon' => '../modules/payulatam/img/info-icon.gif',
                                                 'tab' => 'conf',
                                                 'selected' => (Tools::isSubmit('submitPayU') ? false : true),
-												'style' => 'content-1';
+												'style' => 'content-1'
                                         ),
                                         'credential' => array(
                                                 'title' => $this->l('Credentials'),
@@ -91,7 +91,7 @@ class PayuLatam extends PaymentModule {
                                                 'icon' => '../modules/payulatam/img/credential.png',
                                                 'tab' => 'crendeciales',
                                                 'selected' => (Tools::isSubmit('submitPayU') ? true : false),
-												'style' => 'content-2 form';
+												'style' => 'content-2 form'
                                         ),
                                 ),
                                 'tracking' => 'http://www.prestashop.com/modules/pagosonline.png?url_site='.Tools::safeOutput($_SERVER['SERVER_NAME']).'&id_lang='.(int)$this->context->cookie->id_lang,

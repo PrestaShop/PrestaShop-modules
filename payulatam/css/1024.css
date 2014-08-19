@@ -1,6 +1,6 @@
 @media only screen and (min-width : 1024px) {
 
-header { background-position: center top; background-size: 100% auto; height: 258px; overflow: auto;}
+.header { background-position: center top; background-size: 100% auto; height: 258px; overflow: auto;}
 .ctwrapper { margin: 10px auto; width: 960px; box-shadow: 0 0 5px #CCC; }
 .md-copy { font-size: 1.8em; margin: 16px 273px 0 31px; width: 349px;}
 .logo-py { margin: 30px 400px 0 50px; }

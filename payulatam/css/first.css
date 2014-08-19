@@ -1,7 +1,7 @@
 body { font-family: Arial, Helvetica, sans-serif ; color: #58595b;}
 
-header { background: url(../img/header.jpg) no-repeat left top #f0f0f0; height: 350px; overflow: auto;}
-section { margin: 15px 0;}
+.header { background: url(../img/header.jpg) no-repeat left top #f0f0f0; height: 350px; overflow: auto;}
+.section { margin: 15px 0;}
 
 .tx-blue-ligth { color: #00adee;}
 
@@ -33,7 +33,7 @@ section { margin: 15px 0;}
 
 /*botones de accion*/
 
-.md-btn { color: #FFF; text-align: center; padding: 8px 15px; border-radius: 6px; box-shadow: 0 0 5px #575757; border: none; font-size: 1.3em;
+.md-btn { color: #FFF !important; text-align: center; padding: 8px 15px; border-radius: 6px; box-shadow: 0 0 5px #575757; border: none; font-size: 1.3em;
 	   	background: #bacf38;  /* Old browsers */
     background: -moz-linear-gradient(top, #bacf38 1%, #648a3c 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#bacf38), color-stop(100%,#648a3c)); /* Chrome,Safari4+ */
@@ -44,7 +44,7 @@ section { margin: 15px 0;}
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bacf38', endColorstr='#648a3c',GradientType=0 ); /* IE6-9 */
 }
 .md-btn:hover { 
-	color: #FFF;
+	color: #FFF !important;
 	background: #9de2ff; /* Old browsers */
     background: -moz-linear-gradient(top, #9de2ff 1%, #009cdd 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#9de2ff), color-stop(100%,#009cdd)); /* Chrome,Safari4+ */
