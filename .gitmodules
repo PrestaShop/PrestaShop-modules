@@ -340,9 +340,6 @@
 [submodule "statsvisits"]
 	path = statsvisits
 	url = https://github.com/PrestaShop/statsvisits.git
-[submodule "themeconfigurator"]
-	path = themeconfigurator
-	url = https://github.com/PrestaShop/themeconfigurator.git
 [submodule "trackingfront"]
 	path = trackingfront
 	url = https://github.com/PrestaShop/trackingfront.git
@@ -439,3 +436,6 @@
 [submodule "onboarding"]
 	path = onboarding
 	url = https://github.com/PrestaShop/onboarding.git
+[submodule "themeconfigurator"]
+	path = themeconfigurator
+	url = https://github.com/PrestaShop/themeconfigurator.git
