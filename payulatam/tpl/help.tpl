@@ -23,13 +23,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<h4 class="md-h4">{l s='Once you have created your PayU account:' mod='payulatam'}</h4>
-<ol class="mdn-umb">
-	<li>{l s='Enter the' mod='payulatam'} <a href="https://secure.payulatam.com/">{l s='Administrative Module' mod='payulatam'}</a> {l s='and click on the "Configuration" tab' mod='payulatam'} </li>
-	<li>{l s='You will find the API Key and Merchant idea in the section "Technical Information"' mod='payulatam'} </li>
+<h3>{l s='Once you have created your PayU account:' mod='payulatam'}</h3>
+<ol>
+	<li>{l s='Enter the' mod='payulatam'} <a href="https://secure.payulatam.com/" target="new">{l s='Administrative Module' mod='payulatam'}</a> {l s='and click on the "Configuration" tab' mod='payulatam'} </li>
+	<li>{l s='You will find the API Key and Merchant idea in the section "Technical Information"' mod='payulatam'}</li>
 	<li>{l s='Then, go the "Settings and Credentials" in the Prestashop-PayU Module.' mod='payulatam'}</li>
 	<li>{l s='Fill in the necessary information in the page and then Save it.' mod='payulatam'}</li>
-</ol>
-
-<h4 class="md-h4">{l s='Remember:' mod='payulatam'}</h4>
+</ol>	
+<h3>{l s='Remember:' mod='payulatam'}</h3>
 <p>{l s='You should disable the' mod='payulatam'} <b>{l s='"Test Mode"' mod='payulatam'}</b> {l s='in the PayU platform to process transactions. This is found in the section of "Configuration" and "Account configuration".' mod='payulatam'} </p>
