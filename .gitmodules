@@ -439,3 +439,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
+[submodule "payplug"]
+	path = payplug
+	url = https://github.com/PrestaShop/payplug.git
