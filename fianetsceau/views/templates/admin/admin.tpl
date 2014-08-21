@@ -23,6 +23,40 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{literal}
+<script>
+function ShowHideSceauLog() {
+	
+	var div = document.getElementById('sceau_log');
+	if(div.style.display == "none") { 
+		div.style.display = "block"; 
+	} else { 
+		div.style.display = "none";
+	}
+}
+
+function loadSubCategories(elem_id){
+	
+	var category_id = $('#fianetsceau_'+elem_id+'_category option:selected').val();
+	var token = $("#token_fianetsceau").attr('value');
+	var id_shop = $("#id_shop_fianetsceau").attr('value');
+	
+	$.ajax({
+		url: '../modules/fianetsceau/subcategory.php', 
+		type:'POST', 
+		data: "category_id="+category_id+"&elem_id="+elem_id+"&token="+token+"&id_shop="+id_shop,
+		cache:false, 
+		success:function(reponse){
+			
+			$("#subcategory_"+elem_id).empty();
+			$("#subcategory_"+elem_id).show();
+			$("#subcategory_"+elem_id).append(reponse);
+		}
+	})
+}	
+</script>
+{/literal}
+
 {$head_message|strval}
 <fieldset>
 	<legend><img src="{$image_path|escape:'htmlall'}" />FIA-NET - Sceau de Confiance</legend>
@@ -170,7 +204,7 @@
 		<div class="margin-form">
 			<select name="fianetsceau_logo_position">
 				{foreach from=$fianetsceau_logo_positions key=fianetsceau_logo_position_key item=fianetsceau_logo_position_name name=fianetsceau_logo_positions}
-					<option value="{$fianetsceau_logo_position_key|escape:'htmlall'}" {if $fianetsceau_logo_position_key eq $fianetsceau_logo_position}Selected{/if}>{l s=$fianetsceau_logo_position_name|escape:'htmlall' mod='fianetsceau'}</option>
+					<option value="{$fianetsceau_logo_position_key|escape:'htmlall'}" {if $fianetsceau_logo_position_key eq $fianetsceau_logo_position}Selected{/if}>{l s=$fianetsceau_logo_position_name|strval mod='fianetsceau'}</option>
 				{/foreach}
 			</select><br /><br />
 
@@ -198,7 +232,7 @@
 				{foreach from=$fianetsceau_widget_positions key=fianetsceau_widget_position_key item=fianetsceau_widget_position_name name=fianetsceau_widget_positions}
 				{if $i % 2 eq 1}{/if}
 				{$i|intval % 2}
-				<option value="{$fianetsceau_widget_position_key|escape:'htmlall'}" {if $fianetsceau_widget_position_key eq $fianetsceau_widget_position}Selected{/if}>{l s=$fianetsceau_widget_position_name|escape:'htmlall' mod='fianetsceau'}</option>
+				<option value="{$fianetsceau_widget_position_key|escape:'htmlall'}" {if $fianetsceau_widget_position_key eq $fianetsceau_widget_position}Selected{/if}>{l s=$fianetsceau_widget_position_name|strval mod='fianetsceau'}</option>
 				{$i = $i + 1}
 			{/foreach}
 			</table>
