@@ -54,8 +54,8 @@ try
 		'in2' => '',
 		'in3' => '',
 		'in4' => '',
-		'in5' => SEUR_WS_USERNAME,
-		'in6' => SEUR_WS_PASSWORD,
+		'in5' => Configuration::get('SEUR_WS_USERNAME'),
+		'in6' => Configuration::get('SEUR_WS_PASSWORD'),
 		'in7' => 'S'
 	);
 

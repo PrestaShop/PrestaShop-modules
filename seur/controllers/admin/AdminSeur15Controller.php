@@ -33,7 +33,7 @@ require_once(_PS_MODULE_DIR_.'seur/AdminSeur.php');
 class AdminSeur15Controller extends ModuleAdminController {
 
 	public function initContent()
-	{
+	{		
 		$admin_seur = new AdminSeur(false);
 
 		if (!$admin_seur->module_enabled_and_configured)

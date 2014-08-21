@@ -62,8 +62,8 @@ try
 	$soap_client = new SoapClient((string)Configuration::get('SEUR_URLWS_SP'), $sc_options);
 
 	$plano = '<REG>
-		<USUARIO>'.SEUR_WS_USERNAME.'</USUARIO>
-		<PASSWORD>'.SEUR_WS_PASSWORD.'</PASSWORD>
+		<USUARIO>'.Configuration::get('SEUR_WS_USERNAME').'</USUARIO>
+		<PASSWORD>'.Configuration::get('SEUR_WS_PASSWORD').'</PASSWORD>
 		<NOM_POBLA_DEST>'.pSQL(Tools::getValue('town')).'</NOM_POBLA_DEST>
 		<Peso>'.pSQL(Tools::getValue('peso')).'</Peso>
 		<CODIGO_POSTAL_DEST>'.pSQL(Tools::getValue('post_code')).'</CODIGO_POSTAL_DEST>

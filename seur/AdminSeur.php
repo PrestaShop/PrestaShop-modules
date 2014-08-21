@@ -134,8 +134,10 @@ class AdminSeur extends AdminTab {
 		if (Tools::isSubmit('expedition_number'))
 			$expedition_data['expedition_number'] = Tools::getValue('expedition_number');
 
-		if (Tools::isSubmit('reference_number'))
+		if ((Tools::isSubmit('reference_number')) && (Tools::getValue('reference_number')) > 0)
 			$expedition_data['reference_number'] = sprintf('%06d', Tools::getValue('reference_number'));
+		else
+			$expedition_data['reference_number'] = '';
 
 		if (Tools::isSubmit('order_state'))
 			$expedition_data['order_state'] = Tools::getValue('order_state');
@@ -189,8 +191,20 @@ class AdminSeur extends AdminTab {
 		if (Tools::getValue('error'))
 			$this->content .= $this->module_instance->displayError(Tools::getValue('codigo').' => '.Tools::getValue('error'));
 
-		$this->content .= "<div id='contenttab'>
-			<fieldset>
+		$this->content .= "<div id='contenttab'>";
+
+		if(_PS_VERSION_ > '1.5')
+		{
+			$this->content .= "<script>
+				$( document ).ready(function() {
+					$('#submitFilter').click(function(){
+						document.formfilter.submit();
+					});
+				});
+			</script>";
+		}
+		
+		$this->content .= "<fieldset>
 				<legend>
 					<img src='$img_dir/logonew.png' />
 			 	</legend>
@@ -211,7 +225,7 @@ class AdminSeur extends AdminTab {
 					</ul>
 					<ul class='configuration_tabs'>
 						<li id='deliveries'".($tab_view == 'deliveries' ? ' class="default"' : '').">
-							<form action='index.php?controller=".$this->current_controller.'&submitFilter=1&token='.$token.$this->ps14_tab."' method='post'>
+							<form action='index.php?controller=".$this->current_controller.'&submitFilter=1&token='.$token.$this->ps14_tab."' method='post' id='formfilter' name='formfilter'>
 								<table id='deliveriesTable' class='table' cellpadding='0' cellspacing='0'>
 									<thead>
 										<tr> 
@@ -233,7 +247,7 @@ class AdminSeur extends AdminTab {
 												$this->content .= "</select>
 											</td>
 											<td>
-												<input type='submit' value=".$this->module_instance->l('Filter', self::FILENAME)." name='submitFilter' class='filter' />
+												<input type='submit' value=".$this->module_instance->l('Filter', self::FILENAME)." name='submitFilter' id='submitFilter' class='filter' />
 											</td>
 										</tr>
 									</thead>";

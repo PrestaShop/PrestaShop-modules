@@ -51,8 +51,8 @@ class Pickup extends ObjectModel
 
 				$plano = '
 					<recogida>
-						<usuario>'.SEUR_WS_USERNAME.'</usuario>
-						<password>'.SEUR_WS_PASSWORD.'</password>
+						<usuario>'.Configuration::get('SEUR_WS_USERNAME').'</usuario>
+						<password>'.Configuration::get('SEUR_WS_PASSWORD').'</password>
 						<razonSocial>'.pSQL($merchant_data['company_name']).'</razonSocial>
 						<nombreEmpresa>'.pSQL($merchant_data['company_name']).'</nombreEmpresa>
 						<nombreContactoOrdenante>'.pSQL($merchant_data['name']).'</nombreContactoOrdenante>
@@ -80,14 +80,14 @@ class Pickup extends ObjectModel
 						<mesRecogida>'.date('m').'</mesRecogida>
 						<anioRecogida>'.date('Y').'</anioRecogida>
 						<servicio>1</servicio>
-						<horaMananaDe>10:00</horaMananaDe>
-						<horaMananaA>14:00</horaMananaA>
+						<horaMananaDe></horaMananaDe>
+						<horaMananaA></horaMananaA>
 						<numeroBultos>1</numeroBultos>
 						<mercancia>2</mercancia>
 						<horaTardeDe>16:00</horaTardeDe>
 						<horaTardeA>20:00</horaTardeA>
 						<tipoPorte>P</tipoPorte>
-						<observaciones>PRUEBAS DE WWW.4WEBS.ES PARA CONECTOR PRESTASHOP</observaciones>
+						<observaciones></observaciones>
 						<tipoAviso>EMAIL</tipoAviso>
 						<idiomaContactoOrdenante>'.pSQL($merchant_data['country']).'</idiomaContactoOrdenante>
 
