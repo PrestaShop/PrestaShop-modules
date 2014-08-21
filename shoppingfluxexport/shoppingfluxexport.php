@@ -1716,7 +1716,7 @@ class ShoppingFluxExport extends Module
 				'weight' => 'poids',
 				'ecotax' => 'ecotaxe',
 				'vat' => 'tva',
-				'mpn' => 'ref-constrcuteur',
+				'mpn' => 'ref-constructeur',
 				'supplier_reference' => 'ref-fournisseur',
 				'category_breadcrumb' => 'fil-ariane',
 			)
