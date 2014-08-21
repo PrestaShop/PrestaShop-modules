@@ -13,7 +13,6 @@ class PayuLatam extends PaymentModule {
 		$this->version = '2.0';
 		$this->author = 'PayU Latam';
 		$this->need_instance = 0;
-		$this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
 		$this->currencies = true;
 		$this->currencies_mode = 'checkbox';
 		
@@ -27,7 +26,9 @@ class PayuLatam extends PaymentModule {
 		
 		/* Backward compatibility */
 		if (_PS_VERSION_ < '1.5')
-           require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+
+		$this->checkForUpdates();
 	}
 	
 	public function install() {
@@ -263,5 +264,19 @@ class PayuLatam extends PaymentModule {
 		}
 	}
 
+	private function checkForUpdates()
+	{
+		// Used by PrestaShop 1.3 & 1.4
+		if (version_compare(_PS_VERSION_, '1.5', '<') && self::isInstalled($this->name))
+			foreach (array('2.0') as $version)
+			{
+				$file = dirname(__FILE__).'/upgrade/upgrade-'.$version.'.php';
+				if (Configuration::get('PAYU_LATAM') < $version && file_exists($file))
+				{
+					include_once($file);
+					call_user_func('upgrade_module_'.str_replace('.', '_', $version), $this);
+				}
+			}
+	}
 }
 ?>
