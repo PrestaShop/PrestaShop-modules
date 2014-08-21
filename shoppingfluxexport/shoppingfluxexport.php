@@ -29,11 +29,13 @@ if (!defined('_PS_VERSION_'))
 
 class ShoppingFluxExport extends Module
 {
+	private $default_country = null;
+	
 	public function __construct()
 	{
 		$this->name = 'shoppingfluxexport';
 		$this->tab = 'smart_shopping';
-		$this->version = '3.9.6';
+		$this->version = '3.9.7';
 		$this->author = 'PrestaShop';
 		$this->limited_countries = array('fr', 'us');
 
@@ -42,6 +44,9 @@ class ShoppingFluxExport extends Module
 		$this->displayName = $this->l('Export Shopping Flux');
 		$this->description = $this->l('Exportez vos produits vers plus de 100 comparateurs de prix et places de marché');
 		$this->confirmUninstall = $this->l('Êtes-vous sûr de vouloir supprimer ce module ?');
+		
+		$id_default_country = Configuration::get('PS_COUNTRY_DEFAULT');
+		$this->default_country = new Country($id_default_country);
 	}
 
 	public function install()
@@ -203,7 +208,7 @@ class ShoppingFluxExport extends Module
 			$this->sendMail();
 
 		//get fieldset depending on the country
-		$country = Context::getContext()->country->iso_code == 'FR' ? 'fr' : 'us';
+		$country = $this->default_country->iso_code == 'FR' ? 'fr' : 'us';
 		
 		$html = '<p style="text-align:center"><img style="margin:20px; width: 250px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$country.'.jpg" /></p>';
 		//first fieldset
@@ -245,7 +250,7 @@ class ShoppingFluxExport extends Module
 			
 			$html .= '<div style="width:50%; float:left"><fieldset>
 			<legend>'.$this->l('Information(s)').'</legend>
-			<p style="text-align:center; margin:10px 0 30px 0; font-weight: bold" ><a style="padding:10px 20px; font-size:1.5em" target="_blank" href="https://register.shopping-feed.com/sign/prestashop?email='.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'&feed='.Tools::safeOutput($uri).'&lang='.strtolower(Context::getContext()->country->iso_code).'" onclick="" value="'.$this->l('Envoyer la demande').'" class="button">'.$this->l('Register Now!').'</a></p>
+			<p style="text-align:center; margin:10px 0 30px 0; font-weight: bold" ><a style="padding:10px 20px; font-size:1.5em" target="_blank" href="https://register.shopping-feed.com/sign/prestashop?email='.Tools::safeOutput(Configuration::get('PS_SHOP_EMAIL')).'&feed='.Tools::safeOutput($uri).'&lang='.strtolower($this->default_country->iso_code).'" onclick="" value="'.$this->l('Envoyer la demande').'" class="button">'.$this->l('Register Now!').'</a></p>
 			<h2><b>'.$this->l('Shopping Feed exports your products to the largest marketplaces in the world, all from a single intuitive platform.').'</b> '.$this->l('Through our free setup and expert support, we help thousands of storefronts increase their sales and visibility.').'</h2>
 			<br/><p style="line-height:2em;">
 			<b>'.$this->l('Put your feeds to work:').' </b>'.$this->l('A single platform to manage your products and sales on the world\'s marketplaces.').'<br />
@@ -437,7 +442,7 @@ class ShoppingFluxExport extends Module
 			$base_uri = 'http://'.Tools::getHttpHost().__PS_BASE_URI__;
 
 		$uri = $base_uri.'modules/shoppingfluxexport/flux.php?token='.Configuration::get('SHOPPING_FLUX_TOKEN');
-		$logo = Context::getContext()->country->iso_code == 'FR' ? 'fr' : 'us';
+		$logo = $this->default_country->iso_code == 'FR' ? 'fr' : 'us';
 
 		return '
 		<img style="margin:10px; width:250px" src="'.Tools::safeOutput($base_uri).'modules/shoppingfluxexport/img/logo_'.$logo.'.jpg" />
@@ -490,7 +495,7 @@ class ShoppingFluxExport extends Module
 		$xml .= '<Phone><![CDATA['.Tools::safeOutput(Tools::getValue('telephone')).']]></Phone>';
 		$xml .= '<Feed><![CDATA['.Tools::safeOutput(Tools::getValue('flux')).']]></Feed>';
 		$xml .= '<Code><![CDATA['.Tools::safeOutput(Tools::getValue('code')).']]></Code>';
-		$xml .= '<Lang><![CDATA['.Context::getContext()->country->iso_code.']]></Lang>';
+		$xml .= '<Lang><![CDATA['.$this->default_country->iso_code.']]></Lang>';
 		$xml .= '</AddProspect>';
 
 		if (in_array('curl', get_loaded_extensions()))
@@ -585,7 +590,7 @@ class ShoppingFluxExport extends Module
 		$link = new Link();
 
 		echo '<?xml version="1.0" encoding="utf-8"?>';
-		echo '<products version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">';
+		echo '<products version="'.$this->version.'" country="'.$this->default_country->iso_code.'">';
 
 		foreach ($products as $productArray)
 		{
@@ -627,7 +632,7 @@ class ShoppingFluxExport extends Module
 	public function initFeed()
 	{
 		$file = fopen(dirname(__FILE__).'/feed.xml', 'w+');
-		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><products version="'.$this->version.'" country="'.Context::getContext()->country->iso_code.'">');
+		fwrite($file, '<?xml version="1.0" encoding="utf-8"?><products version="'.$this->version.'" country="'.$this->default_country->iso_code.'">');
 		fclose($file);
 
 		$totalProducts = $this->countProducts();
@@ -1716,7 +1721,7 @@ class ShoppingFluxExport extends Module
 			)
 		);
 
-		$iso_code = Context::getContext()->country->iso_code;
+		$iso_code = $this->default_country->iso_code;
 
 		if (isset($translations[$iso_code][$field]))
 			return $translations[$iso_code][$field];
