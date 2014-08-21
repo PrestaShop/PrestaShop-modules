@@ -1,6 +1,6 @@
 <?php
-/*
-* 2007-2014 PrestaShop
+/**
+* 2014 PAYU LATAM
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision: 14009 $
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*  @author    PAYU LATAM <sac@payulatam.com>
+*  @copyright 2014 PAYU LATAM
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 */
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");

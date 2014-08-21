@@ -1,5 +1,4 @@
-<?php
-/**
+{*
 * 2014 PAYU LATAM
 *
 * NOTICE OF LICENSE
@@ -21,14 +20,15 @@
 *  @author    PAYU LATAM <sac@payulatam.com>
 *  @copyright 2014 PAYU LATAM
 *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*/
-
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-
-header("Location: ../");
-exit;
+*}
+<div class="row">
+	<div class="col-xs-12 col-md-6">
+		<p class="payment_module">
+			<a href="{$module_dir|escape:'htmlall':'UTF-8'}validation.php" style="padding-left: 20px;">
+						
+				<img src="{$module_dir|escape:'htmlall':'UTF-8'}img/logoPayU.png" height="50" width="135"/>	
+				{l s='Pay by PayU Latam' mod='payulatam'}
+			</a>
+		</p>
+	</div>
+</div>

@@ -1,4 +1,28 @@
 <?php
+/**
+* 2014 PAYU LATAM
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    PAYU LATAM <sac@payulatam.com>
+*  @copyright 2014 PAYU LATAM
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*/
+
 include(dirname(__FILE__).'/../../../config/config.inc.php');
 include(dirname(__FILE__).'/../../../init.php');
 include(dirname(__FILE__).'/../payulatam.php');
@@ -7,145 +31,115 @@ include(dirname(__FILE__).'/../../../header.php');
 $payulatam = new PayuLatam();
 
 if (isset($_REQUEST['signature']))
-{
 	$signature = $_REQUEST['signature'];
-} else 
-{
+else
 	$signature = $_REQUEST['firma'];
-}
 
 if (isset($_REQUEST['merchantId']))
-{
-	$merchantId = $_REQUEST['merchantId'];
-} else 
-{
-	$merchantId = $_REQUEST['usuario_id'];
-}
+	$merchant_id = $_REQUEST['merchantId'];
+else
+	$merchant_id = $_REQUEST['usuario_id'];
+
 if (isset($_REQUEST['referenceCode']))
-{
-	$referenceCode = $_REQUEST['referenceCode'];
-} else 
-{
-	$referenceCode = $_REQUEST['ref_venta'];
-}
+	$reference_code = $_REQUEST['referenceCode'];
+else
+	$reference_code = $_REQUEST['ref_venta'];
+
 if (isset($_REQUEST['TX_VALUE']))
-{
 	$value = $_REQUEST['TX_VALUE'];
-} else 
-{
+else
 	$value = $_REQUEST['valor'];
-}
+
 if (isset($_REQUEST['currency']))
-{
+
 	$currency = $_REQUEST['currency'];
-} else 
-{
+else
 	$currency = $_REQUEST['moneda'];
-}
+
 if (isset($_REQUEST['transactionState']))
-{
-	$transactionState = $_REQUEST['transactionState'];
-} else 
-{
-	$transactionState = $_REQUEST['estado'];
-}
+	$transaction_state = $_REQUEST['transactionState'];
+else
+	$transaction_state = $_REQUEST['estado'];
 
 $value = number_format($value, 1, '.', '');
 
 $api_key = Configuration::get('PAYU_LATAM_API_KEY');
-$signature_local = $api_key.'~'.$merchantId.'~'.$referenceCode.'~'.$value.'~'.$currency.'~'.$transactionState;
+$signature_local = $api_key.'~'.$merchant_id.'~'.$reference_code.'~'.$value.'~'.$currency.'~'.$transaction_state;
 $signature_md5 = md5($signature_local);
 
 if (isset($_REQUEST['polResponseCode']))
-{
-	$polResponseCode = $_REQUEST['polResponseCode'];
-} else 
-{
-	$polResponseCode = $_REQUEST['codigo_respuesta_pol'];
-}
+	$pol_response_code = $_REQUEST['polResponseCode'];
+else
+	$pol_response_code = $_REQUEST['codigo_respuesta_pol'];
 
 $message = '';
-if ($transactionState == 6 && $polResponseCode == 5)
+if ($transaction_state == 6 && $pol_response_code == 5)
+	$estado_tx = $payulatam->l('Failed Transaction');
+else if ($transaction_state == 6 && $pol_response_code == 4)
+	$estado_tx = $payulatam->l('Rejected Transaction');
+else if ($transaction_state == 12 && $pol_response_code == 9994)
+	$estado_tx = $payulatam->l('Pending Transaction, Please check if the debit was made in the Bank');
+else if ($transaction_state == 4 && $pol_response_code == 1)
 {
-	$estadoTx = $payulatam->l('Failed Transaction');
-} else if ($transactionState == 6 && $polResponseCode == 4)
-{
-	$estadoTx = $payulatam->l('Rejected Transaction');
-} else if ($transactionState == 12 && $polResponseCode == 9994)
-{
-	$estadoTx = $payulatam->l('Pending Transaction, Please check if the debit was made in the Bank');
-} else if ($transactionState == 4 && $polResponseCode == 1)
-{
-	$estadoTx = $payulatam->l('Transaction Approved');
+	$estado_tx = $payulatam->l('Transaction Approved');
 	$message = $payulatam->l('¡Thank you for your purchase!');
-} else
+}
+else
 {
 	if (isset($_REQUEST['message']))
-	{
-		$estadoTx=$_REQUEST['message'];
-	} else 
-	{
-		$estadoTx=$_REQUEST['mensaje'];
-	}
+		$estado_tx = $_REQUEST['message'];
+	else
+		$estado_tx = $_REQUEST['mensaje'];
 }
 
 if (isset($_REQUEST['transactionId']))
-{
-	$transactionId = $_REQUEST['transactionId'];
-} else 
-{
-	$transactionId = $_REQUEST['transaccion_id'];
-}
+	$transaction_id = $_REQUEST['transactionId'];
+else
+	$transaction_id = $_REQUEST['transaccion_id'];
+
 if (isset($_REQUEST['reference_pol']))
-{
 	$reference_pol = $_REQUEST['reference_pol'];
-} else 
-{
+else
 	$reference_pol = $_REQUEST['ref_pol'];
-}
+
 if (isset($_REQUEST['pseBank']))
-{
-	$pseBank = $_REQUEST['pseBank'];
-} else 
-{
-	$pseBank = $_REQUEST['banco_pse'];
-}
+	$pse_bank = $_REQUEST['pseBank'];
+else
+	$pse_bank = $_REQUEST['banco_pse'];
+
 $cus = $_REQUEST['cus'];
 if (isset($_REQUEST['description']))
-{
 	$description = $_REQUEST['description'];
-} else 
-{
+else
 	$description = $_REQUEST['descripcion'];
-}
-if (isset($_REQUEST['lapPaymentMethod']))
-{
-	$lapPaymentMethod = $_REQUEST['lapPaymentMethod'];
-} else 
-{
-	$lapPaymentMethod = $_REQUEST['medio_pago_lap'];
-}
 
-if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5)) 
+if (isset($_REQUEST['lapPaymentMethod']))
+	$lap_payment_method = $_REQUEST['lapPaymentMethod'];
+else
+	$lap_payment_method = $_REQUEST['medio_pago_lap'];
+
+
+if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 {
 	Context::getContext()->smarty->assign(
 		array(
-			'estadoTx' => $estadoTx,
-			'transactionId' => $transactionId,
+			'estadoTx' => $estado_tx,
+			'transactionId' => $transaction_id,
 			'reference_pol' => $reference_pol,
-			'referenceCode' => $referenceCode,
-			'pseBank' => $pseBank,
+			'referenceCode' => $reference_code,
+			'pseBank' => $pse_bank,
 			'cus' => $cus,
 			'value' => $value,
 			'currency' => $currency,
 			'description' => $description,
-			'lapPaymentMethod' => $lapPaymentMethod,
+			'lapPaymentMethod' => $lap_payment_method,
 			'message' => $message,
 			'valid' => true
 		)
 	);
 
-} else 
+}
+else
 {
 	Context::getContext()->smarty->assign(
 		array(
