@@ -244,6 +244,7 @@ class ShoppingFluxExport extends Module
 			for ($i = 1; $i <= 6; $i++)
 				$html .= '<a href="'.$uri_img.$i.'.jpg" target="_blank"><img style="margin:10px" src="'.$uri_img.$i.'.jpg" width="250" /></a>';
 
+			$html .= '<br/><iframe src="//player.vimeo.com/video/101732350" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 			$html .= '</p></fieldset><br/>';
 		}
 		else {
