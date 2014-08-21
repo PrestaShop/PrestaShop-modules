@@ -165,7 +165,7 @@
 								return false;" href="https://www.paypal.com/us/cgibin/webscr?cmd=_get-api-signature&generic-flow=true" class="paypal_usa-module-btn">{l s='Live Mode API' mod='paypalusa'}</a>&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;<a onclick="window.open(this.href, '1369346829804', 'width=415,height=530,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=0,left=0,top=0');
 								return false;" href="https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" class="paypal_usa-module-btn">{l s='Sandbox Mode API' mod='paypalusa'}</a></p>
 				</div>
-				<label for="paypal_usa_account">{l s='PayPal Business Account:' mod='paypalusa'}</label></td>
+				<label for="paypal_usa_account">{l s='PayPal Business Email Address:' mod='paypalusa'}</label></td>
 				<div class="margin-form">
 					<input type="text" name="paypal_usa_account" class="input-text" value="{if $paypal_usa_configuration.PAYPAL_USA_ACCOUNT}{$paypal_usa_configuration.PAYPAL_USA_ACCOUNT|escape:'htmlall':'UTF-8'}{/if}" /> <sup>*</sup>
 				</div>
