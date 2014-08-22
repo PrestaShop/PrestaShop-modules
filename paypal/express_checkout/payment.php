@@ -395,5 +395,8 @@ else
  */
 $ppec->context->smarty->assign('use_mobile', (bool)$ppec->useMobile());
 
-$display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/'.$template);
+if(file_exists(_PS_THEME_DIR_.'modules/paypal/views/templates/front/'.$template))
+	$display->setTemplate(_PS_THEME_DIR_.'modules/paypal/views/templates/front/'.$template);
+else
+	$display->setTemplate(_PS_MODULE_DIR_.'paypal/views/templates/front/'.$template);
 $display->run();
