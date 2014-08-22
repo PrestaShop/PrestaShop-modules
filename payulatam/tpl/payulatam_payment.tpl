@@ -21,10 +21,11 @@
 *  @copyright 2014 PAYU LATAM
 *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *}
+<link href="{$css|escape:'htmlall':'UTF-8'}payu.css" rel="stylesheet" type="text/css">
 <div class="row">
 	<div class="col-xs-12 col-md-6">
 		<p class="payment_module">
-			<a href="{$module_dir|escape:'htmlall':'UTF-8'}validation.php" style="padding-left: 20px;">
+			<a href="{$module_dir|escape:'htmlall':'UTF-8'}validation.php" class="link-redirect">
 						
 				<img src="{$module_dir|escape:'htmlall':'UTF-8'}img/logoPayU.png" height="50" width="135"/>	
 				{l s='Pay by PayU Latam' mod='payulatam'}

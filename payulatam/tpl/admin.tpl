@@ -26,7 +26,8 @@
 
 <link href="{$css|escape:'htmlall':'UTF-8'}main.css" rel="stylesheet" type="text/css">
 <link href="{$css|escape:'htmlall':'UTF-8'}tabs.css" rel="stylesheet" type="text/css">
-<img src="{$tracking|escape:'htmlall':'UTF-8'}" alt="tracking" style="display:none"/>
+<link href="{$css|escape:'htmlall':'UTF-8'}payu.css" rel="stylesheet" type="text/css">
+<img src="{$tracking|escape:'htmlall':'UTF-8'}" alt="tracking" class="md-tracking"/>
 <div class="ctwrapper">
 	<header class="header">
 		<div class="logo-py"><img src="{$img|escape:'htmlall':'UTF-8'}logo.png" alt="logo"></div>

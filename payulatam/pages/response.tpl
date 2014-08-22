@@ -22,11 +22,12 @@
 *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *}
 <link rel="stylesheet" href="{$css_dir}global.css" type="text/css" media="all">
+<link href="{$css|escape:'htmlall':'UTF-8'}payu.css" rel="stylesheet" type="text/css">
 {if $valid}
 	<center>
-		<table style="width: 42%;">
+		<table class="table-response">
 			<tr align="center">
-				<th colspan="2"><h1 style="text-align: center;">{l s='Purchase Data' mod='payulatam'}</h1></th>
+				<th colspan="2"><h1 class="md-h1">{l s='Purchase Data' mod='payulatam'}</h1></th>
 			</tr>
 			<tr align="left">
 				<td>{l s='Transaction State' mod='payulatam'}</td>

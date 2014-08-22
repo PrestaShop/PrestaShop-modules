@@ -23,9 +23,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<link href="{$css|escape:'htmlall':'UTF-8'}payu.css" rel="stylesheet" type="text/css">
 <p class="payment_module">
 	<a href="{$pathSsl|escape:'htmlall':'UTF-8'}payment.php">
-		<img src="{$modulePath|escape:'htmlall':'UTF-8'}img/logo.png" alt="PayULatam" style="width:160px"/>
+		<img src="{$modulePath|escape:'htmlall':'UTF-8'}img/logo.png" alt="PayULatam" class="md-payment"/>
 		{l s='Pay by Payu Latam (pay with credit card or cash deposit)' mod='payulatam'}
 	</a>
 </p>

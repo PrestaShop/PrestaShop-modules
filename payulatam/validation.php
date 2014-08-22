@@ -92,7 +92,7 @@ else
 	'modules/payulatam/pages/confirmation.php';
 ?>
 
-<form style="display: none" id="payu_latam_form" name="payu_latam_form" method="post" action="<?php echo $gateway_url; ?>">
+<form class="md-form" id="payu_latam_form" name="payu_latam_form" method="post" action="<?php echo $gateway_url; ?>">
 	<input type="hidden" name="merchantId" id="merchantId" value="<?php echo Configuration::get('PAYU_LATAM_MERCHANT_ID'); ?>" />
 	<input type="hidden" name="referenceCode" id="referenceCode" value="<?php echo (int)$payulatam->currentOrder; ?>" />
 	<input type="hidden" name="description" id="description" value="<?php echo trim($description, ','); ?>" />

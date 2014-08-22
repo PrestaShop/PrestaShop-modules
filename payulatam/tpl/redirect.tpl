@@ -43,11 +43,12 @@ cursor:pointer;
 .payu-button:hover, a.payu-button:active { background-position: center bottom; color: #FFF; text-decoration: none; }
 
 </style>
-<div style="text-align:center;">
+<link href="{$css|escape:'htmlall':'UTF-8'}payu.css" rel="stylesheet" type="text/css">
+<div class="div-redirect">
 {if isset($error)}
-<p style="color:red">{l s='An error occured, please try again later.' mod='payulatam'}</p>
+<p class="md-error">{l s='An error occured, please try again later.' mod='payulatam'}</p>
 {else}
-<p style="font-size:15px;">{l s='You are going to be redirected to PayU\'s website for your payment.' mod='payulatam'}</p>
+<p class="tx-redirect">{l s='You are going to be redirected to PayU\'s website for your payment.' mod='payulatam'}</p>
 <form action="{$formLink|escape:'htmlall':'UTF-8'}" method="POST" id="formPayU">
   {foreach from=$payURedirection item=value}
   <input type="hidden" value="{$value.value|escape:'htmlall':'UTF-8'}" name="{$value.name|escape:'htmlall':'UTF-8'}"/>
