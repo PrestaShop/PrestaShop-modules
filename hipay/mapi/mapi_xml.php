@@ -17,7 +17,7 @@ class HIPAY_MAPI_XML {
 				continue;
 
 			if (!is_array($this->$name) && !is_object($this->$name) && !is_bool($this->$name)) {
-				$xml .= str_repeat(chr(9), $t + 1)."<$name>$value</$name>\n";
+				$xml .= str_repeat(chr(9), $t + 1)."<$name><![CDATA[$value]]></$name>\n";
 			} else if (is_bool($this->$name)) {
 				if ($value === true)
 					$xml .= str_repeat(chr(9), $t + 1)."<$name>true</$name>\n";
