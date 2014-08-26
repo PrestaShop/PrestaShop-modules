@@ -2,9 +2,9 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{hipay}prestashop>hipay_50089d40ef4536271e8b16dbe5763c01'] = 'HiPay';
 $_MODULE['<{hipay}prestashop>hipay_035ab5edb2d8af86d51f6a92e65b4c0f'] = 'Paiement sécurisé Visa Mastercard et solutions européennes.';
 $_MODULE['<{hipay}prestashop>hipay_9d72404f720479faa0684f13d753ee06'] = 'Pour fonctionner correctement la librairie SOAP doit être installée.';
+$_MODULE['<{hipay}prestashop>hipay_098082f1378c3000b857303e7041ebcb'] = 'Une erreur s\'est produite lors de votre paiement, veuillez recommencer.';
 $_MODULE['<{hipay}prestashop>hipay_5063b1c7402ff93d09defb875fa0085b'] = '[Hipay] Erreur: impossible de créer PaymentParams';
 $_MODULE['<{hipay}prestashop>hipay_a85eba4c6c699122b2bb1387ea4813ad'] = 'Panier';
 $_MODULE['<{hipay}prestashop>hipay_d4126d0b64579211d37151ef9b5af754'] = '[Hipay] Erreur : impossible de créer le produit \"panier\"';
@@ -91,6 +91,12 @@ $_MODULE['<{hipay}prestashop>hipay_fa4aaa6b8b3825e2cad3ad8c44086207'] = 'mot de 
 $_MODULE['<{hipay}prestashop>hipay_6a8d50e3e8fb5a4c990e0b6175cc6b0d'] = 'Certains champs ne sont pas correctes. Veuillez vérifiez les champs suivants : %s';
 $_MODULE['<{hipay}prestashop>hipay_581d72b595ff53d07c0ab6894f388733'] = 'Une erreur s\'est produite durrant la création du compte : %s';
 $_MODULE['<{hipay}prestashop>hipay_d9ad794fc993784fa7442cce33384535'] = 'Erreur inconnue';
+$_MODULE['<{hipay}prestashop>confirmation_2e2117b7c81aa9ea6931641ea2c6499f'] = 'Votre commande sur';
+$_MODULE['<{hipay}prestashop>confirmation_75fbf512d744977d62599cc3f0ae2bb4'] = 'est bien enregistrée.';
+$_MODULE['<{hipay}prestashop>confirmation_a5b429ca9d28ded3baf51275287f9a55'] = 'Vous avez choisi de payer avec HiPay.';
+$_MODULE['<{hipay}prestashop>confirmation_e6dc7945b557a1cd949bea92dd58963e'] = 'Votre commande vous sera envoyée très prochainement.';
+$_MODULE['<{hipay}prestashop>confirmation_0db71da7150c27142eef9d22b843b4a9'] = 'Pour toute question ou information complémentaire merci de contacter notre';
+$_MODULE['<{hipay}prestashop>confirmation_64430ad2835be8ad60c59e7d44e4b0b1'] = 'service client';
 $_MODULE['<{hipay}prestashop>payment_cb047ebd77ec02c36fbac405f8c9922c'] = 'Payer avec HiPay (Paiement sécurisé Visa Mastercard et solutions européennes)';
 $_MODULE['<{hipay}prestashop>payment_35d5d65e0fb908f81b8c36820ddd7cc6'] = 'Montant minimum pour payer avec HiPay :';
 $_MODULE['<{hipay}prestashop>payment_e755d43d98e3d597b4492d2e6493ffed'] = '(bac à sable / mode test)';
