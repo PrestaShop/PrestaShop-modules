@@ -17,10 +17,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @author Quadra Informatique <modules@quadra-informatique.fr>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com> Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright 2007-2014 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
@@ -47,12 +46,12 @@
 
 <script type="text/javascript">
     var soInputs = new Object();
-    var soBwdCompat = "{$SOBWD_C}";
-    var soCarrierId = "{$id_carrier}";
-    var soToken = "{$token}";
-    var initialCost_label = "{$initialCost_label}";
-    var initialCost = "{$initialCost}";
-    var baseDir = '{$content_dir}';
+    var soBwdCompat = "{$SOBWD_C|escape:'htmlall'}";
+    var soCarrierId = "{$id_carrier|escape:'htmlall'}";
+    var soToken = "{$token|escape:'htmlall'}";
+    var initialCost_label = "{$initialCost_label|escape:'htmlall'}";
+    var initialCost = "{$initialCost|escape:'htmlall'}";
+    var baseDir = '{$content_dir|escape:'htmlall'}';
 
     {foreach from=$inputs item=input key=name name=myLoop}
         soInputs.{$name} = "{$input|strip_tags|addslashes}";
@@ -76,10 +75,10 @@
             $('input.delivery_option_radio').each(function() {
                 if($(this).val() == soCarrierId+',') {
                  $(this).next().children().children().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
-		// 1.6 themes
-		if($(this).next().children('div.delivery_option_price').length == 0)
-		 $(this).parents('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
-
+				 // 1.6 themes
+				if($(this).next().children('div.delivery_option_price').length == 0)
+					$(this).parents('tr').children('td.delivery_option_price').find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
+							
                 }
             });
         }

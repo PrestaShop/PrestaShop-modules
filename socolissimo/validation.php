@@ -1,30 +1,28 @@
 <?php
-
-/*
- * 2007-2014 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @author Quadra Informatique <modules@quadra-informatique.fr>
- *  @copyright  2007-2014 PrestaShop SA / 1997-2014 Quadra Informatique
- *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
- */
+/**
+* 2007-2014 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    PrestaShop SA <contact@prestashop.com> Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright 2007-2014 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
 include('../../config/config.inc.php');
 include('../../init.php');
@@ -55,10 +53,10 @@ if (!$so->checkErrors($errors_codes, SCError::REQUIRED))
 {
 	foreach ($_POST as $key => $val)
 		if ($so->isAvailableFields($key))
-			if (!isset($_POST['CHARSET'])) /* only way to know if api is 3.0 to get encode for accentued chars in key calculation */
-				$return[strtoupper($key)] = utf8_encode(stripslashes($val));
+			if (!Tools::getIsset(Tools::getValue('CHARSET'))) /* only way to know if api is 3.0 to get encode for accentued chars in key calculation */
+				$return[Tools::strtoupper($key)] = utf8_encode(Tools::stripslashes($val));
 			else
-				$return[strtoupper($key)] = stripslashes($val);
+				$return[Tools::strtoupper($key)] = Tools::stripslashes($val);
 
 	/* GET parameter, the only one */
 	$return['TRRETURNURLKO'] = Tools::getValue('trReturnUrlKo'); /* api 4.0 mobile */
@@ -152,7 +150,7 @@ function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object
 			$sql .= '\''.pSQL($so_params['DELIVERYMODE']).'\',
 					'.(isset($so_params['PRID']) ? '\''.pSQL($so_params['PRID']).'\'' : '\'\'').',
 					'.(isset($so_params['CENAME']) ? '\''.pSQL($so_params['CENAME']).'\'' : '\'\'').',
-					'.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['CEFIRSTNAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
 					'.(isset($so_params['PRCOMPLADRESS']) ? '\''.pSQL($so_params['PRCOMPLADRESS']).'\'' : '\'\'').',
 					'.(isset($so_params['PRNAME']) ? '\''.pSQL($so_params['PRNAME']).'\'' : '\'\'').',
 					'.(isset($so_params['PRADRESS1']) ? '\''.pSQL($so_params['PRADRESS1']).'\'' : '\'\'').',
@@ -168,12 +166,12 @@ function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object
 					'.(isset($so_params['CEDOORCODE1']) ? '\''.pSQL($so_params['CEDOORCODE1']).'\'' : '\'\'').',
 					'.(isset($so_params['CEDOORCODE2']) ? '\''.pSQL($so_params['CEDOORCODE2']).'\'' : '\'\'').',
                                     '.(isset($so_params['CODERESEAU']) ? '\''.pSQL($so_params['CODERESEAU']).'\'' : '\'\'').',
-                                    '.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
-                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
+                                    '.(isset($so_params['CENAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
 		else
 			$sql .= '\''.pSQL($so_params['DELIVERYMODE']).'\',\'\',
-					'.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
-					'.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['CENAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+					'.(isset($so_params['CEFIRSTNAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').',
 					'.(isset($so_params['CECOMPLADRESS']) ? '\''.pSQL($so_params['CECOMPLADRESS']).'\'' : '\'\'').',
 					'.(isset($so_params['CEADRESS1']) ? '\''.pSQL($so_params['CEADRESS1']).'\'' : '\'\'').',
 					'.(isset($so_params['CEADRESS2']) ? '\''.pSQL($so_params['CEADRESS2']).'\'' : '\'\'').',
@@ -189,8 +187,8 @@ function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object
 					'.(isset($so_params['CEDOORCODE1']) ? '\''.pSQL($so_params['CEDOORCODE1']).'\'' : '\'\'').',
 					'.(isset($so_params['CEDOORCODE2']) ? '\''.pSQL($so_params['CEDOORCODE2']).'\'' : '\'\'').',
                                     '.(isset($so_params['CODERESEAU']) ? '\''.pSQL($so_params['CODERESEAU']).'\'' : '\'\'').',
-                                    '.(isset($so_params['CENAME']) ? '\''.ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
-                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
+                                    '.(isset($so_params['CENAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CENAME'])).'\'' : '\'\'').',
+                                    '.(isset($so_params['CEFIRSTNAME']) ? '\''.Tools::ucfirst(pSQL($so_params['CEFIRSTNAME'])).'\'' : '\'\'').')';
 		if (Db::getInstance()->execute($sql))
 			return true;
 	}
@@ -203,7 +201,7 @@ function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object
 		if ($so_object->delivery_mode == SCFields::RELAY_POINT)
 		{
 			isset($so_params['PRID']) ? $values['prid'] = pSQL($so_params['PRID']) : '';
-			isset($so_params['PRNAME']) ? $values['prname'] = ucfirst(pSQL($so_params['PRNAME'])) : '';
+			isset($so_params['PRNAME']) ? $values['prname'] = Tools::ucfirst(pSQL($so_params['PRNAME'])) : '';
 			isset($delivery_mode[$so_params['DELIVERYMODE']]) ? $values['prfirstname'] =
 							pSQL($delivery_mode[$so_params['DELIVERYMODE']]) : $values['prfirstname'] = 'So Colissimo';
 			isset($so_params['PRCOMPLADRESS']) ? $values['prcompladress'] = pSQL($so_params['PRCOMPLADRESS']) : '';
@@ -227,8 +225,8 @@ function saveOrderShippingDetails($id_cart, $id_customer, $so_params, $so_object
 		else
 		{
 			isset($so_params['PRID']) ? $values['prid'] = pSQL($so_params['PRID']) : $values['prid'] = '';
-			isset($so_params['CENAME']) ? $values['prname'] = ucfirst(pSQL($so_params['CENAME'])) : '';
-			isset($so_params['CEFIRSTNAME']) ? $values['prfirstname'] = ucfirst(pSQL($so_params['CEFIRSTNAME'])) : '';
+			isset($so_params['CENAME']) ? $values['prname'] = Tools::ucfirst(pSQL($so_params['CENAME'])) : '';
+			isset($so_params['CEFIRSTNAME']) ? $values['prfirstname'] = Tools::ucfirst(pSQL($so_params['CEFIRSTNAME'])) : '';
 			isset($so_params['CECOMPLADRESS']) ? $values['prcompladress'] = pSQL($so_params['CECOMPLADRESS']) : '';
 			isset($so_params['CEADRESS1']) ? $values['pradress1'] = pSQL($so_params['CEADRESS1']) : '';
 			isset($so_params['CEADRESS2']) ? $values['pradress2'] = pSQL($so_params['CEADRESS2']) : '';

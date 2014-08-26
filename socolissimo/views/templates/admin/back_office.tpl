@@ -17,16 +17,16 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com> Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright 2007-2014 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($supcostbelg)}{assign var=supcostbelgttc value=$supcostbelg*(1+($taxrate/100))}{/if}
 <div class="warn">  <p>{l s='Warning, usage of this module in opc mobile theme is not recommended in production mode for your website.' mod='socolissimo'}</p></div>
 <form action="{$smarty.server.REQUEST_URI|escape:'htmlall'}" method="post" class="form">
     <input type="hidden" value={if isset($taxrate)}{$taxrate}{else}0{/if} class="taxrate" name="taxrate" />
-    <fieldset><legend><img src="{$moduleDir}/logo.gif" alt="" />{l s='Description' mod='socolissimo'}</legend>
+    <fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/logo.gif" alt="" />{l s='Description' mod='socolissimo'}</legend>
         {l s='SoColissimo is a service offered by La Poste, which allows you to offer buyers 5 modes of delivery.' mod='socolissimo'} :
         <br/><br/><ul style ="list-style:disc outside none;margin-left:30px;">
             <li>{l s='Home delivery' mod='socolissimo'}.</li>
@@ -38,7 +38,7 @@
         <p>{l s='This module is free and allows you to activate the offer on your store.' mod='socolissimo'}</p>
     </fieldset>
     <div class="clear">&nbsp;</div>
-    <fieldset><legend><img src="{$moduleDir}/logo.gif" alt="" />{l s='Settings' mod='socolissimo'}</legend>
+    <fieldset><legend><img src="{$moduleDir|escape:'htmlall'}/logo.gif" alt="" />{l s='Settings' mod='socolissimo'}</legend>
         <label style="color:#CC0000;text-decoration : underline;">{l s='Important' mod='socolissimo'} : </label>
         <div class="margin-form">
             <p  style="width:500px">{l s='To open your SoColissimo account, please contact "La Poste" at this phone number: 3634 (French phone number).' mod='socolissimo'}</p>
