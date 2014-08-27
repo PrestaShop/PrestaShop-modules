@@ -73,9 +73,6 @@
 [submodule "firstdata/backward_compatibility"]
 	path = firstdata/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "browsi/backward_compatibility"]
-	path = browsi/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
 [submodule "shopgate/backward_compatibility"]
 	path = shopgate/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -454,3 +451,6 @@
 [submodule "boxdropshipment"]
 	path = boxdropshipment
 	url = https://github.com/PrestaShop/boxdropshipment
+[submodule "browsi"]
+	path = browsi
+	url = https://github.com/PrestaShop/browsi
