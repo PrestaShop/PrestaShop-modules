@@ -361,9 +361,6 @@
 [submodule "cronjobs"]
 	path = cronjobs
 	url = https://github.com/PrestaShop/cronjobs
-[submodule "twenga/backward_compatibility"]
-	path = twenga/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "onboarding"]
 	path = onboarding
 	url = https://github.com/PrestaShop/onboarding.git
@@ -502,3 +499,6 @@
 [submodule "trustpilot"]
 	path = trustpilot
 	url = https://github.com/PrestaShop/trustpilot
+[submodule "twenga"]
+	path = twenga
+	url = https://github.com/PrestaShop/twenga
