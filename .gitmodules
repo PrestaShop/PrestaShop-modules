@@ -505,3 +505,6 @@
 [submodule "yotpo"]
 	path = yotpo
 	url = https://github.com/PrestaShop/yotpo
+[submodule "zingaya"]
+	path = zingaya
+	url = https://github.com/PrestaShop/zingaya
