@@ -13,9 +13,6 @@
 [submodule "dibs/backward_compatibility"]
 	path = dibs/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "fedexcarrier/backward_compatibility"]
-	path = fedexcarrier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "ganalytics/backward_compatibility"]
 	path = ganalytics/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -460,3 +457,6 @@
 [submodule "ecopresto"]
 	path = ecopresto
 	url = https://github.com/PrestaShop/ecopresto
+[submodule "fedexcarrier"]
+	path = fedexcarrier
+	url = https://github.com/PrestaShop/fedexcarrier
