@@ -22,9 +22,6 @@
 [submodule "mailjet/backward_compatibility"]
 	path = mailjet/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "mondialrelay/backward_compatibility"]
-	path = mondialrelay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "ogone/backward_compatibility"]
 	path = ogone/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -481,3 +478,6 @@
 [submodule "merchantware"]
 	path = merchantware
 	url = https://github.com/PrestaShop/merchantware
+[submodule "mondialrelay"]
+	path = mondialrelay
+	url = https://github.com/PrestaShop/mondialrelay
