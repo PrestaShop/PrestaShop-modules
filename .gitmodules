@@ -379,9 +379,6 @@
 [submodule "watermark"]
 	path = watermark
 	url = https://github.com/PrestaShop/watermark.git
-[submodule "giveit/backward_compatibility"]
-	path = giveit/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "seur/backward_compatibility"]
 	path = seur/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -469,3 +466,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics
+[submodule "giveit"]
+	path = giveit
+	url = https://github.com/PrestaShop/giveit
