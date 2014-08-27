@@ -427,9 +427,6 @@
 [submodule "twenga/backward_compatibility"]
 	path = twenga/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "affinityitems/backward_compatibility"]
-	path = affinityitems/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "onboarding"]
 	path = onboarding
 	url = https://github.com/PrestaShop/onboarding.git
@@ -448,3 +445,6 @@
 [submodule "adyen"]
 	path = adyen
 	url = https://github.com/PrestaShop/adyen.git
+[submodule "affinityitems"]
+	path = affinityitems
+	url = https://github.com/PrestaShop/affinityitems
