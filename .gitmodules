@@ -61,9 +61,6 @@
 [submodule "uspscarrier/backward_compatibility"]
 	path = uspscarrier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ebay/backward_compatibility"]
-	path = ebay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -457,3 +454,6 @@
 [submodule "desjardins"]
 	path = desjardins
 	url = https://github.com/PrestaShop/desjardins
+[submodule "ebay"]
+	path = ebay
+	url = https://github.com/PrestaShop/ebay
