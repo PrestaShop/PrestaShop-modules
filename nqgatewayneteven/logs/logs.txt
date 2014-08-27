@@ -1,1 +1,0 @@
-Il faut mettre les droits sur le dossier logs/ afin que PHP puisse écrire des fichiers à l'intérieur

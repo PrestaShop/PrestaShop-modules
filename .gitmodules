@@ -52,9 +52,6 @@
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "nqgatewayneteven/backward_compatibility"]
-	path = nqgatewayneteven/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "shopgate/backward_compatibility"]
 	path = shopgate/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -487,3 +484,6 @@
 [submodule "netreviews"]
 	path = netreviews
 	url = https://github.com/PrestaShop/netreviews
+[submodule "nqgatewayneteven"]
+	path = nqgatewayneteven
+	url = https://github.com/PrestaShop/nqgatewayneteven
