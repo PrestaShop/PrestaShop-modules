@@ -469,3 +469,6 @@
 [submodule "gointerpay"]
 	path = gointerpay
 	url = https://github.com/PrestaShop/gointerpay
+[submodule "kiala"]
+	path = kiala
+	url = https://github.com/PrestaShop/kiala
