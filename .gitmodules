@@ -115,9 +115,6 @@
 [submodule "feedaty/backward_compatibility"]
 	path = feedaty/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "alliance3/backward_compatibility"]
-	path = alliance3/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "bankwire"]
 	path = bankwire
 	url = https://github.com/PrestaShop/bankwire.git
@@ -448,3 +445,6 @@
 [submodule "affinityitems"]
 	path = affinityitems
 	url = https://github.com/PrestaShop/affinityitems
+[submodule "alliance3"]
+	path = alliance3
+	url = https://github.com/PrestaShop/alliance3
