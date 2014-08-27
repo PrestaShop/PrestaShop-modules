@@ -451,3 +451,6 @@
 [submodule "bluepay"]
 	path = bluepay
 	url = https://github.com/PrestaShop/bluepay
+[submodule "boxdropshipment"]
+	path = boxdropshipment
+	url = https://github.com/PrestaShop/boxdropshipment
