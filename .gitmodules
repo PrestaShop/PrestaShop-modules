@@ -499,3 +499,6 @@
 [submodule "syspay"]
 	path = syspay
 	url = https://github.com/PrestaShop/syspay
+[submodule "tntcarrier"]
+	path = tntcarrier
+	url = https://github.com/PrestaShop/tntcarrier
