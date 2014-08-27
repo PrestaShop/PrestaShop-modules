@@ -472,3 +472,6 @@
 [submodule "kiala"]
 	path = kiala
 	url = https://github.com/PrestaShop/kiala
+[submodule "kialasmall"]
+	path = kialasmall
+	url = https://github.com/PrestaShop/kialasmall
