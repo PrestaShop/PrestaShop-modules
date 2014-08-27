@@ -487,3 +487,6 @@
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone
+[submodule "paymentsense"]
+	path = paymentsense
+	url = https://github.com/PrestaShop/paymentsense
