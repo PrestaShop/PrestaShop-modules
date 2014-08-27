@@ -37,9 +37,6 @@
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "uspscarrier/backward_compatibility"]
-	path = uspscarrier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -508,3 +505,6 @@
 [submodule "zingaya"]
 	path = zingaya
 	url = https://github.com/PrestaShop/zingaya
+[submodule "uspscarrier"]
+	path = uspscarrier
+	url = https://github.com/PrestaShop/uspscarrier
