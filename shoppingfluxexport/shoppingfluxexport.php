@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_'))
 class ShoppingFluxExport extends Module
 {
 	private $default_country = null;
+	private $_html = '';
 	
 	public function __construct()
 	{
