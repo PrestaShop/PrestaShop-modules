@@ -496,3 +496,6 @@
 [submodule "shopgate"]
 	path = shopgate
 	url = https://github.com/PrestaShop/shopgate
+[submodule "simplifycommerce"]
+	path = simplifycommerce
+	url = https://github.com/PrestaShop/simplifycommerce
