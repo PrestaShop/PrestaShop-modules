@@ -484,3 +484,6 @@
 [submodule "moneybookers"]
 	path = moneybookers
 	url = https://github.com/PrestaShop/moneybookers.git
+[submodule "netreviews"]
+	path = netreviews
+	url = https://github.com/PrestaShop/netreviews
