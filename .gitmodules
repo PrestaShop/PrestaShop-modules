@@ -460,3 +460,6 @@
 [submodule "feedaty"]
 	path = feedaty
 	url = https://github.com/PrestaShop/feedaty
+[submodule "ferbuy"]
+	path = ferbuy
+	url = https://github.com/PrestaShop/ferbuy
