@@ -478,3 +478,6 @@
 [submodule "kwixo"]
 	path = kwixo
 	url = https://github.com/PrestaShop/kwixo
+[submodule "mailjet"]
+	path = mailjet
+	url = https://github.com/PrestaShop/mailjet
