@@ -13,9 +13,6 @@
 [submodule "dibs/backward_compatibility"]
 	path = dibs/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ganalytics/backward_compatibility"]
-	path = ganalytics/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "hipay/backward_compatibility"]
 	path = hipay/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -469,3 +466,6 @@
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords
+[submodule "ganalytics"]
+	path = ganalytics
+	url = https://github.com/PrestaShop/ganalytics
