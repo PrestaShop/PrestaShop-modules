@@ -97,9 +97,6 @@
 [submodule "paypalusa/backward_compatibility"]
 	path = paypalusa/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "feedaty/backward_compatibility"]
-	path = feedaty/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "bankwire"]
 	path = bankwire
 	url = https://github.com/PrestaShop/bankwire.git
@@ -460,3 +457,6 @@
 [submodule "fedexcarrier"]
 	path = fedexcarrier
 	url = https://github.com/PrestaShop/fedexcarrier
+[submodule "feedaty"]
+	path = feedaty
+	url = https://github.com/PrestaShop/feedaty
