@@ -28,7 +28,7 @@ class SceauControl extends SceauDOMDocument
 {
 
 	private $fianetmodule = 'api_prestashop_sceau';
-	private $fianetmoduleversion = '4.4';
+	private $fianetmoduleversion = '4.5';
 
 	public function __construct()
 	{
@@ -36,7 +36,7 @@ class SceauControl extends SceauDOMDocument
 		$this->root = $this->appendChild(new SceauXMLElement('control'));
 		$this->root->setAttribute('fianetmodule', $this->fianetmodule);
 		$this->root->setAttribute('version', $this->fianetmoduleversion);
-		$this->root->setAttribute('sceaumodule', '2.5');
+		$this->root->setAttribute('sceaumodule', '2.8');
 	}
 
 	/**
@@ -202,17 +202,6 @@ class SceauControl extends SceauDOMDocument
 		if (!is_null($lang))
 			$order_details->createChild('langue', $lang);
 		return $order_details;
-	}
-
-	/**
-	 * creates a SceauOrderProducts object representing element <produits>, adds it to the current element, then returns it
-	 * 
-	 * @return SceauOrderProducts
-	 */
-	public function createOrderProducts()
-	{
-		$product_list = $this->addChild(new SceauOrderProducts());
-		return $product_list;
 	}
 
 	/**
