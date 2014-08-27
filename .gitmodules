@@ -64,9 +64,6 @@
 [submodule "nqgatewayneteven/backward_compatibility"]
 	path = nqgatewayneteven/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "firstdata/backward_compatibility"]
-	path = firstdata/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "shopgate/backward_compatibility"]
 	path = shopgate/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -466,3 +463,6 @@
 [submodule "fianetfraud"]
 	path = fianetfraud
 	url = https://github.com/PrestaShop/fianetfraud
+[submodule "firstdata"]
+	path = firstdata
+	url = https://github.com/PrestaShop/firstdata
