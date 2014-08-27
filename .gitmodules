@@ -493,3 +493,6 @@
 [submodule "prediggo"]
 	path = prediggo
 	url = https://github.com/PrestaShop/prediggo
+[submodule "prestafraud"]
+	path = prestafraud
+	url = https://github.com/PrestaShop/prestafraud
