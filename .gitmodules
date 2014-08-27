@@ -466,3 +466,6 @@
 [submodule "firstdata"]
 	path = firstdata
 	url = https://github.com/PrestaShop/firstdata
+[submodule "gadwords"]
+	path = gadwords
+	url = https://github.com/PrestaShop/gadwords
