@@ -448,3 +448,6 @@
 [submodule "avalaratax"]
 	path = avalaratax
 	url = https://github.com/PrestaShop/avalaratax
+[submodule "bluepay"]
+	path = bluepay
+	url = https://github.com/PrestaShop/bluepay
