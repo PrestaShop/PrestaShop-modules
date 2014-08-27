@@ -454,3 +454,6 @@
 [submodule "browsi"]
 	path = browsi
 	url = https://github.com/PrestaShop/browsi
+[submodule "desjardins"]
+	path = desjardins
+	url = https://github.com/PrestaShop/desjardins
