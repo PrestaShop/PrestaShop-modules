@@ -1,9 +1,6 @@
 [submodule "alliedwallet/backward_compatibility"]
 	path = alliedwallet/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "avalaratax/backward_compatibility"]
-	path = avalaratax/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "buyster/backward_compatibility"]
 	path = buyster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -448,3 +445,6 @@
 [submodule "authorizeaim"]
 	path = authorizeaim
 	url = https://github.com/PrestaShop/authorizeaim
+[submodule "avalaratax"]
+	path = avalaratax
+	url = https://github.com/PrestaShop/avalaratax
