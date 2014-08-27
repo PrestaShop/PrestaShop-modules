@@ -502,3 +502,6 @@
 [submodule "upscarrier"]
 	path = upscarrier
 	url = https://github.com/PrestaShop/upscarrier
+[submodule "yotpo"]
+	path = yotpo
+	url = https://github.com/PrestaShop/yotpo
