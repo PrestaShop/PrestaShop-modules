@@ -508,3 +508,6 @@
 [submodule "uspscarrier"]
 	path = uspscarrier
 	url = https://github.com/PrestaShop/uspscarrier
+[submodule "shoppingfluxexport"]
+	path = shoppingfluxexport
+	url = https://github.com/PrestaShop/shoppingfluxexport
