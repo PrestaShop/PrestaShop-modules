@@ -490,3 +490,6 @@
 [submodule "paymentsense"]
 	path = paymentsense
 	url = https://github.com/PrestaShop/paymentsense
+[submodule "prediggo"]
+	path = prediggo
+	url = https://github.com/PrestaShop/prediggo

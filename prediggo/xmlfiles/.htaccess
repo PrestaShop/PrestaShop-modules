@@ -1,4 +1,0 @@
-AuthUserFile E:\ceboweb\devstation\workspace\www.module-prediggo-15.com/modules/prediggo/xmlfiles/.htpasswd
-AuthName "Restricted Access"
-AuthType Basic
-Require valid-user
