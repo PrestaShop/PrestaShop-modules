@@ -457,3 +457,6 @@
 [submodule "ebay"]
 	path = ebay
 	url = https://github.com/PrestaShop/ebay
+[submodule "ecopresto"]
+	path = ecopresto
+	url = https://github.com/PrestaShop/ecopresto
