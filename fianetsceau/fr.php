@@ -7,7 +7,10 @@ $_MODULE['<{fianetsceau}prestashop>fianetsceau_491619b78136b7ce10a3c603cf964bdd'
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_76c3b678f626c3858c3c98baac90c7ac'] = 'Transformez vos visiteurs en acheteurs en créant la confiance sur votre site.';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_75c0304da615c6377264b067e007bda0'] = 'Pour fonctionner correctement dans PrestaShop v1.4, le module FIA-NET Sceau de Confiance requiert au moins la version v0.3 du module de compatibilité.';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_e991b71085336e1b95dfbde4f87604b6'] = 'Vous pouvez télécharger ce module gratuitement ici: http://addons.prestashop.com/en/modules-prestashop/6222-backwardcompatibility.html';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_226c95ef656d442abd9abbe486c8cf03'] = 'Le siteid doit être un entier';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_55181f8c76a8f08ed8866fb48596efcc'] = 'Vous devez donner un statut correct';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_741181c69e7a9fc7a1a8fc92578a2920'] = 'Vous devez configurer une catégorie par défaut';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_20a3f14ed090ca995affa4d95ce292a4'] = 'Vous devez sélectionner un logo ou un widget correct';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_f800848f95f43888831588c5e0d96454'] = 'Vous devez donner un statut de visibilité correct';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_23e1a60bd34dc060eb73303502f52673'] = 'Vous devez donner une position de logo correcte';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_58a59dc98490966cba7f1cbde89c2cb0'] = 'Vous devez donner un type de widget correct';
@@ -54,5 +57,12 @@ $_MODULE['<{fianetsceau}prestashop>waiting_payment_3e6838f3bd7e17bd880239af52265
 $_MODULE['<{fianetsceau}prestashop>waiting_payment_cf74958a5b709446156546623344d0e7'] = 'La commande n\'a pas été envoyée à FIA-NET.';
 $_MODULE['<{fianetsceau}prestashop>waiting_payment_7db21b85601e1bc4831732a36917a833'] = 'Vous devez confirmer le paiement avant de l\'envoyer.';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_53b1061b0e5094903777fe487b3f5b45'] = 'Voir la Fiche Marchand sur FIA-NET.com';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_cb824c8893d031713048335dae83f9e1'] = 'Avis récoltés par';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_dbd6840a15bc5549a0e5c09cce3a04b3'] = 'Note globale';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_ed2b5c0139cec8ad2873829dc1117d50'] = 'sur';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_6d06e6765bdb5813db636ee068add4ef'] = 'avis';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_df3f079de6961496f0460dcfdbf9bca3'] = 'par';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_71860c77c6745379b0d44304d66b6a13'] = 'page';
+$_MODULE['<{fianetsceau}prestashop>fianetsceau_productcomments_7d0db380a5b95a8ba1da0bca241abda1'] = 'le';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_widget_77c57f6bf23fce6c10eb3ef5934d273c'] = 'Voir les avis et commentaires sur le site FIA-NET.com';
 $_MODULE['<{fianetsceau}prestashop>fianetsceau_widget_963a32b0490cc9bfa563e36d8e766429'] = 'Evaluation FIA-NET';

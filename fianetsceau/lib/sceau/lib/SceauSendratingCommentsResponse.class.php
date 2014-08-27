@@ -24,7 +24,23 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-require_once SCEAU_ROOT_DIR.'/lib/sceau/lib/Sceau.class.php';
-require_once SCEAU_ROOT_DIR.'/lib/sceau/lib/SceauSendratingResponse.class.php';
-require_once SCEAU_ROOT_DIR.'/lib/sceau/lib/SceauSendratingCommentsResponse.class.php';
-require_once SCEAU_ROOT_DIR.'/lib/sceau/lib/SceauSendratingCommentsResponseResult.class.php';
+/**
+ * This class implements the response of the script sendrating.cgi
+ */
+
+class SceauSendratingCommentsResponse extends SceauDOMDocument
+{
+	public function getResults()
+	{
+		$results = array();
+		$result_nodes = $this->getElementsByTagName('avis');
+
+		foreach ($result_nodes as $node)
+			$results[] = new SceauSendratingCommentsResponseResult($node->C14N());
+		return $results;
+	}
+	public function listNbComments()
+	{
+		return $this->root->getAttribute('nbr');
+	}
+}
