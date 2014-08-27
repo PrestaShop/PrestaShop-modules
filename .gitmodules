@@ -52,9 +52,6 @@
 [submodule "textmaster/backward_compatibility"]
 	path = textmaster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "trustpilot/backward_compatibility"]
-	path = trustpilot/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "globkurier/backward_compatibility"]
 	path = globkurier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -502,3 +499,6 @@
 [submodule "trustly"]
 	path = trustly
 	url = https://github.com/PrestaShop/trustly
+[submodule "trustpilot"]
+	path = trustpilot
+	url = https://github.com/PrestaShop/trustpilot
