@@ -49,9 +49,6 @@
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "shopgate/backward_compatibility"]
-	path = shopgate/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "realexredirect/backward_compatibility"]
 	path = realexredirect/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -496,3 +493,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud
+[submodule "shopgate"]
+	path = shopgate
+	url = https://github.com/PrestaShop/shopgate
