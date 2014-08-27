@@ -481,3 +481,6 @@
 [submodule "mondialrelay"]
 	path = mondialrelay
 	url = https://github.com/PrestaShop/mondialrelay
+[submodule "moneybookers"]
+	path = moneybookers
+	url = https://github.com/PrestaShop/moneybookers.git
