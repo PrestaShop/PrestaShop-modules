@@ -82,9 +82,6 @@
 [submodule "browsi/backward_compatibility"]
 	path = browsi/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "adyen/backward_compatibility"]
-	path = adyen/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "shopgate/backward_compatibility"]
 	path = shopgate/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -448,3 +445,6 @@
 [submodule "addshoppers"]
 	path = addshoppers
 	url = https://github.com/PrestaShop/addshoppers.git
+[submodule "adyen"]
+	path = adyen
+	url = https://github.com/PrestaShop/adyen.git
