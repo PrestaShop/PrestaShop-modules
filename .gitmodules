@@ -442,3 +442,6 @@
 [submodule "payplug"]
 	path = payplug
 	url = https://github.com/PrestaShop/payplug.git
+[submodule "sendinblue"]
+	path = sendinblue
+	url = https://github.com/PrestaShop/sendinblue.git
