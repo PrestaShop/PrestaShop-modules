@@ -24,8 +24,25 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include(dirname(__FILE__).'/../../config/config.inc.php');
-include(dirname(__FILE__).'/hipay.php');
+/**
+ * @since 1.5.0
+ */
 
-$hipay = new Hipay();
-$hipay->validation();
+class HipayValidationModuleFrontController extends ModuleFrontController
+{
+	public $display_column_left = false;
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->display_column_left = false;
+	}
+
+	public function initContent()
+	{
+		parent::initContent();
+		$hipay = Module::getInstanceByName('hipay');
+		if (Validate::isLoadedObject($hipay))
+			$hipay->validation();
+	}
+}
