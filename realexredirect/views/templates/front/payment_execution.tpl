@@ -45,7 +45,6 @@
 					
 				</option>
 			{/foreach}
-			</option>
 		</select>
 		{$input_new|escape:'':'UTF-8'}
 	</form>
