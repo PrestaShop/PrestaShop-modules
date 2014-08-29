@@ -8,6 +8,7 @@
 - alonbr 
 - Alon Braitstein 
 - antoniofr 
+- apaqui 
 - arossetti 
 - Axome 
 - baptgauthier 
