@@ -139,6 +139,7 @@ $_MODULE['<{socolissimo}prestashop>personnal_data_188f19afec76e0a3a1336a14ae8b45
 $_MODULE['<{socolissimo}prestashop>personnal_data_043950cb479c3260ade8eeece54b5409'] = '< 250 colis / mois';
 $_MODULE['<{socolissimo}prestashop>personnal_data_5b208a9315eacba80fb231724ea47e83'] = '> 250 colis / mois';
 $_MODULE['<{socolissimo}prestashop>personnal_data_60adc330494a66981dec101c81e27f03'] = 'Siret';
+$_MODULE['<{socolissimo}prestashop>personnal_data_eecb47313f320edf63380079b3ee1bc3'] = 'Le Numéro de siret est obligatoire';
 $_MODULE['<{socolissimo}prestashop>personnal_data_70d9be9b139893aa6c69b5e77e614311'] = 'Confirmer';
 $_MODULE['<{socolissimo}prestashop>personnal_data_a54c596b03b4a6857bbf031c6045f57e'] = 'Demandez moi plus tard';
 $_MODULE['<{socolissimo}prestashop>personnal_data_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';

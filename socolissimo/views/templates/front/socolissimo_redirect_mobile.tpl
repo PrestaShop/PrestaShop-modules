@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,39 +17,25 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com> Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright 2007-2014 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 <script type="text/javascript">
 
 	var soInputs = new Object();
-	var soBwdCompat = "{$SOBWD_C}";
-	var initialCost_label = "{$initialCost_label}"
-	var initialCost = "{$initialCost}";
-	var soCarrierId = "{$id_carrier}";
-	var baseDir = '{$content_dir}';
+	var soBwdCompat = "{$SOBWD_C|escape:'htmlall'}";
+	var initialCost_label = "{$initialCost_label|escape:'htmlall'}"
+	var initialCost = "{$initialCost|escape:'htmlall'}";
+	var soCarrierId = "{$id_carrier|escape:'htmlall'}";
+	var baseDir = '{$content_dir|escape:'htmlall'}';
 	
 	{foreach from=$inputs item=input key=name name=myLoop}
 		soInputs.{$name} = "{$input|strip_tags|addslashes}";
 	{/foreach}
 	{literal}
-	
-	function change_action_form()
-	{
-		if(!soBwdCompat) {
-			if ($('#id_carrier'+soCarrierId).is(':not(:checked)'))
-				$('#form').attr("action", 'order.php');
-			else
-				$('#form').attr("action", baseDir+'modules/socolissimo/redirect_mobile.php' + serialiseInput(soInputs));
-		} else {
-			if ($("input[name*='delivery_option[']:checked").val().replace(",", "") != soCarrierId)
-				$('#form').attr("action", 'order.php');
-			else
-				$('#form').attr("action", baseDir+'modules/socolissimo/redirect_mobile.php' + serialiseInput(soInputs));
-		}
-	}
 	
 	$(document).ready(function() {
 		if (!soBwdCompat)
@@ -60,10 +46,15 @@
 					$(this).next().children().children().find('div.delivery_option_price').html(initialCost_label+'<br/>'+initialCost+' TTC');
 			});
 		}
-		$('input[name=id_carrier]').change(function() {
-			change_action_form();
+		$( "#form" ).submit(function() {
+			if(!soBwdCompat) {
+				if ($('#id_carrier{/literal}{$id_carrier}{literal}').is(':checked'))
+					$('#form').attr("action", baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
+			} else {
+				if ($("input[name*='delivery_option[']:checked").val().replace(",", "") == soCarrierId)
+					$('#form').attr("action", baseDir+'modules/socolissimo/redirect.php' + serialiseInput(soInputs));
+			}
 		});
-		change_action_form();
 	});
 	
 	function serialiseInput(inputs) {

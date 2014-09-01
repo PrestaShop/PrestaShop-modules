@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,9 +17,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com> Quadra Informatique <modules@quadra-informatique.fr>
+*  @copyright 2007-2014 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {literal}
@@ -37,7 +37,7 @@
 {/literal}
 <div id="socolissimo_personal_content" style="display: none;">
 	<div style="text-align: left; margin:0; padding: 0">
-		<img src="{$moduleDir}/logo.png" /> <h2 style="display: inline; vertical-align: middle; margin-left: 6px;">{l s='Preliminary step' mod='socolissimo'}</h2>
+		<img src="{$moduleDir|escape:'htmlall'}/logo.png" /> <h2 style="display: inline; vertical-align: middle; margin-left: 6px;">{l s='Preliminary step' mod='socolissimo'}</h2>
 	</div>
 
 	<hr style="display: block; border-bottom: 1px solid #DDD;">
@@ -64,8 +64,9 @@
 				</select>
 			</dd><br>
 
-			<dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod='socolissimo'} :</label></dt>
-			<dd><input type="text" value="{$siret|escape:'htmlall':'UTF-8'}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" /></dd>
+			<dt style="width: 40%"><label for="personal_siret" style="width: 100%;">{l s='Siret' mod='socolissimo'}* :</label></dt>
+			<dd><input type="text" value="{$siret|escape:'htmlall':'UTF-8'}" name="SOCOLISSIMO_PERSONAL_SIRET" id="personal_city" />
+			&nbsp;&nbsp;{if isset($siret_error) && $siret_error}<em style="font-size: .8em;  color: red;">({l s='Siret is mandatory' mod='socolissimo'})</em>{/if}</dd>
 		</dl>
 
 		<input type="submit" class="button" name="submitPersonalSave" value="{l s='Confirm' mod='socolissimo'}" style="float: right; margin-top: 30px; padding: 10px 20px" />
