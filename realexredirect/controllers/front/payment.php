@@ -125,20 +125,19 @@ class RealexRedirectPaymentModuleFrontController extends ModuleFrontController
 					$inputs_pmt_registered .= "<input type='HIDDEN' name='TYPE_CARD' value='$pmt_ref[type_card_realex]' />";
 					$inputs_pmt_registered .= $inputs_payer;
 					if ($pmt_ref['type_card_realex'] == 'MC')
-						$type_card = 'MasterCard';
+						$type_card = 'MasterCard / Maestro';
 					elseif ($pmt_ref['type_card_realex'] == 'AMEX')
 						$type_card = 'American Express';
 					else
 						$type_card = Tools::ucfirst(Tools::strtolower($pmt_ref['type_card_realex']));
-					$inputs_pmt_registered	.= "<div class='fleft'>$pmt_ref[paymentname_realex] / $type_card<br/>";
+					$inputs_pmt_registered	.= "<div class='digits'>$pmt_ref[paymentname_realex] - $type_card<br/>";
 					if ($realex->cvn)
 						$inputs_pmt_registered	.= $realex->l('Security Code','payment')." : <input type='text' style='width:40px' name='cvn'  />";
 					$secure_link = $link->getModuleLink('realexredirect', "payment?reg=$pmt_ref[refpayment_realex]&token=".$this->context->cart->secure_key, array(), true);
-					$inputs_pmt_registered	.= "<br/><a href='".$secure_link."' class='delete' onclick='return(confirm(\"".$realex->bout_suppr."\"))'>";
-					$inputs_pmt_registered	.= 'x '.$realex->l('Delete').'</a></div>';
+					$inputs_pmt_registered	.= "<div class='delete' style='padding-top:10px'><a href='".$secure_link."' class='delete' onclick='return(confirm(\"".$realex->bout_suppr."\"))'>";
+					$inputs_pmt_registered	.= 'x '.$realex->l('Delete Card').'</a></div></div>';
 					$inputs_pmt_registered	.= "<p class='cart_navigation'>";
-					$inputs_pmt_registered	.= "<input type='submit' name='submit_registered' value='".$realex->bout_valide."' class='exclusive_large' />";
-					$inputs_pmt_registered	.= "</p><div class='clear'><br/></div>";
+					$inputs_pmt_registered	.= "<input type='submit' name='submit_registered' value='".$realex->bout_valide."' class='exclusive_large'/>";
 					$inputs_pmt_registered .= '</form>';
 				}
 			}

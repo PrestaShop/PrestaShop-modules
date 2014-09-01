@@ -29,7 +29,7 @@ class RealexRedirect extends PaymentModule
 	{
 		$this->name = 'realexredirect';
 		$this->tab = 'payments_gateways';
-		$this->version = '1.7.2';
+		$this->version = '1.8.1';
 		$this->author = 'Coccinet';
 		$this->bout_valide = $this->l('Pay Now');
 		$this->bout_suppr = $this->l('Do you want to delete your stored card ?');
@@ -433,7 +433,7 @@ class RealexRedirect extends PaymentModule
 						$this->html .= '<tr><td style="padding:5px;"><strong>'.$this->l('Cards').':</strong></td><td>';
 						$this->html .= '<input type="checkbox" value="VISA" name="type_card[]" /> Visa - ';
 						$this->html .= '<input type="checkbox" value="MC" name="type_card[]"/> MasterCard - ';
-						$this->html .= '<input type="checkbox" value="LASER" name="type_card[]"/> Laser - ';
+						$this->html .= '<input type="checkbox" value="MC" name="type_card[]"/> Maestro - ';
 						$this->html .= '<input type="checkbox" value="SWITCH" name="type_card[]"/> Switch - ';
 						$this->html .= '<input type="checkbox" value="AMEX" name="type_card[]"/> American Express - ';
 						$this->html .= '<input type="checkbox" value="DELTA" name="type_card[]"/> Delta - ';
@@ -709,7 +709,7 @@ class RealexRedirect extends PaymentModule
 						$check = "checked='checked'";
 						$check_visa = (in_array('VISA', $tab_card))?$check:'';
 						$check_mc = (in_array('MC', $tab_card))?$check:'';
-						$check_laser = (in_array('LASER', $tab_card))?$check:'';
+						$check_maestro = (in_array('MAESTRO', $tab_card))?$check:'';
 						$check_switch = (in_array('SWITCH', $tab_card))?$check:'';
 						$check_amex = (in_array('AMEX', $tab_card))?$check:'';
 						$check_delta = (in_array('DELTA', $tab_card))?$check:'';
@@ -717,7 +717,7 @@ class RealexRedirect extends PaymentModule
 						$check_solo = (in_array('SOLO', $tab_card))?$check:'';
 						$edit .= '<input type="checkbox" value="VISA" name="type_card[]" '.$check_visa.'/> Visa - ';
 						$edit .= '<input type="checkbox" value="MC" name="type_card[]" '.$check_mc.'/> MasterCard - ';
-						$edit .= '<input type="checkbox" value="LASER" name="type_card[]" '.$check_laser.'/> Laser - ';
+						$edit .= '<input type="checkbox" value="MAESTRO" name="type_card[]" '.$check_maestro.'/> Maestro - ';
 						$edit .= '<input type="checkbox" value="SWITCH" name="type_card[]" '.$check_switch.'/> Switch - ';
 						$edit .= '<input type="checkbox" value="AMEX" name="type_card[]" '.$check_amex.'/> American Express - ';
 						$edit .= '<input type="checkbox" value="DELTA" name="type_card[]" '.$check_delta.'/> Delta - ';
@@ -1183,6 +1183,7 @@ class RealexRedirect extends PaymentModule
 		$dcc_cardholder_amount		= (string)$xm->dcc_cardholder_amount;
 		$dcc_merchant_currency		= (string)$xm->dcc_merchant_currency;
 		$dcc_merchant_amount		= (string)$xm->dcc_merchant_amount;
+                $rv_pmt_digits = preg_replace("/[0-9]/",'x',$rv_pmt_digits,6) ;
 		// ---------------- CREATION PANIER
 		$id_cart 			= explode('-', $orderid);
 		$cart 				= new Cart($id_cart[0]);
@@ -1293,25 +1294,37 @@ class RealexRedirect extends PaymentModule
 				<body>
 					<center>
 						<table border="0" width="100%" style="margin:auto; border: 1px solid #FFA51F" cellpadding="10" cellspacing="10">
+<<<<<<< HEAD
 							<tr>
 								<td align="center">
 									<img src="'.$shop_domain.'/img/logo.jpg" />
 								</td>
 							</tr>
+=======
+>>>>>>> 87bb4a32e029baf802c30e20dabe59d46f3ead12
 							<tr style="border: 1px solid #FFA51F">
 								<td align="center">
 									<strong>'.$msg.'</strong>
 								</td>
 							</tr>
 							<tr>
-								<td align="center">
-									'.$this->l('Click').' <a href="'.$controller_link.'">'.$this->l('here').'</a> '.htmlentities($this->l('to come back to the merchant site')).'
-								</td>
-							</tr>
-						</table>
-					</center>
-				</body>
-			</html>';
+                        ';
+                        if ($result != '00' || $failed){
+                            echo '<td align="center">
+									'.$this->l('Please click').' <a href="'.$controller_link.'">'.$this->l('here').'</a> '.htmlentities($this->l('to return to the checkout and try again.')).'
+								</td>';
+                        }
+                        else{
+                            echo '<td align="center">
+									'.$this->l('Please click').' <a href="'.$controller_link.'">'.$this->l('here').'</a> '.htmlentities($this->l('to complete your order.')).'
+								</td>';
+                        }
+			echo'					
+                            </tr>
+                            </table>
+                            </center>
+                            </body>
+                            </html>';
 			exit;
 		}
 	}
