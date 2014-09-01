@@ -1294,14 +1294,6 @@ class RealexRedirect extends PaymentModule
 				<body>
 					<center>
 						<table border="0" width="100%" style="margin:auto; border: 1px solid #FFA51F" cellpadding="10" cellspacing="10">
-<<<<<<< HEAD
-							<tr>
-								<td align="center">
-									<img src="'.$shop_domain.'/img/logo.jpg" />
-								</td>
-							</tr>
-=======
->>>>>>> 87bb4a32e029baf802c30e20dabe59d46f3ead12
 							<tr style="border: 1px solid #FFA51F">
 								<td align="center">
 									<strong>'.$msg.'</strong>
