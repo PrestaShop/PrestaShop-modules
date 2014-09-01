@@ -92,29 +92,29 @@ else
 	'modules/payulatam/pages/confirmation.php';
 ?>
 
-<form class="md-form" id="payu_latam_form" name="payu_latam_form" method="post" action="<?php echo $gateway_url; ?>">
-	<input type="hidden" name="merchantId" id="merchantId" value="<?php echo Configuration::get('PAYU_LATAM_MERCHANT_ID'); ?>" />
-	<input type="hidden" name="referenceCode" id="referenceCode" value="<?php echo (int)$payulatam->currentOrder; ?>" />
-	<input type="hidden" name="description" id="description" value="<?php echo trim($description, ','); ?>" />
-	<input type="hidden" name="amount" id="amount" value="<?php echo $cart->getordertotal(true); ?>" />
-	<input type="hidden" name="tax" id="tax" value="<?php echo $cart_details['total_tax']; ?>" />
-	<input type="hidden" name="taxReturnBase" id="taxReturnBase" value="<?php echo $base; ?>" />
-	<input type="hidden" name="signature" id="signature" value="<?php echo $signature; ?>" />
-	<input type="hidden" name="accountId" id="accountId" value="<?php echo Configuration::get('PAYU_LATAM_ACCOUNT_ID'); ?>" />
-	<input type="hidden" name="currency" id="currency" value="<?php echo $currency->iso_code; ?>" />
-	<input type="hidden" name="buyerEmail" id="buyerEmail" value="<?php echo $customer->email; ?>" />
-	<input type="hidden" name="test" id="test" value="<?php echo $test; ?>" />
-	<input type="hidden" name="extra1" id="extra1" value="<?php echo 'Prestashop '._PS_VERSION_; ?>" />
-	<input type="hidden" name="responseUrl" id="responseUrl" value="<?php echo $response_url; ?>" />
-	<input type="hidden" name="confirmationUrl" id="confirmationUrl" value="<?php echo $confirmation_url; ?>" />
-	<input type="hidden" name="payerFullName" id="payerFullName" value="<?php echo $customer->firstname.' '.$customer->lastname; ?>" />
-	<input type="hidden" name="billingAddress" id="billingAddress" value="<?php echo $billing_address->address1; ?>" />
-	<input type="hidden" name="shippingAddress" id="shippingAddress" value="<?php echo $delivery_address->address1; ?>" />
-	<input type="hidden" name="telephone" id="telephone" value="<?php echo $billing_address->phone; ?>" />
-	<input type="hidden" name="billingCity" id="billingCity" value="<?php echo $billing_address->city; ?>" />
-	<input type="hidden" name="shippingCity" id="shippingCity" value="<?php echo $delivery_address->city; ?>" />
-	<input type="hidden" name="billingCountry" id="billingCountry" value="<?php echo $billing_address->country->iso_code; ?>" />
-	<input type="hidden" name="shippingCountry" id="shippingCountry" value="<?php echo $delivery_address->country->iso_code; ?>" />
+<form class="md-form" id="payu_latam_form" name="payu_latam_form" method="post" action="<?php echo Tools::safeOutput($gateway_url); ?>">
+	<input type="hidden" name="merchantId" id="merchantId" value="<?php echo Tools::safeOutput(Configuration::get('PAYU_LATAM_MERCHANT_ID')); ?>" />
+	<input type="hidden" name="referenceCode" id="referenceCode" value="<?php echo Tools::safeOutput((int)$payulatam->currentOrder); ?>" />
+	<input type="hidden" name="description" id="description" value="<?php echo Tools::safeOutput(trim($description, ',')); ?>" />
+	<input type="hidden" name="amount" id="amount" value="<?php echo Tools::safeOutput($cart->getordertotal(true)); ?>" />
+	<input type="hidden" name="tax" id="tax" value="<?php echo Tools::safeOutput($cart_details['total_tax']); ?>" />
+	<input type="hidden" name="taxReturnBase" id="taxReturnBase" value="<?php echo Tools::safeOutput($base); ?>" />
+	<input type="hidden" name="signature" id="signature" value="<?php echo Tools::safeOutput($signature); ?>" />
+	<input type="hidden" name="accountId" id="accountId" value="<?php echo Tools::safeOutput(Configuration::get('PAYU_LATAM_ACCOUNT_ID')); ?>" />
+	<input type="hidden" name="currency" id="currency" value="<?php echo Tools::safeOutput($currency->iso_code); ?>" />
+	<input type="hidden" name="buyerEmail" id="buyerEmail" value="<?php echo Tools::safeOutput($customer->email); ?>" />
+	<input type="hidden" name="test" id="test" value="<?php echo Tools::safeOutput($test); ?>" />
+	<input type="hidden" name="extra1" id="extra1" value="<?php echo Tools::safeOutput('Prestashop '._PS_VERSION_); ?>" />
+	<input type="hidden" name="responseUrl" id="responseUrl" value="<?php echo Tools::safeOutput($response_url); ?>" />
+	<input type="hidden" name="confirmationUrl" id="confirmationUrl" value="<?php echo Tools::safeOutput($confirmation_url); ?>" />
+	<input type="hidden" name="payerFullName" id="payerFullName" value="<?php echo Tools::safeOutput($customer->firstname.' '.$customer->lastname); ?>" />
+	<input type="hidden" name="billingAddress" id="billingAddress" value="<?php echo Tools::safeOutput($billing_address->address1); ?>" />
+	<input type="hidden" name="shippingAddress" id="shippingAddress" value="<?php echo Tools::safeOutput($delivery_address->address1); ?>" />
+	<input type="hidden" name="telephone" id="telephone" value="<?php echo Tools::safeOutput($billing_address->phone); ?>" />
+	<input type="hidden" name="billingCity" id="billingCity" value="<?php echo Tools::safeOutput($billing_address->city); ?>" />
+	<input type="hidden" name="shippingCity" id="shippingCity" value="<?php echo Tools::safeOutput($delivery_address->city); ?>" />
+	<input type="hidden" name="billingCountry" id="billingCountry" value="<?php echo Tools::safeOutput($billing_address->country->iso_code); ?>" />
+	<input type="hidden" name="shippingCountry" id="shippingCountry" value="<?php echo Tools::safeOutput($delivery_address->country->iso_code); ?>" />
 </form>
 
 <script type="text/javascript">
