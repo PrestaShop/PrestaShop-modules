@@ -31,9 +31,6 @@
 [submodule "shipwire/backward_compatibility"]
 	path = shipwire/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "socolissimo/backward_compatibility"]
-	path = socolissimo/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -514,3 +511,6 @@
 [submodule "fianetsceau"]
 	path = fianetsceau
 	url = https://github.com/PrestaShop/fianetsceau
+[submodule "socolissimo"]
+	path = socolissimo
+	url = https://github.com/PrestaShop/socolissimo
