@@ -7,19 +7,19 @@
 }
 
 #module-realexredirect-payment #center_column .bloc_new_card{
-	width:45%;min-width:295px;border:1px solid #FAC132;padding:2%;
+	width:40%;min-width:275px;border:1px solid #FAC132;padding:2%;line-height:25px;
 }
 #module-realexredirect-payment #center_column .bloc_new_card select{
 	margin-top:10px;
 }
 #module-realexredirect-payment #center_column .bloc_new_card .cart_navigation {
-	padding-left:60%; 
+	padding-left:65%; 
 }
 #module-realexredirect-payment #center_column .bloc_registered_card{
-	width:40%;float:right;border:1px solid #FAC132;padding:2%
+	width:40%;min-width:275px;border:1px solid #FAC132;padding:2%;line-height:25px;
 }
 #module-realexredirect-payment #center_column .bloc_registered_card .error{
-	padding:5px; font-size:12px;margin:0px
+	padding:5px; font-size:12px;margin:0px;
 }
 #module-realexredirect-payment #center_column .bloc_registered_card form{
 	border-bottom:1px solid #FAC132;
@@ -27,9 +27,15 @@
 #module-realexredirect-payment #center_column .bloc_registered_card form:last-child{
 	border-bottom:none;
 }
+#module-realexredirect-payment #center_column .bloc_registered_card .cart_navigation {
+	padding-left:65%; 
+}
 
 #module-realexredirect-payment #center_column .bloc_registered_card a.delete{
 	color:red
+}
+p.realexresponse{
+	font-size:16px;padding-bottom:25px;padding-top:25px;
 }
 
 p.payment_module.realexredirect {
@@ -51,7 +57,7 @@ p.payment_module.realexredirect {
 	color:#ffffff;
 	font-family:Lucida, Verdana, Arial;
         font-weight: bold ; 
-	font-size:18px ;
+	font-size:16px ;
 	text-shadow:1px 1px 0px #53585a;
         padding: 33px 25px 34px 99px ;
         background-image:url('../.../../img/creditcardo.png');
@@ -77,4 +83,8 @@ p.payment_module.realexredirect:hover {
 p.payment_module.realexredirect:active {
 	position:relative;
 	top:1px;
+}
+
+#module-realexredirect-payment #center_column .bloc_registered_card .digits{
+	padding-top:10px;
 }
