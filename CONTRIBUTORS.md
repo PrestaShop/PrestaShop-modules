@@ -17,6 +17,7 @@
 - BrandonTaylor 
 - Bruno Leveque 
 - bunsenstraat 
+- cartman 
 - Ceboweb 
 - cedricfontaine 
 - CINS 
@@ -93,6 +94,7 @@
 - prestachris 
 - PrestaEdit 
 - PrestanceDesign 
+- Quadra Informatique 
 - quadrateam 
 - Quadra Team 
 - Quetzacoalt91 
