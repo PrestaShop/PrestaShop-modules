@@ -379,9 +379,6 @@
 [submodule "avalaratax"]
 	path = avalaratax
 	url = https://github.com/PrestaShop/avalaratax
-[submodule "bluepay"]
-	path = bluepay
-	url = https://github.com/PrestaShop/bluepay
 [submodule "boxdropshipment"]
 	path = boxdropshipment
 	url = https://github.com/PrestaShop/boxdropshipment
@@ -430,9 +427,6 @@
 [submodule "kialasmall"]
 	path = kialasmall
 	url = https://github.com/PrestaShop/kialasmall
-[submodule "klarnaprestashop"]
-	path = klarnaprestashop
-	url = https://github.com/PrestaShop/klarnaprestashop
 [submodule "kwixo"]
 	path = kwixo
 	url = https://github.com/PrestaShop/kwixo
@@ -457,9 +451,6 @@
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone
-[submodule "paymentsense"]
-	path = paymentsense
-	url = https://github.com/PrestaShop/paymentsense
 [submodule "prediggo"]
 	path = prediggo
 	url = https://github.com/PrestaShop/prediggo
