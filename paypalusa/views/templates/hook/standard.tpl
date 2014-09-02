@@ -45,7 +45,11 @@
 				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.price|floatval}" />
 				<input type="hidden" name="quantity_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.quantity|intval}" />
 			{/foreach}
-			{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(true, Cart::ONLY_SHIPPING)}
+			{if $show_taxes}
+				{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(false, Cart::ONLY_SHIPPING)}
+			{else}
+				{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(true, Cart::ONLY_SHIPPING)}
+			{/if}			
 			{if $paypal_usa_total_shipping}
 				<input type="hidden" name="item_name_{$smarty.foreach.paypal_usa_products.index+2|escape:'htmlall':'UTF-8'}" value="{l s='Shipping' mod='paypalusa'}" />
 				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+2|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_total_shipping|floatval}" />
