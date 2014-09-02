@@ -364,9 +364,6 @@
 [submodule "sendinblue"]
 	path = sendinblue
 	url = https://github.com/PrestaShop/sendinblue.git
-[submodule "addshoppers"]
-	path = addshoppers
-	url = https://github.com/PrestaShop/addshoppers.git
 [submodule "adyen"]
 	path = adyen
 	url = https://github.com/PrestaShop/adyen.git
