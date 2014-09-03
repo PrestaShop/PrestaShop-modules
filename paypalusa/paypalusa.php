@@ -379,7 +379,7 @@ class PayPalUSA extends PaymentModule
 				'paypal_usa_return_url' => /*26/12/2013 fix for Backward compatibilies on confirmation page*/
 					version_compare(_PS_VERSION_, '1.5', '<') ?
 					(Configuration::get('PS_SSL_ENABLED') ? Tools::getShopDomainSsl(true) : Tools::getShopDomain(true)).
-					__PS_BASE_URI__.'order-confirmation.php?id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&key='.$this->context->customer->secure_key : 
+					'/index.php?controller=order-confirmation&id_cart='.(int)$this->context->cart->id.'&id_module='.(int)$this->id.'&key='.$this->context->customer->secure_key : 
 					$this->context->link->getPageLink('order-confirmation.php', null, null, array('id_cart' => (int)$this->context->cart->id, 'key' => $this->context->customer->secure_key, 'id_module' => $this->id)),
 
 				));
