@@ -499,3 +499,6 @@
 [submodule "socolissimo"]
 	path = socolissimo
 	url = https://github.com/PrestaShop/socolissimo
+[submodule "pigmbhpaymill"]
+	path = pigmbhpaymill
+	url = https://github.com/PrestaShop/pigmbhpaymill
