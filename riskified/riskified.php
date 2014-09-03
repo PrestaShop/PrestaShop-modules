@@ -5,13 +5,14 @@
  *  @author    riskified.com <support@riskified.com>
  *  @copyright 2013-Now riskified.com
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of Riskified 
+ *  International Registered Trademark & Property of Riskified
  */
 
 if (!defined('_PS_VERSION_'))
 	exit;
 
 require_once _PS_MODULE_DIR_.'riskified/lib/includes/includes.inc.php';
+require_once _PS_MODULE_DIR_.'riskified/lib/RiskifiedLogger.php';
 
 class Riskified extends Module
 {
@@ -24,7 +25,7 @@ class Riskified extends Module
 	{
 		$this->name = 'riskified';
 		$this->tab = 'payment_security';
-		$this->version = '0.3.0';
+		$this->version = '0.3.1';
 		$this->author = 'Riskified.com';
 		$this->secure_key = Tools::encrypt($this->name);
 		parent::__construct();
@@ -309,7 +310,7 @@ class Riskified extends Module
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_getinfo($ch);
 				curl_exec($ch);
-				
+
 				if (Configuration::get('RISKIFIED_MODE') == '1')
 					Configuration::updateValue('RISKIFIED_CONFIGURATION_OK', true);
 			}
