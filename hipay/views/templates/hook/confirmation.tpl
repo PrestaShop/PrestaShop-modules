@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop 
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -23,16 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p class="payment_module">
-	{if $cart->getOrderTotal() < 2}
-		<a href="">
-			<img src="{$this_path}payment_button/{$logo_suffix}.png" alt="{l s='Pay with Hipay' mod='hipay'}" />
-			{l s='Minimum amount required in order to pay with Hipay:' mod='hipay'} {convertPrice price=2}
-		</a>
-	{else}
-	<a href="{$this_path_ssl}redirect.php" title="{l s='Pay with Hipay' mod='hipay'}">
-		<img src="{$this_path}payment_button/{$logo_suffix}.png" alt="{l s='Pay with Hipay' mod='hipay'}" />
-		{l s='Pay with Hipay' mod='hipay'} {if !$hipay_prod}{l s='(sandbox / test mode)' mod='hipay'}{/if}
-	</a>
-	{/if}
+<p>
+	{l s='Your order on' mod='hipay'} <span class="bold">{$shop_name|escape:'htmlall':'UTF-8'}</span> {l s='is complete.' mod='hipay'}
+	<br /><br />
+	{l s='You have chosen the HiPay method.' mod='hipay'}
+	<br /><br /><span class="bold">{l s='Your order will be sent very soon.' mod='hipay'}</span>
+	<br /><br />{l s='For any questions or for further information, please contact our' mod='hipay'} <a href="{$link->getPageLink('contact', true)}" target="_blank">{l s='customer support' mod='hipay'}</a>.
 </p>
