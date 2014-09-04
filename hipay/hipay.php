@@ -93,7 +93,7 @@ class Hipay extends PaymentModule
 		if (!Configuration::get('HIPAY_RATING'))
 			Configuration::updateValue('HIPAY_RATING', 'ALL');
 		
-		if (!(parent::install() AND $this->registerHook('payment') AND $this->registerHook('paymentReturn') AND $this->_createAuthorizationOrderState()))
+		if (!(parent::install() && $this->registerHook('payment') && $this->registerHook('paymentReturn') && $this->_createAuthorizationOrderState()))
 			return false;
 		
 		$result = Db::getInstance()->ExecuteS('
@@ -119,7 +119,10 @@ class Hipay extends PaymentModule
 			$os = new OrderState();
 			$os->name = array();
 			foreach (Language::getLanguages(false) as $language)
-				$os->name[(int)$language['id_lang']] = 'Authorization accepted by HiPay';
+				if (Tools::strtolower($language['iso_code']) == 'fr')
+					$os->name[(int)$language['id_lang']] = 'Autorisation acceptée par HiPay';
+				else
+					$os->name[(int)$language['id_lang']] = 'Authorization accepted by HiPay';
 			$os->color = '#4169E1';
 			$os->hidden = false;
 			$os->send_email = false;
@@ -410,7 +413,7 @@ class Hipay extends PaymentModule
 					}
 				}
 			}
-			elseif (trim($operation) == 'refund' AND trim(strtolower($status)) == 'ok')
+			elseif (trim($operation) == 'refund' && trim(strtolower($status)) == 'ok')
 			{
 				/* Paiement remboursé sur Hipay */
 				if (!($id_order = Order::getOrderByCartId((int)($id_cart))))
@@ -502,7 +505,7 @@ class Hipay extends PaymentModule
 				Configuration::updateValue('HIPAY_CATEGORY_'.$currency['iso_code'], Tools::getValue('HIPAY_CATEGORY_'.$currency['iso_code']));
 				Configuration::updateValue('HIPAY_ACCOUNT_'.$currency['iso_code'], Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code']));
 
-				if ($this->env AND Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code']))
+				if ($this->env && Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code']))
 					$accounts[Tools::getValue('HIPAY_ACCOUNT_'.$currency['iso_code'])] = 1;
 			}
 			
@@ -524,7 +527,7 @@ class Hipay extends PaymentModule
 		$allow_url_fopen = ini_get('allow_url_fopen');
 		$openssl = extension_loaded('openssl');
 		$curl = extension_loaded('curl');
-		$ping = ($allow_url_fopen AND $openssl AND $fd = fsockopen('payment.hipay.com', 443) AND fclose($fd));
+		$ping = ($allow_url_fopen && $openssl && $fd = fsockopen('payment.hipay.com', 443) && fclose($fd));
 		$online = (in_array(Tools::getRemoteAddr(), array('127.0.0.1', '::1')) ? false : true);
 		$categories = true;
 		$categoryRetrieval = true;
@@ -547,7 +550,7 @@ class Hipay extends PaymentModule
 				'.($allow_url_fopen ? '' : '<h3>'.$this->l('You are not allowed to open external URLs').'</h3>').'
 				'.($curl ? '' : '<h3>'.$this->l('cURL is not enabled').'</h3>').'
 				'.($openssl ? '' : '<h3>'.$this->l('OpenSSL is not enabled').'</h3>').'
-				'.(($allow_url_fopen AND $openssl AND !$ping) ? '<h3>'.$this->l('Cannot access payment gateway').' '.HIPAY_GATEWAY_URL.' ('.$this->l('check your firewall').')</h3>' : '').'
+				'.(($allow_url_fopen && $openssl && !$ping) ? '<h3>'.$this->l('Cannot access payment gateway').' '.HIPAY_GATEWAY_URL.' ('.$this->l('check your firewall').')</h3>' : '').'
 				'.($online ? '' : '<h3>'.$this->l('Your shop is not online').'</h3>').'
 				'.($categories ? '' : '<h3>'.$this->l('Hipay categories are not defined for each Site ID').'</h3>').'
 				'.($categoryRetrieval ? '' : '<h3>'.$this->l('Impossible to retrieve Hipay categories. Please refer to your error log for more details.').'</h3>').'

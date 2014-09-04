@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if version_compare($smarty.const._PS_VERSION_, '1.6.0.0', '>=')}<div class="row"><div class="col-xs-12 col-md-6">{/if}
+{if version_compare($smarty.const._PS_VERSION_, '1.6.0.0', '>=')}<div class="row"><div class="col-xs-12 {if !$hide_left_column && !$hide_right_column}col-md-6{else if !$hide_left_column || !$hide_right_column}col-md-8{else}col-md-12{/if}">{/if}
 <p class="payment_module hipay_payment_module">
 	{if $cart->getOrderTotal() < 2}
 		<a href="">
@@ -45,7 +45,7 @@
 <div class="error">
 	<ol>
 	{foreach from=$errors key=k item=error}
-		<li>{$error}</li>
+		<li>{$error|escape:'htmlall':'UTF-8'}</li>
 	{/foreach}
 	</ol>
 </div>
