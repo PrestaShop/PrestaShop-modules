@@ -93,6 +93,7 @@
 - philong 
 - prestachris 
 - PrestaEdit 
+- prestamodule 
 - PrestanceDesign 
 - Quadra Informatique 
 - quadrateam 
