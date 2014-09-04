@@ -29,6 +29,7 @@ exit();
 
 if (!class_exists('Customer'))
 	include_once(_PS_CLASS_DIR_.'/../classes/Customer.php');
+
 include(dirname(__FILE__).'/config.php');
 
 class Sendinblue extends Module {
@@ -54,7 +55,7 @@ class Sendinblue extends Module {
 		else
 		$this->tab = 'advertising_marketing';
 		$this->author = 'SendinBlue';
-		$this->version = '2.0';
+		$this->version = '2.1';
 		$pathconfig = new Pathfindsendinblue();
 		$this->path = $pathconfig->pathdisp();
 		parent::__construct();
@@ -224,6 +225,7 @@ class Sendinblue extends Module {
 		else
 		{
 			// Load customer data for logged in user so that we can register his/her with sendinblue
+			if (!empty($this->context->cookie->email))
 			$customer_data = $this->getCustomersByEmail($this->context->cookie->email);
 
 			// Check if client have records in customer table
@@ -296,8 +298,8 @@ class Sendinblue extends Module {
 
 				}
 		}
+		if (!empty($this->context->language->id))
 		$this->context->cookie->sms_message_land_id = $this->context->language->id;
-		Configuration::updateValue('Sendin_Sms_Message_Land_Id', $this->context->language->id);
 	}
 
 	/**
@@ -340,7 +342,6 @@ class Sendinblue extends Module {
 			return false;
 
 			Configuration::updateValue('Sendin_Newsletter_table', 1);
-			Configuration::updateValue('Sendin_Notify_Cron_Executed', 0);
 
 			if (Db::getInstance()->Execute('
 				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'sendin_newsletter`(
@@ -1053,7 +1054,6 @@ class Sendinblue extends Module {
 		{
 			Configuration::updateValue('Sendin_Sender_Shipment', $sender_shipment);
 			Configuration::updateValue('Sendin_Sender_Shipment_Message', $sender_shipment_message);
-			Configuration::updateValue('Sendin_Sms_Message_Land_Id', $this->context->language->id);
 			return $this->redirectPage($this->l('Setting updated'), 'SUCCESS');
 		}
 	}
@@ -1244,7 +1244,10 @@ class Sendinblue extends Module {
 			$arr['exclude_list'] = '';
 			$arr['schedule'] = date('Y-m-d H:i:s', time() + 300);
 
-			$this->curlRequest($arr);
+			$result = $this->curlRequest($arr);
+			$data = Tools::jsondecode($result);
+			if (!empty($data->errorMsg))
+			return $this->redirectPage($this->l($data->errorMsg), 'ERROR');
 		}
 		return $this->redirectPage($this->l('Message has been sent successfully'), 'SUCCESS');
 	}
@@ -1362,9 +1365,6 @@ class Sendinblue extends Module {
 	public function getContent()
 	{
 		$this->_html .= $this->addCss();
-
-		//We set the default status of SendinBlue SMTP and tracking code to 0
-		$this->checkSmtpStatus();
 
 		// send test mail to check if SMTP is working or not.
 		if (Tools::isSubmit('sendTestMail'))
@@ -1551,12 +1551,15 @@ class Sendinblue extends Module {
 						Configuration::updateValue('Sendin_First_Request', 1);
 						Configuration::updateValue('Sendin_Subscribe_Setting', 1);
 						Configuration::updateValue('Sendin_dropdown', 0);
+						Configuration::updateValue('Sendin_Notify_Cron_Executed', 0);
 
 						//We remove the default newsletter block since we
 						//have to add the Sendin newsletter block.
 						$this->removeBlocknewsletterBlock();
 					}
 
+					//We set the default status of SendinBlue SMTP and tracking code to 0
+					$this->checkSmtpStatus();
 					Configuration::updateValue('SENDINBLUE_CONFIGURATION_OK', true);
 					$this->redirectPage($this->l('Successfully updated'), 'SUCCESS');
 				}
@@ -2215,7 +2218,7 @@ class Sendinblue extends Module {
 			<label> '.$this->l('Manage follow up email for user subscription').'
 			</label>
 			</td>
-			<td class="'.$this->cl_version.' managesubscribeBlock"><div class="listData" style="text-align:left;"><select name="template" class="ui-state-default" style="width: 225px; height:22px; border-radius:4px;"><option value="">'.$this->l('Select Template').'</option>
+			<td class="'.$this->cl_version.' managesubscribeBlock"><div class="listData" style="text-align:left;"><select name="template" class="ui-state-default" style="width: 225px; height:22px; border-radius:4px; margin-right:5px;"><option value="">'.$this->l('Select Template').'</option>
 			';
 			$options = '';
 			$camp = $this->templateDisplay();
@@ -2223,11 +2226,14 @@ class Sendinblue extends Module {
 			{
 				foreach ($camp->result->campaign_records as $template_data)
 				{
-					$options .= '<option value="'.$template_data->id.'"';
-					if ($template_data->id == Configuration::get('Sendin_Template_Id'))
-					$options .= 'selected="selected"';
+					if ($template_data->templ_status === 'Active')
+					{
+						$options .= '<option value="'.$template_data->id.'"';
+						if ($template_data->id == Configuration::get('Sendin_Template_Id'))
+						$options .= 'selected="selected"';
 
-					$options .= '>'.$template_data->campaign_name.'</option>';
+						$options .= '>'.$template_data->campaign_name.'</option>';
+					}
 				}
 			}
 			$this->_second_block_code .= $options.'</select><span class="toolTip"
@@ -2396,7 +2402,7 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		<legend><img src="'.$this->path.$this->name.'/logo.gif" alt="" />'.$this->l('Prerequisites').'</legend>';
 		$this->_html .= '<label">-
 		'.$this->l('You should have a SendinBlue account. You can create a free account here : ').
-		'<a href="'.$this->l('https://www.sendinblue.com').'" class="link_action"  target="_blank">&nbsp;'.$this->l('https://www.sendinblue.com').'</a></label><br />';
+		'<a href="'.$this->l('https://www.sendinblue.com').'" class="link_action" style="color:#268CCD;"  target="_blank">&nbsp;'.$this->l('https://www.sendinblue.com').'</a></label><br />';
 
 		if (!extension_loaded('curl') || !ini_get('allow_url_fopen'))
 			$this->_html .= '<label">-
@@ -2634,17 +2640,17 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		$this->unregisterHook('createAccount');
 		$this->unregisterHook('createAccountForm');
 		$this->unregisterHook('OrderConfirmation');
-		Configuration::updateValue('Sendin_Api_Sms_Order_Status', 0);
-		Configuration::updateValue('Sendin_Api_Sms_shipment_Status', 0);
-		Configuration::updateValue('Sendin_Api_Sms_Campaign_Status', 0);
-		Configuration::updateValue('Sendin_Sender_Shipment_Message', '');
-		Configuration::updateValue('Sendin_Sender_Shipment', '');
-		Configuration::updateValue('Sendin_Sender_Order', '');
-		Configuration::updateValue('Sendin_Sender_Order_Message', '');
-		Configuration::updateValue('Sendin_Notify_Value', '');
-		Configuration::updateValue('Sendin_Notify_Email', '');
-		Configuration::updateValue('Sendin_Api_Sms_Credit', 0);
-		Configuration::updateValue('Sendin_Notify_Cron_Executed', 0);
+		Configuration::deleteByName('Sendin_Api_Sms_Order_Status');
+		Configuration::deleteByName('Sendin_Api_Sms_shipment_Status');
+		Configuration::deleteByName('Sendin_Api_Sms_Campaign_Status');
+		Configuration::deleteByName('Sendin_Sender_Shipment_Message');
+		Configuration::deleteByName('Sendin_Sender_Shipment');
+		Configuration::deleteByName('Sendin_Sender_Order');
+		Configuration::deleteByName('Sendin_Sender_Order_Message');
+		Configuration::deleteByName('Sendin_Notify_Value');
+		Configuration::deleteByName('Sendin_Notify_Email');
+		Configuration::deleteByName('Sendin_Api_Sms_Credit');
+		Configuration::deleteByName('Sendin_Notify_Cron_Executed');
 
 		if (Configuration::get('Sendin_Api_Smtp_Status'))
 			$this->resetConfigSendinSmtp();
@@ -2659,6 +2665,8 @@ $this->l('contact@sendinblue.com').'</a><br />'.$this->l('Phone : 0899 25 30 61'
 		Configuration::deleteByName('Sendin_Api_Key');
 		Configuration::deleteByName('Sendin_Api_Smtp_Status');
 		Configuration::deleteByName('Sendin_Selected_List_Data');
+		Configuration::deleteByName('Sendin_Template_Id');
+		Configuration::deleteByName('SENDINBLUE_CONFIGURATION_OK');
 
 		if (Configuration::get('Sendin_Newsletter_table'))
 		{

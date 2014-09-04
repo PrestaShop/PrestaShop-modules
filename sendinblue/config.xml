@@ -2,7 +2,7 @@
         <module>
             <name>sendinblue</name>
             <displayName><![CDATA[SendinBlue]]></displayName>
-            <version><![CDATA[2.0]]></version>
+            <version><![CDATA[2.1]]></version>
             <description><![CDATA[Synchronize your PrestaShop contacts with SendinBlue platform &amp; easily send your marketing and transactional emails and SMS]]></description>
             <author><![CDATA[SendinBlue]]></author>
             <tab><![CDATA[emailing]]></tab>
