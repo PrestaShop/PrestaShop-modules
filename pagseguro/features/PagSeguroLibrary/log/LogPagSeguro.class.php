@@ -70,8 +70,10 @@ class LogPagSeguro
             return false;
         }
         $defaultPath = PagSeguroLibrary::getPath();
-        $defaultName = 'PagSeguro.log';
+        $defaultName = 'PagSeguro'.mt_rand().'.log';
         self::$fileLocation = $defaultPath . DIRECTORY_SEPARATOR . $defaultName;
+
+        Configuration::updateValue('PAGSEGURO_LOG_FILELOCATION', "/modules/pagseguro/features/PagSeguroLibrary/".$defaultName);
 
         try {
             $f = fopen(self::$fileLocation, "a");

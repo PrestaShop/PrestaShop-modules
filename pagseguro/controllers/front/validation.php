@@ -54,17 +54,17 @@ class PagSeguroValidationModuleFrontController extends ModuleFrontController
 	        try {	
 	            	Tools::redirectLink($validate->request($this->checkout));
 		    } catch (Exception $e) {
-				$this->displayErroPage();
+				$this->displayErrorPage();
 		    }
         } catch (PagSeguroServiceException $exc) {
-            canceledOrderForErro();
-            displayErroPage();
+            $this->canceledOrderForError();
+            $this->displayErrorPage();
         } catch (Exception $e) {
-            displayErroPage();
+            $this->displayErrorPage();
         }
     }
 
-    private function displayErroPage()
+    private function displayErrorPage()
     {
 
     	$this->context->smarty->assign('version', $this->_whichVersion());
@@ -74,7 +74,7 @@ class PagSeguroValidationModuleFrontController extends ModuleFrontController
         $showView->run();
     }
 
-    private function canceledOrderForErro()
+    private function canceledOrderForError()
     {
         $history = new OrderHistory();
         $history->id_order = (int) ($this->pagSeguro->currentOrder);

@@ -152,21 +152,19 @@ class PagSeguroAbandoned
     public function validateOrderAbandoned($params)
     {
         
-        $isValidated = true;
-        
         if (strpos($params['reference'], Configuration::get('PAGSEGURO_ID')) !== false) {
 
             $initiated = Util::getStatusCMS(0);
             $order_state = OrderHistory::getLastOrderState(((int)EncryptionIdPagSeguro::decrypt($params['reference'])));
             if (strcmp($order_state->name, $initiated) != 0) {
-                $isValidated = false;
+                return false;
             }
 
         } else {
-            $isValidated = false;
+            return false;
         }
         
-        return $isValidated;
+        return true;
     }
 
     private function setObjCredential()
