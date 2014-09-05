@@ -157,8 +157,8 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			{
 				$customer = new Customer();
 				$customer->email = $result['EMAIL'];
-				$customer->firstname = $result['FIRSTNAME'];
-				$customer->lastname = $result['LASTNAME'];
+                $customer->firstname = Tools::substr(preg_replace('/[^a-z]/ui', ' ', $result['FIRSTNAME']), 0, 32);
+                $customer->lastname = Tools::substr(preg_replace('/[^a-z]/ui', ' ', $result['LASTNAME']), 0, 32);
 				$customer->passwd = Tools::encrypt(Tools::passwdGen());
 				$customer->add();
 			}
@@ -178,8 +178,10 @@ class PayPalusaExpressCheckoutModuleFrontController extends ModuleFrontControlle
 			$address->id_country = (int)Country::getByIso($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
 			$address->id_state = (int)State::getIdByIso($result['PAYMENTREQUEST_0_SHIPTOSTATE'], (int)$address->id_country);
 			$address->alias = 'PayPal';
-			$address->lastname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '));
-			$address->firstname = Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname));
+            if (isset($result['BUSINESS']) && !empty($result['BUSINESS']))
+					$address->company = Tools::substr(preg_replace('/[^a-z]/ui', ' ', $result['BUSINESS']), 0, 64);
+            $address->lastname = Tools::substr(preg_replace('/[^a-z]/ui', ' ', Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '))), 0, 32);
+            $address->firstname = Tools::substr(preg_replace('/[^a-z]/ui', ' ', Tools::substr($result['PAYMENTREQUEST_0_SHIPTONAME'], strpos($result['PAYMENTREQUEST_0_SHIPTONAME'], ' '), Tools::strlen($result['PAYMENTREQUEST_0_SHIPTONAME']) - Tools::strlen($address->lastname))), 0, 32);
 			$address->address1 = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
 			if ($result['PAYMENTREQUEST_0_SHIPTOSTREET2'] != '')
 				$address->address2 = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
