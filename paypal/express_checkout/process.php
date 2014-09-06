@@ -266,13 +266,16 @@ class PaypalExpressCheckout extends Paypal
 		$fields['PAYMENTREQUEST_0_SHIPTOSTREET2'] = $address->address2;
 		$fields['PAYMENTREQUEST_0_SHIPTOCITY'] = $address->city;
 
+		$country	= new Country((int)$address->id_country);
 		if ($address->id_state)
 		{
 			$state	= new State((int)$address->id_state);
-			$fields['PAYMENTREQUEST_0_SHIPTOSTATE'] = $state->iso_code;
+                        if($state->iso_code !== $country->iso_code)
+                            $fields['PAYMENTREQUEST_0_SHIPTOSTATE'] = $state->iso_code;
+                        else
+                            $fields['PAYMENTREQUEST_0_SHIPTOSTATE'] = $state->iso_code."!".$state->id;
 		}
-
-		$country	= new Country((int)$address->id_country);
+		
 		$fields['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = $country->iso_code;
 		$fields['PAYMENTREQUEST_0_SHIPTOZIP'] = $address->postcode;
 	}
