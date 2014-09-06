@@ -190,8 +190,8 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 			$ppec->redirectToCheckout($customer, ($ppec->type != 'payment_cart'));
 
 		$addresses = $customer->getAddresses($ppec->context->language->id);
-		foreach ($addresses as $address)
-			if ($address['alias'] == 'Paypal_Address')
+		foreach ($addresses as $address_boucle)
+			if ($$address_boucle['alias'] == 'Paypal_Address')
 			{//If address has already been created
 				$address = new Address($address['id_address']);
 				break;
