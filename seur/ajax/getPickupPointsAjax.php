@@ -74,8 +74,8 @@ if (Tools::getValue('id_address_delivery'))
 				<NOM_POBLACION></NOM_POBLACION>
 				<COD_SERVICIO></COD_SERVICIO>
 				<COD_PRODUCTO></COD_PRODUCTO>
-				<USUARIO>'.SEUR_WS_USERNAME.'</USUARIO>
-				<PASSWORD>'.SEUR_WS_PASSWORD.'</PASSWORD>
+				<USUARIO>'.Configuration::get('SEUR_WS_USERNAME').'</USUARIO>
+				<PASSWORD>'.Configuration::get('SEUR_WS_PASSWORD').'</PASSWORD>
 			</CAMPOS>';
 
 		$data = array('in0' => Tools::strtoupper($xml));
@@ -133,6 +133,7 @@ if (Tools::getValue('savepos') && Tools::getValue('id_seur_pos'))
 		FROM `'._DB_PREFIX_.'seur_order_pos` 
 		WHERE `id_cart` = "'.(int)$id_cart.'"
 	');
+	
 	if ($result !== false)
 	{
 		echo '{"result":"'.Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
@@ -151,7 +152,7 @@ if (Tools::getValue('savepos') && Tools::getValue('id_seur_pos'))
 	else
 	{
 		echo '{"result":"'.Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('
-			INSERT INTO `"'._DB_PREFIX_.'seur_order_pos`
+			INSERT INTO `'._DB_PREFIX_.'seur_order_pos`
 				(`id_cart`, `id_seur_pos`, `company`, `address`, `city`, `postal_code`, `timetable`, `phone`) 
 			VALUES
 				(

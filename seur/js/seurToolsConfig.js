@@ -169,6 +169,7 @@ $(document).ready(function(){
 		inputsRequireds = $('.required input', $(this));
 		selectsRequireds = $('.required select', $(this));
 		$(".form_error").remove();
+
 		$.each(inputsRequireds, function(index, input){
 			if($(input).val() == ''){
 				tmpTxt = "Fill in the field.";
@@ -177,32 +178,6 @@ $(document).ready(function(){
 				$('sup[name="'+input.name+'"]').after("<span class='form_error'>"+tmpTxt+"</span>");
 				$(input).focus();
 				send = false;
-			}
-			else{
-				if($(input).hasClass('onlyNumbers') && !pattern_numbers.test($(input).val())){
-					tmpTxt = "Please enter only numbers.";
-					var tmpObj = $('#seurJsTranslations input[name="onlyNumbers"]').first();
-					if((tmpObj != undefined) && (tmpObj != null) && (tmpObj.length > 0)){ tmpTxt = tmpObj.val() }
-					$('sup[name="'+input.name+'"]').after("<span class='form_error'>"+tmpTxt+"</span>");
-					$(input).focus();
-					send = false;
-				}
-				if($(input).hasClass('onlyEmail') && !pattern_email.test($(input).val())){
-					tmpTxt = "Malformed e-mail.";
-					var tmpObj = $('#seurJsTranslations input[name="onlyEmail"]').first();
-					if((tmpObj != undefined) && (tmpObj != null) && (tmpObj.length > 0)){ tmpTxt = tmpObj.val() }
-					$('sup[name="'+input.name+'"]').after("<span class='form_error'>"+tmpTxt+"</span>");
-					$(input).focus();
-					send = false;
-				}
-				if($(input).hasClass('onlyText') && !pattern_text.test($(input).val())){
-					tmpTxt = "Enter only letters.";
-					var tmpObj = $('#seurJsTranslations input[name="onlyText"]').first();
-					if((tmpObj != undefined) && (tmpObj != null) && (tmpObj.length > 0)){ tmpTxt = tmpObj.val() }
-					$('sup[name="'+input.name+'"]').after("<span class='form_error'>"+tmpTxt+"</span>");
-					$(input).focus();
-					send = false;
-				}
 			}
 		});
 		$.each(selectsRequireds, function(index, input){
@@ -219,128 +194,15 @@ $(document).ready(function(){
 			tmpTxt = "Accept the privacy policy.";
 			var tmpObj = $('#seurJsTranslations input[name="acceptPrivacyPolicy"]').first();
 			if((tmpObj != undefined) && (tmpObj != null) && (tmpObj.length > 0)){ tmpTxt = tmpObj.val() }
-			$('sup[name="lopd"]').after("<span class='form_error'>"+tmpTxt+"</span>");
+			$('sup[name="sup_lopd"]').after("<span class='form_error'>"+tmpTxt+"</span>");
+			$('sup[name="sup"]').after("<span class='form_error'>"+tmpTxt+"</span>");
 			$("#lopd").focus();
 			send = false;
 		}
 		return send;
 	});
 
-	/*
-	* check state, country and franchise by the post code
-	*/
-	$('input[name="post_code"]', new_customer_div).change(function(){
-		if( $(this).val() != '' ){
-                $.ajax({
-                        url: module_dir + '/ajax/getTownsAjax.php',
-                        type: 'GET',
-                        dataType: 'json',
-                        contentType: "application/json; charset=utf-8", 
-                        data: { 
-                                post_code : encodeURIComponent($('input[name="post_code"]').val()),
-                                token : encodeURIComponent($('input[name="token"]').val()),
-                                id_employee : encodeURIComponent($('input[name="id_employee"]').val())
-                        },
-                        error: function(xhr, ajaxOptions, thrownError)
-                        {
-                                console.log("Status: "+xhr.status);
-                                console.log("Options: "+ajaxOptions);
-                                console.log("Error: "+thrownError);
-                        },
-                        success: function(data)
-                        {
-                                $('#outputData').html(data);
-                                $('input[name="state"]', new_customer_div).val(data.state);
-                                $('select[name="country"]', new_customer_div).val(data.iso);
-                                $('input[name="franchise"]', new_customer_div).val(data.franchise);
 
-                                options = "";
-
-                                $.each(data.towns, function(key, name)
-                                {
-                                       options = name;
-                                });
-                                $('input[name="town"]', new_customer_div).val(options);
-                        }
-                });
-        }
-    });
-    
-    $('input[name="post_code_cfg"]', module_configuration_div).change(function() 
-    {
-            if( $(this).val() != '' )
-            {
-                    $.ajax({
-                            url: module_dir + '/ajax/getTownsAjax.php',
-                            type: 'GET',
-                            dataType: 'json',
-                            contentType: "application/json; charset=utf-8", 
-                            data: 
-                            { 
-                                    post_code : encodeURIComponent($('input[name="post_code_cfg"]').val()),
-                                    token : encodeURIComponent($('input[name="token_cfg"]').val()),
-                                    id_employee : encodeURIComponent($('input[name="id_employee_cfg"]').val())
-                            },
-                            success: function(data)
-                            {
-                                    $('#outputData').html(data);
-                                    $('input[name="state_cfg"]', module_configuration_div).val(data.state);
-                                    $('select[name="country_cfg"]', module_configuration_div).val(data.iso);
-                                    $('input[name="franchise_cfg"]', module_configuration_div).val(data.franchise);
-                                    $.each(data.towns, function(key, name)
-                                    {
-                                            options = name;
-                                    });
-                                    $('input[name="town_cfg"]', module_configuration_div).val(options);
-                            }
-                    });
-            }
-    });
-    
-    /*
-     * check user and password to webservices
-     */
-
-    $('input[name="submitUsuario"]', merchant_form).click(function(e)
-    {
-            $('#labelLoader').fadeIn('fast');
-            
-            $.ajax({
-                    url: module_dir + '/ajax/checkUserAjax.php',
-                    type: 'post',
-                    dataType: 'html',
-                    data: 
-                    { 
-                            user : encodeURIComponent($('input[name="user_cfg"]').val()),
-                            pass : encodeURIComponent($('input[name="pass_cfg"]').val()),
-                            token : encodeURIComponent($('input[name="token_cfg"]').val()),
-                            id_employee : encodeURIComponent($('input[name="id_employee_cfg"]').val())
-                    },
-                    success: function(data)
-                    {
-                            $('#labelLoader').fadeOut('fast');
-                            if (data == 'OK')
-                            {
-                                    $('#outputUser')
-                                        .css({ color : 'green' })
-                                        .html('Correcto')
-                                        .fadeIn('slow')
-                                        .delay(5000)
-                                        .fadeOut('fast');
-                            }
-                            if (data == 'KO')
-                            {
-                                    $('#outputUser')
-                                        .css({ color : 'red' })
-                                        .html('Incorrecto')
-                                        .fadeIn('slow')
-                                        .delay(5000)
-                                        .fadeOut('slow');
-                            }
-                    }
-            });
-    });
-    
     yes_button.click(function()
     { 
             install_ranges_div.fadeIn(); 

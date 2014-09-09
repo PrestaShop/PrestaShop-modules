@@ -52,8 +52,8 @@ class Seur extends CarrierModule
 	public function __construct()
 	{
 		$this->name = 'seur';
-		$this->version = '0.6.4';
-		$this->author = 'www.invertus.eu';
+		$this->version = '1.0';
+		$this->author = 'www.lineagrafica.es';
 		$this->need_instance = 0;
 		$this->tab = 'shipping_logistics';
 
@@ -254,6 +254,8 @@ class Seur extends CarrierModule
 		$success &= Configuration::deleteByName('SEUR_PRINTER_NAME');
 		$success &= Configuration::deleteByName('SEUR_FREE_PRICE');
 		$success &= Configuration::deleteByName('SEUR_FREE_WEIGTH');
+		$success &= Configuration::deleteByName('SEUR_WS_USERNAME');
+		$success &= Configuration::deleteByName('SEUR_WS_PASSWORD');
 
 		return $success;
 	}
@@ -298,7 +300,10 @@ class Seur extends CarrierModule
 		Configuration::updateValue('SEUR_PRINTER_NAME', 'Generic / Text Only');
 		Configuration::updateValue('SEUR_REMCAR_CARGO', 5.5);
 		Configuration::updateValue('SEUR_REMCAR_CARGO_MIN', 0);
+		Configuration::updateValue('SEUR_WS_USERNAME', 'SEUR.COM USER');
+		Configuration::updateValue('SEUR_WS_PASSWORD', 'SEUR.COM PASS');
 
+		
 		if (Context::getContext()->shop->isFeatureActive() == true)
 		{
 			$fields = '(`id_seur_configuration`, `international_orders`, `seur_cod`, `pos`, `notification_advice_radio`, `notification_distribution_radio`, `print_type`, `tarifa`, `pickup`, `advice_checkbox`, `distribution_checkbox`, `id_shop`)';
@@ -587,9 +592,7 @@ class Seur extends CarrierModule
 				$output .= $this->displayConfirmation($this->l('Configuration updated.'));
 		}
 		elseif (Tools::isSubmit('submitLogin'))
-		{
-			$response = User::newUser();
-
+		{		
 			$sqlUpdateDataTable = 'UPDATE `'._DB_PREFIX_.'seur_merchant`
 				SET
 					`nif_dni` ="'.pSQL(Tools::strtoupper(Tools::getValue('nif_dni'))).'",
@@ -609,20 +612,27 @@ class Seur extends CarrierModule
 					`country` ="'.(Tools::getValue('country') ? pSQL(Tools::strtoupper(Tools::getValue('country'))) : pSQL(Tools::strtoupper(Tools::getValue('country_cfg')))).'",
 					`phone` ="'.(int)Tools::getValue('phone').'",
 					`ccc` ="'.(int)Tools::getValue('ccc_cfg').'",
+					`cit` ="'.(int)Tools::getValue('ci').'",
 					'.(Tools::getValue('fax') ? '`fax` ='.(int)Tools::getValue('fax').',' : ' ').'
-					`email` ="'.pSQL(Tools::strtolower(Tools::getValue('email'))).'"
-				WHERE `id_seur_datos` = 1;';
+					`email` ="'.pSQL(Tools::strtolower(Tools::getValue('email'))).'"';
+				
+				if(Tools::getValue('user_cfg') && Tools::getValue('pass_cfg'))
+					$sqlUpdateDataTable .= ', `USER`="'.pSQL(Tools::strtolower(Tools::getValue('user_cfg'))).'", `PASS`="'.pSQL(Tools::strtolower(Tools::getValue('pass_cfg'))).'" ';
+				
+				$sqlUpdateDataTable .= "WHERE `id_seur_datos` = 1;";
+				
+				if(Tools::getValue('user_seurcom') && Tools::getValue('pass_seurcom'))
+				{	
+					Configuration::updateValue('SEUR_WS_USERNAME', Tools::getValue('user_seurcom'));
+					Configuration::updateValue('SEUR_WS_PASSWORD', Tools::getValue('pass_seurcom'));
+				}
+				
 
 			if (!Db::getInstance()->Execute($sqlUpdateDataTable))
 				$output .= $this->displayError($this->l('Database fail.'));
 			else
 			{
-				if ($response == 1)
-					$output .= $this->displayConfirmation($this->l('Configuration updated.'));
-				elseif ($response == -1)
-					$output .= $this->displayError($this->l('There are errors registering your user, please contact with SEUR.'));
-				else
-					$output .= $this->displayError(utf8_decode($response));
+				$output .= $this->displayConfirmation($this->l('Configuration updated.'));
 			}
 			$this->stateConfigured = 1;
 		}
@@ -672,7 +682,6 @@ class Seur extends CarrierModule
 					'carriers' => Carrier::getCarriers((int)$id_lang, false, false, false, null, ALL_CARRIERS),
 					'configuration_table' => SeurLib::getConfiguration(),
 					'currency' => $this->context->currency,
-					'merchant_data' => SeurLib::getMerchantData(),
 					'price_configured' => SeurLib::isPricesConfigured(),
 					'seur_active_carriers' => SeurLib::getSeurCarriers(true),
 					'seur_free_price' => Configuration::get('SEUR_FREE_PRICE'),
@@ -691,6 +700,14 @@ class Seur extends CarrierModule
 			);
 		}
 		
+		$this->context->smarty->assign(
+			array(
+				'merchant_data' => SeurLib::getMerchantData(),
+				'user_seurcom' => Configuration::get('SEUR_WS_USERNAME'),
+				'pass_seurcom' => Configuration::get('SEUR_WS_PASSWORD'),
+			)
+		);
+			
 		$id_email_language = User::getIdEmailLanguage();
 		
 		if (!Configuration::get('SEUR_Configured') && !$id_email_language)
@@ -1448,18 +1465,18 @@ class Seur extends CarrierModule
 			if ($order->save())
 				Db::getInstance()->Execute('
 					INSERT INTO `'._DB_PREFIX_.'seur_order`
-					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "'.(int)$pickup_point_address->id.'");'
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0", "'.(int)$pickup_point_address->id.'");'
 				);
 			else
 				Db::getInstance()->Execute('
 					INSERT INTO `'._DB_PREFIX_.'seur_order`
-					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+					VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0", "");'
 				);
 		}
 		else
 			Db::getInstance()->Execute('
 				INSERT INTO `'._DB_PREFIX_.'seur_order`
-				VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0");'
+				VALUES ("'.(int)$order->id.'", "1", "'.(float)$order_weigth.'", null, "0", "0", "");'
 			);
 	}
 }

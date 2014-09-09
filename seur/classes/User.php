@@ -63,8 +63,8 @@ class User
 				<p_fax>'.pSQL(Tools::getValue('fax')).'</p_fax>
 				<p_email>'.pSQL(Tools::getValue('email')).'</p_email>
 				<p_tipo_ecommerce>4</p_tipo_ecommerce>
-				<usuario>'.SEUR_WS_USERNAME.'</usuario>
-				<password>'.SEUR_WS_PASSWORD.'</password>
+				<usuario>'.Configuration::get('SEUR_WS_USERNAME').'</usuario>
+				<password>'.Configuration::get('SEUR_WS_PASSWORD').'</password>
 			</peticion>';
 
 			$data = array('in0' => Tools::strtoupper($plano));
