@@ -57,12 +57,12 @@ class Expedition
 				'in8' => '',
 				'in9' => '',
 				'in10' => '',
-				'in11' => '',
-				'in12' => SEUR_WS_USERNAME,
-				'in13' => SEUR_WS_PASSWORD,
+				'in11' => '0',
+				'in12' => Configuration::get('SEUR_WS_USERNAME'),
+				'in13' => Configuration::get('SEUR_WS_PASSWORD'),
 				'in14' => 'N'
 			);
-
+			
 			$response = $soap_client->consultaListadoExpedicionesStr($data);
 
 			if (empty($response->out))

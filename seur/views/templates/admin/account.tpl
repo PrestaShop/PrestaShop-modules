@@ -48,19 +48,19 @@
 				<dd class="required">
 					<input type="text" name="nif_dni" />
 					<sup name="nif_dni">*</sup>
-					<span class="field-help">{l s='Enter the NIF / CIF Company.' mod='seur'}
+					<span class="field-help">{l s='Enter the NIF / CIF Company. (Eg. 11111111-A)' mod='seur'}
 				</dd>
 
 				<dt><label>{l s='Name' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="name" class="onlyText" />
+					<input type="text" name="name" />
 					<sup name="name">*</sup>
 					<span class="field-help">{l s='Name of the contact person.' mod='seur'}
 				</dd>
 
 				<dt><label>{l s='Firstname' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="first_name" class="onlyText" />
+					<input type="text" name="first_name" />
 					<sup name="first_name">*</sup>
 					<span class="field-help">{l s='Firstname of the contact person.' mod='seur'}
 				</dd>
@@ -105,7 +105,7 @@
 				<dd><input type="text" name="door" /></dd>
 				
 				<dt><label>{l s='Postal Code' mod='seur'}</label></dt>
-				<dd class="required"><input type="text" name="post_code_cfg" class="onlyNumbers" />
+				<dd class="required"><input type="text" name="post_code_cfg" />
 					<sup name="post_code_cfg">*</sup>
 					<span class="field-help">{l s='Postal code of the company.' mod='seur'}</span>
 					<input type="hidden" name="token" value="{$token|escape:'htmlall':'UTF-8'}"/>
@@ -114,17 +114,15 @@
 
 				<dt><label>{l s='City' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="town_cfg" class="onlyText" value=""  />
+					<input type="text" name="town_cfg" value=""  />
 					<sup name="town_cfg">*</sup>
-					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 
 				
 				<dt><label>{l s='State' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="state_cfg" value="" class="onlyText"/>
+					<input type="text" name="state_cfg" value="" />
 					<sup name="state_cfg">*</sup>
-					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 
 				
@@ -137,38 +135,67 @@
 						{/foreach}
 					</select>
 					<sup name="country">*</sup>
-					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 
 				
 				<dt><label>{l s='Franchise' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="franchise_cfg" value="" class="onlyNumbers"/>
+					<input type="text" name="franchise_cfg" value=""/>
 					<sup name="franchise_cfg">*</sup>
-					<span class="field-help">{l s='The automatically entered to fill the zip code.' mod='seur'}
 				</dd>
 				
 				<dt><label>{l s='Phone' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="phone" class="onlyNumbers" />
+					<input type="text" name="phone" />
 					<sup name="phone">*</sup>
 				</dd>
 				
 				<dt><label>{l s='Fax' mod='seur'}</label></dt>
-				<dd><input type="text" name="fax" class="onlyNumbers" /></dd>
+				<dd><input type="text" name="fax" /></dd>
 				
 				<dt><label>{l s='Email' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="email" class="onlyEmail" />
+					<input type="text" name="email" />
 					<sup name="email">*</sup>
 				</dd>
 				
 				<dt><label>{l s='CCC' mod='seur'}</label></dt>
 				<dd class="required">
-					<input type="text" name="ccc_cfg" class="onlyNumbers"/>
+					<input type="text" name="ccc_cfg" />
 					<sup name="ccc_cfg">*</sup>
 					<span class="field-help">{l s='The CCC will be provided by SEUR. It is a numeric code from 1 to 7 digits.' mod='seur'}
 				</dd>
+				
+				<dt><label>{l s='CIT' mod='seur'}</label></dt>
+				<dd class="required">
+					<input type="text" name="ci" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}" />
+					<sup name="ci">*</sup>
+				</dd>
+				
+				<dt><label>{l s='User' mod='seur'}</label></dt>
+				<dd class="required">
+					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}" /><sup name="user_cfg">*</sup>
+					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
+					<input type="hidden" name="id_employee_cfg" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
+				</dd>
+				
+				<dt><label>{l s='Password' mod='seur'}</label></dt>
+				<dd class="required">
+					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}" /><sup name="pass_cfg">*</sup>
+				</dd>
+				
+				<dt><label>{l s='User of www.seur.com' mod='seur'}</label></dt>
+				<dd class="required">
+					<input type="text" name="user_seurcom" value="{$user_seurcom|escape:'htmlall':'UTF-8'}" /><sup name="user_seurcom">*</sup>
+					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
+				</dd>
+				
+			
+				<dt><label>{l s='Password of www.seur.com' mod='seur'}</label></dt>
+				<dd class="required">
+					<input type="password" name="pass_seurcom" value="{$pass_seurcom|escape:'htmlall':'UTF-8'}" /><sup name="pass_seurcom">*</sup>
+				</dd>
+				
 				
 				<dt class="submit required">
 					<h3>{l s='Privacy policy' mod='seur'}</h3>
@@ -183,7 +210,7 @@
 					
 					<p class="checkbox">
 						<input type="checkbox" name="lopd" id="lopd" />
-						{l s='Accept the terms' mod='seur'} <sup>*</sup>
+						{l s='Accept the terms' mod='seur'} <sup name="sup_lopd">*</sup>
 					</p>
 					
 					<input type="submit" name="submitLogin" class="button" value="{l s='Send' mod='seur'}" />

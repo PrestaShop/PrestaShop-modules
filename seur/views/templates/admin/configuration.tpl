@@ -37,9 +37,6 @@
 		<li class="button btnTab" tab="merchant" id="tab_merchant">
 			<img src="{$img_path|escape:'htmlall':'UTF-8'}merchant.png" alt="{l s='Merchant' mod='seur'}" title="{l s='Merchant' mod='seur'}" /> {l s='Merchant' mod='seur'}
 		</li>
-		<li class="button btnTab" tab="webservices" id="tab_webservices">
-			<img src="{$img_path|escape:'htmlall':'UTF-8'}url.png" alt="{l s='Url' mod='seur'}" title="{l s='Url' mod='seur'}" /> {l s='URL\'s' mod='seur'}
-		</li>
 	</ul>
 
 	<!--configuration-->
@@ -344,13 +341,13 @@
 				</li>
 				<li class="required">
 					<label>{l s='Name' mod='seur'}</label>
-					<input type="text" name="name" class="onlyText" value="{$merchant_data.name|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="name" value="{$merchant_data.name|escape:'htmlall':'UTF-8'}"/>
 					<sup name="name">*</sup>
 					 <span class="lihelp">{l s='Name of the contact person.' mod='seur'}</span>
 				</li>
 				<li class="required">
 					<label>{l s='Firstname' mod='seur'}</label>
-					<input type="text" name="first_name" class="onlyText" value="{$merchant_data.first_name|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="first_name" value="{$merchant_data.first_name|escape:'htmlall':'UTF-8'}"/>
 					<sup name="first_name">*</sup>
 					<span class="lihelp">{l s='Firstname of the contact person.' mod='seur'}</span>
 				</li>
@@ -402,22 +399,20 @@
 				</li>
 				<li class="required">
 					<label>{l s='Post Code' mod='seur'}</label>
-					<input type="text" name="post_code_cfg" class="onlyNumbers" value="{$merchant_data.post_code|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="post_code_cfg" value="{$merchant_data.post_code|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="token" value="{$token|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="id_employee" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
 					<sup name="post_code_cfg">*</sup>
 				</li>
 				<li class="required">
 						<label>{l s='City' mod='seur'}</label>
-						<input type="text" name="town_cfg" class="onlyText" value="{$merchant_data.town|escape:'htmlall':'UTF-8'}"/>
+						<input type="text" name="town_cfg" value="{$merchant_data.town|escape:'htmlall':'UTF-8'}"/>
 						<sup name="town_cfg">*</sup>
-						<span class="lihelp">{l s='The automatically entered to fill the zip code.' mod='seur'}</span>
 				</li>
 				<li class="required">
 					<label>{l s='State' mod='seur'}</label>
 					<input type="text" name="state_cfg" value="{$merchant_data.state|escape:'htmlall':'UTF-8'}" />
 					<sup name="state_cfg">*</sup>
-					<span class="lihelp">{l s='The automatically entered to fill the zip code.' mod='seur'}</span>
 				</li>
 				<li class="required">
 					<label>{l s='Country' mod='seur'}</label>
@@ -432,33 +427,31 @@
 						{/foreach}
 					</select>
 					<sup name="country_cfg">*</sup>
-					<span class="lihelp">{l s='The automatically entered to fill the zip code.' mod='seur'}</span>
 				</li>
 				<li class="separator">
 				</li>
 				<li class="required">
 					<label>{l s='Phone' mod='seur'}</label>
-					<input type="text" name="phone" class="onlyNumbers" value="{$merchant_data.phone|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="phone" value="{$merchant_data.phone|escape:'htmlall':'UTF-8'}"/>
 					<sup name="phone">*</sup>
 				</li>
 				<li>
 					<label>{l s='Fax' mod='seur'}</label>
-					<input type="text" name="fax" class="onlyNumbers" value="{$merchant_data.fax|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="fax" value="{$merchant_data.fax|escape:'htmlall':'UTF-8'}"/>
 				</li>
 				<li class="required">
 					<label>{l s='Email' mod='seur'}</label>
-					<input type="text" name="email" class="onlyEmail" value="{$merchant_data.email|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" name="email" value="{$merchant_data.email|escape:'htmlall':'UTF-8'}"/>
 					<sup name="email">*</sup>
 				</li>
 				<li class="required">
 					<label>{l s='CIT' mod='seur'}</label>
-					<input type="text" name="ci" class="onlyNumbers" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}" disabled="disabled" />
+					<input type="text" name="ci" value="{$merchant_data.cit|escape:'htmlall':'UTF-8'}" />
 					<sup name="ci">*</sup>
-					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
 				<li class="required">
 					<label>{l s='CCC' mod='seur'}</label>
-					<input type="text" maxlength="5" name="ccc_cfg" class="onlyNumbers" value="{$merchant_data.ccc|escape:'htmlall':'UTF-8'}"/>
+					<input type="text" maxlength="5" name="ccc_cfg" value="{$merchant_data.ccc|escape:'htmlall':'UTF-8'}"/>
 					<sup name="ccc_cfg">*</sup>
 					<span class="lihelp">{l s='The CCC will be provided by SEUR. It is a numeric code from 1 to 5 digits.' mod='seur'}</span>
 				</li>
@@ -466,27 +459,33 @@
 					<label>{l s='Franchise' mod='seur'}</label>
 					<input type="text" name="franchise_cfg" value="{$merchant_data.franchise|escape:'htmlall':'UTF-8'}" />
 					<sup name="franchise_cfg">*</sup>
-					<span class="lihelp">{l s='The automatically entered to fill the zip code.' mod='seur'}</span>
 				</li>
 				<li class="separator">
 				</li>
-				<li>
+				<li class="left required">
 					<label>{l s='User' mod='seur'}</label>
-					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}" disabled="disabled" />
+					<input type="text" name="user_cfg" value="{$merchant_data.user|escape:'htmlall':'UTF-8'}" /><sup name="user_cfg">*</sup>
 					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
 					<input type="hidden" name="id_employee_cfg" value="{$employee->id|escape:'htmlall':'UTF-8'}"/>
-					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
 				</li>
-				<li>
+				
+				<li  class="left required">
+					<label>{l s='User of www.seur.com' mod='seur'}</label>
+					<input type="text" name="user_seurcom" value="{$user_seurcom|escape:'htmlall':'UTF-8'}" /><sup name="user_seurcom">*</sup>
+					<input type="hidden" name="token_cfg" value="{$token|escape:'htmlall':'UTF-8'}"/>
+				</li>
+				<li class="li_clear"></li>
+				<li class="left required">
 					<label>{l s='Password' mod='seur'}</label>
-					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}" disabled="disabled" />
-					<span class="lihelp">{l s='Appears automatically when connected to the system SEUR.' mod='seur'}</span>
+					<input type="password" name="pass_cfg" value="{$merchant_data.pass|escape:'htmlall':'UTF-8'}" /><sup name="pass_cfg">*</sup>
 				</li>
-				<li>
-					<input type="button" name="submitUsuario" class="buttoncomprobar" value="{l s='Check' mod='seur'}" /><span id="outputUser"></span>
-					<img id="labelLoader" src="{$img_path|escape:'htmlall':'UTF-8'}ajax-loader-circle.gif" style="display:none;" />
+				
+				
+				<li  class="left required">
+					<label>{l s='Password of www.seur.com' mod='seur'}</label>
+					<input type="password" name="pass_seurcom" value="{$pass_seurcom|escape:'htmlall':'UTF-8'}" /><sup name="pass_seurcom">*</sup>
 				</li>
-
+				
 				<li class="separator"></li>
 
 				<li class="submit">
@@ -511,50 +510,7 @@
 	</li>
 
 	<!--merchant end-->
-	<!--webservices-->
 
-	<li id="webservices">
-		<span><strong>{l s='SOAP Web Service URLs' mod='seur'}</strong></span>
-		<br/><br/>
-		<div class="warn alertaconfiguracion">
-		   {l s='Caution: If you change this setting the module may stop working. Only changed if SEUR tell you.' mod='seur'}
-		</div>
-		<br /><br/>
-		<form action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post" name="webservices_form">
-			<ul>
-				<li>
-					<label>{l s='Public Services: ' mod='seur'}</label>
-					<input id="public_services" type="text" name="public_services" value="{$seur_urlws_sp|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li>
-					<label>{l s='Pickup' mod='seur'}</label>
-					<input id="pickups" type="text" name="pickups" value="{$seur_urlws_r|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li>
-					<label>{l s='Shipments' mod='seur'}</label>
-					<input id="deliveries" type="text" name="deliveries" value="{$seur_urlws_e|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li>
-					<label>{l s='Deliveries' mod='seur'}</label>
-					<input id="deliveries_notes" type="text" name="deliveries_notes" value="{$seur_urlws_a|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li>
-					<label>{l s='Labels' mod='seur'}</label>
-					<input id="etiquetas" type="text" name="etiquetas" value="{$seur_urlws_et|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li>
-					<label>{l s='Packing List' mod='seur'}</label>
-					<input id="packing_list" type="text" name="packing_list" value="{$seur_urlws_m|escape:'htmlall':'UTF-8'}" class="txt_large" />
-				</li>
-				<li class="submit">
-					<input type="submit" name="submitWebservices" value="{l s='Save' mod='seur'}" class="buttonsubmitConfiguracion" />
-					<input type="submit" name="submitToDefault" value="{l s='Reset' mod='seur'}" class="buttonsubmitRestaurar" />
-				</li>
-				<li class="separator"></li>
-			</ul>
-		</form>
-	</li>
-	<!--webservices end-->
 </ul>
 <!--configuration_tabs end-->
 </div>

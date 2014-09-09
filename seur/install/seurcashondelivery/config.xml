@@ -4,7 +4,7 @@
             <displayName><![CDATA[SEUR Cash on delivery]]></displayName>
             <version><![CDATA[1.0]]></version>
             <description><![CDATA[This module runs under SEUR module.]]></description>
-            <author><![CDATA[www.4webs.es]]></author>
+            <author><![CDATA[www.lineagrafica.es]]></author>
             <tab><![CDATA[payments_gateways]]></tab>
             <is_configurable>1</is_configurable>
             <need_instance>1</need_instance>

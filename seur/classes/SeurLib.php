@@ -28,12 +28,6 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-if (!defined('SEUR_WS_USERNAME'))
-	define('SEUR_WS_USERNAME', 'wsprestashop');
-
-if (!defined('SEUR_WS_PASSWORD'))
-	define('SEUR_WS_PASSWORD', 'prestashopws');
-
 if (!defined('SEUR_MODULE_NAME'))
 	define('SEUR_MODULE_NAME', 'seur');
 
