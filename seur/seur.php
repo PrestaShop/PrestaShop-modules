@@ -617,7 +617,7 @@ class Seur extends CarrierModule
 					`email` ="'.pSQL(Tools::strtolower(Tools::getValue('email'))).'"';
 				
 				if(Tools::getValue('user_cfg') && Tools::getValue('pass_cfg'))
-					$sqlUpdateDataTable .= ', `USER`="'.Tools::strtolower(Tools::getValue('user_cfg')).'", `PASS`="'.Tools::strtolower(Tools::getValue('pass_cfg')).'" ';
+					$sqlUpdateDataTable .= ', `USER`="'.pSQL(Tools::strtolower(Tools::getValue('user_cfg'))).'", `PASS`="'.pSQL(Tools::strtolower(Tools::getValue('pass_cfg'))).'" ';
 				
 				$sqlUpdateDataTable .= "WHERE `id_seur_datos` = 1;";
 				
