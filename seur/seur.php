@@ -682,7 +682,6 @@ class Seur extends CarrierModule
 					'carriers' => Carrier::getCarriers((int)$id_lang, false, false, false, null, ALL_CARRIERS),
 					'configuration_table' => SeurLib::getConfiguration(),
 					'currency' => $this->context->currency,
-					'merchant_data' => SeurLib::getMerchantData(),
 					'price_configured' => SeurLib::isPricesConfigured(),
 					'seur_active_carriers' => SeurLib::getSeurCarriers(true),
 					'seur_free_price' => Configuration::get('SEUR_FREE_PRICE'),
@@ -697,12 +696,18 @@ class Seur extends CarrierModule
 					'seur_urlws_r' => Configuration::get('SEUR_URLWS_R'),
 					'seur_urlws_sp' => Configuration::get('SEUR_URLWS_SP'),
 					'seur_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
-					'user_seurcom' => Configuration::get('SEUR_WS_USERNAME'),
-					'pass_seurcom' => Configuration::get('SEUR_WS_PASSWORD'),
 				)
 			);
 		}
 		
+		$this->context->smarty->assign(
+			array(
+				'merchant_data' => SeurLib::getMerchantData(),
+				'user_seurcom' => Configuration::get('SEUR_WS_USERNAME'),
+				'pass_seurcom' => Configuration::get('SEUR_WS_PASSWORD'),
+			)
+		);
+			
 		$id_email_language = User::getIdEmailLanguage();
 		
 		if (!Configuration::get('SEUR_Configured') && !$id_email_language)
