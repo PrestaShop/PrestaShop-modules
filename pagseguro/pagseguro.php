@@ -487,39 +487,36 @@ class PagSeguro extends PaymentModule
 
     private function errorMessage($field)
     {
-        return sprintf($this->l("O campo <strong>%s</strong> deve ser informado."), $field);
+        return sprintf($this->l("O campo %s deve ser informado."), $field);
     }
 
     private function missedCurrencyMessage()
     {
         return sprintf(
             $this->l(
-                'Verifique se a moeda <strong>REAL</strong> esta instalada e ativada.
-                Para importar a moeda vá em Localização e importe "Brazil" no Pacote de Localização, 
-                após isso, vá em localização, moedas, e habilite o <strong>REAL</strong>.<br>
-                O PagSeguro aceita apenas BRL (Real) como moeda de pagamento.'
+                'Verifique se a moeda REAL esta instalada e ativada.'
             )
         );
     }
 
     private function invalidMailMessage($field)
     {
-        return sprintf($this->l('O campo <strong>%s</strong> deve ser conter um email válido.'), $field);
+        return sprintf($this->l('O campo %s deve ser conter um email válido.'), $field);
     }
 
     private function invalidFieldSizeMessage($field)
     {
-        return sprintf($this->l('O campo <strong>%s</strong> está com um tamanho inválido'), $field);
+        return sprintf($this->l('O campo %s está com um tamanho inválido'), $field);
     }
 
     private function invalidValue($field)
     {
-        return sprintf($this->l('O campo <strong>%s</strong> contém um valor inválido.'), $field);
+        return sprintf($this->l('O campo %s contém um valor inválido.'), $field);
     }
 
     private function invalidUrl($field)
     {
-        return sprintf($this->l('O campo <strong>%s</strong> deve conter uma url válida.'), $field);
+        return sprintf($this->l('O campo %s deve conter uma url válida.'), $field);
     }
 
     private function checkActiveSlide()
