@@ -128,7 +128,7 @@ $(document).ready( function() {
 	var subFolder = '/integral_evolution';
 	{/literal}
 	{if Configuration::get('PS_SSL_ENABLED')}
-		var baseDirPP = baseDir.replace('http', 'https');
+		var baseDirPP = baseDir.replace('http:', 'https:');
 	{else}
 		var baseDirPP = baseDir;
 	{/if}

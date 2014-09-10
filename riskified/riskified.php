@@ -63,6 +63,7 @@ class Riskified extends Module
 			|| !$this->registerHook('header'))
 			$result = false;
 
+		require_once(dirname(__FILE__).'/lib/RiskifiedLogger.php');
 		RiskifiedLogger::insertLog(__METHOD__.' : '.__LINE__, 'Riskified::install() = '.$result);
 		return $result;
 	}
