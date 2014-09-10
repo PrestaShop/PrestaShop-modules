@@ -143,6 +143,7 @@ class PaypalExpressCheckout extends Paypal
 		// Set payment detail (reference)
 		$this->_setPaymentDetails($fields);
 		$fields['SOLUTIONTYPE'] = 'Sole';
+		$fields['LOCALECODE']= substr( strtoupper($this->context->language->language_code), -2); // EN is not ok for paypal but US is ok so we get the US part of EN-US
 		$fields['LANDINGPAGE'] = 'Login';
 
 		// Seller informations
