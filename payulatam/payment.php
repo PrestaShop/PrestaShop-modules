@@ -95,11 +95,6 @@ public function initParams()
 	if (Configuration::get('PAYU_ACCOUNT_ID') != 0)
 		$params[] = array('value' => (int)Configuration::get('PAYU_ACCOUNT_ID'), 'name' => 'accountId');
 
-	if (Db::getInstance()->getValue('SELECT `token` FROM `'._DB_PREFIX_.'payu_token` WHERE `id_cart` = '.(int)self::$cart->id))
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'payu_token` SET `token` = "'.pSQL($token).'" WHERE `id_cart` = '.(int)self::$cart->id);
-	else
-		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'payu_token` (`id_cart`, `token`) VALUES ('.(int)self::$cart->id.', \''.pSQL($token).'\')');
-
 	return $params;
 }
 

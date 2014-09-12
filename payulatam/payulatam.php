@@ -182,6 +182,11 @@ public function hookPayment($params)
 {
 	if (!$this->active)
 		return;
+		
+	$this->context->smarty->assign(array(
+		'css' => _PS_MODULE_DIR_.$this->name.'/css/',
+		'module_dir' => _PS_MODULE_DIR_.$this->name.'/'
+	));
 
 	return $this->display(__FILE__, 'tpl/payulatam_payment.tpl');
 }
