@@ -505,3 +505,6 @@
 [submodule "vtpayment"]
 	path = vtpayment
 	url = https://github.com/PrestaShop/vtpayment.git
+[submodule "yousticeresolutionsystem"]
+	path = yousticeresolutionsystem
+	url = https://github.com/PrestaShop/yousticeresolutionsystem.git
