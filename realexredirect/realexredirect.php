@@ -313,19 +313,26 @@ class RealexRedirect extends PaymentModule
 		$this->html .= '<br/>';
 		$this->html .= $this->l('This module allows you to accept payments via the Realex \'Redirect\' payment method.').'</strong>';
 		$this->html .= '<br/><br/><br/>';
-		$this->html .= $this->l('If you don\'t already have a Realex account, you may apply for one on our website or call us on 020 3178 5370:');
+		$this->html .= $this->l('If you don\'t already have a Realex Payments account, you may apply for one on our website or call us on 020 3178 5370:');
 		$this->html .= '<br/>';
-		$this->html .= "<a href='http://www.realexpayments.co.uk/business-offering' target='_blank'>";
-		$this->html .= 'http://www.realexpayments.co.uk/business-offering</a><br/><br/>';
-		$this->html .= $this->l('If you have a Realex account, please contact your Realex support representative to obtain the credentials necessary to use this plugin.');
+		$this->html .= "<a href='http://www.realexpayments.com/partner-prestashop' target='_blank'>SIGN UP NOW</a> and receive one month free processing!";
+		$this->html .= '<br/><br/>';
+		$this->html .= $this->l('If you already have a Realex Payments account, please contact your account manager to obtain the credentials necessary to use this module.');
 		$this->html .= '<br/><br/>';
 		$this->html .= $this->l('They will also require the Request and Response URLs which can be found on the module configuration page.');
 		$this->html .= '<br/><br/>';
-		$this->html .= $this->l('Please also inform Realex if you wish to use any of the following services available with the module: ');
+		$this->html .= $this->l('Please also inform Realex Payments if you wish to use any of the following services available with the module: ');
 		$this->html .= '<br/>';
 		$this->html .= '- '.$this->l('Dynamic Currency Conversion (DCC)').'<br/>';
 		$this->html .= '- '.$this->l('RealVault').'<br/>';
 		$this->html .= '- '.$this->l('3DSecure').'<br/>';
+                $this->html .= '<br/>';
+                $this->html .= $this->l('Please see the Configuration Guide which can be found on the Realex Payments Resource Centre');
+                $this->html .= '<br/>';
+                $this->html .= $this->l('This includes a detailed explanation of the services available with this module.');
+                $this->html .= '<br/>';
+                $this->html .= "<a href='http://www.realexpayments.com/images/PrestaShop_Redirect_Configuration_Guide_v1.0.pdf' target='_blank'>Click to Download the Configuration Guide</a>";
+		$this->html .= '<br/>';
 		$this->html .= '</div><div style="clear:both"></div>';
 	}
 
@@ -441,7 +448,7 @@ class RealexRedirect extends PaymentModule
 						$this->html .= '<input type="checkbox" value="SOLO" name="type_card[]"/> Solo ';
 						$this->html .= '&nbsp;  &nbsp;  &nbsp; </td></tr>';
 						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top; padding:5px;">';
-						$this->html .= '<strong>'.$this->l('3D secure').':</strong></td>';
+						$this->html .= '<strong>'.$this->l('3DSecure').':</strong></td>';
 						$this->html .= '<td><input type="radio" name="threeds" value="0" checked="checked" /> '.$this->l('No').'<br/>';
 						$this->html .= '<input type="radio" name="threeds" value="1" /> '.$this->l('Yes').' </td></tr>';
 						$this->html .= '<tr><td width="130" style="height: 35px;vertical-align: top; padding:5px;">';
