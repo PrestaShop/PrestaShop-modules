@@ -13,9 +13,6 @@
 [submodule "dibs/backward_compatibility"]
 	path = dibs/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "hipay/backward_compatibility"]
-	path = hipay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "jirafe/backward_compatibility"]
 	path = jirafe/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -508,3 +505,6 @@
 [submodule "yousticeresolutionsystem"]
 	path = yousticeresolutionsystem
 	url = https://github.com/PrestaShop/yousticeresolutionsystem.git
+[submodule "hipay"]
+	path = hipay
+	url = https://github.com/PrestaShop/hipay
