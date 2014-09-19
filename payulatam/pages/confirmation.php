@@ -111,8 +111,9 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 			{
 				$customer = new Customer((int)$cart->id_customer);
 				$context->customer = $customer;
+				$context->currency = $currency_cart;
 
-				$payulatam->validateOrder((int)$cart->id, (int)Configuration::get($state), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), null, false, $customer->secure_key);
+				$payulatam->validateOrder((int)$cart->id, (int)Configuration::get($state), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), (int)$currency_cart->id, false, $customer->secure_key);
 				$order = new Order((int)Order::getOrderByCartId($cart->id));
 			}
 			if ($state != 'PS_OS_PAYMENT')

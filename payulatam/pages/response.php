@@ -127,7 +127,7 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 	{
 		$customer = new Customer((int)$cart->id_customer);
 		$context->customer = $customer;
-		$payulatam->validateOrder((int)$cart->id, Configuration::get('PAYU_OS_PENDING'), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), null, false, $customer->secure_key);
+		$payulatam->validateOrder((int)$cart->id, Configuration::get('PAYU_OS_PENDING'), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), (int)$cart->id_currency, false, $customer->secure_key);
 	}
 	
 	Context::getContext()->smarty->assign(
