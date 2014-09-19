@@ -1,20 +1,20 @@
 @media only screen and (min-width : 768px) {
 
-.header {  background: url("../img/header.jpg") no-repeat scroll 39% 0 #f0f0f0; height: 258px;}
+header {  background: url("../img/header.jpg") no-repeat scroll 39% 0 #f0f0f0; height: 258px;}
 
 .logo-py { float: left; margin: 50px 400px 0 50px;}
 
-.md-copy { float: left; font-size: 1.5em; line-height: 1.1em; margin: 16px 154px 0 31px; padding: 0 15px; text-align: left; width: 302px; }
-.md-btnhd { float: left; margin: 26px 10px 10px 46px; width: 275px; }
-.md-icos { float: left; margin: -79px auto 0; width: 298px;}
-.md-tl { font-size: 2.4em !important; }
-.iframevd { float: left; margin: 20px 0 0 17px; width: 48%; }
-.md-wrapper p { float: left; text-align: justify; width: 49%; }
-.md-col { float: left; margin-top: 0; min-height: 393px; overflow: auto; width: 49%; }
+.md-copy_payu { float: left; font-size: 1.5em; line-height: 1.1em; margin: 16px 154px 0 31px; padding: 0 15px; text-align: left; width: 302px; }
+.md-btnhd_payu { float: left; margin: 26px 10px 10px 46px; width: 275px; }
+.md-icos_payu { float: left; margin: -79px auto 0; width: 298px;}
+.md-tl_payu { font-size: 2.4em !important; }
+.iframevd_payu { float: left; margin: 20px 0 0 17px; width: 48%; }
+.md-wrapper_payu p { text-align: justify;}
+.md-col_payu { float: left; margin-top: 0;  overflow: auto; width: 49%; }
 
-.md-tl { float: left; text-align: left; width: 698px;}
+.md-tl_payu { float: left; text-align: left; width:50%;}
 
-.content-1 > p { width: 100%; }
+.content-1_payu > p { width: 100%; }
 .full{ width: 50% !important;}
 
 

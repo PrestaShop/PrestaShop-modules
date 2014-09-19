@@ -118,9 +118,18 @@ if (isset($_REQUEST['lapPaymentMethod']))
 else
 	$lap_payment_method = $_REQUEST['medio_pago_lap'];
 
+	
+$cart = new Cart((int)$reference_code);
 
 if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 {
+	if (!($cart->orderExists()))
+	{
+		$customer = new Customer((int)$cart->id_customer);
+		$context->customer = $customer;
+		$payulatam->validateOrder((int)$cart->id, Configuration::get('PAYU_OS_PENDING'), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), null, false, $customer->secure_key);
+	}
+	
 	Context::getContext()->smarty->assign(
 		array(
 			'estadoTx' => $estado_tx,
@@ -134,7 +143,8 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 			'description' => $description,
 			'lapPaymentMethod' => $lap_payment_method,
 			'message' => $message,
-			'valid' => true
+			'valid' => true,
+			'css' => '../modules/payulatam/css/'
 		)
 	);
 
@@ -143,7 +153,8 @@ else
 {
 	Context::getContext()->smarty->assign(
 		array(
-			'valid' => false
+			'valid' => false,
+			'css' => '../modules/payulatam/css/'
 		)
 	);
 }

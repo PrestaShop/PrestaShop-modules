@@ -1,10 +1,10 @@
-.tabs {
-    /*position: relative;*/
+.tabs_payu {
+    position: relative;
 	margin: 40px auto;
 	width: 100%;
 }
 
-.tabs input {
+.tabs_payu input {
 	position: absolute;
 	z-index: 1000;
 	height: 40px;
@@ -15,17 +15,17 @@
     filter: alpha(opacity=0);
 	cursor: pointer;
 }
-.tabs input#tab-2{
+.tabs_payu input#tab-2_payu{
 	left: 120px;
 }
-.tabs input#tab-3{
+.tabs_payu input#tab-3{
 	left: 240px;
 }
-.tabs input#tab-4{
+.tabs_payu input#tab-4{
 	left: 360px;
 }
 
-.tabs label {
+.tabs_payu label {
 	background: #eee;
 	font-size: 0.8em	;
 	line-height: 40px;
@@ -41,7 +41,7 @@
     width: 49%;
 }
 
-.tabs label:after {
+.tabs_payu label:after {
     content: '';
 	position: absolute;
 	bottom: -2px;
@@ -51,12 +51,12 @@
 	display: block;
 }
 
-.tabs input:hover + label {
+.tabs_payu input:hover + label {
 	background: #028cc1;
 	color: #FFF;
 }
 
-.tabs label:first-of-type {
+.tabs_payu label:first-of-type {
     z-index: 4;
     box-shadow: 2px 0 2px rgba(0,0,0,0.1);
 }
@@ -73,7 +73,7 @@
     z-index: 1;
 }
 
-.tabs input:checked + label {
+.tabs_payu input:checked + label {
     background: #00adee;
     color: #fff	 ;
 	z-index: 6;
@@ -83,7 +83,7 @@
 	clear: both;
 }
 
-.content {
+.content_payu {
     background: #fff;
 	position: relative;
     width: 100%;
@@ -92,7 +92,7 @@
     border-radius: 0 5px 5px 5px;
 }
 
-.content div {
+.content_payu div {
     position: absolute;
 	top: 0;
 	left: 0;
@@ -107,12 +107,12 @@
     -ms-transition: opacity linear 0.1s;
     transition: opacity linear 0.1s;
 }
-.content div ol { padding: 0 0 0 15px; }
+.content_payu div ol { padding: 0 0 0 15px; }
 
-.tabs input.tab-selector-1:checked ~ .content .content-1,
-.tabs input.tab-selector-2:checked ~ .content .content-2,
-.tabs input.tab-selector-3:checked ~ .content .content-3,
-.tabs input.tab-selector-4:checked ~ .content .content-4 {
+.tabs_payu input.tab-selector-1:checked ~ .content_payu .content-1_payu,
+.tabs_payu input.tab-selector-2:checked ~ .content_payu .content-2_payu,
+.tabs_payu input.tab-selector-3:checked ~ .content_payu .content-3_payu,
+.tabs_payu input.tab-selector-4:checked ~ .content_payu .content-4_payu {
 	z-index: 100;
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
@@ -124,11 +124,11 @@
     -ms-transition: opacity ease-out 0.2s 0.1s;
     transition: opacity ease-out 0.2s 0.1s;
 }
-.content div h2,
-.content div h3{
+.content_payu div h2,
+.content_payu div h3{
 	color: #00adee;
 }
-.content div p {
+.content_payu div p {
 	text-align: left;
 
 

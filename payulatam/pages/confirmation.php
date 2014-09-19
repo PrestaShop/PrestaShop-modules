@@ -73,14 +73,11 @@ if (isset($_REQUEST['response_code_pol']))
 else
 	$pol_response_code = $_REQUEST['codigo_respuesta_pol'];
 
-
-$order = new Order((int)$reference_code);
-if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5) && $order->current_state != Configuration::get('PS_OS_PAYMENT'))
+$cart = new Cart((int)$reference_code);
+/*$order = new Order((int)$reference_code);*/
+if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 {
-	$history = new OrderHistory();
-	$history->id_order = (int)$reference_code;
 	$state = 'PAYU_OS_FAILED';
-
 	if ($transaction_state == 6 && $pol_response_code == 5)
 		$state = 'PAYU_OS_FAILED';
 	else if ($transaction_state == 6 && $pol_response_code == 4)
@@ -89,13 +86,41 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5) && $order
 		$state = 'PAYU_OS_PENDING';
 	else if ($transaction_state == 4 && $pol_response_code == 1)
 		$state = 'PS_OS_PAYMENT';
+	
+	if (!Validate::isLoadedObject($cart))
+    $errors[] = $this->module->l('Invalid Cart ID');
+	else
+	{               
+		$currency_cart = new Currency((int)$cart->id_currency);
+		if ($currency != $currency_cart->iso_code)
+			$errors[] = $this->module->l('Invalid Currency ID').' '.($currency.'|'.$currency_cart->iso_code);
+		else
+		{
+			if ($cart->orderExists())
+			{
+				$order = new Order((int)Order::getOrderByCartId($cart->id));
+				if ($order->current_state != Configuration::get('PS_OS_PAYMENT'))
+				{
+					$history = new OrderHistory();
+					$history->id_order = (int)$order->id;
+					$history->changeIdOrderState((int)Configuration::get($state), $order, true);
+					$history->addWithemail(true);
+				}
+			}
+			else
+			{
+				$customer = new Customer((int)$cart->id_customer);
+				$context->customer = $customer;
 
-	if ($state != 'PS_OS_PAYMENT')
-	{
-		foreach ($order->getProductsDetail() as $product)
-			StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], + (int)$product['product_quantity'], $order->id_shop);
+				$payulatam->validateOrder((int)$cart->id, (int)Configuration::get($state), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), null, false, $customer->secure_key);
+				$order = new Order((int)Order::getOrderByCartId($cart->id));
+			}
+			if ($state != 'PS_OS_PAYMENT')
+			{
+				foreach ($order->getProductsDetail() as $product)
+					StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], + (int)$product['product_quantity'], $order->id_shop);
+			}
+		}
 	}
-	$history->changeIdOrderState((int)Configuration::get($state), $order, true);
-	$history->add();
 }
 ?>
