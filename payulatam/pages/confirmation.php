@@ -74,7 +74,6 @@ else
 	$pol_response_code = $_REQUEST['codigo_respuesta_pol'];
 
 $cart = new Cart((int)$reference_code);
-/*$order = new Order((int)$reference_code);*/
 if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 {
 	$state = 'PAYU_OS_FAILED';
@@ -99,12 +98,28 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 			if ($cart->orderExists())
 			{
 				$order = new Order((int)Order::getOrderByCartId($cart->id));
-				if ($order->current_state != Configuration::get('PS_OS_PAYMENT'))
+				
+				if (_PS_VERSION_ < '1.5')
 				{
-					$history = new OrderHistory();
-					$history->id_order = (int)$order->id;
-					$history->changeIdOrderState((int)Configuration::get($state), $order, true);
-					$history->addWithemail(true);
+					$current_state = $order->getCurrentState();
+					if ($current_state != Configuration::get('PS_OS_PAYMENT'))
+					{
+						$history = new OrderHistory();
+						$history->id_order = (int)$order->id;
+						$history->changeIdOrderState((int)Configuration::get($state), $order->id);
+						$history->addWithemail(true);
+					}
+				}
+				else
+				{
+					$current_state = $order->current_state;
+					if ($current_state != Configuration::get('PS_OS_PAYMENT'))
+					{
+						$history = new OrderHistory();
+						$history->id_order = (int)$order->id;
+						$history->changeIdOrderState((int)Configuration::get($state), $order, true);
+						$history->addWithemail(true);
+					}
 				}
 			}
 			else
