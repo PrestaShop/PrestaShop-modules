@@ -124,12 +124,12 @@ private function _displayAdminTpl()
 		'lang' => ($this->context->language->iso_code != 'en' || $this->context->language->iso_code != 'es' ? 'en' : $this->context->language->iso_code)
 	));
 
-	return $this->display(__FILE__, 'tpl/admin.tpl');
+	return $this->display(__FILE__, 'views/templates/admin/admin.tpl');
 }
 
 private function _displayHelpTpl()
 {
-	return $this->display(__FILE__, 'tpl/help.tpl');
+	return $this->display(__FILE__, 'views/templates/admin/help.tpl');
 }
 
 private function _displayCredentialTpl()
@@ -174,7 +174,7 @@ private function _displayCredentialTpl()
 				'label' => $this->l('Mode Test'),
 				'desc' => $this->l(''),
 			))));
-	return $this->display(__FILE__, 'tpl/credential.tpl');
+	return $this->display(__FILE__, 'views/templates/admin/credential.tpl');
 }
 
 
@@ -188,7 +188,7 @@ public function hookPayment($params)
 		'module_dir' => _PS_MODULE_DIR_.$this->name.'/'
 	));
 
-	return $this->display(__FILE__, 'tpl/payulatam_payment.tpl');
+	return $this->display(__FILE__, 'views/templates/hook/payulatam_payment.tpl');
 }
 
 private function _postValidation()

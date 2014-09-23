@@ -53,7 +53,7 @@ class PayUController extends FrontController
 	public function displayContent()
 	{
 		parent::displayContent();
-		self::$smarty->display(_PS_MODULE_DIR_.'payulatam/tpl/redirect.tpl');
+		self::$smarty->display(_PS_MODULE_DIR_.'payulatam/views/templates/front/redirect.tpl');
 	}
 
 public function initParams()

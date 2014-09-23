@@ -158,6 +158,6 @@ else
 		)
 	);
 }
-Context::getContext()->smarty->display(dirname(__FILE__).'/response.tpl');
+Context::getContext()->smarty->display(dirname(__FILE__).'/../views/templates/front/response.tpl');
 include(dirname(__FILE__).'/../../../footer.php');
 ?>
