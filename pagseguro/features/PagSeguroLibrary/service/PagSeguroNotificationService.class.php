@@ -89,6 +89,7 @@ class PagSeguroNotificationService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
 
                 default:
                     $e = new PagSeguroServiceException($httpStatus);
@@ -97,6 +98,8 @@ class PagSeguroNotificationService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
+
             }
 
             return isset($transaction) ? $transaction : null;

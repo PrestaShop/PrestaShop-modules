@@ -652,11 +652,11 @@ class PagSeguroPaymentRequest
     public function verifyURLTest($url)
     {
         $adress = array(
-            'localhost',
             '127.0.0.1',
             '::1'
         );
 
+        $urlReturn;
         foreach ($adress as $item) {
             $find = strpos($url, $item);
 

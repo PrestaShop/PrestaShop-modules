@@ -78,7 +78,7 @@ class PagSeguroResources
 
     public static function getWebserviceUrl($environment)
     {
-        if (isset(self::$data['webserviceUrl']) &&
+        if (isset(self::$data['webserviceUrl']) && 
             isset(self::$data['webserviceUrl'][$environment])
         ) {
             return self::$data['webserviceUrl'][$environment];

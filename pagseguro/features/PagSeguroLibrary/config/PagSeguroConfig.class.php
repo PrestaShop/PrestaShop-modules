@@ -21,6 +21,11 @@
  *  @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
+/***
+ * Provides a means to retrieve configuration preferences.
+ * These preferences can come from the default config file (PagSeguroLibrary/config/PagSeguroConfig.php).
+ */
+
 class PagSeguroConfig
 {
 

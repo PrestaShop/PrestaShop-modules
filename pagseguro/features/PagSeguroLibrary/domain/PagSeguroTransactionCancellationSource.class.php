@@ -22,30 +22,24 @@
  */
 
 /***
- * Defines a list of known transaction statuses.
- * This class is not an enum to enable the introduction of new transaction status.
+ * Defines a list of known transaction cancellation source.
+ * This class is not an enum to enable the introduction of new cancellation source.
  * without breaking this version of the library.
  */
-class PagSeguroTransactionStatus
+class PagSeguroTransactionCancellationSource
 {
 
     /***
      * @var array
      */
-    private static $statusList = array(
-        'INITIATED' => 0,
-        'WAITING_PAYMENT' => 1,
-        'IN_ANALYSIS' => 2,
-        'PAID' => 3,
-        'AVAILABLE' => 4,
-        'IN_DISPUTE' => 5,
-        'REFUNDED' => 6,
-        'CANCELLED' => 7
+    private static $sourceList = array(
+        'PAGSEGURO' => "INTERNAL",
+        'FINANCEIRA' => "EXTERNAL"        
     );
 
     /***
-     * the value of the transaction status
-     * Example: 3
+     * the value of the transaction cancellation source
+     * Example: EXTERNAL
      */
     private $value;
 
@@ -73,15 +67,15 @@ class PagSeguroTransactionStatus
      */
     public function setByType($type)
     {
-        if (isset(self::$statusList[$type])) {
-            $this->value = self::$statusList[$type];
+        if (isset(self::$sourceList[$type])) {
+            $this->value = self::$sourceList[$type];
         } else {
             throw new Exception("undefined index $type");
         }
     }
 
     /***
-     * @return integer the status value.
+     * @return string the status value.
      */
     public function getValue()
     {
@@ -90,20 +84,20 @@ class PagSeguroTransactionStatus
 
     /***
      * @param value
-     * @return String the transaction status corresponding to the informed status value
+     * @return String the transaction cancellation source corresponding to the informed source value
      */
     public function getTypeFromValue($value = null)
     {
         $value = ($value == null ? $this->value : $value);
-        return array_search($this->value, self::$statusList);
+        return array_search($this->value, self::$sourceList);
     }
 
     /***
      * Get status list
      * @return array
      */
-    public static function getStatusList()
+    public static function getSourceList()
     {
-        return self::$statusList;
+        return self::$sourceList;
     }
 }

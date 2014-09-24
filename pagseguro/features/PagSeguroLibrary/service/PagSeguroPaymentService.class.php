@@ -107,6 +107,7 @@ class PagSeguroPaymentService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
 
                 default:
                     $e = new PagSeguroServiceException($httpStatus);
@@ -115,6 +116,8 @@ class PagSeguroPaymentService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
+
             }
             return (isset($paymentReturn) ? $paymentReturn : false);
 

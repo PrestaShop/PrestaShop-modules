@@ -110,6 +110,7 @@ class PagSeguroTransactionSearchService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
 
                 default:
                     $e = new PagSeguroServiceException($httpStatus);
@@ -118,6 +119,8 @@ class PagSeguroTransactionSearchService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
+
             }
 
             return isset($transaction) ? $transaction : false;
@@ -201,6 +204,7 @@ class PagSeguroTransactionSearchService
                         ") - end " . $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
 
                 default:
                     $e = new PagSeguroServiceException($httpStatus);
@@ -211,6 +215,8 @@ class PagSeguroTransactionSearchService
                         $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
+
             }
 
             return isset($searchResult) ? $searchResult : false;
@@ -293,6 +299,7 @@ class PagSeguroTransactionSearchService
                         PagSeguroHelper::formatDate($finalDate) . ") - end " . $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
 
                 default:
                     $e = new PagSeguroServiceException($httpStatus);
@@ -302,6 +309,8 @@ class PagSeguroTransactionSearchService
                         PagSeguroHelper::formatDate($finalDate) . ") - end " . $e->getOneLineMessage()
                     );
                     throw $e;
+                    break;
+
             }
 
             return isset($searchResult) ? $searchResult : false;

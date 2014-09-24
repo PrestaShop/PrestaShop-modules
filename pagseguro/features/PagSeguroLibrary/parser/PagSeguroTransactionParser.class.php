@@ -116,6 +116,11 @@ class PagSeguroTransactionParser extends PagSeguroServiceParser
             $transaction->setStatus(new PagSeguroTransactionStatus($data["status"]));
         }
 
+        // <transaction> <cancellationSource>
+        if (isset($data["cancellationSource"])) {
+            $transaction->setCancellationSource(new PagSeguroTransactionCancellationSource($data["cancellationSource"]));
+        }
+
         if (isset($data["paymentMethod"]) && is_array($data["paymentMethod"])) {
 
             // <transaction> <paymentMethod>
@@ -367,6 +372,9 @@ class PagSeguroTransactionParser extends PagSeguroServiceParser
         }
         if (isset($data['status'])) {
             $transactionSummary->setStatus(new PagSeguroTransactionStatus($data['status']));
+        }
+        if (isset($data["cancellationSource"])) {
+            $transactionSummary->setCancellationSource(new PagSeguroTransactionCancellationSource($data["cancellationSource"]));
         }
         if (isset($data['netAmount'])) {
             $transactionSummary->setNetAmount($data['netAmount']);
