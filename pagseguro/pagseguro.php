@@ -651,13 +651,13 @@ class PagSeguro extends PaymentModule
     		for($i = 0; $i < count($orders) ;$i++){
     
     			$sql = "DELETE FROM `"._DB_PREFIX_."order_message` WHERE `id_order_message` = '".$orders[$i]."'";
-    			Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+    			Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($sql);
     		}
     
     		for($i = 0; $i < count($result) ;$i++){
     			$id = $result[$i]['id'];
     			$sql = "DELETE FROM `"._DB_PREFIX_."order_message_lang` WHERE `id_order_message` = '".$id."'";
-    			Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+    			Db::getInstance(_PS_USE_SQL_SLAVE_)->execute($sql);
     		}
     		return true;
     	}
