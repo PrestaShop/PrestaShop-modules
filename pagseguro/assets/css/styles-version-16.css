@@ -1074,7 +1074,6 @@ h1 {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    background: url('../modules/pagseguro/assets/images/sucess.png') no-repeat #DFF0D8;
 }
 
 .alert-success:first-line {

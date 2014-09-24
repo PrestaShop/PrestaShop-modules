@@ -241,6 +241,11 @@ class PagSeguro extends PaymentModule
         $this->context->smarty->assign('adminToken', $adminToken);
         $this->context->smarty->assign('tableResult', '');
         $this->context->smarty->assign('titulo', $this->l('Conciliação'));
+        if ( Configuration::get('PAGSEGURO_EMAIL') and 
+        	 Configuration::get('PAGSEGURO_TOKEN') )
+        	$this->context->smarty->assign('regError', false);
+		else
+			$this->context->smarty->assign('regError', true);
         $conteudo = "";
         $conteudo = $this->display(
             __PS_BASE_URI__ . 'modules/pagseguro',

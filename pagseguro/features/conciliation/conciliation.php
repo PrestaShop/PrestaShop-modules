@@ -223,7 +223,7 @@ class PagSeguroConciliation
     private function getPagSeguroPaymentsList()
     {
 
-        $pageNumber = "";
+        $pageNumber = 1;
         $maxPageResults = 1000;
 
         $timeZone = date_default_timezone_get();
@@ -546,6 +546,27 @@ class PagSeguroConciliation
         $cOrder = $id_order;
         $id_order = sprintf("#%06s", $id_order);
 
+        if ( $name == $status_pagseguro ) {   
+
+
+            $img = "<img src='../modules/pagseguro/assets/images/refresh_deactived.png' 
+                         border='0' 
+                         alt='Atualizar' 
+                         title='Atualizar' 
+                         width='16'/>";
+        } else {
+
+            $img = "<a 
+                    onclick='duplicateStatus(".$row['id_order']."," .$row['id_status_pagseguro'].",".$row['id_order_state'].")' 
+                    style='cursor:pointer'>
+                        <img src='../modules/pagseguro/assets/images/refresh_.png' 
+                             border='0' 
+                             alt='Atualizar' 
+                             title='Atualizar' 
+                             width='16' />
+                    </a>";
+        }
+
         $array = array(  $date_add,
                          $id_order,
                          $pagseguro_code,
@@ -553,10 +574,9 @@ class PagSeguroConciliation
                          $status_pagseguro,
                          "<a onclick='editRedirect(" . $cOrder . ")' id='" . $id_order . "' style='cursor:pointer'>
                                     <img src='../img/admin/edit.gif' border='0' alt='edit' title='Editar'/></a>",
-                         "<a onclick='duplicateStatus(".$row['id_order']."," .$row['id_status_pagseguro'].",".$row['id_order_state'].")' style='cursor:pointer'> "
-                                        . "<img src='../modules/pagseguro/assets/images/refresh_.png' border='0' alt='Atualizar' title='Atualizar' width='16'/> </a>"
+                         $img
             );
-        
+
        $this->addArray($array);
 
     }
