@@ -58,11 +58,6 @@ if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($billing_a
 	die('An unrecoverable error occured while retrieving you data');
 }
 
-/*$payulatam->validateOrder((int)$cart->id, Configuration::get('PAYU_OS_PENDING'), (float)$cart->getordertotal(true), 'PayU Latam');*/
-
-/*$signature = md5(Configuration::get('PAYU_LATAM_API_KEY').'~'.Configuration::get('PAYU_LATAM_MERCHANT_ID').'~'.(int)$payulatam->currentOrder.'~'.
-$cart->getordertotal(true).'~'.$currency->iso_code);*/
-
 $signature = md5(Configuration::get('PAYU_LATAM_API_KEY').'~'.Configuration::get('PAYU_LATAM_MERCHANT_ID').'~'.(int)$cart->id.'~'.
 $cart->getordertotal(true).'~'.$currency->iso_code);
 
@@ -90,7 +85,11 @@ else
 </center>
 
 <?php
-	$response_url = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/payulatam/pages/response.php';
+	if (_PS_VERSION_ < '1.5')
+		$response_url = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'modules/payulatam/pages/response.php';
+	else
+		$response_url = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.'index.php?fc=module&module=payulatam&controller=response';
+
 	$confirmation_url = 'http://'.htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT, 'UTF-8').__PS_BASE_URI__.
 	'modules/payulatam/pages/confirmation.php';
 ?>

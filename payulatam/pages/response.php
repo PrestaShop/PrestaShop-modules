@@ -72,7 +72,7 @@ if (isset($_REQUEST['polResponseCode']))
 else
 	$pol_response_code = $_REQUEST['codigo_respuesta_pol'];
 
-$message = '';
+$messageApproved = '';
 if ($transaction_state == 6 && $pol_response_code == 5)
 	$estado_tx = $payulatam->l('Failed Transaction');
 else if ($transaction_state == 6 && $pol_response_code == 4)
@@ -82,7 +82,7 @@ else if ($transaction_state == 12 && $pol_response_code == 9994)
 else if ($transaction_state == 4 && $pol_response_code == 1)
 {
 	$estado_tx = $payulatam->l('Transaction Approved');
-	$message = $payulatam->l('¡Thank you for your purchase!');
+	$messageApproved = $payulatam->l('¡Thank you for your purchase!');
 }
 else
 {
@@ -142,7 +142,7 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 			'currency' => $currency,
 			'description' => $description,
 			'lapPaymentMethod' => $lap_payment_method,
-			'message' => $message,
+			'messageApproved' => $messageApproved,
 			'valid' => true,
 			'css' => '../modules/payulatam/css/'
 		)

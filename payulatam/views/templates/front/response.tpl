@@ -73,7 +73,7 @@
 			</tr>
 		</table>
 		<p/>
-		<h1>{$message|escape:'htmlall':'UTF-8'}</h1>
+		<h1>{$messageApproved|escape:'htmlall':'UTF-8'}</h1>
 	</center>
 {else}
 	<h1><center>{l s='The request is incorrect! There is an error in the digital signature.' mod='payulatam'}</center></h1>

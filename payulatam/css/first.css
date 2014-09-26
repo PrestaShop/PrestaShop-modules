@@ -85,7 +85,7 @@ li{font-size:13px;}
 
 .form ul { padding-left: 0;}
 .form li { list-style: none; margin: 0 0 5px 0; min-height: 34px;}
-.form input { position: relative !important; opacity: 1 !important; height: auto !important; padding: 8px; width: 100%;} 
+.form inpu { position: relative !important; opacity: 1 !important; height: auto !important; padding: 8px; width: 100%;} 
 .content-2_payu.form input { width: auto; }
 .content-1_payu a { text-decoration: underline; color: #00adee; cursor: pointer;}
 .full{ width: 100% !important;}
@@ -146,9 +146,9 @@ li{font-size:13px;}
 
 .credentials .steps{font-size:13px;}
 
-.credentials label{font-size:15px;color:#009cdd; font-family: 'alwyn_new_rgregular';}
+.credentials label, .credentials .label_payu{font-size:15px;color:#009cdd; font-family: 'alwyn_new_rgregular';width:100% !important;text-align:left!important;font-weight:normal !important;padding:0 !important;}
 
-.credentials input[type="text"]{margin-bottom:10px; width:60%;margin-top:5px;padding:3px;}
+.credentials input.input_payu[type="text"]{margin-bottom:10px; width:60%;margin-top:5px;padding:3px;}
 
 .credentials input[type="radio"]{margin-bottom:25px;margin-right:10px;vertical-align:top;margin-top:3px;}
 
@@ -161,3 +161,5 @@ div.credentials li.caption{font-family:arial;}
 .advice{background:#C7E5F8; padding:3px 20px 10px 20px;}
 
 .credentials li h4{font-size:18px;margin-bottom:15px;}
+
+#content{padding:0 !important;}
