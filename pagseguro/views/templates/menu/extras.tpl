@@ -30,8 +30,8 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <div>
+    <div class="col-md-6">
+ 
             <label>URL DE NOTIFICAÇÃO</label>
             <br>
                 <input type="text" name="pagseguro_notification_url" id="pagseguro_notification_url" value="{$urlNotification|escape:'none'}" maxlength="255" hint="Sempre que uma transação mudar de status, o PagSeguro envia uma notificação para sua loja ou para a URL que você informar neste campo.">
@@ -52,7 +52,10 @@
                 <input type="text" name="pagseguro_log_dir" id="pagseguro_log_dir" value="{$fileLocation|escape:'none'}" hint= "Diretório a partir da raíz de instalação do PrestaShop onde se deseja criar o arquivo de log. Ex.: /logs/log_ps.log"/>
             <br>
             </div>
-            <label>LISTAR TRANSAÇÕES ABANDONADAS?</label>
+           
+	    <div id="abandoned" name="abandoned">	
+		
+		 <label>LISTAR TRANSAÇÕES ABANDONADAS?</label>
             <br>
                 <select id="pagseguro_recovery" name="pagseguro_recovery" class="select" hint="Ao ativar esta funcionalidade, você poderá listar as transações abandonadas e disparar, manualmente, um e-mail para seu comprador. Este e-mail conterá um link que o redirecionará para o fluxo de pagamento, exatamente no ponto onde ele parou." >
                     {html_options values=$keyrecoveryactive output=$valuesrecoveryactive selected=$escolharecoveryactive|escape:'none'}
@@ -65,10 +68,16 @@
                     {html_options values=$keydaystorecovery output=$valuesdaystorecovery selected=$escolhadaystorecovery|escape:'none'}
                 </select>
             <br>
+		</div>
+
+
             </div>
-            <div class="hintps _config"></div>
+            
         </div>
-    </div>
+	<div class="col-md-6">
+		
+		<div class="hintps _config"></div>	
+	</div>
 </div>
 
 <script type="text/javascript">

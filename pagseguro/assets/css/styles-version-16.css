@@ -19,7 +19,7 @@
 #tabList { clear: left; }
 .tabItem { display: none; }
 
-.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; }
+.tabItem .selected { display: table; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; height: 100%; }
 legend {text-align: center; width: 99%; margin-bottom: 10px; }
 
 table.gridConciliacao { border-collapse: collapse; border: 1px solid #E5E5E5; align:center }
@@ -105,16 +105,6 @@ input.invalid { background: red; color: #FDFDFD; }
 #paginator a:active { color: #777; }
 #paginator a:focus { outline: 1px; }
 
-div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 30%!important; right : 20%!important; color : #5B9028;}
-
-@-moz-document url-prefix() {
-  div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 20%!important; right : 20%!important; color : #5B9028;}
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 10%!important; right : 10%!important; color : #5B9028;}
-}
-
 div.tabItem input {}
 div.tabItem input[type=text], div.tabItem select { clear: both; display: inline-block; width : 450px; border : 1px solid #cecece; border-radius : 3px 3px 3px 3px; font-size : 15pt; padding : 8px 8px 8px 8px; height: 20px;}
 div.tabItem input[type=text]:focus { background-color: #edeceb; }
@@ -146,9 +136,7 @@ div.tabItem .small { font-size: 10px; }
 /**** PagSeguro General Styles **/
 
 form.psplugin { position : relative !important; width : 100%; !important; margin-left : 5%; }
-@-moz-document url-prefix() { 
-  div.hintps{ padding-top: 50px; }
-}
+
 form.menu { width: 958px; margin: 0 auto; }
 div.module_confirmation, div.module_error { margin : 0 auto!important; }
 
@@ -557,7 +545,7 @@ h1 {
 #tabList { clear: left; }
 .tabItem { display: none; }
 
-.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; }
+.tabItem.selected { display: table; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; }
 legend {text-align: center; width: 99%; margin-bottom: 10px; }
 
 table.gridConciliacao { border-collapse: collapse; border: 1px solid #E5E5E5; align:center }
@@ -638,11 +626,6 @@ input.invalid { background: red; color: #FDFDFD; }
 #paginator a:active { color: #777; }
 #paginator a:focus { outline: 1px; }
 
-div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 20%; right : 15%; color : #5B9028;}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) { 
-  div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 20%; right : 10%; color : #5B9028;}
-}
 
 div.tabItem input {}
 div.tabItem input[type=text], div.tabItem select { clear: both; display: inline-block; width : 450px; border : 1px solid #cecece; border-radius : 3px 3px 3px 3px; font-size : 15pt; padding : 8px 8px 8px 8px; height: 20px;}
@@ -1087,6 +1070,21 @@ h1 {
 .blockUImg {
   vertical-align: middle;
 }
+
+div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: -3em 0 0 8.5em; }
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: 0 0 0 4em; }
+}
+
+.col-md-6{
+	width: 49%;
+	float: left;
+	height: auto;
+	min-height: 100%;
+}
+
+body,html{height:100%;}
 
 
 

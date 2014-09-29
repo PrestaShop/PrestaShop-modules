@@ -23,13 +23,15 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+
 <div class="row">
     <div class="col-md-12">
 		<h2>{$titulo|escape:'none'}</h2>
 	</div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
 		<label>E-MAIL*</label>
 		<br>
 		    <input type="text" name="pagseguro_email" id="pagseguro_email" value="{$email|escape}" maxlength="60" hint="Para oferecer o PagSeguro em sua loja é preciso ter uma conta do tipo vendedor ou empresarial. Se você ainda não tem uma conta PagSeguro &lt;a href=&quot;https://pagseguro.uol.com.br/registration/registration.jhtml?ep=5&amp;tipo=cadastro#!vendedor&quot; target=&quot;_blank&quot;&gt; clique aqui &lt;/a&gt;, caso contrário informe neste campo o e-mail associado à sua conta PagSeguro." onchange="validarForm('pagseguro_email')">
@@ -51,6 +53,10 @@
 		    </select>
 		<br>
 		<p class="small">* Campos obrigatórios</p>
+	</div>
+	<div class="col-md-6">
+		
 		<div class="hintps _config"></div>	
 	</div>
 </div>
+

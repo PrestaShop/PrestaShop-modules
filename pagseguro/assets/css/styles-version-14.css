@@ -1,16 +1,4 @@
 @charset 'utf-8';
-/***************************************************!
-*
-* project: liteAccordion - a horizontal accordion plugin for jQuery
-* author: Nicola Hibbert
-* url: http://nicolahibbert.com/liteaccordion-v2/
-* demo: http://www.nicolahibbert.com/demo/liteAccordion/
-*
-* Version: 2.2.0
-* Copyright: (c) 2010-2013 Nicola Hibbert
-* Licence: MIT
-*
-**************************************************/
 /******************************************** Core */
 
 #menuTab {padding: 0; margin: 0; text-align: left; margin-left: 10px; }
@@ -19,7 +7,7 @@
 #menuTab li.menuTabButton.selected { background: #FFFFF0; border-left: 1px solid #CCCCCC; border-right: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; margin-bottom: -1px; padding-bottom: 6px; }
 #tabList { clear: left; }
 .tabItem { display: none; }
-.tabItem.selected { display: block; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; }
+.tabItem.selected { display: table; background: #FFFFF0; border: 1px solid #CCCCCC; padding: 10px; height: 100%;}
 legend {text-align: center; width: 99%; margin-bottom: 10px;}
 
 table.gridConciliacao { border-collapse: collapse; border: 1px solid #E5E5E5; align:center }
@@ -105,7 +93,7 @@ input.invalid { background: red; color: #FDFDFD; }
 #paginator a:active { color: #777; }
 #paginator a:focus { outline: 1px; }
 
-div.hintps {font-size:16px; position : absolute !important; display : none; width : 300px; height : 300px; top : 20%; right : 50px; color : #5B9028; padding-top:50px\9;}
+
 div.tabItem input {}
 div.tabItem input[type=text], div.tabItem select { clear: both; width : 450px; border : 1px solid #cecece; border-radius : 3px 3px 3px 3px; font-size : 15pt; padding : 8px 8px 8px 8px; height: 20px;}
 @-moz-document url-prefix() { 
@@ -133,9 +121,7 @@ div.tabItem * { padding: 0; margin: 0; border: 0; box-sizing: content-box }
 /**** PagSeguro General Styles **/
 
 form.psplugin { position : relative !important; width : 910px; left : -470px !important; margin-left : 50%; }
-@-moz-document url-prefix() { 
-  div.hintps{ padding-top: 50px; }
-}
+
 form.menu { width: 928px; margin: 0px auto; }
 div.module_confirmation, div.module_error { margin : 0 auto!important; }
 
@@ -481,3 +467,19 @@ h1 {
 .gridAbandoned th::selection{background:none!important; }
 .gridabandoned th::-moz-selection{background:none!important; }
 .gridAbandoned th::-webkit-selection{background:none!important; }
+
+div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: 0em 0 0 5em; }
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: 0 0 0 4em; }
+}
+
+.col-md-6{
+	width: 49%;
+	float: left;
+	height: auto;
+	min-height: 100%;
+}
+
+body,html{height:100%;}
+

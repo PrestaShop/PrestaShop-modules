@@ -23,14 +23,14 @@
 #nobootstrap .row{ background: none; border: none; margin-top: 0px;}
 
 #nobootstrap label {
-  width: 50%;
+  width: 100%;
   float: left;
   clear: both;
   text-align: left;
 }
 
 #nobootstrap input {
-  width: 50%;
+  width: 100%;
   float: left;
   clear: both;
   font-size: 15pt!important;
@@ -40,10 +40,11 @@
   height: 33px!important;
   min-height: 33px!important;
   max-height: 33px!important;
+  width: 100%;
 }
 
 #nobootstrap select {
-  width: 49%;
+  width: 100%;
   float: left;
   clear: both;
   height: 23px;
@@ -611,6 +612,26 @@ h1 {
 .blockUImg {
   vertical-align: middle;
 }
+
+
+div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: -0.5em 0 0 8em; }
+
+@-moz-document url-prefix() { 
+  div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: -3em 0 0 8em; }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  div.hintps {font-size:16px; float: left; position : relative !important; display : none; width : 300px; height : 300px; color : #5B9028; margin: -0.5em 0 0 8em; }
+}
+
+.col-md-6{
+  width: 49%;
+  float: left;
+  height: auto;
+  min-height: 100%;
+}
+
+body,html{height:100%;}
 
 
 
