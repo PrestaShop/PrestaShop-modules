@@ -511,3 +511,6 @@
 [submodule "envoimoinscher"]
 	path = envoimoinscher
 	url = https://github.com/PrestaShop/envoimoinscher.git
+[submodule "pagseguro"]
+	path = pagseguro
+	url = https://github.com/PrestaShop/pagseguro
