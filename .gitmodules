@@ -334,9 +334,6 @@
 [submodule "watermark"]
 	path = watermark
 	url = https://github.com/PrestaShop/watermark.git
-[submodule "seur/backward_compatibility"]
-	path = seur/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "prestastats/backward_compatibility"]
 	path = prestastats/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -514,3 +511,6 @@
 [submodule "realexredirect"]
 	path = realexredirect
 	url = https://github.com/PrestaShop/realexredirect.git
+[submodule "seur"]
+	path = seur
+	url = https://github.com/PrestaShop/seur.git
