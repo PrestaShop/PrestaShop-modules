@@ -34,9 +34,6 @@
 [submodule "payulatam/backward_compatibility"]
 	path = payulatam/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "realexredirect/backward_compatibility"]
-	path = realexredirect/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "textmaster/backward_compatibility"]
 	path = textmaster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -514,3 +511,6 @@
 [submodule "pagseguro"]
 	path = pagseguro
 	url = https://github.com/PrestaShop/pagseguro
+[submodule "realexredirect"]
+	path = realexredirect
+	url = https://github.com/PrestaShop/realexredirect.git
