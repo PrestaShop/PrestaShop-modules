@@ -20,6 +20,7 @@
 - cartman 
 - Ceboweb 
 - cedricfontaine 
+- cegoncalves 
 - CINS 
 - clément hollander 
 - Claude Traglia 
@@ -41,6 +42,7 @@
 - e.lito 
 - elmahdi 
 - emilien-puget 
+- esilvajrs2it 
 - ESPIAU Nicolas 
 - ethercreation 
 - fram 
