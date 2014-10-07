@@ -106,7 +106,7 @@ private function _displayAdminTpl()
 				'icon' => '../modules/payulatam/img/info-icon.gif',
 				'tab' => 'conf',
 				'selected' => (Tools::isSubmit('submitPayU') ? false : true),
-				'style' => 'config'
+				'style' => 'config_payu'
 			),
 			'credential' => array(
 				'title' => $this->l('Credentials'),
@@ -114,7 +114,7 @@ private function _displayAdminTpl()
 				'icon' => '../modules/payulatam/img/credential.png',
 				'tab' => 'crendeciales',
 				'selected' => (Tools::isSubmit('submitPayU') ? true : false),
-				'style' => 'credentials'
+				'style' => 'credentials_payu'
 			),
 		),
 		'tracking' => 'http://www.prestashop.com/modules/pagosonline.png?url_site='.Tools::safeOutput($_SERVER['SERVER_NAME']).'&id_lang='.

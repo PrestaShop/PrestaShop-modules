@@ -76,6 +76,7 @@ else
 $cart = new Cart((int)$reference_code);
 if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 {
+	$this->context = Context::getContext();
 	$state = 'PAYU_OS_FAILED';
 	if ($transaction_state == 6 && $pol_response_code == 5)
 		$state = 'PAYU_OS_FAILED';
@@ -125,8 +126,8 @@ if (Tools::strtoupper($signature) == Tools::strtoupper($signature_md5))
 			else
 			{
 				$customer = new Customer((int)$cart->id_customer);
-				$context->customer = $customer;
-				$context->currency = $currency_cart;
+				$this->context->customer = $customer;
+				$this->context->currency = $currency_cart;
 
 				$payulatam->validateOrder((int)$cart->id, (int)Configuration::get($state), (float)$cart->getordertotal(true), 'PayU Latam', null, array(), (int)$currency_cart->id, false, $customer->secure_key);
 				$order = new Order((int)Order::getOrderByCartId($cart->id));

@@ -36,9 +36,9 @@ body { font-family: Arial, Helvetica, sans-serif ; color: #58595b;}
 	-webkit-font-smoothing: antialiased;
 }
 
-header#header_payu { background: url(../img/header.jpg) no-repeat left top #f0f0f0; overflow: auto;}
+div.header_payu { background: url(../img/header.jpg) no-repeat left top #f0f0f0; overflow: auto;}
 
-section.payu { margin: 15px 0;}
+div.payu { margin: 15px 0;}
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 
@@ -57,7 +57,7 @@ p{font-size:13px;-webkit-font-smoothing: antialiased;}
 
 a{color:#009cdd;}
 
-li{font-size:13px;}
+.md-col_payu li{font-size:13px;}
 
 
 .tx-blue-ligth { color: #00adee;}
@@ -69,7 +69,7 @@ li{font-size:13px;}
 .button_pr{ width: 228px;}
 .md-icos_payu { margin: 25px 10px 10px; }
 .md-icos_payu ul { margin: 0; padding: 0;}
-.md-icos_payu li { display: inline-block; width: 32%;}
+.md-icos_payu li { display: inline-block; width: 32%;margin-right:0.188em;}
 
 
 .md-wrapper_payu {  margin: 0 25px; font-size: 0.9em; }
@@ -122,44 +122,49 @@ li{font-size:13px;}
 
 .clear{clear:both;}
 
-.config{width:50%;float:left;padding:0px 20px 0px 20px;}
+.config_payu{width:50%;float:left;padding:0px 20px 0px 20px;}
 
-.config h3, .credentials h3{color:#1c3a85;font-size:24px;}
+.config_payu h3, .credentials_payu h3{color:#1c3a85;font-size:24px;}
 
-.config h3{background:url('../img/config.png') no-repeat 0px;height:40px;padding-left:45px;padding-top:5px;}
+.config_payu h3{background:url('../img/config.png') no-repeat 0px;height:40px;padding-left:45px;padding-top:5px;}
 
-.credentials h3{background:url('../img/credentials.png') no-repeat 0px;height:40px;padding-left:45px;padding-top:5px;}
+.credentials_payu h3{background:url('../img/credentials.png') no-repeat 0px;height:40px;padding-left:45px;padding-top:5px;}
 
-.config ol{padding:0px 25px 0px 25px;}
+.config_payu ol{padding:0px 25px 0px 25px;}
 
-.config ol li{margin-bottom:15px;line-height: 20px;color:#009cdd;font-weight:bold;font-size:18px;}
+.config_payu ol li{margin-bottom:15px;line-height: 20px;color:#009cdd;font-weight:bold;font-size:18px;}
 
-.config .steps{font-weight:normal;color:#58595b;font-size:13px;}
+.config_payu .steps{font-weight:normal;color:#58595b;font-size:13px;}
 
-.credentials form{padding:0px 10px 0px 10px;}
+.credentials_payu form{padding:0px 10px 0px 10px;}
 
-.credentials ul{padding:0;}
+.credentials_payu ul{padding:0;}
 
-.credentials ul li{list-style-type: none;}
+.credentials_payu ul li{list-style-type: none;}
 
-.credentials{width:50%;float:right;padding:0px 20px 0px 20px;0px;border-left:dotted 2px #7e7e7e;float:left;}
+.credentials_payu{width:50%;float:right;padding:0px 20px 0px 20px;0px;border-left:dotted 2px #7e7e7e;float:left;}
 
-.credentials .steps{font-size:13px;}
+.credentials_payu .steps{font-size:13px;}
 
-.credentials label, .credentials .label_payu{font-size:15px;color:#009cdd; font-family: 'alwyn_new_rgregular';width:100% !important;text-align:left!important;font-weight:normal !important;padding:0 !important;}
+.credentials_payu label, .credentials_payu .label_payu{font-size:15px;color:#009cdd; font-family: 'alwyn_new_rgregular';width:100% !important;text-align:left!important;font-weight:normal !important;padding:0 !important;}
 
-.credentials input.input_payu[type="text"]{margin-bottom:10px; width:60%;margin-top:5px;padding:3px;}
+.credentials_payu input.input_payu[type="text"]{margin-bottom:10px; width:60%;margin-top:5px;padding:3px;}
 
-.credentials input[type="radio"]{margin-bottom:25px;margin-right:10px;vertical-align:top;margin-top:3px;}
+.credentials_payu input[type="radio"]{margin-bottom:25px;margin-right:10px;vertical-align:top;margin-top:3px;}
 
-.credentials .caption{color:#7e7e7e;font-style: italic;font-size: 12px;font-family:#arial;}
+.credentials_payu .caption{color:#7e7e7e;font-style: italic;font-size: 12px;font-family:#arial;}
 
 .md-btn, .button-form_payu{font-family:'alwyn_newlight';}
 
-div.credentials li.caption{font-family:arial;}
+div.credentials_payu li.caption{font-family:arial;}
 
 .advice{background:#C7E5F8; padding:3px 20px 10px 20px;}
 
-.credentials li h4{font-size:18px;margin-bottom:15px;}
+.credentials_payu li h4{font-size:18px;margin-bottom:15px;}
 
-#content{padding:0 !important;}
+/*#content{padding:0 !important;}*/
+
+
+.button_payu{padding:10px;color:#fff; !important}
+
+.nobootstrap input[type="submit"]{color:#fff;padding:10px;!important}
