@@ -514,3 +514,6 @@
 [submodule "seur"]
 	path = seur
 	url = https://github.com/PrestaShop/seur.git
+[submodule "klikandpay"]
+	path = klikandpay
+	url = https://github.com/PrestaShop/klikandpay.git
