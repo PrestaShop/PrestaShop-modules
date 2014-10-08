@@ -18,7 +18,7 @@
 * International Registered Trademark & Property of TextMaster
 */
 if (!defined('_PS_VERSION_'))
-    exit;
+	exit;
 
 if (!defined('_TEXTMASTER_CLASSES_DIR_'))
     define('_TEXTMASTER_CLASSES_DIR_', _PS_MODULE_DIR_.'textmaster/classes/');
@@ -593,27 +593,16 @@ class TextMaster extends Module
         $result = curl_exec($curl);
         
         if ($this->debug_mode)
-		{
-			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
-				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_EU_URI.'/oauth/token'.'\'
-				</h2> <h3>Params:</h3><pre>';
-			$debug_content .= $header;
-			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
-			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
-			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
-			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
-			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
-		}
+			$this->api_instance->logDebugContent($uri, Tools::jsonDecode($result, true), $header);
         
         return $result;
     }
 
     function createNewTextMasterUser($oAuthTokenNew, $email, $password, $phone = null)
     {
-        $uri      = TEXTMASTER_API_URI.'/admin/users';
+        $uri = TEXTMASTER_API_URI.'/admin/users';
 
-        $header   = array(
+        $header = array(
             "Content-Type: application/json",
             "Authorization: Bearer {$oAuthTokenNew}",
             "Accept: application/json",
@@ -640,7 +629,7 @@ class TextMaster extends Module
                 'group' => 'clients'
             )
         );
-        $post     = Tools::jsonEncode($post_arr);
+        $post = Tools::jsonEncode($post_arr);
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -653,18 +642,7 @@ class TextMaster extends Module
         $result = curl_exec($curl);
         
         if ($this->debug_mode)
-		{
-			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
-				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_API_URI.'/admin/users'.'\'
-				</h2> <h3>Params:</h3><pre>';
-			$debug_content .= print_r($post_arr, true);
-			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
-			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
-			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
-			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
-			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
-		}
+			$this->api_instance->logDebugContent($uri, $result, $post_arr);
         
         return $result;
     }
@@ -776,18 +754,7 @@ class TextMaster extends Module
         $result = curl_exec($curl);
         
         if ($this->debug_mode)
-		{
-			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
-				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_EU_URI.'/oauth/token'.'\'
-				</h2> <h3>Params:</h3><pre>';
-			$debug_content .= $header;
-			$debug_content .= '</pre><br /><h3>Response:</h3><pre>';
-			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
-			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
-			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
-			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
-		}
+			$this->api_instance->logDebugContent($uri, $result, $header);
         
         return $result;
     }
@@ -806,18 +773,7 @@ class TextMaster extends Module
         $result = curl_exec($curl);
         
         if ($this->debug_mode)
-		{
-			$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
-				['.date('Y-m-d H:i:s').']</h2><h2>\''.TEXTMASTER_API_URI.'/admin/users/me'.'\'
-				</h2> <h3>Params:</h3><pre>';
-			$debug_content .= "Authorization: Bearer {$oAuthToken}";
-			$debug_content .= '</pre><h3>Response:</h3><pre>';
-			$debug_content .= print_r(Tools::jsonDecode($result, true), true);
-			$debug_content .= '</pre>';
-			$debug_filename = Configuration::get(TextMasterAPI::CONFIG_DEBUG_FILENAME);
-			$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
-			@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
-		}
+			$this->api_instance->logDebugContent($uri, $result, array('Authorization' => 'Bearer '.$oAuthToken));
         
         return $result;
     }
@@ -1355,9 +1311,8 @@ class TextMaster extends Module
 
         $document_data = $document->getApiData();
 
-        $product_data_validation = $this->validateProductData($document_data);
-        if ($product_data_validation !== true)
-            return $this->_html .= $this->displayError($product_data_validation);
+        if ($product_data_validation_errors = $this->validateProductData($document_data))
+            return $this->_html .= $this->displayErrors($product_data_validation_errors);
 
         if (!$document_data || !isset($document_data['author_work']) || !isset($document_data['project_id']))
             return $this->_html .= $this->displayError($error_message);
@@ -1391,25 +1346,25 @@ class TextMaster extends Module
 
     private function validateProductData($document_data)
     {
-        $errors = '';
+        $errors = array();
 
-        foreach ($document_data['author_work'] as $element => $content)
-            if ($element == 'name' && !Validate::isCatalogName($content))
-                $errors .= $this->l('name is not valid').'<br />';
-            elseif ($element == 'description' && !Validate::isCleanHtml($content))
-                $errors .= $this->l('description is not valid').'<br />';
-            elseif ($element == 'description_short' && !Validate::isCleanHtml($content))
-                $errors .= $this->l('description_short is not valid').'<br />';
-            elseif ($element == 'meta_title' && !Validate::isGenericName($content))
-                $errors .= $this->l('meta_title is not valid').'<br />';
-            elseif ($element == 'meta_description' && !Validate::isGenericName($content))
-                $errors .= $this->l('meta_description is not valid').'<br />';
-            elseif ($element == 'meta_keywords' && !Validate::isGenericName($content))
-                $errors .= $this->l('meta_keywords is not valid').'<br />';
-            elseif ($element == 'link_rewrite' && !Validate::isLinkRewrite($content))
-                $errors .= $this->l('link_rewrite is not valid').'<br />';
+		foreach ($document_data['author_work'] as $element => $content)
+			if ($element == 'name' && !Validate::isCatalogName($content))
+				$errors[] = $this->l('name is not valid');
+			elseif ($element == 'description' && !Validate::isCleanHtml($content))
+				$errors[] = $this->l('description is not valid');
+			elseif ($element == 'description_short' && !Validate::isCleanHtml($content))
+				$errors[] = $this->l('description_short is not valid');
+			elseif ($element == 'meta_title' && !Validate::isGenericName($content))
+				$errors[] = $this->l('meta_title is not valid');
+			elseif ($element == 'meta_description' && !Validate::isGenericName($content))
+				$errors[] = $this->l('meta_description is not valid');
+			elseif ($element == 'meta_keywords' && !Validate::isGenericName($content))
+				$errors[] = $this->l('meta_keywords is not valid');
+			elseif ($element == 'link_rewrite' && !Validate::isLinkRewrite($content))
+				$errors[] = $this->l('link_rewrite is not valid');
 
-        return $errors === '' ? true : $errors;
+		return $errors;
     }
 
     private function updateProductData($document_data, $product, $id_lang)
