@@ -31,9 +31,6 @@
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "textmaster/backward_compatibility"]
-	path = textmaster/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "globkurier/backward_compatibility"]
 	path = globkurier/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -517,3 +514,6 @@
 [submodule "payulatam"]
 	path = payulatam
 	url = https://github.com/PrestaShop/payulatam
+[submodule "textmaster"]
+	path = textmaster
+	url = https://github.com/PrestaShop/textmaster
