@@ -23,12 +23,17 @@
 *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 */
 
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+if (!defined('_PS_VERSION_'))
+	exit;
+function upgrade_module_2_0($object)
+{
+	$upgrade_version = '2.0';
+	$object->upgrade_detail[$upgrade_version] = array();
 
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+	Configuration::updateValue('PAYU_LATAM', $upgrade_version);
 
-header("Location: ../");
-exit;
+	return Db::getInstance()->execute(
+		'DROP TABLE IF EXISTS `'._DB_PREFIX_.'payu_token`;');
+}
+
+?>

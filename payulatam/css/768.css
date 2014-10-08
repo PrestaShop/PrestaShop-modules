@@ -1,0 +1,21 @@
+@media only screen and (min-width : 768px) {
+
+
+.logo-py { float: left; margin: 50px 400px 0 50px;}
+
+.md-copy_payu { float: left; font-size: 1.5em; line-height: 1.1em; margin: 16px 154px 0 31px; padding: 0 15px; text-align: left; width: 302px; }
+.md-btnhd_payu { float: left; margin: 26px 10px 10px 46px; width: 275px; }
+.md-icos_payu { float: left; margin: -79px auto 0; width: 298px;}
+.md-tl_payu { font-size: 2.4em !important; }
+.iframevd_payu { float: left; margin: 20px 0 0 17px; width: 48%; }
+.md-wrapper_payu p { text-align: justify;}
+.md-col_payu { float: left; margin-top: 0;  overflow: auto; width: 49%; }
+
+.md-tl_payu { float: left; text-align: left; width:50%;}
+
+.content-1_payu > p { width: 100%; }
+.full{ width: 50% !important;}
+
+
+
+}
