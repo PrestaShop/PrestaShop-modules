@@ -104,6 +104,7 @@
 - Quetzacoalt91 
 - Rémi Gaillard 
 - RaphArbuz 
+- remixaz 
 - rimas 
 - Rinku Kazeno 
 - Robert 
@@ -137,6 +138,8 @@
 - Xavier 
 - Yann 
 - Yann CYRILLE 
+- youlyn 
+- Youlyn Chinome 
 - Youness ZIOUANE 
 - ZiZuu 
 - zuzul 
