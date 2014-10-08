@@ -24,6 +24,9 @@ require_once(dirname(__FILE__).'/config.api.php');
 
 class TextMasterAPI
 {
+	const CONFIG_DEBUG_FILENAME = 'TEXTMASTER_DEBUG_FILENAME';
+	const DEBUG_FILENAME_LENGTH	= 6;
+	
 	private $api_key;
 
 	private $api_secret;
@@ -48,10 +51,9 @@ class TextMasterAPI
 		$this->api_secret = (!$api_secret) ? TextMasterConfiguration::get('api_secret') : $api_secret;
 
 		date_default_timezone_set('UTC'); // timezone must be UTC, otherwise API refuses connection
-		$this->connection &= $this->testConnection();
 
 		$this->module_instance  = (!$module_instance or !is_object($module_instance)) ? Module::getInstanceByName('textmaster') : $module_instance; // initiates module instance
-		$this->getAuthors();
+		$this->connection &= $this->testConnection();
     }
 	
 	public static function getInstance($module_instance = null, $api_key = null, $api_secret = null)
@@ -125,10 +127,45 @@ class TextMasterAPI
 
 		$curl = $this->initConnection($name, $public, $clients, $version);
 		$content = curl_exec($curl);
+		
+		if ($this->module_instance->debug_mode)
+		{
+			$url = TEXTMASTER_API_URI . ($version ? "/$version" : '') . '/' . ($clients ? 'clients/' : '') . ($public ? 'public/' : '') . $name;
+			$this->logDebugContent($url, Tools::jsonDecode($content, true));
+		}
+		
 		curl_close($curl);
 		$this->$name = Tools::jsonDecode($content, true); // append data to cache
 		return $this->$name;
     }
+
+	public function logDebugContent($url, $result, $data = array(), $method = null)
+	{
+		$debug_content = '<h2 style="padding: 10px 0 10px 0; display: block; border-top: solid 2px #000000; border-bottom: solid 2px #000000;">
+			['.date('Y-m-d H:i:s').']</h2><h2>Request \''.Tools::safeOutput($url).'\'</h2>';
+
+		if ($method)
+			'<h3>Method: '.$method;
+
+		if ($data)
+		{
+			if ($method)
+				$debug_content .= ', ';
+			else
+				$debug_content .= '<h3>';
+
+			$debug_content .= 'Params:</h3><pre>';
+			$debug_content .= print_r($data, true);
+			$debug_content .= '</pre><br />';
+		}
+
+		$debug_content .= '<h3>Response:</h3><pre>';
+		$debug_content .= print_r($result, true);
+		$debug_content .= '</pre>';
+		$debug_filename = Configuration::get(self::CONFIG_DEBUG_FILENAME);
+		$current_content = Tools::file_get_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename);
+		@file_put_contents(_PS_MODULE_DIR_.'textmaster/'.$debug_filename, $debug_content.$current_content, LOCK_EX);
+	}
 
 	private function post($name, $data, $method = 'post')
 	{
@@ -147,6 +184,12 @@ class TextMasterAPI
 			curl_setopt($curl, CURLOPT_POSTFIELDS, Tools::jsonEncode($data));
 
 		$result = Tools::jsonDecode(curl_exec($curl), true);
+
+		if ($this->module_instance->debug_mode)
+		{
+			$url = TEXTMASTER_API_URI . '/'.TEXTMASTER_API_VERSION . '/clients/' . $name;
+			$this->logDebugContent($url, $result, $data, $method);
+		}
 
 		$info = curl_getinfo($curl);
 
