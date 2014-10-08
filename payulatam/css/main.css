@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+				
+   /* Mobile first*/
+		@import url('first.css');
+
+   /*@medias*/
+		/*@import url('360.css');*/
+		@import url('480.css');
+		@import url('640.css');
+		@import url('768.css');
+		@import url('1024.css');
+		/*@import url('max.css');*/
+		
+	/*Base css*/
+		body { margin: 0; padding: 0; }
+		img { border: none;}
+		a { text-decoration: none;}
+		p {}
+		
+		.md-col_payu, .md-wrapper_payu, .config_payu, .credentials_payu, .md-icos_payu li {-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+
+		header {}
+		nav {}
+		section {}
+		article {}
+		aside {}
+		footer {}
+
+		header, nav, section, article, aside, footer { display: block;}
+		
+		select {}
+
+
+		h1 { font-size: 2em; margin: 0.67em 0;}
+		h2 { font-size: 1.5em; margin: 0.83em 0;}
+		h3 { font-size: 1.17em; margin: 1em 0;}
+		h4 { font-size: 1em;}
+		h5 { font-size: 0.83em; margin: 1.67em 0;}
+		h6 { font-size: 0.67em; margin: 2.33em 0;}
+		
+		
+		

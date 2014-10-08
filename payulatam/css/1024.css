@@ -1,0 +1,19 @@
+@media only screen and (min-width : 1024px) {
+
+.header_payu { background-position: center top; background-size: 100% auto; height: 258px; overflow: auto;}
+.ctwrapper { margin: 10px auto; width: 960px; box-shadow: 0 0 5px #CCC; }
+.md-copy_payu { font-size: 1.8em; margin: 16px 273px 0 31px; width: 349px;}
+.logo-py { margin: 30px 400px 0 50px; }
+.md-icos_payu { float: left; margin: -65px 59px 0; width: 298px; }
+
+
+.form li { display: inline-block; margin: 0 0 5px; min-height: 34px; }
+.form li:nth-child(2n+1) { width: 12%;}
+.form li:nth-child(2n+2) { width: 20%;}
+.form li:nth-child(2n+3) { width: 67%;}
+
+.content_payu { min-height: 349px !important; }
+.content-2_payu.form p { margin: 0; padding: 22px 0 0 16px; position: absolute; width: 100%; }
+.full{ width: 90% !important;}
+
+}
