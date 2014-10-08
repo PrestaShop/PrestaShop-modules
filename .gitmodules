@@ -517,3 +517,6 @@
 [submodule "textmaster"]
 	path = textmaster
 	url = https://github.com/PrestaShop/textmaster
+[submodule "dpdpoland"]
+	path = dpdpoland
+	url = https://github.com/PrestaShop/dpdpoland.git
