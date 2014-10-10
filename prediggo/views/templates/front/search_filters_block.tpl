@@ -61,7 +61,7 @@
 <div id="prediggo_search_filter_block" class="block">
 	<h4>{l s='Prediggo search filters' mod='prediggo'}</h4>
 	<div class="block_content">
-		{if sizeof($aSortingOptions)}
+		{*if sizeof($aSortingOptions)}
 		<ul>
 			<li>{l s='Sortings' mod='prediggo'}</li>
 			{foreach from=$aSortingOptions item="oSortingOptions"}
@@ -70,7 +70,7 @@
 			</li>
 			{/foreach}
 		</ul>
-		{/if}
+		{/if}*}
 
 		{if sizeof($aCancellableFiltersGroups)}
 			<ul>
@@ -110,7 +110,6 @@
 						{/if}
 
 						{l s='(' mod='prediggo'}{$oFilteringOption->getNbOccurences()|intval}{l s=')' mod='prediggo'}
-
 					</a>
 				</li>
 				{/foreach}

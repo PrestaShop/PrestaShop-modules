@@ -15,6 +15,7 @@ class RedirectionObject
     private $targetUrl;
     private $pictureUrl;
     private $label;
+    private $redirect = false;
 
     /**
      * Gets the redirection label, usually used as the text displayed as hyperlink.
@@ -69,5 +70,25 @@ class RedirectionObject
     {
         $this->targetUrl = $targetUrl;
     }
+
+    /**
+     * Gest whether this ad should be in redirect mode or not
+     * @return boolean
+     */
+    public function getRedirect()
+    {
+        return $this->redirect;
+    }
+
+    /**
+     * Sets whether this ad should be in redirect mode or not
+     * @param boolean $redirect
+     */
+    public function setRedirect($redirect)
+    {
+        $this->redirect = $redirect;
+    }
+
+
 
 }

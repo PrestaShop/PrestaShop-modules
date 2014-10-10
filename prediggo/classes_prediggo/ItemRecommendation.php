@@ -12,11 +12,12 @@ require_once 'RecDimensionConstants.php';
  */
 class ItemRecommendation
 {
-    protected $dimension = RecDimensionConstants::ONTOLOGY_FILTERING ;
+    protected $dimension = "" ;
     protected $itemId = "";
     protected $notificationId = "";
     protected $itemName = "";
     protected $inferredFrom = "";
+    protected $ruleId = 0;
     protected $additionalAttributes = array();
 
 
@@ -52,6 +53,23 @@ class ItemRecommendation
      */
     public function setItemId($itemId) {
         $this->itemId = $itemId;
+    }
+
+
+    /**
+     * Gets the Rule identifier in the backoffice, for debugging purpose only.
+     * @return string the Rule identifier
+     */
+    public function getRuleId() {
+        return $this->ruleId;
+    }
+
+    /**
+     * Gets the Rule identifier in the backoffice.
+     * @param string $ruleId the Rule identifier
+     */
+    public function setRuleId($ruleId) {
+        $this->ruleId = $ruleId;
     }
 
 

@@ -15,10 +15,16 @@ require_once "GetTopNSalesRequest.php";
 require_once "GetTopNViewedRequest.php";
 require_once "NotifyPrediggoRequest.php";
 require_once "GetAdvertisementRequest.php";
+require_once "GetAdvertisementClickUrlRequest.php";
 
 require_once "BeginProductImportRequest.php";
 require_once "ProductImportRequest.php";
 require_once "EndProductImportRequest.php";
+
+require_once "BeginUserProfileImportRequest.php";
+require_once "UserProfileImportRequest.php";
+require_once "EndUserProfileImportRequest.php";
+
 
 require_once "PrediggoException.php";
 
@@ -257,6 +263,7 @@ class PrediggoService
     }
 
 
+
     /**
      * Executes a getAdvertisement query.
      * @param GetAdvertisementParam $param An object containing all the necessary parameters for this query
@@ -272,6 +279,20 @@ class PrediggoService
     }
 
 
+    /**
+     * Executes a getAdvertisementClickUrl query.
+     * @param GetAdvertisementClickUrlParam $param An object containing all the necessary parameters for this query
+     * @return GetAdvertisementClickUrlResult An object containing the results.
+     * @throws PrediggoException in case of errors
+     */
+    public static function getAdvertisementClickUrl( GetAdvertisementClickUrlParam $param)
+    {
+        $request = new GetAdvertisementClickUrlRequest($param);
+
+        self::executeCall($request);
+        return $request->getResultObject();
+    }
+    
     /**
      * Execute an beginProductImport query.
      * Please refer to the documentation for a complete description of use cases and parameters.
@@ -372,8 +393,6 @@ class PrediggoService
         self::executeCall($request);
         return $request->getResultObject();
     }
-
-
 
 
 

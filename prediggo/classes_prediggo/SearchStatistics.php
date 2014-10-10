@@ -150,7 +150,7 @@ class SearchStatistics
     }
 
     /**
-     * Returns the actual language code
+     * Returns the current language code
      * @return string the language code
      */
     public function getLanguageCode()

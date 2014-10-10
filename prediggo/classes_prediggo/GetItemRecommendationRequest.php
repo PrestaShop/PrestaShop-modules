@@ -49,7 +49,6 @@ class GetItemRecommendationRequest extends GetFilteredRecommendationRequest
         $this->addParameterToMap($argMap, "itemID", $this->parameter->getItemInfo()->getItemId());
         $this->addParameterToMap($argMap, "name", $this->parameter->getItemInfo()->getItemName());
 
-
         $bufferKeys = "";
         $bufferValues = "";
 

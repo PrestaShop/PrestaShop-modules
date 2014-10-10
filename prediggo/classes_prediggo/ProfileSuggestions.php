@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'AttributeSuggestion.php';
 require_once 'WordSuggestion.php';
 require_once 'ProductSuggestion.php';
 
@@ -14,7 +14,7 @@ require_once 'ProductSuggestion.php';
  */
 class ProfileSuggestions
 {
-
+    protected  $suggestedAttributes = array();
     protected  $suggestedWords = array();
     protected  $suggestedProducts = array();
 
@@ -65,6 +65,26 @@ class ProfileSuggestions
     }
 
 
+    /**
+     * Gets the list of recommended attributes.
+     * @return array an array of AttributeSuggestion objects
+     */
+    public function getSuggestedAttributes()
+    {
+        return $this->suggestedAttributes;
+    }
+
+    /**
+     * Adds a new suggested attribute in this profile. This function should not be called
+     * from customer code.
+     *
+     * @param AttributeSuggestion $attribute The attribute to add.
+     */
+    public function addSuggestedAttribute( AttributeSuggestion $attribute )
+    {
+        $this->suggestedAttributes[] = $attribute;
+    }
+    
 
     /**
      * Gets the profile name

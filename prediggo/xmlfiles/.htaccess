@@ -1,4 +1,4 @@
-AuthUserFile D:\projectweb\prestashop15/modules/prediggo/xmlfiles/.htpasswd
+AuthUserFile D:\projectweb\pernod2/modules/prediggo/xmlfiles/.htpasswd
 AuthName "Restricted Access"
 AuthType Basic
 Require valid-user

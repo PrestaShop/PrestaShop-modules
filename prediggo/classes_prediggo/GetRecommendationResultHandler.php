@@ -133,6 +133,10 @@ class GetRecommendationResultHandler extends  DefaultResultHandler
                     $item->setItemName( $attribute->value );
                     break;
 
+                case "ruleID":
+                    $item->setRuleId( intval($attribute->value) );
+                    break;
+
                 case "inferredfrom":
                     $item->setInferredFrom( $attribute->value );
                     break;

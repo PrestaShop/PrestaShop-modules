@@ -27,12 +27,194 @@
 
 class PrediggoConfig
 {
+	public $categoryPageName='category';
+	public $manufacturerPageName='manufacturer';
+	public $attNameCategory='genre';
+	public $attNameManufacturer='supplierid';
+	
+	public $optionsHooksHomePage= array
+	(
+		  array(
+				'id_option' => 'displayHome',                
+				'name' => 'Hook: displayHome - Called at the center of the homepage' 
+			),
+		array(
+				'id_option' => 'displayOrderConfirmation',                
+				'name' => 'Hook: displayOrderConfirmation - This hook is called on order confirmation page.' 
+			),
+		);
+		
+	public $optionsHooksAllPage= array
+	(
+		array(
+		    'id_option' => 'displayHeader',
+		    'name' => 'Hook: displayHeader - Called within the HTML <head> tags. Ideal location for adding JavaScript and CSS files.'
+		  ),
+		  array(
+		    'id_option' => 'displayTop',
+		    'name' => 'Hook: displayTop - Called in the page\'s header.'
+		  ),
+		  array(
+		    'id_option' => 'displayLeftColumn',
+		    'name' => 'Hook: displayLeftColumn - Called when loading the left column.'
+		  ),
+		  array(
+		    'id_option' => 'displayRightColumn',
+		    'name' => 'Hook: displayRightColumn - Called when loading the right column.'
+		  ),
+		  array(
+		    'id_option' => 'displayFooter',
+		    'name' => 'Hook: displayFooter - Called in the page\'s footer.'
+		  ),
+	);
+
+    public $optionsHooksBlocklayeredPage= array
+    (
+        array(
+            'id_option' => 'displayHeader',
+            'name' => 'Hook: displayHeader - Called within the HTML <head> tags. Ideal location for adding JavaScript and CSS files.'
+        ),
+        array(
+            'id_option' => 'displayTop',
+            'name' => 'Hook: displayTop - Called in the page\'s header.'
+        ),
+        array(
+            'id_option' => 'displayLeftColumn',
+            'name' => 'Hook: displayLeftColumn - Called when loading the left column.'
+        ),
+        array(
+            'id_option' => 'displayRightColumn',
+            'name' => 'Hook: displayRightColumn - Called when loading the right column.'
+        ),
+        array(
+            'id_option' => 'displayFooter',
+            'name' => 'Hook: displayFooter - Called in the page\'s footer.'
+        ),
+    );
+	
+	public $optionsHooksProductPage= array
+	(
+		  array(
+				'id_option' => 'displayLeftColumnProduct',                
+				'name' => 'Hook: displayLeftColumnProduct - Called right before the "Print" link, under the picture.' 
+			),
+			array(
+				'id_option' => 'displayRightColumnProduct',                
+				'name' => 'Hook: displayRightColumnProduct - Called right after the block for the "Add to Cart" button.' 
+			),
+			array(
+				'id_option' => 'displayProductButtons',                
+				'name' => 'Hook: displayProductButtons - Called inside the block for the "Add to Cart" button, right after that button.' 
+			),
+			array(
+				'id_option' => 'actionProductOutOfStock',                
+				'name' => 'Hook: actionProductOutOfStock - Called inside the block for the "Add to Cart" button, right after the "Availability" information.' 
+			),
+			array(
+				'id_option' => 'displayFooterProduct',                
+				'name' => 'Hook: displayFooterProduct - Called right before the tabs.' 
+			),
+			array(
+				'id_option' => 'displayProductTab',                
+				'name' => 'Hook: displayProductTab - Called in tabs list, such as "More info", "Data sheet", "Accessories", etc.' 
+			),
+			array(
+				'id_option' => 'displayProductTabContent',                
+				'name' => 'Hook: displayProductTabContent - Called when a tab is clicked.' 
+			),
+		);
+	
+	public $optionsHooksBasketPage= array
+	(
+		  array(
+				'id_option' => 'displayShoppingCart',                
+				'name' => 'Hook: displayShoppingCart - Called after the cart\'s table of items, right above the navigation buttons.' 
+			),
+			array(
+				'id_option' => 'displayShoppingCartFooter',                
+				'name' => 'Hook: displayShoppingCartFooter - Called right below the cart items table.' 
+			),
+			array(
+				'id_option' => 'displayOrderDetail',                
+				'name' => 'Hook: displayOrderDetail - Displayed on order detail on front office.' 
+			),
+			array(
+				'id_option' => 'displayBeforeCarrier',                
+				'name' => 'Hook: displayBeforeCarrier - This hook is display before the carrier list on Front office.' 
+			),
+			array(
+				'id_option' => 'displayCarrierList',                
+				'name' => 'Hook: displayCarrierList - This hook is display during the carrier list on Front office.' 
+			),
+		);
+
+	public $optionsHooksCategoryPage= array
+	(
+		array(
+		    'id_option' => 'displayHeadercategory',
+		    'name' => 'Hook: displayHeaderCategory - Called within the HTML <head> tags. Ideal location for adding JavaScript and CSS files.'
+		  ),
+		  array(
+		    'id_option' => 'displayTopcategory',
+		    'name' => 'Hook: displayTopCategory - Called in the  page\'s header on a category page, before the displayTop hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayLeftColumncategory',
+		    'name' => 'Hook: displayLeftColumnCategory - Called when loading the left column on a category page, before the displayLeftColumn hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayRightColumncategory',
+		    'name' => 'Hook: displayRightColumnCategory - Called when loading the right column on a category page, before the displayRightColumn hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayFootercategory',
+		    'name' => 'Hook: displayFooterCategory - Called in the page\'s footer on a category page, before the displayFooter hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayHeadermanufacturer',
+		    'name' => 'Hook: displayHeaderManufacturer - Called within the HTML <head> tags on a manufacturer page. Ideal location for adding JavaScript and CSS files.'
+		  ),
+		  array(
+		    'id_option' => 'displayTopmanufacturer',
+		    'name' => 'Hook: displayTopManufacturer - Called in the  page\'s header on a manufacturer page, before the displayTop hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayLeftColumnmanufacturer',
+		    'name' => 'Hook: displayLeftColumnManufacturer - Called when loading the  left column on a manufacturer page, before the displayLeftColumn hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayRightColumnmanufacturer',
+		    'name' => 'Hook: displayRightColumnManufacturer - Called when loading the  right column on a manufacturer page, before the displayRightColumn hook.'
+		  ),
+		  array(
+		    'id_option' => 'displayFootermanufacturer',
+		    'name' => 'Hook: displayFooterManufacturer - Called in the page\'s footer on a manufacturer page, before the displayFooter hook.'
+		  ),
+	);
+
+    public $optionsHooksCustomerPage= array
+    (
+        array(
+            'id_option' => 'displayCustomerAccount',
+            'name' => 'Hook: displayCustomerAccount - Called on the client account homepage, after the list of available links. Ideal location to add a link to this list.'
+        ),
+        array(
+            'id_option' => 'displayMyAccountBlock',
+            'name' => 'Hook: displayMyAccountBlock - Called within the "My account" block, in the left column, below the list of available links. This is the ideal location to add a link to this list.'
+        ),
+        array(
+            'id_option' => 'displayMyAccountBlockfooter',
+            'name' => 'Hook: displayMyAccountBlockfooter - Displays extra information inside the "My account" block.'
+        ),
+    );
+
+
 	/** @var ImportConfig Singleton Object */
 	private static $instance;
-	
+
 	/** @var Context Singleton Object */
 	private $oContext;
-	
+
 	/** @var array list of configuration variables */
 	private $aConfs = array(
 		'web_site_id' => array(
@@ -51,14 +233,6 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> false,
 		),
-        'server_id_checked'   => array(
-            'name' 				=> 'PREDIGGO_SERVER_ID_CHECKED',
-            'type'				=> 'int',
-            'val' 				=> '0',
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
         'shop_name'             => array(
             'name' 				=> 'PREDIGGO_SHOP_NAME',
             'type'				=> 'text',
@@ -94,22 +268,14 @@ class PrediggoConfig
         'server_url_check' => array(
             'name' 				=> 'PREDIGGO_SERVER_URL_CHECK',
             'type'				=> 'text',
-            'val' 				=> 'http://www.prediggo.com/prestakeys',
+            'val' 				=> 'http://www.prediggo.com/prestakeys/',
             'multilang'			=> false,
             'multishopgroup'	=> false,
             'multishop'			=> true,
         ),
-			
+
 		/* EXPORT CONFIGURATION */
 		// The FG Corresponds to FILE_GENERATION
-		'logs_file_generation' => array(
-			'name' 				=> 'PREDIGGO_LOGS_FG',
-			'type'				=> 'int',
-			'val' 				=> 0,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> false,
-		),
 		'products_file_generation' => array(
 			'name' 				=> 'PREDIGGO_PRODUCTS_FG',
 			'type'				=> 'int',
@@ -206,7 +372,7 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
+
 		/* PROTECTION CONFIGURATION */
 		'htpasswd_user' => array(
 			'name' 				=> 'PREDIGGO_HTPASSWD_USER',
@@ -224,16 +390,43 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> false,
 		),
-		
+
+        /* LOG CONFIGURATION */
+
+        'logs_generation' => array(
+            'name' 				=> 'PREDIGGO_LOGS',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        /*'logs_reco_file_generation' => array(
+            'name' 				=> 'PREDIGGO_RECO_LOGS',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'logs_search_file_generation' => array(
+            'name' 				=> 'PREDIGGO_SEARCH_LOGS_FG',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'logs_file_generation' => array(
+            'name' 				=> 'PREDIGGO_LOGS_FG',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> false,
+        ),*/
+
 		/* RECOMMENDATIONS CONFIGURATION */
-		'logs_reco_file_generation' => array(
-			'name' 				=> 'PREDIGGO_RECO_LOGS_FG',
-			'type'				=> 'int',
-			'val' 				=> 0,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
 
         'hook_left_column' => array(
             'name' 				=> 'PREDIGGO_HOOK_LEFT_C',
@@ -340,24 +533,50 @@ class PrediggoConfig
             'multishop'			=> true,
         ),
 
-		'home_recommendations' => array(
-			'name' 				=> 'PREDIGGO_HOME_RECO',
+		/* HOME PAGE CONFIGURATION - Block 0*/
+		'home_0_activated' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_ACTIVATED',
 			'type'				=> 'int',
 			'val' 				=> 1,
 			'multilang'			=> false,
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		'home_nb_items' => array(
-			'name' 				=> 'PREDIGGO_HOME_NB_RECO',
+		'home_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_NB_RECO',
 			'type'				=> 'int',
 			'val' 				=> 5,
 			'multilang'			=> false,
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		'home_block_title' => array(
-			'name' 				=> 'PREDIGGO_HOME_BLOCK_TITLE',
+		'home_0_variant_id' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_0_hook_name' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_0_template_name' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_0_block_label' => array(
+			'name' 				=> 'PREDIGGO_HOME_0_BLOCK_LABEL',
 			'type'				=> 'text',
 			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
 			'multilang'			=> true,
@@ -365,6 +584,958 @@ class PrediggoConfig
 			'multishop'			=> true,
 		),
 		
+		/* HOME PAGE CONFIGURATION - Block 1*/
+		'home_1_activated' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_1_nb_items' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_1_variant_id' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_1_hook_name' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_1_template_name' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'home_1_block_label' => array(
+			'name' 				=> 'PREDIGGO_HOME_1_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+
+		/* ALL PAGE CONFIGURATION - Block 0 */
+		'allpage_0_activated' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_0_variant_id' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_0_hook_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_0_template_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_0_block_label' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_0_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* ALL PAGE CONFIGURATION - Block 0 */
+		'allpage_1_activated' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_1_nb_items' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_1_variant_id' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_1_hook_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_1_template_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_1_block_label' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_1_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+
+		/* ALL PAGE  CONFIGURATION - Block 2*/
+		'allpage_2_activated' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE2_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_2_nb_items' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_2_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_2_variant_id' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_2_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_2_hook_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_2_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_2_template_name' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_2_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'allpage_2_block_label' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE_2_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* PRODUCT PAGE  CONFIGURATION - Block 0*/
+		'productpage_0_activated' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_0_variant_id' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_0_hook_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_0_template_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_0_block_label' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_0_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* PRODUCT PAGE  CONFIGURATION - Block 1*/
+		'productpage_1_activated' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_1_nb_items' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_1_variant_id' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_1_hook_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_1_template_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_1_block_label' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_1_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* PRODUCT PAGE  CONFIGURATION - Block 2*/
+		'productpage_2_activated' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_2_nb_items' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_2_variant_id' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_2_hook_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_2_template_name' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'productpage_2_block_label' => array(
+			'name' 				=> 'PREDIGGO_PRODPG_2_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		
+		/* BASKET PAGE CONFIGURATION - Block 0*/
+		'basket_0_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_0_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_0_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_0_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_0_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_0_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* HOME PAGE CONFIGURATION - Block 1*/
+		'basket_1_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_1_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_1_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_1_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_1_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_1_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_1_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* BASKET PAGE CONFIGURATION - Block 2*/
+		'basket_2_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_2_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_2_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_2_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_2_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_2_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_2_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* HOME PAGE CONFIGURATION - Block 3*/
+		'basket_3_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_3_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_3_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_3_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_3_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_3_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_3_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* BASKET PAGE CONFIGURATION - Block 4*/
+		'basket_4_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_4_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_4_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_4_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_4_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_4_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_4_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* HOME PAGE CONFIGURATION - Block 5*/
+		'basket_5_activated' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_5_nb_items' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_5_variant_id' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_5_hook_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_5_template_name' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'basket_5_block_label' => array(
+			'name' 				=> 'PREDIGGO_BASKET_5_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* CATEGORY PAGE CONFIGURATION - Block 0 */
+		'category_0_activated' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_0_variant_id' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_0_hook_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_0_template_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_0_block_label' => array(
+			'name' 				=> 'PREDIGGO_CATPG_0_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		
+		/* CATEGORY PAGE CONFIGURATION - Block 0 */
+		'category_1_activated' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_1_nb_items' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_1_variant_id' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_1_hook_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_1_template_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_1_block_label' => array(
+			'name' 				=> 'PREDIGGO_CATPG_1_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+
+		/* CATEGORY PAGE  CONFIGURATION - Block 2*/
+		'category_2_activated' => array(
+			'name' 				=> 'PREDIGGO_ALLPAGE2_ACTIVATED',
+			'type'				=> 'int',
+			'val' 				=> 1,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_2_nb_items' => array(
+			'name' 				=> 'PREDIGGO_CATPG_2_NB_RECO',
+			'type'				=> 'int',
+			'val' 				=> 5,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_2_variant_id' => array(
+			'name' 				=> 'PREDIGGO_CATPG_2_VARIANT_ID',
+			'type'				=> 'int',
+			'val' 				=> 0,
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_2_hook_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_2_HOOK_NAME',
+			'type'				=> 'select',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_2_template_name' => array(
+			'name' 				=> 'PREDIGGO_CATPG_2_TEMPLATE_NAME',
+			'type'				=> 'text',
+			'size'     			=> 100,
+			'val' 				=> 'list_recommendations.tpl',
+			'multilang'			=> false,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+		'category_2_block_label' => array(
+			'name' 				=> 'PREDIGGO_CATPG_2_BLOCK_LABEL',
+			'type'				=> 'text',
+			'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+			'multilang'			=> true,
+			'multishopgroup'	=> false,
+			'multishop'			=> true,
+		),
+
+        /* CUSTOMER PAGE CONFIGURATION - Block 0 */
+        'customer_0_activated' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_ACTIVATED',
+            'type'				=> 'int',
+            'val' 				=> 1,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_0_nb_items' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_NB_RECO',
+            'type'				=> 'int',
+            'val' 				=> 5,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_0_variant_id' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_VARIANT_ID',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_0_hook_name' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_HOOK_NAME',
+            'type'				=> 'select',
+            'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_0_template_name' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'list_recommendations.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_0_block_label' => array(
+            'name' 				=> 'PREDIGGO_CUST_0_BLOCK_LABEL',
+            'type'				=> 'text',
+            'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+            'multilang'			=> true,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+
+        /* CUSTOMER PAGE CONFIGURATION - Block 1 */
+        'customer_1_activated' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_ACTIVATED',
+            'type'				=> 'int',
+            'val' 				=> 1,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_1_nb_items' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_NB_RECO',
+            'type'				=> 'int',
+            'val' 				=> 5,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_1_variant_id' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_VARIANT_ID',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_1_hook_name' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_HOOK_NAME',
+            'type'				=> 'select',
+            'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_1_template_name' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'list_recommendations.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'customer_1_block_label' => array(
+            'name' 				=> 'PREDIGGO_CUST_1_BLOCK_LABEL',
+            'type'				=> 'text',
+            'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+            'multilang'			=> true,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+		
+		'home_footer_recommendations' => array(
+		        'name' 				=> 'PREDIGGO_HOME_FOOTER_RECO',
+		        'type'				=> 'int',
+		        'val' 				=> 1,
+		        'multilang'			=> false,
+		        'multishopgroup'	=> false,
+		        'multishop'			=> true,
+		),
+		'home_footer_nb_items' => array(
+		        'name' 				=> 'PREDIGGO_HOME_FOOTER_NB_RECO',
+		        'type'				=> 'int',
+		        'val' 				=> 5,
+		        'multilang'			=> false,
+		        'multishopgroup'	=> false,
+		        'multishop'			=> true,
+		),
+		'home_sales_block_title' => array(
+		        'name' 				=> 'PREDIGGO_HOME_SALES_BLOCK_TITLE',
+		        'type'				=> 'html',
+		        'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+		        'multilang'			=> true,
+		        'multishopgroup'	=> false,
+		        'multishop'			=> true,
+		),
+		'home_views_block_title' => array(
+		        'name' 				=> 'PREDIGGO_HOME_VIEWS_BLOCK_TITLE',
+		        'type'				=> 'html',
+		        'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+		        'multilang'			=> true,
+		        'multishopgroup'	=> false,
+		        'multishop'			=> true,
+		),
+
 		'error_recommendations' => array(
 			'name' 				=> 'PREDIGGO_ERROR_RECO',
 			'type'				=> 'int',
@@ -389,336 +1560,6 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
-		'product_recommendations' => array(
-			'name' 				=> 'PREDIGGO_PRODUCT_RECO',
-			'type'				=> 'int',
-			'val' 				=> 1,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-        'product_variant_ID' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_VARIANT_ID',
-            'type'				=> 'int',
-            'val' 				=> 0,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-		'product_nb_items' => array(
-			'name' 				=> 'PREDIGGO_PRODUCT_NB_RECO',
-			'type'				=> 'int',
-			'val' 				=> 6,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-		'product_block_title' => array(
-			'name' 				=> 'PREDIGGO_PRODUCT_BLOCK_TITLE',
-			'type'				=> 'text',
-			'val' 				=> 0,
-			'multilang'			=> true,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-
-        'product_recommendations_one' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_RECO_ONE',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_variant_ID_one' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_VARIANT_ID_ONE',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'product_nb_items_one' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_NB_RECO_ONE',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_block_title_one' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_BLOCK_TITLE_ONE',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'product_recommendations_two' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_RECO_TWO',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_variant_ID_two' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_VARIANT_ID_TWO',
-            'type'				=> 'int',
-            'val' 				=> 2,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'product_nb_items_two' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_NB_RECO_TWO',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_block_title_two' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_BLOCK_TITLE_TWO',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'product_recommendations_th' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_RECO_TH',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_variant_ID_th' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_VARIANT_ID_TH',
-            'type'				=> 'int',
-            'val' 				=> 3,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'product_nb_items_th' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_NB_RECO_TH',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_block_title_th' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_BLOCK_TITLE_TH',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'product_recommendations_fo' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_RECO_FO',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_variant_ID_fo' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_VARIANT_ID_FO',
-            'type'				=> 'int',
-            'val' 				=> 4,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'product_nb_items_fo' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_NB_RECO_FO',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'product_block_title_fo' => array(
-            'name' 				=> 'PREDIGGO_PRODUCT_BLOCK_TITLE_FO',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-		
-		'category_recommendations' => array(
-			'name' 				=> 'PREDIGGO_CATEGORY_RECO',
-			'type'				=> 'int',
-			'val' 				=> 1,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-        'category_variant_ID' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_VARIANT_ID',
-            'type'				=> 'int',
-            'val' 				=> 0,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-		'category_nb_items' => array(
-			'name' 				=> 'PREDIGGO_CATEGORY_NB_RECO',
-			'type'				=> 'int',
-			'val' 				=> 6,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-		'category_block_title' => array(
-			'name' 				=> 'PREDIGGO_CATEGORY_BLOCK_TITLE',
-			'type'				=> 'text',
-            'val' 				=> 0,
-			'multilang'			=> true,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
-
-        'category_recommendations_o' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_RECO_O',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_variant_ID_o' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_VARIANT_ID_O',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'category_nb_items_o' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_NB_RECO_O',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_block_title_o' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_BLOCK_TITLE_O',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'category_recommendations_tw' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_RECO_TW',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_variant_ID_tw' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_VARIANT_ID_TW',
-            'type'				=> 'int',
-            'val' 				=> 2,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'category_nb_items_tw' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_NB_RECO_TW',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_block_title_tw' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_BLOCK_TITLE_TW',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'category_recommendations_th' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_RECO_TH',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_variant_ID_th' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_VARIANT_ID_TH',
-            'type'				=> 'int',
-            'val' 				=> 3,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'category_nb_items_th' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_NB_RECO_TH',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_block_title_th' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_BLOCK_TITLE_TH',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-
-        'category_recommendations_fo' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_RECO_FO',
-            'type'				=> 'int',
-            'val' 				=> 1,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_variant_ID_fo' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_VARIANT_ID_FO',
-            'type'				=> 'int',
-            'val' 				=> 4,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> false,
-        ),
-        'category_nb_items_fo' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_NB_RECO_FO',
-            'type'				=> 'int',
-            'val' 				=> 6,
-            'multilang'			=> false,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
-        'category_block_title_fo' => array(
-            'name' 				=> 'PREDIGGO_CATEGORY_BLOCK_TITLE_FO',
-            'type'				=> 'text',
-            'val' 				=> 0,
-            'multilang'			=> true,
-            'multishopgroup'	=> false,
-            'multishop'			=> true,
-        ),
 
         'customer_recommendations' => array(
 			'name' 				=> 'PREDIGGO_CUSTOMER_RECO',
@@ -744,7 +1585,7 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
+
 		'cart_recommendations' => array(
 			'name' 				=> 'PREDIGGO_CART_RECO',
 			'type'				=> 'int',
@@ -769,7 +1610,7 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
+
 		'best_sales_recommendations' => array(
 			'name' 				=> 'PREDIGGO_BEST_SALES_RECO',
 			'type'				=> 'int',
@@ -794,32 +1635,57 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
-		'blocklayered_recommendations' => array(
-			'name' 				=> 'PREDIGGO_LAYERED_RECO',
+
+		'blocklayered_0_recommendations' => array(
+			'name' 				=> 'PREDIGGO_LAY_0_RECO',
 			'type'				=> 'int',
 			'val' 				=> 1,
 			'multilang'			=> false,
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		'blocklayered_nb_items' => array(
-			'name' 				=> 'PREDIGGO_LAYERED_NB_RECO',
+		'blocklayered_0_nb_items' => array(
+			'name' 				=> 'PREDIGGO_LAY_0_NB_RECO',
 			'type'				=> 'int',
 			'val' 				=> 3,
 			'multilang'			=> false,
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		'blocklayered_block_title' => array(
-			'name' 				=> 'PREDIGGO_LAYERED_BLOCK_TITLE',
+        'blocklayered_0_variant_id' => array(
+            'name' 				=> 'PREDIGGO_LAY_0_VARIANT_ID',
+            'type'				=> 'int',
+            'val' 				=> 0,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+		'blocklayered_0_block_title' => array(
+			'name' 				=> 'PREDIGGO_LAY_0_BLOCK_TITLE',
 			'type'				=> 'text',
 			'val' 				=> 0,
 			'multilang'			=> true,
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
+        'blocklayered_0_hook_name' => array(
+            'name' 				=> 'PREDIGGO_LAY_0_HOOK_NAME',
+            'type'				=> 'select',
+            'val' 				=> array(1 => 'Prediggo', 2 => 'Prediggo', 3 => 'Prediggo', 4 => 'Prediggo', 5 => 'Prediggo'),
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'blocklayered_0_template_name' => array(
+            'name' 				=> 'PREDIGGO_LAY_0_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'list_recommendations.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+
 		/* SEARCHS CONFIGURATION */
 		'search_active' => array(
 			'name' 				=> 'PREDIGGO_SEARCH_ACTIVE',
@@ -845,14 +1711,51 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		'logs_search_file_generation' => array(
-			'name' 				=> 'PREDIGGO_SEARCH_LOGS_FG',
-			'type'				=> 'int',
-			'val' 				=> 0,
-			'multilang'			=> false,
-			'multishopgroup'	=> false,
-			'multishop'			=> true,
-		),
+        'pagination_template_name' => array(
+            'name' 				=> 'PREDIGGO_PAGI_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'pagination.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'search_filters_sort_by_template_name' => array(
+            'name' 				=> 'PREDIGGO_SFSB_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'search_filters_sort_by.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'search_filter_block_template_name' => array(
+            'name' 				=> 'PREDIGGO_SFB_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'search_filters_block.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'prod_compare_template_name' => array(
+            'name' 				=> 'PREDIGGO_PCOMP_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'product_compare.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'prod_list_template_name' => array(
+            'name' 				=> 'PREDIGGO_PLIST_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'product-list.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
 		'searchandizing_active' => array(
 			'name' 				=> 'PREDIGGO_SEARCHANDIZING_ACTIVE',
 			'type'				=> 'int',
@@ -885,6 +1788,60 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
+        'search_0_template_name' => array(
+            'name' 				=> 'PREDIGGO_SERCH_0_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'search_block.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'search_main_template_name' => array(
+            'name' 				=> 'PREDIGGO_SCHMAIN_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'search.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'autoc_template_name' => array(
+            'name' 				=> 'PREDIGGO_AUTOC_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'autocomplete_dum.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'autop_template_name' => array(
+            'name' 				=> 'PREDIGGO_AUTOP_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'autocomplete_product.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'autos_template_name' => array(
+            'name' 				=> 'PREDIGGO_AUTOS_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'autocomplete_suggest.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'autocat_template_name' => array(
+            'name' 				=> 'PREDIGGO_AUTOCAT_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'autocomplete_attributes.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
 		'suggest_active' => array(
 			'name' 				=> 'PREDIGGO_SUGGEST_ACTIVE',
 			'type'				=> 'int',
@@ -901,7 +1858,25 @@ class PrediggoConfig
 			'multishopgroup'	=> false,
 			'multishop'			=> true,
 		),
-		
+        //Category
+        'category_active' => array(
+            'name' 				=> 'PREDIGGO_CAT_ACTIVE',
+            'type'				=> 'int',
+            'val' 				=> 1,
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+        'category_0_template_name' => array(
+            'name' 				=> 'PREDIGGO_CAT_0_TEMPLATE_NAME',
+            'type'				=> 'text',
+            'size'     			=> 100,
+            'val' 				=> 'category.tpl',
+            'multilang'			=> false,
+            'multishopgroup'	=> false,
+            'multishop'			=> true,
+        ),
+
 	);
 
     /**
@@ -913,9 +1888,9 @@ class PrediggoConfig
 		if(is_object($oContext)
 		&& get_class($oContext) == 'Context')
 			$this->oContext = $oContext;
-		
+
 		$aLanguages = Language::getLanguages(false);
-		
+
 		foreach($this->aConfs as $var => $aConf)
 		{
 			$aParams = array(
@@ -924,7 +1899,7 @@ class PrediggoConfig
 				2 => false,
 				3 => false,
 			);
-			
+
 			if($this->oContext)
 			{
 				if((int)$aConf['multishopgroup'])
@@ -932,7 +1907,7 @@ class PrediggoConfig
 				if((int)$aConf['multishop'])
 					$aParams[3] = (int)$this->oContext->shop->id;
 			}
-				
+
 			switch($aConf['type'])
 			{
 				case 'int' :
@@ -971,7 +1946,7 @@ class PrediggoConfig
 				3 => false,
 				4 => false,
 			);
-				
+
 			if($this->oContext)
 			{
 				if((int)$aConf['multishopgroup'])
@@ -979,7 +1954,7 @@ class PrediggoConfig
 				if((int)$aConf['multishop'])
 					$aParams[4] = (int)$this->oContext->shop->id;
 			}
-			
+
 			if(!call_user_func_array(array('Configuration', 'updateValue'), $aParams))
 				return false;
 		}
@@ -1011,11 +1986,11 @@ class PrediggoConfig
 			$aParams = array(
 				0 => $aConf['name'],
 				1 => $this->{$var},
-				2 => false,
+				2 => $aConf['type'] == 'html' ? true : false,
 				3 => false,
 				4 => false,
 			);
-			
+
 			if($this->oContext)
 			{
 				if((int)$aConf['multishopgroup'])
@@ -1023,7 +1998,7 @@ class PrediggoConfig
 				if((int)$aConf['multishop'])
 					$aParams[4] = (int)$this->oContext->shop->id;
 			}
-			
+
 			switch($aConf['type'])
 			{
 				case 'int' :
@@ -1039,9 +2014,9 @@ class PrediggoConfig
 		}
 		return true;
 	}
-	
+
 	public function getContext()
 	{
-		return $this->oContext;	
+		return $this->oContext;
 	}
 }

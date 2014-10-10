@@ -1,6 +1,6 @@
 <?php
 
-require_once "RequestResultBase.php";
+require_once "RequestParamBase.php";
 require_once "ImportCommitMode.php";
 
 
@@ -12,7 +12,7 @@ require_once "ImportCommitMode.php";
  *
  * @author Stef
  */
-class EndProductImportParam extends RequestResultBase
+class EndProductImportParam extends RequestParamBase
 {
     protected $transactionId = "";
     protected $commitMode = ImportCommitMode::COMMIT_IN_MEMORY;

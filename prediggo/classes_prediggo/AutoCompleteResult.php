@@ -52,6 +52,21 @@ class AutoCompleteResult extends RequestResultBase
     }
 
     /**
+     * Gets the list of suggested attributes. This is a shortcut method for shops having <strong>only one profile</strong>.
+     * If your shop has more than one profile, you should rather consider using {@link AutoCompleteResult#getSuggestionsProfiles()} which sorts suggestions by profile.
+     * @return array an array of AttributeSuggestion objects (all profiles put together).
+     */
+    public function getSuggestedAttributes()
+    {
+        $reco = array();
+
+        foreach( $this->suggestionProfiles as $profile)
+            $reco = array_merge( $reco , $profile->getSuggestedAttributes() );
+
+        return $reco;
+    }
+
+    /**
      * Gets a list of suggestions grouped in profiles.
      * @return ProfileSuggestions A list of suggestions grouped in profiles
      */

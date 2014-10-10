@@ -36,7 +36,7 @@
 		<ul class="pagination clear">
 			{foreach from=$aChangePageLinks item="oChangePageOption"}
 				{assign var="sChangePageLinksLabel" value=$oChangePageOption->getLabel()}
-				<li {if $sChangePageLinksLabel == 'back'}id="pagination_previous"{elseif $sChangePageLinksLabel == 'next'}id="pagination_next"{elseif $sChangePageLinksLabel == 'first'}id="pagination_first"{elseif $sChangePageLinksLabel == 'last'}id="pagination_last"{/if} {if $oSearchStatistics->getCurrentPageNumber()|intval == $sChangePageLinksLabel|intval}class="current"{/if}>
+				<li {if $sChangePageLinksLabel == 'back'}id="pagination_previous" {elseif $sChangePageLinksLabel == 'next'}id="pagination_next" {elseif $sChangePageLinksLabel == 'first'}id="pagination_first" {elseif $sChangePageLinksLabel == 'last'}id="pagination_last"{/if} {if $oSearchStatistics->getCurrentPageNumber()|intval == $sChangePageLinksLabel|intval}class="current"{/if}>
 					{if $oSearchStatistics->getCurrentPageNumber()|intval == $sChangePageLinksLabel|intval}
 						<span>{l s=$sChangePageLinksLabel mod='prediggo'}</span>
 					{else}

@@ -1,7 +1,7 @@
 <?php
 
 require_once "GetAdvertisementResult.php";
-require_once "GetRecommendationResultHandler.php";
+require_once "GetAdvertisementResultHandler.php";
 require_once "GetAdvertisementParam.php";
 require_once "RequestTemplate.php";
 
@@ -37,8 +37,21 @@ class GetAdvertisementRequest  extends RequestTemplate
         $argMap = parent::getArgumentMap();
 
         //parameters
+        $this->addParameterToMap($argMap, "userID", $this->parameter->getUserId());
         $this->addParameterToMap($argMap, "languageCode", $this->parameter->getLanguageCode());
         $this->addParameterToMap($argMap, "classID", $this->parameter->getProfileMapId() );
+        $this->addParameterToMap($argMap, "pageID", $this->parameter->getPageId() );
+
+
+        $bufferKeys = "";
+        $bufferValues = "";
+
+        //implode the key values pairs into separate strings
+        Utils::implodeKeyValuePairsToSeparatedString( $this->parameter->getConditions(), "_/_",  $bufferKeys, $bufferValues);
+
+        //add parameters
+        $this->addParameterToMap($argMap, "attributeNames", $bufferKeys);
+        $this->addParameterToMap($argMap, "attributeValues", $bufferValues);
 
         return $argMap;
     }
@@ -59,11 +72,11 @@ class GetAdvertisementRequest  extends RequestTemplate
 
     /**
      * Gets an appropriate result handler for this request.
-     * @return GetRecommendationResultHandler An appropriate result handler for this request.
+     * @return GetAdvertisementResultHandler An appropriate result handler for this request.
      */
     protected function getResultHandler()
     {
-        return new GetRecommendationResultHandler();
+        return new GetAdvertisementResultHandler();
     }
 
 
@@ -75,7 +88,7 @@ class GetAdvertisementRequest  extends RequestTemplate
      */
     protected function getServletName()
     {
-        return "GetAdsRecommandation_MainFrame";
+        return  "/mock/GetAdvertisement";
     }
 
 

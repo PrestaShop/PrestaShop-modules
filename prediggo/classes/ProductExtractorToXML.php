@@ -65,11 +65,29 @@ class ProductExtractorToXML extends DataExtractorToXML
 	  */
 	public function getEntities()
 	{
+	
+		//get active shops
+		$shopIDs= $this->getActiveShopIds();//Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_shop FROM `'._DB_PREFIX_.'module_shop`  where id_module in 
+		
+		$whereShopIds = '';
+		foreach ($shopIDs as $row) //
+		{
+			$whereShopIds .= (int)$row['id_shop'].',';
+		}
+		
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+		SELECT p.`id_product`, ps.`id_shop`
+		FROM `'._DB_PREFIX_.'product` p
+		INNER JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.`id_product` = p.`id_product` AND ps.`id_shop` IN ('.substr($whereShopIds, 0, -1).') )
+		ORDER BY p.`id_product` ASC', false);
+		
+		/**
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT p.`id_product`, ps.`id_shop`
 		FROM `'._DB_PREFIX_.'product` p
 		INNER JOIN ps_product_shop ps ON (ps.`id_product` = p.`id_product` AND ps.`id_shop` IN('.join(',',array_keys($this->aPrediggoConfigs)).'))
 		ORDER BY p.`id_product` ASC', false);
+		*/
 	}
 
 	/**

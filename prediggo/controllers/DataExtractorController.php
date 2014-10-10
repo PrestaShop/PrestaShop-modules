@@ -57,7 +57,7 @@ class DataExtractorController
      */
     public function __construct($oModule = false)
     {
-        $this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
+		$this->oPrediggoConfig = new PrediggoConfig(Context::getContext());
 
         $this->sRepositoryPath = _PS_MODULE_DIR_.'prediggo/xmlfiles/';
 
@@ -80,12 +80,15 @@ class DataExtractorController
      */
     public function launchExport()
     {
-        // Addition of a secured token
-        if(!Tools::getValue('token')
-            || Tools::getValue('token') != Tools::getAdminToken('DataExtractorController'))
+		 // Addition of a secured token
+		// used to check Tools::getAdminTokenLite('AdminModules') but now use Tools::getAdminToken('DataExtractorController')
+        if(!Tools::getValue('token') || 
+		(Tools::getValue('token') != Tools::getAdminToken('DataExtractorController') && Tools::getValue('token') != Tools::getAdminTokenLite('AdminModules')))
+		{
+			//echo 'Exiting data extractor as identification token is not validated, your token:'.Tools::getValue('token').'admin token:'.Tools::getAdminTokenLite('AdminModules');
             return;
-
-        @ini_set('max_execution_time', '3000');
+		}
+		@ini_set('max_execution_time', '3000');
         @ini_set('max_input_time', '3000');
         @ini_set('memory_limit', '384M');
 
@@ -109,7 +112,7 @@ class DataExtractorController
 
         if(count($params['aPrediggoConfigs']))
         {
-            $oDataExtractor = new CustomerExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
+            $oDataExtractor = new CustomerExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_generation);
             $this->lauchFileExport($oDataExtractor);
         }
 
@@ -123,7 +126,7 @@ class DataExtractorController
 
         if(count($params['aPrediggoConfigs']))
         {
-            $oDataExtractor = new OrderExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
+            $oDataExtractor = new OrderExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_generation);
             $this->lauchFileExport($oDataExtractor);
         }
 
@@ -137,7 +140,7 @@ class DataExtractorController
 
         if(count($params['aPrediggoConfigs']))
         {
-            $oDataExtractor = new ProductExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_file_generation);
+            $oDataExtractor = new ProductExtractorToXML($this->sRepositoryPath, $params, (int)$this->oPrediggoConfig->logs_generation);
             $this->lauchFileExport($oDataExtractor);
         }
     }

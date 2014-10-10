@@ -1,6 +1,7 @@
 <?php
 
 require_once "WordSuggestion.php";
+require_once "AttributeSuggestion.php";
 require_once "ProductSuggestion.php";
 require_once "ProfileSuggestions.php";
 
@@ -95,6 +96,15 @@ class AutoCompleteResultHandler  extends  DefaultResultHandler
                     $suggProfile->addSuggestedProduct($product);
 
                     break;
+
+                case "attribute":
+
+                    //parse product element
+                    $attribute = new AttributeSuggestion();
+                    $this->readAttribute( $suggNode, $attribute);
+                    $suggProfile->addSuggestedAttribute($attribute);
+
+                    break;
             }
         }
 
@@ -155,6 +165,32 @@ class AutoCompleteResultHandler  extends  DefaultResultHandler
                     $prod->setAdditionalAttribute($attribute->name, $attribute->value);
                     break;
                 
+            }
+        }
+    }
+
+    protected function readAttribute(DOMNode $attNode, AttributeSuggestion $att)
+    {
+        //read content
+        $att->setAttributeValue( $attNode->textContent );
+
+        //read attributes
+        foreach ( $attNode->attributes as $attribute )
+        {
+
+            switch ($attribute->name)
+            {
+                case "attributeName":
+                    $att->setAttributeName($attribute->value );
+                    break;
+
+                case "nbOccurences":
+                    $att->setNbOccurrences( intval( $attribute->value) );
+                    break;
+
+                case "onClickQuery":
+                    $att->setSearchQuery($attribute->value );
+                    break;
             }
         }
     }

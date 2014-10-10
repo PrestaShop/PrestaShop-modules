@@ -49,13 +49,13 @@ class SortingClause
     /**
     * Reverse alphabetical
     */
-    const DECREASING_APHABETICAL = 8;
+    const DECREASING_ALPHABETICAL = 8;
 
 
     /**
     * Alphabetical
     */
-    const  INCREASING_APHABETICAL = 9;
+    const  INCREASING_ALPHABETICAL = 9;
 
     /**
     * Based on relevance and user context

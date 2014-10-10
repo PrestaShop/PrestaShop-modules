@@ -59,9 +59,26 @@ class OrderExtractorToXML extends DataExtractorToXML
 	  */
 	public function getEntities()
 	{
+		//get active shops
+		$shopIDs= $this->getActiveShopIds();//Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_shop FROM `'._DB_PREFIX_.'module_shop`  where id_module in 
+		
 		$sWhere = '';
-		foreach($this->aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
-			$sWhere .= '(id_shop = '.(int)$iIDShop.' AND DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND invoice_date >= \''.pSQL(date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$oPrediggoConfig->nb_days_order_valide), date('Y')))).'\') OR';
+		foreach ($shopIDs as $row) //
+		{
+			foreach($this->aPrediggoConfigs as $iIDShop => $oPrediggoConfig)
+			{
+				//ignore the shop ids that are note active in the prediggo config
+				if ((int)$iIDShop!=(int)$row['id_shop'])
+					continue;
+					
+				//echo 'reading shop id:'.$row['id_shop'].'<br>';
+				//echo 'Nb days in the past to consider:'.(int)$oPrediggoConfig->nb_days_order_valide.'<br>';
+				//$sWhere .= '(id_shop = '.(int)$iIDShop.' AND DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND invoice_date >= \''.pSQL(date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$oPrediggoConfig->nb_days_order_valide), date('Y')))).'\') OR';
+				$sWhere .= '(id_shop = '.(int)$row['id_shop'].' AND DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL(date('Y-m-d H:i:s')).'\' AND invoice_date >= \''.
+				pSQL(date('Y-m-d H:i:s', mktime(0, 0, 0, date('m'), date('d')-((int)$oPrediggoConfig->nb_days_order_valide), date('Y')))).'\') OR';
+			
+			}
+		}
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 		SELECT `id_order`, `id_shop`
 		FROM `'._DB_PREFIX_.'orders`
@@ -77,6 +94,8 @@ class OrderExtractorToXML extends DataExtractorToXML
 	  */
 	public function formatEntityToXML($aEntity)
 	{
+		
+	
 		$dom = new DOMDocument('1.0', 'utf-8');
 		// Set the root of the XML
 		$root = $dom->createElement($this->sEntity);

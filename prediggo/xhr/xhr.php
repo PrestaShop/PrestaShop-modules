@@ -55,6 +55,7 @@ if (Tools::getValue('q'))
 	ob_end_clean();
 	die(Tools::jsonEncode($aResult));
 }
+
 // Launch a Prediggo Recommendations for the blocklayered module
 if(Tools::getValue('id_category_layered'))
 {

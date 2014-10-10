@@ -171,6 +171,9 @@ abstract class RequestTemplate {
         $options[CURLOPT_CONNECTTIMEOUT] = $finalTimeout ;     // timeout on connect
         $options[CURLOPT_TIMEOUT]        = $finalTimeout ;     // timeout on response
 
+        //echo '<br>'.$finalTimeout.'<br>';
+        //echo '<br>'.$this->createRequestUrl().'<br>';
+
         $curlRequest = curl_init( $this->createRequestUrl() );
         curl_setopt_array( $curlRequest, $options );
 

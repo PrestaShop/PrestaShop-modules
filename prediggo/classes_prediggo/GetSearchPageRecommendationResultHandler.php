@@ -297,6 +297,12 @@ class GetSearchPageRecommendationResultHandler extends GetSearchRecommendationBa
                         case "redirectionPictureURL" :
                             $redir->setPictureUrl( $attribute->value );
                             break;
+
+                        case "redirect" :
+                            if( $attribute->value == "true" )
+                                $redir->setRedirect( true);
+
+                            break;
                     }
                 }
 

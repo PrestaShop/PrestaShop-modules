@@ -89,106 +89,116 @@ class PrediggoCall
         $this->_logs = array();
     }
 
-    /**
-     * Get Landing pages Recommendations, used for home & 404 pages
-     *
-     * @param array $params list of specific params
-     * @return array list of Product Recommendations
-    @DEPRECATED
-     */
-    public function getLandingPageRecommendations($params)
-    {
-        $this->oRecoParam = new GetLandingPageRecommendationParam();
-        $this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
-
-        return $this->getRecommendations($params, 'getLandingPageRecommendation');
-    }
-
-    /**
-     * Get Product pages Recommendations
+	 /**
+     * Get the home page recommendation
      *
      * @param array $params list of specific params
      * @return array list of Product Recommendations
      */
-    public function getNewLandingPage($params,$variantId)
+    public function getHomePageRecommendation($params)
     {
         $this->oRecoParam = new GetItemRecommendationParam();
+        $this->oRecoParam->setVariantId($params['variant_id']);
+		$this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
+		
+		//no_id as item id
         $this->oRecoParam->getItemInfo()->setItemId('no_id');
-        $this->oRecoParam->setVariantId($variantId);
         return $this->getRecommendations($params, 'getItemRecommendation');
     }
-
-    /**
-     * Get Product pages Recommendations
+	
+	/**
+     * Get the home page recommendation
      *
      * @param array $params list of specific params
      * @return array list of Product Recommendations
      */
-    public function getProductRecommendations($params,$variantId)
+    public function getProductPageRecommendation($params)
     {
-        if($variantId == 0){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 1){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_one;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_one[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 2){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_two;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_two[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 3){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_th;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_th[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 4){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_fo;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_fo[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }
         $this->oRecoParam = new GetItemRecommendationParam();
-        $this->oRecoParam->getItemInfo()->setItemId((int)$params['id_product']);
-        $this->oRecoParam->setVariantId($variantId);
-        return $this->getRecommendations($params2, 'getItemRecommendation');
+		
+        $this->oRecoParam->setVariantId($params['variant_id']);
+		$this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
+		
+		//add the item id currently seen
+        $this->oRecoParam->getItemInfo()->setItemId((int)Tools::getValue('id_product'));
+        return $this->getRecommendations($params, 'getItemRecommendation');
     }
-
-    /**
-     * Get Category page Recommendations
+	
+	/**
+     * Get the Basket page recommendation
      *
      * @param array $params list of specific params
      * @return array list of Product Recommendations
      */
-    public function getCategoryRecommendations($params,$variantId)
+    public function getBasketPageRecommendation($params)
     {
-        if($variantId == 0){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 1){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items_o;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title_o[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 2){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items_tw;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title_tw[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 3){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items_th;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title_th[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }elseif($variantId == 4){
-            $params['nb_items'] = (int)$this->oPrediggoConfig->category_nb_items;
-            $params['block_title'] = pSQL($this->oPrediggoConfig->category_block_title_fo[(int)$params['cookie']->id_lang]);
-            $params2 = $params;
-        }
+        $this->oRecoParam = new GetItemRecommendationParam();
+		
+		$this->oRecoParam->setVariantId($params['variant_id']);
+		$this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
 
-        $this->oRecoParam = new GetCategoryRecommendationParam();
-        $this->oRecoParam->addCondition('genre', $params2['category']->name);
-        $this->oRecoParam->setVariantId($variantId);
 
-        return $this->getRecommendations($params2, 'getCategoryRecommendation');
+		//add the basket ids
+		if(!isset($params['cart']) || !(int)$params['cart']->id)
+		{
+			return false;
+		}
+
+        $this->oRecoParam = new GetBasketRecommendationParam();
+        $aProducts = $params['cart']->getProducts();
+        if(!count($aProducts))
+            return false;
+
+        foreach($params['cart']->getProducts() as $aProduct)
+            $this->oRecoParam->addBasketItem((int)Context::getContext()->shop->id, $aProduct['id_product']);
+
+	//echo 'Adding product'.(int)Context::getContext()->shop->id.'_/_'. $aProduct['id_product'] .'into basket';
+			
+        return $this->getRecommendations($params, 'getBasketRecommendation');
     }
+    
+	/**
+     * Get the Category page recommendation
+     *
+     * @param array $params list of specific params
+     * @return array list of Product Recommendations
+     */
+    public function getCategoryPageRecommendation($params)
+    {
+        $this->oRecoParam = new GetCategoryRecommendationParam();
+		
+		if (count($params['condition'])==0 || count($params['condition'][0])==null || count($params['condition'][1])==null)
+		{
+			//echo 'aboting category reco has no condition';
+			return;
+		}
+		
+        $this->oRecoParam->setVariantId($params['variant_id']);
+		$this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
+		
+		//adding the category
+		$this->oRecoParam->addCondition($params['condition'][0], $params['condition'][1]);
+		
+        return $this->getRecommendations($params, 'getCategoryRecommendation');
+    }
+
+    /**
+     * Get the home page recommendation
+     *
+     * @param array $params list of specific params
+     * @return array list of Product Recommendations
+     */
+    public function getCustomerPageRecommendation($params)
+    {
+        $this->oRecoParam = new GetItemRecommendationParam();
+        $this->oRecoParam->setVariantId($params['variant_id']);
+        $this->oRecoParam->setRefererUrl(!empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'');
+
+        //add the item id currently seen
+        $this->oRecoParam->getItemInfo()->setItemId((int)Tools::getValue('id_product'));
+        return $this->getRecommendations($params, 'getItemRecommendation');
+    }
+	
 
     /**
      * Get Block layered Recommendations
@@ -273,41 +283,6 @@ class PrediggoCall
         return $this->getRecommendations($params, 'getUserRecommendation');
     }
 
-    /**
-     * Get Cart page Recommendations
-     *
-     * @param array $params list of specific params
-     * @return array list of Product Recommendations
-     */
-    public function getCartRecommendations($params)
-    {
-        if(!isset($params['cart'])
-            || !(int)$params['cart']->id)
-            return false;
-
-        $this->oRecoParam = new GetBasketRecommendationParam();
-        $aProducts = $params['cart']->getProducts();
-        if(!count($aProducts))
-            return false;
-
-        foreach($params['cart']->getProducts() as $aProduct)
-            $this->oRecoParam->addBasketItem((int)$params['cookie']->id_lang, $aProduct['id_product']);
-        return $this->getRecommendations($params, 'getBasketRecommendation');
-
-    }
-
-    /**
-     * Get Best sales page Recommendations
-     *
-     * @param array $params list of specific params
-     * @return array list of Product Recommendations
-     */
-    public function getBestSalesRecommendations($params)
-    {
-        $this->oRecoParam = new GetTopNSalesParam();
-
-        return $this->getRecommendations($params, 'getTopNSales');
-    }
 
     /**
      * Set the main prediggo call params
@@ -353,6 +328,7 @@ class PrediggoCall
      */
     private function getRecommendations($params, $sFunction)
     {
+		//echo 'NOW MAKING THE REQUEST TO PREDIGGO FOR VARIANT ID:'.$params['variant_id'].'<BR>';
         $this->_logs[] = '[BEGIN] ['.date('c').'] ACTION : '.$sFunction;
 
         $this->setRecommendationParamData($params);
@@ -363,6 +339,7 @@ class PrediggoCall
             $this->_logs[] = '[LAUNCH] : '.$sFunction;
             if($oResult = call_user_func(array('PrediggoService', $sFunction), $this->oRecoParam))
             {
+				$this->_logs[] = '[VARIANT ID] : '.(int)$params['variant_id'];
                 $this->_logs[] = '[NB ITEMS ASKED] : '.(int)$params['nb_items'];
                 $aItems = $this->getProducts($oResult, (int)$params['cookie']->id_lang);
                 unset($oResult);
@@ -406,7 +383,6 @@ class PrediggoCall
     {
         $this->oRecoParam = new NotifyPrediggoParam();
         $this->oRecoParam->setNotificationId($params['notificationId']);
-
         $this->setNotification($params, 'notifyPrediggo');
     }
 
@@ -473,12 +449,36 @@ class PrediggoCall
     public function getSearch($params)
     {
         $this->oRecoParam = new GetSearchPageRecommendationParam();
-
         if(!empty($params['filters']) && is_array($params['filters']))
             foreach($params['filters'] as $filter => $val)
                 $this->oRecoParam->addCondition($filter, $val);
 
+        $this->oRecoParam->setServerUrl();
         $this->oRecoParam->setSearchString($params['query']);
+        $this->oRecoParam->setNbRecommendation(0);
+        $this->oRecoParam->setMaxNbResultsPerPage((int)$params['nb_items']);
+        if(!empty($params['option']))
+            $this->oRecoParam->setSearchRefiningOption($params['option']);
+
+        return $this->setSearch($params, 'getSearchPageRecommendation');
+    }
+
+    /**
+     * Get the prediggo search products
+     *
+     * @param array $params list of specific params
+     * @return object PrediggoService
+     */
+    public function getSearchCat($params)
+    {
+        $this->oRecoParam = new GetSearchPageRecommendationParam();
+        if(!empty($params['filters']) && is_array($params['filters']))
+            foreach($params['filters'] as $filter => $val)
+                $this->oRecoParam->addCondition($filter, $val);
+
+        $this->oRecoParam->setServerUrl();
+        $this->oRecoParam->setSearchString($params['query']);
+        $this->oRecoParam->addCondition($params['conditionP'],$params['conditionV']);
         $this->oRecoParam->setNbRecommendation(0);
         $this->oRecoParam->setMaxNbResultsPerPage((int)$params['nb_items']);
         if(!empty($params['option']))
@@ -502,6 +502,7 @@ class PrediggoCall
             return false;
 
         $oResult = false;
+
         try
         {
             $this->_logs[] = '[LAUNCH] : '.$sFunction;
@@ -522,7 +523,6 @@ class PrediggoCall
 
         $this->_logs[] = '[EXEC TIME] : '.$this->execTime;
         $this->_logs[] = '[END] ACTION : '.$sFunction;
-
         return $oResult;
     }
 
@@ -544,6 +544,16 @@ class PrediggoCall
     public function getLogs()
     {
         return $this->_logs;
+    }
+
+    public function getSuggestedAttributes($oResult){
+
+        $aAttName = $oResult->getAttributeName();
+        $aAttVal = $oResult->getAttributeValue();
+
+        $aResult = $aAttName.' : '.$aAttVal;
+
+        return $aResult;
     }
 
     /**
@@ -617,7 +627,6 @@ class PrediggoCall
     public function getProducts($oResult, $id_lang)
     {
         $aRecommendedItems = $oResult->getRecommendedItems();
-
         if(empty($aRecommendedItems))
             return false;
 
@@ -691,19 +700,56 @@ class PrediggoCall
     /**
      * Check the client web site id with a light call
      */
-    public function checkLicence($url)
+    public function checkLicence()
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Check URL prestashop de Prediggo (www.prediggo.com)');
-        $resultat = curl_exec ($ch);
-        curl_close($ch);
-            if($resultat == 'ok') {
-                return true;
-            }
-            else {
+            $file = $this->sServerUrl.'/'.$this->sShopName.'/'.$this->sTokenId.'file';
+            //echo $file;
+            $file_headers = @get_headers($file);
+			//echo '<H1>PREDIGGO LICENSE VERIFICATION FAILED</H1><BR>';
+            if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
                 return false;
             }
+            else {
+                return true;
+            }
     }
+	
+	
+	/**
+     * Get Product pages Recommendations
+     *
+     * @param array $params list of specific params
+     * @return array list of Product Recommendations
+     */
+/*  
+  public function getProductRecommendations($params,$variantId)
+    {
+		echo ' Entering getProductRecommendations<br>';
+        if($variantId == 0){
+            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items;
+            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title[(int)$params['cookie']->id_lang]);
+            $params2 = $params;
+        }elseif($variantId == 1){
+            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_one;
+            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_one[(int)$params['cookie']->id_lang]);
+            $params2 = $params;
+        }elseif($variantId == 2){
+            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_two;
+            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_two[(int)$params['cookie']->id_lang]);
+            $params2 = $params;
+        }elseif($variantId == 3){
+            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_th;
+            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_th[(int)$params['cookie']->id_lang]);
+            $params2 = $params;
+        }elseif($variantId == 4){
+            $params['nb_items'] = (int)$this->oPrediggoConfig->product_nb_items_fo;
+            $params['block_title'] = pSQL($this->oPrediggoConfig->product_block_title_fo[(int)$params['cookie']->id_lang]);
+            $params2 = $params;
+        }
+        $this->oRecoParam = new GetItemRecommendationParam();
+        $this->oRecoParam->getItemInfo()->setItemId((int)$params['id_product']);
+        $this->oRecoParam->setVariantId($variantId);
+        return $this->getRecommendations($params2, 'getItemRecommendation');
+    }
+*/
 }

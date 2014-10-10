@@ -14,6 +14,7 @@ class ProductImportParam extends RequestParamBase
 {
 
     protected $updates = array();
+    protected $transactionId = "";
 
     /**
      * Return the list of update
@@ -38,6 +39,28 @@ class ProductImportParam extends RequestParamBase
             $this->updates[] = array( $itemId, $attName, $attValue, $score);
 
     }
+
+
+    /**
+     * Gets the transaction ID received when beginning the transaction
+     * @param string $transactionId
+     *
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+    }
+
+    /**
+     * Sets the transaction ID received when beginning the transaction
+     * @return string The transaction ID
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
+
+
 
 
 }

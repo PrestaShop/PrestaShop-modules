@@ -12,7 +12,7 @@ require_once 'RequestParamBase.php';
  */
 class UserProfileImportParam extends RequestParamBase
 {
-
+    protected $transactionId = "";
     protected $updates = array();
 
     /**
@@ -25,15 +25,34 @@ class UserProfileImportParam extends RequestParamBase
     }
 
     /**
-     * @param string $itemId item identifier
+     * @param string $userId item identifier
      * @param string $attName the attribute name eg: "manufacturer"
      * @param string $attValue the attribute value eg: "apple"
      */
-    public function addUpdate($itemId, $attName, $attValue) {
+    public function addUpdate($userId, $attName, $attValue) {
 
-        $this->updates[] = array( $itemId, $attName, $attValue);
+        $this->updates[] = array( $userId, $attName, $attValue);
 
 
+    }
+
+    /**
+     * Gets the transaction ID received when beginning the transaction
+     * @param string $transactionId
+     *
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->transactionId = $transactionId;
+    }
+
+    /**
+     * Sets the transaction ID received when beginning the transaction
+     * @return string The transaction ID
+     */
+    public function getTransactionId()
+    {
+        return $this->transactionId;
     }
 
 

@@ -59,7 +59,7 @@ abstract class DataExtractorToXML
 
 	/** @var integer Last of the extraction */
 	public $execTime;
-	
+
 	/** @var boolean is log enable */
 	public $bLogEnable;
 
@@ -100,7 +100,7 @@ abstract class DataExtractorToXML
 
 		// Set the name of XML File
 		$this->sFileName = $this->sFileNameBase.'-'.date('YmdHis').'.xml';
-		
+
 		// Open log file handler if needed
 		if($this->bLogEnable)
 		{
@@ -117,7 +117,7 @@ abstract class DataExtractorToXML
 			$sLog = '[BEGIN][OK] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
 		else
 			$sLog = '[BEGIN][FAIL] ACTION : CREATE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
-		
+
 		// Add the first export log and test if log file is in writting mode
 		if($this->bLogEnable && !fwrite($loghandle, $sLog."\n"))
 		{
@@ -140,7 +140,7 @@ abstract class DataExtractorToXML
 					$sLog = '[OK] ACTION : FORMAT - Entity : '.$this->sEntity;
 					if($this->bLogEnable)
 						fwrite($loghandle, $sLog."\n");
-					
+
 					// Write xml as string into file
 					if(fwrite($handle, str_replace(array("\n","\r"),' ',$sContent)."\n"))
 					{
@@ -149,20 +149,20 @@ abstract class DataExtractorToXML
 					}
 					else
 						$sLog = '[FAIL] ACTION : WRITE - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
-					
+
 					if($this->bLogEnable)
 						fwrite($loghandle, $sLog."\n");
 				}
 				else
 				{
 					$sLog = '[FAIL] ACTION : FORMAT - Entity : '.$this->sEntity.' - '.join(',',$aEntity);
-				
+
 					if($this->bLogEnable)
 						fwrite($loghandle, $sLog."\n");
 				}
 			}
 			$sLog  = '[DATA] NB ENTITIES CREATED : '.$this->nbEntities;
-			
+
 			if($this->bLogEnable)
 				fwrite($loghandle, $sLog."\n");
 		}
@@ -181,21 +181,21 @@ abstract class DataExtractorToXML
 			$sLog = '[OK] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
 		else
 			$sLog = '[FAIL] ACTION : CLOSE FILE ['.$this->sFileName.'] - Entity : '.$this->sEntity;
-		
+
 		if($this->bLogEnable)
 			fwrite($loghandle, $sLog."\n");
 
 		// Set the executino time
 		$this->execTime = number_format(microtime(true) - $this->execTime, 3, '.', '');
 		$sLog = '[END] [DATA] TOTAL EXPORT TIME ['.$this->sFileName.'] : '.$this->execTime.'s';
-		
+
 		if($this->bLogEnable)
 			fwrite($loghandle, $sLog."\n");
 
 		// Close log file handler
 		if($this->bLogEnable)
 			fclose($loghandle);
-		
+
 		if((int)$this->nbEntitiesTreated < (int)$this->nbEntities)
 			return false;
 		return true;
@@ -255,5 +255,22 @@ abstract class DataExtractorToXML
 	public function getLogs()
 	{
 		return $this->_logs;
+	}
+	
+	/**
+	* Get all the shop ids for which the prediggo module is active
+	* @return a set of rows. Use $row['id_shop'] to access the shop id
+	*/
+	public function getActiveShopIds()
+	{
+		$moduleName='prediggo';
+		$shopIDs= Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('SELECT id_shop FROM `'._DB_PREFIX_.'module_shop`  where id_module in 
+		(SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "'.$moduleName.'" )' , true);
+		
+		//foreach ($shopIDs as $row)
+		//{
+		//	echo '$shopIDs:='.$row['id_shop'].'<BR>';
+		//}
+		return $shopIDs;
 	}
 }

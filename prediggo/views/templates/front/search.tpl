@@ -34,7 +34,6 @@
 <h1>
 {l s='Search' mod='prediggo'}&nbsp;{if $nbProducts > 0}"{$sPrediggoQuery}"{/if}
 </h1>
-
 {include file="$tpl_dir./errors.tpl"}
 {if !$nbProducts}
 	<p class="warning">
@@ -70,12 +69,14 @@
 	<div class="content_sortPagiBar">
 		{include file="./pagination.tpl"}
 		<div class="sortPagiBar">
+            {include file="./search_filters_sort_by.tpl"}
 			{include file="$tpl_dir./product-compare.tpl"}
 		</div>
 	</div>
-	{include file="./product-list.tpl" products=$aPrediggoProducts}
+	{include file="$tpl_dir./product-list.tpl" products=$aPrediggoProducts}
 	<div class="content_sortPagiBar">
 		<div class="sortPagiBar">
+            {include file="./search_filters_sort_by.tpl"}
 			{include file="$tpl_dir./product-compare.tpl"}
 		</div>
 		{include file="./pagination.tpl"}

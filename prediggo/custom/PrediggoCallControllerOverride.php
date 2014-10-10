@@ -31,17 +31,42 @@ require_once(_PS_MODULE_DIR_.'prediggo/classes/PrediggoCall.php');
 class PrediggoCallControllerOverride extends PrediggoCallController
 {
 
+	/**
+	* overide the setPageName 
+	* used in the category and manufacturer page
+	*/
+	public function setPageName()
+	{
+        $context = $this->oPrediggoConfig->getContext();
+        $controller = $context->controller->php_self;
+        $this->sPageName = $controller;
+		//echo 'controller:'.$this->sPageName;
+        return true;
+    }
+
+	
     /**
      * Set the current page name and store it to the object var $sPageName
      * You must update this function base on your URL rewrite policy
      * The page name is then used to select which type of recommendation bloc to use (GetItemReco,...)
      */
-    public function setPageName()
+    /**
+	public function setPageName2()
     {
+		$context = $this->oPrediggoConfig->getContext();
+        $controller = $context->controller->php_self;
+        
         $pos = strpos($_SERVER['REQUEST_URI'],'controller=category');
+       
         if ($pos==true || $pos>=1)
         {
-            $this->sPageName ='category';
+			$this->sPageName =$this->oPrediggoConfig->categoryPageName;
+            return true;
+        }
+		$pos = strpos($_SERVER['REQUEST_URI'],'controller=manufacturer');
+		if ($pos==true || $pos>=1)
+        {
+			$this->sPageName =$this->oPrediggoConfig->manufacturerPageName;
             return true;
         }
         $pos = strpos($_SERVER['REQUEST_URI'],'controller=product');
@@ -60,7 +85,7 @@ class PrediggoCallControllerOverride extends PrediggoCallController
         if (preg_match('#^'.__PS_BASE_URI__.'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m))
             $this->sPageName = 'module-'.$m[1].'-'.str_replace(array('.php', '/'), array('', '-'), $m[2]);
     }
-
+*/
     /**
      * Update the current $sPageName
      */
@@ -77,70 +102,7 @@ class PrediggoCallControllerOverride extends PrediggoCallController
 
     }
 
-        /**
-     * Function chooseVariantId : Choose the good variant ID
-     *
-     * @iVariantId return the variant ID
-     */
-    public function chooseVariantId($sHookName){
-
-        switch($sHookName)
-        {
-            case 'displayLeftColumn' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_left_column;
-                break;
-
-            case 'displayRightColumn' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_right_column;
-                break;
-
-            case 'displayFooter' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_footer;
-                break;
-
-            case 'displayHome' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_home;
-                break;
-
-            case 'displayFooterProduct' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_footer_product;
-                break;
-
-            case 'displayLeftColumnProduct' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_left_column_product;
-                break;
-
-            case 'displayRightColumnProduct' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_right_column_product;
-                break;
-
-            case 'displayShoppingCartFooter' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_shopping_cart_footer;
-                break;
-
-            case 'displayShoppingCart' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_shopping_cart;
-                break;
-
-            case 'displayOrderDetail' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_order_detail;
-                break;
-
-            case 'displayProductTab' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_product_tab;
-                break;
-
-            case 'displayBeforeCarrier' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_before_carrier;
-                break;
-
-            case 'displayCarrierList' :
-                $iVariantId = (int)$this->oPrediggoConfig->hook_carrier_list;
-                break;
-
-            default : break;
-        }
-
-        return $iVariantId;
+    public function variantId(){
+       return 1;
     }
 }
