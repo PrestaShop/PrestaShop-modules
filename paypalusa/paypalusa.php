@@ -769,7 +769,7 @@ class PayPalUSA extends PaymentModule
 	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = null)
 	{
 		if (version_compare(_PS_VERSION_, '1.5', '<'))
-			$link = Tools::getShopDomainSsl(true)._MODULE_DIR_.$module.'/'.$controller.'?'.http_build_query($params);
+			$link = Tools::getShopDomainSsl(true)._MODULE_DIR_.$module.'/'.$controller.'.php?'.http_build_query($params);
 		else
 			$link = $this->context->link->getModuleLink($module, $controller, $params, $ssl);
 			
