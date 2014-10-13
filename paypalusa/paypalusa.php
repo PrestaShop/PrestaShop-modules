@@ -26,7 +26,10 @@ class PayPalUSA extends PaymentModule
 
 		parent::__construct();
 
-		$this->_shop_country = new Country((int)Configuration::get('PS_SHOP_COUNTRY_ID'));
+		//$this->_shop_country = new Country((int)Configuration::get('PS_SHOP_COUNTRY_ID'));
+		//Set toggle behavior on Default country
+		$this->_shop_country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		
 		$this->displayName = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'PayPal Mexico' : 'PayPal USA, Canada');
 		$this->description = $this->l((Validate::isLoadedObject($this->_shop_country) && $this->_shop_country->iso_code == 'MX') ? 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard.' : 'Accept payments using PayPal\'s Express Checkout, PayPal Payments Standard, Advanced, Pro, or Payflow.');
 		$this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
