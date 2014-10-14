@@ -69,14 +69,14 @@
 	<div class="content_sortPagiBar">
 		{include file="./pagination.tpl"}
 		<div class="sortPagiBar">
-            {include file="./search_filters_sort_by.tpl"}
+            {include file="./search_filters_sort_by_cat.tpl"}
 			{include file="$tpl_dir./product-compare.tpl"}
 		</div>
 	</div>
 	{include file="$tpl_dir./product-list.tpl" products=$aPrediggoProducts}
 	<div class="content_sortPagiBar">
 		<div class="sortPagiBar">
-            {include file="./search_filters_sort_by.tpl"}
+            {include file="./search_filters_sort_by_cat.tpl"}
 			{include file="$tpl_dir./product-compare.tpl"}
 		</div>
 		{include file="./pagination.tpl"}
