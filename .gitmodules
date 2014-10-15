@@ -520,3 +520,6 @@
 [submodule "dpdpoland"]
 	path = dpdpoland
 	url = https://github.com/PrestaShop/dpdpoland.git
+[submodule "clickline"]
+	path = clickline
+	url = https://github.com/PrestaShop/clickline.git
