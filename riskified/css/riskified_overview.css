@@ -25,7 +25,8 @@
 	text-decoration: none;
 	border-bottom: none;
 }
-#riskified-desc 
+
+.riskified-desc 
 {
 	width: 58%;
 	font-family: "Roboto", "ariel", sans-serif;
@@ -203,11 +204,16 @@
 	border: 1px solid #828282;
 	display: inline-block;
 	text-decoration: none;
-	width: 294px;
+	width: 164px;
 	text-align: center;
 	font-weight: 300;
 	letter-spacing: .05em;
 	margin-top: 20px;
+	margin-bottom: 10px !important;
+}
+
+a.riskified-button:hover {
+background-color: #CBEF8B;
 }
 
 #riskified_mode {
@@ -218,4 +224,8 @@
 #riskified_mode label {
   width:280px;
   text-align:left;
+}
+
+.riskified-ul-above-config {
+	margin-bottom: 30px;
 }
