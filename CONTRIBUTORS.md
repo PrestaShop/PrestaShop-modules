@@ -45,6 +45,7 @@
 - esilvajrs2it 
 - ESPIAU Nicolas 
 - ethercreation 
+- Eyal 
 - fram 
 - François Gaillard 
 - François-Marie de Jouvencel 
