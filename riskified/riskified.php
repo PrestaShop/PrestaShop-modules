@@ -5,14 +5,13 @@
  *  @author    riskified.com <support@riskified.com>
  *  @copyright 2013-Now riskified.com
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of Riskified
+ *  International Registered Trademark & Property of Riskified 
  */
 
 if (!defined('_PS_VERSION_'))
 	exit;
 
 require_once _PS_MODULE_DIR_.'riskified/lib/includes/includes.inc.php';
-require_once _PS_MODULE_DIR_.'riskified/lib/RiskifiedLogger.php';
 
 class Riskified extends Module
 {
