@@ -24,7 +24,7 @@ class Riskified extends Module
 	{
 		$this->name = 'riskified';
 		$this->tab = 'payment_security';
-		$this->version = '0.3.1';
+		$this->version = '1.1.4';
 		$this->author = 'Riskified.com';
 		$this->secure_key = Tools::encrypt($this->name);
 		parent::__construct();
