@@ -1,12 +1,6 @@
 [submodule "alliedwallet/backward_compatibility"]
 	path = alliedwallet/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "authorizeaim/backward_compatibility"]
-	path = authorizeaim/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "avalaratax/backward_compatibility"]
-	path = avalaratax/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "buyster/backward_compatibility"]
 	path = buyster/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -19,29 +13,11 @@
 [submodule "dibs/backward_compatibility"]
 	path = dibs/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "fedexcarrier/backward_compatibility"]
-	path = fedexcarrier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ganalytics/backward_compatibility"]
-	path = ganalytics/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "hipay/backward_compatibility"]
-	path = hipay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "jirafe/backward_compatibility"]
 	path = jirafe/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "mailjet/backward_compatibility"]
 	path = mailjet/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "merchantware/backward_compatibility"]
-	path = merchantware/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "mondialrelay/backward_compatibility"]
-	path = mondialrelay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ogone/backward_compatibility"]
-	path = ogone/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paypal/backward_compatibility"]
 	path = paypal/backward_compatibility
@@ -52,56 +28,8 @@
 [submodule "shipwire/backward_compatibility"]
 	path = shipwire/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "socolissimo/backward_compatibility"]
-	path = socolissimo/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "trustly/backward_compatibility"]
-	path = trustly/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "upscarrier/backward_compatibility"]
-	path = upscarrier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "uspscarrier/backward_compatibility"]
-	path = uspscarrier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "ebay/backward_compatibility"]
-	path = ebay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "payulatam/backward_compatibility"]
-	path = payulatam/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "nqgatewayneteven/backward_compatibility"]
-	path = nqgatewayneteven/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "firstdata/backward_compatibility"]
-	path = firstdata/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "browsi/backward_compatibility"]
-	path = browsi/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "adyen/backward_compatibility"]
-	path = adyen/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "shopgate/backward_compatibility"]
-	path = shopgate/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "realexredirect/backward_compatibility"]
-	path = realexredirect/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "gointerpay/backward_compatibility"]
-	path = gointerpay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "textmaster/backward_compatibility"]
-	path = textmaster/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "sofortbanking/backward_compatibility"]
-	path = sofortbanking/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "trustpilot/backward_compatibility"]
-	path = trustpilot/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "globkurier/backward_compatibility"]
 	path = globkurier/backward_compatibility
@@ -109,17 +37,8 @@
 [submodule "ferbuy/backward_compatibility"]
 	path = ferbuy/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "klarnaprestashop/backward_compatibility"]
-	path = klarnaprestashop/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paypalusa/backward_compatibility"]
 	path = paypalusa/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "feedaty/backward_compatibility"]
-	path = feedaty/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "alliance3/backward_compatibility"]
-	path = alliance3/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "bankwire"]
 	path = bankwire
@@ -340,9 +259,6 @@
 [submodule "statsvisits"]
 	path = statsvisits
 	url = https://github.com/PrestaShop/statsvisits.git
-[submodule "themeconfigurator"]
-	path = themeconfigurator
-	url = https://github.com/PrestaShop/themeconfigurator.git
 [submodule "trackingfront"]
 	path = trackingfront
 	url = https://github.com/PrestaShop/trackingfront.git
@@ -412,21 +328,198 @@
 [submodule "watermark"]
 	path = watermark
 	url = https://github.com/PrestaShop/watermark.git
-[submodule "giveit/backward_compatibility"]
-	path = giveit/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "seur/backward_compatibility"]
-	path = seur/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "prestastats/backward_compatibility"]
 	path = prestastats/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
-[submodule "syspay/backward_compatibility"]
-	path = syspay/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "cronjobs"]
 	path = cronjobs
 	url = https://github.com/PrestaShop/cronjobs
+[submodule "onboarding"]
+	path = onboarding
+	url = https://github.com/PrestaShop/onboarding.git
+[submodule "themeconfigurator"]
+	path = themeconfigurator
+	url = https://github.com/PrestaShop/themeconfigurator.git
+[submodule "payplug"]
+	path = payplug
+	url = https://github.com/PrestaShop/payplug.git
+[submodule "sendinblue"]
+	path = sendinblue
+	url = https://github.com/PrestaShop/sendinblue.git
+[submodule "adyen"]
+	path = adyen
+	url = https://github.com/PrestaShop/adyen.git
+[submodule "affinityitems"]
+	path = affinityitems
+	url = https://github.com/PrestaShop/affinityitems
+[submodule "alliance3"]
+	path = alliance3
+	url = https://github.com/PrestaShop/alliance3
+[submodule "authorizeaim"]
+	path = authorizeaim
+	url = https://github.com/PrestaShop/authorizeaim
+[submodule "avalaratax"]
+	path = avalaratax
+	url = https://github.com/PrestaShop/avalaratax
+[submodule "boxdropshipment"]
+	path = boxdropshipment
+	url = https://github.com/PrestaShop/boxdropshipment
+[submodule "browsi"]
+	path = browsi
+	url = https://github.com/PrestaShop/browsi
+[submodule "desjardins"]
+	path = desjardins
+	url = https://github.com/PrestaShop/desjardins
+[submodule "ebay"]
+	path = ebay
+	url = https://github.com/PrestaShop/ebay
+[submodule "ecopresto"]
+	path = ecopresto
+	url = https://github.com/PrestaShop/ecopresto
+[submodule "fedexcarrier"]
+	path = fedexcarrier
+	url = https://github.com/PrestaShop/fedexcarrier
+[submodule "feedaty"]
+	path = feedaty
+	url = https://github.com/PrestaShop/feedaty
+[submodule "ferbuy"]
+	path = ferbuy
+	url = https://github.com/PrestaShop/ferbuy
+[submodule "fianetfraud"]
+	path = fianetfraud
+	url = https://github.com/PrestaShop/fianetfraud
+[submodule "firstdata"]
+	path = firstdata
+	url = https://github.com/PrestaShop/firstdata
+[submodule "gadwords"]
+	path = gadwords
+	url = https://github.com/PrestaShop/gadwords
+[submodule "ganalytics"]
+	path = ganalytics
+	url = https://github.com/PrestaShop/ganalytics
+[submodule "giveit"]
+	path = giveit
+	url = https://github.com/PrestaShop/giveit
+[submodule "gointerpay"]
+	path = gointerpay
+	url = https://github.com/PrestaShop/gointerpay
+[submodule "kiala"]
+	path = kiala
+	url = https://github.com/PrestaShop/kiala
+[submodule "kialasmall"]
+	path = kialasmall
+	url = https://github.com/PrestaShop/kialasmall
+[submodule "kwixo"]
+	path = kwixo
+	url = https://github.com/PrestaShop/kwixo
+[submodule "mailjet"]
+	path = mailjet
+	url = https://github.com/PrestaShop/mailjet
+[submodule "merchantware"]
+	path = merchantware
+	url = https://github.com/PrestaShop/merchantware
+[submodule "mondialrelay"]
+	path = mondialrelay
+	url = https://github.com/PrestaShop/mondialrelay
+[submodule "moneybookers"]
+	path = moneybookers
+	url = https://github.com/PrestaShop/moneybookers.git
+[submodule "netreviews"]
+	path = netreviews
+	url = https://github.com/PrestaShop/netreviews
+[submodule "nqgatewayneteven"]
+	path = nqgatewayneteven
+	url = https://github.com/PrestaShop/nqgatewayneteven
+[submodule "ogone"]
+	path = ogone
+	url = https://github.com/PrestaShop/ogone
+[submodule "prediggo"]
+	path = prediggo
+	url = https://github.com/PrestaShop/prediggo
+[submodule "prestafraud"]
+	path = prestafraud
+	url = https://github.com/PrestaShop/prestafraud
+[submodule "shopgate"]
+	path = shopgate
+	url = https://github.com/PrestaShop/shopgate
+[submodule "simplifycommerce"]
+	path = simplifycommerce
+	url = https://github.com/PrestaShop/simplifycommerce
+[submodule "sofortbanking"]
+	path = sofortbanking
+	url = https://github.com/PrestaShop/sofortbanking
+[submodule "syspay"]
+	path = syspay
+	url = https://github.com/PrestaShop/syspay
+[submodule "tntcarrier"]
+	path = tntcarrier
+	url = https://github.com/PrestaShop/tntcarrier
+[submodule "trustly"]
+	path = trustly
+	url = https://github.com/PrestaShop/trustly
+[submodule "trustpilot"]
+	path = trustpilot
+	url = https://github.com/PrestaShop/trustpilot
+[submodule "twenga"]
+	path = twenga
+	url = https://github.com/PrestaShop/twenga
+[submodule "upscarrier"]
+	path = upscarrier
+	url = https://github.com/PrestaShop/upscarrier
+[submodule "yotpo"]
+	path = yotpo
+	url = https://github.com/PrestaShop/yotpo
+[submodule "uspscarrier"]
+	path = uspscarrier
+	url = https://github.com/PrestaShop/uspscarrier
+[submodule "shoppingfluxexport"]
+	path = shoppingfluxexport
+	url = https://github.com/PrestaShop/shoppingfluxexport
+[submodule "fianetsceau"]
+	path = fianetsceau
+	url = https://github.com/PrestaShop/fianetsceau
+[submodule "socolissimo"]
+	path = socolissimo
+	url = https://github.com/PrestaShop/socolissimo
+[submodule "pigmbhpaymill"]
+	path = pigmbhpaymill
+	url = https://github.com/PrestaShop/pigmbhpaymill
+[submodule "vtpayment"]
+	path = vtpayment
+	url = https://github.com/PrestaShop/vtpayment.git
+[submodule "yousticeresolutionsystem"]
+	path = yousticeresolutionsystem
+	url = https://github.com/PrestaShop/yousticeresolutionsystem.git
+[submodule "hipay"]
+	path = hipay
+	url = https://github.com/PrestaShop/hipay
+[submodule "envoimoinscher"]
+	path = envoimoinscher
+	url = https://github.com/PrestaShop/envoimoinscher.git
+[submodule "pagseguro"]
+	path = pagseguro
+	url = https://github.com/PrestaShop/pagseguro
+[submodule "realexredirect"]
+	path = realexredirect
+	url = https://github.com/PrestaShop/realexredirect.git
+[submodule "seur"]
+	path = seur
+	url = https://github.com/PrestaShop/seur.git
+[submodule "klikandpay"]
+	path = klikandpay
+	url = https://github.com/PrestaShop/klikandpay.git
+[submodule "payulatam"]
+	path = payulatam
+	url = https://github.com/PrestaShop/payulatam
+[submodule "textmaster"]
+	path = textmaster
+	url = https://github.com/PrestaShop/textmaster
+[submodule "dpdpoland"]
+	path = dpdpoland
+	url = https://github.com/PrestaShop/dpdpoland.git
+[submodule "clickline"]
+	path = clickline
+	url = https://github.com/PrestaShop/clickline.git

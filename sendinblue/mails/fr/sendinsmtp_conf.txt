@@ -1,3 +1,0 @@
-﻿Cet e-mail a été envoyé via sendinBlue SMTP.
-Félicitation, votre module SendinBlue SMTP est bien configuré.
-L'équipe de SendinBlue 
