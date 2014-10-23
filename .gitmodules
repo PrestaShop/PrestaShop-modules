@@ -523,3 +523,6 @@
 [submodule "clickline"]
 	path = clickline
 	url = https://github.com/PrestaShop/clickline.git
+[submodule "riskified"]
+	path = riskified
+	url = https://github.com/PrestaShop/riskified
