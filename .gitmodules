@@ -526,3 +526,6 @@
 [submodule "riskified"]
 	path = riskified
 	url = https://github.com/PrestaShop/riskified
+[submodule "erpillicopresta"]
+	path = erpillicopresta
+	url = https://github.com/PrestaShop/erpillicopresta.git
