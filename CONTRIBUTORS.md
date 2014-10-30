@@ -8,6 +8,7 @@
 - alonbr 
 - Alon Braitstein 
 - antoniofr 
+- apaqui 
 - arossetti 
 - Axome 
 - baptgauthier 
@@ -16,8 +17,10 @@
 - BrandonTaylor 
 - Bruno Leveque 
 - bunsenstraat 
+- cartman 
 - Ceboweb 
 - cedricfontaine 
+- cegoncalves 
 - CINS 
 - clément hollander 
 - Claude Traglia 
@@ -39,8 +42,10 @@
 - e.lito 
 - elmahdi 
 - emilien-puget 
+- esilvajrs2it 
 - ESPIAU Nicolas 
 - ethercreation 
+- Eyal 
 - fram 
 - François Gaillard 
 - François-Marie de Jouvencel 
@@ -60,6 +65,7 @@
 - indesign47 
 - ironwo0d 
 - IsabelleCoccinet 
+- jcriadop 
 - J. Danse 
 - jeromenadaud 
 - Jerome Nadaud 
@@ -77,6 +83,7 @@
 - Lesley Paone 
 - lsparer 
 - Ludovic 
+- Ludovic Verrecchia 
 - Luigi Massa 
 - luisalb 
 - Mathieu 
@@ -90,17 +97,21 @@
 - philong 
 - prestachris 
 - PrestaEdit 
+- prestamodule 
 - PrestanceDesign 
+- Quadra Informatique 
 - quadrateam 
 - Quadra Team 
 - Quetzacoalt91 
 - Rémi Gaillard 
 - RaphArbuz 
+- remixaz 
 - rimas 
 - Rinku Kazeno 
 - Robert 
 - samy-r 
 - seanmacdomhnall 
+- Shamunr 
 - sjousse 
 - Sparer lilian 
 - Sven Weber 
@@ -128,6 +139,8 @@
 - Xavier 
 - Yann 
 - Yann CYRILLE 
+- youlyn 
+- Youlyn Chinome 
 - Youness ZIOUANE 
 - ZiZuu 
 - zuzul 

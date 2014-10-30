@@ -1,9 +1,0 @@
-Bonjour,
-
-Une commande de {cart_qty} {name_product} a été passée sur votre boutique eBay
-
-Cependant ce produit à une quantité d'achat minimale qui vaut {min_qty}.
-
-Vous pouvez modifier cette quantité minimum dans la fiche du produit, pour pouvoir récupérer la commande dans PrestaShop.
-
-{shop_name}

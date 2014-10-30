@@ -1,8 +1,0 @@
-Hello, 
-
-You sold {cart_qty} of {name_product} from your eBay Shop.
-But you have a minimal quantity of {min_qty} of this product.
-
-You can modify this quantity in the product form, so that you can retrieve the order in your PrestaShop stocks.
-
-{shop_name}

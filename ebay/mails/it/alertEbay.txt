@@ -1,7 +1,0 @@
-Buongiorno, 
-
-un ordine {cart_qty} {name_product} è stato trasmesso sul tuo Negozio eBay. Al momento questo prodotto ha una quantità minima di {min_qty}. 
-
-Puoi modificare questo valore nella scheda di prodotto e rintracciare l'ordine su Prestashop.
-
-{shop_name}

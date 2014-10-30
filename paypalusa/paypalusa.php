@@ -19,7 +19,7 @@ class PayPalUSA extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.6';
+		$this->version = '1.3.8';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
 		$this->tab = 'payments_gateways';
@@ -772,6 +772,8 @@ class PayPalUSA extends PaymentModule
 			$link = Tools::getShopDomainSsl(true)._MODULE_DIR_.$module.'/'.$controller.'?'.http_build_query($params);
 		else
 			$link = $this->context->link->getModuleLink($module, $controller, $params, $ssl);
+			
+		return $link;
 	}
 
 }
