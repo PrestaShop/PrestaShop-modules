@@ -413,7 +413,7 @@ class PayPalUSA extends PaymentModule
 			}
 			
 			$currency = new Currency((int)$this->context->cart->id_currency);
-			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
+			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&BILLTOEMAIL='.$this->context->customer->email.'&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
 					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED'))).']='.$this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED')).
 					'&CANCELURL='.$this->context->link->getPageLink('order.php','').
 					'&RETURNURL['.strlen($this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED'))).']='.$this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED')), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
