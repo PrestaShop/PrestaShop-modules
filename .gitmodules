@@ -532,3 +532,6 @@
 [submodule "mapubfacile"]
 	path = mapubfacile
 	url = https://github.com/PrestaShop/mapubfacile.git
+[submodule "loyaltylion"]
+	path = loyaltylion
+	url = https://github.com/PrestaShop/loyaltylion.git
