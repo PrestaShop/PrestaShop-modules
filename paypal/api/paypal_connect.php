@@ -127,7 +127,7 @@ class PayPalConnect
 			else
 				$this->_logs[] = $this->paypal->l('Send with fsockopen method successful');
 		}
-		return $tmp ? $tmp : false;
+		return isset($tmp) ? $tmp : false;
 	}
 
 	private function _makeHeader($host, $script, $lenght)
