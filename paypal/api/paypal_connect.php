@@ -85,7 +85,7 @@ class PayPalConnect
 			@curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			@curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			@curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-			@curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+			@curl_setopt($ch, CURLOPT_SSLVERSION, defined(CURL_SSLVERSION_TLSv1) ? CURL_SSLVERSION_TLSv1 : 1);
 			@curl_setopt($ch, CURLOPT_VERBOSE, false);
 
 			if ($http_header)
@@ -105,7 +105,7 @@ class PayPalConnect
 
 	private function _connectByFSOCK($host, $script, $body)
 	{
-		$fp = @fsockopen('sslv3://'.$host, 443, $errno, $errstr, 4);
+		$fp = @fsockopen('tls://'.$host, 443, $errno, $errstr, 4);
 
 		if (!$fp)
 			$this->_logs[] = $this->paypal->l('Connect failed with fsockopen method');
@@ -127,7 +127,7 @@ class PayPalConnect
 			else
 				$this->_logs[] = $this->paypal->l('Send with fsockopen method successful');
 		}
-		return $tmp ? $tmp : false;
+		return isset($tmp) ? $tmp : false;
 	}
 
 	private function _makeHeader($host, $script, $lenght)
