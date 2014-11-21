@@ -127,7 +127,7 @@ $(document).ready( function() {
 	var modulePath = 'modules/paypal';
 	var subFolder = '/integral_evolution';
 	{/literal}
-	{if Configuration::get('PS_SSL_ENABLED')}
+	{if $ssl_enabled}
 		var baseDirPP = baseDir.replace('http', 'https');
 	{else}
 		var baseDirPP = baseDir;
