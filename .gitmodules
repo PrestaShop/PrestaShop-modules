@@ -538,3 +538,6 @@
 [submodule "bluesnap"]
 	path = bluesnap
 	url = https://github.com/PrestaShop/bluesnap.git
+[submodule "sellstrom"]
+	path = sellstrom
+	url = https://github.com/PrestaShop/sellstrom.git
