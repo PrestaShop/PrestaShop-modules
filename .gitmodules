@@ -541,3 +541,6 @@
 [submodule "sellstrom"]
 	path = sellstrom
 	url = https://github.com/PrestaShop/sellstrom.git
+[submodule "nostotagging"]
+	path = nostotagging
+	url = https://github.com/PrestaShop/nostotagging.git
