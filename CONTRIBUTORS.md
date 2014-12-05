@@ -7,6 +7,7 @@
 - Alexandre Segura 
 - alonbr 
 - Alon Braitstein 
+- Amala 
 - antoniofr 
 - apaqui 
 - arossetti 
@@ -81,6 +82,7 @@
 - khokha elmahdi 
 - Krystian Podemski 
 - Lesley Paone 
+- Livintha 
 - lsparer 
 - Ludovic 
 - Ludovic Verrecchia 
