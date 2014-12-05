@@ -257,7 +257,7 @@ class DataHelperVersionFour extends DataHelper
 	}
 	public function getCustomersSalesQuery()
 	{
-		$sql = 'SELECT  count(distinct o.date_add) as total_orders, c.id_customer AS "c#id_customer",
+		$sql = 'SELECT  count(distinct o.date_add) as total_orders, c.id_customer AS "c#id_customer", o.id_order AS "o#id_order",
 					CONCAT( c.firstname,  " ", c.lastname ) AS  "name",
 					c.firstname as "c#firstname",c.lastname as "c#lastname",
 					c.email as "c#email",

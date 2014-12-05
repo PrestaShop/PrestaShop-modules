@@ -524,10 +524,8 @@ class DataHelper extends ModuleGrid {
 				$values = $get_collect['values'];
 				if (is_array ( $values ))
 				{
-					$values = array_map ( function ($val)
-					{
-						return ($val == 0) ? null : $val;
-					}, $values );
+					$func = create_function ( '$val', 'return ($val == 0)? null : $val;' );
+					$values = array_map ( $func, $values );
 				}
 				$final_data[] = array (
 						'name' => $lang_name['data'],
@@ -1897,7 +1895,7 @@ class DataHelper extends ModuleGrid {
 	}
 	public function getCustomersSalesQuery()
 	{
-		$sql = 'SELECT  count(distinct o.date_add) as total_orders, c.id_customer AS "c#id_customer",
+		$sql = 'SELECT  count(distinct o.date_add) as total_orders, c.id_customer AS "c#id_customer", o.id_order AS "o#id_order",
     						CONCAT( c.firstname,  " ", c.lastname ) AS  "name",
 							c.firstname as "c#firstname",c.lastname as "c#lastname",
 							c.email as "c#email",
