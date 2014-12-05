@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>prestastats</name>
+	<displayName><![CDATA[PrestaStats - Analytics Dashboard and Abandoned Carts]]></displayName>
+	<version><![CDATA[2.1.3]]></version>
+	<description><![CDATA[PrestaStats is the leading Business Analytics Dashboard &amp;amp; Abandoned Carts Monitor enabling you to see business critical data from your PrestaShop store on any device, at any time.]]></description>
+	<author><![CDATA[CDL Software Ltd.]]></author>
+	<tab><![CDATA[analytics_stats]]></tab>
+	<confirmUninstall><![CDATA[Uninstall]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>
