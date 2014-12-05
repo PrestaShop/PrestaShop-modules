@@ -25,6 +25,7 @@
  */
 
 include(dirname(__FILE__).'/datahelper.php');
+include(dirname(__FILE__).'/DataHelperVersion1.4.php');
 
 function authenticate()
 {
@@ -80,14 +81,18 @@ else
 try
 {
 	$timezone = Configuration::get('PS_TIMEZONE');
-	$data = new DataHelper($date_from, $date_to);
+	$versionfour = new DataHelperVersionFour();
+	$data = new DataHelper($date_from, $date_to, $versionfour);
 	$data->setDateFrom($date_from);
 	$data->setDateTo($date_to);
-
 	if (isset($rangeselect))
 		$data->setMethod($method);
-
 	$data->setTimezone($timezone);
+	$versionfour->setDateFrom($date_from);
+	$versionfour->setDateTo($date_to);
+	if (isset($rangeselect))
+		$versionfour->setMethod($method);
+	$versionfour->setTimezone($timezone);
 	$filter = null;
 	$property = null;
 	$direction = null;
