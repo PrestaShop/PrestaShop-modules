@@ -85,6 +85,7 @@ class PayPal extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '3.8.1';
 		$this->author = 'PrestaShop';
+		$this->is_eu_compatible = 1;
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -120,7 +121,7 @@ class PayPal extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn') ||
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('displayPaymentEU') || !$this->registerHook('paymentReturn') ||
 		!$this->registerHook('shoppingCartExtra') || !$this->registerHook('backBeforePayment') || !$this->registerHook('rightColumn') ||
 		!$this->registerHook('cancelProduct') || !$this->registerHook('productFooter') || !$this->registerHook('header') ||
 		!$this->registerHook('adminOrder') || !$this->registerHook('backOfficeHeader'))
@@ -559,6 +560,102 @@ class PayPal extends PaymentModule
 		}
 
 		return null;
+	}
+	
+	public function hookDisplayPaymentEU($params) {
+		if (!$this->active)
+			return;
+
+		$use_mobile = $this->useMobile();
+
+		if ($use_mobile)
+			$method = ECS;
+		else
+			$method = (int)Configuration::get('PAYPAL_PAYMENT_METHOD');
+
+		if (isset($this->context->cookie->express_checkout))
+			$this->redirectToConfirmation();
+			
+		$logos = $this->paypal_logos->getLogos();
+		$sandbox_mode = Configuration::get('PAYPAL_SANDBOX');
+		$use_mobile = $use_mobile;
+		$PayPal_lang_code = (isset($iso_lang[$this->context->language->iso_code])) ? $iso_lang[$this->context->language->iso_code] : 'en_US';
+		
+		$protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
+		$base_dir_ssl = $protocol_link . Tools::getShopDomainSsl() . __PS_BASE_URI__;
+		
+		if (isset($logos['LocalPayPalHorizontalSolutionPP']) && $method == WPS) {
+			$logo = $logos['LocalPayPalHorizontalSolutionPP'];
+		}
+		else {
+			$logo = $logos['LocalPayPalLogoMedium'];
+		}
+		
+		if ($method == HSS) {
+			$billing_address = new Address($this->context->cart->id_address_invoice);
+			$delivery_address = new Address($this->context->cart->id_address_delivery);
+			$billing_address->country = new Country($billing_address->id_country);
+			$delivery_address->country = new Country($delivery_address->id_country);
+			$billing_address->state	= new State($billing_address->id_state);
+			$delivery_address->state = new State($delivery_address->id_state);
+
+			$cart = $this->context->cart;
+			$cart_details = $cart->getSummaryDetails(null, true);
+
+			if ((int)Configuration::get('PAYPAL_SANDBOX') == 1)
+				$action_url = 'https://securepayments.sandbox.paypal.com/acquiringweb';
+			else
+				$action_url = 'https://securepayments.paypal.com/acquiringweb';
+
+			$shop_url = PayPal::getShopDomainSsl(true, true);
+
+			$this->context->smarty->assign(array(
+				'action_url' => $action_url,
+				'cart' => $cart,
+				'cart_details' => $cart_details,
+				'currency' => new Currency((int)$cart->id_currency),
+				'customer' => $this->context->customer,
+				'business_account' => Configuration::get('PAYPAL_BUSINESS_ACCOUNT'),
+				'custom' => Tools::jsonEncode(array('id_cart' => $cart->id, 'hash' => sha1(serialize($cart->nbProducts())))),
+				'gift_price' => (float)$this->getGiftWrappingPrice(),
+				'billing_address' => $billing_address,
+				'delivery_address' => $delivery_address,
+				'shipping' => $cart_details['total_shipping_tax_exc'],
+				'subtotal' => $cart_details['total_price_without_tax'] - $cart_details['total_shipping_tax_exc'],
+				'time' => time(),
+				'cancel_return' => $this->context->link->getPageLink('order.php'),
+				'notify_url' => $shop_url._MODULE_DIR_.$this->name.'/ipn.php',
+				'return_url' => $shop_url._MODULE_DIR_.$this->name.'/integral_evolution/submit.php?id_cart='.(int)$cart->id,
+				'tracking_code' => $this->getTrackingCode($method), 
+				'iso_code' => Tools::strtoupper($this->context->language->iso_code),
+				'payment_hss_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
+				'payment_hss_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
+			));
+			$this->getTranslations();
+			
+			return array(
+				'cta_text' => $this->l('Paypal'),
+				'logo' => $logo,
+				'form' => $this->fetchTemplate('integral_evolution_payment_eu.tpl')
+			);
+		}
+		elseif ($method == WPS || $method == ECS) {
+			$this->getTranslations();
+			$this->context->smarty->assign(array(
+				'PayPal_integral' => WPS,
+				'PayPal_express_checkout' => ECS,
+				'PayPal_payment_method' => $method,
+				'PayPal_payment_type' => 'payment_cart',
+				'PayPal_current_page' => $this->getCurrentUrl(),
+				'PayPal_tracking_code' => $this->getTrackingCode($method))
+			);
+			
+			return array(
+				'cta_text' => $this->l('Paypal'),
+				'logo' => $logo,
+				'form' => $this->fetchTemplate('express_checkout_payment_eu.tpl')
+			);
+		}
 	}
 
 	public function hookShoppingCartExtra()
