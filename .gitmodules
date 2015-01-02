@@ -544,6 +544,3 @@
 [submodule "nostotagging"]
 	path = nostotagging
 	url = https://github.com/PrestaShop/nostotagging.git
-[submodule "eurovatgenerator"]
-	path = eurovatgenerator
-	url = https://github.com/PrestaShop/eurovatgenerator
