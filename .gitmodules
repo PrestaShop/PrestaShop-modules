@@ -547,3 +547,6 @@
 [submodule "paypalmx"]
 	path = paypalmx
 	url = https://github.com/PrestaShop/paypalmx.git
+[submodule "powatag"]
+	path = powatag
+	url = https://github.com/PrestaShop/powatag
