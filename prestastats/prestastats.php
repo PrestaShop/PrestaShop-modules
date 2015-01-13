@@ -33,7 +33,7 @@ class Prestastats extends Module
 	{
 		$this->name = 'prestastats';
 		$this->tab = 'analytics_stats';
-		$this->version = '2.1.2';
+		$this->version = '2.1.3';
 		$this->author = 'CDL Software Ltd.';
 		$this->need_instance = 0;
 		$this->bootstrap = true;

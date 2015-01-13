@@ -541,3 +541,15 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport
+[submodule "sellstrom"]
+	path = sellstrom
+	url = https://github.com/PrestaShop/sellstrom.git
+[submodule "nostotagging"]
+	path = nostotagging
+	url = https://github.com/PrestaShop/nostotagging.git
+[submodule "paypalmx"]
+	path = paypalmx
+	url = https://github.com/PrestaShop/paypalmx.git
+[submodule "powatag"]
+	path = powatag
+	url = https://github.com/PrestaShop/powatag
