@@ -553,3 +553,6 @@
 [submodule "powatag"]
 	path = powatag
 	url = https://github.com/PrestaShop/powatag
+[submodule "olark"]
+	path = olark
+	url = https://github.com/PrestaShop/olark.git
