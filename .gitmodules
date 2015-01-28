@@ -559,3 +559,6 @@
 [submodule "easymarketing"]
 	path = easymarketing
 	url = https://github.com/PrestaShop/easymarketing.git
+[submodule "brinkscheckout"]
+	path = brinkscheckout
+	url = https://github.com/PrestaShop/brinkscheckout.git
