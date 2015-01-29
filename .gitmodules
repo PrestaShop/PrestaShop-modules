@@ -562,3 +562,6 @@
 [submodule "brinkscheckout"]
 	path = brinkscheckout
 	url = https://github.com/PrestaShop/brinkscheckout.git
+[submodule "trustedshops"]
+	path = trustedshops
+	url = https://github.com/PrestaShop/trustedshops.git
