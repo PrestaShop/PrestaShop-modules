@@ -565,6 +565,3 @@
 [submodule "trustedshops"]
 	path = trustedshops
 	url = https://github.com/PrestaShop/trustedshops.git
-[submodule "eu_legal"]
-	path = eu_legal
-	url = https://github.com/PrestaShop/eu_legal
