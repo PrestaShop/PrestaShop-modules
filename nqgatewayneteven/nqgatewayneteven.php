@@ -46,7 +46,7 @@ class NqGatewayNeteven extends Module
 
         $this->tab = $tab_name;
 		
-		$this->version = '2.7';
+		$this->version = '2.10.3';
 		$this->author = 'NetEven';
 		
 		parent::__construct();
@@ -112,6 +112,7 @@ class NqGatewayNeteven extends Module
 		$new_employe->passwd = $rand_letters[0].'$&-$&-$&-$&'.rand(0, 1000);
 		$new_employe->id_profile = 3;
         $new_employe->active = 0;
+        $new_employe->optin = 0;
 		$new_employe->add();
 		Gateway::updateConfig('ID_EMPLOYEE_NETEVEN', (int)$new_employe->id);
 
