@@ -56,15 +56,25 @@ class ShopgateConfigPresta extends ShopgateConfig
 		$this->enable_get_settings = 1;
 		$this->enable_get_items = 1;
 		$this->enable_get_categories = 1;
+        $this->enable_get_reviews = 0;
 
 		// initialize plugin specific stuff
 		$this->use_stock = 1;
 		$this->currency = 'EUR';
-		if (version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 		{
 			$this->setEnableCheckCart(true);
+		}
+
+		if (version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+		{
 			$this->setEnableRedeemCoupons(true);
 		}
+
+        if (version_compare(_PS_VERSION_, '1.6.0.0', '>='))
+        {
+            $this->setEnableGetReviews(true);
+        }
 
 		/**
 		 * set supported_fields_check_cart

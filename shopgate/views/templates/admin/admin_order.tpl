@@ -16,9 +16,11 @@
 * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
 *}
 
+<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}css/admin-order.css">
+
 <br />
 <form action="" method="post">
-<fieldset style="width: 400px;float: left;">
+<fieldset class="shopgate-order-info">
 	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/img/logo.png">{l s='Shopgate information' mod='shopgate'}</legend>
 	
 	{if $shopgate_error}<span style="color:red; font-weight:bold;">{$shopgate_error|escape:'htmlall':'UTF-8'}</span>{/if}
@@ -109,6 +111,39 @@
 		<div class="margin-form">
 			<input type="submit" class="button" name="updateShopgateOrder" value="{l s='Save' mod='shopgate'}">
 		</div>
+
+		<h4 style="border-bottom:1px solid #E0D0B1">{l s='Additional informations' mod='shopgate'}</h4>
+
+		{if count($sOrder->getCustomFields())}
+			<div class="admin-order additional-box">
+				<h5>{l s='Order' mod='shopgate'}</h5>
+				{foreach key="key" from=$sOrder->getCustomFields() item="item"}
+					<label>{$item->getLabel()|escape:'htmlall':'UTF-8'}</label>
+					<div class="margin-form">{$item->getValue()|escape:'htmlall':'UTF-8'}</div>
+				{/foreach}
+			</div>
+		{/if}
+
+		{if count($sOrderInvoiceAddress->getCustomFields())}
+			<div class="admin-order additional-box">
+				<h5>{l s='Invoice Adress' mod='shopgate'}</h5>
+				{foreach key="key" from=$sOrderInvoiceAddress->getCustomFields() item="item"}
+					<label>{$item->getLabel()|escape:'htmlall':'UTF-8'}</label>
+					<div class="margin-form">{$item->getValue()|escape:'htmlall':'UTF-8'}</div>
+				{/foreach}
+			</div>
+		{/if}
+
+		{if count($sOrderDeliveryAddress->getCustomFields())}
+			<div class="admin-order additional-box">
+				<h5>{l s='Delivery Adress' mod='shopgate'}</h5>
+				{foreach key="key" from=$sOrderDeliveryAddress->getCustomFields() item="item"}
+					<label>{$item->getLabel()|escape:'htmlall':'UTF-8'}</label>
+					<div class="margin-form">{$item->getValue()|escape:'htmlall':'UTF-8'}</div>
+				{/foreach}
+			</div>
+		{/if}
+
 	
 	{elseif !$shopgate_error}
 		<span style="color:red; font-weight:bold;">{l s='Order not found in shopgate' mod='shopgate'}</span>

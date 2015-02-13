@@ -351,7 +351,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		}
 		
 		$linkTag = '';
-		if ($this->config->getShopIsActive()) {
+		if ($this->config->getShopIsActive() && !$this->suppressRedirect) {
 			$linkTag = $this->loadTemplate($this->linkTagTemplatePath);
 		}
 		

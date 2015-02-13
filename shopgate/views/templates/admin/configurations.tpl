@@ -263,12 +263,23 @@
 		</div>
 
         <h2>{l s='Product export' mod='shopgate'}</h2>
+
         <label>{l s='Description' mod='shopgate'}</label>
         <div class="margin-form">
             <select name="settings[SHOPGATE_PRODUCT_DESCRIPTION]">
                 {foreach from=$product_export_descriptions key=key item=name}
                     <option value="{$key|escape:html:'UTF-8'}"
                             {if $key == $settings.SHOPGATE_PRODUCT_DESCRIPTION}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
+                {/foreach}
+            </select>
+        </div>
+
+        <label>{l s='Price type' mod='shopgate'}</label>
+        <div class="margin-form">
+            <select name="settings[SHOPGATE_EXPORT_PRICE_TYPE]">
+                {foreach from=$product_export_price_type key=key item=name}
+                    <option value="{$key|escape:html:'UTF-8'}"
+                            {if $key == $settings.SHOPGATE_EXPORT_PRICE_TYPE}selected="selected"{/if}>{$name|escape:'htmlall':'UTF-8'}</option>
                 {/foreach}
             </select>
         </div>

@@ -1,0 +1,13 @@
+.shopgate-order-info {
+    width: 400px;
+    float: left;
+}
+
+.shopgate-order-info .margin-form {
+    font-size: 1em;
+}
+
+.shopgate-order-info .additional-box h5 {
+    border-bottom:1px solid #E0D0B1;
+    margin-left: 30px;
+}

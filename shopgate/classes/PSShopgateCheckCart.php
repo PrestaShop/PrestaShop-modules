@@ -105,6 +105,11 @@ class PSShopgateCheckCart
 	protected $_currentCurrency = null;
 
 	/**
+	 * @var bool
+	 */
+	protected $_customerDummyCreated = false;
+
+	/**
 	 * @param ShopgateCart $shopgateCart
 	 */
 	public function __construct(ShopgateCart $shopgateCart)
@@ -293,14 +298,26 @@ class PSShopgateCheckCart
 	 */
 	protected function _createCustomer()
 	{
-		$this->_context->customer = new Customer();
-
-		$this->_context->customer->lastname = self::DEFAULT_CUSTOMER_LAST_NAME;
-		$this->_context->customer->firstname = self::DEFAULT_CUSTOMER_FIRST_NAME;
-		$this->_context->customer->email = self::DEFAULT_CUSTOMER_EMAIL;
-		$this->_context->customer->passwd = self::DEFAULT_CUSTOMER_PASSWD;
-
-		$this->_context->customer->add();
+		if($this->_shopgateCart->getExternalCustomerId()) {
+			/**
+			 * load exist customer
+			 */
+			$this->_context->customer = new Customer($this->_shopgateCart->getExternalCustomerId());
+			if (!Validate::isLoadedObject($this->_context->customer)) {
+				$this->_addException(ShopgateLibraryException::COUPON_INVALID_USER);
+			}
+		} else {
+			/**
+			 * create dummy customer
+			 */
+			$this->_context->customer = new Customer();
+			$this->_context->customer->lastname = self::DEFAULT_CUSTOMER_LAST_NAME;
+			$this->_context->customer->firstname = self::DEFAULT_CUSTOMER_FIRST_NAME;
+			$this->_context->customer->email = self::DEFAULT_CUSTOMER_EMAIL;
+			$this->_context->customer->passwd = self::DEFAULT_CUSTOMER_PASSWD;
+			$this->_context->customer->add();
+			$this->_customerDummyCreated = true;
+		}
 
 		$this->_context->cart->id_customer = $this->_context->customer->id;
 		$this->_context->cart->save();
@@ -349,7 +366,9 @@ class PSShopgateCheckCart
 	 */
 	protected function getProductIdentifiers(ShopgateOrderItem $item)
 	{
-		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::PREFIX)));
+		return substr($item->getItemNumber(), 0, 2) == PSShopgatePlugin::PREFIX
+			? explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::PREFIX)))
+			: explode('_', $item->getItemNumber());
 	}
 
 	/**
@@ -696,30 +715,24 @@ class PSShopgateCheckCart
 	 */
 	public function __destruct()
 	{
-		/**
-		 * delete customer
-		 */
-		if ($this->_context->customer->id)
-			$this->_context->customer->delete();
-
-		/**
-		 * delete delivery address
-		 */
-		if ($this->_deliveryAddress && $this->_deliveryAddress->id)
-			$this->_deliveryAddress->delete();
-
-		/**
-		 * delete invoice address
-		 */
-		if ($this->_invoiceAddress && $this->_invoiceAddress->id)
-			$this->_invoiceAddress->delete();
-
-		/**
-		 * delete cart
-		 */
-		if ($this->_context->cart->id)
-			$this->_context->cart->delete();
+		foreach ($this->getCustomersByEmail(PSShopgateCheckCart::DEFAULT_CUSTOMER_EMAIL) as $customer) {
+			$currentCustomer = new Customer($customer['id_customer']);
+			$currentCustomer->delete();
+		}
 	}
+
+    /**
+     * Retrieve customers by email address
+     *
+     * @static
+     * @param $email
+     * @return array
+     */
+    public function getCustomersByEmail($email)
+    {
+        $query = 'SELECT id_customer FROM ' . _DB_PREFIX_ . 'customer WHERE email = "' . pSQL($email) . '"';
+        return Db::getInstance()->ExecuteS($query);
+    }
 
 	/**
 	 * in array recursive

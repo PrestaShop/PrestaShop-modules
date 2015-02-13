@@ -1,5 +1,57 @@
 '''Deutsch'''
 
+'''Version 2.9.1'''
+* CDATA für den Author der Rezensionen in der XML hinzugefügt
+
+'''Version 2.9.0'''
+* Export der Kundenrezensionen als XML hinzugefügt
+
+'''Version 2.8.10'''
+* Linkexport für Produkte und Kategorien um CDATA erweitert (XML)  
+* CNAME Validierung erweitert
+* Ungenutzte Code Teile entfernt
+
+'''Version 2.8.9'''
+* Maximalwert des Speichers kann gesetzt werden
+* Maximale Ausführungszeit kann gesetzt werden
+* Der ShopgateErrorHandler gibt nun by default keinen stacktrace mehr aus
+
+'''Version 2.8.8'''
+* XML - Images neuer Flag für isCover
+
+'''Version 2.8.7'''
+* Integration für Amazon Payments
+
+'''Version 2.8.6'''
+* Optimierte Funktion für leere XML Knoten entfernen
+* Optimierte Funktion für Aufbereitung der XML Children
+
+'''Version 2.8.5'''
+* Entfernen von git Konflikt markup
+* Ersetzen von json_encode Aufrufen durch die interne Methode jsonEncode
+
+'''Version 2.8.4'''
+* Regex Anpassung für cname Validierung
+* Neuer Kindknoten zur Unterstützung von Gruppenprodukten und Darstellungstypen für XML hinzugefügt
+
+'''Version 2.8.3'''
+* ungültige UTF-8-Sequenzen für XML werden jetzt beim Export entfernt
+* Einstellung 'supported_methods_cron' hinzugefügt, mit der ein Plugin mitteilen kann, welche Methoden bei der cron-Action unterstützt werden
+
+'''Version 2.8.2'''
+* Fehler beim Konvertieren eines Encodings in UTF-8 behoben
+
+'''Version 2.8.1'''
+* neues Attribut ShopgateExternalOrderExtraCost::$label mit Getter und Setter hinzugefügt
+* bei check_cart wird jetzt die 'currency' des Warenkorbs in der API-Response mit dem Wert des Warenkorbs vom Request vorinitialisiert
+
+'''Version 2.8.0'''
+* Unterstützung für das Synchronisieren einer Favoritenliste über die Shopgate Plugin API hinzugefügt
+* Unterstützung für den Abruf von Bestellungen aus dem Shopsystem über die Shopgate Plugin API hinzugefügt
+* Shopgate-Bestellungen enthalten jetzt das Feld "shipping_tax_percent" mit dem Steuersatz der Versandkosten
+* der Parameter $trackingNumber der Methode ShopgateMerchantApi::addOrderDeliveryNote() ist jetzt optional (Standard: leerer String)
+* 'related_shop_items' zur Standard-Produkt-CSV-Zeile hinzugefügt
+
 '''Version 2.7.2'''
 * Bugfix für Inkonsistenz während Methodenumbenennung
 * Verschleiern des oauth_access_token bei der Ausgabe der Ping-Methode
@@ -301,6 +353,58 @@
 
 
 '''English'''
+
+'''Version 2.9.1'''
+* added CDATA for review author in xml
+
+'''Version 2.9.0'''
+* export of reviews as xml added
+
+'''Version 2.8.10'''
+* added cdata for deep links in categories and products (xml) 
+* extended cname validation
+* removed legacy code
+
+'''Version 2.8.9'''
+* maximum memory value for executing scripts can be set now
+* maximum execution time can be set now
+* by default the ShopgateErrorHandler doesn't print the stacktrace
+
+'''Version 2.8.8'''
+* XML - Images new flag for isCover
+
+'''Version 2.8.7'''
+* integration for amazon payments
+
+'''Version 2.8.6'''
+* optimized function to remove empty XML nodes
+* optimized function to prepare XML children
+
+'''Version 2.8.5'''
+* removed remaining git conflict markup
+* replaced json_encode calls through the internal method jsonEncode
+
+'''Version 2.8.4'''
+* regex adjustment for cname validation
+* new child node for grouped products / different display types added to xml 
+
+'''Version 2.8.3'''
+* stripping invalid UTF-8 sequences now on XML export
+* added setting 'supported_methods_cron' for plugins to tell which methods are supported by their cron action
+
+'''Version 2.8.2'''
+* fixed a bug in converting encodings into UTF-8
+
+'''Version 2.8.1'''
+* added property ShopgateExternalOrderExtraCost::$label with getter and setter
+* on check_cart, the 'currency' of the cart in the response is pre-initialized with that of the cart in the request now
+
+'''Version 2.8.0'''
+* added support for synchronizing a favourite list via the Shopgate Plugin API
+* added support for retrievieng orders from the shopping cart solution via the Shopgate Plugin API
+* Shopgate orders now contain a field named "shipping_tax_percent" with the tax rate of shipping cost
+* parameter $trackingNumber of ShopgateMerchantApi::addOrderDeliveryNote() is now optional (default: empty string)
+* added 'related_shop_items' to the default products CSV row
 
 '''Version 2.7.2'''
 * obfuscation of the oauth_access_token on ping method output

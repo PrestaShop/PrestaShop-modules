@@ -38,6 +38,9 @@
  *  @method         setAlt(string $value)
  *  @method string  getAlt()
  *
+ *  @method         setIsCover(bool $value)
+ *  @method string  getIsCover()
+ *
  */
 class Shopgate_Model_Media_Image extends Shopgate_Model_AbstractExport {
 
@@ -51,7 +54,8 @@ class Shopgate_Model_Media_Image extends Shopgate_Model_AbstractExport {
 		'SortOrder',
 		'Url',
 		'Title',
-		'Alt');
+		'Alt',
+		'IsCover');
 
 	/**
 	 * @param Shopgate_Model_XmlResultObject $itemNode
@@ -65,6 +69,7 @@ class Shopgate_Model_Media_Image extends Shopgate_Model_AbstractExport {
 		$imageNode = $itemNode->addChild('image');
 		$imageNode->addAttribute('uid', $this->getUid());
 		$imageNode->addAttribute('sort_order', $this->getSortOrder());
+		$imageNode->addAttribute('is_cover', $this->getIsCover());
 		$imageNode->addChildWithCDATA('url', $this->getUrl());
 		$imageNode->addChildWithCDATA('title', $this->getTitle());
 		$imageNode->addChildWithCDATA('alt', $this->getAlt());
@@ -83,6 +88,7 @@ class Shopgate_Model_Media_Image extends Shopgate_Model_AbstractExport {
 		$imageResult->setUrl($this->getUrl());
 		$imageResult->setTitle($this->getTitle());
 		$imageResult->setAlt($this->getAlt());
+		$imageResult->setIsCover($this->getIsCover());
 
 		return $imageResult->getData();
 

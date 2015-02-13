@@ -1,5 +1,115 @@
 '''Deutsch'''
 
+'''Version 2.9.19'''
+* fix sale price
+
+'''Version 2.9.18'''
+* update getSettings (zip_ranges)
+* fix config for older php versions
+
+'''Version 2.9.17'''
+* fix categories for multistore
+* change identifier - reference to sku
+* update payment mapping / order status
+* fix root categories for multistore
+
+'''Version 2.9.16'''
+* fix sort order for coupon
+* fix invalid / not active country codes
+
+'''Version 2.9.15'''
+* fix customer group on addOrder
+
+'''Version 2.9.14'''
+* change logic for availability text
+
+'''Version 2.9.13'''
+* fix validate coupon for registered customers
+* fix export is_saleable for child products
+
+'''Version 2.9.12'''
+* fix default shop id for tier prices
+
+'''Version 2.9.11'''
+* fix default attribute id for redirect
+
+'''Version 2.9.10'''
+* fix admin_template for version 1.3
+* fix attributegroup label (public)
+
+'''Version 2.9.9'''
+* fix default customer group
+* fix backorders (children) für version < 1.5
+
+'''Version 2.9.8'''
+* add shop id condition to special price query
+* fix backorders für version < 1.5
+
+'''Version 2.9.7'''
+* fix class_exists
+
+'''Version 2.9.6'''
+* preis export variante in konfiguration möglich
+
+'''Version 2.9.5'''
+* custom fields in der Bestellansicht
+* überprüfung aktiver Preisregeln
+* fix Preis für reduzierte Produkte
+
+'''Version 2.9.4'''
+* check_cart optimiert
+
+'''Version 2.9.3'''
+* fix image info für version < 1.3.3
+
+'''Version 2.9.2'''
+* fix image link für version < 1.3.3
+
+'''Version 2.9.1'''
+* fix setIsSaleable für version < 1.5
+
+'''Version 2.9.0'''
+* neue lib version 2.9.x
+* get reviews aktiviert
+
+'''Version 2.8.9'''
+* Fix Aktivierung check_cart >= 1.5
+* checkTable specific_price
+
+'''Version 2.8.8'''
+* Fix XML setImages
+
+'''Version 2.8.7'''
+* Fix autoload on check_class
+
+'''Version 2.8.6'''
+* Fix getRequiredAddressFields für Version < 1.5
+
+'''Version 2.8.5'''
+* Fix getSettings für Version < 1.5
+
+'''Version 2.8.4'''
+* Fix Produkt Identifier für check_cart XML / CSV
+
+'''Version 2.8.3'''
+* Position der Produkte innerhalb der Kategorien XML und CSV
+
+'''Version 2.8.2'''
+* neue Funktionen getOrders und syncFavouriteList angelegt
+
+'''Version 2.8.1'''
+* Fehler in createCustomer behoben
+
+'''Version 2.8.0'''
+* neue Lib 2.8.x
+* xml und CSV Sortierung für Bilder
+
+'''Version 2.7.4'''
+* standart Tax von GROSS zu NET geändert
+
+'''Version 2.7.2'''
+* getSettings Methode erweitert
+
 '''Version 2.7.1'''
 * neue Lib Version eingebunden
 * ping methode erweitert
@@ -278,6 +388,116 @@
 
 
 '''English'''
+
+'''Version 2.9.19'''
+* fix sale price
+
+'''Version 2.9.18'''
+* update getSettings (zip_ranges)
+* fix config for older php versions
+
+'''Version 2.9.17'''
+* fix categories for multistore
+* change identifier - reference to sku
+* update payment mapping / order status
+* fix root categories for multistore
+
+'''Version 2.9.16'''
+* fix sort order for coupon
+* fix invalid / not active country codes
+
+'''Version 2.9.15'''
+* fix customer group on addOrder
+
+'''Version 2.9.14'''
+* change logic for availability text
+
+'''Version 2.9.13'''
+* fix validate coupon for registered customers
+* fix export is_saleable for child products
+
+'''Version 2.9.12'''
+* fix default shop id for tier prices
+
+'''Version 2.9.11'''
+* fix default attribute id for redirect
+
+'''Version 2.9.10'''
+* fix admin_template for version 1.3
+* fix attributegroup label (public)
+
+'''Version 2.9.9'''
+* fix default customer group
+* fix backorders (children) for version < 1.5
+
+'''Version 2.9.8'''
+* add shop id condition to special price query
+* fix backorders for version < 1.5
+
+'''Version 2.9.7'''
+* fix class_exists
+
+'''Version 2.9.6'''
+* export price variant (net/gross) in configuration
+
+'''Version 2.9.5'''
+* order detail view - custom fields
+* check active price rules
+* fix price for reduced products
+
+'''Version 2.9.4'''
+* optimized check_cart
+
+'''Version 2.9.3'''
+* fix image info for version < 1.3.3
+
+'''Version 2.9.2'''
+* fix image link for version < 1.3.3
+
+'''Version 2.9.1'''
+* fix setIsSaleable for version < 1.5
+
+'''Version 2.9.0'''
+* new lib version 2.9.x
+* enable get reviews
+
+'''Version 2.8.9'''
+* Fix activation check_cart >= 1.5
+* checkTable specific_price
+
+'''Version 2.8.8'''
+* Fix XML setImages
+
+'''Version 2.8.7'''
+* Fix autoload on check_class
+
+'''Version 2.8.6'''
+* Fix getRequiredAddressFields for version < 1.5
+
+'''Version 2.8.5'''
+* Fix getSettings for version < 1.5
+
+'''Version 2.8.4'''
+* Fix Product Identifier for check_cart XML / CSV
+
+'''Version 2.8.3'''
+* fix product position in category for xml and csv
+
+'''Version 2.8.2'''
+* added new functions getOrders and syncFavouriteList
+
+'''Version 2.8.1'''
+* fix create Customer
+
+'''Version 2.8.0'''
+* new Lib 2.8.x
+* sorting images for xml and CSV
+
+'''Version 2.7.4'''
+* change default tax from GROSS to NET
+
+'''Version 2.7.2'''
+* extend getSettings method
 
 '''Version 2.7.1'''
 * new lib version added

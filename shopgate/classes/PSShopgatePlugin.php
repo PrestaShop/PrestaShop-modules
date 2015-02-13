@@ -32,6 +32,37 @@ class PSShopgatePlugin extends ShopgatePlugin
 	const PS_CONST_IMAGE_TYPE_CATEGORY_DEFAULT = 'category%sdefault';
 
 	/**
+	 * @var array
+	 */
+	protected $paymentMapping = array(
+
+		'DEFAULT' => array(
+			'PAYMENT_NAME' => 'Mobile Payment',
+			'BLOCKED' => 'PS_OS_SHOPGATE',
+			'BLOCKED_PAID' => 'PS_OS_SHOPGATE',
+			'NOT_BLOCKED_PAID' => 'PS_OS_PAYMENT',
+			'NOT_BLOCKED_NOT_PAID' => 'PS_OS_SHOPGATE', // special case
+			'BLOCKED_SHIPPED' => 'PS_OS_SHOPGATE',
+			'NON_BLOCKED_SHIPPED' => 'PS_OS_PREPARATION',
+		),
+
+		'COD' => array(
+			'PAYMENT_NAME' => 'Cash on Delivery',
+			'NOT_BLOCKED_PAID' => 'PS_OS_PREPARATION',
+		),
+
+		'PAYPAL' => array(
+			'PAYMENT_NAME' => 'PayPal',
+			'NOT_BLOCKED_NOT_PAID' => 'PS_OS_PAYPAL'
+		),
+
+		'PREPAY' => array(
+			'PAYMENT_NAME' => 'Bankwire',
+			'NOT_BLOCKED_NOT_PAID' => 'PS_OS_BANKWIRE'
+		),
+	);
+
+	/**
 	 * default no taxable class name
 	 */
 	const DEFAULT_NO_TAXABLE_CLASS_NAME = 'Not Taxable';
@@ -199,7 +230,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function getPSAddress($customer, ShopgateAddress $shopgateAddress)
 	{
 		// Get country
-		$id_country = Country::getByIso($shopgateAddress->getCountry());
+		$id_country = $this->getCountryByIso($shopgateAddress->getCountry());
 		if (!$id_country)
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_UNKNOWN_COUNTRY_CODE, 'Invalid country code:'.$id_country, true);
 
@@ -241,13 +272,33 @@ class PSShopgatePlugin extends ShopgatePlugin
 	}
 
 	/**
+	 * Get a country ID with its iso code
+	 *
+	 * @param string $iso_code Country iso code
+	 * @return integer Country ID
+	 */
+	public function getCountryByIso($iso_code)
+	{
+		if (!Validate::isLanguageIsoCode($iso_code))
+			die(Tools::displayError());
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT `id_country`
+		FROM `'._DB_PREFIX_.'country`
+		WHERE `active` = 1 AND `iso_code` = \''.pSQL(strtoupper($iso_code)).'\'');
+
+		return $result['id_country'];
+	}
+
+	/**
 	 * @param ShopgateOrderItem $item
 	 *
 	 * @return array
 	 */
 	protected function getProductIdentifiers(ShopgateOrderItem $item)
 	{
-		return explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(self::PREFIX)));
+        return substr($item->getItemNumber(), 0, 2) == PSShopgatePlugin::PREFIX
+            ? explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::PREFIX)))
+            : explode('_', $item->getItemNumber());
 	}
 
 	/**
@@ -390,80 +441,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 			}
 		}
 
-		$this->log('Add Coupons', ShopgateLogger::LOGTYPE_DEBUG);
-		$coupons = $order->getExternalCoupons();
-		if (!empty($coupons))
-		{
-			foreach ($coupons as $coupon)
-			{
-				/** @var $coupon ShopgateExternalCoupon */
-				$code = $coupon->getCode();
-				$this->context = Context::getContext();
-				$this->context->cart = $cart;
-				if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
-				{
-					/** @var CartRuleCore $cartRule */
-					if ($cartRule->checkValidity($this->context, false, true))
-						$this->log('Coupon not valid '.$code, ShopgateLogger::LOGTYPE_DEBUG);
-					else
-						$cart->addCartRule($cartRule->id);
-				}
-			}
-		}
-
 		$shopgate = new ShopGate();
-		$payment_name = $shopgate->getTranslation('Mobile Payment');
 
-		$this->log('PS map payment method', ShopgateLogger::LOGTYPE_DEBUG);
-		if (!$order->getIsShippingBlocked())
-		{
-			$id_order_state = $this->getOrderStateId('PS_OS_PAYMENT');
-			switch ($order->getPaymentMethod())
-			{
-				case 'SHOPGATE':
-					$payment_name = $shopgate->getTranslation('Shopgate');
-					break;
-				case 'PREPAY':
-					$payment_name = $shopgate->getTranslation('Bankwire');
-					$id_order_state = $this->getOrderStateId('PS_OS_BANKWIRE');
-					break;
-				case 'COD':
-					$payment_name = $shopgate->getTranslation('Cash on Delivery');
-					$id_order_state = $this->getOrderStateId('PS_OS_PREPARATION');
-					break;
-				case 'PAYPAL':
-					$id_order_state = $this->getOrderStateId('PS_OS_PAYMENT');
-					$payment_name = $shopgate->getTranslation('PayPal');
-					break;
-				default:
-					break;
-			}
-		}
-		else
-		{
-			$id_order_state = $this->getOrderStateId('PS_OS_SHOPGATE');
+		/**
+		 * detect payment and order state
+		 */
+		$payment_name = $this->getMappedPaymentMethod($order);
+		$id_order_state = reset($this->getNewOrderStates($order));
 
-			switch ($order->getPaymentMethod())
-			{
-				case 'SHOPGATE':
-					$payment_name = $shopgate->getTranslation('Shopgate');
-					break;
-				case 'PREPAY':
-					$payment_name = $shopgate->getTranslation('Bankwire');
-					break;
-				case 'COD':
-					$payment_name = $shopgate->getTranslation('Cash on Delivery');
-					$id_order_state = $this->getOrderStateId('PS_OS_PREPARATION');
-					break;
-				case 'PAYPAL':
-					$id_order_state = $this->getOrderStateId('PS_OS_PAYPAL');
-					$payment_name = $shopgate->getTranslation('PayPal');
-					break;
-				default:
-					$id_order_state = $this->getOrderStateId('PS_OS_SHOPGATE');
-					break;
-			}
-		}
 
 		$shippingCosts = $order->getAmountShipping() + $order->getAmountShopPayment();
 
@@ -503,6 +488,27 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 			$this->log('PS 1.5.x.x: $cart->update()', ShopgateLogger::LOGTYPE_DEBUG);
 			$cart->update();
+		}
+
+		$this->log('Add Coupons', ShopgateLogger::LOGTYPE_DEBUG);
+		$coupons = $order->getExternalCoupons();
+		if (!empty($coupons))
+		{
+			foreach ($coupons as $coupon)
+			{
+				/** @var $coupon ShopgateExternalCoupon */
+				$code = $coupon->getCode();
+				$this->context = Context::getContext();
+				$this->context->cart = $cart;
+				if (($cartRule = new CartRule(CartRule::getIdByCode($code))) && Validate::isLoadedObject($cartRule))
+				{
+					/** @var CartRuleCore $cartRule */
+					if ($cartRule->checkValidity($this->context, false, true))
+						$this->log('Coupon not valid '.$code, ShopgateLogger::LOGTYPE_DEBUG);
+					else
+						$cart->addCartRule($cartRule->id);
+				}
+			}
 		}
 
 		$amountPaid = $order->getAmountComplete();
@@ -570,6 +576,116 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$shopgateOrder->delete();
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create order', true);
 		}
+	}
+
+	/**
+	 * @param ShopgateOrder $order
+	 * @return mixed
+	 */
+	protected function getMappedPaymentMethod(ShopgateOrder $order)
+	{
+		$shopgate = new ShopGate();
+		$mappedMethods = $this->getPaymentStates($order->getPaymentMethod());
+
+		$this->log('$order->getPaymentMethod() -> ' . $order->getPaymentMethod());
+		$this->log('$shopgate->getTranslation($mappedMethods[\'PAYMENT_NAME\']) -> ' . $shopgate->getTranslation($mappedMethods['PAYMENT_NAME']));
+
+		return $shopgate->getTranslation($mappedMethods['PAYMENT_NAME']);
+	}
+
+	/**
+	 * @param ShopgateOrder $order
+	 * @param bool $newOrder
+	 * @return array
+	 */
+	protected function getNewOrderStates(ShopgateOrder $order, $newOrder = true)
+	{
+		$idOrderStates = array();
+		$mappedStates = $this->getPaymentStates($order->getPaymentMethod());
+
+		$this->log('$order->getIsShippingBlocked() -> ' . $order->getIsShippingBlocked());
+		$this->log('$order->getIsPaid() -> ' . $order->getIsPaid());
+
+
+		switch ($newOrder) {
+
+			/**
+			 * new order
+			 */
+			case true :
+				$this->log('getNewOrderStates (new order)', ShopgateLogger::LOGTYPE_DEBUG);
+				if ($order->getIsShippingBlocked()) {
+					/**
+					 * blocked by shopgate
+					 */
+					$this->log(' - order is blocked', ShopgateLogger::LOGTYPE_DEBUG);
+					$this->log(' -- ' . $order->getPaymentMethod() . ' #' . $mappedStates['BLOCKED'], ShopgateLogger::LOGTYPE_DEBUG);
+					array_push($idOrderStates, $this->getOrderStateId($mappedStates['BLOCKED']));
+
+				} else {
+					/**
+					 * not blocked
+					 */
+					if($order->getIsPaid()) {
+						$this->log(' - order is not blocked and paid', ShopgateLogger::LOGTYPE_DEBUG);
+						$this->log(' -- ' . $order->getPaymentMethod() . ' #' . $mappedStates['NOT_BLOCKED_PAID'], ShopgateLogger::LOGTYPE_DEBUG);
+						array_push($idOrderStates, $this->getOrderStateId($mappedStates['NOT_BLOCKED_PAID']));
+					} else {
+						$this->log(' - order is not blocked and not paid', ShopgateLogger::LOGTYPE_DEBUG);
+						$this->log(' -- ' . $order->getPaymentMethod() . ' #' . $mappedStates['NOT_BLOCKED_NOT_PAID'], ShopgateLogger::LOGTYPE_DEBUG);
+						array_push($idOrderStates, $this->getOrderStateId($mappedStates['NOT_BLOCKED_NOT_PAID']));
+					}
+				}
+				break;
+
+			/**
+			 * update order
+			 */
+			case false :
+
+				$this->log('getNewOrderStates (update order)', ShopgateLogger::LOGTYPE_DEBUG);
+				/**
+				 * payment is updated
+				 */
+				if ($order->getUpdatePayment() && $order->getIsPaid() && !$order->getIsShippingBlocked()) {
+					$this->log(' - update_payment = 1; is_paid = 1; is_shipping_blocked = false => order_state_id #' .  $mappedStates['NOT_BLOCKED_PAID'], ShopgateLogger::LOGTYPE_DEBUG);
+					array_push($idOrderStates, $this->getOrderStateId($mappedStates['NOT_BLOCKED_PAID']));
+				}
+
+				/**
+				 * update shipping
+				 */
+				if ($order->getUpdateShipping()) {
+					switch ($order->getIsShippingBlocked()) {
+						case false :
+							$this->log(' - update_shipping = 1; is_shipping_blocked = false => order_state_id #' . $mappedStates['NOT_BLOCKED_SHIPPED'], ShopgateLogger::LOGTYPE_DEBUG);
+							array_push($idOrderStates, $this->getOrderStateId($mappedStates['NOT_BLOCKED_SHIPPED']));
+							break;
+						case true :
+							$this->log(' - update_shipping = 1; is_shipping_blocked = true => order_state_id #' . $mappedStates['BLOCKED_SHIPPED'], ShopgateLogger::LOGTYPE_DEBUG);
+							array_push($idOrderStates, $this->getOrderStateId($mappedStates['BLOCKED_SHIPPED']));
+							break;
+					}
+				}
+				break;
+		};
+
+		return $idOrderStates;
+	}
+
+	/**
+	 * @param $paymentMethod
+	 * @return mixed
+	 */
+	protected function getPaymentStates($paymentMethod) {
+
+		if(array_key_exists($paymentMethod, $this->paymentMapping)) {
+			foreach ($this->paymentMapping[$paymentMethod] as $key => $value) {
+				$this->paymentMapping['DEFAULT'][$key] = $value;
+			}
+		}
+
+		return $this->paymentMapping['DEFAULT'];
 	}
 
 	/**
@@ -645,7 +761,13 @@ class PSShopgatePlugin extends ShopgatePlugin
 	protected function getRequiredAddressFields()
 	{
 		$address = new Address();
-		return $address->getFieldsRequiredDatabase();
+
+		if(method_exists($address, 'getFieldsRequiredDatabase')) {
+			return $address->getFieldsRequiredDatabase();
+		} else {
+			return array();
+		}
+
 	}
 
 	/**
@@ -668,15 +790,17 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$customer->passwd = md5(_COOKIE_KEY_.time());
 		$customer->newsletter = Configuration::get('SHOPGATE_SUBSCRIBE_NEWSLETTER') ? true : false;
 		$customer->optin = false;
-		if (version_compare(_PS_VERSION_, '1.4.1.0', '>='))
+
+		if (!$customer->add())
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create customer', true);
+
+		if (version_compare(_PS_VERSION_, '1.5.0.1', '>=') && Configuration::get('PS_GUEST_GROUP'))
 		{
 			// guest accounts flag only exists in Prestashop 1.4.1.0 and higher
 			$customer->addGroups(array(Configuration::get('PS_GUEST_GROUP')));
 			$customer->is_guest = (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
 		}
 
-		if (!$customer->add())
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'Unable to create customer', true);
 		$this->log('end createCustomer()', ShopgateLogger::LOGTYPE_DEBUG);
 
 		return $customer;
@@ -787,13 +911,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 		if (!Validate::isLoadedObject($shopgateOrder))
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_ORDER_NOT_FOUND, 'Order not found', true);
 
-		$order_states = array();
-
-		if ($order->getUpdatePayment() && $order->getIsPaid())
-			array_push($order_states, $this->getOrderStateId('PS_OS_PAYMENT'));
-
-		if ($order->getUpdateShipping() && !$order->getIsShippingBlocked())
-			array_push($order_states, $this->getOrderStateId('PS_OS_PREPARATION'));
+		$order_states = $this->getNewOrderStates($order, false);
 
 		if (count($order_states))
 		{
@@ -910,6 +1028,21 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$row = $this->executeLoaders($loaders, $row, $productModel);
 			$this->addItemRow($row);
 		}
+	}
+
+	/**
+	 * @param $product_id
+	 * @param $category_id
+	 *
+	 * @return mixed
+	 */
+	protected function getProductPositionByIdAndCategoryId($product_id, $category_id)
+	{
+		return Db::getInstance()->getValue('
+				SELECT position
+				FROM `'._DB_PREFIX_.'category_product`
+				WHERE `id_product` = ' . $product_id . ' AND `id_category` = ' . $category_id
+		);
 	}
 
 	/**
@@ -1097,9 +1230,9 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 		foreach ($categoryIds as $categoryId)
 		{
-			$categoryModel = new Category($categoryId);
+			$position = $this->getProductPositionByIdAndCategoryId($product->id, $categoryId);
 			$maxPosition = $maxSortOrderByCategoryNumber[$categoryId];
-			array_push($categoryOrder, $categoryId.'=>'.($maxPosition - $categoryModel->position));
+			array_push($categoryOrder, $categoryId.'=>'.($maxPosition - $position));
 		}
 		$row['category_numbers'] = implode('||', $categoryOrder);
 
@@ -1712,6 +1845,12 @@ class PSShopgatePlugin extends ShopgatePlugin
 		$categoryItems = array();
 		$result = array();
 
+		if(version_compare(_PS_VERSION_, '1.5.0.0', '<')) {
+			$shopItem = false;
+		} else {
+			$shopItem = new Shop($this->context->shop->id);
+		}
+
 		$exportRootCategories = Configuration::get('SHOPGATE_EXPORT_ROOT_CATEGORIES') == 1 ? true : false;
 
 		$skippedRootCategories = array();
@@ -1723,9 +1862,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$categoryInfo = new Category($category['id_category']);
 			$categoryLinkRewrite = $categoryInfo->getLinkRewrite($categoryInfo->id_category, $this->id_lang);
 
-			version_compare(_PS_VERSION_, '1.5.0.0', '<')
-				? $isRootCategory = ($categoryInfo->id_category == 1 ? true : false)
-				: $isRootCategory = $categoryInfo->is_root_category;
+			if(version_compare(_PS_VERSION_, '1.5.0.0', '<')) {
+				$isRootCategory = $categoryInfo->is_root_category;
+			} else {
+				$isRootCategory = ($categoryInfo->id_category == 1 ? true : false);
+				if($shopItem && $shopItem->id_category == $categoryInfo->id_category) {
+					$isRootCategory = true;
+				}
+			}
 
 			version_compare(_PS_VERSION_, '1.5.0.0', '<')
 				? $idShop = false
@@ -1844,7 +1988,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 	 */
 	public function redeemCoupons(ShopgateCart $shopgateCart)
 	{
-		//coupon redemption will be done automatically in add_order action 
+		//coupon redemption will be done automatically in add_order action
 		$result = array();
 
 		foreach ($shopgateCart->getExternalCoupons() as $coupon)
@@ -1874,12 +2018,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 
 		if (is_array($customerGroupsItems))
 		{
+			$defaultGroup = Configuration::get('PS_CUSTOMER_GROUP');
+
 			foreach ($customerGroupsItems as $customerGroupsItem)
 			{
 				$group = array();
 				$group['id'] = $customerGroupsItem['id_group'];
 				$group['name'] = $customerGroupsItem['name'];
-				$group['is_default'] = false;
+				$group['is_default'] = $defaultGroup == $customerGroupsItem['id_group'];
 				array_push($customerGroups, $group);
 			}
 		}
@@ -1908,12 +2054,22 @@ class PSShopgatePlugin extends ShopgatePlugin
 		/**
 		 * customer tax classes
 		 */
-		$result['tax']['customer_tax_classes'] = array();
+		$result['tax']['customer_tax_classes'] = array(
+			array(
+				'key' => 'default',
+				'is_default' => true
+			)
+		);
 
-		/**
+
+		/**w
 		 * tax rates
 		 */
-		$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
+		if($this->checkClass('TaxRulesGroup', 'tax/') && method_exists('TaxRulesGroup', 'getTaxRulesGroups'))
+			$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
+		else
+			$taxRuleGroups = array();
+
 		$taxRules = array();
 
 		/**
@@ -1936,14 +2092,14 @@ class PSShopgatePlugin extends ShopgatePlugin
 					$state = $this->getStateById($taxRuleItem->id_state)->iso_code;
 
 					$resultTaxRule = array();
-					$resultTaxRule['id'] = $taxRuleItem->id_tax_rules_group;
+					$resultTaxRule['id'] = $taxRuleItem->id;
 
 					if ($state)
 						$resultTaxRule['key'] = $taxItem->name."-".$country."-".$state;
 					else
 						$resultTaxRule['key'] = $taxItem->name."-".$country;
 
-					$resultTaxRule['key'] .= "-".$taxRuleItem->id_tax_rules_group;
+					$resultTaxRule['key'] .= "-".$taxRuleItem->id;
 
 					$resultTaxRule['display_name'] = $taxItem->name;
 					$resultTaxRule['tax_percent'] = $taxItem->rate;
@@ -1951,8 +2107,8 @@ class PSShopgatePlugin extends ShopgatePlugin
 					$resultTaxRule['state'] = (!empty($state)) ? $country."-".$state : null;
 
 					$resultTaxRule['zipcode_type'] = 'range';
-					$resultTaxRule['zipcode_range_from'] = $taxRuleItem->zipcode_from ? $taxRuleItem->zipcode_from : null;
-					$resultTaxRule['zipcode_range_to'] = $taxRuleItem->zipcode_to ? $taxRuleItem->zipcode_to : null;
+					$resultTaxRule['zipcode_range_from'] = $taxRuleItem->zipcode_from ? $taxRuleItem->zipcode_from : 'all';
+					$resultTaxRule['zipcode_range_to'] = $taxRuleItem->zipcode_to ? $taxRuleItem->zipcode_to : 'all';
 
 					if($taxItem->active && Configuration::get('PS_TAX') == 1)
 						array_push($taxRules, $resultTaxRule);
@@ -1975,7 +2131,7 @@ class PSShopgatePlugin extends ShopgatePlugin
 						$resultTaxRule['key'] = $taxItem->name."-".$country."-".$state;
 					else
 						$resultTaxRule['key'] = $taxItem->name."-".$country;
-					$resultTaxRule['key'] .= "-".$taxRuleItem['id_tax_rule'];
+					$resultTaxRule['key'] .= "-".$taxRuleItem['id'];
 
 					$resultTaxRule['display_name'] = $taxItem->name;
 					$resultTaxRule['tax_percent'] = $taxItem->rate;
@@ -1995,7 +2151,12 @@ class PSShopgatePlugin extends ShopgatePlugin
 		 * tax rules
 		 */
 		$result['tax']['tax_rules'] = array();
-		$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
+
+		if($this->checkClass('TaxRulesGroup', 'tax/') && method_exists('TaxRulesGroup', 'getTaxRulesGroups'))
+			$taxRuleGroups = TaxRulesGroup::getTaxRulesGroups(true);
+		else
+			$taxRuleGroups = array();
+
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 		{
 			foreach ($taxRuleGroups as $taxRuleGroup)
@@ -2008,10 +2169,17 @@ class PSShopgatePlugin extends ShopgatePlugin
 				);
 
 				$rule['product_tax_classes'] = array(
-					'id' => $taxRuleGroup['id_tax_rules_group'],
-					'key' => $taxRuleGroup['name']
+					array(
+						'id' => $taxRuleGroup['id_tax_rules_group'],
+						'key' => $taxRuleGroup['name']
+					)
 				);
-				$rule['customer_tax_classes'] = array();
+				$rule['customer_tax_classes'] = array(
+					array(
+						'key' => 'default',
+						'is_default' => true
+					)
+				);
 				$rule['tax_rates'] = array();
 
 				foreach ($this->getTaxRulesByGroupId($taxRuleGroup['id_tax_rules_group']) as $taxRuleItem)
@@ -2046,8 +2214,10 @@ class PSShopgatePlugin extends ShopgatePlugin
 				);
 
 				$rule['product_tax_classes'] = array(
-					'id' => $taxRuleGroup['id_tax_rules_group'],
-					'key' => $taxRuleGroup['name']
+					array(
+						'id' => $taxRuleGroup['id_tax_rules_group'],
+						'key' => $taxRuleGroup['name']
+					)
 				);
 				$rule['customer_tax_classes'] = array();
 				$rule['tax_rates'] = array();
@@ -2376,6 +2546,106 @@ class PSShopgatePlugin extends ShopgatePlugin
 			$this->addCategoryModel($row->setItem($categoryItem)->generateData());
 		}
 	}
+
+	/**
+	 * Exports orders from the shop system's database to Shopgate.
+	 *
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_orders
+	 *
+	 * @param string $customerToken
+	 * @param string $customerLanguage
+	 * @param int    $limit
+	 * @param int    $offset
+	 * @param string $orderDateFrom
+	 * @param string $sortOrder
+	 *
+	 * @return ShopgateExternalOrder[] A list of ShopgateExternalOrder objects
+	 *
+	 * @throws ShopgateLibraryException
+	 */
+	public function getOrders($customerToken, $customerLanguage, $limit = 10, $offset = 0, $orderDateFrom = '', $sortOrder = 'created_desc') {
+		// TODO: Implement getOrders() method.
+	}
+
+	/**
+	 * Updates and returns synchronization information for the favourite list of a customer.
+	 *
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_sync_favourite_list
+	 *
+	 * @param string             $customerToken
+	 * @param ShopgateSyncItem[] $items A list of ShopgateSyncItem objects that need to be synchronized
+	 *
+	 * @return ShopgateSyncItem[] The updated list of ShopgateSyncItem objects
+	 */
+	public function syncFavouriteList($customerToken, $items) {
+		// TODO: Implement syncFavouriteList() method.
+	}
+
+    /**
+     * Loads the product reviews of the shop system's database and passes them to the buffer.
+     *
+     * @param int $limit pagination limit; if not null, the number of exported reviews must be <= $limit
+     * @param int $offset pagination; if not null, start the export with the reviews at position $offset
+     * @param string[] $uids A list of products that should be fetched for the reviews.
+     *
+     * @see http://developer.shopgate.com/plugin_api/export/get_reviews
+     *
+     * @throws ShopgateLibraryException
+     */
+    protected function createReviews($limit = null, $offset = null, array $uids = array())
+    {
+        $reviews = array();
+
+        if($this->checkTable(sprintf('%sproduct_comment', _DB_PREFIX_)))
+        {
+            $reviews = Db::getInstance()->ExecuteS(
+                sprintf(
+                    'SELECT * FROM %sproduct_comment WHERE validate = 1%s%s',
+                    _DB_PREFIX_,
+                    is_int($limit) ? ' LIMIT ' . $limit : '',
+                    is_int($offset) ? ' OFFSET ' . $offset : ''
+                )
+            );
+        }
+
+        foreach ($reviews as $review)
+        {
+            if (count($uids) > 0 && !in_array($review['id_product_comment'], $uids))
+                continue;
+            $row = new PluginModelReviewObject();
+            $this->addReviewModel($row->setItem($review)->generateData());
+        }
+    }
+
+    /**
+     * check table name
+     *
+     * @param $tableName
+     * @return bool
+     */
+    protected function checkTable($tableName)
+    {
+        foreach (Db::getInstance()->ExecuteS('SHOW TABLES') as $key => $name) {
+            if($tableName == current($name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+	/**
+	 * @param        $className
+	 * @param string $folder
+	 *
+	 * @return bool
+	 */
+	protected function checkClass($className, $folder = '')
+	{
+		return
+			file_exists(dirname(_PS_ROOT_DIR_).'/classes/'.$folder.$className.'.php')
+				|| file_exists(dirname(_PS_CLASS_DIR_).'/classes/'.$folder.$className.'.php');
+	}
 }
 
 class PSShopgatePluginUS extends PSShopgatePlugin
@@ -2547,4 +2817,5 @@ class PSShopgatePluginUS extends PSShopgatePlugin
 
 		return $row;
 	}
+
 }

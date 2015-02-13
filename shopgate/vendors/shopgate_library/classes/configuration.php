@@ -54,8 +54,8 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		// exactly 20 hexadecimal digits
 		'alias' => '/^[0-9a-zA-Z]+(([\.]?|[\-]+)[0-9a-zA-Z]+)*$/',
 		// start and end with alpha-numerical characters, multiple dashes and single dots in between are ok
-		'cname' => '/^(http:\/\/\S+)?$/i',
-		// empty or a string beginning with "http://" followed by any number of non-whitespace characters
+        'cname' => '/^((http|https):\/\/)?((([\w-]+)[\.]?)*([\w-]+)\.(\w){2,})?(\/)?$/i',
+        // empty or a string beginning with "http://" followed by any number of non-whitespace characters
 		'server' => '/^(live|pg|sl|custom)$/',
 		// "live" or "pg" or "sl" or "custom"
 		'api_url' => '/^(https?:\/\/\S+)?$/i',
@@ -127,7 +127,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	protected $server;
 
 	/**
-	 * @var string api url map for server and authentication service type
+	 * @var array<string, array<string, string>> api url map for server and authentication service type
 	 */
 	protected $api_urls = array(
 		'live' => array(
@@ -180,16 +180,21 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	protected $export_convert_encoding;
 	
 	/**
-	 * @var array<string> the list of fields supported by the plugin method check_cart
+	 * @var string[] the list of fields supported by the plugin method check_cart
 	 */
 	protected $supported_fields_check_cart;
 	
 	/**
-	 * @var array<string> the list of fields supported by the plugin method get_settings
+	 * @var string[] the list of fields supported by the plugin method get_settings
 	 */
 	protected $supported_fields_get_settings;
+	
+	/**
+	 * @var string[] the list of methods supported by the cron action
+	 */
+	protected $supported_methods_cron;
 
-    /**
+	/**
 	 * @var array<string, string[]> the list of response types supported by the plugin, indexed by actions
 	 */
 	protected $supported_response_types;
@@ -272,6 +277,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 */
 	protected $enable_get_reviews_csv;
 
+    /**
+     * @var bool
+     */
+    protected $enable_get_reviews;
+
 	/**
 	 * @var bool
 	 */
@@ -311,6 +321,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_set_settings;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_sync_favourite_list;
 	
 	/**
 	 * @var bool
@@ -410,6 +425,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 */
 	protected $reviews_csv_filename;
 
+    /**
+     * @var string The name of the reviews XML file.
+     */
+    protected $reviews_xml_filename;
+
+    /**
+     * @var string The name of the reviews JSON file.
+     */
+    protected $reviews_json_filename;
+
 	/**
 	 * @var string The name of the access log file.
 	 */
@@ -455,6 +480,15 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 */
 	protected $redirectable_get_params = array();
 
+	/**
+	 * @var int execution time limit for file export in seconds
+	 */
+	protected $default_execution_time;
+	
+	/**
+	 * @var int memory limit in MB
+	 */
+	protected $default_memory_limit;
 
 	###################################################
 	### Initialization, loading, saving, validating ###
@@ -482,9 +516,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->export_convert_encoding = 1;
 		$this->supported_fields_check_cart = array();
 		$this->supported_fields_get_settings = array();
+		$this->supported_methods_cron = array();
 		$this->supported_response_types = array(
 				'get_items' => array('xml'),
 				'get_categories' => array('xml'),
+                'get_reviews' => array('xml')
 		);
 		$this->enable_ping = 1;
 		$this->enable_add_order = 0;
@@ -509,6 +545,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_settings = 0;
 		$this->enable_set_settings = 1;
 		$this->enable_register_customer = 0;
+		$this->enable_sync_favourite_list = 0;
 		$this->enable_receive_authorization = 0;
 
 		$this->sma_auth_service_class_name = ShopgateConfigInterface::SHOPGATE_AUTH_SERVICE_CLASS_NAME_SHOPGATE;
@@ -532,13 +569,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->items_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'items.csv';
 		$this->items_xml_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'items.xml';
 		$this->items_json_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'items.json';
+		
+        $this->media_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'media.csv';
 
-		$this->media_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'media.csv';
 		$this->categories_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'categories.csv';
 		$this->categories_xml_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'categories.xml';
 		$this->categories_json_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'categories.json';
 
 		$this->reviews_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'reviews.csv';
+        $this->reviews_xml_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'reviews.xml';
+        $this->reviews_json_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'reviews.json';
 
 		$this->access_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'access.log';
 		$this->request_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'request.log';
@@ -551,6 +591,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->is_shopgate_adapter = false;
 		$this->redirectable_get_params = array('gclid','utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content');
 
+		$this->default_memory_limit = ShopgateConfigInterface::DEFAULT_MEMORY_LIMIT;
+		$this->default_execution_time = ShopgateConfigInterface::DEFAULT_EXECUTION_TIME;
+		
 		// call possible sub class' startup()
 		if (!$this->startup()) {
 			$this->loadArray($data);
@@ -1036,6 +1079,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getSupportedFieldsGetSettings() {
 		return $this->supported_fields_get_settings;
 	}
+	
+	public function getSupportedMethodsCron() {
+		return $this->supported_methods_cron;
+	}
 
 	public function getSupportedResponseTypes() {
 		return $this->supported_response_types;
@@ -1101,6 +1148,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->enable_get_reviews_csv;
 	}
 
+    public function getEnableGetReviews() {
+        return $this->enable_get_reviews;
+    }
+
 	public function getEnableGetMediaCsv(){
 		return $this->enable_get_media_csv;
 	}
@@ -1131,6 +1182,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 	public function getEnableSetSettings() {
 		return $this->enable_set_settings;
+	}
+	
+	public function getEnableSyncFavouriteList() {
+		return $this->enable_sync_favourite_list;
 	}
 	
 	public function getEnableReceiveAuthorization() {
@@ -1264,6 +1319,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getReviewsCsvPath() {
 		return rtrim($this->export_folder_path.DS.$this->reviews_csv_filename, DS);
 	}
+    
+    public function getReviewsXmlPath() {
+        return rtrim($this->export_folder_path.DS.$this->reviews_xml_filename, DS);
+    }
+
+    public function getReviewsJsonPath() {
+        return rtrim($this->export_folder_path.DS.$this->reviews_json_filename, DS);
+    }
 
 	public function getAccessLogPath() {
 		return rtrim($this->log_folder_path.DS.$this->access_log_filename, DS);
@@ -1295,6 +1358,20 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getRedirectableGetParams() {
 		return $this->redirectable_get_params;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getDefaultExecutionTime() {
+		return $this->default_execution_time;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getDefaultMemoryLimit() {
+		return $this->default_memory_limit;
 	}
 
 	###############
@@ -1379,6 +1456,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function setSupportedFieldsGetSettings($value) {
 		$this->supported_fields_get_settings = $value;
 	}
+	
+	public function setSupportedMethodsCron($value) {
+		$this->supported_methods_cron = $value;
+	}
 
 	public function setSupportedResponseTypes($value) {
 		$this->supported_response_types = $value;
@@ -1444,6 +1525,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_reviews_csv = $value;
 	}
 
+    public function setEnableGetReviews($value) {
+        $this->enable_get_reviews = $value;
+    }
+
 	public function setEnableGetMediaCsv($value){
 		$this->enable_get_media_csv = $value;
 	}
@@ -1474,6 +1559,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 	public function setEnableSetSettings($value) {
 		$this->enable_set_settings = $value;
+	}
+	
+	public function setEnableSyncFavouriteList($value) {
+		$this->enable_sync_favourite_list = $value;
 	}
 	
 	public function setEnableReceiveAuthorization($value) {
@@ -1550,6 +1639,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 	public function setReviewsCsvFilename($value) {
 		$this->reviews_csv_filename = $value;
+	}
+
+	public function setReviewsXmlFilename($value) {
+		$this->reviews_xml_filename = $value;
+	}
+
+	public function setReviewsJsonFilename($value) {
+		$this->reviews_json_filename = $value;
 	}
 
 	public function setAccessLogFilename($value) {
@@ -1656,6 +1753,26 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		}
 	}
 
+	public function setReviewsXmlPath($value) {
+		$dir  = dirname($value);
+		$file = basename($value);
+
+		if (!empty($dir) && !empty($file)) {
+			$this->export_folder_path   = $dir;
+			$this->reviews_xml_filename = $file;
+		}
+	}
+
+	public function setReviewsJsonPath($value) {
+		$dir  = dirname($value);
+		$file = basename($value);
+
+		if (!empty($dir) && !empty($file)) {
+			$this->export_folder_path    = $dir;
+			$this->reviews_json_filename = $file;
+		}
+	}
+
 	public function setAccessLogPath($value) {
 		$dir = dirname($value);
 		$file = basename($value);
@@ -1724,6 +1841,19 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->redirectable_get_params = $value;
 	}
 
+	/**
+	 * @param int $default_execution_time
+	 */
+	public function setDefaultExecutionTime($default_execution_time) {
+		$this->default_execution_time = $default_execution_time;
+	}
+	/**
+	 * @param int $default_memory_limit
+	 */
+	public function setDefaultMemoryLimit($default_memory_limit) {
+		$this->default_memory_limit = $default_memory_limit;
+	}
+	
 	###############
 	### Helpers ###
 	###############
@@ -1754,7 +1884,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$properties['categories_json_path'] = $this->getCategoriesJsonPath();
 		
 		$properties['reviews_csv_path'] = $this->getReviewsCsvPath();
-
+		$properties['reviews_xml_path'] = $this->getReviewsXmlPath();
+		$properties['reviews_json_path'] = $this->getReviewsJsonPath();
+        
 		$properties['access_log_path'] = $this->getAccessLogPath();
 		$properties['request_log_path'] = $this->getRequestLogPath();
 		$properties['error_log_path'] = $this->getErrorLogPath();
@@ -2313,6 +2445,8 @@ interface ShopgateConfigInterface {
 	
 	const SHOPGATE_FILE_PREFIX = 'shopgate_';
 
+	const DEFAULT_MEMORY_LIMIT = -1;
+	const DEFAULT_EXECUTION_TIME = 0;
 	/**
 	 * Loads an array of key-value pairs or a permanent storage.
 	 *
@@ -2464,6 +2598,11 @@ interface ShopgateConfigInterface {
 	public function getSupportedFieldsGetSettings();
 
 	/**
+	 * @return string[] the list of methods supported by the cron action
+	 */
+	public function getSupportedMethodsCron();
+	
+	/**
 	 * @return bool
 	 */
 	public function getEnablePing();
@@ -2541,6 +2680,11 @@ interface ShopgateConfigInterface {
 	/**
 	 * @return bool
 	 */
+	public function getEnableGetReviews();
+
+	/**
+	 * @return bool
+	 */
 	public function getEnableGetMediaCsv();
 
 	/**
@@ -2578,6 +2722,11 @@ interface ShopgateConfigInterface {
 	 */
 	public function getEnableSetSettings();
 
+	/**
+	 * @return bool
+	 */
+	public function getEnableSyncFavouriteList();
+	
 	/**
 	 * @return bool
 	 */
@@ -2739,6 +2888,16 @@ interface ShopgateConfigInterface {
 	public function getReviewsCsvPath();
 
 	/**
+	 * @return string The path to where the reviews XML file is stored and retrieved from.
+	 */
+	public function getReviewsXmlPath();
+
+	/**
+	 * @return string The path to where the reviews JSON file is stored and retrieved from.
+	 */
+	public function getReviewsJsonPath();
+
+	/**
 	 * @return string The path to where the media CSV file is stored and retrieved from.
 	 */
 	public function getMediaCsvPath();
@@ -2779,9 +2938,21 @@ interface ShopgateConfigInterface {
 	public function getIsShopgateAdapter();
 
 	/**
+	 * @return int maximum execution time in seconds
+	 */
+	public function getDefaultExecutionTime();
+
+	/**
+	 * @return int default memory limit in MB
+	 */
+	public function getDefaultMemoryLimit();
+	
+	/**
 	 * @param string $value The name of the plugin / shop system the plugin is for.
 	 */
 	public function setPluginName($value);
+
+
 
 	/**
 	 * @param bool $value true to activate the Shopgate error handler.
@@ -2877,7 +3048,13 @@ interface ShopgateConfigInterface {
 	 * @param array the list of fields supported by the plugin method get_settings
 	 */
 	public function setSupportedFieldsGetSettings($value);
-    /**
+	
+	/**
+	 * @param string[] $value the list of methods supported by the cron action
+	 */
+	public function setSupportedMethodsCron($value);
+	
+	/**
 	 * @param array<string, string[]> $value the list of response types supported by the plugin, indexed by exports
 	 */
 	public function setSupportedResponseTypes($value);
@@ -2956,7 +3133,12 @@ interface ShopgateConfigInterface {
 	 * @param bool $value
 	 */
 	public function setEnableGetReviewsCsv($value);
-	
+
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableGetReviews($value);
+
 	/**
 	 * @param bool $value
 	 */
@@ -2996,6 +3178,11 @@ interface ShopgateConfigInterface {
 	 * @param bool $value
 	 */
 	public function setEnableSetSettings($value);
+	
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableSyncFavouriteList($value);
 
 	/**
 	 * @param bool $value
@@ -3023,7 +3210,7 @@ interface ShopgateConfigInterface {
 	public function setMobileHeaderParent($value);
 
 	/**
-	 * @return bool $value True to insert the Mobile Header as first child element, false to append it.
+	 * @param bool $value True to insert the Mobile Header as first child element, false to append it.
 	 */
 	public function setMobileHeaderPrepend($value);
 
@@ -3091,6 +3278,16 @@ interface ShopgateConfigInterface {
 	 * @param string $value The name of the reviews CSV file.
 	 */
 	public function setReviewsCsvFilename($value);
+
+	/**
+	 * @param string $value The name of the reviews XML file.
+	 */
+	public function setReviewsXmlFilename($value);
+
+	/**
+	 * @param string $value The name of the reviews JSON file.
+	 */
+	public function setReviewsJsonFilename($value);
 
 	/**
 	 * @param string $value The name of the access log file.
@@ -3163,6 +3360,16 @@ interface ShopgateConfigInterface {
 	public function setReviewsCsvPath($value);
 
 	/**
+	 * @param string $value The path to where the reviews XML file is stored and retrieved from.
+	 */
+	public function setReviewsXmlPath($value);
+
+	/**
+	 * @param string $value The path to where the reviews JSON file is stored and retrieved from.
+	 */
+	public function setReviewsJsonPath($value);
+
+	/**
 	 * @param string $value The path to the access log file.
 	 */
 	public function setAccessLogPath($value);
@@ -3197,6 +3404,16 @@ interface ShopgateConfigInterface {
 	 */
 	public function setIsShopgateAdapter($value);
 
+	/**
+	 * @param $default_execution_time int set value for maximum execution time in seconds
+	 */
+	public function setDefaultExecutionTime($default_execution_time);
+
+	/**
+	 * @param $default_memory_limit int set value for default memory limit in MB
+	 */
+	public function setDefaultMemoryLimit($default_memory_limit);
+	
 	/**
 	 * Returns an additional setting.
 	 *

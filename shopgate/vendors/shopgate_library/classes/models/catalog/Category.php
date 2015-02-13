@@ -122,7 +122,7 @@ class Shopgate_Model_Catalog_Category extends Shopgate_Model_AbstractExport {
 		$categoryNode->addAttribute('is_active', $this->getIsActive());
 		$categoryNode->addAttribute('is_anchor', $this->getIsAnchor());
 		$categoryNode->addChildWithCDATA('name', $this->getName());
-		$categoryNode->addChild('deeplink', $this->getDeeplink());
+		$categoryNode->addChildWithCDATA('deeplink', $this->getDeeplink());
 
 		/**
 		 * image
