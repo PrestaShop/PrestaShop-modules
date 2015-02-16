@@ -565,3 +565,6 @@
 [submodule "trustedshops"]
 	path = trustedshops
 	url = https://github.com/PrestaShop/trustedshops.git
+[submodule "dotpay"]
+	path = dotpay
+	url = https://github.com/PrestaShop/dotpay.git
