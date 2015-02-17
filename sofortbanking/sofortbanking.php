@@ -47,7 +47,7 @@ class Sofortbanking extends PaymentModule
 	{
 		$this->name = 'sofortbanking';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.5';
+		$this->version = '2.5.3';
 		$this->author = 'touchdesign';
 		$this->module_key = '65af9f83d2ae6fbe6dbdaa91d21f952a';
 		$this->currencies = true;
@@ -262,9 +262,13 @@ class Sofortbanking extends PaymentModule
 	 */
 	public function hookLeftColumn()
 	{
+		$links = array('hu' => 'https://documents.sofort.com/sb/ugyfelinformacio');
+
 		if (Configuration::get('SOFORTBANKING_BLOCK_LOGO') == 'N')
 			return false;
 		$this->context->smarty->assign('mod_lang', $this->isSupportedLang());
+		$this->context->smarty->assign('sofort_link', (isset($links[$this->isSupportedLang()])
+				? $links[$this->isSupportedLang()] : $this->context->link->getCMSLink(5)));
 		return $this->display(__FILE__, 'views/templates/hook/left_column.tpl');
 	}
 

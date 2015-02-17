@@ -1,5 +1,4 @@
 <?php
-
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{sofortbanking}prestashop>sofortbanking_509a4658ba4b9a50ee9ae034572fdac0'] = 'SOFORT Bankig';
@@ -64,13 +63,13 @@ $_MODULE['<{sofortbanking}prestashop>display_form_83dfa65d82d4e8ccf9eb4ff121aa61
 $_MODULE['<{sofortbanking}prestashop>payment_execution_8160b19e00d84831a18547ae1320d2a7'] = 'Fizetés SOFORT Bankinggel';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_f1d3b424cd68795ecaa552883759aceb'] = 'A megrendelés jóváhagyása';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_879f6b8877752685a966564d072f498f'] = 'Bevásárlókosara üres.';
-$_MODULE['<{sofortbanking}prestashop>payment_execution_d21f6083263df8b02158f303e6bd7c54'] = 'SOFORT Banking – Egyszerű biztos fizetés.';
-$_MODULE['<{sofortbanking}prestashop>payment_execution_5c48e9dbf7bde1a61d5bfdae5cdd5a7d'] = 'A SOFORT Banking TÜV által minősített fizetési rendszerével a jelszó és az egyszeri azonosító kód segítségével regisztráció nélkül egyszerűen és biztosan fizethet a megszokott internetes bankolási adataival.';
+$_MODULE['<{sofortbanking}prestashop>payment_execution_d21f6083263df8b02158f303e6bd7c54'] = 'SOFORT Banking – Egyszerű biztonságos fizetés.';
+$_MODULE['<{sofortbanking}prestashop>payment_execution_5c48e9dbf7bde1a61d5bfdae5cdd5a7d'] = 'A SOFORT Banking TÜV által minősített fizetési rendszerével a jelszó és az egyszeri azonosító kód segítségével regisztráció nélkül egyszerűen és biztonságosan fizethet a megszokott internetes bankolási adataival.';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_b459d7e1103a33f6790ca26c05b99715'] = 'Többet itt.';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_6af381041f6fb0734eac4b0964d827e8'] = 'Ön a SOFORT Banking fizetési módot választotta, és ezután a SOFORT Bankinghez irányítják, ahol a fizetést azonnal végrehajthatja.';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_167add1e8662b28f92fd0ab08e3c5ff5'] = 'Megrendelésének végösszege';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_1f87346a16cf80c372065de3c54c86d9'] = '(áfával)';
-$_MODULE['<{sofortbanking}prestashop>payment_execution_52f64bc0164b0e79deaeaaaa7e93f98f'] = 'Kérjük, hagyja jóvá megrendelését a \"Megrendelés fizetési kötelezettséggel\" gomb segítségével történ? küldéssel.';
+$_MODULE['<{sofortbanking}prestashop>payment_execution_52f64bc0164b0e79deaeaaaa7e93f98f'] = 'Kérjük, hagyja jóvá megrendelését a \"Megrendelés fizetési kötelezettséggel\" gomb segítségével.';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_569fd05bdafa1712c4f6be5b153b8418'] = 'Más fizetési mód kiválasztása';
 $_MODULE['<{sofortbanking}prestashop>payment_execution_46b9e3665f187c739c55983f757ccda0'] = 'Megrendelés fizetési kötelezettséggel';
 $_MODULE['<{sofortbanking}prestashop>payment_redirect_8160b19e00d84831a18547ae1320d2a7'] = 'Fizetés SOFORT Bankinggel';

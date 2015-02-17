@@ -61,7 +61,7 @@ fieldset a:hover {
 	<fieldset class="level2">
 		<legend><img src="{$sofort.dfl.img_path|escape:'htmlall':'UTF-8'}/step_1.png" width="16" height="16" alt="unknown.gif" title="">{l s='Registration' mod='sofortbanking'}</legend>
 		<b>{l s='In order to offer SOFORT Banking you need a customer account with the SOFORT AG. You are not a customer?' mod='sofortbanking'}</b>
-		<a target="_blank" href="https://www.sofortueberweisung.de/payment/users/register/666"><b>{l s='Register now!' mod='sofortbanking'}</b></a><br />
+		<a target="_blank" href="https://www.sofortueberweisung.de/payment/users/register/284"><b>{l s='Register now!' mod='sofortbanking'}</b></a><br />
 	</fieldset>
 	<br />
 	
