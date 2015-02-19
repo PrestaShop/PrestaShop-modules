@@ -571,3 +571,6 @@
 [submodule "psphipay"]
 	path = psphipay
 	url = https://github.com/PrestaShop/psphipay.git
+[submodule "sarbacanedesktop"]
+	path = sarbacanedesktop
+	url = https://github.com/PrestaShop/sarbacanedesktop.git
