@@ -17,12 +17,13 @@
  * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  */
 
-if (!defined('_PS_VERSION_')) exit;
+if (!defined('_PS_VERSION_'))
+	exit;
 /*
 	//Translations
 	$this->l('Shopgate order ID:');
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.9.19');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.23');
 define('SHOPGATE_DIR', _PS_MODULE_DIR_.'shopgate/');
 
 require_once(SHOPGATE_DIR.'vendors/shopgate_library/shopgate.php');
@@ -38,38 +39,37 @@ require_once(SHOPGATE_DIR.'classes/PluginModelReviewObject.php');
 
 class ShopGate extends PaymentModule
 {
-	private $shopgate_trans = array();
-	private $configurations = array(
-		'SHOPGATE_CARRIER_ID' => 1,
-		'PS_OS_SHOPGATE' => 0,
-		'SHOPGATE_LANGUAGE_ID' => 0,
-		'SHOPGATE_SHIPPING_SERVICE' => 'OTHER',
-		'SHOPGATE_MIN_QUANTITY_CHECK' => 0,
-		'SHOPGATE_OUT_OF_STOCK_CHECK' => 0,
-		'SHOPGATE_PRODUCT_DESCRIPTION' => self::PRODUCT_EXPORT_DESCRIPTION,
-		'SHOPGATE_SUBSCRIBE_NEWSLETTER' => 0,
+	private $shopgate_trans = array ();
+	private $configurations = array (
+		'SHOPGATE_CARRIER_ID'             => 1,
+		'PS_OS_SHOPGATE'                  => 0,
+		'SHOPGATE_LANGUAGE_ID'            => 0,
+		'SHOPGATE_SHIPPING_SERVICE'       => 'OTHER',
+		'SHOPGATE_MIN_QUANTITY_CHECK'     => 0,
+		'SHOPGATE_OUT_OF_STOCK_CHECK'     => 0,
+		'SHOPGATE_PRODUCT_DESCRIPTION'    => self::PRODUCT_EXPORT_DESCRIPTION,
+		'SHOPGATE_SUBSCRIBE_NEWSLETTER'   => 0,
 		'SHOPGATE_EXPORT_ROOT_CATEGORIES' => 0,
-		'SHOPGATE_EXPORT_PRICE_TYPE' => Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET
+		'SHOPGATE_EXPORT_PRICE_TYPE'      => Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET
 	);
 
 	const PRODUCT_EXPORT_DESCRIPTION = 'DESCRIPTION';
 	const PRODUCT_EXPORT_SHORT_DESCRIPTION = 'SHORT';
 	const PRODUCT_EXPORT_BOTH_DESCRIPTIONS = 'BOTH';
 
-	private $shipping_service_list = array();
-	private $product_export_descriptions = array();
+	private $shipping_service_list = array ();
+	private $product_export_descriptions = array ();
 
 	public function __construct()
-	{	
+	{
 		$this->name = 'shopgate';
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '<'))
 			$this->tab = 'market_place';
 		else
 			$this->tab = 'mobile';
 
-		//$this->version = '0.0.1';
-		$this->version = SHOPGATE_PLUGIN_VERSION;
-		$this->author = 'Shopgate';
+		$this->version    = SHOPGATE_PLUGIN_VERSION;
+		$this->author     = 'Shopgate';
 		$this->module_key = '';
 
 		parent::__construct();
@@ -80,41 +80,41 @@ class ShopGate extends PaymentModule
 		//delivery service list
 		$this->shipping_service_list = array
 		(
-			'OTHER' => $this->l('Other'),
-			'DHL' => $this->l('DHL'),
+			'OTHER'      => $this->l('Other'),
+			'DHL'        => $this->l('DHL'),
 			'DHLEXPRESS' => $this->l('DHL Express'),
-			'DP' => $this->l('Deutsche Post'),
-			'DPD' => $this->l('DPD'),
-			'FEDEX' => $this->l('FedEx'),
-			'GLS' => $this->l('GLS'),
-			'HLG' => $this->l('Hermes'),
-			'TNT' => $this->l('TNT'),
-			'TOF' => $this->l('trans-o-flex'),
-			'UPS' => $this->l('UPS'),
-			'LAPOSTE' => $this->l('LA POSTE'),
+			'DP'         => $this->l('Deutsche Post'),
+			'DPD'        => $this->l('DPD'),
+			'FEDEX'      => $this->l('FedEx'),
+			'GLS'        => $this->l('GLS'),
+			'HLG'        => $this->l('Hermes'),
+			'TNT'        => $this->l('TNT'),
+			'TOF'        => $this->l('trans-o-flex'),
+			'UPS'        => $this->l('UPS'),
+			'LAPOSTE'    => $this->l('LA POSTE'),
 		);
 
 		$this->product_export_descriptions = array
 		(
-			self::PRODUCT_EXPORT_DESCRIPTION => $this->l('Description'),
+			self::PRODUCT_EXPORT_DESCRIPTION       => $this->l('Description'),
 			self::PRODUCT_EXPORT_SHORT_DESCRIPTION => $this->l('Short Description'),
 			self::PRODUCT_EXPORT_BOTH_DESCRIPTIONS => $this->l('Short Description + Description'),
 		);
 
-		$this->shopgate_trans = array(
-			'Bankwire' => $this->l('Bankwire'),
+		$this->shopgate_trans = array (
+			'Bankwire'         => $this->l('Bankwire'),
 			'Cash on Delivery' => $this->l('Cash on Delivery'),
-			'PayPal' => $this->l('PayPal'),
-			'Mobile Payment' => $this->l('Mobile Payment'),
-			'Shopgate' => $this->l('Shopgate')
+			'PayPal'           => $this->l('PayPal'),
+			'Mobile Payment'   => $this->l('Mobile Payment'),
+			'Shopgate'         => $this->l('Shopgate')
 		);
 	}
 
 	private function setCarrier(Carrier $carrier)
 	{
-		$carrier->name = 'Shopgate';
-		$carrier->is_module = 1;
-		$carrier->deleted = 1;
+		$carrier->name              = 'Shopgate';
+		$carrier->is_module         = 1;
+		$carrier->deleted           = 1;
 		$carrier->shipping_external = 1;
 
 		// 			if(version_compare(_PS_VERSION_, '1.4.4.0', '<') && version_compare(_PS_VERSION_, '1.4.2.5', '>=')){
@@ -125,8 +125,8 @@ class ShopGate extends PaymentModule
 		{
 			// calculating shipping costs in Prestashop before version 1.4.4.2
 			//$carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
-			$carrier->range_behavior = 1;
-			$carrier->active = 1;
+			$carrier->range_behavior    = 1;
+			$carrier->active            = 1;
 			$carrier->shipping_handling = 0;
 		}
 
@@ -146,9 +146,11 @@ class ShopGate extends PaymentModule
 		ShopgateLogger::getInstance()->enableDebug();
 
 		$this->log('INSTALLATION - checking for cURL', ShopgateLogger::LOGTYPE_DEBUG);
+
 		if (!in_array('curl', get_loaded_extensions()))
 		{
 			$this->log('Installation failed. cURL is not installed or loaded.', ShopgateLogger::LOGTYPE_ERROR);
+
 			return false;
 		}
 
@@ -157,11 +159,12 @@ class ShopGate extends PaymentModule
 		if (!$result)
 		{
 			$this->log('parent::install() failed; return value: '.var_export($result, true), ShopgateLogger::LOGTYPE_ERROR);
+
 			return false;
 		}
 
 		$this->log('INSTALLATION - registering hookpoints', ShopgateLogger::LOGTYPE_DEBUG);
-		$hooks = array('header', 'adminOrder', 'updateOrderStatus');
+		$hooks = array ('header', 'adminOrder', 'updateOrderStatus');
 		foreach ($hooks as $hook)
 		{
 			$this->log('INSTALLATION - registering hookpoint "'.$hook.'"', ShopgateLogger::LOGTYPE_DEBUG);
@@ -169,6 +172,7 @@ class ShopGate extends PaymentModule
 			if (!$result)
 			{
 				$this->log('$this->registerHook("'.$hook.'") failed; return value: '.var_export($result, true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -181,6 +185,7 @@ class ShopGate extends PaymentModule
 			if (!$result)
 			{
 				$this->log('$this->registerHook("displayMobileHeader") failed; return value: '.var_export($result, true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -194,6 +199,7 @@ class ShopGate extends PaymentModule
 		if (!$this->updateDatabase($db))
 		{
 			$this->log('installation failed - unable to update database', ShopgateLogger::LOGTYPE_ERROR);
+
 			return false;
 		}
 
@@ -223,6 +229,7 @@ class ShopGate extends PaymentModule
 			if (!$carrier->add())
 			{
 				$this->log('installation failed: unable to add carrier.', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -233,6 +240,7 @@ class ShopGate extends PaymentModule
 			if (!$carrier->update())
 			{
 				$this->log('installation failed: unable to update carrier.', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -244,6 +252,7 @@ class ShopGate extends PaymentModule
 			if (!$this->carrierCompatibility($carrier))
 			{
 				$this->log('installation failed: $this->carrierCompatibility returned false.', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -254,7 +263,7 @@ class ShopGate extends PaymentModule
 
 		// Save default configurations
 		$this->log('INSTALLATION - setting config values', ShopgateLogger::LOGTYPE_DEBUG);
-		$this->configurations['SHOPGATE_CARRIER_ID'] = $carrier->id;
+		$this->configurations['SHOPGATE_CARRIER_ID']  = $carrier->id;
 		$this->configurations['SHOPGATE_LANGUAGE_ID'] = Configuration::get('PS_LANG_DEFAULT');
 
 		$this->log('INSTALLATION - saving configuration values', ShopgateLogger::LOGTYPE_DEBUG);
@@ -263,6 +272,7 @@ class ShopGate extends PaymentModule
 			if (!Configuration::updateValue($name, $value))
 			{
 				$this->log('installation failed: unable to save configuration setting "'.var_export($name, true).'" with value "'.var_export($value, true).'".', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -270,7 +280,7 @@ class ShopGate extends PaymentModule
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
 		$shopgateConfig->registerPlugin();
@@ -303,6 +313,7 @@ class ShopGate extends PaymentModule
 		if (!$db->Execute($sql_table))
 		{
 			$this->log('installation failed: unable to add table "shopgate_order" to database. MySQL says: '.var_export($db->getMsgError(), true), ShopgateLogger::LOGTYPE_ERROR);
+
 			return false;
 		}
 
@@ -317,6 +328,7 @@ class ShopGate extends PaymentModule
 			if ($db->Execute('ALTER TABLE `'._DB_PREFIX_.'shopgate_order` ADD `comments` text NULL DEFAULT NULL AFTER `shipping_cost`;') === false)
 			{
 				$this->log('installation failed: unable to add field "comments" to table "shopgate_order". MySQL says: '.var_export($db->getMsgError(), true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -329,11 +341,13 @@ class ShopGate extends PaymentModule
 			if ($db->Execute('ALTER TABLE `'._DB_PREFIX_.'shopgate_order` ADD `shop_number` varchar(16) NULL DEFAULT NULL AFTER `shipping_cost`;') === false)
 			{
 				$this->log('installation failed: unable to add field "shop_number" to table "shopgate_order". MySQL says: '.var_export($db->getMsgError(), true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
 
 		$this->log('INSTALLATION - database updates have been performed successfully', ShopgateLogger::LOGTYPE_DEBUG);
+
 		return true;
 	}
 
@@ -346,7 +360,7 @@ class ShopGate extends PaymentModule
 		if (empty($rangePrices))
 		{
 			$this->log('INSTALLATION - price range was empty, creating new one', ShopgateLogger::LOGTYPE_DEBUG);
-			$rangePrice = new RangePrice();
+			$rangePrice             = new RangePrice();
 			$rangePrice->id_carrier = $carrier->id;
 			$rangePrice->delimiter1 = 0.0;
 			$rangePrice->delimiter2 = 1000000.0;
@@ -355,6 +369,7 @@ class ShopGate extends PaymentModule
 			if (!$rangePrice->add())
 			{
 				$this->log('installation failed: unable to add price range.', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -370,7 +385,7 @@ class ShopGate extends PaymentModule
 		if (empty($rangeWeights))
 		{
 			$this->log('INSTALLATION - weight range was empty, creating new one', ShopgateLogger::LOGTYPE_DEBUG);
-			$rangeWeight = new RangeWeight();
+			$rangeWeight             = new RangeWeight();
 			$rangeWeight->id_carrier = $carrier->id;
 			$rangeWeight->delimiter1 = 0.0;
 			$rangeWeight->delimiter2 = 1000000.0;
@@ -378,6 +393,7 @@ class ShopGate extends PaymentModule
 			if (!$rangeWeight->add())
 			{
 				$this->log('installation failed: unable to weight price range.', ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -399,30 +415,32 @@ class ShopGate extends PaymentModule
 		foreach ($zones as $zone)
 		{
 			$this->log('INSTALLATION - creating delivery options by weight for zone '.var_export($zone, true), ShopgateLogger::LOGTYPE_DEBUG);
-			$deliveryRangeWeight = new Delivery();
-			$deliveryRangeWeight->id_carrier = $carrier->id;
+			$deliveryRangeWeight                  = new Delivery();
+			$deliveryRangeWeight->id_carrier      = $carrier->id;
 			$deliveryRangeWeight->id_range_weight = $rangeWeight->id;
-			$deliveryRangeWeight->id_range_price = 0;
-			$deliveryRangeWeight->price = 0;
-			$deliveryRangeWeight->id_zone = $zone['id_zone'];
+			$deliveryRangeWeight->id_range_price  = 0;
+			$deliveryRangeWeight->price           = 0;
+			$deliveryRangeWeight->id_zone         = $zone['id_zone'];
 
 			if (!$deliveryRangeWeight->add(true, true))
 			{
 				$this->log('installation failed: unable to create delivery options by weight for zone '.var_export($zone, true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 
 			$this->log('INSTALLATION - creating delivery options by price for zone '.var_export($zone, true), ShopgateLogger::LOGTYPE_DEBUG);
-			$deliveryRangePrice = new Delivery();
-			$deliveryRangePrice->id_carrier = $carrier->id;
-			$deliveryRangePrice->id_range_price = $rangePrice->id;
+			$deliveryRangePrice                  = new Delivery();
+			$deliveryRangePrice->id_carrier      = $carrier->id;
+			$deliveryRangePrice->id_range_price  = $rangePrice->id;
 			$deliveryRangePrice->id_range_weight = 0;
-			$deliveryRangePrice->price = 0;
-			$deliveryRangePrice->id_zone = $zone['id_zone'];
+			$deliveryRangePrice->price           = 0;
+			$deliveryRangePrice->id_zone         = $zone['id_zone'];
 
 			if (!$deliveryRangePrice->add(true, true))
 			{
 				$this->log('installation failed: unable to create delivery options by price for zone '.var_export($zone, true), ShopgateLogger::LOGTYPE_ERROR);
+
 				return false;
 			}
 		}
@@ -435,7 +453,7 @@ class ShopGate extends PaymentModule
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
 
@@ -467,9 +485,11 @@ class ShopGate extends PaymentModule
 
 		// Disable shopgate api
 		$shopgateConfig->setShopIsActive(false);
-		try {
-			$shopgateConfig->saveFile(array('shop_is_active'));
-		} catch (ShopgateLibraryException $ex) {
+		try
+		{
+			$shopgateConfig->saveFile(array ('shop_is_active'));
+		} catch(ShopgateLibraryException $ex)
+		{
 			$exception = $ex;
 		}
 
@@ -505,9 +525,9 @@ class ShopGate extends PaymentModule
 		if (!Validate::isLoadedObject($orderState))
 		{
 			//Creating new order state
-			$orderState->color = 'lightblue';
+			$orderState->color       = 'lightblue';
 			$orderState->unremovable = 1;
-			$orderState->name = array();
+			$orderState->name        = array ();
 			foreach (Language::getLanguages() as $language)
 				$orderState->name[$language['id_lang']] = $name;
 			if (!$orderState->add())
@@ -549,12 +569,12 @@ class ShopGate extends PaymentModule
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
 
 		// instantiate and set up redirect class
-		$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
+		$shopgateBuilder    = new ShopgateBuilder($shopgateConfig);
 		$shopgateRedirector = $shopgateBuilder->buildRedirect();
 
 		/* redirect logic */
@@ -562,14 +582,14 @@ class ShopGate extends PaymentModule
 		if ($id_product = Tools::getValue('id_product', 0))
 		{
 			/** @var ProductCore $productItem */
-			$productItem = new Product($id_product);
+			$productItem        = new Product($id_product);
 			$defaultAttributeId = $productItem->getDefaultAttribute($id_product);
-			$shopgateJsHeader = $shopgateRedirector->buildScriptItem(
+			$shopgateJsHeader   = $shopgateRedirector->buildScriptItem(
 				sprintf('%s%s_%s',
 					PSShopgatePlugin::PREFIX,
 					$id_product,
 					$defaultAttributeId ? $defaultAttributeId : 0
-					)
+				)
 			);
 		}
 		elseif ($id_category = Tools::getValue('id_category', 0))
@@ -595,24 +615,25 @@ class ShopGate extends PaymentModule
 
 	public function hookUpdateOrderStatus($params)
 	{
-		$id_order = $params['id_order'];
-		$orderState = $params['newOrderStatus'];
+		$id_order      = $params['id_order'];
+		$orderState    = $params['newOrderStatus'];
 		$shopgateOrder = PSShopgateOrder::instanceByOrderId($id_order);
 
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
 
-		$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
+		$shopgateBuilder     = new ShopgateBuilder($shopgateConfig);
 		$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
 
 		if (!Validate::isLoadedObject($shopgateOrder))
 			return;
 
-		try {
+		try
+		{
 			switch ($orderState->id)
 			{
 				case _PS_OS_DELIVERED_:
@@ -624,12 +645,13 @@ class ShopGate extends PaymentModule
 				default:
 					break;
 			}
-		} catch (ShopgateMerchantApiException $e) {
-			$msg = new Message();
-			$msg->message = $this->l('On order state').': '.$orderState->name.' - '.$this->l('Shopgate status was not updated because of following error').': '.$e->getMessage();
-			$msg->id_order = $id_order;
+		} catch(ShopgateMerchantApiException $e)
+		{
+			$msg              = new Message();
+			$msg->message     = $this->l('On order state').': '.$orderState->name.' - '.$this->l('Shopgate status was not updated because of following error').': '.$e->getMessage();
+			$msg->id_order    = $id_order;
 			$msg->id_employee = isset($params['cookie']->id_employee) ? $params['cookie']->id_employee : 0;
-			$msg->private = true;
+			$msg->private     = true;
 			$msg->add();
 		}
 	}
@@ -644,29 +666,31 @@ class ShopGate extends PaymentModule
 
 		if (Tools::isSubmit('updateShopgateOrder'))
 		{
-			$shopgate_order = Tools::getValue('shopgateOrder');
+			$shopgate_order  = Tools::getValue('shopgateOrder');
 			$shippingService = $shopgate_order['shipping_service'];
-			$trackingNumber = $shopgate_order['tracking_number'];
+			$trackingNumber  = $shopgate_order['tracking_number'];
 
 			if (isset($shippingService))
 			{
-				try {
+				try
+				{
 					$shopgateConfig = new ShopgateConfigPresta(
 						is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 							unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-							array()
+							array ()
 
 					);
 
-					$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
+					$shopgateBuilder     = new ShopgateBuilder($shopgateConfig);
 					$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
 					$shopgateMerchantApi->addOrderDeliveryNote($shopgateOrder->order_number, $shippingService, $trackingNumber, true, false);
 
-				} catch (ShopgateMerchantApiException $e) {
+				} catch(ShopgateMerchantApiException $e)
+				{
 					$error = $e->getMessage();
 				}
 				$shopgateOrder->shipping_service = $shippingService;
-				$shopgateOrder->tracking_number = $trackingNumber;
+				$shopgateOrder->tracking_number  = $trackingNumber;
 				$shopgateOrder->update();
 			}
 		}
@@ -675,63 +699,65 @@ class ShopGate extends PaymentModule
 			return '';
 
 		$sOrder = new ShopgateOrder();
-		$error = null;
-		try {
-			$shopgateConfig = new ShopgateConfigPresta(
+		$error  = null;
+		try
+		{
+			$shopgateConfig      = new ShopgateConfigPresta(
 				is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 					unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-					array()
+					array ()
 
 			);
-			$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
+			$shopgateBuilder     = new ShopgateBuilder($shopgateConfig);
 			$shopgateMerchantApi = $shopgateBuilder->buildMerchantApi();
-			$orders = $shopgateMerchantApi->getOrders(array('order_numbers[0]' => $shopgateOrder->order_number));
+			$orders              = $shopgateMerchantApi->getOrders(array ('order_numbers[0]' => $shopgateOrder->order_number));
 			foreach ($orders->getData() as $o)
 			{
 				/* @var $o ShopgateOrder */
 				if ($o->getOrderNumber() == $shopgateOrder->order_number)
 					$sOrder = $o;
 			}
-		} catch (Exception $e) {
+		} catch(Exception $e)
+		{
 			$error = $e->getMessage();
 		}
 
-		$paymentInfoStrings = array(
-			'shopgate_payment_name' => $this->l('Payment name'),
-			'upp_transaction_id' => $this->l('Transaction ID'),
-			'authorization' => $this->l('Authorization'),
-			'settlement' => $this->l('Settlement'),
-			'purpose' => $this->l('Purpose'),
-			'billsafe_transaction_id' => $this->l('Transaction ID'),
-			'reservation_number' => $this->l('Reservation number'),
+		$paymentInfoStrings = array (
+			'shopgate_payment_name'     => $this->l('Payment name'),
+			'upp_transaction_id'        => $this->l('Transaction ID'),
+			'authorization'             => $this->l('Authorization'),
+			'settlement'                => $this->l('Settlement'),
+			'purpose'                   => $this->l('Purpose'),
+			'billsafe_transaction_id'   => $this->l('Transaction ID'),
+			'reservation_number'        => $this->l('Reservation number'),
 			'activation_invoice_number' => $this->l('Invoice activation number'),
-			'bank_account_holder' => $this->l('Account holder'),
-			'bank_account_number' => $this->l('Account number'),
-			'bank_code' => $this->l('Bank code'),
-			'bank_name' => $this->l('Bank name'),
-			'iban' => $this->l('IBAN'),
-			'bic' => $this->l('BIC'),
-			'transaction_id' => $this->l('Transaction ID'),
-			'payer_id' => $this->l('Payer ID'),
-			'payer_email' => $this->l('Payer email')
+			'bank_account_holder'       => $this->l('Account holder'),
+			'bank_account_number'       => $this->l('Account number'),
+			'bank_code'                 => $this->l('Bank code'),
+			'bank_name'                 => $this->l('Bank name'),
+			'iban'                      => $this->l('IBAN'),
+			'bic'                       => $this->l('BIC'),
+			'transaction_id'            => $this->l('Transaction ID'),
+			'payer_id'                  => $this->l('Payer ID'),
+			'payer_email'               => $this->l('Payer email')
 		);
 
-		$sOrderDeliveryNotes = array();
+		$sOrderDeliveryNotes = array ();
 
 		if (is_array($sOrder->getDeliveryNotes()))
 		{
 			foreach ($sOrder->getDeliveryNotes() as $notes)
 			{
-				$sOrderDeliveryNotes[] = array(
+				$sOrderDeliveryNotes[] = array (
 					'shipping_service_id' => $notes->getShippingServiceId(),
-					'tracking_number' => $notes->getTrackingNumber(),
-					'shipping_time' => $notes->getShippingTime(),
+					'tracking_number'     => $notes->getTrackingNumber(),
+					'shipping_time'       => $notes->getShippingTime(),
 				);
 			}
 		}
 
 		// build comments
-		$comments = array();
+		$comments = array ();
 		foreach ($sOrder->jsonDecode($shopgateOrder->comments) as $text => $information)
 			$comments[] = sprintf($this->l($text), $information);
 
@@ -752,8 +778,8 @@ class ShopGate extends PaymentModule
 		/**
 		 * fix objects for template
 		 */
-		$this->context->smarty->assign('sOrderInvoiceAddress',$sOrder->getInvoiceAddress());
-		$this->context->smarty->assign('sOrderDeliveryAddress',$sOrder->getDeliveryAddress());
+		$this->context->smarty->assign('sOrderInvoiceAddress', $sOrder->getInvoiceAddress());
+		$this->context->smarty->assign('sOrderDeliveryAddress', $sOrder->getDeliveryAddress());
 
 		return $this->display(__FILE__, 'views/templates/admin/admin_order.tpl');
 	}
@@ -762,21 +788,21 @@ class ShopGate extends PaymentModule
 	{
 		include_once dirname(__FILE__).'/backward_compatibility/backward.php';
 
-		$output = '';
+		$output         = '';
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
 
-		$bools = array('true' => true, 'false' => false);
+		$bools = array ('true' => true, 'false' => false);
 
 		/** @var CarrierCore $carrierModel */
-		$carrierModel = new Carrier();
+		$carrierModel      = new Carrier();
 		$carrierCollection = $carrierModel->getCarriers($this->context->language->id);
 
-		$settingKeys = array(
+		$settingKeys = array (
 			'SHOPGATE_SHIPPING_SERVICE',
 			'SHOPGATE_MIN_QUANTITY_CHECK',
 			'SHOPGATE_OUT_OF_STOCK_CHECK',
@@ -785,18 +811,18 @@ class ShopGate extends PaymentModule
 			'SHOPGATE_EXPORT_ROOT_CATEGORIES',
 			'SHOPGATE_EXPORT_PRICE_TYPE'
 		);
-		$carriers = array();
+		$carriers    = array ();
 
 		foreach ($carrierCollection as $carrier)
 		{
-			$configKey = 'SHOPGATE_CARRIER_MAPPING_'.$carrier['id_carrier'];
+			$configKey            = 'SHOPGATE_CARRIER_MAPPING_'.$carrier['id_carrier'];
 			$carriers[$configKey] = $carrier;
-			$settingKeys[] = $configKey;
+			$settingKeys[]        = $configKey;
 		}
 
 		if (Tools::isSubmit('saveConfigurations'))
 		{
-			$configs = Tools::getValue('configs', array());
+			$configs = Tools::getValue('configs', array ());
 			foreach ($configs as $name => $value)
 			{
 				if (isset($bools[$value]))
@@ -806,7 +832,7 @@ class ShopGate extends PaymentModule
 
 			$configs['use_stock'] = !((bool)Configuration::get('PS_ORDER_OUT_OF_STOCK'));
 
-			$settings = Tools::getValue('settings', array());
+			$settings = Tools::getValue('settings', array ());
 
 			foreach ($settings as $key => $value)
 			{
@@ -818,27 +844,29 @@ class ShopGate extends PaymentModule
 				$languageID = Language::getIdByIso($configs['language']);
 			Configuration::updateValue('SHOPGATE_LANGUAGE_ID', $languageID);
 
-			try {
+			try
+			{
 				$shopgateConfig->loadArray($configs);
 				$shopgateConfig->initFolders();
 				$shopgateConfig->save(array_keys($configs));
 				$output .= '<div class="conf confirm"><img src="../img/admin/ok.gif" alt="'.$this->l('Confirmation').'" />'.$this->l('Configurations updated').'</div>';
-			} catch (ShopgateLibraryException $e) {
+			} catch(ShopgateLibraryException $e)
+			{
 				$output .= '<div class="conf error"><img src="../img/admin/error.png" alt="'.$this->l('Error').'" />'.$this->l('Error').': '.$e->getAdditionalInformation().'</div>';
 			}
 		}
 
-		$langs = array();
+		$langs = array ();
 		foreach (Language::getLanguages() as $id => $l)
 			$langs[Tools::strtoupper($l['iso_code'])] = $l['name'];
 
-		$servers = array(
-			'live' => $this->l('Live'),
-			'pg' => $this->l('Playground'),
+		$servers = array (
+			'live'   => $this->l('Live'),
+			'pg'     => $this->l('Playground'),
 			'custom' => $this->l('Custom')
 		);
 
-		$enables = array();
+		$enables = array ();
 
 		$settings = Configuration::getMultiple($settingKeys);
 		/**
@@ -847,16 +875,16 @@ class ShopGate extends PaymentModule
 		$shopgateConfig = new ShopgateConfigPresta(
 			is_array(unserialize(Configuration::get('SHOPGATE_CONFIG'))) ?
 				unserialize(Configuration::get('SHOPGATE_CONFIG')) :
-				array()
+				array ()
 
 		);
-		$configs = $shopgateConfig->toArray();
+		$configs        = $shopgateConfig->toArray();
 
 		/**
 		 * price types
 		 */
-		$priceTypes = array(
-			Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET => $this->l('Net'),
+		$priceTypes = array (
+			Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET   => $this->l('Net'),
 			Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_GROSS => $this->l('Gross')
 		);
 

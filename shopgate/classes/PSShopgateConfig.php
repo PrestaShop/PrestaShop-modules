@@ -35,51 +35,61 @@ class ShopgateConfigPresta extends ShopgateConfig
 	public function startup()
 	{
 		// overwrite some library defaults
-		$this->plugin_name = 'prestashop';
+		$this->plugin_name                    = 'prestashop';
 		$this->enable_redirect_keyword_update = 24;
-		$this->enable_ping = 1;
-		$this->enable_add_order = 1;
-		$this->enable_update_order = 1;
-		$this->enable_get_orders = 0;
-		$this->enable_get_customer = 1;
-		$this->enable_get_items_csv = 1;
-		$this->enable_get_categories_csv = 1;
-		$this->enable_get_reviews_csv = 0;
-		$this->enable_get_pages_csv = 0;
-		$this->enable_get_log_file = 1;
-		$this->enable_set_settings = 1;
-		$this->enable_mobile_website = 1;
-		$this->enable_cron = 0;
-		$this->enable_clear_logfile = 1;
-		$this->encoding = 'UTF-8';
-		$this->enable_default_redirect = 0;
-		$this->enable_get_settings = 1;
-		$this->enable_get_items = 1;
-		$this->enable_get_categories = 1;
-        $this->enable_get_reviews = 0;
+		$this->enable_ping                    = 1;
+		$this->enable_add_order               = 1;
+		$this->enable_update_order            = 1;
+		$this->enable_get_orders              = 0;
+		$this->enable_get_customer            = 1;
+		$this->enable_get_items_csv           = 1;
+		$this->enable_get_categories_csv      = 1;
+		$this->enable_get_reviews_csv         = 0;
+		$this->enable_get_pages_csv           = 0;
+		$this->enable_get_log_file            = 1;
+		$this->enable_set_settings            = 1;
+		$this->enable_mobile_website          = 1;
+		$this->enable_cron                    = 0;
+		$this->enable_clear_logfile           = 1;
+		$this->encoding                       = 'UTF-8';
+		$this->enable_default_redirect        = 0;
+		$this->enable_get_settings            = 1;
+		$this->enable_get_items               = 1;
+		$this->enable_get_categories          = 1;
+		$this->enable_get_reviews             = 0;
 
 		// initialize plugin specific stuff
 		$this->use_stock = 1;
-		$this->currency = 'EUR';
+		$this->currency  = 'EUR';
+
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 		{
+			/**
+			 * setEnableCheckCart
+			 */
 			$this->setEnableCheckCart(true);
 		}
 
 		if (version_compare(_PS_VERSION_, '1.4.0.0', '>='))
 		{
+			/**
+			 * setEnableRedeemCoupons
+			 */
 			$this->setEnableRedeemCoupons(true);
 		}
 
-        if (version_compare(_PS_VERSION_, '1.6.0.0', '>='))
-        {
-            $this->setEnableGetReviews(true);
-        }
+		if (version_compare(_PS_VERSION_, '1.6.0.0', '>='))
+		{
+			/**
+			 * setEnableGetReviews
+			 */
+			$this->setEnableGetReviews(true);
+		}
 
 		/**
 		 * set supported_fields_check_cart
 		 */
-		$this->supported_fields_check_cart = array(
+		$this->supported_fields_check_cart = array (
 			'customer',
 			'external_coupons',
 			'shipping_methods',
@@ -90,7 +100,7 @@ class ShopgateConfigPresta extends ShopgateConfig
 		/**
 		 * set supported_fields_get_settings
 		 */
-		$this->supported_fields_get_settings = array(
+		$this->supported_fields_get_settings = array (
 			'customer_groups',
 			'tax'
 		);
@@ -128,21 +138,22 @@ class ShopgateConfigPresta extends ShopgateConfig
 
 	public function registerPlugin()
 	{
-		try {
-			$data = array(
-				'action' => 'interface_install',
-				'uid' => $this->getUniqueId(),
-				'url' => Configuration::get('PS_SHOP_DOMAIN') ? Configuration::get('PS_SHOP_DOMAIN') : $this->getShopUrl(),
-				'plugin_version' => SHOPGATE_PLUGIN_VERSION,
-				'shopping_system_id' => self::DEFAULT_SHOP_SYSTEM_ID,
-				'contact_name' => '',
-				'contact_phone' => Configuration::get('PS_SHOP_PHONE'),
-				'contact_email' => Configuration::get('PS_SHOP_EMAIL'),
-				'stats_items' => $this->getStatsItems(),
-				'stats_categories' => $this->getStatsCategories(),
-				'stats_orders' => $this->getStatsOrders(),
-				'stats_currency' => $this->getStatsCurrency(),
-				'stats_acs' => $this->getStatsAcs(),
+		try
+		{
+			$data = array (
+				'action'              => 'interface_install',
+				'uid'                 => $this->getUniqueId(),
+				'url'                 => Configuration::get('PS_SHOP_DOMAIN') ? Configuration::get('PS_SHOP_DOMAIN') : $this->getShopUrl(),
+				'plugin_version'      => SHOPGATE_PLUGIN_VERSION,
+				'shopping_system_id'  => self::DEFAULT_SHOP_SYSTEM_ID,
+				'contact_name'        => '',
+				'contact_phone'       => Configuration::get('PS_SHOP_PHONE'),
+				'contact_email'       => Configuration::get('PS_SHOP_EMAIL'),
+				'stats_items'         => $this->getStatsItems(),
+				'stats_categories'    => $this->getStatsCategories(),
+				'stats_orders'        => $this->getStatsOrders(),
+				'stats_currency'      => $this->getStatsCurrency(),
+				'stats_acs'           => $this->getStatsAcs(),
 				'stats_unique_visits' => $this->getStatsUniqueVisits(),
 				'stats_mobile_visits' => 0);
 
@@ -153,9 +164,12 @@ class ShopgateConfigPresta extends ShopgateConfig
 			curl_exec($ch);
 			curl_close($ch);
 
-		} catch (Exception $e) {
-			// do nothing // prestashop validator
-			$exeption = $e;
+		} catch(Exception $e)
+		{
+			/**
+			 * do nothing // prestashop validator
+			 */
+			$exception = $e;
 		}
 	}
 
@@ -230,11 +244,11 @@ class ShopgateConfigPresta extends ShopgateConfig
 	 * store config
 	 *
 	 * @param array $fieldList
-	 * @param bool $validate
+	 * @param bool  $validate
 	 */
 	public function save(array $fieldList, $validate = true)
 	{
-		$saveFields = array();
+		$saveFields    = array ();
 		$currentConfig = parent::toArray();
 		foreach ($fieldList as $field)
 			$saveFields[$field] = (isset($currentConfig[$field])) ? $currentConfig[$field] : null;
@@ -255,9 +269,11 @@ class ShopgateConfigPresta extends ShopgateConfig
 
 		if ($configFile && is_file($configFile))
 		{
-			try {
+			try
+			{
 				unlink($configFile);
-			} catch (Exception $e) {
+			} catch(Exception $e)
+			{
 				throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'The configuration file "'.$configFile.'" could not be deleted.');
 			}
 		}
@@ -291,7 +307,7 @@ class ShopgateConfigPresta extends ShopgateConfig
 	 * create folder by path
 	 *
 	 * @param      $path
-	 * @param int $mode
+	 * @param int  $mode
 	 * @param bool $recursive
 	 *
 	 * @throws ShopgateLibraryException
@@ -300,9 +316,11 @@ class ShopgateConfigPresta extends ShopgateConfig
 	{
 		if (!is_dir($path))
 		{
-			try {
+			try
+			{
 				mkdir($path, $mode, $recursive);
-			} catch (ShopgateLibraryException $e) {
+			} catch(ShopgateLibraryException $e)
+			{
 				throw new ShopgateLibraryException(
 					ShopgateLibraryException::CONFIG_READ_WRITE_ERROR,
 					sprintf('The folder "%s" could not be created.', $path)
@@ -314,7 +332,7 @@ class ShopgateConfigPresta extends ShopgateConfig
 	/**
 	 * returns the path by shop number and type
 	 *
-	 * @param int $shopNumber
+	 * @param int   $shopNumber
 	 * @param mixed $type
 	 *
 	 * @return string

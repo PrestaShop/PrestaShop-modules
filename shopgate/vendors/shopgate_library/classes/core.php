@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Shopgate GmbH
  *
  * URHEBERRECHTSHINWEIS
@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.9.1');
+define('SHOPGATE_LIBRARY_VERSION', '2.9.10');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -42,9 +42,9 @@ function shopgateGetErrorType($type) {
 			return 'E_CORE_ERROR';
 		case E_CORE_WARNING: // 32 //
 			return 'E_CORE_WARNING';
-		case E_CORE_ERROR: // 64 //
+		case E_COMPILE_ERROR: // 64 //
 			return 'E_COMPILE_ERROR';
-		case E_CORE_WARNING: // 128 //
+		case E_COMPILE_WARNING: // 128 //
 			return 'E_COMPILE_WARNING';
 		case E_USER_ERROR: // 256 //
 			return 'E_USER_ERROR';
@@ -236,6 +236,9 @@ class ShopgateLibraryException extends Exception {
 	const CART_ITEM_INPUT_VALIDATION_FAILED = 303;
 	const CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY = 304;
 	const CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY = 305;
+	
+	//Helper class exception
+	const SHOPGATE_HELPER_FUNCTION_NOT_FOUND_EXCEPTION = 310;
 	
 	// extended error code format that contains information on multiple errors
 	const MULTIPLE_ERRORS = 998;
@@ -461,12 +464,51 @@ class ShopgateLibraryException extends Exception {
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
 class ShopgateMerchantApiException extends Exception {
+	const UNKNOWN_ACTION = 101;
+	const SHOP_NUMBER_NOT_SET = 103;
+	const MERCHANT_NOT_FOUND = 110;
+	const SHOP_NOT_FOUND = 113;
+	const MISSING_PARAMETERS = 118;
+	const FIELDS_OF_WRONG_TYPE = 123;
+	const AUTHORIZATION_NOT_SET = 400;
+	const AUTHORIZATION_USERNAME_INVALID = 401;
+	const AUTHORIZATION_PASSWORD_INVALID = 402;
+	
 	const ORDER_NOT_FOUND = 201;
 	const ORDER_ON_HOLD = 202;
 	const ORDER_ALREADY_COMPLETED = 203;
 	const ORDER_SHIPPING_STATUS_ALREADY_COMPLETED = 204;
-
+	const ORDER_INVALID_SHIPPING_SERVICE_ID = 119;
+	
+	const CATEGORY_NAME_ALREADY_EXISTS = 142;
+	const CATEGORY_NOT_FOUND = 205;
+	const CATEGORY_PARENT_NOT_FOUND = 212;
+	const CATEGORY_NUMBER_ALREADY_EXISTS = 216;
+	const CATEGORY_CHILD_ITEMS_COULD_NOT_BE_MAPPED = 217;
+	const CATEGORY_CANNOT_MAP_CHILD_ITEMS = 217;
+	const CATEGORY_ERROR_DELETING_ITEM_MAPPING = 147;
+	
+	const ITEM_ERROR_DOWNLOADING_IMAGE = 149;
+	const ITEM_NOT_FOUND = 206;
+	const ITEM_CURRENCY_NOT_FOUND = 207;
+	const ITEM_PARENT_NOT_FOUND = 220;
+	const ITEM_ALREADY_EXISTS = 221;
+	const ITEM_ERROR_DELETING = 129;
+	
+	const BATCH_ITEM_MULTIPLE_ERRORS = 166;
+	const BATCH_ITEM_TOO_MANY_ELEMENTS = 167;
+	
+	
+	const ORDER_ALREADY_CANCELLED = 222;
+	const ORDER_CANCEL_INVALID_ITEM = 223;
+	const ORDER_CANCEL_INVALID_ITEM_QUANTITY = 224;
+	const ORDER_SHIPPING_COSTS_ALREADY_CANCELLED = 225;
+	const ORDER_CANCEL_INVALID_ARGUMENTS = 226;
+	
 	const INTERNAL_ERROR_OCCURED_WHILE_SAVING = 803;
+	const INTERNAL_ERROR_OCCURED_WHILE_DELETING = 804;
+	
+	const UNKNOWN_ERROR = 999;
 	
 	/**
 	 * @var ShopgateMerchantApiResponse
@@ -860,7 +902,7 @@ class ShopgateBuilder {
 	 * @var ShopgateConfigInterface
 	 */
 	protected $config;
-	
+
 	/**
 	 * Loads configuration and initializes the ShopgateLogger class.
 	 *
@@ -915,18 +957,18 @@ class ShopgateBuilder {
 		
 		// instantiate export file buffer
 		if (!empty($_REQUEST['action']) && (($_REQUEST['action'] == 'get_items')
-			|| ($_REQUEST['action'] == 'get_categories') || ($_REQUEST['action'] == 'get_reviews'))) {
+				|| ($_REQUEST['action'] == 'get_categories') || ($_REQUEST['action'] == 'get_reviews'))) {
 			$xmlModelNames = array(
 					'get_items' => 'Shopgate_Model_Catalog_Product',
 					'get_categories' => 'Shopgate_Model_Catalog_Category',
 					'get_reviews' => 'Shopgate_Model_Review'
 			);
 			
-			$sourceEncoding = $this->config->getExportConvertEncoding();
-			if (!empty($sourceEncoding)) {
-				array_splice(Shopgate_Model_AbstractExport::$allowedEncodings, 1, 0, $sourceEncoding);
+			if ($this->config->getExportConvertEncoding()) {
+				array_splice(Shopgate_Model_AbstractExport::$allowedEncodings, 1, 0, $this->config->getEncoding());
+				Shopgate_Model_AbstractExport::$allowedEncodings = array_unique(Shopgate_Model_AbstractExport::$allowedEncodings);
 			}
-			
+
 			$format = (!empty($_REQUEST['response_type'])) ? $_REQUEST['response_type'] : '';
 			switch ($format) {
 				default: case 'xml':
@@ -1010,6 +1052,54 @@ abstract class ShopgateObject {
 	 * @var array cache already camelized strings
 	 */
 	protected $camelizeCache = array();
+
+	/**
+	 * defines the name for the Shopgate datastructure helper
+	 * @const HELPER_DATA_STRUCTURE
+	 */
+	const HELPER_DATASTRUCTURE = "DataStructure";
+
+	/**
+	 * defines the name for the Shopgate pricing helper
+	 * @const HELPER_PRICING
+	 */
+	const HELPER_PRICING 		= "Pricing";
+
+	/**
+	 * defines the name for the Shopgate string helper
+	 * @const HELPER_STRING
+	 */
+	const HELPER_STRING 		= "String";
+
+	/**
+	 * Save the already instantiated Helper Object to guarantee the only one instance is allocated
+	 * 
+	 * @var array of Shopgate_Helper_DataStructure|Shopgate_Helper_Pricing|Shopgate_Helper_String
+	 */
+	private $helperClassInstances = array(
+		self::HELPER_DATASTRUCTURE 	=> null,
+		self::HELPER_PRICING 		=> null,
+		self::HELPER_STRING 		=> null,
+	);
+
+	/**
+	 * get a instance of an Shopgate helper class depending on the committed name
+	 *
+	 * @param $helperName string defined by constants in this class(ShopgateObject)
+	 *
+	 * @return null|Shopgate_Helper_DataStructure|Shopgate_Helper_Pricing|Shopgate_Helper_String returns the requested helper instance or null
+	 * @throws ShopgateLibraryException
+	 */
+	protected function getHelper($helperName){
+		if(array_key_exists($helperName,$this->helperClassInstances)) {
+			$helperClassName = "Shopgate_Helper_" . $helperName;
+			if (!isset($this->helperClassInstances[$helperClassName])) {
+				$this->helperClassInstances[$helperClassName] = new $helperClassName();
+			}
+			return $this->helperClassInstances[$helperClassName];
+		}
+		throw new ShopgateLibraryException("Helper function {$helperName} not found",ShopgateLibraryException::SHOPGATE_HELPER_FUNCTION_NOT_FOUND_EXCEPTION);
+	}
 	
 	/**
 	 * Convenience method for logging to the ShopgateLogger.
@@ -1504,7 +1594,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * Takes care of buffer and file handlers and calls ShopgatePlugin::createPagesCsv().
 	 *
-	 * @throws ShopgateLibraryException
+	 * @param int $limit
+	 * @param int $offset
+	 * @param array $uids
+	 * @param string $responseType
 	 */
 	public final function startGetItems($limit = null, $offset = null, array $uids = array(), $responseType = 'xml') {
 		switch ($responseType) {
@@ -1524,7 +1617,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * Takes care of buffer and file handlers and calls ShopgatePlugin::createCategories().
 	 *
-	 * @throws ShopgateLibraryException
+	 * @param int $limit
+	 * @param int $offset
+	 * @param array $uids
+	 * @param string $responseType
 	 */
 	public final function startGetCategories($limit = null, $offset = null, array $uids = array(), $responseType = 'xml') {
 		switch ($responseType) {
@@ -1544,7 +1640,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * Takes care of buffer and file handlers and calls ShopgatePlugin::createReviews().
 	 *
-	 * @throws ShopgateLibraryException
+	 * @param int $limit
+	 * @param int $offset
+	 * @param array $uids
+	 * @param string $responseType
 	 */
 	public final function startGetReviews($limit = null, $offset = null, array $uids = array(), $responseType = 'xml') {
 		switch ($responseType) {
@@ -1898,21 +1997,6 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	}
 
 	/**
-	 * Rounds and formats a price.
-	 *
-	 * @param float $price The price of an item.
-	 * @param int $digits The number of digits after the decimal separator.
-	 * @param string $decimalPoint The decimal separator.
-	 * @param string $thousandPoints The thousands separator.
-	 * @return float|string
-	 */
-	protected function formatPriceNumber($price, $digits = 2, $decimalPoint = ".", $thousandPoints = "") {
-		$price = round($price, $digits);
-		$price = number_format($price, $digits, $decimalPoint, $thousandPoints);
-		return $price;
-	}
-
-	/**
 	 * Removes all disallowed HTML tags from a given string.
 	 *
 	 * By default the following are allowed:
@@ -1931,42 +2015,66 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @return string The sanititzed string.
 	 */
-	protected function removeTagsFromString($string, $removeTags = array(), $additionalAllowedTags = array()) {
-		// all tags available
-		$allowedTags = array("ADDRESS", "AREA", "A", "BASE", "BASEFONT", "BIG", "BLOCKQUOTE",
-			"BODY", "BR", "B", "CAPTION", "CENTER", "CITE", "CODE", "DD", "DFN", "DIR", "DIV", "DL", "DT",
-			"EM", "FONT", "FORM", "H1", "H2", "H3", "H4", "H5", "H6", "HEAD", "HR", "HTML", "IMG", "INPUT",
-			"ISINDEX", "I", "KBD", "LINK", "LI", "MAP", "MENU", "META", "OL", "OPTION", "PARAM", "PRE",
-			"P", "SAMP", "SELECT", "SMALL", "STRIKE", "STRONG", "STYLE", "SUB", "SUP",
-			"TABLE", "TD", "TEXTAREA", "TH", "TITLE", "TR", "TT", "UL", "U", "VAR"
-		);
-		
-		foreach ($allowedTags as &$t) $t = strtolower($t);
-		foreach ($removeTags as &$t) $t = strtolower($t);
-		foreach ($additionalAllowedTags as &$t) $t = strtolower($t);
-		
-		// some tags must be removed completely (including content)
-		$string = preg_replace('#<script([^>]*?)>(.*?)</script>#is', '', $string);
-		$string = preg_replace('#<style([^>]*?)>(.*?)</style>#is', '', $string);
-		$string = preg_replace('#<link([^>]*?)>(.*?)</link>#is', '', $string);
-		
-		$string = preg_replace('#<script([^>]*?)/>#is', '', $string);
-		$string = preg_replace('#<style([^>]*?)/>#is', '', $string);
-		$string = preg_replace('#<link([^>]*?)/>#is', '', $string);
-
-		// add the additional allowed tags to the list
-		$allowedTags = array_merge($allowedTags, $additionalAllowedTags);
-
-		// strip the disallowed tags from the list
-		$allowedTags = array_diff($allowedTags, $removeTags);
-
-		// add HTML brackets
-		foreach ($allowedTags as &$t) $t = "<$t>";
-
-		// let PHP sanitize the string and return it
-		return strip_tags($string, implode(",", $allowedTags));
+	protected function removeTagsFromString($string, $removeTags = array(), $additionalAllowedTags = array())
+	{
+		$helper = $this->getHelper(self::HELPER_STRING);
+		return $helper->removeTagsFromString($string, $removeTags, $additionalAllowedTags);	
 	}
 
+	/**
+	 * Rounds and formats a price.
+	 *
+	 * @param float $price The price of an item.
+	 * @param int $digits The number of digits after the decimal separator.
+	 * @param string $decimalPoint The decimal separator.
+	 * @param string $thousandPoints The thousands separator.
+	 * @return float|string
+	 */
+	protected function formatPriceNumber($price, $digits = 2, $decimalPoint = ".", $thousandPoints = "")
+	{
+		$helper = $this->getHelper(self::HELPER_PRICING);
+		return $helper->formatPriceNumber($price, $digits, $decimalPoint, $thousandPoints);
+	}
+
+	/**
+	 * Takes an array of arrays that contain all elements which are taken to create a cross-product of all elements. The resulting array is an array-list with
+	 * each possible combination as array. An Element itself can be anything (including a whole array that is not torn apart, but instead treated as a whole)
+	 * By setting the second parameter to true, the keys of the source array is added as an array at the front of the resulting array
+	 *
+	 * Sample input: array(
+	 * 		'group-1-key' => array('a', 'b'),
+	 * 		'group-2-key' => array('x'),
+	 * 		7 => array('l', 'm', 'n'),
+	 * );
+	 * Output of sample: Array (
+	 * 		[0] => Array (
+	 * 			[group-1-key] => a
+	 * 			[group-2-key] => x
+	 * 			[7] => l
+	 * 		)
+	 * 		[1] => Array (
+	 * 			[group-1-key] => b
+	 * 			[group-2-key] => x
+	 * 			[7] => l
+	 * 		)
+	 * 		[2] => Array (
+	 * 			[group-1-key] => a
+	 * 			[group-2-key] => x
+	 * 			[7] => m
+	 * 		)
+	 * 		[...] and so on ... (total of count(src[0])*count(src[1])*...*count(src[N]) elements) [=> 2*1*3 elements in this case]
+	 * 	)
+	 *
+	 * @param array $src: The (at least) double dimensioned array input
+	 * @param bool $enableFirstRow: Disabled by default
+	 * @return array[][]:
+	 */
+	protected function arrayCross(array $src, $enableFirstRow = false)
+	{
+		$helper = $this->getHelper(self::HELPER_DATASTRUCTURE);
+		return $helper->arrayCross($src, $enableFirstRow);
+	}
+	
 	/**
 	 * @param array $loaders
 	 * @return mixed
@@ -1986,7 +2094,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 					// pass through known Shopgate Library Exceptions
 					throw $e;
 				} catch (Exception $e) {
-					throw new ShopgateLibraryException("An unknown exception has been thrown in loader method \"{$method}\". Memory usage ".$this->getMemoryUsageString()." Exception '".get_class($e)."': [Code: {$e->getCode()}] {$e->getMessage()}");
+					$msg = "An unknown exception has been thrown in loader method \"{$method}\". Memory usage "
+						 . $this->getMemoryUsageString()." Exception '".get_class($e)."': [Code: {$e->getCode()}] {$e->getMessage()}";
+					throw new ShopgateLibraryException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, $msg, true);
 				}
 
 				if ($result) {
@@ -2063,7 +2173,6 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * Gets the used memory and real used memory and returns it as a string
 	 *
-	 * @param $sizeUnit (GB / MB / KB / BYTES)
 	 * @return string
 	 */
 	protected function getMemoryUsageString() {
@@ -2177,8 +2286,8 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @param string $user The user name the customer entered at Shopgate.
 	 * @param string $pass The password the customer entered at Shopgate.
-	 * @param ShopgateCustomer A ShopgateCustomer object to be added to the shop system's database.
-	 * @throws ShopgateLibraryException if an error occures
+	 * @param ShopgateCustomer $customer A ShopgateCustomer object to be added to the shop system's database.
+	 * @throws ShopgateLibraryException if an error occurs
 	 */
 	public abstract function registerCustomer($user, $pass, ShopgateCustomer $customer);
 	
@@ -2235,8 +2344,8 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @return array(
 	 *          <ul>
 	 *          	<li>'external_coupons' => ShopgateExternalCoupon[], # list of all coupons</li>
-	 *          	<li>'items' => array(...), # list of item changes</li>
-	 *          	<li>'shippings' => array(...), # list of available shipping services for this cart</li>
+	 *          	<li>'items' => ShopgateCartItem[], # list of item changes</li>
+	 *          	<li>'shippings' => ShopgateShippingMethod[], # list of available shipping services for this cart</li>
 	 *          </ul>)
 	 * @throws ShopgateLibraryException if an error occurs.
 	 */
@@ -2250,15 +2359,15 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @param ShopgateCart $cart The ShopgateCart object to be checked and validated.
 	 *
-	 * @return array(
-	 *          'items' => array(...), # list of item changes
-	 * )
+	 * @return ShopgateCartItem[] list of item changes
 	 * @throws ShopgateLibraryException if an error occurs.
 	 */
 	public abstract function checkStock(ShopgateCart $cart);
 	
 	/**
-	 * Returns an array of certain settings of the shop. (Currently mainly tax settings.)	 *
+	 * Returns an array of certain settings of the shop. (Currently mainly tax settings.)
+	 * 
+	 * 
 	 * @see http://developer.shopgate.com/plugin_api/system_information/get_settings
 	 *
 	 * @return array(
@@ -2398,72 +2507,6 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createReviews($limit = null, $offset = null, array $uids = array());
-
-	/**
-	 * Takes an array of arrays that contain all elements which are taken to create a cross-product of all elements. The resulting array is an array-list with
-	 * each possible combination as array. An Element itself can be anything (including a whole array that is not torn apart, but instead treated as a whole)
-	 * By setting the second parameter to true, the keys of the source array is added as an array at the front of the resulting array
-	 *
-	 * Sample input: array(
-	 * 		'group-1-key' => array('a', 'b'),
-	 * 		'group-2-key' => array('x'),
-	 * 		7 => array('l', 'm', 'n'),
-	 * );
-	 * Output of sample: Array (
-	 * 		[0] => Array (
-	 * 			[group-1-key] => a
-	 * 			[group-2-key] => x
-	 * 			[7] => l
-	 * 		)
-	 * 		[1] => Array (
-	 * 			[group-1-key] => b
-	 * 			[group-2-key] => x
-	 * 			[7] => l
-	 * 		)
-	 * 		[2] => Array (
-	 * 			[group-1-key] => a
-	 * 			[group-2-key] => x
-	 * 			[7] => m
-	 * 		)
-	 * 		[...] and so on ... (total of count(src[0])*count(src[1])*...*count(src[N]) elements) [=> 2*1*3 elements in this case]
-	 * 	)
-	 *
-	 * @param array $src: The (at least) double dimensioned array input
-	 * @param bool $enableFirstRow: Disabled by default
-	 * @return array[][]:
-	 */
-	protected function arrayCross(array $src, $enableFirstRow = false) {
-		$result = array();
-		$firstRow = array();
-		
-		if($enableFirstRow) {
-			$firstRow[0] = array_keys($src);
-		}
-		
-		foreach($src as $key => $valArr) {
-			// elements are copied for appending data, so the actual count is needed as the base-element-count
-			$copyCount = count($result);
-			
-			// start by using the first array as a resultset (in case of only one array the result of the cross-product is the first input-array)
-			if(empty($result)) {
-				foreach($valArr as $optionSelection) {
-					$result[] = array($key => $optionSelection);
-				}
-			} else {
-				$i = 0;
-				foreach($valArr as $optionSelection) {
-					for($j = 0; $j < $copyCount; $j++) {
-						// in case of $i==0 it copies itself, so it's correct in all cases if $i
-						$result[$i*$copyCount+$j] = $result[$j];
-						$result[$i*$copyCount+$j][$key] = $optionSelection;
-					}
-					$i++;
-				}
-			}
-		}
-		
-		return array_merge($firstRow, $result);
-	}
 }
 
 interface ShopgateFileBufferInterface {

@@ -72,27 +72,27 @@ class PSShopgateCheckCart
 	/**
 	 * @var array
 	 */
-	protected $_externalCoupons = array();
+	protected $_externalCoupons = array ();
 
 	/**
 	 * @var array
 	 */
-	protected $_resultItems = array();
+	protected $_resultItems = array ();
 
 	/**
 	 * @var array
 	 */
-	protected $_resultCarriers = array();
+	protected $_resultCarriers = array ();
 
 	/**
 	 * @var array
 	 */
-	protected $_resultPayments = array();
+	protected $_resultPayments = array ();
 
 	/**
 	 * @var array
 	 */
-	protected $_resultExternalCoupons = array();
+	protected $_resultExternalCoupons = array ();
 
 	/**
 	 * @var int
@@ -114,7 +114,7 @@ class PSShopgateCheckCart
 	 */
 	public function __construct(ShopgateCart $shopgateCart)
 	{
-		$this->_context = Context::getContext();
+		$this->_context      = Context::getContext();
 		$this->_shopgateCart = $shopgateCart;
 	}
 
@@ -174,7 +174,7 @@ class PSShopgateCheckCart
 	 */
 	protected function _setItemCurrencyId()
 	{
-		$this->_itemCurrencyId = $this->_context->cart->id_currency;
+		$this->_itemCurrencyId  = $this->_context->cart->id_currency;
 		$this->_currentCurrency = $this->_context->currency->iso_code;
 	}
 
@@ -251,12 +251,14 @@ class PSShopgateCheckCart
 		if ($this->_shopgateCart->getDeliveryAddress())
 		{
 
-			$this->_deliveryAddress = $this->_createAddress($this->_shopgateCart->getDeliveryAddress());
+			$this->_deliveryAddress              = $this->_createAddress($this->_shopgateCart->getDeliveryAddress());
 			$this->_deliveryAddress->id_customer = $this->_context->customer->id;
 
-			try {
+			try
+			{
 				$this->_deliveryAddress->save();
-			} catch (Exception $e) {
+			} catch(Exception $e)
+			{
 				$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, '_createDeliveryAddress : '.$e->getMessage());
 			}
 
@@ -276,12 +278,14 @@ class PSShopgateCheckCart
 		if ($this->_shopgateCart->getInvoiceAddress())
 		{
 
-			$this->_invoiceAddress = $this->_createAddress($this->_shopgateCart->getInvoiceAddress());
+			$this->_invoiceAddress              = $this->_createAddress($this->_shopgateCart->getInvoiceAddress());
 			$this->_invoiceAddress->id_customer = $this->_context->customer->id;
 
-			try {
+			try
+			{
 				$this->_invoiceAddress->save();
-			} catch (Exception $e) {
+			} catch(Exception $e)
+			{
 				$this->_addException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, '_createInvoiceAddress : '.$e->getMessage());
 			}
 
@@ -298,23 +302,30 @@ class PSShopgateCheckCart
 	 */
 	protected function _createCustomer()
 	{
-		if($this->_shopgateCart->getExternalCustomerId()) {
+		if ($this->_shopgateCart->getExternalCustomerId())
+		{
 			/**
 			 * load exist customer
 			 */
 			$this->_context->customer = new Customer($this->_shopgateCart->getExternalCustomerId());
-			if (!Validate::isLoadedObject($this->_context->customer)) {
+			if (!Validate::isLoadedObject($this->_context->customer))
+			{
+				/**
+				 * _addException
+				 */
 				$this->_addException(ShopgateLibraryException::COUPON_INVALID_USER);
 			}
-		} else {
+		}
+		else
+		{
 			/**
 			 * create dummy customer
 			 */
-			$this->_context->customer = new Customer();
-			$this->_context->customer->lastname = self::DEFAULT_CUSTOMER_LAST_NAME;
+			$this->_context->customer            = new Customer();
+			$this->_context->customer->lastname  = self::DEFAULT_CUSTOMER_LAST_NAME;
 			$this->_context->customer->firstname = self::DEFAULT_CUSTOMER_FIRST_NAME;
-			$this->_context->customer->email = self::DEFAULT_CUSTOMER_EMAIL;
-			$this->_context->customer->passwd = self::DEFAULT_CUSTOMER_PASSWD;
+			$this->_context->customer->email     = self::DEFAULT_CUSTOMER_EMAIL;
+			$this->_context->customer->passwd    = self::DEFAULT_CUSTOMER_PASSWD;
 			$this->_context->customer->add();
 			$this->_customerDummyCreated = true;
 		}
@@ -366,7 +377,7 @@ class PSShopgateCheckCart
 	 */
 	protected function getProductIdentifiers(ShopgateOrderItem $item)
 	{
-		return substr($item->getItemNumber(), 0, 2) == PSShopgatePlugin::PREFIX
+		return Tools::substr($item->getItemNumber(), 0, 2) == PSShopgatePlugin::PREFIX
 			? explode('_', Tools::substr($item->getItemNumber(), Tools::strlen(PSShopgatePlugin::PREFIX)))
 			: explode('_', $item->getItemNumber());
 	}
@@ -382,12 +393,12 @@ class PSShopgateCheckCart
 		{
 			$identifiers = $this->getProductIdentifiers($sGItem);
 
-			$productId = false;
+			$productId   = false;
 			$attributeId = null;
 
 			if (is_array($identifiers))
 			{
-				$productId = array_key_exists(0, $identifiers) ? $identifiers[0] : false;
+				$productId   = array_key_exists(0, $identifiers) ? $identifiers[0] : false;
 				$attributeId = array_key_exists(1, $identifiers) ? $identifiers[1] : null;
 			}
 
@@ -472,7 +483,7 @@ class PSShopgateCheckCart
 		$this->_context->cart = new Cart();
 
 		$this->_context->cart->id_currency = $this->_itemCurrencyId;
-		$this->_context->cart->id_lang = $this->_context->language->id;
+		$this->_context->cart->id_lang     = $this->_context->language->id;
 
 		$this->_context->cart->save();
 	}
@@ -480,9 +491,9 @@ class PSShopgateCheckCart
 	/**
 	 * create result cart items
 	 *
-	 * @param Product $product
+	 * @param Product           $product
 	 * @param ShopgateOrderItem $sGItem
-	 * @param bool $id_product_attribute
+	 * @param bool              $id_product_attribute
 	 *
 	 * @return ShopgateCartItem
 	 */
@@ -568,7 +579,7 @@ class PSShopgateCheckCart
 		$resultCarrier->setAmountWithTax($carrier['price']);
 		$resultCarrier->setTaxClass($_taxRulesGroup->name);
 		$resultCarrier->setTaxPercent($_carrier->getTaxesRate($this->_deliveryAddress));
-		$resultCarrier->setInternalShippingInfo(serialize(array('carrierId' => $carrier['id_carrier'])));
+		$resultCarrier->setInternalShippingInfo(serialize(array ('carrierId' => $carrier['id_carrier'])));
 
 		return $resultCarrier;
 
@@ -582,19 +593,21 @@ class PSShopgateCheckCart
 	 */
 	public function createResult()
 	{
-		try {
+		try
+		{
 			$this->_run();
-		} catch (Exception $e) {
+		} catch(Exception $e)
+		{
 			$this->__destruct();
 			throw $e;
 		}
 
-		return array(
-			'items' => (array)$this->_resultItems,
+		return array (
+			'items'            => (array)$this->_resultItems,
 			'shipping_methods' => (array)$this->_resultCarriers,
-			'payment_methods' => (array)$this->_resultPayments,
+			'payment_methods'  => (array)$this->_resultPayments,
 			'external_coupons' => (array)$this->_resultExternalCoupons,
-			'currency' => $this->_currentCurrency);
+			'currency'         => $this->_currentCurrency);
 	}
 
 	/**
@@ -627,15 +640,15 @@ class PSShopgateCheckCart
 		$_resultAddress = new Address();
 
 		$_resultAddress->id_country = $this->_getCountryIdByIsoCode($address->getCountry());
-		$_resultAddress->alias = self::DEFAULT_ADDRESS_ALIAS;
+		$_resultAddress->alias      = self::DEFAULT_ADDRESS_ALIAS;
 
-		$_resultAddress->firstname = $address->getFirstName();
-		$_resultAddress->lastname = $address->getLastName();
-		$_resultAddress->address1 = $address->getStreet1();
-		$_resultAddress->postcode = $address->getZipcode();
-		$_resultAddress->city = $address->getCity();
-		$_resultAddress->country = $address->getCountry();
-		$_resultAddress->phone = $address->getPhone() ? $address->getPhone() : 1;
+		$_resultAddress->firstname    = $address->getFirstName();
+		$_resultAddress->lastname     = $address->getLastName();
+		$_resultAddress->address1     = $address->getStreet1();
+		$_resultAddress->postcode     = $address->getZipcode();
+		$_resultAddress->city         = $address->getCity();
+		$_resultAddress->country      = $address->getCountry();
+		$_resultAddress->phone        = $address->getPhone() ? $address->getPhone() : 1;
 		$_resultAddress->phone_mobile = $address->getMobile() ? $address->getMobile() : 1;
 
 		/**
@@ -699,7 +712,7 @@ class PSShopgateCheckCart
 	/**
 	 * add exception
 	 *
-	 * @param int $errorCoded
+	 * @param int  $errorCoded
 	 * @param bool $message
 	 * @param bool $writeLog
 	 *
@@ -715,24 +728,28 @@ class PSShopgateCheckCart
 	 */
 	public function __destruct()
 	{
-		foreach ($this->getCustomersByEmail(PSShopgateCheckCart::DEFAULT_CUSTOMER_EMAIL) as $customer) {
+		foreach ($this->getCustomersByEmail(PSShopgateCheckCart::DEFAULT_CUSTOMER_EMAIL) as $customer)
+		{
 			$currentCustomer = new Customer($customer['id_customer']);
 			$currentCustomer->delete();
 		}
 	}
 
-    /**
-     * Retrieve customers by email address
-     *
-     * @static
-     * @param $email
-     * @return array
-     */
-    public function getCustomersByEmail($email)
-    {
-        $query = 'SELECT id_customer FROM ' . _DB_PREFIX_ . 'customer WHERE email = "' . pSQL($email) . '"';
-        return Db::getInstance()->ExecuteS($query);
-    }
+	/**
+	 * Retrieve customers by email address
+	 *
+	 * @static
+	 *
+	 * @param $email
+	 *
+	 * @return array
+	 */
+	public function getCustomersByEmail($email)
+	{
+		$query = 'SELECT id_customer FROM '._DB_PREFIX_.'customer WHERE email = "'.pSQL($email).'"';
+
+		return Db::getInstance()->ExecuteS($query);
+	}
 
 	/**
 	 * in array recursive

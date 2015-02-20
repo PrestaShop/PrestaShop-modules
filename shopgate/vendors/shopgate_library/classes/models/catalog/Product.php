@@ -3,121 +3,123 @@
 /**
  * Shopgate GmbH
  *
- * NOTICE OF LICENSE
+ * URHEBERRECHTSHINWEIS
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file AFL_license.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/AFL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to interfaces@shopgate.com so we can send you a copy immediately.
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
  *
- * @author     Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
- * @copyright  Shopgate GmbH
- * @license    http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ * COPYRIGHT NOTICE
  *
- * User: awesselburg
- * Date: 07.03.14
- * Time: 08:17
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
  *
- * File: Product.php
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
+
+/**
+ * @class Shopgate_Model_Catalog_Product
+ * @see http://developer.shopgate.com/file_formats/xml/products
  *
- * @method                                      setUid(string $value)
- * @method string                               getUid()
+ * @method                                          setUid(string $value)
+ * @method string                                   getUid()
  *
- * @method                                      setLastUpdate(string $value)
- * @method string                               getLastUpdate()
+ * @method                                          setLastUpdate(string $value)
+ * @method string                                   getLastUpdate()
  *
- * @method                                      setName(string $value)
- * @method string                               getName()
+ * @method                                          setName(string $value)
+ * @method string                                   getName()
  *
- * @method                                      setTaxPercent(float $value)
- * @method float                                getTaxPercent()
+ * @method                                          setTaxPercent(float $value)
+ * @method float                                    getTaxPercent()
  *
- * @method                                      setTaxClass(string $value)
- * @method string                               getTaxClass()
+ * @method                                          setTaxClass(string $value)
+ * @method string                                   getTaxClass()
  *
- * @method                                      setCurrency(string $value)
- * @method string                               getCurrency()
+ * @method                                          setCurrency(string $value)
+ * @method string                                   getCurrency()
  *
- * @method                                      setDescription(string $value)
- * @method string                               getDescription()
+ * @method                                          setDescription(string $value)
+ * @method string                                   getDescription()
  *
- * @method                                      setDeeplink(string $value)
- * @method string                               getDeeplink()
+ * @method                                          setDeeplink(string $value)
+ * @method string                                   getDeeplink()
  *
- * @method                                      setPromotionSortOrder(int $value)
- * @method int                                  getPromotionSortOrder()
+ * @method                                          setPromotionSortOrder(int $value)
+ * @method int                                      getPromotionSortOrder()
  *
- * @method                                      setInternalOrderInfo(string $value)
- * @method string                               getInternalOrderInfo()
+ * @method                                          setInternalOrderInfo(string $value)
+ * @method string                                   getInternalOrderInfo()
  *
- * @method                                      setAgeRating(int $value)
- * @method int                                  getAgeRating()
+ * @method                                          setAgeRating(int $value)
+ * @method int                                      getAgeRating()
  *
- * @method                                      setPrice(Shopgate_Model_Catalog_Price $value)
- * @method Shopgate_Model_Catalog_Price         getPrice()
+ * @method                                          setPrice(Shopgate_Model_Catalog_Price $value)
+ * @method Shopgate_Model_Catalog_Price             getPrice()
  *
- * @method                                      setWeight(float $value)
- * @method float                                getWeight()
+ * @method                                          setWeight(float $value)
+ * @method float                                    getWeight()
  *
- * @method                                      setWeightUnit(string $value)
- * @method string                               getWeightUnit()
+ * @method                                          setWeightUnit(string $value)
+ * @method string                                   getWeightUnit()
  *
- * @method                                      setImages(array $value)
- * @method array                                getImages()
+ * @method                                          setImages(array $value)
+ * @method Shopgate_Model_Media_Image[]             getImages()
  *
- * @method                                      setCategoryPaths(array $value)
- * @method array                                getCategoryPaths()
+ * @method                                          setCategoryPaths(array $value)
+ * @method Shopgate_Model_Catalog_CategoryPath[]    getCategoryPaths()
  *
- * @method                                      setShipping(Shopgate_Model_Catalog_Shipping $value)
- * @method Shopgate_Model_Catalog_Shipping      getShipping()
+ * @method                                          setShipping(Shopgate_Model_Catalog_Shipping $value)
+ * @method Shopgate_Model_Catalog_Shipping          getShipping()
  *
- * @method                                      setManufacturer(Shopgate_Model_Catalog_Manufacturer $value)
- * @method Shopgate_Model_Catalog_Manufacturer  getManufacturer()
+ * @method                                          setManufacturer(Shopgate_Model_Catalog_Manufacturer $value)
+ * @method Shopgate_Model_Catalog_Manufacturer      getManufacturer()
  *
- * @method                                      setVisibility(Shopgate_Model_Catalog_Visibility $value)
- * @method Shopgate_Model_Catalog_Visibility    getVisibility()
+ * @method                                          setVisibility(Shopgate_Model_Catalog_Visibility $value)
+ * @method Shopgate_Model_Catalog_Visibility        getVisibility()
  *
- * @method                                      setProperties(array $value)
- * @method array                                getProperties()
+ * @method                                          setProperties(array $value)
+ * @method Shopgate_Model_Catalog_Property[]        getProperties()
  *
- * @method                                      setStock(Shopgate_Model_Catalog_Stock $value)
- * @method Shopgate_Model_Catalog_Stock         getStock()
+ * @method                                          setStock(Shopgate_Model_Catalog_Stock $value)
+ * @method Shopgate_Model_Catalog_Stock             getStock()
  *
- * @method                                      setIdentifiers(array $value)
- * @method array                                getIdentifiers()
+ * @method                                          setIdentifiers(array $value)
+ * @method Shopgate_Model_Catalog_Identifier[]      getIdentifiers()
  *
- * @method                                      setTags(array $value)
- * @method array                                getTags()
+ * @method                                          setTags(array $value)
+ * @method Shopgate_Model_Catalog_Tag[]             getTags()
  *
- * @method                                      setRelations(array $value)
- * @method array                                getRelations()
+ * @method                                          setRelations(array $value)
+ * @method Shopgate_Model_Catalog_Relation[]        getRelations()
  *
- * @method                                      setAttributeGroups(array $value)
- * @method array                                getAttributeGroups()
+ * @method                                          setAttributeGroups(array $value)
+ * @method Shopgate_Model_Catalog_AttributeGroup[]  getAttributeGroups()
  *
- * @method                                      setAttributes(array $value)
- * @method array                                getAttributes()
+ * @method                                          setAttributes(array $value)
+ * @method Shopgate_Model_Catalog_Attribute[]       getAttributes()
  *
- * @method                                      setInputs(array $value)
- * @method array                                getInputs()
+ * @method                                          setInputs(array $value)
+ * @method Shopgate_Model_Catalog_Input[]           getInputs()
  *
- * @method                                      setAttachments(array $value)
- * @method array                                getAttachments()
+ * @method                                          setAttachments(array $value)
+ * @method Shopgate_Model_Media_Attachment[]          getAttachments()
  *
- * @method                                      setIsDefaultChild(bool $value)
- * @method bool                                 getIsDefaultChild()
+ * @method                                          setIsDefaultChild(bool $value)
+ * @method bool                                     getIsDefaultChild()
  *
- * @method                                      setChildren(array $value)
+ * @method                                          setChildren(array $value)
  *
- * @method                                      setDisplayType(string $value)
- * @method string                               getDisplayType()
+ * @method                                          setDisplayType(string $value)
+ * @method string                                   getDisplayType()
  *
  */
-class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
-{
+class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport {
 
     /**
      * define identifier uid
@@ -265,8 +267,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
     /**
      * init default object
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->setData(
              array(
                  'price'            => new Shopgate_Model_Catalog_Price(),
@@ -294,8 +295,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @return bool
      */
-    public function getIsChild()
-    {
+    public function getIsChild() {
         return $this->isChild;
     }
 
@@ -304,8 +304,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param $value
      */
-    public function setIsChild($value)
-    {
+    public function setIsChild($value) {
         $this->isChild = $value;
     }
 
@@ -316,8 +315,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @return Shopgate_Model_XmlResultObject
      */
-    public function asXml(Shopgate_Model_XmlResultObject $itemsNode)
-    {
+    public function asXml(Shopgate_Model_XmlResultObject $itemsNode) {
         /**
          * global info
          *
@@ -500,8 +498,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Media_Image $image
      */
-    public function addImage(Shopgate_Model_Media_Image $image)
-    {
+    public function addImage(Shopgate_Model_Media_Image $image) {
         $images = $this->getImages();
         array_push($images, $image);
         $this->setImages($images);
@@ -512,8 +509,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Product $child
      */
-    public function addChild($child)
-    {
+    public function addChild($child) {
         $children = $this->getChildren();
         array_push($children, $child);
         $this->setChildren($children);
@@ -522,8 +518,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
     /**
      * @return array
      */
-    public function getChildren()
-    {
+    public function getChildren() {
         if (self::DEFAULT_CLEAN_CHILDREN) {
             foreach (parent::getData('children') as $child) {
                 $this->cleanChildData($this, $child);
@@ -538,8 +533,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_CategoryPath $categoryPath
      */
-    public function addCategoryPath(Shopgate_Model_Catalog_CategoryPath $categoryPath)
-    {
+    public function addCategoryPath(Shopgate_Model_Catalog_CategoryPath $categoryPath) {
         $categoryPaths = $this->getCategoryPaths();
         array_push($categoryPaths, $categoryPath);
         $this->setCategoryPaths($categoryPaths);
@@ -550,8 +544,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_AttributeGroup $attributeGroup
      */
-    public function addAttributeGroup($attributeGroup)
-    {
+    public function addAttributeGroup($attributeGroup) {
         $attributesGroups = $this->getAttributeGroups();
         array_push($attributesGroups, $attributeGroup);
         $this->setAttributeGroups($attributesGroups);
@@ -562,8 +555,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Property $property
      */
-    public function addProperty($property)
-    {
+    public function addProperty($property) {
         $properties = $this->getProperties();
         array_push($properties, $property);
         $this->setProperties($properties);
@@ -574,8 +566,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Identifier $identifier
      */
-    public function addIdentifier($identifier)
-    {
+    public function addIdentifier($identifier) {
         $identifiers = $this->getIdentifiers();
         array_push($identifiers, $identifier);
         $this->setIdentifiers($identifiers);
@@ -586,8 +577,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Tag $tag
      */
-    public function addTag($tag)
-    {
+    public function addTag($tag) {
         $tags = $this->getTags();
         array_push($tags, $tag);
         $this->setTags($tags);
@@ -598,8 +588,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Relation $relation
      */
-    public function addRelation($relation)
-    {
+    public function addRelation($relation) {
         $relations = $this->getRelations();
         array_push($relations, $relation);
         $this->setRelations($relations);
@@ -610,8 +599,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Input $input
      */
-    public function addInput($input)
-    {
+    public function addInput($input) {
         $inputs = $this->getInputs();
         array_push($inputs, $input);
         $this->setInputs($inputs);
@@ -622,8 +610,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @param Shopgate_Model_Catalog_Attribute $attribute
      */
-    public function addAttribute($attribute)
-    {
+    public function addAttribute($attribute) {
         $attributes = $this->getAttributes();
         array_push($attributes, $attribute);
         $this->setAttributes($attributes);
@@ -654,8 +641,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @return array
      */
-    public function asArray()
-    {
+    public function asArray() {
         $productResult = new Shopgate_Model_Abstract();
 
         $productResult->setData('uid', $this->getUid());
@@ -756,8 +742,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
     /**
      * generate csv result object
      */
-    public function asCsv()
-    {
+    public function asCsv() {
     }
 
 	/**
@@ -800,8 +785,7 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
      *
      * @return mixed
      */
-    protected function getItemByUid($data, $uid)
-    {
+    protected function getItemByUid($data, $uid) {
         /* @var Shopgate_Model_Abstract $item */
         foreach ($data as $item) {
             if ($item->getData(self::DEFAULT_IDENTIFIER_UID) == $uid) {
@@ -811,4 +795,5 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport
 
         return false;
     }
+    
 }

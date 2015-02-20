@@ -1,5 +1,23 @@
 '''Deutsch'''
 
+
+'''Version 2.9.x'''
+* fix logic for description
+* part 2 - optimize structure for prestashop validator
+
+'''Version 2.9.23'''
+* base price calculated on price type
+
+'''Version 2.9.22'''
+* update lib
+
+'''Version 2.9.21'''
+* added base price
+* part 1 - optimize structure for prestashop validator
+
+'''Version 2.9.20'''
+* fix category import
+
 '''Version 2.9.19'''
 * fix sale price
 
@@ -388,6 +406,23 @@
 
 
 '''English'''
+
+'''Version 2.9.x'''
+* fix logic for description
+* part 2 - optimize structure for prestashop validator
+
+'''Version 2.9.23'''
+* base price calculated on price type
+
+'''Version 2.9.22'''
+* update lib
+
+'''Version 2.9.21'''
+* added base price
+* part 1 - optimize structure for prestashop validator
+
+'''Version 2.9.20'''
+* fix category import
 
 '''Version 2.9.19'''
 * fix sale price

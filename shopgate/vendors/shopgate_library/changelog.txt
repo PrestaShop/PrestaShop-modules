@@ -1,5 +1,34 @@
 '''Deutsch'''
 
+'''Version 2.9.10'''
+* Fehlerhafte Benamung der Konstante behoben 
+
+'''Version 2.9.9'''
+* Es ist nun möglich, Instanzen von Shopgate-Hilfsklassen über einen Funktionsaufruf zu bekommen, um zu garantieren, dass die Hilfsfunktionen in jeder Ebene des Shopgate-Plugins zur Verfügung stehen
+
+'''Version 2.9.8'''
+* Setter und Getter für external_customer_group_id hinzugefügt
+* beim Default-Redirect (d.h. wenn die zugehörige mobile Seite unbekannt ist) wird kein <link>-Tag mehr ausgegeben
+* PHPDoc für einige Methoden und Klassen korrigiert
+
+'''Version 2.9.7'''
+* Unterstützung für Tracking-Parameter beim Bestellungsimport hinzugefügt
+
+'''Version 2.9.6'''
+* Zugriffe auf Request-Parameter überarbeitet
+
+'''Version 2.9.5'''
+* Fehler bei der Verarbeitung der Request-Parameter behoben
+* Fehler im XML-Export-Encoding behoben 
+
+'''Version 2.9.4'''
+* PHPDoc überarbeitet
+* Konstanten für Fehlercodes der Shopgate Merchant API hinzugefügt
+* direkte Zugriffe auf $_REQUEST und $_GET entfernt
+
+'''Version 2.9.3'''
+* Preis Model um den Grundpreis erweitert
+
 '''Version 2.9.1'''
 * CDATA für den Author der Rezensionen in der XML hinzugefügt
 
@@ -353,6 +382,35 @@
 
 
 '''English'''
+
+'''Version 2.9.10'''
+* corrected wrong constant names 
+
+'''Version 2.9.9'''
+* it is now possible to get instances of Shopgate helper classes via function call to ensure that the helper functionality is available on every level in the plugin
+
+'''Version 2.9.8'''
+* added setter and getter for external_customer_group_id
+* on default redirect (i.e. we don't know the corresponding mobile page) no <link> tag is put out anymore
+* corrected PHPDoc for some classes and methods
+
+'''Version 2.9.7'''
+* added support for tracking parameters in the import of orders
+
+'''Version 2.9.6'''
+* reworked access of request parameters
+
+'''Version 2.9.5'''
+* fixed a bug in processing the request parameters of API requests
+* fixed XML export encoding issue
+
+'''Version 2.9.4'''
+* revised PHPDoc
+* added constants for error codes of the Shopgate Merchant API
+* removed direct access to $_REQUEST and $_GET
+
+'''Version 2.9.3'''
+* extended price model with base price
 
 '''Version 2.9.1'''
 * added CDATA for review author in xml

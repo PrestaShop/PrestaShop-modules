@@ -16,12 +16,12 @@
 * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
 *}
 
-<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}css/admin-order.css">
+<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}views/css/admin-order.css">
 
 <br />
 <form action="" method="post">
 <fieldset class="shopgate-order-info">
-	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}/img/logo.png">{l s='Shopgate information' mod='shopgate'}</legend>
+	<legend><img src="{$sModDir|escape:'htmlall':'UTF-8'}views/img/logo.png">{l s='Shopgate information' mod='shopgate'}</legend>
 	
 	{if $shopgate_error}<span style="color:red; font-weight:bold;">{$shopgate_error|escape:'htmlall':'UTF-8'}</span>{/if}
 	

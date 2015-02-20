@@ -3,46 +3,52 @@
 /**
  * Shopgate GmbH
  *
- * NOTICE OF LICENSE
+ * URHEBERRECHTSHINWEIS
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file AFL_license.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/AFL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to interfaces@shopgate.com so we can send you a copy immediately.
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
  *
- * @author     Shopgate GmbH, Schloßstraße 10, 35510 Butzbach <interfaces@shopgate.com>
- * @copyright  Shopgate GmbH
- * @license    http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
+ * COPYRIGHT NOTICE
  *
- * User: awesselburg
- * Date: 14.03.14
- * Time: 16:47
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
  *
- * File: Price.php
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
+
+/**
+ * @class Shopgate_Model_Catalog_Price
+ * @see http://developer.shopgate.com/file_formats/xml/products
  *
- *  @method         setType(string $value)
- *  @method string  getType()
+ *  @method                                      setType(string $value)
+ *  @method string                               getType()
  *
- *  @method         setPrice(float $value)
- *  @method float   getPrice()
+ *  @method                                      setPrice(float $value)
+ *  @method float                                getPrice()
  *
- *  @method         setCost(float $value)
- *  @method float   getCost()
+ *  @method                                      setCost(float $value)
+ *  @method float                                getCost()
  *
- *  @method         setSalePrice(float $value)
- *  @method float   getSalePrice()
+ *  @method                                      setSalePrice(float $value)
+ *  @method float                                getSalePrice()
  *
- *  @method         setMsrp(float $value)
- *  @method float   getMsrp()
+ *  @method                                      setMsrp(float $value)
+ *  @method float                                getMsrp()
  *
- *  @method         setTierPricesGroup(array $value)
- *  @method array   getTierPricesGroup()
+ *  @method                                      setTierPricesGroup(array $value)
+ *  @method Shopgate_Model_Catalog_TierPrice[]   getTierPricesGroup()
  *
- *  @method         setMinimumOrderAmount(int $value)
- *  @method int     getMinimumOrderAmount()
+ *  @method                                      setMinimumOrderAmount(int $value)
+ *  @method int                                  getMinimumOrderAmount()
+ *
+ *  @method                                      setBasePrice(string $value)
+ *  @method string                               getBasePrice()
  *
  */
 class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
@@ -70,7 +76,9 @@ class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
 		'SalePrice',
 		'Msrp',
 		'TierPricesGroup',
-		'MinimumOrderAmount');
+		'MinimumOrderAmount',
+		'BasePrice'
+	);
 
 	/**
 	 * init default object
@@ -82,7 +90,7 @@ class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
 	public function asXml(Shopgate_Model_XmlResultObject $itemNode) {
 		/**
 		 * @var Shopgate_Model_XmlResultObject $tierPricesNode
-		 * @var Shopgate_Model_Customer_Group  $customerGroupItem
+		 * @var Shopgate_Model_Catalog_TierPrice  $customerGroupItem
 		 */
 		$pricesNode = $itemNode->addChild('prices');
 		$pricesNode->addAttribute('type', $this->getType());
@@ -91,6 +99,7 @@ class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
 		$pricesNode->addChild('sale_price', $this->getSalePrice());
 		$pricesNode->addChild('msrp', $this->getMsrp());
 		$pricesNode->addChild('minimum_order_amount', $this->getMinimumOrderAmount());
+		$pricesNode->addChildWithCDATA('base_price', $this->getBasePrice());
 
 		$tierPricesNode = $pricesNode->addChild('tier_prices');
 		foreach ($this->getTierPricesGroup() as $customerGroupItem) {

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Shopgate GmbH
  *
  * URHEBERRECHTSHINWEIS
@@ -532,10 +532,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_customer = 0;
 		$this->enable_get_debug_info = 0;
 		$this->enable_get_items_csv = 0;
-		$this->enable_get_items = 1;
-		$this->enable_get_categories = 1;
+		$this->enable_get_items = 0;
+		$this->enable_get_categories = 0;
 		$this->enable_get_media_csv = 0;
 		$this->enable_get_categories_csv = 0;
+		$this->enable_get_reviews = 0;
 		$this->enable_get_reviews_csv = 0;
 		$this->enable_get_log_file = 1;
 		$this->enable_mobile_website = 0;
@@ -589,7 +590,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->redirect_skip_keyword_cache_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'skip_redirect_keywords.txt';
 
 		$this->is_shopgate_adapter = false;
-		$this->redirectable_get_params = array('gclid','utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content');
+		$this->redirectable_get_params = array('gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content');
 
 		$this->default_memory_limit = ShopgateConfigInterface::DEFAULT_MEMORY_LIMIT;
 		$this->default_execution_time = ShopgateConfigInterface::DEFAULT_EXECUTION_TIME;

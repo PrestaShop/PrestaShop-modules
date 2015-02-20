@@ -17,18 +17,17 @@
 *}
 
 <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin,latin-ext'/>
-<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}css/MyFontsWebfontsKit.css">
-<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}css/configurations.css">
+<link rel="stylesheet" type="text/css" href="{$mod_dir|escape:html:'UTF-8'}views/css/configurations.css">
 
 <div id="shopgateTeaser">
 
     <div id="shopgateTeaserHeader">
         <div>
             <div class="logo">
-                <img src="{$mod_dir|escape:html:'UTF-8'}img/shopgate_logo.png"/>
+                <img src="{$mod_dir|escape:html:'UTF-8'}views/img/shopgate_logo.png"/>
             </div>
             <div class="devices">
-                <img src="{$mod_dir|escape:html:'UTF-8'}img/devices.png"/>
+                <img src="{$mod_dir|escape:html:'UTF-8'}views/img/devices.png"/>
             </div>
             <div class="register">
                 <a href="{$offer_url|escape:html:'UTF-8'}" target="_blank" class="register">{l s='Register now​' mod='shopgate'}</a>
@@ -56,7 +55,7 @@
 
             <p>{l s='With Shopgate you can sell your products quickly and easily via mobile devices. We will create a mobile-optimized webshop and innovative shopping apps with numerous features. Increase your sales and the customer\'s interest through targeted marketing!' mod='shopgate'}</p>
 
-            <img class="contentImage" src="{$mod_dir|escape:html:'UTF-8'}img/content_image.png"/>
+            <img class="contentImage" src="{$mod_dir|escape:html:'UTF-8'}views/img/content_image.png"/>
 
             <h4>{l s='Your advantages with Shopgate​:' mod='shopgate'}</h4>
             <ul>
@@ -87,7 +86,7 @@
     <h2>{l s='Shopgate' mod='shopgate'}</h2>
 
     <p>
-        <img src="{$mod_dir|escape:html:'UTF-8'}img/logo_web.png"/>
+        <img src="{$mod_dir|escape:html:'UTF-8'}views/img/logo_web.png"/>
     </p>
 
     <p>
@@ -111,7 +110,7 @@
 
 <form method="post" action="">
     <fieldset>
-        <legend><img title="" alt="" src="{$mod_dir|escape:html:'UTF-8'}img/logo.png">{l s='Configuration' mod='shopgate'}</legend>
+        <legend><img title="" alt="" src="{$mod_dir|escape:html:'UTF-8'}views/img/logo.png">{l s='Configuration' mod='shopgate'}</legend>
 
         <h2>{l s='Info' mod='shopgate'}</h2>
 

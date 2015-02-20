@@ -1,137 +1,153 @@
 <?php
 
-/*
-* Shopgate GmbH
-*
-* URHEBERRECHTSHINWEIS
-*
-* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
-* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
-* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
-* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
-* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
-*
-* COPYRIGHT NOTICE
-*
-* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
-* for the purpose of facilitating communication between the IT system of the customer and the IT system
-* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
-* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
-* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
-*
-*  @author Shopgate GmbH <interfaces@shopgate.com>
-*/
-
+/**
+ * Shopgate GmbH
+ *
+ * URHEBERRECHTSHINWEIS
+ *
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ *
+ * COPYRIGHT NOTICE
+ *
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ *
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
 abstract class ShopgateCartBase extends ShopgateContainer {
 
-	const SHOPGATE = "SHOPGATE";
-	const PREPAY = "PREPAY";
-	const SG_PREPAY = "SG_PREPAY";
+	const SHOPGATE   = "SHOPGATE";
+	
+	const PREPAY     = "PREPAY";
+	const PAYONE_PRP = "PAYONE_PRP";
+	const SG_PREPAY  = "SG_PREPAY";
 
-	const DEBIT = "DEBIT";
-	const COD = "COD";
+	const DEBIT      = "DEBIT";
+	const PAYMRW_DBT = "PAYMRW_DBT";
+	const PAYONE_DBT = "PAYONE_DBT";
+	
+	const COD        = "COD";
 	const COLL_STORE = "COLL_STORE";
 
-	const INVOICE = "INVOICE";
+	const INVOICE    = "INVOICE";
 	const KLARNA_INV = "KLARNA_INV";
-	const BILLSAFE = "BILLSAFE";
+	const BILLSAFE   = "BILLSAFE";
 	const MSTPAY_INV = "MSTPAY_INV";
+	const PAYMRW_INV = "PAYMRW_INV";
+	const PAYONE_INV = "PAYONE_INV";
 	const SG_INVOICE = "SG_INVOICE";
+	const WCARD_INV  = "WCARD_INV";
 
-	const PAYPAL = "PAYPAL";
-	const CMPTOP_PP = "CMPTOP_PP";
+	const PAYPAL     = "PAYPAL";
+	const CMPTOP_PP  = "CMPTOP_PP";
 	const MASTPAY_PP = "MASTPAY_PP";
+	const PAYONE_PP  = "PAYONE_PP";
 	const SAGEPAY_PP = "SAGEPAY_PP";
-	const SG_PAYPAL = "SG_PAYPAL";
+	const SG_PAYPAL  = "SG_PAYPAL";
+	const SIX_PP     = "SIX_PP";
+	const WCARD_PP   = "WCARD_PP";
 	
-	const CC = "CC";
-	const AUTHN_CC = "AUTHN_CC";
+	const CC         = "CC";
+	const AUTHN_CC   = "AUTHN_CC";
 	const BCLEPDQ_CC = "BCLEPDQ_CC";
-	const BNSTRM_CC = "BNSTRM_CC";
+	const BNSTRM_CC  = "BNSTRM_CC";
 	const BRAINTR_CC = "BRAINTR_CC";
-	const CHASE_CC = "CHASE_CC";
-	const CMPTOP_CC = "CMPTOP_CC";
+	const CHASE_CC   = "CHASE_CC";
+	const CMPTOP_CC  = "CMPTOP_CC";
 	const CRDSTRM_CC = "CRDSTRM_CC";
 	const CREDITCARD = "CREDITCARD";
 	const CYBRSRC_CC = "CYBRSRC_CC";
-	const DRCPAY_CC = "DRCPAY_CC";
-	const DTCASH_CC = "DTCASH_CC";
-	const DT_CC = "DT_CC";
-	const EFSNET_CC = "EFSNET_CC";
-	const ELAVON_CC = "ELAVON_CC";
-	const EPAY_CC = "EPAY_CC";
-	const EWAY_CC = "EWAY_CC";
-	const EXACT_CC = "EXACT_CC";
+	const DRCPAY_CC  = "DRCPAY_CC";
+	const DTCASH_CC  = "DTCASH_CC";
+	const DT_CC      = "DT_CC";
+	const EFSNET_CC  = "EFSNET_CC";
+	const ELAVON_CC  = "ELAVON_CC";
+	const EPAY_CC    = "EPAY_CC";
+	const EWAY_CC    = "EWAY_CC";
+	const EXACT_CC   = "EXACT_CC";
 	const FRSTDAT_CC = "FRSTDAT_CC";
 	const GAMEDAY_CC = "GAMEDAY_CC";
 	const GARANTI_CC = "GARANTI_CC";
 	const GESTPAY_CC = "GESTPAY_CC";
+	const HIPAY      = "HIPAY";
 	const HITRUST_CC = "HITRUST_CC";
 	const INSPIRE_CC = "INSPIRE_CC";
-	const INSTAP_CC = "INSTAP_CC";
-	const INTUIT_CC = "INTUIT_CC";
+	const INSTAP_CC  = "INSTAP_CC";
+	const INTUIT_CC  = "INTUIT_CC";
 	const IRIDIUM_CC = "IRIDIUM_CC";
-	const LITLE_CC = "LITLE_CC";
+	const LITLE_CC   = "LITLE_CC";
 	const MASTPAY_CC = "MASTPAY_CC";
 	const MERESOL_CC = "MERESOL_CC";
 	const MERWARE_CC = "MERWARE_CC";
 	const MODRPAY_CC = "MODRPAY_CC";
 	const MONERIS_CC = "MONERIS_CC";
-	const MSTPAY_CC = "MSTPAY_CC";
+	const MSTPAY_CC  = "MSTPAY_CC";
 	const NELTRAX_CC = "NELTRAX_CC";
 	const NETBILL_CC = "NETBILL_CC";
 	const NETREGS_CC = "NETREGS_CC";
-	const NOCHEX_CC = "NOCHEX_CC";
-	const OGONE_CC = "OGONE_CC";
+	const NOCHEX_CC  = "NOCHEX_CC";
+	const OGONE_CC   = "OGONE_CC";
 	const OPTIMAL_CC = "OPTIMAL_CC";
-	const PAYBOX_CC = "PAYBOX_CC";
+	const PAYBOX_CC  = "PAYBOX_CC";
 	const PAYEXPR_CC = "PAYEXPR_CC";
 	const PAYFAST_CC = "PAYFAST_CC";
 	const PAYFLOW_CC = "PAYFLOW_CC";
 	const PAYJUNC_CC = "PAYJUNC_CC";
+	const PAYONE_CC  = "PAYONE_CC";
 	const PLUGNPL_CC = "PLUGNPL_CC";
 	const PP_WSPP_CC = "PP_WSPP_CC";
 	const PSIGATE_CC = "PSIGATE_CC";
-	const PSL_CC = "PSL_CC";
-	const PXPAY_CC = "PXPAY_CC";
+	const PSL_CC     = "PSL_CC";
+	const PXPAY_CC   = "PXPAY_CC";
 	const QUIKPAY_CC = "QUIKPAY_CC";
-	const REALEX_CC = "REALEX_CC";
+	const REALEX_CC  = "REALEX_CC";
 	const SAGEPAY_CC = "SAGEPAY_CC";
-	const SAGE_CC = "SAGE_CC";
+	const SAGE_CC    = "SAGE_CC";
 	const SAMURAI_CC = "SAMURAI_CC";
 	const SCPTECH_CC = "SCPTECH_CC";
-	const SCP_AU_CC = "SCP_AU_CC";
-	const SECPAY_CC = "SECPAY_CC";
-	const SG_CC = "SG_CC";
+	const SCP_AU_CC  = "SCP_AU_CC";
+	const SECPAY_CC  = "SECPAY_CC";
+	const SG_CC      = "SG_CC";
+	const SIX_CC     = "SIX_CC";
 	const SKIPJCK_CC = "SKIPJCK_CC";
-	const SKRILL_CC = "SKRILL_CC";
-	const STRIPE_CC = "STRIPE_CC";
+	const SKRILL_CC  = "SKRILL_CC";
+	const STRIPE_CC  = "STRIPE_CC";
+	const TELECSH_CC = "TELECSH_CC";
 	const TRNSFST_CC = "TRNSFST_CC";
 	const TRUSTCM_CC = "TRUSTCM_CC";
 	const USAEPAY_CC = "USAEPAY_CC";
 	const VALITOR_CC = "VALITOR_CC";
-	const VERIFI_CC = "VERIFI_CC";
+	const VERIFI_CC  = "VERIFI_CC";
 	const VIAKLIX_CC = "VIAKLIX_CC";
 	const WIRECRD_CC = "WIRECRD_CC";
 	const WLDPDIR_CC = "WLDPDIR_CC";
 	const WLDPOFF_CC = "WLDPOFF_CC";
 
-	const CNB = "CNB";
-	const SG_CNB = "SG_CNB";
+	const CNB        = "CNB";
+	const SG_CNB     = "SG_CNB";
 
-	const MCM = "MCM";
-	const UPAID_MCM = "UPAID_MCM";
+	const MCM        = "MCM";
+	const UPAID_MCM  = "UPAID_MCM";
 
-	const PAYU = "PAYU";
+	const PAYU       = "PAYU";
 
 	const REDIRECTCC = "REDIRECTCC";
-	const WORLDLINE = "WORLDLINE";
+	const WORLDLINE  = "WORLDLINE";
 
-	const SUE = "SUE";
+	const SUE        = "SUE";
 	const MSTPAY_SUE = "MSTPAY_SUE";
-	const SG_SUE = "SG_SUE";
+	const SG_SUE     = "SG_SUE";
+	const WCARD_SUE  = "WCARD_SUE";
+
+	const SIX_IDEAL  = "SIX_IDEAL";
     
-    // const for amazon payment
     const AMAZON_PAYMENT = "MWS";
 
 	protected $customer_number;
@@ -141,6 +157,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 
 	protected $external_customer_number;
 	protected $external_customer_id;
+	protected $external_customer_group_id;
 
 	protected $mail;
 	protected $phone;
@@ -229,6 +246,13 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	 */
 	public function setMobile($value) {
 		$this->mobile = $value;
+	}
+
+	/**
+	 * @param string $value
+	 */
+	public function setExternalCustomerGroupId($value) {
+		$this->external_customer_group_id = $value;
 	}
 
 	/**
@@ -514,6 +538,13 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getExternalCustomerGroupId() {
+		return $this->external_customer_group_id;
+	}
+
+	/**
 	 * @return ShopgateOrderCustomField[]
 	 */
 	public function getCustomFields() {
@@ -697,6 +728,7 @@ class ShopgateOrder extends ShopgateCartBase {
 	protected $update_payment = false;
 
 	protected $delivery_notes = array();
+	protected $tracking_get_parameters = array();
 
 	public function accept(ShopgateContainerVisitor $v) {
 		$v->visitOrder($this);
@@ -857,6 +889,13 @@ class ShopgateOrder extends ShopgateCartBase {
 		}
 
 		$this->delivery_notes = $value;
+	}
+	
+	/**
+	 * @param array $value
+	 */
+	public function setTrackingGetParameters($value) {
+		$this->tracking_get_parameters = (array) $value;
 	}
 
 
@@ -1029,6 +1068,13 @@ class ShopgateOrder extends ShopgateCartBase {
 	 */
 	public function getDeliveryNotes() {
 		return $this->delivery_notes;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getTrackingGetParameters() {
+		return $this->tracking_get_parameters;
 	}
 }
 
@@ -2145,9 +2191,6 @@ class ShopgateOrderCustomField extends ShopgateContainer {
 	}
 }
 
-/**
- * Class ShopgateShippingMethod
- */
 class ShopgateShippingMethod extends ShopgateContainer {
 	protected $id;
 	protected $title;
@@ -2413,9 +2456,6 @@ class ShopgatePaymentMethod extends ShopgateContainer {
 	}
 }
 
-/**
- * Class ShopgateQuoteItem
- */
 class ShopgateCartItem extends ShopgateContainer {
 	protected $item_number;
 	protected $is_buyable;
@@ -2657,9 +2697,6 @@ class ShopgateCartItem extends ShopgateContainer {
 	}
 }
 
-/**
- * Class ShopgateCartCustomer
- */
 class ShopgateCartCustomer extends ShopgateContainer {
 	protected $customer_tax_class_key;
 	protected $customer_groups;
@@ -2708,9 +2745,6 @@ class ShopgateCartCustomer extends ShopgateContainer {
 	}
 }
 
-/**
- * Class ShopgateCartCustomerGroup
- */
 class ShopgateCartCustomerGroup extends ShopgateContainer {
 	protected $id;
 

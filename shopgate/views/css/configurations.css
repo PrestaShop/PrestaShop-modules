@@ -70,7 +70,7 @@
 
 #shopgateTeaserContent li {
     padding: 5px 0 5px 20px;
-    background: url(../img/check.png) no-repeat left center;
+    background: url("../img/check.png") no-repeat left center;
 }
 
 #shopgateTeaserContent p {

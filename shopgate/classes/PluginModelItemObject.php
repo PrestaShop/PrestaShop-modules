@@ -17,20 +17,19 @@
  * @license   http://opensource.org/licenses/AFL-3.0 Academic Free License ("AFL"), in the version 3.0
  *
  * User: awesselburg
- * Date: 06.03.14
- * Time: 10:14
+ * Date: 28.01.14
+ * Time: 10:21
  *
  * File: PluginModelItemObject.php
  */
 
-class PluginModelItemObject
-	extends Shopgate_Model_Catalog_Product
+class PluginModelItemObject extends Shopgate_Model_Catalog_Product
 {
 
 	protected $context;
 
 	/**
-	 * set context
+	 * @param $context
 	 */
 	public function __construct($context)
 	{
@@ -114,7 +113,24 @@ class PluginModelItemObject
 	 */
 	public function setDescription()
 	{
-		parent::setDescription($this->item->description);
+		$descriptionSetting = Configuration::get('SHOPGATE_PRODUCT_DESCRIPTION');
+		switch ($descriptionSetting)
+		{
+			case ShopGate::PRODUCT_EXPORT_SHORT_DESCRIPTION:
+				$description = $this->item->description_short;
+				break;
+			case ShopGate::PRODUCT_EXPORT_BOTH_DESCRIPTIONS:
+				$break       = !empty($this->item->description_short) && !empty($this->item->description) ? '<br />' : '';
+				$description = $this->item->description_short.$break.$this->item->description;
+				break;
+			case ShopGate::PRODUCT_EXPORT_DESCRIPTION:
+			default:
+				$description = $this->item->description;
+				break;
+		}
+		parent::setDescription(str_replace(array (
+			"\r",
+			"\n"), '', $description));
 	}
 
 	public function setPrice()
@@ -127,17 +143,50 @@ class PluginModelItemObject
 		/**
 		 * set the price type
 		 */
-		$priceItem->setType(
-			Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE')
-				? Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE')
-				: Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET
-		);
+		$priceItem->setType(Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE') ? Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE') : Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET);
 
 		/** @var $this ->item ProductCore */
-		$priceItem->setPrice($this->getItemPrice($this->getUid(), NULL, $this->getUseTax()));
+		$priceItem->setPrice($this->getItemPrice($this->getUid(), null, $this->getUseTax()));
 
 		if ($this->item->wholesale_price != 0)
+		{
+			/**
+			 * set wholesale_price
+			 */
 			$priceItem->setCost($this->item->wholesale_price);
+		}
+
+		if ($this->item->unit_price != 0)
+		{
+
+			$basePrice = $this->item->unit_price;
+
+			if ($this->getUseTax())
+			{
+				/**
+				 * set base price
+				 */
+				$basePrice = $basePrice + ($basePrice * $this->getTaxPercent() / 100);
+			}
+
+			$basePrice = number_format($basePrice, 2);
+
+			if ($this->item->unity != '')
+			{
+				/**
+				 * set price with unity
+				 */
+				$priceItem->setBasePrice(sprintf('%s %s / %s', $basePrice, $this->getContext()->currency->iso_code, $this->item->unity));
+			}
+			else
+			{
+				/**
+				 *  set price without unity
+				 */
+				$priceItem->setBasePrice(sprintf('%s %s', $basePrice, $this->getContext()->currency->iso_code));
+			}
+
+		}
 
 		/**
 		 * ignored because also catalog price rules are tier price rules :-(
@@ -147,7 +196,12 @@ class PluginModelItemObject
 		 */
 
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			/**
+			 * set minimal_quantity
+			 */
 			$priceItem->setMinimumOrderAmount($this->item->minimal_quantity);
+		}
 
 		/**
 		 * tier prices
@@ -165,14 +219,15 @@ class PluginModelItemObject
 				$tierPriceItem->setFromQuantity($tierPrice['from_quantity']);
 				$tierPriceItem->setReductionType($this->mapTierPriceType($tierPrice['reduction_type']));
 
-				$tierPriceItem->setReduction(
-					$tierPriceItem->getReductionType() == Shopgate_Model_Catalog_TierPrice::DEFAULT_TIER_PRICE_TYPE_PERCENT
-						? $tierPrice['reduction'] * 100
-						: $tierPrice['reduction']
-				);
+				$tierPriceItem->setReduction($tierPriceItem->getReductionType() == Shopgate_Model_Catalog_TierPrice::DEFAULT_TIER_PRICE_TYPE_PERCENT ? $tierPrice['reduction'] * 100 : $tierPrice['reduction']);
 
 				if (array_key_exists('id_group', $tierPrice) && $tierPrice['id_group'] != 0)
+				{
+					/**
+					 * set id_group
+					 */
 					$tierPriceItem->setCustomerGroupUid($tierPrice['id_group']);
+				}
 
 				$priceItem->addTierPriceGroup($tierPriceItem);
 
@@ -203,41 +258,46 @@ class PluginModelItemObject
 	 */
 	public function setImages()
 	{
-		$result = array();
+		$result = array ();
 
-        /** @var Product $product */
-        $product = new Product($this->item->id);
+		/** @var Product $product */
+		$product = new Product($this->item->id);
 
-        foreach ($product->getImages($this->getContext()->language->id) as $image)
-        {
-            $imageItem = new Shopgate_Model_Media_Image();
-            $imageItem->setUid($image['id_image']);
+		foreach ($product->getImages($this->getContext()->language->id) as $image)
+		{
+			$imageItem = new Shopgate_Model_Media_Image();
+			$imageItem->setUid($image['id_image']);
 
-            if (version_compare(_PS_VERSION_, '1.3.3.0', '<')) {
-                $imageItem->setUrl(
-                    _PS_BASE_URL_ . $this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$image['id_image'])
-                );
-            } else {
-                $imageItem->setUrl(
-                    $this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$image['id_image'])
-                );
-            }
+			if (version_compare(_PS_VERSION_, '1.3.3.0', '<'))
+			{
+				/**
+				 * set image url
+				 */
+				$imageItem->setUrl(_PS_BASE_URL_.$this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$image['id_image']));
+			}
+			else
+			{
+				/**
+				 * set image url
+				 */
+				$imageItem->setUrl($this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$image['id_image']));
+			}
 
-            $imageItem->setSortOrder($image['position']);
-            $imageInfo = $this->getImageInfo($image['id_image']);
+			$imageItem->setSortOrder($image['position']);
+			$imageInfo = $this->getImageInfo($image['id_image']);
 
-            if (is_array($imageInfo) && array_key_exists(0, $imageInfo))
-            {
-                $imageItem->setAlt($imageInfo[0]['legend']);
-                $imageItem->setTitle($imageInfo[0]['legend']);
-            }
+			if (is_array($imageInfo) && array_key_exists(0, $imageInfo))
+			{
+				$imageItem->setAlt($imageInfo[0]['legend']);
+				$imageItem->setTitle($imageInfo[0]['legend']);
+			}
 
-            $imageItemModel = new Image($image['id_image']);
-            $imageItem->setSortOrder($imageItemModel->position);
-            $imageItem->setIsCover($imageItemModel->cover);
+			$imageItemModel = new Image($image['id_image']);
+			$imageItem->setSortOrder($imageItemModel->position);
+			$imageItem->setIsCover($imageItemModel->cover);
 
-            array_push($result, $imageItem);
-        }
+			array_push($result, $imageItem);
+		}
 
 		parent::setImages($result);
 	}
@@ -249,19 +309,24 @@ class PluginModelItemObject
 	 */
 	public function setCategoryPaths()
 	{
-		$result = array();
+		$result                       = array ();
 		$maxSortOrderByCategoryNumber = $this->getCategoryMaxSortOrder();
 		foreach ($this->getCategoriesFromDb() as $category)
 		{
 			$categoryPathItem = new Shopgate_Model_Catalog_CategoryPath();
 			$categoryPathItem->setUid($category['id_category']);
 
-			$maxPosition = array_key_exists($category['id_category'], $maxSortOrderByCategoryNumber) ?  $maxSortOrderByCategoryNumber[$category['id_category']] : 0;
+			$maxPosition     = array_key_exists($category['id_category'], $maxSortOrderByCategoryNumber) ? $maxSortOrderByCategoryNumber[$category['id_category']] : 0;
 			$productPosition = $this->getProductPositionByIdAndCategoryId($this->item->id, $category['id_category']);
 
 			$categoryPathItem->setSortOrder($maxPosition - $productPosition);
 			foreach ($this->getCategoryPathsFromModel($category['id_category']) as $path)
+			{
+				/**
+				 * set category path
+				 */
 				$categoryPathItem->addItem($path['level_depth'], $path['name']);
+			}
 
 			array_push($result, $categoryPathItem);
 		}
@@ -279,8 +344,7 @@ class PluginModelItemObject
 		return Db::getInstance()->getValue('
 				SELECT position
 				FROM `'._DB_PREFIX_.'category_product`
-				WHERE `id_product` = ' . $product_id . ' AND `id_category` = ' . $category_id
-		);
+				WHERE `id_product` = '.$product_id.' AND `id_category` = '.$category_id);
 	}
 
 	/**
@@ -295,12 +359,16 @@ class PluginModelItemObject
 			$maxSortOrderCategories = Db::getInstance()->ExecuteS('
 				SELECT id_category, MAX(position) as max_position
 				FROM `'._DB_PREFIX_.'category_product`
-				GROUP BY `id_category`'
-			);
+				GROUP BY `id_category`');
 
-			$maxSortOrderByCategoryNumber = array();
+			$maxSortOrderByCategoryNumber = array ();
 			foreach ($maxSortOrderCategories as $sortOrderCategory)
+			{
+				/**
+				 * set max position
+				 */
 				$maxSortOrderByCategoryNumber[$sortOrderCategory['id_category']] = $sortOrderCategory['max_position'];
+			}
 		}
 
 		return $maxSortOrderByCategoryNumber;
@@ -313,15 +381,7 @@ class PluginModelItemObject
 	 */
 	public function setDeepLink()
 	{
-		parent::setDeeplink(
-			$this->getContext()->link->getProductLink(
-					$this->item->id,
-					$this->item->link_rewrite,
-					$this->item->category,
-					$this->item->ean13,
-					$this->getContext()->language->id
-				)
-		);
+		parent::setDeeplink($this->getContext()->link->getProductLink($this->item->id, $this->item->link_rewrite, $this->item->category, $this->item->ean13, $this->getContext()->language->id));
 	}
 
 	/**
@@ -333,7 +393,12 @@ class PluginModelItemObject
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
 		{
 			if ($this->item->additional_shipping_cost > 0)
+			{
+				/**
+				 * set shipping cost
+				 */
 				$shippingItem->setAdditionalCostsPerUnit($this->item->additional_shipping_cost);
+			}
 		}
 		//$shippingItem->setCostsPerOrder();
 		//$shippingItem->setIsFree(true);
@@ -357,7 +422,7 @@ class PluginModelItemObject
 	 */
 	public function setProperties()
 	{
-		$result = array();
+		$result     = array ();
 		$properties = Product::getFrontFeaturesStatic($this->getContext()->language->id, $this->item->id);
 
 		foreach ($properties as $property)
@@ -380,7 +445,12 @@ class PluginModelItemObject
 		$visibilityItem = new Shopgate_Model_Catalog_Visibility();
 		//$visibilityItem->setMarketplace();
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			/**
+			 * set visibility
+			 */
 			$visibilityItem->setLevel($this->mapVisibility($this->item->visibility));
+		}
 		parent::setVisibility($visibilityItem);
 	}
 
@@ -393,16 +463,30 @@ class PluginModelItemObject
 
 		$stockItem->setIsSaleable($this->item->checkQty(1));
 
-		if($stockItem->getIsSaleable()) {
+		if ($stockItem->getIsSaleable())
+		{
+			/**
+			 * setAvailabilityText
+			 */
 			$stockItem->setAvailabilityText($this->item->available_now);
 		}
 
 		if (version_compare(_PS_VERSION_, '1.4.0.0', '>='))
+		{
+			/**
+			 * setMinimumOrderQuantity
+			 */
 			$stockItem->setMinimumOrderQuantity($this->item->minimal_quantity);
+		}
 
 		$stockItem->setStockQuantity($this->item->quantity);
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			/**
+			 * setUseStock
+			 */
 			$stockItem->setUseStock($this->item->depends_on_stock);
+		}
 
 		parent::setStock($stockItem);
 	}
@@ -412,7 +496,7 @@ class PluginModelItemObject
 	 */
 	public function setIdentifiers()
 	{
-		$result = array();
+		$result = array ();
 
 		/**
 		 * UPC
@@ -453,7 +537,7 @@ class PluginModelItemObject
 	 */
 	public function setTags()
 	{
-		$result = array();
+		$result = array ();
 		{
 			if (isset($this->item->tags[$this->getContext()->language->id]))
 			{
@@ -503,17 +587,27 @@ class PluginModelItemObject
 	 */
 	public function setAttributeGroups()
 	{
-		$result = array();
+		$result = array ();
 
 		if ($this->item->hasAttributes())
 		{
 
 			if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+			{
+				/**
+				 * getAttributesInformationsByProduct
+				 */
 				$attributes = Product::getAttributesInformationsByProduct($this->item->id);
+			}
 			else
+			{
+				/**
+				 * getAttributeCombinaisons
+				 */
 				$attributes = $this->item->getAttributeCombinaisons($this->getContext()->language->id);
+			}
 
-			$addedGroup = array();
+			$addedGroup = array ();
 			foreach ($attributes as $attribute)
 			{
 				/**
@@ -541,7 +635,7 @@ class PluginModelItemObject
 	 */
 	public function setInputs()
 	{
-		$result = array();
+		$result = array ();
 
 		if ($this->item->customizable)
 		{
@@ -553,7 +647,12 @@ class PluginModelItemObject
 				$inputItem->setLabel($customizationField['name']);
 
 				if ($customizationField['required'] == 1)
+				{
+					/**
+					 * setRequired
+					 */
 					$inputItem->setRequired(true);
+				}
 
 				switch ($customizationField['type'])
 				{
@@ -577,21 +676,21 @@ class PluginModelItemObject
 	 */
 	public function setChildren()
 	{
-		$result = array();
+		$result = array ();
 
 		if ($this->item->hasAttributes())
 		{
 
 			$combination_images = $this->item->getCombinationImages($this->getContext()->language->id);
-			$attributes = $this->item->getAttributeCombinaisons($this->getContext()->language->id);
-			$combinations = array();
+			$attributes         = $this->item->getAttributeCombinaisons($this->getContext()->language->id);
+			$combinations       = array ();
 
-			$attribute_groups = array();
+			$attribute_groups = array ();
 
 			foreach ($attributes as $a)
 			{
 				$combinations[$a['id_product_attribute']][$a['id_attribute_group']] = $a;
-				$attribute_groups[$a['id_attribute_group']] = $a['group_name'];
+				$attribute_groups[$a['id_attribute_group']]                         = $a['group_name'];
 			}
 
 			foreach ($combinations as $id => $c)
@@ -610,17 +709,32 @@ class PluginModelItemObject
 				 * id default child
 				 */
 				if (array_key_exists('default_on', $combination) && $combination['default_on'] == 1)
+				{
+					/**
+					 * setIsDefaultChild
+					 */
 					$childItemItem->setIsDefaultChild(true);
+				}
 
 				/**
 				 * price
 				 */
 				$priceItem = new Shopgate_Model_Catalog_Price();
 				if ($combination['wholesale_price'] > 0 && $combination['wholesale_price'] != $this->getPrice()->getCost())
+				{
+					/**
+					 * setCost
+					 */
 					$priceItem->setCost($combination['wholesale_price']);
+				}
 
 				if (array_key_exists('minimal_quantity', $combination) && $combination['minimal_quantity'] != $this->getPrice()->getMinimumOrderAmount())
+				{
+					/**
+					 * setMinimumOrderAmount
+					 */
 					$priceItem->setMinimumOrderAmount($combination['minimal_quantity']);
+				}
 
 				$priceItem->setPrice($this->getItemPrice($this->getUid(), $id, $this->getUseTax()));
 				$priceItem->setSalePrice($this->getItemPrice($this->getUid(), $id, $this->getUseTax(), true));
@@ -633,16 +747,13 @@ class PluginModelItemObject
 				$stockItem = new Shopgate_Model_Catalog_Stock();
 				$stockItem->setStockQuantity($combination['quantity']);
 
-				$stockItem->setIsSaleable(
-					($this->item->getQuantity(
-							$this->item->id, $id) > 0 ||
-							Product::isAvailableWhenOutOfStock($this->item->out_of_stock)
-					)
-						? 1
-						: 0
-				);
+				$stockItem->setIsSaleable(($this->item->getQuantity($this->item->id, $id) > 0 || Product::isAvailableWhenOutOfStock($this->item->out_of_stock)) ? 1 : 0);
 
-				if($stockItem->getIsSaleable()) {
+				if ($stockItem->getIsSaleable())
+				{
+					/**
+					 * setAvailabilityText
+					 */
 					$stockItem->setAvailabilityText($this->item->available_now);
 				}
 
@@ -718,18 +829,20 @@ class PluginModelItemObject
 						$imageItem = new Shopgate_Model_Media_Image();
 						$imageItem->setUid($combination_image['id_image']);
 
-                        if (version_compare(_PS_VERSION_, '1.3.3.0', '<')) {
-                            $imageItem->setUrl(
-                                _PS_BASE_URL_ . $this->getContext()->link->getImageLink(
-                                    $this->item->link_rewrite, $product->id.'-'.$combination_image['id_image'])
-                            );
-                        } else {
-                            $imageItem->setUrl(
-                                $this->getContext()->link->getImageLink(
-                                    $this->item->link_rewrite, $product->id.'-'.$combination_image['id_image']
-                                )
-                            );
-                        }
+						if (version_compare(_PS_VERSION_, '1.3.3.0', '<'))
+						{
+							/**
+							 * setUrl
+							 */
+							$imageItem->setUrl(_PS_BASE_URL_.$this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$combination_image['id_image']));
+						}
+						else
+						{
+							/**
+							 * setUrl
+							 */
+							$imageItem->setUrl($this->getContext()->link->getImageLink($this->item->link_rewrite, $product->id.'-'.$combination_image['id_image']));
+						}
 
 						$imageInfo = $this->getImageInfo($combination_image['id_image']);
 
@@ -765,8 +878,7 @@ class PluginModelItemObject
 	 */
 	protected function getInputsFromDb()
 	{
-		$select = sprintf(
-			'SELECT
+		$select = sprintf('SELECT
 			  cf.required,
 			  cf.type,
 			  cf.id_customization_field,
@@ -774,12 +886,7 @@ class PluginModelItemObject
 			FROM %scustomization_field as cf
 			INNER JOIN %scustomization_field_lang as cl
 			  ON cf.id_customization_field = cl.id_customization_field
-			WHERE cf.id_product = %s AND cl.id_lang = %s;',
-			_DB_PREFIX_,
-			_DB_PREFIX_,
-			$this->item->id,
-			$this->getContext()->language->id
-		);
+			WHERE cf.id_product = %s AND cl.id_lang = %s;', _DB_PREFIX_, _DB_PREFIX_, $this->item->id, $this->getContext()->language->id);
 
 		return Db::getInstance()->ExecuteS($select);
 	}
@@ -793,12 +900,7 @@ class PluginModelItemObject
 	 */
 	protected function getImageInfo($imageId)
 	{
-		$select = sprintf(
-			'SELECT * from %simage_lang WHERE id_image = %s AND id_lang = %s',
-			_DB_PREFIX_,
-			$imageId,
-			$this->getContext()->language->id
-		);
+		$select = sprintf('SELECT * from %simage_lang WHERE id_image = %s AND id_lang = %s', _DB_PREFIX_, $imageId, $this->getContext()->language->id);
 
 		return Db::getInstance()->ExecuteS($select);
 	}
@@ -812,43 +914,50 @@ class PluginModelItemObject
 		/**
 		 * check table
 		 */
-		if($this->checkTable(sprintf("%sspecific_price", _DB_PREFIX_))) {
-			$now = date('Y-m-d H:i:s');
-			$select = sprintf(
-				'SELECT * from %sspecific_price WHERE id_product = %s AND %s AND %s AND (id_shop = %s OR id_shop = 0)',
-				_DB_PREFIX_,
-				$this->item->id,
-				'(`from` = "0000-00-00 00:00:00" OR "' . $now . '" >= `from`)',
-				'(`to` = "0000-00-00 00:00:00" OR "' . $now . '" <= `to`)',
-				$this->context->shop->id
-			);
+		if ($this->checkTable(sprintf('%sspecific_price', _DB_PREFIX_)))
+		{
+			$now    = date('Y-m-d H:i:s');
+			$select = sprintf('SELECT * from %sspecific_price WHERE id_product = %s AND %s AND %s AND (id_shop = %s OR id_shop = 0)', _DB_PREFIX_, $this->item->id, '(`from` = "0000-00-00 00:00:00" OR "'.$now.'" >= `from`)', '(`to` = "0000-00-00 00:00:00" OR "'.$now.'" <= `to`)', $this->context->shop->id);
+
 			return Db::getInstance()->ExecuteS($select);
-		} else {
-			return array();
+		}
+		else
+		{
+			/**
+			 * empty
+			 */
+			return array ();
 		}
 	}
 
-    /**
-     * check table name
-     *
-     * @param $tableName
-     * @return bool
-     */
-    protected function checkTable($tableName)
-    {
-        foreach (Db::getInstance()->ExecuteS('SHOW TABLES') as $key => $name) {
-            if($tableName == current($name)) {
-                return true;
-            }
-        }
+	/**
+	 * check table name
+	 *
+	 * @param $tableName
+	 *
+	 * @return bool
+	 */
+	protected function checkTable($tableName)
+	{
+		foreach (Db::getInstance()->ExecuteS('SHOW TABLES') as $key => $name)
+		{
+			if ($tableName == current($name))
+			{
+				/**
+				 * is current
+				 */
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	protected function getCategoriesFromDb()
 	{
-		$select = sprintf(
-			'SELECT
+		if (version_compare(_PS_VERSION_, '1.5.0.0', '>='))
+		{
+			$select = sprintf('SELECT
 						cp.id_category,
 						cp.position,
 						cl.name
@@ -861,14 +970,22 @@ class PluginModelItemObject
 						cl.id_lang = %s AND
 						cs.id_shop = %s
 						group by cp.id_category
-						',
-			_DB_PREFIX_,
-			_DB_PREFIX_,
-			_DB_PREFIX_,
-			$this->item->id,
-			$this->getContext()->language->id,
-			$this->getContext()->shop->id
-		);
+						', _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, $this->item->id, $this->getContext()->language->id, $this->getContext()->shop->id);
+		}
+		else
+		{
+			$select = sprintf('SELECT
+						cp.id_category,
+						cp.position,
+						cl.name
+						FROM %scategory_product AS cp
+						LEFT JOIN %scategory_lang AS cl
+						ON cp.id_category = cl.id_category
+						WHERE cp.id_product = %s AND
+						cl.id_lang = %s
+						group by cp.id_category
+						', _DB_PREFIX_, _DB_PREFIX_, $this->item->id, $this->getContext()->language->id);
+		}
 
 		return Db::getInstance()->ExecuteS($select);
 	}
@@ -883,6 +1000,7 @@ class PluginModelItemObject
 	protected function getCategoryPathsFromModel($categoryId)
 	{
 		$categoryModel = new Category($categoryId, $this->getContext()->language->id);
+
 		return $categoryModel->getParentsCategories($this->getContext()->language->id);
 	}
 
@@ -937,10 +1055,11 @@ class PluginModelItemObject
 	/**
 	 * calculate the prices
 	 *
-	 * @param $productId
+	 * @param      $productId
 	 * @param null $attributeId
 	 * @param bool $useTax
 	 * @param bool $useReduction
+	 *
 	 * @return float
 	 */
 	protected function getItemPrice($productId, $attributeId = null, $useTax = false, $useReduction = false)
@@ -953,8 +1072,6 @@ class PluginModelItemObject
 	 */
 	protected function getUseTax()
 	{
-		return Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE') == Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET
-			? false
-			: true;
+		return Configuration::get('SHOPGATE_EXPORT_PRICE_TYPE') == Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET ? false : true;
 	}
 }
