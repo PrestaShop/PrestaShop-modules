@@ -98,9 +98,17 @@ function setCustomerAddress($ppec, $customer, $id = null)
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2']))
 		$address->address2 = $ppec->result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
 	$address->city = $ppec->result['PAYMENTREQUEST_0_SHIPTOCITY'];
-	if (Country::containsStates($address->id_country))
+	if (Country::containsStates($address->id_country)) 
+        {
+            if (stristr($ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE'], "!") === false)
+            {
 		$address->id_state = (int)State::getIdByIso($ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE'], $address->id_country);
-	$address->postcode = $ppec->result['PAYMENTREQUEST_0_SHIPTOZIP'];
+            } else {
+                $state_array = explode("!", $ppec->result['PAYMENTREQUEST_0_SHIPTOSTATE']);
+                $address->id_state = (int)$state_array[1];
+            }
+        }
+        $address->postcode = $ppec->result['PAYMENTREQUEST_0_SHIPTOZIP'];
 	if (isset($ppec->result['PAYMENTREQUEST_0_SHIPTOPHONENUM']))
 		$address->phone = $ppec->result['PAYMENTREQUEST_0_SHIPTOPHONENUM'];
 	$address->id_customer = $customer->id;
@@ -190,8 +198,8 @@ elseif (!empty($ppec->token) && ($ppec->token == $token) && ($ppec->payer_id = $
 			$ppec->redirectToCheckout($customer, ($ppec->type != 'payment_cart'));
 
 		$addresses = $customer->getAddresses($ppec->context->language->id);
-		foreach ($addresses as $address)
-			if ($address['alias'] == 'Paypal_Address')
+		foreach ($addresses as $address_boucle)
+			if ($$address_boucle['alias'] == 'Paypal_Address')
 			{//If address has already been created
 				$address = new Address($address['id_address']);
 				break;
