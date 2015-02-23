@@ -574,3 +574,6 @@
 [submodule "sarbacanedesktop"]
 	path = sarbacanedesktop
 	url = https://github.com/PrestaShop/sarbacanedesktop.git
+[submodule "prestashippingeasy"]
+	path = prestashippingeasy
+	url = https://github.com/PrestaShop/prestashippingeasy.git
