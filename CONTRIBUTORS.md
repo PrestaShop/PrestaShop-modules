@@ -5,6 +5,7 @@
 - Aleksander Palyan 
 - Alexander Wesselburg 
 - Alexandre Segura 
+- alexsimple 
 - alonbr 
 - Alon Braitstein 
 - Amala 
@@ -50,6 +51,7 @@
 - fram 
 - François Gaillard 
 - François-Marie de Jouvencel 
+- Francesco Guardiani 
 - Francois Gaillard 
 - Giedrius Stan 
 - Gordon Coubrough 
