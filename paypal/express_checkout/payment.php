@@ -255,12 +255,12 @@ function validateOrder($customer, $cart, $ppec)
 			else
 				$payment_status = 'Error';
 
-			if (strcmp($payment_status, 'Completed') === 0)
+			if ((strcasecmp($payment_status, 'Completed') === 0) || (strcasecmp($payment_status, 'Completed_Funds_Held') === 0))
 			{
 				$payment_type = (int)Configuration::get('PS_OS_PAYMENT');
 				$message = $ppec->l('Payment accepted.').'<br />';
 			}
-			elseif (strcmp($payment_status, 'Pending') === 0)
+			elseif (strcasecmp($payment_status, 'Pending') === 0)
 			{
 				$payment_type = (int)Configuration::get('PS_OS_PAYPAL');
 				$message = $ppec->l('Pending payment confirmation.').'<br />';
