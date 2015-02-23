@@ -85,6 +85,7 @@ class PayPal extends PaymentModule
 		$this->tab = 'payments_gateways';
 		$this->version = '3.8.1';
 		$this->author = 'PrestaShop';
+		$this->is_eu_compatible = 1;
 
 		$this->currencies = true;
 		$this->currencies_mode = 'radio';
@@ -120,7 +121,7 @@ class PayPal extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn') ||
+		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('displayPaymentEU') || !$this->registerHook('paymentReturn') ||
 		!$this->registerHook('shoppingCartExtra') || !$this->registerHook('backBeforePayment') || !$this->registerHook('rightColumn') ||
 		!$this->registerHook('cancelProduct') || !$this->registerHook('productFooter') || !$this->registerHook('header') ||
 		!$this->registerHook('adminOrder') || !$this->registerHook('backOfficeHeader'))
@@ -559,6 +560,52 @@ class PayPal extends PaymentModule
 		}
 
 		return null;
+	}
+	
+	public function hookDisplayPaymentEU($params) {
+		if (!$this->active)
+			return;
+
+		if ($this->hookPayment($params) == null)
+			return null;
+
+		$use_mobile = $this->useMobile();
+
+		if ($use_mobile)
+			$method = ECS;
+		else
+			$method = (int)Configuration::get('PAYPAL_PAYMENT_METHOD');
+
+		if (isset($this->context->cookie->express_checkout))
+			$this->redirectToConfirmation();
+			
+		$logos = $this->paypal_logos->getLogos();
+
+		if (isset($logos['LocalPayPalHorizontalSolutionPP']) && $method == WPS)
+		{
+			$logo = $logos['LocalPayPalHorizontalSolutionPP'];
+		}
+		else
+		{
+			$logo = $logos['LocalPayPalLogoMedium'];
+		}
+		
+		if ($method == HSS)
+		{
+			return array(
+				'cta_text' => $this->l('Paypal'),
+				'logo' => $logo,
+				'form' => $this->fetchTemplate('integral_evolution_payment_eu.tpl')
+			);
+		}
+		elseif ($method == WPS || $method == ECS)
+		{
+			return array(
+				'cta_text' => $this->l('Paypal'),
+				'logo' => $logo,
+				'form' => $this->fetchTemplate('express_checkout_payment_eu.tpl')
+			);
+		}
 	}
 
 	public function hookShoppingCartExtra()
