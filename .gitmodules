@@ -28,9 +28,6 @@
 [submodule "trustedshops/backward_compatibility"]
 	path = trustedshops/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "globkurier/backward_compatibility"]
-	path = globkurier/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "ferbuy/backward_compatibility"]
 	path = ferbuy/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -574,3 +571,6 @@
 [submodule "prestastats"]
 	path = prestastats
 	url = https://github.com/PrestaShop/prestastats.git
+[submodule "globkurier"]
+	path = globkurier
+	url = https://github.com/PrestaShop/globkurier.git
