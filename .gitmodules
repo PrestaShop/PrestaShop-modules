@@ -19,9 +19,6 @@
 [submodule "mailjet/backward_compatibility"]
 	path = mailjet/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
-[submodule "paypal/backward_compatibility"]
-	path = paypal/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "paysafecard/backward_compatibility"]
 	path = paysafecard/backward_compatibility
 	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
@@ -328,9 +325,6 @@
 [submodule "watermark"]
 	path = watermark
 	url = https://github.com/PrestaShop/watermark.git
-[submodule "prestastats/backward_compatibility"]
-	path = prestastats/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
@@ -574,3 +568,9 @@
 [submodule "prestashippingeasy"]
 	path = prestashippingeasy
 	url = https://github.com/PrestaShop/prestashippingeasy.git
+[submodule "paypal"]
+	path = paypal
+	url = https://github.com/PrestaShop/paypal.git
+[submodule "prestastats"]
+	path = prestastats
+	url = https://github.com/PrestaShop/prestastats.git
