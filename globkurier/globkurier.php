@@ -64,7 +64,6 @@ class GlobKurier extends Module {
 		$this->description = $this->l('Save up to 80% off on UPS, DPD, K-EX, DHL with GlobKurier module!');
 		$this->confirmUninstall = $this->l('Warning: all the data saved in your database will be deleted. Are you sure you want uninstall this module?');
 
-
 		/* Backward compatibility */
 		if (version_compare(_PS_VERSION_, '1.5.0.0', '<'))
 			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
@@ -176,18 +175,18 @@ class GlobKurier extends Module {
 		// Make order
 		$this->doOrder($params);
 
-		$this->context->controller->addCSS($this->_path.'css/main.css', 'all');
+		$this->context->controller->addCSS($this->_path.'css/main.css?v='.$this->version, 'all');
 		$this->context->controller->addCSS($this->_path.'css/jquery-ui-1.8.14.custom.css', 'all');
-		$this->context->controller->addCSS($this->_path.'css/content_picker.css', 'all');
-		$this->context->controller->addCSS($this->_path.'css/time_picker.css', 'all');
+		$this->context->controller->addCSS($this->_path.'css/content_picker.css?v='.$this->version, 'all');
+		$this->context->controller->addCSS($this->_path.'css/time_picker.css?v='.$this->version, 'all');
 		$this->context->controller->addJquery();
-                $this->context->controller->addJS($this->_path.'js/rsv_validator.js', 'all');
+        $this->context->controller->addJS($this->_path.'js/rsv_validator.js?v='.$this->version, 'all');
 		$this->context->controller->addJS($this->_path.'js/jquery-ui-1.8.14.custom.min.js', 'all');
-		$this->context->controller->addJS($this->_path.'js/jquery.customDataPicker.js', 'all');
-		$this->context->controller->addJS($this->_path.'js/pricing.js', 'all');
-		$this->context->controller->addJS($this->_path.'js/content_picker.js', 'all');
-		$this->context->controller->addJS($this->_path.'js/time_picker.js', 'all');
-		$this->context->controller->addJS($this->_path.'js/globkurier.js', 'all');
+		$this->context->controller->addJS($this->_path.'js/jquery.customDataPicker.js?v='.$this->version, 'all');
+		$this->context->controller->addJS($this->_path.'js/pricing.js?v='.$this->version, 'all');
+		$this->context->controller->addJS($this->_path.'js/content_picker.js?v='.$this->version, 'all');
+		$this->context->controller->addJS($this->_path.'js/time_picker.js?v='.$this->version, 'all');
+		$this->context->controller->addJS($this->_path.'js/globkurier.js?v='.$this->version, 'all');
 
 		if (!$obj_json_login->status)
 			return $this->display(__FILE__, 'views/templates/hook/no_access.tpl');
@@ -269,6 +268,7 @@ class GlobKurier extends Module {
 			$obj_json_save_order->setIntIdCustomer((int)$params['cart']->id_customer);
 			$obj_json_save_order->setStrShopKey((string)Configuration::get($this->name.'_SHOP_KEY'));
 			$obj_json_save_order->setStrSecureKey((string)$params['cart']->secure_key);
+            $obj_json_save_order->setStrHost((string)Tools::getShopDomain());
 			$obj_json_save_order->setStrReference((string)$obj_order->reference);
 			$obj_json_save_order->setStrOrderNumber((string)$order_number);
 			$obj_json_save_order->setStrBaseService((string)Tools::getValue('base_service'));
@@ -308,9 +308,18 @@ class GlobKurier extends Module {
 			$obj_json_save_order->setStrRecipientCountry((int)Tools::getValue('recipient_country'));
 			$obj_json_save_order->setStrRecipientPhone((string)Tools::getValue('recipient_phone'));
 			$obj_json_save_order->setStrRecipientMail((string)Tools::getValue('recipient_email'));
-			// Token
+			// Custom 
+            $obj_json_save_order->setStrCustomLpName((string)Tools::getValue('custom_lp_nazwa'));
+            $obj_json_save_order->setStrCustomLpStreet((string)Tools::getValue('custom_lp_ulica'));
+            $obj_json_save_order->setStrCustomLpHome((string)Tools::getValue('custom_lp_dom'));
+            $obj_json_save_order->setStrCustomLpLocal((string)Tools::getValue('custom_lp_lokal'));
+            $obj_json_save_order->setStrCustomLpCity((string)Tools::getValue('custom_lp_miasto'));
+            $obj_json_save_order->setStrCustomLpPostalCode((string)Tools::getValue('custom_lp_kod'));
+            $obj_json_save_order->setStrCustomLpPhone((string)Tools::getValue('custom_lp_telefon'));
+            // Token
 			$obj_json_save_order->setStrToken(sha1((string)Tools::getValue('sender_name').$this->apikey));
 			$obj_json_save_order = Tools::jsonDecode($obj_json_save_order->sendData());
+                        
 			if ($obj_json_save_order->status == true)
 			{
 				if (!$obj_order_gk)
@@ -367,6 +376,7 @@ class GlobKurier extends Module {
 			$obj_globkurier_insert_order->setIntIdCustomer((int)$params['cart']->id_customer);
 			$obj_globkurier_insert_order->setStrSecureKey((string)$params['cart']->secure_key);
 			$obj_globkurier_insert_order->setStrShopKey(Configuration::get('GLOBKURIER_SHOP_KEY'));
+            $obj_globkurier_insert_order->setStrHost((string)Tools::getShopDomain());
 			$obj_globkurier_insert_order->setStrDate((string)$params['cart']->date_upd);
 			$obj_globkurier_insert_order->setStrRecipientName((string)$obj_delivery_address->company.' '.$obj_delivery_address->lastname.' '.$obj_delivery_address->firstname);
 			$obj_globkurier_insert_order->setStrRecipientAddress1((string)$obj_delivery_address->address1);
@@ -383,6 +393,16 @@ class GlobKurier extends Module {
 		}
 		$obj_globkurier_order->save();
 	}
+        
+        /**
+        * Build and display left column banner
+        *
+        * @param array $params
+        * @return string Templatepart
+        */
+        public function hookLeftColumn() {
+            return $this->display(__FILE__, 'views/templates/frontend/left_column.tpl');
+        }
 
 	/**
 	* Login action
@@ -409,8 +429,8 @@ class GlobKurier extends Module {
 			if (count($this->arr_login_err) == 0)
 			{
 				$obj_globkurier = new GlobKurierLogin(GlobKurierTools::gkEncryptString(Tools::getValue('gk_login')),
-													GlobKurierTools::gkEncryptString(Tools::getValue('gk_password')),
-													GlobKurierTools::gkEncryptString(Tools::getValue('gk_api_key')));
+				GlobKurierTools::gkEncryptString(Tools::getValue('gk_password')),
+				GlobKurierTools::gkEncryptString(Tools::getValue('gk_api_key')));
 				$obj_json_login = Tools::jsonDecode($obj_globkurier->sendData());
 			}
 			if (isset($obj_json_login) && $obj_json_login->status == true && $obj_json_login->userParams->get_data == true)
@@ -430,7 +450,7 @@ class GlobKurier extends Module {
 				Configuration::updateValue($this->name.'_AD_INSURANCE', GlobKurierConfig::PS_GK_AD_INSURANCE);
 				Configuration::updateValue($this->name.'_AD_COD', GlobKurierConfig::PS_GK_AD_COD);
 				Configuration::updateValue($this->name.'_AD_COD3', GlobKurierConfig::PS_GK_AD_COD3);
-				Configuration::updateValue('GLOBKURIER_CONFIGURATION_OK', true);
+                Configuration::updateValue('GLOBKURIER_CONFIGURATION_OK', true);
 			}
 		}
 		if ($login && $password && $apikey)
@@ -564,6 +584,7 @@ class GlobKurier extends Module {
 			|| !$this->registerHook('DisplayAdminOrder')
 			|| !$this->registerHook('DisplayBackOfficeTop')
 			|| !$this->registerHook('actionValidateOrder')
+            || !$this->registerHook('leftColumn')
 			|| !$this->registerHook('actionCarrierProcess')
 			|| !$this->registerHook('displayOrderDetail')
 			|| !$this->registerHook('actionOrderStatusUpdate')
