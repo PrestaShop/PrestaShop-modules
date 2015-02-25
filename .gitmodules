@@ -574,3 +574,6 @@
 [submodule "globkurier"]
 	path = globkurier
 	url = https://github.com/PrestaShop/globkurier.git
+[submodule "reforestaction"]
+	path = reforestaction
+	url = https://github.com/PrestaShop/reforestaction.git
