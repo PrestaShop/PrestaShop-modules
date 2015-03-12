@@ -577,3 +577,6 @@
 [submodule "exapaq"]
 	path = exapaq
 	url = https://github.com/PrestaShop/exapaq.git
+[submodule "expressmailing"]
+	path = expressmailing
+	url = https://github.com/PrestaShop/expressmailing.git
