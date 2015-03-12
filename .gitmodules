@@ -580,3 +580,6 @@
 [submodule "expressmailing"]
 	path = expressmailing
 	url = https://github.com/PrestaShop/expressmailing.git
+[submodule "mailjet"]
+	path = mailjet
+	url = https://github.com/PrestaShop/mailjet.git
