@@ -583,3 +583,6 @@
 [submodule "mailjet"]
 	path = mailjet
 	url = https://github.com/PrestaShop/mailjet.git
+[submodule "bpostshm"]
+	path = bpostshm
+	url = https://github.com/PrestaShop/bpostshm.git
