@@ -586,3 +586,6 @@
 [submodule "bpostshm"]
 	path = bpostshm
 	url = https://github.com/PrestaShop/bpostshm.git
+[submodule "ovhhosting"]
+	path = ovhhosting
+	url = https://github.com/PrestaShop/ovhhosting.git
