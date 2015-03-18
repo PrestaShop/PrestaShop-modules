@@ -354,7 +354,7 @@
 	url = https://github.com/PrestaShop/authorizeaim
 [submodule "avalaratax"]
 	path = avalaratax
-	url = https://github.com/PrestaShop/avalaratax
+	url = https://github.com/PrestaShop/avalaratax.git
 [submodule "boxdropshipment"]
 	path = boxdropshipment
 	url = https://github.com/PrestaShop/boxdropshipment
