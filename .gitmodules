@@ -589,3 +589,6 @@
 [submodule "ovhhosting"]
 	path = ovhhosting
 	url = https://github.com/PrestaShop/ovhhosting.git
+[submodule "mercadopago"]
+	path = mercadopago
+	url = https://github.com/PrestaShop/mercadopago.git
