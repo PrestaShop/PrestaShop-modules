@@ -810,6 +810,29 @@ class GatewayOrder extends Gateway
 		if (!empty($country['id_country']))
 			$id_country = $country['id_country'];
 
+
+        if (!(int)$id_country) {
+            $id_country = 0;
+            $t_country_part = explode(' ', strtolower($neteven_address->Country));
+
+            foreach ($t_country_part as $country_part) {
+                if (!$id_country) {
+                    $country = Db::getInstance()->getRow('
+							SELECT c.`id_country`
+							FROM `'._DB_PREFIX_.'country` c
+							INNER JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
+							WHERE LOWER(c.`iso_code`) = "'.pSQL(Tools::strtolower(trim($country_part))).'"
+							OR LOWER(cl.`name`) = "'.pSQL(Tools::strtolower(trim($country_part))).'"
+							GROUP BY c.`id_country`
+						');
+
+                    if (!empty($country['id_country'])) {
+                        $id_country = $country['id_country'];
+                    }
+                }
+            }
+        }
+
 		if ($id_address = Toolbox::existAddress($neteven_address, $id_country, $id_customer))
 			Toolbox::addLogLine(self::getL('Get existing address for NetEven Order Id').' '.$order_id);
 		else
