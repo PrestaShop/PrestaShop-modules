@@ -631,45 +631,63 @@ class GatewayOrder extends Gateway
 					Toolbox::displayDebugMessage(self::getL('Order information').' : '.((int)$this->current_time_0 - (int)$this->current_time_2).'s');
 				}
 
-				/* Add order detail */
-				$tax = new Tax(Configuration::get('PS_TAX'), $context->cookie->id_lang);
-				
-				$price_product = ($neteven_order->Price->_ - (float)($neteven_order->VAT->_)) / $neteven_order->Quantity;
-				$order_detail = new OrderDetail();
-				$order_detail->id_order	= $id_order;
-				$order_detail->product_id = $res_product['id_product'];
-				$order_detail->product_attribute_id = $id_product_attribute;
-				$order_detail->product_name = $name;
-				$order_detail->product_quantity	= $neteven_order->Quantity;
-				$order_detail->product_quantity_in_stock = $neteven_order->Quantity;
-				$order_detail->product_quantity_refunded = 0;
-				$order_detail->product_quantity_return = 0;
-				$order_detail->product_quantity_reinjected = 0;
-				$order_detail->product_price = number_format((float)$price_product, 4, '.', '');
-				$order_detail->total_price_tax_excl	= number_format((float)$price_product, 4, '.', '');
-				$order_detail->unit_price_tax_incl = number_format((float)$price_product, 4, '.', '');
-				$order_detail->unit_price_tax_excl = $tax->rate ? number_format((float)$price_product / ((float)$tax->rate/100), 4, '.', '') : $price_product;
-				$order_detail->reduction_percent = 0;
-				$order_detail->reduction_amount = 0;
-				$order_detail->group_reduction = 0;
-				$order_detail->product_quantity_discount = 0;
-				$order_detail->product_ean13 = null;
-				$order_detail->product_upc = null;
-				$order_detail->product_reference = $product_reference;
-				$order_detail->product_supplier_reference = null;
-				$order_detail->product_weight = !empty($res_product['weight']) ? (float)$res_product['weight'] : 0;
-				$order_detail->tax_name	= $tax->name;
-				$order_detail->tax_rate	= (float)$tax->rate;
-				$order_detail->ecotax = 0;
-				$order_detail->ecotax_tax_rate = 0;
-				$order_detail->discount_quantity_applied = 0;
-				$order_detail->download_hash = '';
-				$order_detail->download_nb = 0;
-				$order_detail->download_deadline = '0000-00-00 00:00:00';
-				$order_detail->id_warehouse	= 0;
+                /* Add order detail */
+                $tax = new Tax(Configuration::get('PS_TAX'), $context->cookie->id_lang);
 
-				if (Configuration::get('PS_SHOP_ENABLE'))
-					$order_detail->id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
+                /* Add order detail */
+                if (version_compare(_PS_VERSION_, '1.5', '<')) {
+                    $tax = new Tax(Configuration::get('PS_TAX'), $context->cookie->id_lang);
+                    $current_tax_rate = $tax->rate;
+                    $current_tax_name = $tax->name;
+                }
+                else {
+                    $tax_manager = TaxManagerFactory::getManager(new Address($order->id_address_delivery), Product::getIdTaxRulesGroupByIdProduct((int)$res_product['id_product'], $context));
+                    $current_tax_rate = $tax_manager->getTaxCalculator()->getTotalRate();
+                    $current_tax_name = $tax_manager->getTaxCalculator()->getTaxesName();
+                }
+
+                $price_product = ($neteven_order->Price->_ - (float)($neteven_order->VAT->_)) / $neteven_order->Quantity;
+                $price_product_ttc = ($neteven_order->Price->_ ) / $neteven_order->Quantity ;
+
+
+                $order_detail = new OrderDetail();
+                $order_detail->id_order	= $id_order;
+                $order_detail->product_id = $res_product['id_product'];
+                $order_detail->product_attribute_id = $id_product_attribute;
+                $order_detail->product_name = $name;
+                $order_detail->product_quantity	= $neteven_order->Quantity;
+                $order_detail->product_quantity_in_stock = $neteven_order->Quantity;
+                $order_detail->product_quantity_refunded = 0;
+                $order_detail->product_quantity_return = 0;
+                $order_detail->product_quantity_reinjected = 0;
+
+                $order_detail->product_price = number_format((float)$price_product_ttc, 4, '.', '');
+                $order_detail->total_price_tax_excl	= number_format(($price_product * $neteven_order->Quantity), 4, '.', '');
+                $order_detail->total_price_tax_incl	= number_format(($price_product_ttc * $neteven_order->Quantity), 4, '.', '');
+                $order_detail->unit_price_tax_incl = number_format((float)$price_product_ttc, 4, '.', '');
+                $order_detail->unit_price_tax_excl = number_format($price_product, 4, '.', '');
+
+                $order_detail->reduction_percent = 0;
+                $order_detail->reduction_amount = 0;
+                $order_detail->group_reduction = 0;
+                $order_detail->product_quantity_discount = 0;
+                $order_detail->product_ean13 = null;
+                $order_detail->product_upc = null;
+                $order_detail->product_reference = $product_reference;
+                $order_detail->product_supplier_reference = null;
+                $order_detail->product_weight = !empty($res_product['weight']) ? (float)$res_product['weight'] : 0;
+                $order_detail->tax_name	= $current_tax_name;
+                $order_detail->tax_rate	= (float)$current_tax_rate;
+                $order_detail->ecotax = 0;
+                $order_detail->ecotax_tax_rate = 0;
+                $order_detail->discount_quantity_applied = 0;
+                $order_detail->download_hash = '';
+                $order_detail->download_nb = 0;
+                $order_detail->download_deadline = '0000-00-00 00:00:00';
+                $order_detail->id_warehouse	= 0;
+
+                if (Configuration::get('PS_SHOP_ENABLE'))
+                    $order_detail->id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
 				if (!$order_detail->add())
 					Toolbox::addLogLine(self::getL('Failed for creation of order detail / NetEven Order Id').' '.(int)$neteven_order->OrderID.' '.self::getL('NetEven order detail id').' '.$neteven_order->OrderLineID);
