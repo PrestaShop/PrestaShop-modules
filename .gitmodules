@@ -574,9 +574,6 @@
 [submodule "reforestaction"]
 	path = reforestaction
 	url = https://github.com/PrestaShop/reforestaction.git
-[submodule "exapaq"]
-	path = exapaq
-	url = https://github.com/PrestaShop/exapaq.git
 [submodule "expressmailing"]
 	path = expressmailing
 	url = https://github.com/PrestaShop/expressmailing.git
@@ -592,3 +589,6 @@
 [submodule "mercadopago"]
 	path = mercadopago
 	url = https://github.com/PrestaShop/mercadopago.git
+[submodule "dpdfrance"]
+	path = dpdfrance
+	url = https://github.com/PrestaShop/dpdfrance.git
