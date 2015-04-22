@@ -595,3 +595,6 @@
 [submodule "a2hosting"]
 	path = a2hosting
 	url = https://github.com/PrestaShop/a2hosting.git
+[submodule "gapps"]
+	path = gapps
+	url = https://github.com/PrestaShop/gapps.git
