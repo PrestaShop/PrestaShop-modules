@@ -598,3 +598,6 @@
 [submodule "gapps"]
 	path = gapps
 	url = https://github.com/PrestaShop/gapps.git
+[submodule "chronopost"]
+	path = chronopost
+	url = https://github.com/PrestaShop/chronopost.git
