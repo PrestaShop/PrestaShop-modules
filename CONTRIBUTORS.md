@@ -24,11 +24,11 @@
 - cedricfontaine 
 - cegoncalves 
 - CINS 
-- clément hollander 
 - Claude Traglia 
 - Claudio Mulas 
 - clement 
 - clement-hollander 
+- clément hollander 
 - cmouleyre 
 - Damien Metzger 
 - darko 
@@ -49,10 +49,10 @@
 - ethercreation 
 - Eyal 
 - fram 
-- François Gaillard 
-- François-Marie de Jouvencel 
 - Francesco Guardiani 
 - Francois Gaillard 
+- François Gaillard 
+- François-Marie de Jouvencel 
 - Giedrius Stan 
 - Gordon Coubrough 
 - GreenItaliaWeb.it 
@@ -107,8 +107,8 @@
 - quadrateam 
 - Quadra Team 
 - Quetzacoalt91 
-- Rémi Gaillard 
 - RaphArbuz 
+- Rémi Gaillard 
 - remixaz 
 - rimas 
 - Rinku Kazeno 
