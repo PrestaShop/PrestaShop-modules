@@ -72,6 +72,7 @@
 - J. Danse 
 - jeromenadaud 
 - Jerome Nadaud 
+- Jérôme Nadaud 
 - Jonadabe 
 - Jonathan Wohl 
 - joseantgv 
