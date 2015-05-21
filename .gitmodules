@@ -607,3 +607,6 @@
 [submodule "zeleriscarrier"]
 	path = zeleriscarrier
 	url = https://github.com/PrestaShop/zeleriscarrier.git
+[submodule "nimblepayment"]
+	path = nimblepayment
+	url = https://github.com/PrestaShop/nimblepayment.git
