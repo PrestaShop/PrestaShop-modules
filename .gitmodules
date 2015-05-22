@@ -610,3 +610,6 @@
 [submodule "nimblepayment"]
 	path = nimblepayment
 	url = https://github.com/PrestaShop/nimblepayment.git
+[submodule "protectedshops"]
+	path = protectedshops
+	url = https://github.com/PrestaShop/protectedshops.git
