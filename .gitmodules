@@ -613,3 +613,6 @@
 [submodule "protectedshops"]
 	path = protectedshops
 	url = https://github.com/PrestaShop/protectedshops.git
+[submodule "advancedeucompliance"]
+	path = advancedeucompliance
+	url = https://github.com/PrestaShop/advancedeucompliance
