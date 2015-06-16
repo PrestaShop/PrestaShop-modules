@@ -616,3 +616,6 @@
 [submodule "advancedeucompliance"]
 	path = advancedeucompliance
 	url = https://github.com/PrestaShop/advancedeucompliance
+[submodule "eurovatgenerator"]
+	path = eurovatgenerator
+	url = https://github.com/PrestaShop/eurovatgenerator
