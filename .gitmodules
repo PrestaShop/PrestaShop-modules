@@ -622,3 +622,6 @@
 [submodule "famebit"]
 	path = famebit
 	url = https://github.com/PrestaShop/famebit.git
+[submodule "shiptomyid"]
+	path = shiptomyid
+	url = https://github.com/PrestaShop/shiptomyid.git
