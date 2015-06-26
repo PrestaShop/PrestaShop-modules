@@ -625,3 +625,6 @@
 [submodule "shiptomyid"]
 	path = shiptomyid
 	url = https://github.com/PrestaShop/shiptomyid.git
+[submodule "lendingclub"]
+	path = lendingclub
+	url = https://github.com/PrestaShop/lendingclub.git
