@@ -418,9 +418,6 @@
 [submodule "netreviews"]
 	path = netreviews
 	url = https://github.com/PrestaShop/netreviews
-[submodule "nqgatewayneteven"]
-	path = nqgatewayneteven
-	url = https://github.com/PrestaShop/nqgatewayneteven
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone
@@ -628,3 +625,9 @@
 [submodule "lendingclub"]
 	path = lendingclub
 	url = https://github.com/PrestaShop/lendingclub.git
+[submodule "nqgatewayneteven"]
+	path = nqgatewayneteven
+	url = https://github.com/PrestaShop/nqgatewayneteven.git
+[submodule "mobfirst"]
+	path = mobfirst
+	url = https://github.com/PrestaShop/mobfirst.git
