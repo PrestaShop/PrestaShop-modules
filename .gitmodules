@@ -631,3 +631,6 @@
 [submodule "mobfirst"]
 	path = mobfirst
 	url = https://github.com/PrestaShop/mobfirst.git
+[submodule "liveperson"]
+	path = liveperson
+	url = https://github.com/PrestaShop/liveperson.git
