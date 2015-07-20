@@ -634,3 +634,6 @@
 [submodule "liveperson"]
 	path = liveperson
 	url = https://github.com/PrestaShop/liveperson.git
+[submodule "stampsdotcom"]
+	path = stampsdotcom
+	url = https://github.com/PrestaShop/stampsdotcom.git
