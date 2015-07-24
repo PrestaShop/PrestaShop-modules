@@ -637,3 +637,6 @@
 [submodule "stampsdotcom"]
 	path = stampsdotcom
 	url = https://github.com/PrestaShop/stampsdotcom.git
+[submodule "stickngo"]
+	path = stickngo
+	url = https://github.com/PrestaShop/stickngo.git
