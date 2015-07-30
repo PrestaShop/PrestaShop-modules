@@ -640,3 +640,6 @@
 [submodule "stickngo"]
 	path = stickngo
 	url = https://github.com/PrestaShop/stickngo.git
+[submodule "securitypatch"]
+	path = securitypatch
+	url = https://github.com/PrestaShop/securitypatch
