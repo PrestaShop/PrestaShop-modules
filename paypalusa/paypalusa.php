@@ -413,7 +413,19 @@ class PayPalUSA extends PaymentModule
 			}
 
 			$currency = new Currency((int)$this->context->cart->id_currency);
+			$billing_address = new Address((int)$this->context->cart->id_address_invoice);
+			$billing_address->country = new Country((int)$billing_address->id_country);
+			$billing_address->state = new State((int)$billing_address->id_state);
+			$delivery_address = new Address((int)$this->context->cart->id_address_delivery);
+			$delivery_address->country = new Country((int)$delivery_address->id_country);
+			$delivery_address->state = new State((int)$delivery_address->id_state);
 			$result = $this->postToPayFlow('&TRXTYPE[1]=S&AMT['.strlen($amount).']='.$amount.$nvp_request.'&CREATESECURETOKEN[1]=Y&DISABLERECEIPT=TRUE&SECURETOKENID[36]='.$token.
+					'&BILLTOFIRSTNAME='.$billing_address->firstname.'&BILLTOLASTNAME='.$billing_address->lastname.
+					'&BILLTOSTREET='.$billing_address->address1.'&BILLTOSTREET2='.$billing_address->address2.'&BILLTOCITY='.$billing_address->city.'&BILLTOSTATE='.$billing_address->state->iso_code.
+					'&BILLTOZIP='.$billing_address->postcode.'&BILLTOCOUNTRY='.$billing_address->country->iso_code.'&BILLTOEMAIL='.$this->context->customer->email.
+					'&SHIPTOFIRSTNAME='.$delivery_address->firstname.'&SHIPTOLASTNAME='.$delivery_address->lastname.
+					'&SHIPTOSTREET='.$delivery_address->address1.'&SHIPTOSTREET2='.$delivery_address->address2.'&SHIPTOCITY='.$delivery_address->city.'&SHIPTOSTATE='.$delivery_address->state->iso_code.
+					'&SHIPTOZIP='.$delivery_address->postcode.'&SHIPTOCOUNTRY='.$delivery_address->country->iso_code.'&SHIPTOPHONENUM='.$delivery_address->phone.
 					'&CURRENCY['.strlen(urlencode($currency->iso_code)).']='.urlencode($currency->iso_code).'&TEMPLATE[9]=MINLAYOUT&ERRORURL['.strlen($this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED'))).']='.$this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED')).
 					'&CANCELURL='.$this->context->link->getPageLink('order.php','').
 					'&RETURNURL['.strlen($this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED'))).']='.$this->getModuleLink('paypalusa', 'validation', array(), Configuration::get('PS_SSL_ENABLED')), Configuration::get('PAYPAL_USA_PAYFLOW_LINK') ? 'link' : 'pro');
