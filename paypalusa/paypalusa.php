@@ -19,7 +19,7 @@ class PayPalUSA extends PaymentModule
 	public function __construct()
 	{
 		$this->name = 'paypalusa';
-		$this->version = '1.3.9';
+		$this->version = '1.3.10';
 		$this->author = 'PrestaShop';
 		$this->className = 'Paypalusa';
 		$this->tab = 'payments_gateways';
