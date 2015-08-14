@@ -643,3 +643,6 @@
 [submodule "securitypatch"]
 	path = securitypatch
 	url = https://github.com/PrestaShop/securitypatch
+[submodule "openpayprestashop"]
+	path = openpayprestashop
+	url = https://github.com/PrestaShop/openpayprestashop.git
