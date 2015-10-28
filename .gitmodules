@@ -652,3 +652,6 @@
 [submodule "convermax"]
 	path = convermax
 	url = https://github.com/PrestaShop/convermax.git
+[submodule "checkyourdata"]
+	path = checkyourdata
+	url = https://github.com/PrestaShop/checkyourdata.git
