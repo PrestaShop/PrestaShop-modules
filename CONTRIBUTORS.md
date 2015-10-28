@@ -5,51 +5,25 @@
 - Aleksander Palyan 
 - Alexander Wesselburg 
 - Alexandre Segura 
-- alexsimple 
-- alonbr 
 - Alon Braitstein 
 - Amala 
-- antoniofr 
-- apaqui 
-- arossetti 
 - Axome 
-- baptgauthier 
 - Baptiste GAUTHIER 
-- bellini13 
 - BrandonTaylor 
 - Bruno Leveque 
-- bunsenstraat 
-- cartman 
-- Ceboweb 
-- cedricfontaine 
-- cegoncalves 
 - CINS 
+- Ceboweb 
 - Claude Traglia 
 - Claudio Mulas 
-- clement 
-- clement-hollander 
-- clément hollander 
-- cmouleyre 
 - Damien Metzger 
-- darko 
-- dave-lp 
 - David Kelly 
 - Delboy 
 - DevNet 
 - Dh42 
-- djfm 
-- doekia 
 - Donatas Lomsargis 
 - Dvir Julius 
-- edamart 
-- e.lito 
-- elmahdi 
-- emilien-puget 
-- esilvajrs2it 
 - ESPIAU Nicolas 
-- ethercreation 
 - Eyal 
-- fram 
 - Francesco Guardiani 
 - Francois Gaillard 
 - François Gaillard 
@@ -58,87 +32,56 @@
 - Gordon Coubrough 
 - GreenItaliaWeb.it 
 - Gregory Roussac 
-- gRoussac 
 - GuigZ 
 - Guillaume DELOINCE 
 - Guillaume Illien 
-- hadjedjvincent 
-- hMaarek 
 - Ibrahim Ibn Dawood 
 - IceEyz 
-- indesign47 
-- ironwo0d 
 - IsabelleCoccinet 
-- jcriadop 
 - J. Danse 
-- jeromenadaud 
-- Jérôme Nadaud 
 - Jerome Nadaud 
-- Jérôme Nadaud 
 - Jonadabe 
 - Jonathan Wohl 
-- joseantgv 
 - Julien 
 - Julien Bijoux 
-- julienbourdeau 
 - Julien Bourdeau 
-- kazeno 
+- Jérôme Nadaud 
 - Ken Mendes 
-- khokha elmahdi 
 - Krystian Podemski 
 - Lesley Paone 
 - Livintha 
-- lsparer 
 - Ludovic 
 - Ludovic Verrecchia 
 - Luigi Massa 
-- luisalb 
 - Mathieu 
 - MatthieuB 
-- m-hume 
-- modem 
 - Obvious1809 
 - OliverMuellerShopgate 
 - PaymentSense-Developer 
 - Peter Schaeffer 
-- philong 
-- prestachris 
 - PrestaEdit 
-- prestamodule 
 - PrestanceDesign 
 - Quadra Informatique 
-- quadrateam 
 - Quadra Team 
 - Quetzacoalt91 
 - RaphArbuz 
-- Rémi Gaillard 
-- remixaz 
-- rimas 
 - Rinku Kazeno 
 - Robert 
-- samy-r 
-- seanmacdomhnall 
+- Rémi Gaillard 
 - Shamunr 
-- sjousse 
 - Sparer lilian 
 - Sven Weber 
 - Talha Umer Syed 
 - Thibaud Chauviere 
 - Thoma 
-- thoma202 
-- Thoma Biguères 
 - Thoma Bigueres 
+- Thoma Biguères 
 - Thomas 
 - Thomas N 
 - Thomas Nabord 
-- tNabord 
 - Tomasz 
 - Toto 
-- tpharaoh 
 - Tredez Guillaume 
-- tucoinfo 
-- unknown 
-- vAugagneur 
 - Vincent Augagneur 
 - Vincent Terenti 
 - Wanted85 
@@ -146,8 +89,63 @@
 - Xavier 
 - Yann 
 - Yann CYRILLE 
-- youlyn 
 - Youlyn Chinome 
 - Youness ZIOUANE 
 - ZiZuu 
+- alexsimple 
+- alonbr 
+- antoniofr 
+- apaqui 
+- arossetti 
+- baptgauthier 
+- bellini13 
+- bunsenstraat 
+- cartman 
+- cedricfontaine 
+- cegoncalves 
+- clement 
+- clement-hollander 
+- clément hollander 
+- cmouleyre 
+- darko 
+- djfm 
+- doekia 
+- e.lito 
+- edamart 
+- elmahdi 
+- emilien-puget 
+- esilvajrs2it 
+- ethercreation 
+- fram 
+- gRoussac 
+- hMaarek 
+- hadjedjvincent 
+- indesign47 
+- ironwo0d 
+- jcriadop 
+- jeromenadaud 
+- joseantgv 
+- julienbourdeau 
+- kazeno 
+- khokha elmahdi 
+- lsparer 
+- luisalb 
+- m-hume 
+- modem 
+- philong 
+- prestachris 
+- prestamodule 
+- quadrateam 
+- remixaz 
+- rimas 
+- samy-r 
+- seanmacdomhnall 
+- sjousse 
+- tNabord 
+- thoma202 
+- tpharaoh 
+- tucoinfo 
+- unknown 
+- vAugagneur 
+- youlyn 
 - zuzul 
