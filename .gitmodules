@@ -655,3 +655,6 @@
 [submodule "checkyourdata"]
 	path = checkyourdata
 	url = https://github.com/PrestaShop/checkyourdata.git
+[submodule "remarkety"]
+	path = remarkety
+	url = https://github.com/PrestaShop/remarkety.git
