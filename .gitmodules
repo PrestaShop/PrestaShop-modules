@@ -658,3 +658,6 @@
 [submodule "remarkety"]
 	path = remarkety
 	url = https://github.com/PrestaShop/remarkety.git
+[submodule "alipay"]
+	path = alipay
+	url = https://github.com/PrestaShop/alipay.git
