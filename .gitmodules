@@ -661,3 +661,6 @@
 [submodule "alipay"]
 	path = alipay
 	url = https://github.com/PrestaShop/alipay.git
+[submodule "amzpayments"]
+	path = amzpayments
+	url = https://github.com/PrestaShop/amzpayments.git
