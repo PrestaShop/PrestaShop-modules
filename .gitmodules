@@ -664,3 +664,6 @@
 [submodule "amzpayments"]
 	path = amzpayments
 	url = https://github.com/PrestaShop/amzpayments.git
+[submodule "safeshops"]
+	path = safeshops
+	url = https://github.com/PrestaShop/safeshops.git
