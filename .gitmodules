@@ -349,9 +349,6 @@
 [submodule "boxdropshipment"]
 	path = boxdropshipment
 	url = https://github.com/PrestaShop/boxdropshipment
-[submodule "browsi"]
-	path = browsi
-	url = https://github.com/PrestaShop/browsi
 [submodule "desjardins"]
 	path = desjardins
 	url = https://github.com/PrestaShop/desjardins
