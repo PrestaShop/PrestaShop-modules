@@ -382,9 +382,6 @@
 [submodule "kialasmall"]
 	path = kialasmall
 	url = https://github.com/PrestaShop/kialasmall
-[submodule "kwixo"]
-	path = kwixo
-	url = https://github.com/PrestaShop/kwixo
 [submodule "merchantware"]
 	path = merchantware
 	url = https://github.com/PrestaShop/merchantware
