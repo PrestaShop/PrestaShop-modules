@@ -340,9 +340,6 @@
 [submodule "sendinblue"]
 	path = sendinblue
 	url = https://github.com/PrestaShop/sendinblue.git
-[submodule "affinityitems"]
-	path = affinityitems
-	url = https://github.com/PrestaShop/affinityitems.git
 [submodule "alliance3"]
 	path = alliance3
 	url = https://github.com/PrestaShop/alliance3
