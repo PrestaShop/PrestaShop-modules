@@ -409,9 +409,6 @@
 [submodule "sofortbanking"]
 	path = sofortbanking
 	url = https://github.com/PrestaShop/sofortbanking
-[submodule "syspay"]
-	path = syspay
-	url = https://github.com/PrestaShop/syspay
 [submodule "tntcarrier"]
 	path = tntcarrier
 	url = https://github.com/PrestaShop/tntcarrier
