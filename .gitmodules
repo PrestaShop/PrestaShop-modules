@@ -412,9 +412,6 @@
 [submodule "tntcarrier"]
 	path = tntcarrier
 	url = https://github.com/PrestaShop/tntcarrier
-[submodule "trustly"]
-	path = trustly
-	url = https://github.com/PrestaShop/trustly
 [submodule "trustpilot"]
 	path = trustpilot
 	url = https://github.com/PrestaShop/trustpilot
