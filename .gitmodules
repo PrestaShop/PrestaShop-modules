@@ -361,9 +361,6 @@
 [submodule "fedexcarrier"]
 	path = fedexcarrier
 	url = https://github.com/PrestaShop/fedexcarrier
-[submodule "ferbuy"]
-	path = ferbuy
-	url = https://github.com/PrestaShop/ferbuy
 [submodule "fianetfraud"]
 	path = fianetfraud
 	url = https://github.com/PrestaShop/fianetfraud
