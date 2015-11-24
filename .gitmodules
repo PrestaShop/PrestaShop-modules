@@ -340,9 +340,6 @@
 [submodule "sendinblue"]
 	path = sendinblue
 	url = https://github.com/PrestaShop/sendinblue.git
-[submodule "alliance3"]
-	path = alliance3
-	url = https://github.com/PrestaShop/alliance3
 [submodule "authorizeaim"]
 	path = authorizeaim
 	url = https://github.com/PrestaShop/authorizeaim
