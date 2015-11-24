@@ -373,9 +373,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics
-[submodule "giveit"]
-	path = giveit
-	url = https://github.com/PrestaShop/giveit
 [submodule "gointerpay"]
 	path = gointerpay
 	url = https://github.com/PrestaShop/gointerpay
