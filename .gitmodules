@@ -397,9 +397,6 @@
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone
-[submodule "prediggo"]
-	path = prediggo
-	url = https://github.com/PrestaShop/prediggo
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud
