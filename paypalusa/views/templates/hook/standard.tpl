@@ -38,14 +38,14 @@
 		{/if}
 		<input type="hidden" name="address_override" value="1" />
 		
-		{assign var="paypal_usa_total_discounts" value=$cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS)}
+		{assign var="paypal_usa_total_discounts" value=$cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS)}
 		{if $paypal_usa_total_discounts == 0}
 			{foreach from=$cart->getProducts() item=paypal_usa_product name="paypal_usa_products"}
 				<input type="hidden" name="item_name_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.name|escape:'htmlall':'UTF-8'}" />
 				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.price|string_format:"%.2f"}" />
 				<input type="hidden" name="quantity_{$smarty.foreach.paypal_usa_products.index+1|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_product.quantity|intval}" />
 			{/foreach}
-			{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(true, Cart::ONLY_SHIPPING)}
+			{assign var="paypal_usa_total_shipping" value=$cart->getOrderTotal(false, Cart::ONLY_SHIPPING)}
 			{if $paypal_usa_total_shipping}
 				<input type="hidden" name="item_name_{$smarty.foreach.paypal_usa_products.index+2|escape:'htmlall':'UTF-8'}" value="{l s='Shipping' mod='paypalusa'}" />
 				<input type="hidden" name="amount_{$smarty.foreach.paypal_usa_products.index+2|escape:'htmlall':'UTF-8'}" value="{$paypal_usa_total_shipping|floatval}" />
