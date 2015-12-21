@@ -637,3 +637,12 @@
 [submodule "storecommander"]
 	path = storecommander
 	url = https://github.com/PrestaShop/storecommander.git
+[submodule "twengafeed"]
+	path = twengafeed
+	url = https://github.com/PrestaShop/twengafeed.git
+[submodule "hipaymobileivr"]
+	path = hipaymobileivr
+	url = https://github.com/PrestaShop/hipaymobileivr.git
+[submodule "twengabid"]
+	path = twengabid
+	url = https://github.com/PrestaShop/twengabid.git
