@@ -337,9 +337,6 @@
 [submodule "payplug"]
 	path = payplug
 	url = https://github.com/PrestaShop/payplug.git
-[submodule "sendinblue"]
-	path = sendinblue
-	url = https://github.com/PrestaShop/sendinblue.git
 [submodule "authorizeaim"]
 	path = authorizeaim
 	url = https://github.com/PrestaShop/authorizeaim
@@ -388,9 +385,6 @@
 [submodule "mondialrelay"]
 	path = mondialrelay
 	url = https://github.com/PrestaShop/mondialrelay
-[submodule "moneybookers"]
-	path = moneybookers
-	url = https://github.com/PrestaShop/moneybookers.git
 [submodule "netreviews"]
 	path = netreviews
 	url = https://github.com/PrestaShop/netreviews
