@@ -400,9 +400,6 @@
 [submodule "simplifycommerce"]
 	path = simplifycommerce
 	url = https://github.com/PrestaShop/simplifycommerce
-[submodule "sofortbanking"]
-	path = sofortbanking
-	url = https://github.com/PrestaShop/sofortbanking
 [submodule "tntcarrier"]
 	path = tntcarrier
 	url = https://github.com/PrestaShop/tntcarrier
