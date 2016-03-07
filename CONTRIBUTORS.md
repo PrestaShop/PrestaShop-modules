@@ -95,6 +95,7 @@
 - luisalb 
 - Mathieu 
 - MatthieuB 
+- Maxime Biloé 
 - m-hume 
 - modem 
 - Obvious1809 
