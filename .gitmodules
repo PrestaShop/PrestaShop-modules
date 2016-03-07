@@ -658,3 +658,6 @@
 [submodule "ps_categorytree"]
 	path = ps_categorytree
 	url = https://github.com/PrestaShop/ps_categorytree.git
+[submodule "blockreassurance"]
+	path = blockreassurance
+	url = https://github.com/PrestaShop/blockreassurance.git
