@@ -625,3 +625,36 @@
 [submodule "twengabid"]
 	path = twengabid
 	url = https://github.com/PrestaShop/twengabid.git
+[submodule "ps_sharebuttons"]
+	path = ps_sharebuttons
+	url = https://github.com/PrestaShop/ps_sharebuttons.git
+[submodule "ps_socialfollow"]
+	path = ps_socialfollow
+	url = https://github.com/PrestaShop/ps_socialfollow.git
+[submodule "ps_customtext"]
+	path = ps_customtext
+	url = https://github.com/PrestaShop/ps_customtext.git
+[submodule "ps_contactinfo"]
+	path = ps_contactinfo
+	url = https://github.com/PrestaShop/ps_contactinfo.git
+[submodule "ps_emailsubscription"]
+	path = ps_emailsubscription
+	url = https://github.com/PrestaShop/ps_emailsubscription.git
+[submodule "ps_banner"]
+	path = ps_banner
+	url = https://github.com/PrestaShop/ps_banner.git
+[submodule "ps_featuredproducts"]
+	path = ps_featuredproducts
+	url = https://github.com/PrestaShop/ps_featuredproducts.git
+[submodule "ps_imageslider"]
+	path = ps_imageslider
+	url = https://github.com/PrestaShop/ps_imageslider.git
+[submodule "ps_mainmenu"]
+	path = ps_mainmenu
+	url = https://github.com/PrestaShop/ps_mainmenu.git
+[submodule "ps_customersignin"]
+	path = ps_customersignin
+	url = https://github.com/PrestaShop/ps_customersignin.git
+[submodule "ps_categorytree"]
+	path = ps_categorytree
+	url = https://github.com/PrestaShop/ps_categorytree.git
