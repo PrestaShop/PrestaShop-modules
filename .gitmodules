@@ -661,3 +661,6 @@
 [submodule "blockreassurance"]
 	path = blockreassurance
 	url = https://github.com/PrestaShop/blockreassurance.git
+[submodule "skebby"]
+	path = skebby
+	url = https://github.com/PrestaShop/skebby.git
