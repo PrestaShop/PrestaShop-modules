@@ -664,3 +664,6 @@
 [submodule "skebby"]
 	path = skebby
 	url = https://github.com/PrestaShop/skebby.git
+[submodule "welcome"]
+	path = welcome
+	url = https://github.com/PrestaShop/welcome.git
