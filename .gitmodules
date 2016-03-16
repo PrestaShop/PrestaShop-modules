@@ -379,9 +379,6 @@
 [submodule "mondialrelay"]
 	path = mondialrelay
 	url = https://github.com/PrestaShop/mondialrelay
-[submodule "netreviews"]
-	path = netreviews
-	url = https://github.com/PrestaShop/netreviews
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone
