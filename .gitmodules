@@ -661,3 +661,6 @@
 [submodule "welcome"]
 	path = welcome
 	url = https://github.com/PrestaShop/welcome.git
+[submodule "packlinkpro"]
+	path = packlinkpro
+	url = https://github.com/PrestaShop/packlinkpro.git
