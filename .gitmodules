@@ -664,3 +664,6 @@
 [submodule "packlinkpro"]
 	path = packlinkpro
 	url = https://github.com/PrestaShop/packlinkpro.git
+[submodule "ps_legalcompliance"]
+	path = ps_legalcompliance
+	url = https://github.com/PrestaShop/ps_legalcompliance
