@@ -667,3 +667,6 @@
 [submodule "ps_legalcompliance"]
 	path = ps_legalcompliance
 	url = https://github.com/PrestaShop/ps_legalcompliance
+[submodule "contactform"]
+	path = contactform
+	url = https://github.com/PrestaShop/contactform
