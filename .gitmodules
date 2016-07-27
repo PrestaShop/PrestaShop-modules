@@ -670,3 +670,6 @@
 [submodule "contactform"]
 	path = contactform
 	url = https://github.com/PrestaShop/contactform
+[submodule "ps_wirepayment"]
+	path = ps_wirepayment
+	url = https://github.com/PrestaShop/ps_wirepayment
