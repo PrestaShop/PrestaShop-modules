@@ -691,3 +691,6 @@
 [submodule "ps_searchbar"]
 	path = ps_searchbar
 	url = https://github.com/PrestaShop/ps_searchbar
+[submodule "ps_checkpayment"]
+	path = ps_checkpayment
+	url = https://github.com/PrestaShop/ps_checkpayment
