@@ -685,3 +685,6 @@
 [submodule "ps_facetedsearch"]
 	path = ps_facetedsearch
 	url = https://github.com/PrestaShop/ps_facetedsearch
+[submodule "ps_customeraccountlinks"]
+	path = ps_customeraccountlinks
+	url = https://github.com/PrestaShop/ps_customeraccountlinks/
