@@ -688,3 +688,6 @@
 [submodule "ps_customeraccountlinks"]
 	path = ps_customeraccountlinks
 	url = https://github.com/PrestaShop/ps_customeraccountlinks/
+[submodule "ps_searchbar"]
+	path = ps_searchbar
+	url = https://github.com/PrestaShop/ps_searchbar
