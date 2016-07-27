@@ -673,3 +673,6 @@
 [submodule "ps_wirepayment"]
 	path = ps_wirepayment
 	url = https://github.com/PrestaShop/ps_wirepayment
+[submodule "ps_shoppingcart"]
+	path = ps_shoppingcart
+	url = https://github.com/PrestaShop/ps_shoppingcart
