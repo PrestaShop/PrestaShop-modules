@@ -682,3 +682,6 @@
 [submodule "ps_languageselector"]
 	path = ps_languageselector
 	url = https://github.com/PrestaShop/ps_languageselector
+[submodule "ps_facetedsearch"]
+	path = ps_facetedsearch
+	url = https://github.com/PrestaShop/ps_facetedsearch
