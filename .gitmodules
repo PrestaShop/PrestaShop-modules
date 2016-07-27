@@ -679,3 +679,6 @@
 [submodule "ps_currencyselector"]
 	path = ps_currencyselector
 	url = https://github.com/PrestaShop/ps_currencyselector
+[submodule "ps_languageselector"]
+	path = ps_languageselector
+	url = https://github.com/PrestaShop/ps_languageselector
