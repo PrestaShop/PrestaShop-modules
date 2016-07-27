@@ -676,3 +676,6 @@
 [submodule "ps_shoppingcart"]
 	path = ps_shoppingcart
 	url = https://github.com/PrestaShop/ps_shoppingcart
+[submodule "ps_currencyselector"]
+	path = ps_currencyselector
+	url = https://github.com/PrestaShop/ps_currencyselector
