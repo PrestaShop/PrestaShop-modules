@@ -694,3 +694,6 @@
 [submodule "ps_checkpayment"]
 	path = ps_checkpayment
 	url = https://github.com/PrestaShop/ps_checkpayment
+[submodule "ps_linklist"]
+	path = ps_linklist
+	url = https://github.com/PrestaShop/ps_linklist/
