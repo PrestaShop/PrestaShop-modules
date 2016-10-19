@@ -697,3 +697,6 @@
 [submodule "ps_linklist"]
 	path = ps_linklist
 	url = https://github.com/PrestaShop/ps_linklist/
+[submodule "ps_emailalerts"]
+	path = ps_emailalerts
+	url = https://github.com/PrestaShop/ps_emailalerts
