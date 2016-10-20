@@ -700,3 +700,6 @@
 [submodule "ps_emailalerts"]
 	path = ps_emailalerts
 	url = https://github.com/PrestaShop/ps_emailalerts
+[submodule "ps_advertising"]
+	path = ps_advertising
+	url = https://github.com/PrestaShop/ps_advertising.git
