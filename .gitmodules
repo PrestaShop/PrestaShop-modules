@@ -706,3 +706,6 @@
 [submodule "ps_bestsellers"]
 	path = ps_bestsellers
 	url = https://github.com/PrestaShop/ps_bestsellers.git
+[submodule "ps_categoryproducts"]
+	path = ps_categoryproducts
+	url = https://github.com/PrestaShop/ps_categoryproducts.git
