@@ -715,3 +715,6 @@
 [submodule "ps_rssfeed"]
 	path = ps_rssfeed
 	url = https://github.com/PrestaShop/ps_rssfeed
+[submodule "ps_cashondelivery"]
+	path = ps_cashondelivery
+	url = https://github.com/PrestaShop/ps_cashondelivery
