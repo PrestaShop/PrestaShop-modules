@@ -718,3 +718,6 @@
 [submodule "ps_cashondelivery"]
 	path = ps_cashondelivery
 	url = https://github.com/PrestaShop/ps_cashondelivery
+[submodule "ps_brandlist"]
+	path = ps_brandlist
+	url = https://github.com/PrestaShop/ps_brandlist.git
