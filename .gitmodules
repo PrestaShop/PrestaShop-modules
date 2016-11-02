@@ -730,3 +730,6 @@
 [submodule "ps_specials"]
 	path = ps_specials
 	url = https://github.com/PrestaShop/ps_specials.git
+[submodule "ps_viewedproduct"]
+	path = ps_viewedproduct
+	url = https://github.com/PrestaShop/ps_viewedproduct.git
