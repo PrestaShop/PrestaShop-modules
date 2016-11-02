@@ -724,3 +724,6 @@
 [submodule "ps_newproducts"]
 	path = ps_newproducts
 	url = https://github.com/PrestaShop/ps_newproducts.git
+[submodule "ps_supplierlist"]
+	path = ps_supplierlist
+	url = https://github.com/PrestaShop/ps_supplierlist.git
