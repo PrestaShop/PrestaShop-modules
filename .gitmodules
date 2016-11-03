@@ -739,3 +739,6 @@
 [submodule "ps_dataprivacy"]
 	path = ps_dataprivacy
 	url = https://github.com/PrestaShop/ps_dataprivacy.git
+[submodule "ps_feeder"]
+	path = ps_feeder
+	url = https://github.com/PrestaShop/ps_feeder.git
