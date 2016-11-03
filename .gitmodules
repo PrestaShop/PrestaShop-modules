@@ -733,3 +733,6 @@
 [submodule "ps_viewedproduct"]
 	path = ps_viewedproduct
 	url = https://github.com/PrestaShop/ps_viewedproduct.git
+[submodule "ps_crossselling"]
+	path = ps_crossselling
+	url = https://github.com/PrestaShop/ps_crossselling.git
