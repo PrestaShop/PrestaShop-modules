@@ -736,3 +736,6 @@
 [submodule "ps_crossselling"]
 	path = ps_crossselling
 	url = https://github.com/PrestaShop/ps_crossselling.git
+[submodule "ps_dataprivacy"]
+	path = ps_dataprivacy
+	url = https://github.com/PrestaShop/ps_dataprivacy.git
