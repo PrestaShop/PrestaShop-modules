@@ -742,3 +742,6 @@
 [submodule "ps_feeder"]
 	path = ps_feeder
 	url = https://github.com/PrestaShop/ps_feeder.git
+[submodule "ps_reminder"]
+	path = ps_reminder
+	url = https://github.com/PrestaShop/ps_reminder
