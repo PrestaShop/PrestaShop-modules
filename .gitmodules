@@ -748,3 +748,6 @@
 [submodule "ps_carriercomparison"]
 	path = ps_carriercomparison
 	url = https://github.com/PrestaShop/ps_carriercomparison.git
+[submodule "ps_emailsmanager"]
+	path = ps_emailsmanager
+	url = https://github.com/PrestaShop/ps_emailsmanager.git
