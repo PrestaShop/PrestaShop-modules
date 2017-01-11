@@ -150,7 +150,7 @@
 	url = https://github.com/PrestaShop/dashactivity.git
 [submodule "dashgoals"]
 	path = dashgoals
-	url = https://github.com/PrestaShop/dashgoals.git
+	url = https://github.com/PrestaShop/dashgoals
 [submodule "dashproducts"]
 	path = dashproducts
 	url = https://github.com/PrestaShop/dashproducts.git
