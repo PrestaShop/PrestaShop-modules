@@ -748,3 +748,6 @@
 [submodule "ps_emailsmanager"]
 	path = ps_emailsmanager
 	url = https://github.com/PrestaShop/ps_emailsmanager.git
+[submodule "ps_livetranslation"]
+	path = ps_livetranslation
+	url = https://github.com/PrestaShop/ps_livetranslation.git
