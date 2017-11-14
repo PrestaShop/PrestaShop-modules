@@ -754,3 +754,6 @@
 [submodule "ps_googleanalytics"]
 	path = ps_googleanalytics
 	url = https://github.com/PrestaShop/ps_googleanalytics.git
+[submodule "firebaseauthenticator"]
+	path = firebaseauthenticator
+	url = https://github.com/PrestaShop/firebaseauthenticator.git
