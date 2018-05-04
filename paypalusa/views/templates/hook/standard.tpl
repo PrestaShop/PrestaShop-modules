@@ -25,6 +25,7 @@
 		<input type="hidden" name="amount" value="{$cart->getOrderTotal(true)|floatval}" />
 		<input type="hidden" name="first_name" value="{$paypal_usa_billing_address->firstname|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="last_name" value="{$paypal_usa_billing_address->lastname|escape:'htmlall':'UTF-8'}" />
+		<input type="hidden" name="country" value="{$paypal_usa_billing_address->country->iso_code|escape:'htmlall':'UTF-8'}" />
 		<input type="hidden" name="address1" value="{$paypal_usa_billing_address->address1|escape:'htmlall':'UTF-8'}" />
 		{if $paypal_usa_billing_address->address2}<input type="hidden" name="address2" value="{$paypal_usa_billing_address->address2|escape:'htmlall':'UTF-8'}" />{/if}
 		<input type="hidden" name="city" value="{$paypal_usa_billing_address->city|escape:'htmlall':'UTF-8'}" />
