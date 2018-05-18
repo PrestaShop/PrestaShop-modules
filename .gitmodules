@@ -757,3 +757,7 @@
 [submodule "firebaseauthenticator"]
 	path = firebaseauthenticator
 	url = https://github.com/PrestaShop/firebaseauthenticator.git
+[submodule "ps_themecusto"]
+        path = ps_themecusto
+        url = https://github.com/PrestaShop/ps_themecusto.git
+
