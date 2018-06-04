@@ -760,3 +760,6 @@
 [submodule "ps_themecusto"]
 	path = ps_themecusto
 	url = https://github.com/PrestaShop/ps_themecusto.git
+[submodule "psgdpr"]
+	path = psgdpr
+	url = https://github.com/PrestaShop/psgdpr.git
