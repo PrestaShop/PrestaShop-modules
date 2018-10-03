@@ -763,3 +763,6 @@
 [submodule "psgdpr"]
 	path = psgdpr
 	url = https://github.com/PrestaShop/psgdpr.git
+[submodule "ps_faviconnotificationbo"]
+	path = ps_faviconnotificationbo
+	url = https://github.com/PrestaShop/ps_faviconnotificationbo.git
