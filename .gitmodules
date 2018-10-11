@@ -766,3 +766,6 @@
 [submodule "ps_faviconnotificationbo"]
 	path = ps_faviconnotificationbo
 	url = https://github.com/PrestaShop/ps_faviconnotificationbo.git
+[submodule "seopresta-menu"]
+	path = seopresta-menu
+	url = https://github.com/PrestaShop/seopresta-menu.git
