@@ -769,3 +769,6 @@
 [submodule "seopresta-menu"]
 	path = seopresta-menu
 	url = https://github.com/PrestaShop/seopresta-menu.git
+[submodule "ps_mbo"]
+	path = ps_mbo
+	url = git://github.com/PrestaShop/ps_mbo.git
