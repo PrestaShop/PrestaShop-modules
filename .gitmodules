@@ -775,3 +775,6 @@
 [submodule "ps_buybuttonlite"]
 	path = ps_buybuttonlite
 	url = https://github.com/PrestaShop/ps_buybuttonlite.git
+[submodule "ps_checkout"]
+	path = ps_checkout
+	url = https://github.com/PrestaShopCorp/ps_checkout.git
