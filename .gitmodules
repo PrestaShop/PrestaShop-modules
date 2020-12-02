@@ -769,9 +769,6 @@
 [submodule "ps_mbo"]
 	path = ps_mbo
 	url = https://github.com/PrestaShop/ps_mbo.git
-[submodule "seoprestamenu"]
-	path = seoprestamenu
-	url = https://github.com/PrestaShop/seoprestamenu.git
 [submodule "ps_buybuttonlite"]
 	path = ps_buybuttonlite
 	url = https://github.com/PrestaShop/ps_buybuttonlite.git
