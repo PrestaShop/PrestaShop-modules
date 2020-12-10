@@ -193,9 +193,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics.git
-[submodule "gointerpay"]
-	path = gointerpay
-	url = https://github.com/PrestaShop/gointerpay.git
 [submodule "kiala"]
 	path = kiala
 	url = https://github.com/PrestaShop/kiala.git
