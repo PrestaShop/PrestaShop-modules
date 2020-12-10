@@ -25,9 +25,6 @@
 [submodule "blocktags"]
 	path = blocktags
 	url = https://github.com/PrestaShop/blocktags.git
-[submodule "cheque"]
-	path = cheque
-	url = https://github.com/PrestaShop/cheque.git
 [submodule "crossselling"]
 	path = crossselling
 	url = https://github.com/PrestaShop/crossselling.git
