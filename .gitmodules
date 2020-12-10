@@ -196,9 +196,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud.git
-[submodule "uspscarrier"]
-	path = uspscarrier
-	url = https://github.com/PrestaShop/uspscarrier.git
 [submodule "fianetsceau"]
 	path = fianetsceau
 	url = https://github.com/PrestaShop/fianetsceau.git
