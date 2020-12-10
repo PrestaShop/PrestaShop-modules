@@ -7,9 +7,6 @@
 [submodule "blocklink"]
 	path = blocklink
 	url = https://github.com/PrestaShop/blocklink.git
-[submodule "blockmanufacturer"]
-	path = blockmanufacturer
-	url = https://github.com/PrestaShop/blockmanufacturer.git
 [submodule "blockmyaccount"]
 	path = blockmyaccount
 	url = https://github.com/PrestaShop/blockmyaccount.git
