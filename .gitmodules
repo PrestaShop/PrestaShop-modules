@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "reforestaction"]
-	path = reforestaction
-	url = https://github.com/PrestaShop/reforestaction.git
 [submodule "expressmailing"]
 	path = expressmailing
 	url = https://github.com/PrestaShop/expressmailing.git
