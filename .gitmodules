@@ -187,9 +187,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
-[submodule "desjardins"]
-	path = desjardins
-	url = https://github.com/PrestaShop/desjardins.git
 [submodule "ecopresto"]
 	path = ecopresto
 	url = https://github.com/PrestaShop/ecopresto.git
