@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "sarbacanedesktop"]
-	path = sarbacanedesktop
-	url = https://github.com/PrestaShop/sarbacanedesktop.git
 [submodule "prestashippingeasy"]
 	path = prestashippingeasy
 	url = https://github.com/PrestaShop/prestashippingeasy.git
