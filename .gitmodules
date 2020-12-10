@@ -196,9 +196,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud.git
-[submodule "loyaltylion"]
-	path = loyaltylion
-	url = https://github.com/PrestaShop/loyaltylion.git
 [submodule "bluesnap"]
 	path = bluesnap
 	url = https://github.com/PrestaShop/bluesnap.git
