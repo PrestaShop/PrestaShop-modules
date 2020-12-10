@@ -16,9 +16,6 @@
 [submodule "blockpermanentlinks"]
 	path = blockpermanentlinks
 	url = https://github.com/PrestaShop/blockpermanentlinks.git
-[submodule "blockreinsurance"]
-	path = blockreinsurance
-	url = https://github.com/PrestaShop/blockreinsurance.git
 [submodule "blockrss"]
 	path = blockrss
 	url = https://github.com/PrestaShop/blockrss.git
