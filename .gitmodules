@@ -4,9 +4,6 @@
 [submodule "blockfacebook"]
 	path = blockfacebook
 	url = https://github.com/PrestaShop/blockfacebook.git
-[submodule "blocklanguages"]
-	path = blocklanguages
-	url = https://github.com/PrestaShop/blocklanguages.git
 [submodule "blocklayered"]
 	path = blocklayered
 	url = https://github.com/PrestaShop/blocklayered.git
