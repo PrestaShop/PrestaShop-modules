@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "powatag"]
-	path = powatag
-	url = https://github.com/PrestaShop/powatag.git
 [submodule "olark"]
 	path = olark
 	url = https://github.com/PrestaShop/olark.git
