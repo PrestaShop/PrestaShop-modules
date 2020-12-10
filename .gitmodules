@@ -172,9 +172,6 @@
 [submodule "sendtoafriend"]
 	path = sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend.git
-[submodule "themeinstallator"]
-	path = themeinstallator
-	url = https://github.com/PrestaShop/themeinstallator.git
 [submodule "autoupgrade"]
 	path = autoupgrade
 	url = https://github.com/PrestaShop/autoupgrade.git
