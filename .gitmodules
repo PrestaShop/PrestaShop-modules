@@ -1,6 +1,3 @@
-[submodule "blockcontact"]
-	path = blockcontact
-	url = https://github.com/PrestaShop/blockcontact.git
 [submodule "blockcontactinfos"]
 	path = blockcontactinfos
 	url = https://github.com/PrestaShop/blockcontactinfos.git
