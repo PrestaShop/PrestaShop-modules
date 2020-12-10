@@ -19,9 +19,6 @@
 [submodule "blocksharefb"]
 	path = blocksharefb
 	url = https://github.com/PrestaShop/blocksharefb.git
-[submodule "blocksocial"]
-	path = blocksocial
-	url = https://github.com/PrestaShop/blocksocial.git
 [submodule "blockspecials"]
 	path = blockspecials
 	url = https://github.com/PrestaShop/blockspecials.git
