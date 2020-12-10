@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "paypal"]
-	path = paypal
-	url = https://github.com/PrestaShop/paypal.git
 [submodule "prestastats"]
 	path = prestastats
 	url = https://github.com/PrestaShop/prestastats.git
