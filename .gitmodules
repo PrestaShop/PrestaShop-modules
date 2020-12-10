@@ -52,9 +52,6 @@
 [submodule "sekeywords"]
 	path = sekeywords
 	url = https://github.com/PrestaShop/sekeywords.git
-[submodule "socialsharing"]
-	path = socialsharing
-	url = https://github.com/PrestaShop/socialsharing.git
 [submodule "statsbestcategories"]
 	path = statsbestcategories
 	url = https://github.com/PrestaShop/statsbestcategories.git
