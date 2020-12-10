@@ -193,9 +193,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics.git
-[submodule "mondialrelay"]
-	path = mondialrelay
-	url = https://github.com/PrestaShop/mondialrelay.git
 [submodule "ogone"]
 	path = ogone
 	url = https://github.com/PrestaShop/ogone.git
