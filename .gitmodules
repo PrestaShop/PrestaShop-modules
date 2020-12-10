@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "dotpay"]
-	path = dotpay
-	url = https://github.com/PrestaShop/dotpay.git
 [submodule "psphipay"]
 	path = psphipay
 	url = https://github.com/PrestaShop/psphipay.git
