@@ -208,9 +208,6 @@
 [submodule "mediafinanz"]
 	path = mediafinanz
 	url = https://github.com/PrestaShop/mediafinanz.git
-[submodule "alipay"]
-	path = alipay
-	url = https://github.com/PrestaShop/alipay.git
 [submodule "safeshops"]
 	path = safeshops
 	url = https://github.com/PrestaShop/safeshops.git
