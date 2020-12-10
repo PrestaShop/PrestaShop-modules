@@ -208,9 +208,6 @@
 [submodule "mediafinanz"]
 	path = mediafinanz
 	url = https://github.com/PrestaShop/mediafinanz.git
-[submodule "storecommander"]
-	path = storecommander
-	url = https://github.com/PrestaShop/storecommander.git
 [submodule "twengafeed"]
 	path = twengafeed
 	url = https://github.com/PrestaShop/twengafeed.git
