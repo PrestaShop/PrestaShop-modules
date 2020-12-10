@@ -196,9 +196,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud.git
-[submodule "pagseguro"]
-	path = pagseguro
-	url = https://github.com/PrestaShop/pagseguro.git
 [submodule "realexredirect"]
 	path = realexredirect
 	url = https://github.com/PrestaShop/realexredirect.git
