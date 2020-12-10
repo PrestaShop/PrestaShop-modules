@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "chronopost"]
-	path = chronopost
-	url = https://github.com/PrestaShop/chronopost.git
 [submodule "dpdgroup"]
 	path = dpdgroup
 	url = https://github.com/PrestaShop/dpdgroup.git
