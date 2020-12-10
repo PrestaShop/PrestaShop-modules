@@ -187,9 +187,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
-[submodule "firstdata"]
-	path = firstdata
-	url = https://github.com/PrestaShop/firstdata.git
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords.git
