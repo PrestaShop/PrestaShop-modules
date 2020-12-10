@@ -187,9 +187,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
-[submodule "ecopresto"]
-	path = ecopresto
-	url = https://github.com/PrestaShop/ecopresto.git
 [submodule "fedexcarrier"]
 	path = fedexcarrier
 	url = https://github.com/PrestaShop/fedexcarrier.git
