@@ -183,7 +183,7 @@
 	url = https://github.com/PrestaShop/gsitemap.git
 [submodule "cronjobs"]
 	path = cronjobs
-	url = https://github.com/PrestaShop/cronjobs.git
+	url = https://github.com/PrestaShopCorp/cronjobs.git
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
