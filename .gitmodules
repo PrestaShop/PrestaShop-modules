@@ -1,6 +1,3 @@
-[submodule "blockcart"]
-	path = blockcart
-	url = https://github.com/PrestaShop/blockcart.git
 [submodule "blockcategories"]
 	path = blockcategories
 	url = https://github.com/PrestaShop/blockcategories.git
