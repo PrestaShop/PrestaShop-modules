@@ -49,9 +49,6 @@
 [submodule "productpaymentlogos"]
 	path = productpaymentlogos
 	url = https://github.com/PrestaShop/productpaymentlogos.git
-[submodule "producttooltip"]
-	path = producttooltip
-	url = https://github.com/PrestaShop/producttooltip.git
 [submodule "sekeywords"]
 	path = sekeywords
 	url = https://github.com/PrestaShop/sekeywords.git
