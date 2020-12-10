@@ -43,9 +43,6 @@
 [submodule "gridhtml"]
 	path = gridhtml
 	url = https://github.com/PrestaShop/gridhtml.git
-[submodule "homefeatured"]
-	path = homefeatured
-	url = https://github.com/PrestaShop/homefeatured.git
 [submodule "homeslider"]
 	path = homeslider
 	url = https://github.com/PrestaShop/homeslider.git
