@@ -208,9 +208,6 @@
 [submodule "mediafinanz"]
 	path = mediafinanz
 	url = https://github.com/PrestaShop/mediafinanz.git
-[submodule "twengafeed"]
-	path = twengafeed
-	url = https://github.com/PrestaShop/twengafeed.git
 [submodule "hipaymobileivr"]
 	path = hipaymobileivr
 	url = https://github.com/PrestaShop/hipaymobileivr.git
