@@ -351,7 +351,7 @@
 	url = https://github.com/PrestaShop/ps_faviconnotificationbo.git
 [submodule "ps_mbo"]
 	path = ps_mbo
-	url = https://github.com/PrestaShop/ps_mbo.git
+	url = https://github.com/PrestaShopCorp/ps_mbo.git
 [submodule "ps_buybuttonlite"]
 	path = ps_buybuttonlite
 	url = https://github.com/PrestaShop/ps_buybuttonlite.git
