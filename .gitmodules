@@ -202,9 +202,6 @@
 [submodule "eurovatgenerator"]
 	path = eurovatgenerator
 	url = https://github.com/PrestaShop/eurovatgenerator
-[submodule "mobfirst"]
-	path = mobfirst
-	url = https://github.com/PrestaShop/mobfirst.git
 [submodule "liveperson"]
 	path = liveperson
 	url = https://github.com/PrestaShop/liveperson.git
