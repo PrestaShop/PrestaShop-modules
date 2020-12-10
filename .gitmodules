@@ -1,6 +1,3 @@
-[submodule "blockcmsinfo"]
-	path = blockcmsinfo
-	url = https://github.com/PrestaShop/blockcmsinfo.git
 [submodule "blockcontact"]
 	path = blockcontact
 	url = https://github.com/PrestaShop/blockcontact.git
