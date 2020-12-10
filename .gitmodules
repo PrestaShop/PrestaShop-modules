@@ -187,9 +187,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
-[submodule "avalaratax"]
-	path = avalaratax
-	url = https://github.com/PrestaShop/avalaratax.git
 [submodule "boxdropshipment"]
 	path = boxdropshipment
 	url = https://github.com/PrestaShop/boxdropshipment
