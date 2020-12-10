@@ -196,9 +196,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud.git
-[submodule "pigmbhpaymill"]
-	path = pigmbhpaymill
-	url = https://github.com/PrestaShop/pigmbhpaymill.git
 [submodule "vtpayment"]
 	path = vtpayment
 	url = https://github.com/PrestaShop/vtpayment.git
