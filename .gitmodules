@@ -187,9 +187,6 @@
 [submodule "themeconfigurator"]
 	path = themeconfigurator
 	url = https://github.com/PrestaShop/themeconfigurator.git
-[submodule "authorizeaim"]
-	path = authorizeaim
-	url = https://github.com/PrestaShop/authorizeaim
 [submodule "avalaratax"]
 	path = avalaratax
 	url = https://github.com/PrestaShop/avalaratax.git
