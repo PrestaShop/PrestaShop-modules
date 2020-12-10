@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "prestastats"]
-	path = prestastats
-	url = https://github.com/PrestaShop/prestastats.git
 [submodule "globkurier"]
 	path = globkurier
 	url = https://github.com/PrestaShop/globkurier.git
