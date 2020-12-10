@@ -196,9 +196,6 @@
 [submodule "prestafraud"]
 	path = prestafraud
 	url = https://github.com/PrestaShop/prestafraud.git
-[submodule "fianetsceau"]
-	path = fianetsceau
-	url = https://github.com/PrestaShop/fianetsceau.git
 [submodule "socolissimo"]
 	path = socolissimo
 	url = https://github.com/PrestaShop/socolissimo.git
