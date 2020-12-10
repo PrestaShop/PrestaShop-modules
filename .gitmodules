@@ -208,9 +208,6 @@
 [submodule "mediafinanz"]
 	path = mediafinanz
 	url = https://github.com/PrestaShop/mediafinanz.git
-[submodule "creditfr"]
-	path = creditfr
-	url = https://github.com/PrestaShop/creditfr.git
 [submodule "oneandonehosting"]
 	path = oneandonehosting
 	url = https://github.com/PrestaShop/oneandonehosting.git
