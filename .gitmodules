@@ -1,9 +1,6 @@
 [submodule "blockcontactinfos"]
 	path = blockcontactinfos
 	url = https://github.com/PrestaShop/blockcontactinfos.git
-[submodule "blockcustomerprivacy"]
-	path = blockcustomerprivacy
-	url = https://github.com/PrestaShop/blockcustomerprivacy.git
 [submodule "blockfacebook"]
 	path = blockfacebook
 	url = https://github.com/PrestaShop/blockfacebook.git
