@@ -1,39 +1,3 @@
-[submodule "alliedwallet/backward_compatibility"]
-	path = alliedwallet/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "buyster/backward_compatibility"]
-	path = buyster/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "canadapost/backward_compatibility"]
-	path = canadapost/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "cloudcache/backward_compatibility"]
-	path = cloudcache/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "dibs/backward_compatibility"]
-	path = dibs/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "jirafe/backward_compatibility"]
-	path = jirafe/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "mailjet/backward_compatibility"]
-	path = mailjet/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "paysafecard/backward_compatibility"]
-	path = paysafecard/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "shipwire/backward_compatibility"]
-	path = shipwire/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "trustedshops/backward_compatibility"]
-	path = trustedshops/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "ferbuy/backward_compatibility"]
-	path = ferbuy/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
-[submodule "paypalusa/backward_compatibility"]
-	path = paypalusa/backward_compatibility
-	url = https://github.com/PrestaShop/PrestaShop-backward_compatibility.git
 [submodule "bankwire"]
 	path = bankwire
 	url = https://github.com/PrestaShop/bankwire.git
