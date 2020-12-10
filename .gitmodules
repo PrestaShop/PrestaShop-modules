@@ -22,9 +22,6 @@
 [submodule "blockstore"]
 	path = blockstore
 	url = https://github.com/PrestaShop/blockstore.git
-[submodule "blocksupplier"]
-	path = blocksupplier
-	url = https://github.com/PrestaShop/blocksupplier.git
 [submodule "blocktags"]
 	path = blocktags
 	url = https://github.com/PrestaShop/blocktags.git
