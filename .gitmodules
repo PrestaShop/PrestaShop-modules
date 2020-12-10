@@ -199,9 +199,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "olark"]
-	path = olark
-	url = https://github.com/PrestaShop/olark.git
 [submodule "brinkscheckout"]
 	path = brinkscheckout
 	url = https://github.com/PrestaShop/brinkscheckout.git
