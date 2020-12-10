@@ -1,6 +1,3 @@
-[submodule "blockadvertising"]
-	path = blockadvertising
-	url = https://github.com/PrestaShop/blockadvertising.git
 [submodule "blockbanner"]
 	path = blockbanner
 	url = https://github.com/PrestaShop/blockbanner.git
