@@ -25,9 +25,6 @@
 [submodule "blocktags"]
 	path = blocktags
 	url = https://github.com/PrestaShop/blocktags.git
-[submodule "blockuserinfo"]
-	path = blockuserinfo
-	url = https://github.com/PrestaShop/blockuserinfo.git
 [submodule "blockviewed"]
 	path = blockviewed
 	url = https://github.com/PrestaShop/blockviewed.git
