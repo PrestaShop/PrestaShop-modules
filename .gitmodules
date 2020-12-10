@@ -1,6 +1,3 @@
-[submodule "bankwire"]
-	path = bankwire
-	url = https://github.com/PrestaShop/bankwire.git
 [submodule "blockadvertising"]
 	path = blockadvertising
 	url = https://github.com/PrestaShop/blockadvertising.git
