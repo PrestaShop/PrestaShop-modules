@@ -205,9 +205,6 @@
 [submodule "securitypatch"]
 	path = securitypatch
 	url = https://github.com/PrestaShop/securitypatch.git
-[submodule "mediafinanz"]
-	path = mediafinanz
-	url = https://github.com/PrestaShop/mediafinanz.git
 [submodule "ps_sharebuttons"]
 	path = ps_sharebuttons
 	url = https://github.com/PrestaShop/ps_sharebuttons.git
