@@ -148,9 +148,6 @@
 [submodule "mailalerts"]
 	path = mailalerts
 	url = https://github.com/PrestaShop/mailalerts.git
-[submodule "newsletter"]
-	path = newsletter
-	url = https://github.com/PrestaShop/newsletter.git
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
