@@ -286,9 +286,6 @@
 [submodule "ps_reminder"]
 	path = ps_reminder
 	url = https://github.com/PrestaShop/ps_reminder.git
-[submodule "ps_carriercomparison"]
-	path = ps_carriercomparison
-	url = https://github.com/PrestaShop/ps_carriercomparison.git
 [submodule "ps_emailsmanager"]
 	path = ps_emailsmanager
 	url = https://github.com/PrestaShop/ps_emailsmanager.git
