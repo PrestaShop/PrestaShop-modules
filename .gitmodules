@@ -115,9 +115,6 @@
 [submodule "statsvisits"]
 	path = statsvisits
 	url = https://github.com/PrestaShop/statsvisits.git
-[submodule "trackingfront"]
-	path = trackingfront
-	url = https://github.com/PrestaShop/trackingfront.git
 [submodule "vatnumber"]
 	path = vatnumber
 	url = https://github.com/PrestaShop/vatnumber.git
