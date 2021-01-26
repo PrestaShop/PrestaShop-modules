@@ -160,9 +160,6 @@
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
-[submodule "pscleaner"]
-	path = pscleaner
-	url = https://github.com/PrestaShop/pscleaner.git
 [submodule "referralprogram"]
 	path = referralprogram
 	url = https://github.com/PrestaShop/referralprogram.git
