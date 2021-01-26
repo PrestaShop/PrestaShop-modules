@@ -127,9 +127,6 @@
 [submodule "cashondelivery"]
 	path = cashondelivery
 	url = https://github.com/PrestaShop/cashondelivery.git
-[submodule "dateofdelivery"]
-	path = dateofdelivery
-	url = https://github.com/PrestaShop/dateofdelivery.git
 [submodule "editorial"]
 	path = editorial
 	url = https://github.com/PrestaShop/editorial.git
