@@ -139,9 +139,6 @@
 [submodule "gapi"]
 	path = gapi
 	url = https://github.com/PrestaShop/gapi.git
-[submodule "loyalty"]
-	path = loyalty
-	url = https://github.com/PrestaShop/loyalty.git
 [submodule "mailalerts"]
 	path = mailalerts
 	url = https://github.com/PrestaShop/mailalerts.git
