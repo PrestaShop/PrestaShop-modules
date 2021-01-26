@@ -88,9 +88,6 @@
 [submodule "statsforecast"]
 	path = statsforecast
 	url = https://github.com/PrestaShop/statsforecast.git
-[submodule "statslive"]
-	path = statslive
-	url = https://github.com/PrestaShop/statslive.git
 [submodule "statsnewsletter"]
 	path = statsnewsletter
 	url = https://github.com/PrestaShop/statsnewsletter.git
