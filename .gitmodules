@@ -274,9 +274,6 @@
 [submodule "ps_emailalerts"]
 	path = ps_emailalerts
 	url = https://github.com/PrestaShop/ps_emailalerts.git
-[submodule "ps_advertising"]
-	path = ps_advertising
-	url = https://github.com/PrestaShop/ps_advertising.git
 [submodule "ps_bestsellers"]
 	path = ps_bestsellers
 	url = https://github.com/PrestaShop/ps_bestsellers.git
