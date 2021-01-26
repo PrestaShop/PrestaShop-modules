@@ -175,9 +175,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics.git
-[submodule "prestafraud"]
-	path = prestafraud
-	url = https://github.com/PrestaShop/prestafraud.git
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
