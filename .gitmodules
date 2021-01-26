@@ -148,9 +148,6 @@
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
-[submodule "referralprogram"]
-	path = referralprogram
-	url = https://github.com/PrestaShop/referralprogram.git
 [submodule "sendtoafriend"]
 	path = sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend.git
