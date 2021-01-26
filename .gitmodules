@@ -280,9 +280,6 @@
 [submodule "ps_categoryproducts"]
 	path = ps_categoryproducts
 	url = https://github.com/PrestaShop/ps_categoryproducts.git
-[submodule "ps_productinfo"]
-	path = ps_productinfo
-	url = https://github.com/PrestaShop/ps_productinfo.git
 [submodule "ps_rssfeed"]
 	path = ps_rssfeed
 	url = https://github.com/PrestaShop/ps_rssfeed.git
