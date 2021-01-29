@@ -19,9 +19,6 @@
 [submodule "pagesnotfound"]
 	path = pagesnotfound
 	url = https://github.com/PrestaShop/pagesnotfound.git
-[submodule "productpaymentlogos"]
-	path = productpaymentlogos
-	url = https://github.com/PrestaShop/productpaymentlogos.git
 [submodule "sekeywords"]
 	path = sekeywords
 	url = https://github.com/PrestaShop/sekeywords.git
