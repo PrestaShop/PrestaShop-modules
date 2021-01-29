@@ -10,9 +10,6 @@
 [submodule "blockpermanentlinks"]
 	path = blockpermanentlinks
 	url = https://github.com/PrestaShop/blockpermanentlinks.git
-[submodule "blocksharefb"]
-	path = blocksharefb
-	url = https://github.com/PrestaShop/blocksharefb.git
 [submodule "blockstore"]
 	path = blockstore
 	url = https://github.com/PrestaShop/blockstore.git
