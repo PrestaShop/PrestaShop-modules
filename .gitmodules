@@ -88,9 +88,6 @@
 [submodule "statsforecast"]
 	path = statsforecast
 	url = https://github.com/PrestaShop/statsforecast.git
-[submodule "statslive"]
-	path = statslive
-	url = https://github.com/PrestaShop/statslive.git
 [submodule "statsnewsletter"]
 	path = statsnewsletter
 	url = https://github.com/PrestaShop/statsnewsletter.git
@@ -118,12 +115,6 @@
 [submodule "statsvisits"]
 	path = statsvisits
 	url = https://github.com/PrestaShop/statsvisits.git
-[submodule "trackingfront"]
-	path = trackingfront
-	url = https://github.com/PrestaShop/trackingfront.git
-[submodule "vatnumber"]
-	path = vatnumber
-	url = https://github.com/PrestaShop/vatnumber.git
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
@@ -133,9 +124,6 @@
 [submodule "cashondelivery"]
 	path = cashondelivery
 	url = https://github.com/PrestaShop/cashondelivery.git
-[submodule "dateofdelivery"]
-	path = dateofdelivery
-	url = https://github.com/PrestaShop/dateofdelivery.git
 [submodule "editorial"]
 	path = editorial
 	url = https://github.com/PrestaShop/editorial.git
@@ -148,36 +136,18 @@
 [submodule "gamification"]
 	path = gamification
 	url = https://github.com/PrestaShop/gamification.git
-[submodule "gapi"]
-	path = gapi
-	url = https://github.com/PrestaShop/gapi.git
-[submodule "loyalty"]
-	path = loyalty
-	url = https://github.com/PrestaShop/loyalty.git
 [submodule "mailalerts"]
 	path = mailalerts
 	url = https://github.com/PrestaShop/mailalerts.git
-[submodule "newsletter"]
-	path = newsletter
-	url = https://github.com/PrestaShop/newsletter.git
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
-[submodule "pscleaner"]
-	path = pscleaner
-	url = https://github.com/PrestaShop/pscleaner.git
-[submodule "referralprogram"]
-	path = referralprogram
-	url = https://github.com/PrestaShop/referralprogram.git
 [submodule "sendtoafriend"]
 	path = sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend.git
 [submodule "autoupgrade"]
 	path = autoupgrade
 	url = https://github.com/PrestaShop/autoupgrade.git
-[submodule "watermark"]
-	path = watermark
-	url = https://github.com/PrestaShop/watermark.git
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
@@ -193,9 +163,6 @@
 [submodule "ganalytics"]
 	path = ganalytics
 	url = https://github.com/PrestaShop/ganalytics.git
-[submodule "prestafraud"]
-	path = prestafraud
-	url = https://github.com/PrestaShop/prestafraud.git
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
@@ -244,9 +211,6 @@
 [submodule "welcome"]
 	path = welcome
 	url = https://github.com/PrestaShop/welcome.git
-[submodule "ps_legalcompliance"]
-	path = ps_legalcompliance
-	url = https://github.com/PrestaShop/ps_legalcompliance.git
 [submodule "contactform"]
 	path = contactform
 	url = https://github.com/PrestaShop/contactform.git
@@ -280,21 +244,12 @@
 [submodule "ps_emailalerts"]
 	path = ps_emailalerts
 	url = https://github.com/PrestaShop/ps_emailalerts.git
-[submodule "ps_advertising"]
-	path = ps_advertising
-	url = https://github.com/PrestaShop/ps_advertising.git
 [submodule "ps_bestsellers"]
 	path = ps_bestsellers
 	url = https://github.com/PrestaShop/ps_bestsellers.git
 [submodule "ps_categoryproducts"]
 	path = ps_categoryproducts
 	url = https://github.com/PrestaShop/ps_categoryproducts.git
-[submodule "ps_productinfo"]
-	path = ps_productinfo
-	url = https://github.com/PrestaShop/ps_productinfo.git
-[submodule "ps_rssfeed"]
-	path = ps_rssfeed
-	url = https://github.com/PrestaShop/ps_rssfeed.git
 [submodule "ps_cashondelivery"]
 	path = ps_cashondelivery
 	url = https://github.com/PrestaShop/ps_cashondelivery.git
@@ -319,21 +274,12 @@
 [submodule "ps_dataprivacy"]
 	path = ps_dataprivacy
 	url = https://github.com/PrestaShop/ps_dataprivacy.git
-[submodule "ps_feeder"]
-	path = ps_feeder
-	url = https://github.com/PrestaShop/ps_feeder.git
 [submodule "ps_reminder"]
 	path = ps_reminder
 	url = https://github.com/PrestaShop/ps_reminder.git
-[submodule "ps_carriercomparison"]
-	path = ps_carriercomparison
-	url = https://github.com/PrestaShop/ps_carriercomparison.git
 [submodule "ps_emailsmanager"]
 	path = ps_emailsmanager
 	url = https://github.com/PrestaShop/ps_emailsmanager.git
-[submodule "ps_livetranslation"]
-	path = ps_livetranslation
-	url = https://github.com/PrestaShop/ps_livetranslation.git
 [submodule "ps_googleanalytics"]
 	path = ps_googleanalytics
 	url = https://github.com/PrestaShop/ps_googleanalytics.git
