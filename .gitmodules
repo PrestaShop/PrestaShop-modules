@@ -1,6 +1,3 @@
-[submodule "blocklink"]
-	path = blocklink
-	url = https://github.com/PrestaShop/blocklink.git
 [submodule "dashactivity"]
 	path = dashactivity
 	url = https://github.com/PrestaShop/dashactivity.git
