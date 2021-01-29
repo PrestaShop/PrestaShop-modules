@@ -136,9 +136,6 @@
 [submodule "gamification"]
 	path = gamification
 	url = https://github.com/PrestaShop/gamification.git
-[submodule "mailalerts"]
-	path = mailalerts
-	url = https://github.com/PrestaShop/mailalerts.git
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
