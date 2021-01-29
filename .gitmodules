@@ -103,9 +103,6 @@
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
-[submodule "sendtoafriend"]
-	path = sendtoafriend
-	url = https://github.com/PrestaShop/sendtoafriend.git
 [submodule "autoupgrade"]
 	path = autoupgrade
 	url = https://github.com/PrestaShop/autoupgrade.git
