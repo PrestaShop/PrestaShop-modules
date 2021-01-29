@@ -121,9 +121,6 @@
 [submodule "carriercompare"]
 	path = carriercompare
 	url = https://github.com/PrestaShop/carriercompare.git
-[submodule "cashondelivery"]
-	path = cashondelivery
-	url = https://github.com/PrestaShop/cashondelivery.git
 [submodule "editorial"]
 	path = editorial
 	url = https://github.com/PrestaShop/editorial.git
