@@ -112,9 +112,6 @@
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords.git
-[submodule "securitypatch"]
-	path = securitypatch
-	url = https://github.com/PrestaShop/securitypatch.git
 [submodule "ps_sharebuttons"]
 	path = ps_sharebuttons
 	url = https://github.com/PrestaShop/ps_sharebuttons.git
