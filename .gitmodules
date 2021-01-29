@@ -148,9 +148,6 @@
 [submodule "cronjobs"]
 	path = cronjobs
 	url = https://github.com/PrestaShopCorp/cronjobs.git
-[submodule "themeconfigurator"]
-	path = themeconfigurator
-	url = https://github.com/PrestaShop/themeconfigurator.git
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords.git
