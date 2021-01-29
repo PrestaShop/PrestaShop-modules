@@ -4,9 +4,6 @@
 [submodule "blockmyaccountfooter"]
 	path = blockmyaccountfooter
 	url = https://github.com/PrestaShop/blockmyaccountfooter.git
-[submodule "blockpermanentlinks"]
-	path = blockpermanentlinks
-	url = https://github.com/PrestaShop/blockpermanentlinks.git
 [submodule "blockstore"]
 	path = blockstore
 	url = https://github.com/PrestaShop/blockstore.git
