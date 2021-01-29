@@ -118,9 +118,6 @@
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
-[submodule "carriercompare"]
-	path = carriercompare
-	url = https://github.com/PrestaShop/carriercompare.git
 [submodule "editorial"]
 	path = editorial
 	url = https://github.com/PrestaShop/editorial.git
