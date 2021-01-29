@@ -151,9 +151,6 @@
 [submodule "pssupport"]
 	path = pssupport
 	url = https://github.com/PrestaShop/pssupport.git
-[submodule "eurovatgenerator"]
-	path = eurovatgenerator
-	url = https://github.com/PrestaShop/eurovatgenerator
 [submodule "securitypatch"]
 	path = securitypatch
 	url = https://github.com/PrestaShop/securitypatch.git
