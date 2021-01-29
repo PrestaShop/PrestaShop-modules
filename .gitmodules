@@ -1,6 +1,3 @@
-[submodule "blockfacebook"]
-	path = blockfacebook
-	url = https://github.com/PrestaShop/blockfacebook.git
 [submodule "blocklink"]
 	path = blocklink
 	url = https://github.com/PrestaShop/blocklink.git
