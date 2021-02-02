@@ -1,30 +1,3 @@
-[submodule "blockcontactinfos"]
-	path = blockcontactinfos
-	url = https://github.com/PrestaShop/blockcontactinfos.git
-[submodule "blockfacebook"]
-	path = blockfacebook
-	url = https://github.com/PrestaShop/blockfacebook.git
-[submodule "blocklink"]
-	path = blocklink
-	url = https://github.com/PrestaShop/blocklink.git
-[submodule "blockmyaccountfooter"]
-	path = blockmyaccountfooter
-	url = https://github.com/PrestaShop/blockmyaccountfooter.git
-[submodule "blockpaymentlogo"]
-	path = blockpaymentlogo
-	url = https://github.com/PrestaShop/blockpaymentlogo.git
-[submodule "blockpermanentlinks"]
-	path = blockpermanentlinks
-	url = https://github.com/PrestaShop/blockpermanentlinks.git
-[submodule "blocksharefb"]
-	path = blocksharefb
-	url = https://github.com/PrestaShop/blocksharefb.git
-[submodule "blockstore"]
-	path = blockstore
-	url = https://github.com/PrestaShop/blockstore.git
-[submodule "blocktags"]
-	path = blocktags
-	url = https://github.com/PrestaShop/blocktags.git
 [submodule "dashactivity"]
 	path = dashactivity
 	url = https://github.com/PrestaShop/dashactivity.git
@@ -46,9 +19,6 @@
 [submodule "pagesnotfound"]
 	path = pagesnotfound
 	url = https://github.com/PrestaShop/pagesnotfound.git
-[submodule "productpaymentlogos"]
-	path = productpaymentlogos
-	url = https://github.com/PrestaShop/productpaymentlogos.git
 [submodule "sekeywords"]
 	path = sekeywords
 	url = https://github.com/PrestaShop/sekeywords.git
@@ -118,33 +88,18 @@
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
-[submodule "carriercompare"]
-	path = carriercompare
-	url = https://github.com/PrestaShop/carriercompare.git
-[submodule "cashondelivery"]
-	path = cashondelivery
-	url = https://github.com/PrestaShop/cashondelivery.git
 [submodule "editorial"]
 	path = editorial
 	url = https://github.com/PrestaShop/editorial.git
 [submodule "favoriteproducts"]
 	path = favoriteproducts
 	url = https://github.com/PrestaShop/favoriteproducts.git
-[submodule "followup"]
-	path = followup
-	url = https://github.com/PrestaShop/followup.git
 [submodule "gamification"]
 	path = gamification
 	url = https://github.com/PrestaShop/gamification.git
-[submodule "mailalerts"]
-	path = mailalerts
-	url = https://github.com/PrestaShop/mailalerts.git
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
-[submodule "sendtoafriend"]
-	path = sendtoafriend
-	url = https://github.com/PrestaShop/sendtoafriend.git
 [submodule "autoupgrade"]
 	path = autoupgrade
 	url = https://github.com/PrestaShop/autoupgrade.git
@@ -154,24 +109,9 @@
 [submodule "cronjobs"]
 	path = cronjobs
 	url = https://github.com/PrestaShopCorp/cronjobs.git
-[submodule "themeconfigurator"]
-	path = themeconfigurator
-	url = https://github.com/PrestaShop/themeconfigurator.git
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords.git
-[submodule "ganalytics"]
-	path = ganalytics
-	url = https://github.com/PrestaShop/ganalytics.git
-[submodule "pssupport"]
-	path = pssupport
-	url = https://github.com/PrestaShop/pssupport.git
-[submodule "eurovatgenerator"]
-	path = eurovatgenerator
-	url = https://github.com/PrestaShop/eurovatgenerator
-[submodule "securitypatch"]
-	path = securitypatch
-	url = https://github.com/PrestaShop/securitypatch.git
 [submodule "ps_sharebuttons"]
 	path = ps_sharebuttons
 	url = https://github.com/PrestaShop/ps_sharebuttons.git
