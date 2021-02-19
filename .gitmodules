@@ -202,9 +202,6 @@
 [submodule "ps_dataprivacy"]
 	path = ps_dataprivacy
 	url = https://github.com/PrestaShop/ps_dataprivacy.git
-[submodule "ps_reminder"]
-	path = ps_reminder
-	url = https://github.com/PrestaShop/ps_reminder.git
 [submodule "ps_emailsmanager"]
 	path = ps_emailsmanager
 	url = https://github.com/PrestaShop/ps_emailsmanager.git
