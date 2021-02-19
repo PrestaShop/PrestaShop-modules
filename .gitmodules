@@ -58,9 +58,6 @@
 [submodule "statsnewsletter"]
 	path = statsnewsletter
 	url = https://github.com/PrestaShop/statsnewsletter.git
-[submodule "statsorigin"]
-	path = statsorigin
-	url = https://github.com/PrestaShop/statsorigin.git
 [submodule "statspersonalinfos"]
 	path = statspersonalinfos
 	url = https://github.com/PrestaShop/statspersonalinfos.git
