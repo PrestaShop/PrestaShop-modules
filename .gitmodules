@@ -106,9 +106,6 @@
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
-[submodule "cronjobs"]
-	path = cronjobs
-	url = https://github.com/PrestaShopCorp/cronjobs.git
 [submodule "gadwords"]
 	path = gadwords
 	url = https://github.com/PrestaShop/gadwords.git
