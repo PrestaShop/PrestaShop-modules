@@ -201,7 +201,7 @@
 	url = https://github.com/PrestaShop/ps_themecusto.git
 [submodule "psgdpr"]
 	path = psgdpr
-	url = https://github.com/PrestaShopCorp/psgdpr.git
+	url = https://github.com/PrestaShop/psgdpr.git
 [submodule "ps_faviconnotificationbo"]
 	path = ps_faviconnotificationbo
 	url = https://github.com/PrestaShop/ps_faviconnotificationbo.git
