@@ -76,9 +76,6 @@
 [submodule "statsstock"]
 	path = statsstock
 	url = https://github.com/PrestaShop/statsstock.git
-[submodule "statsvisits"]
-	path = statsvisits
-	url = https://github.com/PrestaShop/statsvisits.git
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
