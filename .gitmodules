@@ -19,9 +19,6 @@
 [submodule "pagesnotfound"]
 	path = pagesnotfound
 	url = https://github.com/PrestaShop/pagesnotfound.git
-[submodule "sekeywords"]
-	path = sekeywords
-	url = https://github.com/PrestaShop/sekeywords.git
 [submodule "statsbestcategories"]
 	path = statsbestcategories
 	url = https://github.com/PrestaShop/statsbestcategories.git
@@ -52,18 +49,12 @@
 [submodule "statsdata"]
 	path = statsdata
 	url = https://github.com/PrestaShop/statsdata.git
-[submodule "statsequipment"]
-	path = statsequipment
-	url = https://github.com/PrestaShop/statsequipment.git
 [submodule "statsforecast"]
 	path = statsforecast
 	url = https://github.com/PrestaShop/statsforecast.git
 [submodule "statsnewsletter"]
 	path = statsnewsletter
 	url = https://github.com/PrestaShop/statsnewsletter.git
-[submodule "statsorigin"]
-	path = statsorigin
-	url = https://github.com/PrestaShop/statsorigin.git
 [submodule "statspersonalinfos"]
 	path = statspersonalinfos
 	url = https://github.com/PrestaShop/statspersonalinfos.git
@@ -82,18 +73,9 @@
 [submodule "statsstock"]
 	path = statsstock
 	url = https://github.com/PrestaShop/statsstock.git
-[submodule "statsvisits"]
-	path = statsvisits
-	url = https://github.com/PrestaShop/statsvisits.git
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
-[submodule "editorial"]
-	path = editorial
-	url = https://github.com/PrestaShop/editorial.git
-[submodule "favoriteproducts"]
-	path = favoriteproducts
-	url = https://github.com/PrestaShop/favoriteproducts.git
 [submodule "gamification"]
 	path = gamification
 	url = https://github.com/PrestaShop/gamification.git
@@ -106,12 +88,6 @@
 [submodule "gsitemap"]
 	path = gsitemap
 	url = https://github.com/PrestaShop/gsitemap.git
-[submodule "cronjobs"]
-	path = cronjobs
-	url = https://github.com/PrestaShopCorp/cronjobs.git
-[submodule "gadwords"]
-	path = gadwords
-	url = https://github.com/PrestaShop/gadwords.git
 [submodule "ps_sharebuttons"]
 	path = ps_sharebuttons
 	url = https://github.com/PrestaShop/ps_sharebuttons.git
@@ -214,9 +190,6 @@
 [submodule "ps_dataprivacy"]
 	path = ps_dataprivacy
 	url = https://github.com/PrestaShop/ps_dataprivacy.git
-[submodule "ps_reminder"]
-	path = ps_reminder
-	url = https://github.com/PrestaShop/ps_reminder.git
 [submodule "ps_emailsmanager"]
 	path = ps_emailsmanager
 	url = https://github.com/PrestaShop/ps_emailsmanager.git
@@ -228,13 +201,10 @@
 	url = https://github.com/PrestaShop/ps_themecusto.git
 [submodule "psgdpr"]
 	path = psgdpr
-	url = https://github.com/PrestaShopCorp/psgdpr.git
+	url = https://github.com/PrestaShop/psgdpr.git
 [submodule "ps_faviconnotificationbo"]
 	path = ps_faviconnotificationbo
 	url = https://github.com/PrestaShop/ps_faviconnotificationbo.git
-[submodule "ps_mbo"]
-	path = ps_mbo
-	url = https://github.com/PrestaShopCorp/ps_mbo.git
 [submodule "ps_buybuttonlite"]
 	path = ps_buybuttonlite
 	url = https://github.com/PrestaShop/ps_buybuttonlite.git
