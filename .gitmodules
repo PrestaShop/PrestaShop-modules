@@ -76,9 +76,6 @@
 [submodule "blockwishlist"]
 	path = blockwishlist
 	url = https://github.com/PrestaShop/blockwishlist.git
-[submodule "gamification"]
-	path = gamification
-	url = https://github.com/PrestaShop/gamification.git
 [submodule "productcomments"]
 	path = productcomments
 	url = https://github.com/PrestaShop/productcomments.git
