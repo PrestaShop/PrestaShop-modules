@@ -208,3 +208,6 @@
 [submodule "ps_buybuttonlite"]
 	path = ps_buybuttonlite
 	url = https://github.com/PrestaShop/ps_buybuttonlite.git
+[submodule "ps_distributionapiclient"]
+	path = ps_distributionapiclient
+	url = https://github.com/prestashop/ps_distributionapiclient
